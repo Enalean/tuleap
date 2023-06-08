@@ -19,6 +19,7 @@
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",

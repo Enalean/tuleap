@@ -15,8 +15,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
-    "@tuleap/cypress-utilities-support": "workspace:*",
-    "@tuleap/tlp": "workspace:*"
+    "@tuleap/cypress-utilities-support": "workspace:*"
   },
   "scripts": {
     "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",

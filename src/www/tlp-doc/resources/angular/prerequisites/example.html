@@ -4,12 +4,6 @@ var path = require('path');
 
 {
     // ...
-    resolve: {
-        alias: {
-            // Adapt the relative path accordingly
-            'angular-tlp': path.resolve(__dirname, '../../src/themes/tlp/angular-tlp/index.js'),
-        }
-    },
     externals: {
         tlp: 'tlp'
     },
@@ -19,7 +13,7 @@ var path = require('path');
 <script>
 // app.js OR similar main AngularJS module
 import angular            from 'angular';
-import angular_tlp_module from 'angular-tlp';
+import angular_tlp_module from '@tuleap/angular-tlp';
 
 export default angular.module('my-main-module', [
     angular_tlp_module,
