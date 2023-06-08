@@ -77,11 +77,6 @@ class LdapPlugin extends Plugin
     private $ldapInstance;
 
     /**
-     * @var LDAP
-     */
-    private $ldap_write_instance;
-
-    /**
      * @type LDAP_UserManager
      */
     private $_ldapUmInstance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
@@ -126,34 +121,6 @@ class LdapPlugin extends Plugin
     public function getLogger(): \Psr\Log\LoggerInterface
     {
         return new LdapLogger();
-    }
-
-    /**
-     * @return LDAP
-     */
-    public function getLDAPWrite()
-    {
-        if (! isset($this->ldap_write_instance)) {
-            $ldap_params = $this->getLDAPParams();
-            if (isset($ldap_params['server_type']) && $ldap_params['server_type'] == LDAP::SERVER_TYPE_ACTIVE_DIRECTORY) {
-                throw new LDAP_Exception_NoWriteException();
-            } elseif (isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '') {
-                $this->ldap_write_instance = $this->instanciateLDAP();
-            } else {
-                throw new LDAP_Exception_NoWriteException();
-            }
-        }
-        return $this->ldap_write_instance;
-    }
-
-    private function hasLDAPWrite()
-    {
-        try {
-            $this->getLDAPWrite();
-            return true;
-        } catch (LDAP_Exception_NoWriteException $ex) {
-        }
-        return false;
     }
 
     private function getLDAPParams(): array
@@ -338,14 +305,6 @@ class LdapPlugin extends Plugin
                 );
                 $event->refuseLogin(_('Invalid Password Or User Name'));
                 return;
-            }
-        }
-
-        if ($this->hasLDAPWrite() && $event->user->getLdapId() == null) {
-            try {
-                $this->getLDAPUserWrite()->updateWithUser($event->user);
-            } catch (Exception $exception) {
-                $this->getLogger()->error('An error occurred while registering user (afterLogin): ' . $exception->getMessage());
             }
         }
     }
@@ -540,7 +499,7 @@ class LdapPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function registrationGuardEvent(RegistrationGuardEvent $event): void
     {
-        if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
+        if ($this->isLdapAuthType()) {
             $event->disableRegistration();
         }
     }
@@ -603,9 +562,7 @@ class LdapPlugin extends Plugin
     public function displayLostpwCreateaccount($params): void
     {
         if ($this->isLdapAuthType()) {
-            if (! $this->hasLDAPWrite()) {
-                $params['allow'] = false;
-            }
+            $params['allow'] = false;
         }
     }
 
@@ -623,16 +580,14 @@ class LdapPlugin extends Plugin
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         if ($this->isLdapAuthType() && $user->getLdapId() != '') {
-            if (! $this->hasLDAPWrite()) {
-                $params['allow'] = false;
-            }
+            $params['allow'] = false;
         }
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event): void
     {
-        if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
+        if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '') {
             $event->forbidUserToChangePassword();
         }
     }
@@ -641,7 +596,7 @@ class LdapPlugin extends Plugin
     public function accountInformationCollection(AccountInformationCollection $account_information): void
     {
         if ($this->isLdapAuthType()) {
-            if ($account_information->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
+            if ($account_information->getUser()->getLdapId() !== '') {
                 $account_information->disableChangeRealName();
                 $account_information->disableChangeEmail();
             }
@@ -1033,28 +988,9 @@ class LdapPlugin extends Plugin
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Event::USER_MANAGER_UPDATE_DB)]
-    public function userManagerUpdateDb(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        try {
-            $this->getLDAPUserWrite()->updateWithPreviousUser($params['old_user'], $params['new_user']);
-        } catch (LDAP_Exception_NoWriteException $exception) {
-            $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
-        } catch (Exception $exception) {
-            $this->getLogger()->error('An error occured while updating user settings (user_manager_update_db): ' . $exception->getMessage());
-        }
-    }
-
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function accountCreated(AccountCreated $account_created): void
     {
-        try {
-            $this->getLDAPUserWrite()->updateWithUser($account_created->user);
-        } catch (LDAP_Exception_NoWriteException $exception) {
-            $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
-        } catch (Exception $exception) {
-            $this->getLogger()->error('An error occurred while creating user (AccountCreated): ' . $exception->getMessage());
-        }
         (
             new AccountCreation(
                 $this->getLogger(),
@@ -1063,16 +999,6 @@ class LdapPlugin extends Plugin
         )->associateWithLDAPAccount($account_created);
     }
 
-    private function getLDAPUserWrite()
-    {
-        return new LDAP_UserWrite(
-            $this->getLDAPWrite(),
-            UserManager::instance(),
-            new UserDao(),
-            new LDAP_UserDao(),
-            $this->getLogger()
-        );
-    }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function gerritCanMigrateEvent(GerritCanMigrateEvent $event): void
@@ -1080,9 +1006,8 @@ class LdapPlugin extends Plugin
         $ldap_params = $this->getLDAPParams();
 
         $platform_uses_ldap_for_authentication = $this->isLdapAuthType();
-        $ldap_write_server_is_configured       = isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '';
 
-        if ($platform_uses_ldap_for_authentication || $ldap_write_server_is_configured) {
+        if ($platform_uses_ldap_for_authentication) {
             $event->platformCanUseGerrit();
         }
     }

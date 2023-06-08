@@ -80,7 +80,6 @@ class LDAP_UserManager
     /**
      * Get LDAPResult object corresponding to an LDAP ID
      *
-     * @param  $ldapId    The LDAP identifier
      * @return LDAPResult|false
      */
     public function getLdapFromLdapId($ldapId)

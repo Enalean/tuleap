@@ -91,14 +91,3 @@ $sys_ldap_grp_dn        = "ou=groups,dc=tuleap,dc=local";
 $sys_ldap_grp_cn        = "cn";
 // Field that indicate the membership of a user in a group
 $sys_ldap_grp_member    = "uniquemember";
-
-// A server on which you can write so users are exported into it
-$sys_ldap_write_server = "%write-server%";
-
-$sys_ldap_write_dn        = "cn=Manager,dc=tuleap,dc=local";
-
-$sys_ldap_write_password = "%password%";
-
-$sys_ldap_write_people_dn = "ou=people,dc=tuleap,dc=local";
-
-$sys_ldap_write_group_dn  = "ou=groups,dc=tuleap,dc=local";
