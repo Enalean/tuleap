@@ -29,6 +29,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
@@ -173,11 +174,12 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariation $theme_variation): array
     {
+        $tlp_assets       = new IncludeAssets(__DIR__ . '/../../../scripts/tlp/frontend-assets', '/assets/core/tlp');
         $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection(
             [
-                new CssAssetWithoutVariantDeclinaisons($core_assets, 'tlp'),
-                new CssAssetWithDensityVariants($core_assets, 'tlp-vars'),
+                new CssAssetWithoutVariantDeclinaisons($tlp_assets, 'tlp'),
+                new CssAssetWithDensityVariants($tlp_assets, 'tlp-vars'),
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot'),
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'common-theme/project-sidebar'),
             ]

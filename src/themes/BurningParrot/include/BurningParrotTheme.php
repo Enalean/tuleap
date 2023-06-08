@@ -48,6 +48,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -129,7 +130,10 @@ class BurningParrotTheme extends BaseLayout
 
         $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
         $this->includeFooterJavascriptFile(
-            $this->include_asset->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
+            (new IncludeAssets(
+                __DIR__ . '/../../../scripts/tlp/frontend-assets',
+                '/assets/core/tlp'
+            ))->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
 

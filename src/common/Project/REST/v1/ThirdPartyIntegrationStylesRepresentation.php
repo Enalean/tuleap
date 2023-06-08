@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST\v1;
 
 use ThemeVariant;
-use Tuleap\Layout\IncludeCoreAssets;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ThemeVariation;
 
 /**
@@ -38,14 +38,17 @@ final class ThirdPartyIntegrationStylesRepresentation
     public static function fromUser(\PFUser $user): self
     {
         $theme_variant_color = (new ThemeVariant())->getVariantColorForUser($user);
-        $tlp_vars            = new \Tuleap\Layout\CssAssetWithDensityVariants(new IncludeCoreAssets(), 'tlp-vars');
+        $tlp_vars            = new \Tuleap\Layout\CssAssetWithDensityVariants(
+            new IncludeAssets(__DIR__ . '/../../../../scripts/tlp/frontend-assets', '/assets/core/tlp'),
+            'tlp-vars'
+        );
         $url                 = $tlp_vars->getFileURL(new ThemeVariation($theme_variant_color, $user));
-        $path                = __DIR__ . '/../../../../scripts/main/frontend-assets/' . substr($url, strlen('/assets/core/main/'));
+        $path                = __DIR__ . '/../../../../scripts/tlp/frontend-assets/' . substr($url, strlen('/assets/core/tlp/'));
 
         $css_file_content = file_get_contents($path);
 
         if ($css_file_content === false) {
-            throw new \RuntimeException("Could not read  TLP vars stylesheet at $path");
+            throw new \RuntimeException("Could not read TLP vars stylesheet at $path");
         }
 
         return new self($css_file_content, $theme_variant_color->getName());

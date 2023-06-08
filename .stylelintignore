@@ -3,5 +3,5 @@
 **/coverage/*
 **/node_modules/*
 **/vendor/*
-src/themes/tlp/src/fonts/font-awesome-4.7.0/
+src/scripts/tlp/src/fonts/font-awesome-4.7.0/
 src/www/scripts/select2/select2.scss

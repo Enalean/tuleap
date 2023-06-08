@@ -6,7 +6,7 @@ dependencies:
     version: link:../gettext
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../../src/themes/tlp
+    version: link:../../../src/scripts/tlp
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../tlp-swatch-colors

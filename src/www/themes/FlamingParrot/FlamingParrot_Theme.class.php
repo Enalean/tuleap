@@ -201,7 +201,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $theme_variant = new ThemeVariant();
         $variant_used  = $theme_variant->getVariantColorForUser($current_user);
 
-        $tlp_vars = new \Tuleap\Layout\CssAsset($include_assets, 'tlp-vars');
+        $tlp_assets = new IncludeAssets(__DIR__ . '/../../../scripts/tlp/frontend-assets', '/assets/core/tlp');
+        $tlp_vars   = new \Tuleap\Layout\CssAsset($tlp_assets, 'tlp-vars');
 
         return [
             $include_assets->getFileURL('FlamingParrot/style.css'),

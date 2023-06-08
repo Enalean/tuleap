@@ -23,7 +23,7 @@ devDependencies:
     version: link:../../lib/frontend/build-system-configurator
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/themes/tlp
+    version: link:../../src/scripts/tlp
 
 packages:
 

@@ -5,7 +5,7 @@
         "types": ["ckeditor", "jest"],
         "baseUrl": ".",
         "paths": {
-            "tlp": ["../../../../../src/themes/tlp/src/js/index.ts"]
+            "tlp": ["../../../../../src/scripts/tlp/src/js/index.ts"]
         }
     },
     "include": ["src/**/*", "tests/**/*"]

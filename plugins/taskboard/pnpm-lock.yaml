@@ -18,7 +18,7 @@ dependencies:
     version: link:../../lib/frontend/project-background
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/themes/tlp
+    version: link:../../src/scripts/tlp
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch

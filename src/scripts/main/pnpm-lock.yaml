@@ -60,7 +60,7 @@ dependencies:
     version: link:../../../lib/frontend/project-sidebar-internal
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../themes/tlp
+    version: link:../tlp
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-dropdown
@@ -521,7 +521,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.6
     dev: false
 
   /jsonfile@5.0.0:
