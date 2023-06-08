@@ -26,6 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
+use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
 
 class ArtifactMoveButtonPresenterBuilder
 {
@@ -71,9 +72,11 @@ class ArtifactMoveButtonPresenterBuilder
             $errors[] = $external_errors;
         }
 
-        $links_error = $this->collectErrorsRelatedToArtifactLinks($artifact, $user);
-        if ($links_error) {
-            $errors[] = $links_error;
+        if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
+            $links_error = $this->collectErrorsRelatedToArtifactLinks($artifact, $user);
+            if ($links_error) {
+                $errors[] = $links_error;
+            }
         }
 
         return new ArtifactMoveButtonPresenter(

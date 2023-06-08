@@ -25,23 +25,38 @@ use Tracker_FormElement_Field;
 
 final class NoFeedbackFieldCollector implements FeedbackFieldCollectorInterface
 {
-    public function initAllTrackerFieldAsNotMigrated(Tracker $tracker)
+    public function initAllTrackerFieldAsNotMigrated(Tracker $tracker): void
     {
         return;
     }
 
-    public function addFieldInNotMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInNotMigrated(Tracker_FormElement_Field $field): void
     {
         return;
     }
 
-    public function addFieldInFullyMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInFullyMigrated(Tracker_FormElement_Field $field): void
     {
         return;
     }
 
-    public function addFieldInPartiallyMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInPartiallyMigrated(Tracker_FormElement_Field $field): void
     {
         return;
+    }
+
+    public function getFieldsFullyMigrated(): array
+    {
+        return [];
+    }
+
+    public function getFieldsNotMigrated(): array
+    {
+        return [];
+    }
+
+    public function getFieldsPartiallyMigrated(): array
+    {
+        return [];
     }
 }

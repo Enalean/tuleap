@@ -227,10 +227,10 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
             ->andReturns([$field]);
 
         $this->artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset_Null::class));
-        $this->artifact->shouldReceive('getSubmittedOn')->andReturn('2055-4-99');
+        $this->artifact->shouldReceive('getSubmittedOn')->andReturn(12346789);
 
         $this->assertEquals(
-            [12 => '2055-4-99'],
+            [12 => 12346789],
             $this->initializator->process($this->artifact, [])
         );
     }
@@ -244,10 +244,10 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
             ->andReturns([$field]);
 
         $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
-        $this->artifact->shouldReceive('getSubmittedOn')->andReturn('2055-4-99');
+        $this->artifact->shouldReceive('getSubmittedOn')->andReturn(12346789);
 
         $this->assertEquals(
-            [12 => '2055-4-99'],
+            [12 => 12346789],
             $this->initializator->process($this->artifact, [])
         );
     }

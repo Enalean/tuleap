@@ -27,13 +27,14 @@ use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
@@ -200,13 +201,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         unset($this->formElements[$form_element->getId()]);
     }
 
-    /**
-     * Returns the short name of the type of the given field
-     *
-     * @param Tracker_FormElement $form_element
-     * @return string
-     */
-    public function getType($form_element)
+    public function getType(Tracker_FormElement $form_element): string
     {
         $all_classnames = array_merge(
             $this->classnames,
@@ -318,35 +313,25 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->used_formElements[$id];
     }
 
-    /**
-     * Get a used field by name
-     *
-     * @param int    $tracker_id the id of the tracker
-     * @param string $name       the name of the field (short name)
-     */
-    public function getUsedFieldByName($tracker_id, $name): ?Tracker_FormElement_Field
+    public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field
     {
-        if (! $name) {
-            return null;
-        }
-
         if (! isset($this->used_form_element_fields_by_name[$tracker_id])) {
             $this->used_form_element_fields_by_name[$tracker_id] = [];
         }
-        if (array_key_exists($name, $this->used_form_element_fields_by_name[$tracker_id])) {
-            return $this->used_form_element_fields_by_name[$tracker_id][$name];
+        if (array_key_exists($field_name, $this->used_form_element_fields_by_name[$tracker_id])) {
+            return $this->used_form_element_fields_by_name[$tracker_id][$field_name];
         }
 
-        $row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow();
+        $row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $field_name)->getRow();
         if ($row !== false) {
             $form_element = $this->getCachedInstanceFromRow($row);
             if ($form_element instanceof Tracker_FormElement_Field) {
-                $this->used_form_element_fields_by_name[$tracker_id][$name] = $form_element;
+                $this->used_form_element_fields_by_name[$tracker_id][$field_name] = $form_element;
                 return $form_element;
             }
         }
 
-        $this->used_form_element_fields_by_name[$tracker_id][$name] = null;
+        $this->used_form_element_fields_by_name[$tracker_id][$field_name] = null;
         return null;
     }
 

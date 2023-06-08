@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_String;
 final class TrackerFormElementStringFieldBuilder
 {
     private string $label     = "Title";
+    private string $name      = "title";
     private bool $is_required = false;
 
     private function __construct(private readonly int $id)
@@ -50,13 +51,19 @@ final class TrackerFormElementStringFieldBuilder
         return $this;
     }
 
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_String
     {
         return new Tracker_FormElement_Field_String(
             $this->id,
             10,
             15,
-            "title",
+            $this->name,
             $this->label,
             "",
             true,

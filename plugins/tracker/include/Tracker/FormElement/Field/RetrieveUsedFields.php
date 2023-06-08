@@ -31,4 +31,6 @@ interface RetrieveUsedFields
     public function getUsedFields(\Tracker $tracker): array;
 
     public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field;
+
+    public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field;
 }

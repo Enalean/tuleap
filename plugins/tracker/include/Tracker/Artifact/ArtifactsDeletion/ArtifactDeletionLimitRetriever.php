@@ -24,28 +24,17 @@ use PFUser;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 
-class ArtifactDeletionLimitRetriever
+class ArtifactDeletionLimitRetriever implements RetrieveActionDeletionLimit
 {
-    /**
-     * @var ArtifactsDeletionConfig
-     */
-    private $config;
-    /**
-     * @var UserDeletionRetriever
-     */
-    private $user_deletion_retriever;
-
-    public function __construct(ArtifactsDeletionConfig $config, UserDeletionRetriever $user_deletion_retriever)
+    public function __construct(private ArtifactsDeletionConfig $config, private UserDeletionRetriever $user_deletion_retriever)
     {
-        $this->config                  = $config;
-        $this->user_deletion_retriever = $user_deletion_retriever;
     }
 
     /**
      * @throws ArtifactsDeletionLimitReachedException
      * @throws DeletionOfArtifactsIsNotAllowedException
      */
-    public function getNumberOfArtifactsAllowedToDelete(PFUser $user)
+    public function getNumberOfArtifactsAllowedToDelete(PFUser $user): int
     {
         $limit = $this->config->getArtifactsDeletionLimit();
         if (! $limit) {
@@ -54,7 +43,7 @@ class ArtifactDeletionLimitRetriever
 
         $nb_artifacts_deleted = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
 
-        if ($nb_artifacts_deleted >= (int) $limit) {
+        if ($nb_artifacts_deleted >= $limit) {
             throw new ArtifactsDeletionLimitReachedException();
         }
 

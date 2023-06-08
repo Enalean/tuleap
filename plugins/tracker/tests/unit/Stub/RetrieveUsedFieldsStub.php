@@ -64,4 +64,15 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
 
         return null;
     }
+
+    public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getName() === $field_name) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
 }

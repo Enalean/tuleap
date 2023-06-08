@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
+use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
@@ -48,7 +49,8 @@ final class ArtifactTestBuilder
      * @var \Project|null
      */
     private $project;
-    private int $submission_timestamp = 1234567890;
+    private int $submission_timestamp  = 1234567890;
+    private ?PFUser $submitted_by_user = null;
 
     private function __construct(int $id)
     {
@@ -68,6 +70,13 @@ final class ArtifactTestBuilder
     public function withTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function submittedBy(PFUser $user): self
+    {
+        $this->submitted_by_user = $user;
 
         return $this;
     }
@@ -111,6 +120,10 @@ final class ArtifactTestBuilder
 
         $artifact->setTracker($this->tracker);
         $artifact->setTitle($this->title);
+
+        if ($this->submitted_by_user) {
+            $artifact->setSubmittedByUser($this->submitted_by_user);
+        }
 
         if ($this->artifact_factory) {
             $artifact->setArtifactFactory($this->artifact_factory);

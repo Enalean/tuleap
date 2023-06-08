@@ -27,29 +27,19 @@ namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
 class ArtifactsDeletionConfig
 {
-    /**
-     * @var ArtifactsDeletionConfigDAO
-     */
-    private $dao;
+    private int $cache_artifacts_limit;
 
-    /**
-     * @var int
-     */
-    private $cache_artifacts_limit;
-
-    public function __construct(
-        ArtifactsDeletionConfigDAO $dao,
-    ) {
-        $this->dao = $dao;
+    public function __construct(public readonly ArtifactsDeletionConfigDAO $dao)
+    {
     }
 
-    public function getArtifactsDeletionLimit()
+    public function getArtifactsDeletionLimit(): int
     {
         if (! isset($this->cache_artifacts_limit)) {
             $row = $this->dao->searchDeletableArtifactsLimit();
 
             $this->cache_artifacts_limit = (count($row) > 0)
-                ? $row[0]['value']
+                ? (int) $row[0]['value']
                 : 0;
         }
 

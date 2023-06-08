@@ -242,10 +242,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Constructor
      *
-     * @param int  $id                       The Id of the artifact
-     * @param int  $tracker_id               The tracker Id the artifact belongs to
-     * @param int  $submitted_by             The id of the user who's submitted the artifact
-     * @param int  $submitted_on             The timestamp of artifact submission
+     * @param int $id The Id of the artifact
+     * @param int $tracker_id The tracker Id the artifact belongs to
+     * @param int $submitted_by The id of the user who's submitted the artifact
+     * @param int $submitted_on The timestamp of artifact submission
      *
      * @param bool $use_artifact_permissions True if this artifact uses permission, false otherwise
      */
@@ -1640,14 +1640,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return null;
     }
 
-    /**
-     * Returns the date (timestamp) the artifact ha been created
-     *
-     * @return int the timestamp for the date this aetifact was created
-     */
-    public function getSubmittedOn()
+    public function getSubmittedOn(): int
     {
-        return $this->submitted_on;
+        return (int) $this->submitted_on;
     }
 
     /**
