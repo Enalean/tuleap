@@ -18,8 +18,15 @@
  */
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { del, uri } from "@tuleap/fetch-result";
+import { post, uri } from "@tuleap/fetch-result";
 
-export function deleteKey(key_id: string): ResultAsync<null, Fault> {
-    return del(uri`/webauthn/key/${key_id}`).map(() => null);
+export function deleteKey(key_id: string, csrf_token: string): ResultAsync<null, Fault> {
+    return post(
+        uri`/webauthn/key/delete`,
+        {},
+        {
+            key_id: key_id,
+            csrf_token: csrf_token,
+        }
+    ).map(() => null);
 }

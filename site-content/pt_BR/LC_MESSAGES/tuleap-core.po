@@ -33,6 +33,9 @@ msgstr "O rótulo \"%s\" já existe. Por favor, escolha outro."
 msgid "\"csrf_token\" field is missing from the request body"
 msgstr ""
 
+msgid "\"key_id\" field is missing from the request body"
+msgstr ""
+
 msgid "\"name\" field is missing from the request body"
 msgstr ""
 

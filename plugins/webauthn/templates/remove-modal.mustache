@@ -13,6 +13,9 @@
         <div class="tlp-alert-danger webauthn-hidden" id="webauthn-remove-error"></div>
         {{# dgettext }} tuleap-webauthn | Are you sure you want to remove your passkey? {{/ dgettext }}
         <input type="hidden" class="tlp-input webauthn-hidden" id="webauthn-key-id-input" />
+        {{# csrf_token_del }}
+            {{> csrf_token_input }}
+        {{/ csrf_token_del }}
     </div>
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">

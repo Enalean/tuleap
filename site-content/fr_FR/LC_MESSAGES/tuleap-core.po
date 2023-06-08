@@ -33,6 +33,9 @@ msgstr "Le label \"%s\" label exist déjà. Merci de choisir un autre nom."
 msgid "\"csrf_token\" field is missing from the request body"
 msgstr "Il manque le champs \"csrf_token\" dans le corps de la requête"
 
+msgid "\"key_id\" field is missing from the request body"
+msgstr "Il manque le champs \"key_id\" dans le corps de la requête"
+
 msgid "\"name\" field is missing from the request body"
 msgstr "Il manque le champs \"name\" dans le corps de la requête"
 
