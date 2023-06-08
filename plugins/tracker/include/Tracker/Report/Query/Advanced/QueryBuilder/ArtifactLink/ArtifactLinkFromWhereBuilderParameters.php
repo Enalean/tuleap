@@ -20,15 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-final class WithoutParent implements Term
-{
-    public function __construct(public readonly ?ParentCondition $condition)
-    {
-    }
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 
-    public function acceptTermVisitor(TermVisitor $visitor, $parameters)
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+
+final class ArtifactLinkFromWhereBuilderParameters implements VisitorParameters
+{
+    public function __construct(public readonly \PFUser $user, public readonly string $suffix)
     {
-        return $visitor->visitWithoutParent($this, $parameters);
     }
 }

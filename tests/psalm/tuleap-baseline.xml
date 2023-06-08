@@ -45130,6 +45130,11 @@
       <code>normalize</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/ArtifactLink/ArtifactLinkFromWhereBuilder.php">
+    <DeprecatedMethod>
+      <code>quoteSmart</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/BetweenComparison/ForDateTime.php">
     <DeprecatedMethod>
       <code>escapeInt</code>

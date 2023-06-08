@@ -40,7 +40,7 @@ const TQL_mode_definition = {
             token: "keyword",
         },
         {
-            regex: /(?:now|between|in|not|myself|open|parent|artifact)\b/i,
+            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker)\b/i,
             token: "variable-2",
         },
         {
@@ -94,7 +94,9 @@ export const TQL_autocomplete_keywords = [
     "MYSELF()",
     "WITH PARENT",
     "WITH PARENT ARTIFACT",
+    "WITH PARENT TRACKER",
     "WITHOUT PARENT",
     "WITHOUT PARENT ARTIFACT",
+    "WITHOUT PARENT TRACKER",
     "@comments",
 ];

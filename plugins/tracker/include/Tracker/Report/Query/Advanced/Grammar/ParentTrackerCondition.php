@@ -21,14 +21,15 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-final class WithoutParent implements Term
+
+final class ParentTrackerCondition implements ParentCondition
 {
-    public function __construct(public readonly ?ParentCondition $condition)
+    public function __construct(public readonly string $tracker_name)
     {
     }
 
-    public function acceptTermVisitor(TermVisitor $visitor, $parameters)
+    public function accept(ParentConditionVisitor $visitor, $parameters)
     {
-        return $visitor->visitWithoutParent($this, $parameters);
+        return $visitor->visitParentTrackerCondition($this, $parameters);
     }
 }

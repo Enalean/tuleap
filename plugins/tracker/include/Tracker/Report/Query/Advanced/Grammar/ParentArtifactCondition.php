@@ -22,9 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class ParentArtifactCondition
+final class ParentArtifactCondition implements ParentCondition
 {
     public function __construct(public readonly int $artifact_id)
     {
+    }
+
+    public function accept(ParentConditionVisitor $visitor, $parameters)
+    {
+        return $visitor->visitParentArtifactCondition($this, $parameters);
     }
 }
