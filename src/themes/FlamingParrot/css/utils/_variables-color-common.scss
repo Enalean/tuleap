@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../tlp/src/scss/variables/colors/common-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/common-colors";
 
 $grey: #a9a9a9;
 $medium-grey: #686868;

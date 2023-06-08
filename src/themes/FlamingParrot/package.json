@@ -12,6 +12,7 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-sidebar-internal": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*"

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../tlp/src/scss/components/skeleton";
-@import "../../../common/css/utils/switch-to";
+@use "@tuleap/tlp/src/scss/components/skeleton";
+@use "../../../common/css/utils/switch-to";
 
 #switch-to-modal {
     top: 5vh;
