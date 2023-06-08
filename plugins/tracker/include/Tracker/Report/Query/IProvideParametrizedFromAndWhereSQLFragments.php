@@ -18,22 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query;
+namespace Tuleap\Tracker\Report\Query;
+
+use ParagonIE\EasyDB\EasyStatement;
 
 interface IProvideParametrizedFromAndWhereSQLFragments
 {
     /**
      * @return ParametrizedFrom[]
      */
-    public function getAllParametrizedFrom();
+    public function getAllParametrizedFrom(): array;
 
-    /**
-     * @return string
-     */
-    public function getWhere();
+    public function getWhere(): string|EasyStatement;
 
-    /**
-     * @return array
-     */
-    public function getWhereParameters();
+    public function getWhereParameters(): array;
 }

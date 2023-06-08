@@ -17,30 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\CrossTracker\Report\Query;
+namespace Tuleap\Tracker\Report\Query;
+
+use ParagonIE\EasyDB\EasyStatement;
 
 final class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
     /** @var ParametrizedFrom */
     private $parametrized_from;
 
-    /** @var array */
-    private $where_parameters;
-
-    /** @var string */
-    private $where;
-
-    public function __construct($from, $where, array $from_parameters, array $where_parameters)
+    public function __construct(string $from, private readonly string|EasyStatement $where, array $from_parameters, private readonly array $where_parameters)
     {
         $this->parametrized_from = new ParametrizedFrom($from, $from_parameters);
-        $this->where             = $where;
-        $this->where_parameters  = $where_parameters;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhere()
+    public function getWhere(): string|EasyStatement
     {
         return $this->where;
     }
@@ -48,15 +39,12 @@ final class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQL
     /**
      * @return ParametrizedFrom[]
      */
-    public function getAllParametrizedFrom()
+    public function getAllParametrizedFrom(): array
     {
         return [$this->parametrized_from];
     }
 
-    /**
-     * @return array
-     */
-    public function getWhereParameters()
+    public function getWhereParameters(): array
     {
         return $this->where_parameters;
     }

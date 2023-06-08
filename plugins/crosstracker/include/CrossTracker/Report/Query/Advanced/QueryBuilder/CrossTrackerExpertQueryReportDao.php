@@ -21,8 +21,8 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\CrossTracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\DB\DataAccessObject;
 
 final class CrossTrackerExpertQueryReportDao extends DataAccessObject

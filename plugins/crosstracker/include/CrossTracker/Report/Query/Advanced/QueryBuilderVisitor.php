@@ -33,9 +33,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComp
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameters;
-use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\CrossTracker\Report\Query\ParametrizedAndFromWhere;
-use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
