@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/tlp/src/scss/components/tables";
+@use "./includes/popovers";
+
 .ttm-definition-step-draggable {
     padding: 5px 0 0;
     background-color: var(--tlp-white-color);
@@ -261,6 +264,3 @@
     display: flex;
     align-items: center;
 }
-
-@import "../../src/themes/tlp/src/scss/components/tables";
-@import "./includes/popovers";

@@ -30,9 +30,6 @@ devDependencies:
   '@tuleap/cypress-utilities-support':
     specifier: workspace:*
     version: link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../src/themes/tlp
 
 packages:
 

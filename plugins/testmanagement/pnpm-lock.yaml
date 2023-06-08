@@ -43,6 +43,9 @@ dependencies:
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../lib/frontend/project-background
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../src/themes/tlp
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-dropdown
