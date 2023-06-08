@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semant
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 

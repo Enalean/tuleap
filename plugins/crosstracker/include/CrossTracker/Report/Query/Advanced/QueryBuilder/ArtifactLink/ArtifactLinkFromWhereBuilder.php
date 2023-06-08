@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 
-use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentArtifactCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentConditionVisitor;

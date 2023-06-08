@@ -17,31 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\CrossTracker\Report\Query;
+namespace Tuleap\Tracker\Report\Query;
+
+use ParagonIE\EasyDB\EasyStatement;
 
 final class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
-    /**
-     * @var IProvideParametrizedFromAndWhereSQLFragments
-     */
-    private $left;
-    /**
-     * @var IProvideParametrizedFromAndWhereSQLFragments
-     */
-    private $right;
-
     public function __construct(
-        IProvideParametrizedFromAndWhereSQLFragments $left,
-        IProvideParametrizedFromAndWhereSQLFragments $right,
+        private readonly IProvideParametrizedFromAndWhereSQLFragments $left,
+        private readonly IProvideParametrizedFromAndWhereSQLFragments $right,
     ) {
-        $this->left  = $left;
-        $this->right = $right;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhere()
+    public function getWhere(): string|EasyStatement
     {
         return $this->left->getWhere() . ' AND ' . $this->right->getWhere();
     }
@@ -49,15 +37,12 @@ final class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhere
     /**
      * @return ParametrizedFrom[]
      */
-    public function getAllParametrizedFrom()
+    public function getAllParametrizedFrom(): array
     {
         return array_merge($this->left->getAllParametrizedFrom(), $this->right->getAllParametrizedFrom());
     }
 
-    /**
-     * @return array
-     */
-    public function getWhereParameters()
+    public function getWhereParameters(): array
     {
         return array_merge($this->left->getWhereParameters(), $this->right->getWhereParameters());
     }

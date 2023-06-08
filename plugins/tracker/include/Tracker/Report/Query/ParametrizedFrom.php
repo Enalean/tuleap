@@ -18,47 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query;
+namespace Tuleap\Tracker\Report\Query;
 
 final class ParametrizedFrom
 {
-    /**
-     * @var string
-     */
-    private $from;
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @param string $from
-     * @param array $parameters
-     */
-    public function __construct($from, array $parameters)
+    public function __construct(private readonly string $from, private readonly array $parameters)
     {
-        $this->from       = $from;
-        $this->parameters = $parameters;
     }
 
-    /**
-     * @return string
-     */
-    public function getFrom()
+    public function getFrom(): string
     {
         return $this->from;
     }
 
-    /**
-     * @return array
-     */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
     public function __toString(): string
     {
-        return $this->from . var_export($this->parameters, 1);
+        return $this->from . var_export($this->parameters, true);
     }
 }

@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 
-use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;

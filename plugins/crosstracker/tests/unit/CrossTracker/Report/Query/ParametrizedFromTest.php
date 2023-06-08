@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 
 class ParametrizedFromTest extends \Tuleap\Test\PHPUnit\TestCase
 {
