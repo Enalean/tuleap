@@ -36,14 +36,14 @@ class LDAP_UserSync
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(private readonly ?\Psr\Log\LoggerInterface $logger = null)
     {
     }
 
     /**
      * Instanciate the right LDAP_UserSync object
      *
-     * Site can define its own implementation in /etc/codendi/plugins/ldap/site-content/en_US/synchronize_user.txt
+     * Site can define its own implementation in /etc/tuleap/plugins/ldap/site-content/en_US/synchronize_user.txt
      *
      * @return LDAP_UserSync
      */
@@ -53,7 +53,11 @@ class LDAP_UserSync
             $syncClass = self::class;
             // Allows site defined user update
             include_once($GLOBALS['Language']->getContent('synchronize_user', 'en_US', 'ldap'));
-            self::$instance = new $syncClass();
+            if ($syncClass === self::class) {
+                self::$instance = new $syncClass(new \Tuleap\LDAP\LdapLogger());
+            } else {
+                self::$instance = new $syncClass();
+            }
         }
         return self::$instance;
     }
@@ -73,22 +77,12 @@ class LDAP_UserSync
     }
 
     /**
-     * Set the sync attributes
-     *
-     * @param Array $values
-     */
-    public function setSyncAttributes($values)
-    {
-        $this->attributes = $values;
-    }
-
-    /**
-     * Do all the synchronization between an ldap result and a Codendi user.
+     * Do all the synchronization between an ldap result and a Tuleap user.
      *
      * This method returns if it modified the user or not. This is usefull during
      * batch process in order to limit computing.
      *
-     * @param PFUser       $user Codendi user
+     * @param PFUser     $user Tuleap user
      * @param LDAPResult $lr   Ldap result
      *
      * @return bool True if the method modified the user object
@@ -97,12 +91,18 @@ class LDAP_UserSync
     {
         $modified = false;
 
-        if (($lr->getCommonName() !== null) && ($user->getRealName() != substr($lr->getCommonName(), 0, 32))) {
+        if (($lr->getCommonName() !== null) && ($user->getRealName() != $lr->getCommonName())) {
+            $this->logger?->info("[LDAP default sync] Not matching Real Name between LDAP and DB for user #" . $user->getId());
+            $this->logger?->info("DB Real Name: " . $user->getRealName());
+            $this->logger?->info("LDAP Real Name: " . $lr->getCommonName());
             $user->setRealName($this->getCommonName($lr));
             $modified = true;
         }
 
         if (($lr->getEmail() !== null) && ($user->getEmail() != $lr->getEmail())) {
+            $this->logger?->info("[LDAP default sync] Not matching Email between LDAP and DB for user #" . $user->getId());
+            $this->logger?->info("DB email: " . $user->getEmail());
+            $this->logger?->info("LDAP email: " . $lr->getEmail());
             $user->setEmail($lr->getEmail());
             $modified = true;
         }
