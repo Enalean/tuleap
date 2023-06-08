@@ -39,11 +39,11 @@
             It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
         </li>
         <li>
-            <code class="code-inline">new_item_callback: (item_name: string) => void</code>: An optional callback to be executed when the user clicks on the &quot;Create new item&quot; button. If not given, the &quot;Create new item&quot; button will not appear.
+            <code class="code-inline">new_item_clicked_callback: (item_name: string) => void</code>: An optional callback to be executed when the user clicks on the &quot;Create new item&quot; button. If not given, the &quot;Create new item&quot; button will not appear.
             <br>
             It takes one parameter: <code class="code-inline">item_name: string</code>: The query typed by the user when the "Create new item" button was clicked.
         </li>
-        <li><code class="code-inline">new_item_button_label: string</code>: A (translated) text that will be shown on the &quot;Create new item&quot; button. It is only available when <code class="code-inline">new_item_callback</code> is defined.</li>
+        <li><code class="code-inline">new_item_label_callback: (item_name: string) => string</code>: A callback that should return the (translated) label for the &quot;Create new item&quot; button. It is only available when <code class="code-inline">new_item_clicked_callback</code> is defined.</li>
         <li>
             <code class="code-inline">selection_badge_callback: (item: LazyboxItem) => SelectionBadge &amp; HTMLElement</code>: An optional callback function returning an instance of custom element representing a selected item badge. It is only available when <code class="code-inline">is_multiple = true</code>. The custom element has a <code class="code-inline">&lt;slot&gt;</code>, you can pass any content in it to be rendered inside the badge. It has two properties:
             <ul>

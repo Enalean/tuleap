@@ -21,13 +21,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./SearchInput";
 import { buildClear, connect, onInput, onKeyDown, onKeyUp } from "./SearchInput";
 
-const noopSearchCallback = (query: string): void => {
-    //Fake usage of query to prevent eslint from removing it
-    if (query !== "") {
-        //Do nothing
-    }
-};
-
 describe(`SearchInput`, () => {
     let inner_input: HTMLInputElement, doc: Document;
 
@@ -45,8 +38,7 @@ describe(`SearchInput`, () => {
             Object.assign(doc.createElement("span"), {
                 query: "",
                 timeout_id: undefined,
-                search_callback: noopSearchCallback,
-            }) as HostElement;
+            } as HostElement);
 
         const buildInputEvent = (input_value: string): Event => {
             const inner_event = new Event("input");
@@ -55,7 +47,7 @@ describe(`SearchInput`, () => {
             return inner_event;
         };
 
-        it(`dispatches a "search-input" event to open the dropdown`, () => {
+        it(`dispatches a "search-entered" event to open the dropdown`, () => {
             const host = getHost();
             const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
@@ -63,28 +55,31 @@ describe(`SearchInput`, () => {
             onInput(host, inner_event);
 
             const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toBe("search-input");
+            expect(event.type).toBe("search-entered");
         });
 
-        it("should execute the callback after 250ms after the users has stopped typing in the search_field_element", () => {
+        it(`after waiting 250ms after the users has stopped typing in the input,
+            it will dispatch a "search-input" event`, () => {
             const host = getHost();
-            const search_callback = vi.spyOn(host, "search_callback");
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
-            const event = buildInputEvent("a query");
-            onInput(host, event);
+            const inner_event = buildInputEvent("a query");
+            onInput(host, inner_event);
 
             vi.advanceTimersByTime(249); // 249 ms elapsed
 
-            expect(search_callback).not.toHaveBeenCalled();
+            expect(dispatchEvent).toHaveBeenCalledOnce();
 
             vi.advanceTimersByTime(1); // 250 ms elapsed
 
-            expect(search_callback).toHaveBeenCalledWith("a query");
+            expect(dispatchEvent).toHaveBeenCalledTimes(2);
+            const event = dispatchEvent.mock.calls[1][0];
+            expect(event.type).toBe("search-input");
         });
 
-        it("should not execute the callback when the user it still typing", () => {
+        it(`will not dispatch a "search-input" event while the user it still typing`, () => {
             const host = getHost();
-            const search_callback = vi.spyOn(host, "search_callback");
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
             ["nana ", "nana ", "nana ", "BATMAN"].forEach((query) => {
                 inner_input.value += query;
@@ -95,20 +90,23 @@ describe(`SearchInput`, () => {
 
             vi.advanceTimersByTime(250);
 
-            expect(search_callback).toHaveBeenCalledTimes(1);
-            expect(search_callback).toHaveBeenCalledWith("nana nana nana BATMAN");
+            const all_search_input_events = dispatchEvent.mock.calls
+                .map((args) => args[0].type)
+                .filter((type) => type === "search-input");
+            expect(all_search_input_events).toHaveLength(1);
         });
 
-        it("When the query has been cleared, then it should trigger the callback immediately", () => {
+        it(`When the query has been cleared, then it should dispatch a "search-input" event immediately`, () => {
             const host = getHost();
-            const search_callback = vi.spyOn(host, "search_callback");
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
-            const event = buildInputEvent("");
-            onInput(host, event);
+            const inner_event = buildInputEvent("");
+            onInput(host, inner_event);
 
             vi.advanceTimersByTime(0); // 0 ms elapsed
 
-            expect(search_callback).toHaveBeenCalledWith("");
+            const event = dispatchEvent.mock.calls[1][0];
+            expect(event.type).toBe("search-input");
         });
     });
 
@@ -116,7 +114,7 @@ describe(`SearchInput`, () => {
         const getHost = (): HostElement =>
             Object.assign(doc.createElement("span"), {
                 query: "",
-            }) as HostElement;
+            } as HostElement);
 
         const buildKeyboardEvent = (key: string, input_value: string): KeyboardEvent => {
             const inner_event = new KeyboardEvent("keyup", { key });
@@ -136,7 +134,7 @@ describe(`SearchInput`, () => {
         });
 
         it(`prevents the "enter" key from submitting forms
-            and stops propagation to avoid triggering handler in SelectionElement`, () => {
+            and stops propagation to avoid triggering the handler in SelectionElement`, () => {
             const event = new KeyboardEvent("keydown", { key: "Enter", cancelable: true });
             const stopPropagation = vi.spyOn(event, "stopPropagation");
             onKeyDown({}, event);
@@ -159,7 +157,7 @@ describe(`SearchInput`, () => {
             target.append(inner_input);
             const host = Object.assign(doc.createElement("span"), {
                 content: (): HTMLElement => target,
-            }) as HostElement;
+            } as HostElement);
 
             connect(host);
 
@@ -169,17 +167,17 @@ describe(`SearchInput`, () => {
     });
 
     describe("clear()", () => {
-        it(`clears the query and calls the callback`, () => {
-            const host = {
+        it(`clears the query and dispatches a "search-input" event`, () => {
+            const host = Object.assign(doc.createElement("span"), {
                 query: "a query",
-                search_callback: noopSearchCallback,
-            } as HostElement;
-            const search_callback = vi.spyOn(host, "search_callback");
+            } as HostElement);
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
             buildClear(host)();
 
             expect(host.query).toBe("");
-            expect(search_callback).toHaveBeenCalledWith("");
+            const event = dispatchEvent.mock.calls[0][0];
+            expect(event.type).toBe("search-input");
         });
     });
 });

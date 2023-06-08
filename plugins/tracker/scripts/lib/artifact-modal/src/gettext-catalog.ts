@@ -129,6 +129,8 @@ export const getSubmitDisabledImageUploadReason = (): string =>
     gettextCatalog.getString("An image in a text field or in a new comment is being uploaded");
 export const getCreateNewArtifactButtonInLinkLabel = (): string =>
     gettextCatalog.getString("→ Create new artifact…");
+export const getCreateNewArtifactButtonInLinkWithNameLabel = (): string =>
+    gettextCatalog.getString(`→ Create new artifact "%(title)s"…`);
 export const getCreateArtifactButtonInCreatorLabel = (): string =>
     gettextCatalog.getString("Create");
 export const getCancelArtifactCreationLabel = (): string => gettextCatalog.getString("Cancel");

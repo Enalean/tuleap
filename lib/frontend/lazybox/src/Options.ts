@@ -32,7 +32,8 @@ export type LazyboxTemplatingCallback = (
     item: LazyboxItem
 ) => HTMLTemplateResult;
 
-export type LazyboxNewItemCallback = (item_name: string) => void;
+export type LazyboxNewItemClickedCallback = (item_name: string) => void;
+export type LazyboxNewItemLabelCallback = (item_name: string) => string;
 
 export type LazyboxSelectionBadgeCallback = (item: LazyboxItem) => SelectionBadge & HTMLElement;
 
@@ -47,12 +48,12 @@ type LazyboxWithSingleSelection = {
 };
 
 type LazyboxWithNewItemButton = {
-    readonly new_item_button_label: string;
-    readonly new_item_callback: LazyboxNewItemCallback;
+    readonly new_item_clicked_callback: LazyboxNewItemClickedCallback;
+    readonly new_item_label_callback: LazyboxNewItemLabelCallback;
 };
 
 type LazyboxWithoutNewItemButton = {
-    readonly new_item_callback?: undefined;
+    readonly new_item_clicked_callback?: undefined;
 };
 
 export type LazyboxOptions = (LazyboxWithSingleSelection | LazyboxWithMultipleSelection) &

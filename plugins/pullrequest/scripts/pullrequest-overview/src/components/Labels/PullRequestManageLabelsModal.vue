@@ -97,7 +97,7 @@ import {
     LabelsCreationManager,
 } from "./autocomplete/LabelsCreationManager";
 
-const { $gettext } = useGettext();
+const { $gettext, interpolate } = useGettext();
 const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
@@ -195,8 +195,11 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
                 ({ id }) => id !== LABEL_TO_CREATE_TMP_ID
             );
         },
-        new_item_button_label: $gettext("Create a new label"),
-        new_item_callback: (item_name: string) => {
+        new_item_label_callback: (item_name) =>
+            item_name !== ""
+                ? interpolate($gettext(`Create a new label "%{label}"`), { label: item_name })
+                : $gettext("Create a new label"),
+        new_item_clicked_callback: (item_name: string) => {
             if (!labels_creation_manager.canLabelBeCreated(item_name)) {
                 return;
             }

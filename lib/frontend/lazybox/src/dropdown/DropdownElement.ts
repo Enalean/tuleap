@@ -18,7 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import type { LazyboxNewItemCallback, LazyboxTemplatingCallback } from "../Options";
+import type { LazyboxTemplatingCallback } from "../Options";
 import type { SelectionElement } from "../selection/SelectionElement";
 import { getAllGroupsTemplate } from "./GroupTemplate";
 import type { GroupCollection } from "../GroupCollection";
@@ -32,7 +32,7 @@ export type DropdownElement = {
     open: boolean;
     multiple_selection: boolean;
     groups: GroupCollection;
-    new_item_callback: LazyboxNewItemCallback | undefined;
+    has_new_item: boolean;
     new_item_button_label: string;
     templating_callback: LazyboxTemplatingCallback;
     search_input: SearchInput & HTMLElement;
@@ -60,6 +60,10 @@ export const observeOpen = (
     dispatch(host, "close");
 };
 
+const onClickOnNewItemButton = (host: HostElement): void => {
+    dispatch(host, "click-create-item");
+};
+
 export const onArrowKeyUp = (host: HTMLElement, event: KeyboardEvent): void => {
     const getParent = (): HTMLElement => host;
 
@@ -78,20 +82,12 @@ export const onArrowKeyDown = (host: unknown, event: KeyboardEvent): void => {
     }
 };
 
-const onClickCreateItem = (
-    search_input: SearchInput,
-    new_item_callback: LazyboxNewItemCallback
-): void => {
-    new_item_callback(search_input.getQuery());
-    search_input.clear();
-};
-
 export const DropdownElement = define<InternalDropdownElement>({
     tag: TAG,
     open: { observe: observeOpen, value: false },
     multiple_selection: false,
     groups: { set: (host, new_value) => new_value ?? [] },
-    new_item_callback: undefined,
+    has_new_item: false,
     new_item_button_label: "",
     templating_callback: undefined,
     search_input: undefined,
@@ -102,22 +98,19 @@ export const DropdownElement = define<InternalDropdownElement>({
         }
         const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
 
-        const new_item_callback = host.new_item_callback;
-        const new_item_button =
-            new_item_callback !== undefined
-                ? html`<button
-                      type="button"
-                      class="lazybox-new-item-button"
-                      onclick="${(): void =>
-                          onClickCreateItem(host.search_input, new_item_callback)}"
-                      data-test="new-item-button"
-                      data-navigation="lazybox-item"
-                      onkeyup="${onArrowKeyUp}"
-                      onkeydown="${onArrowKeyDown}"
-                  >
-                      ${host.new_item_button_label}
-                  </button>`
-                : html``;
+        const new_item_button = host.has_new_item
+            ? html`<button
+                  type="button"
+                  class="lazybox-new-item-button"
+                  onclick="${onClickOnNewItemButton}"
+                  data-test="new-item-button"
+                  data-navigation="lazybox-item"
+                  onkeyup="${onArrowKeyUp}"
+                  onkeydown="${onArrowKeyDown}"
+              >
+                  ${host.new_item_button_label}
+              </button>`
+            : html``;
 
         return html`${search_section}${new_item_button}
             <ul
