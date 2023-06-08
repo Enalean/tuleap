@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Hook;
 
 use Http\Mock\Client;
-use Mockery;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -36,8 +35,6 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private EncryptionKey $encryption_key;
 
     protected function setUp(): void
@@ -48,15 +45,15 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testJenkinsIsNotified(): void
     {
         $http_client          = new Client();
-        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+        $csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
 
-        $request_factory = Mockery::mock(RequestFactoryInterface::class);
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
         $jenkins_client  = new JenkinsClient(
             $http_client,
             $request_factory,
             $csrf_crumb_retriever,
-            Mockery::mock(JenkinsTuleapPluginHookPayload::class),
-            Mockery::mock(StreamFactoryInterface::class),
+            $this->createMock(JenkinsTuleapPluginHookPayload::class),
+            $this->createMock(StreamFactoryInterface::class),
             $this->encryption_key,
         );
 
@@ -67,11 +64,11 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $expected_url        = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
         $request_factory
-            ->shouldReceive('createRequest')
+            ->method('createRequest')
             ->with('POST', $expected_url)
-            ->andReturn(Mockery::mock(RequestInterface::class));
+            ->willReturn($this->createMock(RequestInterface::class));
 
-        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
         $http_response_factory = HTTPFactoryBuilder::responseFactory();
 
         $triggered_jobs = ['https://jenkins.example.com/job1', 'https://jenkins.example.com/job2'];
@@ -90,22 +87,22 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             '8b2f3943e997d2faf4a55ed78e695bda64fad421'
         );
 
-        $this->assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
-        $this->assertEquals($body_content, $polling_response->getBody());
+        self::assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
+        self::assertEquals($body_content, $polling_response->getBody());
     }
 
     public function testJenkinsIsNotifiedWithoutSha1(): void
     {
         $http_client          = new Client();
-        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+        $csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
 
-        $request_factory = Mockery::mock(RequestFactoryInterface::class);
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
         $jenkins_client  = new JenkinsClient(
             $http_client,
             $request_factory,
             $csrf_crumb_retriever,
-            Mockery::mock(JenkinsTuleapPluginHookPayload::class),
-            Mockery::mock(StreamFactoryInterface::class),
+            $this->createMock(JenkinsTuleapPluginHookPayload::class),
+            $this->createMock(StreamFactoryInterface::class),
             $this->encryption_key
         );
 
@@ -114,11 +111,11 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $expected_url        = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
         $request_factory
-            ->shouldReceive('createRequest')
+            ->method('createRequest')
             ->with('POST', $expected_url)
-            ->andReturn(Mockery::mock(RequestInterface::class));
+            ->willReturn($this->createMock(RequestInterface::class));
 
-        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
         $http_response_factory = HTTPFactoryBuilder::responseFactory();
 
         $triggered_jobs = ['https://jenkins.example.com/job1', 'https://jenkins.example.com/job2'];
@@ -137,16 +134,16 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
-        $this->assertEquals($body_content, $polling_response->getBody());
+        self::assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
+        self::assertEquals($body_content, $polling_response->getBody());
     }
 
     public function testJenkinsTuleapBranchSourcePluginIsNotified(): void
     {
         $http_client          = new Client();
-        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+        $csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
 
-        $payload = Mockery::mock(JenkinsTuleapPluginHookPayload::class);
+        $payload = $this->createMock(JenkinsTuleapPluginHookPayload::class);
 
         $payload_content = [
             'tuleapProjectId' => '1',
@@ -154,10 +151,10 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             'branchName'      => 'A35',
         ];
 
-        $payload->shouldReceive('getPayload')->andReturn($payload_content);
+        $payload->method('getPayload')->willReturn($payload_content);
 
-        $stream_factory = Mockery::mock(StreamFactoryInterface::class);
-        $stream_factory->shouldReceive('createStream')->with(json_encode($payload->getPayload()))->once();
+        $stream_factory = $this->createMock(StreamFactoryInterface::class);
+        $stream_factory->expects(self::once())->method('createStream')->with(json_encode($payload->getPayload()));
 
         $jenkins_client = new JenkinsClient(
             $http_client,
@@ -168,7 +165,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->encryption_key,
         );
 
-        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
         $http_response_factory = HTTPFactoryBuilder::responseFactory();
 
         $http_client->addResponse(
@@ -184,9 +181,9 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThrowsExceptionWhenTheBuildCannotBeTriggered(): void
     {
         $http_client          = new Client();
-        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+        $csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
 
-        $payload = Mockery::mock(JenkinsTuleapPluginHookPayload::class);
+        $payload = $this->createMock(JenkinsTuleapPluginHookPayload::class);
 
         $payload_content = [
             'tuleapProjectId' => '1',
@@ -194,10 +191,10 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             'branchName'      => 'A35',
         ];
 
-        $payload->shouldReceive('getPayload')->andReturn($payload_content);
+        $payload->method('getPayload')->willReturn($payload_content);
 
-        $stream_factory = Mockery::mock(StreamFactoryInterface::class);
-        $stream_factory->shouldReceive('createStream')->with(json_encode($payload->getPayload()))->once();
+        $stream_factory = $this->createMock(StreamFactoryInterface::class);
+        $stream_factory->expects(self::once())->method('createStream')->with(json_encode($payload->getPayload()));
 
         $jenkins_client = new JenkinsClient(
             $http_client,
@@ -208,7 +205,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->encryption_key,
         );
 
-        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
         $http_response_factory = HTTPFactoryBuilder::responseFactory();
 
         $http_client->addResponse(

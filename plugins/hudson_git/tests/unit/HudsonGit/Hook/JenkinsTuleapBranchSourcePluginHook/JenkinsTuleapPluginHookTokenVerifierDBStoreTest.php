@@ -34,7 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class JenkinsTuleapPluginHookTokenVerifierDBStoreTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsTuleapPluginHookTokenDAO
+     * @var \\PHPUnit\Framework\MockObject\MockObject&JenkinsTuleapPluginHookTokenDAO
      */
     private $dao;
     private PrefixedSplitTokenSerializer $serializer;
