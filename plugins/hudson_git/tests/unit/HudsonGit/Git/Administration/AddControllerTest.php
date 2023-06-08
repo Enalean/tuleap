@@ -40,37 +40,37 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private AddController $controller;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
+     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
+     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&Project
+     * @var \PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var GitPermissionsManager&PHPUnit\Framework\MockObject\MockObject
+     * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_permissions_manager;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
+     * @var \\PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
      */
     private $git_jenkins_administration_server_adder;
 
     /**
-     * @var CSRFSynchronizerToken&PHPUnit\Framework\MockObject\MockObject
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 

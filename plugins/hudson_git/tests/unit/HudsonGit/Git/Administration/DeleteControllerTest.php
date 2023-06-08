@@ -38,38 +38,38 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private DeleteController $controller;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $git_jenkins_administration_server_factory;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
+     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
+     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
     private JenkinsServer $jenkins_server;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&Project
+     * @var \PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDeleter
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerDeleter
      */
     private $git_jenkins_administration_server_deleter;
 
     /**
-     * @var CSRFSynchronizerToken&PHPUnit\Framework\MockObject\MockObject
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
-     * @var GitPermissionsManager&Mockery\MockInterface
+     * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_permissions_manager;
 

@@ -38,32 +38,32 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private HookTriggerController $controller;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&HookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&HookDao
      */
     private $dao;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsClient
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsClient
      */
     private $jenkins_client;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&LogCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&LogCreator
      */
     private $log_creator;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
     /**
-     * @var GitRepository&PHPUnit\Framework\MockObject\MockObject
+     * @var GitRepository&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository;
 

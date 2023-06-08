@@ -31,14 +31,14 @@ final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
     private JenkinsServerDeleter $deleter;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
      */
     private $jenkins_server_dao;
 
     private JenkinsServer $jenkins_server;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&ProjectJobDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectJobDao
      */
     private $project_job_dao;
 

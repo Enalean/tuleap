@@ -47,52 +47,52 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private AdministrationController $controller;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
 
     /**
-     * @var GitPermissionsManager&PHPUnit\Framework\MockObject\MockObject
+     * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_permissions_manager;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
+     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
+     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&Project
+     * @var \PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
      */
     private $renderer;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&HeaderRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&HeaderRenderer
      */
     private $header_renderer;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&IncludeAssets
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
      */
     private $include_assets;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&LogFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&LogFactory
      */
     private $log_factory;
 

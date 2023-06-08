@@ -23,43 +23,32 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Log;
 
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private LogCreator $creator;
     /**
-     * @var LogCreator
-     */
-    private $creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JobDao
+     * @var MockObject&JobDao
      */
     private $job_dao;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectJobDao
+     * @var MockObject&ProjectJobDao
      */
     private $project_job_dao;
-
-    /**
-     * @var DBTransactionExecutorPassthrough
-     */
-    private $transaction_executor;
+    private DBTransactionExecutorPassthrough $transaction_executor;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->job_dao              = Mockery::mock(JobDao::class);
-        $this->project_job_dao      = Mockery::mock(ProjectJobDao::class);
+        $this->job_dao              = $this->createMock(JobDao::class);
+        $this->project_job_dao      = $this->createMock(ProjectJobDao::class);
         $this->transaction_executor = new DBTransactionExecutorPassthrough();
 
         $this->creator = new LogCreator(
@@ -72,15 +61,15 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCreatesFullLogForRepository(): void
     {
         $log = new Log(
-            Mockery::mock(GitRepository::class),
+            $this->createMock(GitRepository::class),
             0,
             'https://job_url',
             200
         );
 
-        $this->job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->job_dao->shouldReceive('logTriggeredJobs')->once();
-        $this->job_dao->shouldReceive('logBranchSource')->once();
+        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->job_dao->expects(self::once())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
@@ -88,15 +77,15 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCreatesLogWithTriggeredJobsOnlyForRepository(): void
     {
         $log = new Log(
-            Mockery::mock(GitRepository::class),
+            $this->createMock(GitRepository::class),
             0,
             'https://job_url',
             null
         );
 
-        $this->job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->job_dao->shouldReceive('logTriggeredJobs')->once();
-        $this->job_dao->shouldReceive('logBranchSource')->never();
+        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
@@ -104,15 +93,15 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCreatesLogWithBranchSourceStatusCodeOnlyForRepository(): void
     {
         $log = new Log(
-            Mockery::mock(GitRepository::class),
+            $this->createMock(GitRepository::class),
             0,
             '',
             200
         );
 
-        $this->job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->job_dao->shouldReceive('logTriggeredJobs')->never();
-        $this->job_dao->shouldReceive('logBranchSource')->once();
+        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->job_dao->expects(self::never())->method('logTriggeredJobs');
+        $this->job_dao->expects(self::once())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
@@ -120,7 +109,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesNotCreateAnyLogForRepositoryWhenNothingIsReturned(): void
     {
         $log = new Log(
-            Mockery::mock(GitRepository::class),
+            $this->createMock(GitRepository::class),
             0,
             '',
             null
@@ -128,16 +117,16 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotCreateLogException::class);
 
-        $this->job_dao->shouldReceive('create')->never();
-        $this->job_dao->shouldReceive('logTriggeredJobs')->never();
-        $this->job_dao->shouldReceive('logBranchSource')->never();
+        $this->project_job_dao->expects(self::never())->method('create');
+        $this->project_job_dao->expects(self::never())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
 
     public function testCreatesFullLogForProject(): void
     {
-        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -145,9 +134,9 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project
         );
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getProject')->willReturn($project);
+        $repository->method('getId')->willReturn(1);
 
         $log = new Log(
             $repository,
@@ -156,16 +145,16 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->project_job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->project_job_dao->shouldReceive('logTriggeredJobs')->once();
-        $this->project_job_dao->shouldReceive('logBranchSource')->once();
+        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::once())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }
 
     public function testCreatesLogWithTriggeredJobsOnlyForProject(): void
     {
-        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -173,9 +162,9 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project
         );
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getProject')->willReturn($project);
+        $repository->method('getId')->willReturn(1);
 
         $log = new Log(
             $repository,
@@ -184,16 +173,16 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->project_job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->project_job_dao->shouldReceive('logTriggeredJobs')->once();
-        $this->project_job_dao->shouldReceive('logBranchSource')->never();
+        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }
 
     public function testCreatesLogWithBranchSourceStatusCodeOnlyForProject(): void
     {
-        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -201,9 +190,9 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project
         );
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getProject')->willReturn($project);
+        $repository->method('getId')->willReturn(1);
 
         $log = new Log(
             $repository,
@@ -212,16 +201,16 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->project_job_dao->shouldReceive('create')->once()->andReturn(1);
-        $this->project_job_dao->shouldReceive('logTriggeredJobs')->never();
-        $this->project_job_dao->shouldReceive('logBranchSource')->once();
+        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects(self::never())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::once())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }
 
     public function testDoesNotCreateAnyLogForProjectWhenNothingIsReturned(): void
     {
-        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -229,9 +218,9 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project
         );
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getProject')->willReturn($project);
+        $repository->method('getId')->willReturn(1);
 
         $log = new Log(
             $repository,
@@ -242,16 +231,16 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotCreateLogException::class);
 
-        $this->project_job_dao->shouldReceive('create')->never();
-        $this->project_job_dao->shouldReceive('logTriggeredJobs')->never();
-        $this->project_job_dao->shouldReceive('logBranchSource')->never();
+        $this->project_job_dao->expects(self::never())->method('create');
+        $this->project_job_dao->expects(self::never())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }
 
     public function testDoesNotCreateAnyLogForProjectWhenServerAndLogsAreNotInSameProject(): void
     {
-        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -259,10 +248,10 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project
         );
 
-        $project02  = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(102)->getMock();
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturn($project02);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $project02  = ProjectTestBuilder::aProject()->withId(102)->build();
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getProject')->willReturn($project02);
+        $repository->method('getId')->willReturn(1);
 
         $log = new Log(
             $repository,
@@ -273,9 +262,9 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotCreateLogException::class);
 
-        $this->project_job_dao->shouldReceive('create')->never();
-        $this->project_job_dao->shouldReceive('logTriggeredJobs')->never();
-        $this->project_job_dao->shouldReceive('logBranchSource')->never();
+        $this->project_job_dao->expects(self::never())->method('create');
+        $this->project_job_dao->expects(self::never())->method('logTriggeredJobs');
+        $this->project_job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }

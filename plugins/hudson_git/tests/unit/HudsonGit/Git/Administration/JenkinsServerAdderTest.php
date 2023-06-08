@@ -33,7 +33,7 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private JenkinsServerAdder $adder;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
      */
     private $git_jenkins_administration_server_dao;
 

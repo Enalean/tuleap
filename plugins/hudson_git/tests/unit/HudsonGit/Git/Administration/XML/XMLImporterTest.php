@@ -33,12 +33,12 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private XMLImporter $importer;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
      */
     private $jenkins_server_adder;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     private Project $project;

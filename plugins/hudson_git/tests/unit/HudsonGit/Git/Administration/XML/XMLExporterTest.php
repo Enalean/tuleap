@@ -37,14 +37,14 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private XMLExporter $exporter;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
     private Project $project;
 
     /**
-     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     private EncryptionKey $encryption_key;
