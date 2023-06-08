@@ -31,6 +31,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Layout\Feedback\ISerializeFeedback;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
@@ -46,6 +47,8 @@ use function Psl\Json\decode as psl_json_decode;
 
 final class PostRegistrationController extends DispatchablePSR15Compatible
 {
+    public const URL = '/webauthn/registration';
+
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
         private readonly RetrieveWebAuthnChallenge $challenge_dao,
@@ -57,6 +60,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         private readonly ResponseFactoryInterface $response_factory,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
         private readonly ISerializeFeedback $serialize_feedback,
+        private readonly CSRFSynchronizerTokenInterface $synchronizer_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -85,10 +89,18 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         if (! array_key_exists('name', $request_body)) {
             return $this->error_response_builder->build(400, _('"name" field is missing from the request body'));
         }
-        $response = $request_body['response'];
-        $name     = $request_body['name'];
-        if (! is_array($response) || ! is_string($name) || empty($name)) {
+        if (! array_key_exists('csrf_token', $request_body)) {
+            return $this->error_response_builder->build(400, _('"csrf_token" field is missing from the request body'));
+        }
+        $response   = $request_body['response'];
+        $name       = $request_body['name'];
+        $csrf_token = $request_body['csrf_token'];
+        if (! is_array($response) || ! is_string($name) || empty($name) || ! is_string($csrf_token) || empty($csrf_token)) {
             return $this->error_response_builder->build(400, _('Request body is not well formed'));
+        }
+
+        if (! $this->synchronizer_token->isValid($csrf_token)) {
+            return $this->error_response_builder->build(400, $GLOBALS['Language']->getText('global', 'error_synchronizertoken'));
         }
 
         try {

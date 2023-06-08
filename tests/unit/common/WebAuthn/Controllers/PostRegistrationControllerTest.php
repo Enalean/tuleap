@@ -31,6 +31,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
@@ -53,11 +54,13 @@ final class PostRegistrationControllerTest extends TestCase
 {
     private WebAuthnCredentialSourceDaoStub $source_dao;
     private FeedbackSerializerStub $serializer;
+    private CSRFSynchronizerTokenStub $synchronizer_token_stub;
 
     protected function setUp(): void
     {
-        $this->source_dao = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
-        $this->serializer = FeedbackSerializerStub::buildSelf();
+        $this->source_dao              = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
+        $this->serializer              = FeedbackSerializerStub::buildSelf();
+        $this->synchronizer_token_stub = CSRFSynchronizerTokenStub::buildSelf();
     }
 
     public function testItReturns401WhenNoAuth(): void
@@ -116,6 +119,7 @@ final class PostRegistrationControllerTest extends TestCase
             [
                 'response' => $passkey->generateAttestationResponse($challenge),
                 'name' => $passkey_name,
+                'csrf_token' => 'some token',
             ],
             $challenge_dao
         );
@@ -127,6 +131,8 @@ final class PostRegistrationControllerTest extends TestCase
         $key = array_keys($this->source_dao->sources_name)[0];
         self::assertSame($passkey_name, $this->source_dao->sources_name[$key]);
         self::assertCount(1, $this->serializer->getCapturedFeedbacks());
+        self::assertSame(\Feedback::SUCCESS, $this->serializer->getCapturedFeedbacks()[0]->getLevel());
+        self::assertTrue($this->synchronizer_token_stub->hasBeenChecked());
     }
 
     // Above, tests functions
@@ -176,6 +182,7 @@ final class PostRegistrationControllerTest extends TestCase
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
             $this->serializer,
+            $this->synchronizer_token_stub,
             new NoopSapiEmitter()
         );
     }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AccountPresenter
@@ -35,6 +36,7 @@ final class AccountPresenter
     public function __construct(
         public readonly AccountTabPresenterCollection $tabs,
         public readonly array $authenticators,
+        public readonly CSRFSynchronizerTokenPresenter $csrf_token_add,
     ) {
         $this->has_authenticator        = ! empty($this->authenticators);
         $this->need_more_authenticators = count($this->authenticators) < 2;

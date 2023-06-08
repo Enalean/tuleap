@@ -1344,6 +1344,7 @@ class RouteCollector
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
             new FeedbackSerializer(new \FeedbackDao()),
+            new \CSRFSynchronizerToken(PostRegistrationController::URL),
             new SapiEmitter()
         );
     }

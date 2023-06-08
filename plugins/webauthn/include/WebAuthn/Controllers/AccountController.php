@@ -25,6 +25,7 @@ namespace Tuleap\WebAuthn\Controllers;
 use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeViteAssets;
@@ -65,7 +66,8 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
             array_map(
                 fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $user),
                 $sources
-            )
+            ),
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL))
         );
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));

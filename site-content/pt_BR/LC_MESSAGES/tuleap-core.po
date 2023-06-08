@@ -30,6 +30,9 @@ msgstr ""
 msgid "\"%s\" label already exists. Please choose another one."
 msgstr "O rótulo \"%s\" já existe. Por favor, escolha outro."
 
+msgid "\"csrf_token\" field is missing from the request body"
+msgstr ""
+
 msgid "\"name\" field is missing from the request body"
 msgstr ""
 
