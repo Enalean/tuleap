@@ -46,6 +46,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\CollectRoutesEvent;
@@ -1227,7 +1228,7 @@ class LdapPlugin extends Plugin
         );
     }
 
-    private function getUserRemover()
+    private function getUserRemover(): UserRemover
     {
         return new UserRemover(
             ProjectManager::instance(),
@@ -1236,7 +1237,8 @@ class LdapPlugin extends Plugin
             new UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),
-            new UGroupManager()
+            new UGroupManager(),
+            new UserPermissionsDao(),
         );
     }
 

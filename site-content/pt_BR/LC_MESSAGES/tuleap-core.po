@@ -886,6 +886,11 @@ msgstr "Não é possível remover o usuário do grupo"
 msgid "Cannot remove users from bound groups"
 msgstr "Não é possível remover usuários de grupos vinculados"
 
+msgid ""
+"Cannot switch the project visibility because it will remove every restricted "
+"users from the project, and after that no administrator will be left."
+msgstr ""
+
 msgid "Cannot update the requested dashboard."
 msgstr "Não é possível atualizar o painel solicitado."
 

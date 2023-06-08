@@ -41,6 +41,7 @@ use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -126,6 +127,7 @@ class ProjectDetailsController
         CSRFSynchronizerToken $csrf_token,
         TemplateFactory $template_factory,
         private ProjectIconRetriever $project_icon_retriever,
+        private readonly UpdateVisibilityChecker $update_visibility_checker,
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -507,9 +509,21 @@ class ProjectDetailsController
         if ($this->project_visibility_configuration->canUserConfigureProjectVisibility($user, $project)) {
             if ($project->getAccess() !== $request->get('project_visibility')) {
                 if ($request->get('term_of_service')) {
-                    $this->project_manager->setAccess($project, $request->get('project_visibility'));
-                    $this->project_manager->clear($project->getID());
-                    $this->ugroup_binding->reloadUgroupBindingInProject($project);
+                    $update_visibility_status = $this->update_visibility_checker->canUpdateVisibilityRegardingRestrictedUsers(
+                        $project,
+                        $request->get('project_visibility'),
+                    );
+
+                    if ($update_visibility_status->canSwitch()) {
+                        $this->project_manager->setAccess($project, $request->get('project_visibility'));
+                        $this->project_manager->clear($project->getID());
+                        $this->ugroup_binding->reloadUgroupBindingInProject($project);
+                    } else {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $update_visibility_status->getReason(),
+                        );
+                    }
                 } else {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Please accept term of service"));
                 }

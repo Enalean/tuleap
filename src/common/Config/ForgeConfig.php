@@ -300,7 +300,7 @@ class ForgeConfig
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::ANONYMOUS;
     }
 
-    public static function areRestrictedUsersAllowed()
+    public static function areRestrictedUsersAllowed(): bool
     {
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::RESTRICTED;
     }

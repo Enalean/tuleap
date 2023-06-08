@@ -21,6 +21,7 @@ namespace Tuleap\Project\Admin;
 
 use BaseLanguage;
 use Codendi_HTMLPurifier;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityStatus;
 
 class ProjectVisibilityPresenter
 {
@@ -54,12 +55,13 @@ class ProjectVisibilityPresenter
 
     public function __construct(
         BaseLanguage $language,
-        $platform_allows_restricted,
-        $project_visibility,
+        bool $platform_allows_restricted,
+        UpdateVisibilityStatus $private_without_restricted_visibility_switch_status,
+        string $project_visibility,
         int $number_of_restricted_users_in_project,
         ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
     ) {
-        $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
+        $this->platform_allows_restricted       = $platform_allows_restricted;
         $this->restricted_warning_message       = $language->getText(
             'project_admin_editgroupinfo',
             'restricted_warning'
@@ -76,10 +78,12 @@ class ProjectVisibilityPresenter
         $this->project_visibility_label = _('Project visibility');
         $this->accept_tos_message       = _("Please accept term of service");
 
-        $this->options                               = $project_visibility_options_generator->generateVisibilityOptions(
+        $this->options = $project_visibility_options_generator->generateVisibilityOptions(
             $this->platform_allows_restricted,
+            $private_without_restricted_visibility_switch_status,
             $project_visibility
         );
+
         $this->number_of_restricted_users_in_project = $number_of_restricted_users_in_project;
     }
 }

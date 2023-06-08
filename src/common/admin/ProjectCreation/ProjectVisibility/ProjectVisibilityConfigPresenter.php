@@ -23,6 +23,7 @@ namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 use ForgeConfig;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityStatus;
 
 class ProjectVisibilityConfigPresenter
 {
@@ -63,6 +64,7 @@ class ProjectVisibilityConfigPresenter
         $this->send_mail_on_project_visibility_change = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE);
         $this->default_project_visibility_options     = $project_visibility_options_generator->generateVisibilityOptions(
             ForgeConfig::areRestrictedUsersAllowed(),
+            UpdateVisibilityStatus::buildStatusSwitchIsAllowed(),
             $current_default_project_visibility_retriever
         );
     }

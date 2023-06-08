@@ -5,7 +5,11 @@
     </label>
     <select class="tlp-select" name="project_visibility" id="project_visibility" data-test="project_visibility">
         {{# options }}
-            <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+            <option value="{{ value }}"
+                {{# disabled }} disabled {{/ disabled }}
+                {{# title }} title="{{ . }}" {{/ title }}
+                {{ selected }}
+            >{{ label }}</option>
         {{/ options }}
     </select>
 </div>

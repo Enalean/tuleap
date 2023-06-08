@@ -24,6 +24,8 @@ use ProjectManager;
 use EventManager;
 use ArtifactTypeFactory;
 use Feedback;
+use Tuleap\Project\Admin\ForceRemovalOfRestrictedAdministrator;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectAdminHistoryEntry;
 use UserManager;
 use ProjectHistoryDao;
 use Project;
@@ -74,6 +76,7 @@ class UserRemover
         UserManager $user_manager,
         ProjectHistoryDao $project_history_dao,
         UGroupManager $ugroup_manager,
+        private readonly UserPermissionsDao $user_permissions_dao,
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
@@ -84,11 +87,36 @@ class UserRemover
         $this->ugroup_manager      = $ugroup_manager;
     }
 
+    public function forceRemoveAdminRestrictedUserFromProject(Project $project, \PFUser $removed_user): void
+    {
+        if (! $removed_user->isRestricted()) {
+            return;
+        }
+
+        $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $removed_user->getId());
+        $this->project_history_dao->addHistory(
+            $project,
+            $this->user_manager->getUserAnonymous(),
+            new \DateTimeImmutable(),
+            ProjectAdminHistoryEntry::Remove->value,
+            $removed_user->getUserName() . " (" . $removed_user->getId() . ")",
+        );
+
+        $this->event_manager->dispatch(
+            new ForceRemovalOfRestrictedAdministrator($project, $removed_user),
+        );
+
+        $this->removeUserFromProject(
+            $project->getID(),
+            $removed_user->getID(),
+        );
+    }
+
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
     {
         $project = $this->getProject($project_id);
 
-        if (! $this->dao->removeUserFromProject($project_id, $user_id)) {
+        if (! $this->dao->removeNonAdminUserFromProject($project_id, $user_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('project_admin_index', 'user_not_removed')

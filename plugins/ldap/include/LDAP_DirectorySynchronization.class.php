@@ -26,6 +26,7 @@ require_once 'LDAP.class.php';
 require_once 'LDAP_UserManager.class.php';
 require_once 'LDAP_SyncNotificationManager.class.php';
 
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\User\PasswordVerifier;
@@ -219,7 +220,7 @@ class LDAP_DirectorySynchronization
         return EventManager::instance();
     }
 
-    private function getUserRemover()
+    private function getUserRemover(): UserRemover
     {
         return new UserRemover(
             ProjectManager::instance(),
@@ -228,7 +229,8 @@ class LDAP_DirectorySynchronization
             new UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),
-            new UGroupManager()
+            new UGroupManager(),
+            new UserPermissionsDao(),
         );
     }
 }

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
@@ -488,7 +489,8 @@ class SystemEventManager
                         new UserRemoverDao(),
                         $user_manager,
                         new ProjectHistoryDao(),
-                        new UGroupManager()
+                        new UGroupManager(),
+                        new UserPermissionsDao(),
                     ),
                 ];
                 break;
@@ -532,7 +534,8 @@ class SystemEventManager
                         new UserRemoverDao(),
                         UserManager::instance(),
                         new ProjectHistoryDao(),
-                        $ugroup_manager
+                        $ugroup_manager,
+                        new UserPermissionsDao(),
                     ),
                     $ugroup_manager,
                 ];

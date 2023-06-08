@@ -21,16 +21,19 @@
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\Admin\ForceRemovalOfRestrictedAdministrator;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityIsAllowedEvent;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\ProjectOwnership\ProjectAdmin\CannotRemoveProjectOwnerFromTheProjectAdministratorsException;
 use Tuleap\ProjectOwnership\ProjectAdmin\IndexController;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
+use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRemover;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerUpdater;
 use Tuleap\ProjectOwnership\ProjectOwner\UserWithStarBadgeFinder;
@@ -210,6 +213,29 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     {
         return new ProjectOwnershipSystemEventManager(
             SystemEventManager::instance()
+        );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function updateVisibilityIsAllowedEvent(UpdateVisibilityIsAllowedEvent $event): void
+    {
+        $update_status = (new Tuleap\ProjectOwnership\ProjectAdmin\UpdateVisibilityChecker(
+            new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance()),
+        ))->canUpdateVisibilityRegardingRestrictedUsers($event->getProject());
+
+        $event->setUpdateVisibilityStatus($update_status);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function forceRemovalOfRestrictedAdministrator(ForceRemovalOfRestrictedAdministrator $event): void
+    {
+        (new ProjectOwnerRemover(
+            new ProjectOwnerDAO(),
+            new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance()),
+            BackendLogger::getDefaultLogger(),
+        ))->forceRemovalOfRestrictedProjectOwner(
+            $event->project,
+            $event->user,
         );
     }
 }

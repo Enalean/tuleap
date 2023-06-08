@@ -26,6 +26,7 @@ namespace phpunit\common\Project\ProjectDetails;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
+use ForgeAccess;
 use ForgeConfig;
 use HTTPRequest;
 use Mockery;
@@ -39,9 +40,11 @@ use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsController;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
@@ -115,7 +118,8 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trove_cat_link_dao,
             $this->csrf_token,
             Mockery::mock(TemplateFactory::class),
-            new ProjectIconRetriever()
+            new ProjectIconRetriever(),
+            new UpdateVisibilityChecker($this->event_manager),
         );
 
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
@@ -195,6 +199,54 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_visibility_configuration->shouldReceive('canUserConfigureProjectVisibility')->once(
         )->andReturnFalse();
         $this->project_visibility_configuration->shouldReceive('canUserConfigureTruncatedMail')->once()->andReturnFalse(
+        );
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::INFO, _('Update successful')]);
+
+        $this->controller->update($request);
+    }
+
+    public function testVisibilityUpdateIsNotValidWhenNotMatchingRestrictedUsersConstraints(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
+        $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn('decription');
+        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("");
+        $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
+        $request->shouldReceive('get')->withArgs(['project_visibility'])->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+        $request->shouldReceive('get')->withArgs(['term_of_service'])->andReturn(true);
+        $current_user = $this->createMock(PFUser::class);
+        $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn($current_user);
+        $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
+
+        $project = $this->createMock(Project::class);
+        $project->method('getAdmins')->willReturn([
+            UserTestBuilder::aRestrictedUser()->build(),
+        ]);
+        $project->method('getAccess')->willReturn(Project::ACCESS_PUBLIC);
+        $project->method('getID')->willReturn(101);
+        $current_user->method('isAdmin')->with(101)->willReturn(true);
+        $request->shouldReceive('getProject')->twice()->andReturn($project);
+
+        $this->description_fields_factory->shouldReceive('getAllDescriptionFields')->twice()->andReturn([]);
+
+        $this->current_project->shouldReceive('getProjectsDescFieldsValue')->once()->andReturn([]);
+
+        $this->project_details_dao->shouldReceive('updateGroupNameAndDescription')->once();
+        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
+        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->project_visibility_configuration->shouldReceive('canUserConfigureProjectVisibility')->once(
+        )->andReturnTrue();
+        $this->project_visibility_configuration->shouldReceive('canUserConfigureTruncatedMail')->once()->andReturnFalse(
+        );
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs(
+            [Feedback::ERROR, _('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.')]
         );
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::INFO, _('Update successful')]);

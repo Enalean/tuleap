@@ -44,6 +44,7 @@ use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -193,7 +194,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 new UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
-                new UGroupManager()
+                new UGroupManager(),
+                new UserPermissionsDao(),
             ),
             ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
             $project_creator,

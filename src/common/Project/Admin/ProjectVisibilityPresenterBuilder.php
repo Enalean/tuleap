@@ -26,7 +26,9 @@ namespace Tuleap\Project\Admin;
 
 use ForgeConfig;
 use HTTPRequest;
+use Project;
 use ProjectTruncatedEmailsPresenter;
+use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
 use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectVisibilityPresenterBuilder
@@ -54,6 +56,7 @@ class ProjectVisibilityPresenterBuilder
         ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
         RestrictedUsersProjectCounter $restricted_users_project_counter,
         ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
+        private readonly UpdateVisibilityChecker $update_visibility_checker,
     ) {
         $this->project_visibility_configuration     = $project_visibility_configuration;
         $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;
@@ -68,6 +71,10 @@ class ProjectVisibilityPresenterBuilder
         $visibility_presenter = new ProjectVisibilityPresenter(
             $GLOBALS['Language'],
             ForgeConfig::areRestrictedUsersAllowed(),
+            $this->update_visibility_checker->canUpdateVisibilityRegardingRestrictedUsers(
+                $project,
+                Project::ACCESS_PRIVATE_WO_RESTRICTED,
+            ),
             $project->getAccess(),
             $this->restricted_users_project_counter->getNumberOfRestrictedUsersInProject($project),
             $this->project_visibility_options_generator

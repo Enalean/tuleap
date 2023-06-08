@@ -64,7 +64,8 @@ $project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
     $project_visibility_configuration,
     $service_truncated_mails_retriever,
     new RestrictedUsersProjectCounter(new UserDao()),
-    new \Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator()
+    new \Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator(),
+    new \Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker($event_manager),
 );
 
 $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
@@ -84,7 +85,8 @@ $project_details_controller = new ProjectDetailsController(
     $trove_cat_link_dao,
     $csrf_token,
     TemplateFactory::build(),
-    $project_icons_retriever
+    $project_icons_retriever,
+    new \Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker($event_manager),
 );
 
 $project_details_router = new ProjectDetailsRouter(

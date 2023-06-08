@@ -43,7 +43,7 @@ final class SwitchToPresenterBuilder
 
         return new SwitchToPresenter(
             $this->project_presenters_builder->getProjectPresenters($user),
-            (bool) \ForgeConfig::areRestrictedUsersAllowed(),
+            \ForgeConfig::areRestrictedUsersAllowed(),
             (bool) \ForgeConfig::get('sys_use_trove'),
             $user->isAlive() && ! $user->isRestricted(),
             $this->search_form_presenter_builder->build(),

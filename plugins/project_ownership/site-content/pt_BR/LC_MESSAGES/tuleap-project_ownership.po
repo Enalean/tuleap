@@ -9,6 +9,11 @@ msgstr ""
 msgid "Adds project owner role"
 msgstr ""
 
+msgid ""
+"Cannot switch the project visibility because it will remove the project "
+"owner which is restricted."
+msgstr ""
+
 msgid "Current project owner:"
 msgstr ""
 

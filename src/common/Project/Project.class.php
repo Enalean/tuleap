@@ -517,9 +517,9 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     }
 
     /**
-     * @return array of User admin of the project
+     * @return PFUser[] of User admin of the project
      */
-    public function getAdmins(?UGroupManager $ugm = null)
+    public function getAdmins(?UGroupManager $ugm = null): array
     {
         if (is_null($ugm)) {
             $ugm = $this->getUGroupManager();
