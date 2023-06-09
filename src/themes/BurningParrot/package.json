@@ -9,6 +9,7 @@
     "@tuleap/cross-ref-badges": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "dragula": "^3.7.2"
