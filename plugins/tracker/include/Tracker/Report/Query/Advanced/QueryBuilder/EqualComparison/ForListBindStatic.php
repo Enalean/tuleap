@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
-use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
@@ -28,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFie
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWhereBuilder
 {
@@ -38,7 +37,7 @@ final class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFr
     ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -51,33 +50,24 @@ final class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFr
         return $this->getFromWhereForNonEmptyCondition($query_presenter, $value);
     }
 
-    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value): IProvideFromAndWhereSQLFragments
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value): IProvideParametrizedFromAndWhereSQLFragments
     {
         $condition = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.id
-            AND $query_presenter->list_value_alias.label = " . $this->quoteSmart($value);
+            AND $query_presenter->list_value_alias.label = ?";
 
         $query_presenter->setCondition($condition);
+        $query_presenter->setParameters([$value]);
 
         return $this->comparison_builder->getFromWhere($query_presenter);
     }
 
-    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $condition = "($query_presenter->changeset_value_alias.changeset_id IS NULL OR $query_presenter->changeset_value_list_alias.bindvalue_id =" .
-            $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE) . ")";
+        $condition = "($query_presenter->changeset_value_alias.changeset_id IS NULL OR $query_presenter->changeset_value_list_alias.bindvalue_id = ?)";
 
         $query_presenter->setCondition($condition);
+        $query_presenter->setParameters([Tracker_FormElement_Field_List::NONE_VALUE]);
 
         return $this->empty_comparison_builder->getFromWhere($query_presenter);
-    }
-
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
-    }
-
-    private function quoteSmart($value)
-    {
-        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 }

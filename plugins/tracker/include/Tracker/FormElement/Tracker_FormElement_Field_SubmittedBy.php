@@ -19,8 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
@@ -39,13 +42,13 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return true;
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
-        // SubmittedOn is stored in the artifact
-        return '';
+        // SubmittedBy is stored in the artifact
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if criteria is valuated
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
@@ -56,13 +59,18 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
                 array_merge([100], array_keys($this->getBind()->getAllValues()))
             ));
             if (count($ids_to_search) > 1) {
-                return " artifact.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
+                $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $ids_to_search);
+                return Option::fromValue(
+                    new ParametrizedSQLFragment("artifact.submitted_by IN($in)", $in->values())
+                );
             } else {
-                $id_to_search = isset($ids_to_search[0]) ? $ids_to_search[0] : null;
-                return " artifact.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($id_to_search) . " ";
+                $id_to_search = $ids_to_search[0] ?? null;
+                return Option::fromValue(
+                    new ParametrizedSQLFragment("artifact.submitted_by = ?", [$id_to_search])
+                );
             }
         }
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

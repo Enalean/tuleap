@@ -30,9 +30,12 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -107,12 +110,14 @@ class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCa
             {
             }
 
-            public function getCriteriaFrom($criteria)
+            public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
             {
+                return Option::nothing(ParametrizedFrom::class);
             }
 
-            public function getCriteriaWhere($criteria)
+            public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
             {
+                return Option::nothing(ParametrizedSQLFragment::class);
             }
 
             protected function getCriteriaDao()

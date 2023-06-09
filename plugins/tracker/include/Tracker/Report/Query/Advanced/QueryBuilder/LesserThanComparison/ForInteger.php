@@ -19,12 +19,11 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparison;
 
-use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForInteger implements FieldFromWhereBuilder
 {
@@ -32,7 +31,7 @@ final class ForInteger implements FieldFromWhereBuilder
     {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
@@ -42,19 +41,15 @@ final class ForInteger implements FieldFromWhereBuilder
         $changeset_value_int_alias = "CVInt_{$field_id}_{$suffix}";
         $changeset_value_alias     = "CV_{$field_id}_{$suffix}";
 
-        $condition = "$changeset_value_int_alias.value < " . $this->escapeInt($value);
+        $condition = "$changeset_value_int_alias.value < ?";
 
         return $this->from_where_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_int_alias,
             'tracker_changeset_value_int',
-            $condition
+            $condition,
+            [$value],
         );
-    }
-
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
     }
 }

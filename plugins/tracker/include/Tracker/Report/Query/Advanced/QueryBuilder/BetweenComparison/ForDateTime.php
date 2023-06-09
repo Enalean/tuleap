@@ -19,23 +19,17 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class ForDateTime implements DateTimeConditionBuilder
 {
-    /**
-     * @var DateTimeValueRounder
-     */
-    private $date_time_value_rounder;
-
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    public function __construct(private readonly DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getCondition($value, $changeset_value_date_alias)
+    public function getCondition($value, string $changeset_value_date_alias): ParametrizedSQLFragment
     {
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
@@ -43,17 +37,10 @@ final class ForDateTime implements DateTimeConditionBuilder
         $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($min_value);
         $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($max_value);
 
-        $min_value_floored_timestamp = $this->escapeInt($min_value_floored_timestamp);
-        $max_value_ceiled_timestamp  = $this->escapeInt($max_value_ceiled_timestamp);
-
-        $condition = "$changeset_value_date_alias.value >= $min_value_floored_timestamp
-            AND $changeset_value_date_alias.value <= $max_value_ceiled_timestamp";
-
-        return $condition;
-    }
-
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment(
+            "$changeset_value_date_alias.value >= ?
+                AND $changeset_value_date_alias.value <= ?",
+            [$min_value_floored_timestamp, $max_value_ceiled_timestamp]
+        );
     }
 }

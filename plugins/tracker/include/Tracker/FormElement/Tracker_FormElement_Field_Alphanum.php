@@ -18,7 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
@@ -26,9 +28,12 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field
 {
-    protected function buildMatchExpression($field_name, $criteria_value)
+    /**
+     * @return Option<ParametrizedSQLFragment>
+     */
+    protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
-        $expr    = '';
+        $expr    = Option::nothing(ParametrizedSQLFragment::class);
         $matches = [];
         // If it is sourrounded by /.../ then assume a regexp
         if (preg_match('#(!?)/(.*)/#', $criteria_value, $matches)) {
@@ -38,18 +43,14 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
             if ($matches[1]) {
                 $not = ' NOT';
             }
-            $expr = $field_name . $not . " RLIKE " . $this->quote($matches[2]);
+            return Option::fromValue(
+                new ParametrizedSQLFragment(
+                    $field_name . $not . ' RLIKE ?',
+                    [$matches[2]]
+                )
+            );
         }
         return $expr;
-    }
-
-    protected function quote($string)
-    {
-        $criteria_dao = $this->getCriteriaDao();
-        if ($criteria_dao === null) {
-            return '';
-        }
-        return $criteria_dao->getDa()->quoteSmart($string);
     }
 
     public function fetchCriteriaValue($criteria)

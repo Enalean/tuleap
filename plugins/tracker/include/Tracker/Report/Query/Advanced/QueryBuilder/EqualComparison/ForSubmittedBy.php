@@ -19,8 +19,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListReadOnlyConditionBuilder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UserManager;
 
 final class ForSubmittedBy implements ListReadOnlyConditionBuilder
@@ -36,21 +36,16 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
         $this->user_manager = $user_manager;
     }
 
-    public function getCondition(array $values)
+    public function getCondition(array $values): ParametrizedSQLFragment
     {
         $value = $values[0];
         if ($value === '') {
-            $condition = "0";
-        } else {
-            $user      = $this->user_manager->getUserByUserName($value);
-            $condition = "artifact.submitted_by = " . $this->escapeInt($user->getId());
+            return new ParametrizedSQLFragment("0", []);
         }
 
-        return $condition;
-    }
+        $user      = $this->user_manager->getUserByUserName($value);
+        $condition = "artifact.submitted_by = ?";
 
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment($condition, [$user->getId()]);
     }
 }

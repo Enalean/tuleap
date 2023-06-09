@@ -34,7 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array{min_value: string | int | float, max_value: string | int | float}>
@@ -47,7 +47,7 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
     ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix   = spl_object_hash($comparison);
         $value    = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
@@ -63,7 +63,8 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
             $changeset_value_alias,
             $changeset_value_date_alias,
             'tracker_changeset_value_date',
-            $condition
+            $condition->sql,
+            $condition->parameters
         );
     }
 

@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query;
 
 use ParagonIE\EasyDB\EasyStatement;
 
-final class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
+final class ParametrizedAndFromWhere extends ParametrizedBase
 {
     public function __construct(
         private readonly IProvideParametrizedFromAndWhereSQLFragments $left,
@@ -31,7 +31,7 @@ final class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhere
 
     public function getWhere(): string|EasyStatement
     {
-        return $this->left->getWhere() . ' AND ' . $this->right->getWhere();
+        return '(' . $this->left->getWhere() . ') AND (' . $this->right->getWhere() . ')';
     }
 
     /**

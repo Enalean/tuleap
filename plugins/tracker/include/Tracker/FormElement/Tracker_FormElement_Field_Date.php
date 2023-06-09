@@ -19,10 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -264,12 +267,13 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->getDao()->delete($this->id);
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
+            $criteria_value = $this->getCriteriaValue($criteria);
             //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            if ($criteria_value) {
                 $a                 = 'A_' . $this->id;
                 $b                 = 'B_' . $this->id;
                 $compare_date_stmt = $this->getSQLCompareDate(
@@ -279,16 +283,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     $criteria_value['to_date'],
                     $b . '.value'
                 );
-                return " INNER JOIN tracker_changeset_value AS $a
-                         ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
-                         INNER JOIN tracker_changeset_value_date AS $b
-                         ON ($a.id = $b.changeset_value_id
-                             AND $compare_date_stmt
-                         ) ";
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a
+                             ON ($a.changeset_id = c.id AND $a.field_id = ? )
+                             INNER JOIN tracker_changeset_value_date AS $b
+                             ON ($a.id = $b.changeset_value_id
+                                 AND $compare_date_stmt->sql
+                             ) ",
+                        [
+                            $this->id,
+                            ...$compare_date_stmt->parameters,
+                        ]
+                    )
+                );
             }
         }
 
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
      /**
@@ -362,15 +374,13 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      * @param int    $from        The $from date used for comparison (only for advanced mode)
      * @param int    $to          The $to date used for comparison
      * @param string $column      The column to look into. ex: "A_234.value" | "c.submitted_on" ...
-     *
-     * @return string sql statement
      */
-    protected function getSQLCompareDate($is_advanced, $op, $from, $to, $column)
+    protected function getSQLCompareDate($is_advanced, $op, $from, $to, $column): ParametrizedSQLFragment
     {
         return $this->getSQLCompareDay($is_advanced, $op, $from, $to, $column);
     }
 
-    private function getSQLCompareDay($is_advanced, $op, $from, $to, $column)
+    private function getSQLCompareDay($is_advanced, $op, $from, $to, $column): ParametrizedSQLFragment
     {
         $seconds_in_a_day = DateHelper::SECONDS_IN_A_DAY;
 
@@ -379,38 +389,28 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 $to = $_SERVER['REQUEST_TIME'];
             }
             if (empty($from)) {
-                $to               = $this->getDao()->getDa()->escapeInt($to);
-                $and_compare_date = "$column <=  $to + $seconds_in_a_day - 1 ";
-            } else {
-                $from             = $this->getDao()->getDa()->escapeInt($from);
-                $to               = $this->getDao()->getDa()->escapeInt($to);
-                $and_compare_date = "$column BETWEEN $from
-                                             AND $to + $seconds_in_a_day - 1";
+                return new ParametrizedSQLFragment(
+                    "$column <= ?",
+                    [$to + $seconds_in_a_day - 1]
+                );
             }
-        } else {
-            switch ($op) {
-                case '<':
-                    $to               = $this->getDao()->getDa()->escapeInt($to);
-                    $and_compare_date = "$column < $to";
-                    break;
-                case '=':
-                    $to               = $this->getDao()->getDa()->escapeInt($to);
-                    $and_compare_date = "$column BETWEEN $to
-                                                 AND $to + $seconds_in_a_day - 1";
-                    break;
-                default:
-                    $to               = $this->getDao()->getDa()->escapeInt($to);
-                    $and_compare_date = "$column > $to + $seconds_in_a_day - 1";
-                    break;
-            }
+
+            return new ParametrizedSQLFragment(
+                "$column BETWEEN ? AND ?",
+                [$from, $to + $seconds_in_a_day - 1]
+            );
         }
 
-        return $and_compare_date;
+        return match ($op) {
+            '<' => new ParametrizedSQLFragment("$column < ?", [$to]),
+            '=' => new ParametrizedSQLFragment("$column BETWEEN ? AND ?", [$to, $to + $seconds_in_a_day - 1]),
+            default => new ParametrizedSQLFragment("$column > ?", [$to + $seconds_in_a_day - 1]),
+        };
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

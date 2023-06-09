@@ -28,37 +28,42 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentTrackerCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 /**
- * @template-implements ParentConditionVisitor<ArtifactLinkFromWhereBuilderParameters, string>
+ * @template-implements ParentConditionVisitor<ArtifactLinkFromWhereBuilderParameters, ParametrizedSQLFragment>
  */
 final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
 {
-    private const INVALID_ARTIFACT_ID = '-1';
+    private const INVALID_ARTIFACT_ID = -1;
 
     public function __construct(private readonly RetrieveViewableArtifact $artifact_factory)
     {
     }
 
-    public function getFromWhereForWithParent(WithParent $term, \PFUser $user): IProvideFromAndWhereSQLFragments
+    public function getFromWhereForWithParent(WithParent $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $from  = '';
-        $where = '(' . $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user) . ') = 1';
+        $fragment = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user);
 
-        return new FromWhere($from, $where);
+        $from  = '';
+        $where = '(' . $fragment->sql . ') = 1';
+
+        return new ParametrizedFromWhere($from, $where, [], $fragment->parameters);
     }
 
-    public function getFromWhereForWithoutParent(WithoutParent $term, \PFUser $user): IProvideFromAndWhereSQLFragments
+    public function getFromWhereForWithoutParent(WithoutParent $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $from  = '';
-        $where = '(' . $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user) . ') IS NULL';
+        $fragment = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user);
 
-        return new FromWhere($from, $where);
+        $from  = '';
+        $where = '(' . $fragment->sql . ') IS NULL';
+
+        return new ParametrizedFromWhere($from, $where, [], $fragment->parameters);
     }
 
-    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneParent(WithParent|WithoutParent $term, \PFUser $user): string
+    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneParent(WithParent|WithoutParent $term, \PFUser $user): ParametrizedSQLFragment
     {
         $suffix = spl_object_hash($term);
 
@@ -66,7 +71,8 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
             return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix));
         }
 
-        return "SELECT 1
+        return new ParametrizedSQLFragment(
+            "SELECT 1
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
@@ -75,7 +81,9 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
                     ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
             WHERE TCVAL_$suffix.artifact_id = artifact.id
                 AND TCVAL_$suffix.nature = '_is_child'
-            LIMIT 1";
+            LIMIT 1",
+            [],
+        );
     }
 
     public function visitParentArtifactCondition(ParentArtifactCondition $condition, $parameters)
@@ -84,9 +92,8 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
 
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($parameters->user, $condition->artifact_id);
 
-        $artifact_id = (int) ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID);
-
-        return "SELECT 1
+        return new ParametrizedSQLFragment(
+            "SELECT 1
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
@@ -94,20 +101,23 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
                 INNER JOIN tracker_artifact AS TCA_$suffix
                     ON (
                         TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id AND
-                        TCA_$suffix.id = $artifact_id
+                        TCA_$suffix.id = ?
                     )
             WHERE TCVAL_$suffix.artifact_id = artifact.id
                 AND TCVAL_$suffix.nature = '_is_child'
-            LIMIT 1";
+            LIMIT 1",
+            [
+                ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
+            ]
+        );
     }
 
     public function visitParentTrackerCondition(ParentTrackerCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 
-        $tracker_name = \CodendiDataAccess::instance()->quoteSmart($condition->tracker_name);
-
-        return "SELECT 1
+        return new ParametrizedSQLFragment(
+            "SELECT 1
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
@@ -116,10 +126,14 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
                     ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
                 INNER JOIN tracker AS T_$suffix
                     ON (T_$suffix.id = TCA_$suffix.tracker_id AND
-                        T_$suffix.item_name = $tracker_name
+                        T_$suffix.item_name = ?
                     )
             WHERE TCVAL_$suffix.artifact_id = artifact.id
                 AND TCVAL_$suffix.nature = '_is_child'
-            LIMIT 1";
+            LIMIT 1",
+            [
+                $condition->tracker_name,
+            ],
+        );
     }
 }

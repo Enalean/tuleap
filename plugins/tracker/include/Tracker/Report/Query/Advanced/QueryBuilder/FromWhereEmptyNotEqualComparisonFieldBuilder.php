@@ -19,12 +19,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class FromWhereEmptyNotEqualComparisonFieldBuilder
 {
-    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
             tracker_changeset_value AS $query_presenter->changeset_value_alias
@@ -36,6 +36,6 @@ final class FromWhereEmptyNotEqualComparisonFieldBuilder
 
         $where = "$query_presenter->changeset_value_alias.changeset_id IS NOT NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [...$query_presenter->parameters, $query_presenter->field_id], []);
     }
 }

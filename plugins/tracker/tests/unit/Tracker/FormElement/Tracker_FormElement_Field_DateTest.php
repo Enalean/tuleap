@@ -641,10 +641,10 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $field = $this->getDateField();
-        $sql   = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
-        $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column BETWEEN $from AND $to + 86400 - 1", $sql);
+        $field    = $this->getDateField();
+        $fragment = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
+        $this->assertEquals("my_date_column BETWEEN ? AND ?", $fragment->sql);
+        $this->assertEquals([$from, $to + 86400 - 1], $fragment->parameters);
     }
 
     public function testItReturnsTheCorrectCriteriaForBeforeIncludingTheToDay(): void
@@ -658,9 +658,9 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $sql = $method->invokeArgs($field, [$is_advanced, "=", null, $to, $column]);
-        $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column <= $to + 86400 - 1", $sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, "=", null, $to, $column]);
+        $this->assertEquals("my_date_column <= ?", $fragment->sql);
+        $this->assertEquals([$to + 86400 - 1], $fragment->parameters);
     }
 
     public function testItReturnsTheCorrectCriteriaForEquals(): void
@@ -675,9 +675,9 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $sql = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
-        $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column BETWEEN $to AND $to + 86400 - 1", $sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
+        $this->assertEquals("my_date_column BETWEEN ? AND ?", $fragment->sql);
+        $this->assertEquals([$to, $to + 86400 - 1], $fragment->parameters);
     }
 
     public function testItReturnsTheCorrectCriteriaForBefore(): void
@@ -692,9 +692,9 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $sql = $method->invokeArgs($field, [$is_advanced, "<", $from, $to, $column]);
-        $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column < $to", $sql);
+        $fragment = $method->invokeArgs($field, [$is_advanced, "<", $from, $to, $column]);
+        $this->assertEquals("my_date_column < ?", $fragment->sql);
+        $this->assertEquals([$to], $fragment->parameters);
     }
 
     public function testItReturnsTheCorrectCriteriaForAfter(): void
@@ -709,18 +709,9 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
-        $sql = $method->invokeArgs($field, [$is_advanced, ">", $from, $to, $column]);
-        $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column > $to + 86400 - 1", $sql);
-    }
-
-    private function makeStringCheckable(&$string)
-    {
-        $string = str_replace(PHP_EOL, ' ', trim($string));
-
-        while (strstr($string, '  ')) {
-            $string = str_replace('  ', ' ', $string);
-        }
+        $fragment = $method->invokeArgs($field, [$is_advanced, ">", $from, $to, $column]);
+        $this->assertEquals("my_date_column > ?", $fragment->sql);
+        $this->assertEquals([$to + 86400 - 1], $fragment->parameters);
     }
 
     public function testItAddsAnEqualsCrterion(): void

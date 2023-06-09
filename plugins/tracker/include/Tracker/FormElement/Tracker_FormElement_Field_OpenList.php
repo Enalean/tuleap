@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -28,6 +29,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List implements BindVisitor
@@ -589,16 +592,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return new Tracker_Report_Criteria_OpenList_ValueDao();
     }
 
-    /**
-     * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve
-     * the last changeset of all artifacts.
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
@@ -618,28 +612,42 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             if ($openvalues || $bindvalues) {
                 $a         = 'A_' . $this->id;
                 $b         = 'B_' . $this->id;
-                $statement = '';
+                $statement = new ParametrizedSQLFragment('1', []);
                 if ($openvalues) {
-                    $statement .= "$b.openvalue_id IN (" . $this->getCriteriaDao()->getDa()->escapeIntImplode($openvalues) . ")";
+                    $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $openvalues);
+                    $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in))", $in->values());
                 }
                 if ($bindvalues) {
-                    if ($statement) {
-                        $statement .= ' OR ';
-                    }
-                    $statement .= "$b.bindvalue_id IN (" . $this->getCriteriaDao()->getDa()->escapeIntImplode($bindvalues) . ")";
+                    $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $bindvalues);
+                    $statement = new ParametrizedSQLFragment(
+                        $statement->sql . ' OR ' . "$b.bindvalue_id IN ($in)",
+                        [
+                            ...$statement->parameters,
+                            ...$in->values(),
+                        ]
+                    );
                 }
-                return " INNER JOIN tracker_changeset_value AS $a
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id
-                             AND $a.field_id = " . $this->id . "
+                             AND $a.field_id = ?
                          )
                          INNER JOIN tracker_changeset_value_openlist AS $b ON (
                             $b.changeset_value_id = $a.id
-                            AND ($statement)
+                            AND ($statement->sql)
                          )
-                         ";
+                         ",
+                        [
+                            $this->id,
+                            ...$statement->parameters,
+                        ]
+                    )
+                );
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     protected function formatCriteriaValue($value_to_match)
@@ -667,20 +675,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public function getQueryFromWithDecorator()
     {
         return $this->getBind()->getQueryFromWithDecorator('tracker_changeset_value_openlist');
-    }
-
-    /**
-     * Get the "where" statement to allow search with this field
-     *
-     * @see getCriteriaFrom
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaWhere($criteria)
-    {
-        return ''; //$this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
     }
 
     /**

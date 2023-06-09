@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison;
 
-use CodendiDataAccess;
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
 {
@@ -37,24 +37,21 @@ final class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFrom
     ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
         $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
-        $escaped_values = $this->quoteSmartImplode($values);
-        $condition      = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.user_id
-            AND $query_presenter->list_value_alias.user_name IN($escaped_values)";
+        $in = EasyStatement::open()->in('?*', $values);
+
+        $condition = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.user_id
+            AND $query_presenter->list_value_alias.user_name IN($in)";
 
         $query_presenter->setCondition($condition);
         $query_presenter->setListValueTable('user');
+        $query_presenter->setParameters($in->values());
 
         return $this->from_where_builder->getFromWhere($query_presenter);
-    }
-
-    private function quoteSmartImplode($values): string
-    {
-        return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
     }
 }

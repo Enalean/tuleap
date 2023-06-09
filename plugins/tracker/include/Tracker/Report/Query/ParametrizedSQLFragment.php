@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query;
 
 use ParagonIE\EasyDB\EasyStatement;
 
-interface IProvideParametrizedFromAndWhereSQLFragments
+final class ParametrizedSQLFragment
 {
-    /**
-     * @return ParametrizedFrom[]
-     */
-    public function getAllParametrizedFrom(): array;
-
-    public function getFrom(): string;
-
-    public function getWhere(): string|EasyStatement;
-
-    public function getWhereParameters(): array;
-
-    public function getFromParameters(): array;
+    public function __construct(public readonly string|EasyStatement $sql, public readonly array $parameters)
+    {
+    }
 }

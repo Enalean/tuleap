@@ -21,6 +21,7 @@
 
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
@@ -46,6 +47,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 #[ConfigKeyCategory('Tracker')]
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -311,16 +314,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $link_ids;
     }
 
-    /**
-     * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve
-     * the last changeset of all artifacts.
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
@@ -328,14 +322,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $a = 'A_' . $this->id;
                 $b = 'B_' . $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+
+                $match_expression = $this->buildMatchExpression("$b.artifact_id", $criteria_value);
+
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
                          INNER JOIN tracker_changeset_value_artifactlink AS $b ON (
                             $b.changeset_value_id = $a.id
-                            AND " . $this->buildMatchExpression("$b.artifact_id", $criteria_value) . "
-                         ) ";
+                            AND " . $match_expression->sql . "
+                         ) ",
+                        [
+                            $this->id,
+                            ...$match_expression->parameters,
+                        ]
+                    )
+                );
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     /**
@@ -347,47 +353,38 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return (int) $value;
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value)
+    private function buildMatchExpression(string $field_name, string $criteria_value): ParametrizedSQLFragment
     {
-        $expr    = '';
         $matches = [];
         if (preg_match('/\/(.*)\//', $criteria_value, $matches)) {
             // If it is sourrounded by /.../ then assume a regexp
-            $expr = $field_name . " RLIKE " . $this->getCriteriaDao()->da->quoteSmart($matches[1]);
+            return new ParametrizedSQLFragment($field_name . " RLIKE ?", [$matches[1]]);
         }
-        if (! $expr) {
-            $matches = [];
-            if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)\$/", $criteria_value, $matches)) {
-                // It's < or >,  = and a number then use as is
-                $matches[2] = (string) ($this->cast($matches[2]));
-                $expr       = $field_name . ' ' . $matches[1] . ' ' . $matches[2];
-            } elseif (preg_match("/^($this->pattern)\$/", $criteria_value, $matches)) {
-                // It's a number so use  equality
-                $matches[1] = $this->cast($matches[1]);
-                $expr       = $field_name . ' = ' . $matches[1];
-            } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)\$/", $criteria_value, $matches)) {
-                // it's a range number1-number2
-                $matches[1] = (string) ($this->cast($matches[1]));
-                $matches[2] = (string) ($this->cast($matches[2]));
-                $expr       = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
-            } else {
-                // Invalid syntax - no condition
-                $expr = '1';
-            }
+
+        $matches = [];
+        if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)\$/", $criteria_value, $matches)) {
+            // It's < or >,  = and a number then use as is
+            $number = (string) ($this->cast($matches[2]));
+            return new ParametrizedSQLFragment($field_name . ' ' . $matches[1] . ' ?', [$number]);
+        } elseif (preg_match("/^($this->pattern)\$/", $criteria_value, $matches)) {
+            // It's a number so use  equality
+            $number = $this->cast($matches[1]);
+            return new ParametrizedSQLFragment($field_name . ' = ?', [$number]);
+        } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)\$/", $criteria_value, $matches)) {
+            // it's a range number1-number2
+            $min  = (string) ($this->cast($matches[1]));
+            $max  = (string) ($this->cast($matches[2]));
+            $expr = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
+            return new ParametrizedSQLFragment($field_name . ' >= ? AND ' . $field_name . ' <= ?', [$min, $max]);
+        } else {
+            // Invalid syntax - no condition
+            return new ParametrizedSQLFragment('1', []);
         }
-        return $expr;
     }
 
-    /**
-     * Get the "where" statement to allow search with this field
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

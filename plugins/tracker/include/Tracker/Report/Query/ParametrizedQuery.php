@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query;
 
-interface IProvideFromAndWhereSQLFragments
+final class ParametrizedQuery
 {
-    /**
-     * @return string[]
-     */
-    public function getFromAsArray();
+    public function __construct(
+        private readonly string $select,
+        private readonly IProvideParametrizedFromAndWhereSQLFragments $from_where,
+    ) {
+    }
 
-    /**
-     * @return string
-     */
-    public function getFromAsString();
+    public function getQuery(): string
+    {
+        return $this->select .
+            ' FROM ' . $this->from_where->getFrom() .
+            ' WHERE ' . $this->from_where->getWhere();
+    }
 
-    /**
-     * @return string
-     */
-    public function getWhere();
+    public function getParameters(): array
+    {
+        return array_merge(
+            $this->from_where->getFromParameters(),
+            $this->from_where->getWhereParameters(),
+        );
+    }
 }

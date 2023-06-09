@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -27,6 +28,8 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -394,16 +397,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
-   /**
-    * Get the "from" statement to allow search with this field
-    * You can join on 'c' which is a pseudo table used to retrieve
-    * the last changeset of all artifacts.
-    *
-    * @param Tracker_Report_Criteria $criteria
-    *
-    * @return string
-    */
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
@@ -411,25 +405,28 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
                 $a    = 'A_' . $this->id;
                 $b    = 'B_' . $this->id;
-                 $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = " . $this->id . ")
+                 $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
                           INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
                             $b.use_artifact_permissions = 0) ";
-                return $sql;
+
+                 return Option::fromValue(new ParametrizedFrom($sql, [$this->id]));
             } elseif ($criteria_value) {
                 $a = 'A_' . $this->id;
                 $b = 'B_' . $this->id;
                 $c = 'C_' . $this->id;
 
-                $ugroup_ids = CodendiDataAccess::instance()->escapeIntImplode(array_keys($criteria_value));
+                $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', array_keys($criteria_value));
 
-                $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = " . $this->id . ")
+                $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
                          INNER JOIN tracker_changeset_value_permissionsonartifact AS $b ON ($b.changeset_value_id = $a.id
-                            AND $b.ugroup_id IN ($ugroup_ids)
+                            AND $b.ugroup_id IN ($in)
                       )";
-                return $sql;
+
+                return Option::fromValue(new ParametrizedFrom($sql, [$this->id, ...$in->values()]));
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     /**
@@ -494,9 +491,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return;
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function fetchCriteriaValue($criteria)

@@ -19,16 +19,16 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
-use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class ForFile implements FieldFromWhereBuilder
 {
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
@@ -40,20 +40,24 @@ final class ForFile implements FieldFromWhereBuilder
         $fileinfo_alias             = "fileinfo_{$field_id}_{$suffix}";
 
         if ($value === '') {
-            return new FromWhere(
+            return new ParametrizedFromWhere(
                 " LEFT JOIN (
                     tracker_changeset_value AS $changeset_value_alias
                     INNER JOIN tracker_changeset_value_file AS $changeset_value_file_alias
                      ON ($changeset_value_file_alias.changeset_value_id = $changeset_value_alias.id
                      )
-                 ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)",
-                "$changeset_value_alias.changeset_id IS NULL"
+                 ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = ?)",
+                "$changeset_value_alias.changeset_id IS NULL",
+                [
+                    $field_id,
+                ],
+                []
             );
         }
 
         $value = $this->quoteLikeValueSurround($value);
 
-        return new FromWhere(
+        return new ParametrizedFromWhere(
             " LEFT JOIN (
                     tracker_changeset_value AS $changeset_value_alias
                     INNER JOIN tracker_changeset_value_file AS $changeset_value_file_alias
@@ -65,17 +69,23 @@ final class ForFile implements FieldFromWhereBuilder
                         ON (
                             $changeset_value_file_alias.fileinfo_id = $fileinfo_alias.id
                             AND (
-                                $fileinfo_alias.description LIKE $value
-                                OR $fileinfo_alias.filename LIKE $value
+                                $fileinfo_alias.description LIKE ?
+                                OR $fileinfo_alias.filename LIKE ?
                             )
                         )
-                 ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)",
-            "$changeset_value_alias.changeset_id IS NOT NULL"
+                 ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = ?)",
+            "$changeset_value_alias.changeset_id IS NOT NULL",
+            [
+                $value,
+                $value,
+                $field_id,
+            ],
+            []
         );
     }
 
     private function quoteLikeValueSurround($value)
     {
-        return CodendiDataAccess::instance()->quoteLikeValueSurround($value);
+        return '%' . DBFactory::getMainTuleapDBConnection()->getDB()->escapeLikeValue($value) . '%';
     }
 }

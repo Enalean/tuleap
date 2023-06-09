@@ -19,33 +19,21 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
 {
-    /**
-     * @var DateTimeValueRounder
-     */
-    private $date_time_value_rounder;
-
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    public function __construct(private readonly DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getCondition($value)
+    public function getCondition($value): ParametrizedSQLFragment
     {
         $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
-        $ceiled_timestamp = $this->escapeInt($ceiled_timestamp);
-        $condition        = "artifact.submitted_on > $ceiled_timestamp";
+        $condition        = "artifact.submitted_on > ?";
 
-        return $condition;
-    }
-
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment($condition, [$ceiled_timestamp]);
     }
 }

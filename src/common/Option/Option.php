@@ -75,6 +75,20 @@ final class Option
     }
 
     /**
+     * @psalm-param callable(Value): void $fn
+     * @psalm-param callable(): void $nothing_fn
+     */
+    public function match(callable $fn, callable $nothing_fn): void
+    {
+        if (! $this->has_value) {
+            $nothing_fn();
+            return;
+        }
+
+        $fn($this->value);
+    }
+
+    /**
      * @template T
      * @psalm-param callable(Value): T $fn
      * @psalm-param T $default

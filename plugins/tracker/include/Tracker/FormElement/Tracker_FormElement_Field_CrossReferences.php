@@ -27,6 +27,7 @@ use Tuleap\Forum\MessageRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\News\NewsDao;
 use Tuleap\News\NewsRetriever;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
@@ -43,6 +44,8 @@ use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -56,23 +59,26 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     public $default_properties = [];
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
+            $criteria_value = $this->getCriteriaValue($criteria);
             //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
-                $a              = 'A_' . $this->id;
-                return " INNER JOIN cross_references AS $a
-                         ON (artifact.id = $a.source_id AND $a.source_type = '" . Artifact::REFERENCE_NATURE . "' AND $a.target_id = $criteria_value
+            if ($criteria_value) {
+                $a = 'A_' . $this->id;
+                return Option::fromValue(new ParametrizedFrom(
+                    " INNER JOIN cross_references AS $a
+                         ON (artifact.id = $a.source_id AND $a.source_type = ? AND $a.target_id = ?
                              OR
-                             artifact.id = $a.target_id AND $a.target_type = '" . Artifact::REFERENCE_NATURE . "' AND $a.source_id = $criteria_value
-                         )
-                ";
+                             artifact.id = $a.target_id AND $a.target_type = ? AND $a.source_id = ?
+                         )",
+                    [Artifact::REFERENCE_NATURE, $criteria_value, Artifact::REFERENCE_NATURE, $criteria_value],
+                ));
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
@@ -134,9 +140,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $list;
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

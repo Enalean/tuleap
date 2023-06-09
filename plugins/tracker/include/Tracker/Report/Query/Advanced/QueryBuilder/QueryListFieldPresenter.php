@@ -19,20 +19,23 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
 final class QueryListFieldPresenter
 {
-    public $field_id;
-    public $tracker_id;
-    public $changeset_value_list_alias;
-    public $changeset_value_alias;
-    public $list_value_alias;
-    public $filter_alias;
-    public $tracker_changeset_value_table;
-    public $list_value_table;
-    public $condition;
+    public int $field_id;
+    public int $tracker_id;
+    public string $changeset_value_list_alias;
+    public string $changeset_value_alias;
+    public string $list_value_alias;
+    public string $bind_value_alias;
+    public string $filter_alias;
+    public string $tracker_changeset_value_table;
+    public string $list_value_table;
+    public string|EasyStatement $condition;
+    public array $parameters;
 
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {
@@ -52,12 +55,17 @@ final class QueryListFieldPresenter
         $this->condition = '';
     }
 
-    public function setCondition($condition)
+    public function setCondition(string|EasyStatement $condition): void
     {
         $this->condition = $condition;
     }
 
-    public function setListValueTable($list_value_table)
+    public function setParameters(array $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
+
+    public function setListValueTable(string $list_value_table): void
     {
         $this->list_value_table = $list_value_table;
     }

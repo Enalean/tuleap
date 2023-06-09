@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -147,27 +149,39 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return ['AVG', 'COUNT', 'COUNT_GRBY', 'MAX', 'MIN', 'STD', 'SUM'];
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value)
+    protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
-        if (! $expr) {
+        if ($expr->isNothing()) {
             $matches = [];
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
-                $matches[2] = (string) ($this->cast($matches[2]));
-                $expr       = $field_name . ' ' . $matches[1] . ' ' . $matches[2];
+                $value = $this->cast($matches[2]);
+                $expr  = Option::fromValue(
+                    new ParametrizedSQLFragment(
+                        $field_name . ' ' . $matches[1] . ' ?',
+                        [$value]
+                    )
+                );
             } elseif (preg_match("/^($this->pattern)$/", $criteria_value, $matches)) {
                 // It's a number so use  equality
-                $matches[1] = $this->cast($matches[1]);
-                $expr       = $field_name . ' = ' . $matches[1];
+                $value = $this->cast($matches[1]);
+                $expr  = Option::fromValue(
+                    new ParametrizedSQLFragment(
+                        $field_name . ' = ?',
+                        [$value]
+                    )
+                );
             } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // it's a range number1-number2
-                $matches[1] = (string) ($this->cast($matches[1]));
-                $matches[2] = (string) ($this->cast($matches[2]));
-                $expr       = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
-            } else {
-                // Invalid syntax - no condition
-                $expr = '1';
+                $min  = $this->cast($matches[1]);
+                $max  = $this->cast($matches[2]);
+                $expr = Option::fromValue(
+                    new ParametrizedSQLFragment(
+                        $field_name . ' >= ? AND ' . $field_name . ' <= ?',
+                        [$min, $max],
+                    )
+                );
             }
         }
         return $expr;

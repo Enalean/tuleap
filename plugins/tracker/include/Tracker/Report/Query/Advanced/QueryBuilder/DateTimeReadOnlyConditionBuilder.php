@@ -19,7 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+
 interface DateTimeReadOnlyConditionBuilder
 {
-    public function getCondition($value);
+    public function getCondition($value): ParametrizedSQLFragment;
 }

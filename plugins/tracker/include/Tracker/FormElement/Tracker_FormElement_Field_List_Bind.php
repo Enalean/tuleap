@@ -19,11 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
 
 /**
@@ -252,72 +255,97 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      * @param array $criteria_value array of criteria_value (which are array)
-     * @return string
+     * @return Option<ParametrizedFrom>
      */
-    public function getCriteriaFrom($criteria_value)
+    public function getCriteriaFrom($criteria_value): Option
     {
         if (! $this->getField()->isUsed()) {
-            return '';
+            return Option::nothing(ParametrizedFrom::class);
         }
+
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_' . $this->field->id;
             $b = 'B_' . $this->field->id;
             if ($this->isSearchingNone($criteria_value)) {
-                return " LEFT JOIN (
-                    tracker_changeset_value AS $a
-                    INNER JOIN tracker_changeset_value_list AS $b ON (
-                        $b.changeset_value_id = $a.id
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " LEFT JOIN (
+                            tracker_changeset_value AS $a
+                            INNER JOIN tracker_changeset_value_list AS $b ON (
+                                $b.changeset_value_id = $a.id
+                            )
+                        ) ON ($a.changeset_id = c.id
+                            AND $a.field_id = ?
+                        )",
+                        [$this->field->id]
                     )
-                ) ON ($a.changeset_id = c.id
-                    AND $a.field_id = " . $this->field->id . "
-                )";
+                );
             }
 
-            return " INNER JOIN tracker_changeset_value AS $a
-                     ON ($a.changeset_id = c.id
-                         AND $a.field_id = " . $this->field->id . "
-                     )
-                     INNER JOIN tracker_changeset_value_list AS $b ON (
-                        $b.changeset_value_id = $a.id
-                     ) ";
+            return Option::fromValue(
+                new ParametrizedFrom(
+                    " INNER JOIN tracker_changeset_value AS $a
+                             ON ($a.changeset_id = c.id
+                                 AND $a.field_id = ?
+                             )
+                             INNER JOIN tracker_changeset_value_list AS $b ON (
+                                $b.changeset_value_id = $a.id
+                             ) ",
+                    [$this->field->id]
+                )
+            );
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     /**
      * Get the "where" statement to allow search with this field
+     *
      * @param array $criteria_value array of id => criteria_value (which are array)
-     * @return string
+     *
+     * @return Option<ParametrizedSQLFragment>
      * @see getCriteriaFrom
      */
-    public function getCriteriaWhere($criteria_value)
+    public function getCriteriaWhere($criteria_value): Option
     {
         if (! $this->getField()->isUsed()) {
-            return '';
+            return Option::nothing(ParametrizedSQLFragment::class);
         }
+
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_' . $this->field->id;
             $b = 'B_' . $this->field->id;
 
-            $data_access = CodendiDataAccess::instance();
-
             if ($this->isSearchingNone($criteria_value)) {
-                $values_id = $data_access->escapeIntImplode(array_values($criteria_value));
+                $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', array_values($criteria_value));
 
-                return " $b.bindvalue_id IN (" . $values_id . ") OR $b.bindvalue_id IS NULL ";
+                return Option::fromValue(
+                    new ParametrizedSQLFragment(
+                        "$b.bindvalue_id IN ($in) OR $b.bindvalue_id IS NULL",
+                        $in->values(),
+                    )
+                );
             }
 
-            $ids_to_search = $data_access->escapeIntImplode($this->getIdsToSearch($criteria_value));
-
+            $ids_to_search = $this->getIdsToSearch($criteria_value);
             if ($ids_to_search === '') {
-                return '';
+                return Option::nothing(ParametrizedSQLFragment::class);
             }
 
-            return " $b.bindvalue_id IN(" . $ids_to_search . ") ";
+            $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $ids_to_search);
+
+            return Option::fromValue(
+                new ParametrizedSQLFragment(
+                    "$b.bindvalue_id IN ($in)",
+                    $in->values(),
+                )
+            );
         }
-        return '';
+
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     protected function getIdsToSearch($criteria_value)

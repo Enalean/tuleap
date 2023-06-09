@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\DB\DataAccessObject;
 
 final class CrossTrackerExpertQueryReportDao extends DataAccessObject
@@ -33,9 +32,7 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $limit,
         $offset,
     ) {
-        $unique_parametrized_from = array_unique($from_where->getAllParametrizedFrom());
-
-        $from  = $this->getFrom($unique_parametrized_from);
+        $from  = $from_where->getFrom();
         $where = $from_where->getWhere();
 
         $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
@@ -68,36 +65,12 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
                 ORDER BY tracker_artifact.id DESC
                 LIMIT ?, ?";
 
-        $parameters   = $this->getFromParameters($unique_parametrized_from);
+        $parameters   = $from_where->getFromParameters();
         $parameters   = array_merge($parameters, $tracker_ids_statement->values());
         $parameters   = array_merge($parameters, $from_where->getWhereParameters());
         $parameters[] = $offset;
         $parameters[] = $limit;
 
         return $this->getDB()->safeQuery($sql, $parameters);
-    }
-
-    private function getFrom(array $unique_parametrized_from)
-    {
-        return implode(
-            '',
-            array_map(
-                function (ParametrizedFrom $parametrized_from) {
-                    return $parametrized_from->getFrom();
-                },
-                $unique_parametrized_from
-            )
-        );
-    }
-
-    private function getFromParameters($unique_parametrized_from)
-    {
-        return array_reduce(
-            $unique_parametrized_from,
-            function (array $carry, ParametrizedFrom $parametrized_from) {
-                return array_merge($carry, $parametrized_from->getParameters());
-            },
-            []
-        );
     }
 }

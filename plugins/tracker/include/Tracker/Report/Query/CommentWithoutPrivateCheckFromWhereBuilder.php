@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query;
 
-use CodendiDataAccess;
-
 final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {
-    public function getFromWhereWithComment(string $value, string $suffix): FromWhere
+    public function getFromWhereWithComment(string $value, string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $value = $this->quoteSmart($value);
+        $value = $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value);
         $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
 
         $from = " LEFT JOIN (
@@ -37,17 +35,17 @@ final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhe
                      ON (
                         TCC_$suffix.id = TCCF_$suffix.comment_id
                         AND TCC_$suffix.parent_id = 0
-                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
+                        AND match(TCCF_$suffix.stripped_body) against (? IN BOOLEAN MODE)
                      )
                      INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
                  ) ON TC_$suffix.artifact_id = artifact.id";
 
         $where = "TCC_$suffix.changeset_id IS NOT NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [$value], []);
     }
 
-    public function getFromWhereWithoutComment(string $suffix): FromWhere
+    public function getFromWhereWithoutComment(string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
                     tracker_changeset AS TC_$suffix
@@ -59,14 +57,7 @@ final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhe
 
         $where = "TCCF_$suffix.comment_id IS NULL";
 
-        return new FromWhere($from, $where);
-    }
-
-    private function quoteSmart(string $value): string
-    {
-        return $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(
-            CodendiDataAccess::instance()->quoteSmart($value)
-        );
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 
     private function removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(string $value): string
@@ -76,6 +67,6 @@ final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhe
 
     private function surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching(string $value): string
     {
-        return '\'"' . $value . '"\'';
+        return '"' . $value . '"';
     }
 }

@@ -19,40 +19,31 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class ForDateTime implements DateTimeConditionBuilder
 {
-    /**
-     * @var DateTimeValueRounder
-     */
-    private $date_time_value_rounder;
-
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    public function __construct(private readonly DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getCondition($value, $changeset_value_date_alias)
+    public function getCondition($value, string $changeset_value_date_alias): ParametrizedSQLFragment
     {
         if ($value === '') {
-            $condition = "$changeset_value_date_alias.value IS NULL";
-        } else {
-            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
-
-            $floored_timestamp = $this->escapeInt($floored_timestamp);
-            $ceiled_timestamp  = $this->escapeInt($ceiled_timestamp);
-            $condition         = "$changeset_value_date_alias.value BETWEEN $floored_timestamp AND $ceiled_timestamp";
+            return new ParametrizedSQLFragment(
+                "$changeset_value_date_alias.value IS NULL",
+                []
+            );
         }
 
-        return $condition;
-    }
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
 
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment(
+            "$changeset_value_date_alias.value BETWEEN ? AND ?",
+            [$floored_timestamp, $ceiled_timestamp]
+        );
     }
 }

@@ -19,39 +19,26 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
 {
-    /**
-     * @var DateTimeValueRounder
-     */
-    private $date_time_value_rounder;
-
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    public function __construct(private readonly DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getCondition($value)
+    public function getCondition($value): ParametrizedSQLFragment
     {
         if ($value === '') {
-            $condition = "1";
-        } else {
-            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
-            $floored_timestamp = $this->escapeInt($floored_timestamp);
-            $ceiled_timestamp  = $this->escapeInt($ceiled_timestamp);
-            $condition         = "c.submitted_on NOT BETWEEN $floored_timestamp AND $ceiled_timestamp";
+            return new ParametrizedSQLFragment("1", []);
         }
 
-        return $condition;
-    }
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $condition         = "c.submitted_on NOT BETWEEN ? AND ?";
 
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment($condition, [$floored_timestamp, $ceiled_timestamp]);
     }
 }
