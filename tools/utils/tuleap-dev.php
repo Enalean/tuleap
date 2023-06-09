@@ -25,13 +25,11 @@ declare(strict_types=1);
 use Symfony\Component\Console\Application;
 
 require_once __DIR__ . '/../../src/vendor/autoload.php';
-require_once __DIR__ . '/TuleapDev/GerritSetupCommand.php';
-require_once __DIR__ . '/TuleapDev/RegisterIPCommand.php';
-require_once __DIR__ . '/TuleapDev/AddLDAPUserCommand.php';
 
 $application = new Application();
-$application->add(new TuleapDev\GerritSetupCommand());
-$application->add(new TuleapDev\RegisterIPCommand());
-$application->add(new TuleapDev\AddLDAPUserCommand());
+$application->add(new TuleapDev\TuleapDev\GerritSetupCommand());
+$application->add(new TuleapDev\TuleapDev\RegisterIPCommand());
+$application->add(new TuleapDev\TuleapDev\AddLDAPUserCommand());
+$application->add(new TuleapDev\TuleapDev\ModLdapUserCommand());
 
 $application->run();
