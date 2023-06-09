@@ -1,0 +1,34 @@
+{
+  "author": "Enelean Team",
+  "name": "@tuleap/webauthn",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "dist/webauthn.js",
+  "main": "dist/webauthn.umd.cjs",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/webauthn.js",
+      "require": "./dist/webauthn.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@simplewebauthn/browser": "^7.2.0",
+    "@simplewebauthn/typescript-types": "^7.0.0",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/option": "workspace:*",
+    "neverthrow": "^6.0.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

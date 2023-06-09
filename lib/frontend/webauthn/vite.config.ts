@@ -16,11 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Fault } from "@tuleap/fault";
 
-export const RegistrationFault = {
-    fromError: (error: unknown): Fault =>
-        error instanceof Error
-            ? Fault.fromError(error)
-            : Fault.fromMessage("Failed to register passkey"),
-};
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
+import pkg from "./package.json";
+
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "WebAuthn",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
+        },
+    },
+});

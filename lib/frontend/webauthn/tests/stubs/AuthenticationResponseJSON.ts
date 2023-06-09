@@ -16,11 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Fault } from "@tuleap/fault";
+import type { AuthenticationResponseJSON } from "@simplewebauthn/typescript-types";
 
-export const RegistrationFault = {
-    fromError: (error: unknown): Fault =>
-        error instanceof Error
-            ? Fault.fromError(error)
-            : Fault.fromMessage("Failed to register passkey"),
-};
+export function authenticationResponseJSONStub(): AuthenticationResponseJSON {
+    return {
+        id: "id",
+        rawId: "rawId",
+        response: {
+            clientDataJSON: "clientDataJSON",
+            authenticatorData: "authenticatorData",
+            signature: "signature",
+        },
+        clientExtensionResults: {},
+        type: "public-key",
+    };
+}

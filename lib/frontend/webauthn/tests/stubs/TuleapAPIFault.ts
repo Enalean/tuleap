@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,11 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { Fault } from "@tuleap/fault";
 
-export const RegistrationFault = {
-    fromError: (error: unknown): Fault =>
-        error instanceof Error
-            ? Fault.fromError(error)
-            : Fault.fromMessage("Failed to register passkey"),
+export const TuleapAPIFault = {
+    fromCodeAndMessage(status_code: number, message: string): Fault {
+        return {
+            isTuleapAPIFault: () => true,
+            isForbidden: () => status_code === 403,
+            isNotFound: () => status_code === 404,
+            ...Fault.fromMessage(message),
+        };
+    },
 };

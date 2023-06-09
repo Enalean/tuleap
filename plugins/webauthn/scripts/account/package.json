@@ -13,6 +13,7 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/webauthn": "workspace:*",
     "neverthrow": "^6.0.0"
   },
   "devDependencies": {
