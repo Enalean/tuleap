@@ -37,6 +37,7 @@ final class AccountPresenter
         public readonly AccountTabPresenterCollection $tabs,
         public readonly array $authenticators,
         public readonly CSRFSynchronizerTokenPresenter $csrf_token_add,
+        public readonly CSRFSynchronizerTokenPresenter $csrf_token_del,
     ) {
         $this->has_authenticator        = ! empty($this->authenticators);
         $this->need_more_authenticators = count($this->authenticators) < 2;

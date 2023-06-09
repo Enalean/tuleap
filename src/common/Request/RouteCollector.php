@@ -1410,6 +1410,7 @@ class RouteCollector
             new RestlerErrorResponseBuilder($json_response_builder),
             $response_factory,
             new FeedbackSerializer(new \FeedbackDao()),
+            new \CSRFSynchronizerToken(DeleteSourceController::URL),
             new SapiEmitter()
         );
     }
@@ -1609,7 +1610,7 @@ class RouteCollector
             $r->post('/authentication-challenge', [self::class, 'postWebAuthnAuthenticationChallenge']);
             $r->post('/authentication', [self::class, 'postWebAuthnAuthentication']);
 
-            $r->delete('/key/{key_id}', [self::class, 'deleteWebAuthnSource']);
+            $r->post('/key/delete', [self::class, 'deleteWebAuthnSource']);
         });
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');

@@ -145,6 +145,11 @@ function prepareAuthentication(gettext_provider: GetText): void {
 function prepareRemove(): void {
     const form_remove_modal = selectOrThrow(document, "#webauthn-remove-modal");
     const key_id_input = selectOrThrow(document, "#webauthn-key-id-input", HTMLInputElement);
+    const csrf_modal_input = selectOrThrow(
+        form_remove_modal,
+        "input[name=challenge]",
+        HTMLInputElement
+    );
     const error = selectOrThrow(form_remove_modal, "#webauthn-remove-error");
     const remove_button = selectOrThrow(
         form_remove_modal,
@@ -175,11 +180,12 @@ function prepareRemove(): void {
         event.preventDefault();
 
         const key_id = key_id_input.value;
+        const csrf_token = csrf_modal_input.value;
 
         remove_button_icon.classList.remove(HIDDEN);
         remove_button.disabled = true;
 
-        deleteKey(key_id).match(
+        deleteKey(key_id, csrf_token).match(
             () => location.reload(),
             (fault) => {
                 remove_button_icon.classList.add(HIDDEN);

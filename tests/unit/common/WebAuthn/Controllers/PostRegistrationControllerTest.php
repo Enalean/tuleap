@@ -203,40 +203,66 @@ final class PostRegistrationControllerTest extends TestCase
                 'response' => ['some data'],
             ],
         ];
+        yield 'It returns 400 when missing csrf_token' => [
+            'body' => [
+                'response' => ['some data'],
+                'name' => 'a name',
+            ],
+        ];
         yield 'It returns 400 when response is not array' => [
             'body' => [
                 'response' => 'not an array',
                 'name' => 'name of passkey',
+                'csrf_token' => 'a token',
             ],
         ];
         yield 'It returns 400 when name is not string' => [
             'body' => [
                 'response' => [],
                 'name' => -1,
+                'csrf_token' => 'a token',
+            ],
+        ];
+        yield 'It returns 400 when csrf_token is not string' => [
+            'body' => [
+                'response' => [],
+                'name' => 'name of passkey',
+                'csrf_token' => -1,
             ],
         ];
         yield 'It returns 400 when name is empty' => [
             'body' => [
                 'response' => [],
                 'name' => '',
+                'csrf_token' => 'a token',
+            ],
+        ];
+        yield 'It returns 400 when csrf_token is empty' => [
+            'body' => [
+                'response' => [],
+                'name' => 'name of passkey',
+                'csrf_token' => '',
             ],
         ];
         yield 'It returns 400 when invalid response' => [
             'body' => [
                 'response' => ['invalid data'],
                 'name' => 'name of passkey',
+                'csrf_token' => 'some token',
             ],
         ];
         yield 'It returns 400 when response is assertion' => [
             'body' => [
                 'response' => (new PasskeyStub())->generateAssertionResponse('challenge'),
                 'name' => 'name of passkey',
+                'csrf_token' => 'some token',
             ],
         ];
         yield 'It returns 400 when there is not stored challenge' => [
             'body' => [
                 'response' => (new PasskeyStub())->generateAttestationResponse('challenge'),
                 'name' => 'name of passkey',
+                'csrf_token' => 'some token',
             ],
         ];
     }

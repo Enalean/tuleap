@@ -67,7 +67,8 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
                 fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $user),
                 $sources
             ),
-            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL))
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL)),
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(DeleteSourceController::URL))
         );
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));
