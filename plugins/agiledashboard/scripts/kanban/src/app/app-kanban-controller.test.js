@@ -111,6 +111,7 @@ describe("KanbanCtrl", function () {
         jest.spyOn(DroppedService, "moveToColumn").mockReturnValue($q.when());
         jest.spyOn(ColumnCollectionService, "getColumn").mockImplementation(() => {});
         jest.spyOn(SocketService, "listenNodeJSServer").mockReturnValue($q.defer().promise);
+        jest.spyOn(SocketService, "open").mockImplementation(() => {});
 
         $scope = $rootScope.$new();
 
