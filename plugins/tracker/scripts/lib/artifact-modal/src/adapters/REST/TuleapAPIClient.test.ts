@@ -506,7 +506,7 @@ describe(`TuleapAPIClient`, () => {
         });
     });
 
-    describe(`getProjectTrackers()`, () => {
+    describe(`getTrackersByProject()`, () => {
         const PROJECT_ID = 113,
             FIRST_TRACKER_ID = 200,
             SECOND_TRACKER_ID = 161,
@@ -548,7 +548,7 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_project.color_name).toBe(FIRST_TRACKER_COLOR);
             expect(second_returned_project.label).toBe(SECOND_TRACKER_LABEL);
             expect(second_returned_project.color_name).toBe(SECOND_TRACKER_COLOR);
-            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects/113/trackers`, {
+            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects/${PROJECT_ID}/trackers`, {
                 params: {
                     limit: 50,
                     representation: "minimal",

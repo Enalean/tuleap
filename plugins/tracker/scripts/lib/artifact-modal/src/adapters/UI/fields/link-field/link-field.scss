@@ -107,6 +107,7 @@ $link-type-width: 150px;
 }
 
 .link-field-row-type {
+    flex-shrink: 0;
     width: $link-type-width;
     text-align: right;
 }

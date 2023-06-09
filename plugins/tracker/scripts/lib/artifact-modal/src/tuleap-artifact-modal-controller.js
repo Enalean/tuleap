@@ -202,7 +202,13 @@ function ArtifactModalController(
             );
         },
         getArtifactCreatorController() {
-            return ArtifactCreatorController(event_dispatcher, api_client, api_client, user_locale);
+            return ArtifactCreatorController(
+                event_dispatcher,
+                api_client,
+                api_client,
+                project_identifier,
+                user_locale
+            );
         },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id], event_dispatcher);

@@ -28,16 +28,18 @@ import type { Tracker } from "../../../Tracker";
 import { ProjectsRetrievalFault } from "./ProjectsRetrievalFault";
 import type { RetrieveProjectTrackers } from "./RetrieveProjectTrackers";
 import { ProjectTrackersRetrievalFault } from "./ProjectTrackersRetrievalFault";
-import type { ProjectIdentifier } from "../../../ProjectIdentifier";
+import { ProjectIdentifier } from "../../../ProjectIdentifier";
+import type { CurrentProjectIdentifier } from "../../../CurrentProjectIdentifier";
 
 type OnFaultHandler = (fault: Fault) => void;
 
 export type ArtifactCreatorController = {
     registerFaultListener(handler: OnFaultHandler): void;
     getProjects(): PromiseLike<readonly Project[]>;
-    getTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
+    selectProjectAndGetItsTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
     disableSubmit(reason: string): void;
     enableSubmit(): void;
+    getSelectedProject(): ProjectIdentifier;
     getUserLocale(): string;
 };
 
@@ -45,13 +47,18 @@ export const ArtifactCreatorController = (
     event_dispatcher: DispatchEvents,
     projects_retriever: RetrieveProjects,
     project_trackers_retriever: RetrieveProjectTrackers,
+    current_project_identifier: CurrentProjectIdentifier,
     user_locale: string
 ): ArtifactCreatorController => {
     let _handler: Option<OnFaultHandler> = Option.nothing();
+    let selected_project: ProjectIdentifier = ProjectIdentifier.fromCurrentProject(
+        current_project_identifier
+    );
 
     return {
-        getTrackers(project_id): PromiseLike<readonly Tracker[]> {
-            return project_trackers_retriever.getTrackersByProject(project_id).match(
+        selectProjectAndGetItsTrackers(project_id): PromiseLike<readonly Tracker[]> {
+            selected_project = project_id;
+            return project_trackers_retriever.getTrackersByProject(selected_project).match(
                 (trackers) => trackers,
                 (fault) => {
                     _handler.apply((handler) => handler(ProjectTrackersRetrievalFault(fault)));
@@ -81,8 +88,8 @@ export const ArtifactCreatorController = (
             event_dispatcher.dispatch(WillEnableSubmit());
         },
 
-        getUserLocale(): string {
-            return user_locale;
-        },
+        getSelectedProject: () => selected_project,
+
+        getUserLocale: () => user_locale,
     };
 };

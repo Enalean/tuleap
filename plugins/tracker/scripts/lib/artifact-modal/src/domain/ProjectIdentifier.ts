@@ -18,5 +18,15 @@
  */
 
 import type { Identifier } from "./Identifier";
+import type { CurrentProjectIdentifier } from "./CurrentProjectIdentifier";
 
 export type ProjectIdentifier = Identifier<"ProjectIdentifier">;
+
+export const ProjectIdentifier = {
+    fromCurrentProject: (
+        current_project_identifier: CurrentProjectIdentifier
+    ): ProjectIdentifier => ({
+        id: current_project_identifier.id,
+        _type: "ProjectIdentifier",
+    }),
+};

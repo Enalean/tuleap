@@ -26,14 +26,16 @@ import type { Tracker } from "../../../Tracker";
 import { RetrieveProjectsStub } from "../../../../../tests/stubs/RetrieveProjectsStub";
 import { RetrieveProjectTrackersStub } from "../../../../../tests/stubs/RetrieveProjectTrackersStub";
 import type { RetrieveProjectTrackers } from "./RetrieveProjectTrackers";
-import type { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { ProjectIdentifierStub } from "../../../../../tests/stubs/ProjectIdentifierStub";
+import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
+import type { ProjectIdentifier } from "../../../ProjectIdentifier";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 
 describe(`ArtifactCreatorController`, () => {
+    const CURRENT_PROJECT_ID = 101;
     let event_dispatcher: DispatchEventsStub,
         projects_retriever: RetrieveProjects,
-        tracker_retriever: RetrieveProjectTrackers,
-        project_id: ProjectIdentifier;
+        tracker_retriever: RetrieveProjectTrackers;
 
     beforeEach(() => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
@@ -54,17 +56,39 @@ describe(`ArtifactCreatorController`, () => {
             cannot_create_reason: "",
         };
         tracker_retriever = RetrieveProjectTrackersStub.withTrackers(first_tracker, second_tracker);
-
-        project_id = ProjectIdentifierStub.withId(102);
     });
+
     const getController = (): ArtifactCreatorController =>
-        ArtifactCreatorController(event_dispatcher, projects_retriever, tracker_retriever, "en_US");
+        ArtifactCreatorController(
+            event_dispatcher,
+            projects_retriever,
+            tracker_retriever,
+            CurrentProjectIdentifierStub.withId(CURRENT_PROJECT_ID),
+            en_US_LOCALE
+        );
+
+    describe(`getSelectedProject`, () => {
+        it(`will return the current project id`, () => {
+            expect(getController().getSelectedProject().id).toBe(CURRENT_PROJECT_ID);
+        });
+
+        it(`after calling selectProjectAndGetItsTrackers() with a project id,
+            it will memorize it and return it`, () => {
+            const project_id = ProjectIdentifierStub.withId(993);
+            const controller = getController();
+
+            controller.selectProjectAndGetItsTrackers(project_id);
+
+            expect(controller.getSelectedProject()).toBe(project_id);
+        });
+    });
 
     describe(`getProjects()`, () => {
         it(`will return a list of projects`, async () => {
             const projects = await getController().getProjects();
             expect(projects).toHaveLength(2);
         });
+
         it(`when there is a problem when projects are retrieved,
             it will call the previously registered Fault listener
             and it will return an empty array`, async () => {
@@ -81,9 +105,14 @@ describe(`ArtifactCreatorController`, () => {
         });
     });
 
-    describe(`getTrackers()`, () => {
+    describe(`selectProjectAndGetItsTrackers()`, () => {
+        let project_id: ProjectIdentifier;
+        beforeEach(() => {
+            project_id = ProjectIdentifierStub.withId(184);
+        });
+
         it(`will return a list of trackers`, async () => {
-            const projects = await getController().getTrackers(project_id);
+            const projects = await getController().selectProjectAndGetItsTrackers(project_id);
             expect(projects).toHaveLength(2);
         });
 
@@ -96,7 +125,7 @@ describe(`ArtifactCreatorController`, () => {
 
             const controller = getController();
             controller.registerFaultListener(handler);
-            const trackers = await controller.getTrackers(project_id);
+            const trackers = await controller.selectProjectAndGetItsTrackers(project_id);
 
             expect(trackers).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
