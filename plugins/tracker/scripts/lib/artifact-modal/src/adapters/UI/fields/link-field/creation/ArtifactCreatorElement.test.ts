@@ -35,6 +35,7 @@ import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedLinksTypesPresenters";
 import { RetrieveProjectTrackersStub } from "../../../../../../tests/stubs/RetrieveProjectTrackersStub";
 import { en_US_LOCALE } from "@tuleap/core-constants";
+import type { Tracker } from "../../../../../domain/Tracker";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -123,7 +124,32 @@ describe(`ArtifactCreatorElement`, () => {
                 error_message,
                 show_error_details,
                 projects: [],
-                trackers: [],
+                trackers: [
+                    {
+                        id: 1,
+                        label: "GT",
+                        color_name: "deep-blue",
+                        cannot_create_reason: "",
+                    } as Tracker,
+                    {
+                        id: 2,
+                        label: "Shelby",
+                        color_name: "green",
+                        cannot_create_reason: "",
+                    } as Tracker,
+                    {
+                        id: 3,
+                        label: "Mach-e",
+                        color_name: "red",
+                        cannot_create_reason: "Not a Mustang",
+                    } as Tracker,
+                    {
+                        id: 4,
+                        label: "Mach 1",
+                        color_name: "red",
+                        cannot_create_reason: "",
+                    } as Tracker,
+                ],
                 content: () => target,
             }) as HostElement;
             const updateFunction = ArtifactCreatorElement.content(host);
@@ -148,7 +174,17 @@ describe(`ArtifactCreatorElement`, () => {
             expect(submit.disabled).toBe(true);
             expect(target.querySelector("[data-test=artifact-creator-spinner]")).not.toBeNull();
         });
+        it(`disables the option when if the user cannot creates artifact`, () => {
+            const target = render();
+            const tracker_options = target.querySelectorAll(
+                "[data-test=artifact-modal-link-creator-trackers-option]"
+            ) as NodeListOf<HTMLOptionElement>;
 
+            expect(tracker_options.item(0).disabled).toBe(false);
+            expect(tracker_options.item(1).disabled).toBe(false);
+            expect(tracker_options.item(2).disabled).toBe(true);
+            expect(tracker_options.item(3).disabled).toBe(false);
+        });
         it(`when there is an error, it will show it`, () => {
             error_message = Option.fromValue("Shtopp dat cart!");
             const target = render();

@@ -51,7 +51,7 @@ import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStu
 import type {
     ArtifactCreationPayload,
     ChangesetWithCommentRepresentation,
-    TrackerResponseWithColor,
+    TrackerResponseWithCannotCreateReason,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
@@ -525,12 +525,14 @@ describe(`TuleapAPIClient`, () => {
                 id: FIRST_TRACKER_ID,
                 label: FIRST_TRACKER_LABEL,
                 color_name: FIRST_TRACKER_COLOR,
-            } as TrackerResponseWithColor;
+                cannot_create_reasons: [],
+            } as TrackerResponseWithCannotCreateReason;
             const second_tracker = {
                 id: SECOND_TRACKER_ID,
                 label: SECOND_TRACKER_LABEL,
                 color_name: SECOND_TRACKER_COLOR,
-            } as TrackerResponseWithColor;
+                cannot_create_reasons: [],
+            } as TrackerResponseWithCannotCreateReason;
             const getAllJSON = jest
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync([first_tracker, second_tracker]));
@@ -547,7 +549,11 @@ describe(`TuleapAPIClient`, () => {
             expect(second_returned_project.label).toBe(SECOND_TRACKER_LABEL);
             expect(second_returned_project.color_name).toBe(SECOND_TRACKER_COLOR);
             expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects/113/trackers`, {
-                params: { limit: 50, representation: "minimal" },
+                params: {
+                    limit: 50,
+                    representation: "minimal",
+                    with_creation_semantic_check: "title",
+                },
             });
         });
     });

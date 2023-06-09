@@ -41,8 +41,18 @@ describe(`ArtifactCreatorController`, () => {
         const second_project: Project = { id: 198, label: "Indigo Sun" };
         projects_retriever = RetrieveProjectsStub.withProjects(first_project, second_project);
 
-        const first_tracker: Tracker = { color_name: "deep-blue", label: "V-Series.R" };
-        const second_tracker: Tracker = { color_name: "graffiti-yellow", label: "963" };
+        const first_tracker: Tracker = {
+            id: 1,
+            color_name: "deep-blue",
+            label: "V-Series.R",
+            cannot_create_reason: "",
+        };
+        const second_tracker: Tracker = {
+            id: 2,
+            color_name: "graffiti-yellow",
+            label: "963",
+            cannot_create_reason: "",
+        };
         tracker_retriever = RetrieveProjectTrackersStub.withTrackers(first_tracker, second_tracker);
 
         project_id = ProjectIdentifierStub.withId(102);

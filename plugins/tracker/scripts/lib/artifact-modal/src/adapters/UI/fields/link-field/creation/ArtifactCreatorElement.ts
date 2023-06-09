@@ -106,7 +106,13 @@ const getTrackersOptions = (
 ): UpdateFunction<ArtifactCreatorElement>[] =>
     host.trackers.map(
         (tracker) =>
-            html`<option data-color-value="${tracker.color_name}">${tracker.label}</option>`
+            html`<option
+                value="${tracker.id}"
+                disabled="${tracker.cannot_create_reason !== ""}"
+                data-test="artifact-modal-link-creator-trackers-option"
+            >
+                ${tracker.label}
+            </option>`
     );
 
 const getTrackers = (host: InternalArtifactCreator, event: Event): void => {
@@ -136,6 +142,30 @@ const initListPicker = (
         locale: controller.getUserLocale(),
         placeholder: getProjectTrackersListPickerPlaceholder(),
         is_filterable: true,
+        items_template_formatter: (html, value_id, option_label) => {
+            const current_tracker = host.trackers.find(
+                (tracker) => Number(value_id) === tracker.id
+            );
+            if (!current_tracker) {
+                return html``;
+            }
+
+            const tooltip = html` <span
+                class="artifact-modal-link-creator-list-picker-tooltip"
+                title="${current_tracker.cannot_create_reason}"
+            >
+                <i class="fa-solid fa-question-circle tlp-button-icon" aria-hidden="true"></i
+            ></span>`;
+            return html` <span class="artifact-modal-link-creator-list-picker-container">
+                <span class="artifact-modal-link-creator-list-picker-option-label">
+                    <span
+                        class="tlp-swatch-${current_tracker.color_name} list-picker-circular-color"
+                    ></span>
+                    ${option_label}
+                </span>
+                ${current_tracker.cannot_create_reason === "" ? html`` : tooltip}
+            </span>`;
+        },
     });
 };
 export const setErrorMessage = (

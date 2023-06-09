@@ -18,12 +18,15 @@
  */
 
 import type { Tracker } from "../../domain/Tracker";
-import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
+import type { TrackerResponseWithCannotCreateReason } from "@tuleap/plugin-tracker-rest-api-types";
 
 export const MINIMAL_REPRESENTATION = "minimal";
+export const SEMANTIC_TO_CHECK = "title";
 export const TrackerProxy = {
-    fromAPIProject: (tracker: TrackerResponseWithColor): Tracker => ({
+    fromAPIProject: (tracker: TrackerResponseWithCannotCreateReason): Tracker => ({
+        id: tracker.id,
         label: tracker.label,
         color_name: tracker.color_name,
+        cannot_create_reason: tracker.cannot_create_reasons[0] ?? "",
     }),
 };
