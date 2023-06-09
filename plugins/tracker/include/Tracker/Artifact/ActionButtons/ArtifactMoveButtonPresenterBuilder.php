@@ -23,28 +23,17 @@ namespace Tuleap\Tracker\Artifact\ActionButtons;
 use PFUser;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
 use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
 
 class ArtifactMoveButtonPresenterBuilder
 {
-    /**
-     * @var ArtifactDeletionLimitRetriever
-     */
-    private $deletion_limit_retriever;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        ArtifactDeletionLimitRetriever $deletion_limit_retriever,
-        \EventManager $event_manager,
+        private readonly RetrieveActionDeletionLimit $deletion_limit_retriever,
+        private readonly \EventManager $event_manager,
     ) {
-        $this->deletion_limit_retriever = $deletion_limit_retriever;
-        $this->event_manager            = $event_manager;
     }
 
     public function getMoveArtifactButton(PFUser $user, Artifact $artifact): ?ArtifactMoveButtonPresenter

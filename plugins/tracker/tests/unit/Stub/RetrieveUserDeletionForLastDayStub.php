@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Admin\ArtifactsDeletion;
+declare(strict_types=1);
 
-use DateTimeImmutable;
+namespace Tuleap\Tracker\Test\Stub;
+
 use PFUser;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\RetrieveUserDeletionForLastDay;
 
-final class UserDeletionRetriever implements RetrieveUserDeletionForLastDay
+final class RetrieveUserDeletionForLastDayStub implements RetrieveUserDeletionForLastDay
 {
-    public function __construct(private readonly ArtifactsDeletionDAO $dao)
+    private function __construct(private int $number_of_deletions_done)
     {
+    }
+
+    public static function withAlreadyDoneDeletions(int $number_of_deletions_done): self
+    {
+        return new self($number_of_deletions_done);
     }
 
     public function getNumberOfArtifactsDeletionsForUserInTimePeriod(PFUser $user): int
     {
-        $window_start = new DateTimeImmutable('-1day');
-
-        return (int) $this->dao->searchNumberOfArtifactsDeletionsForUserInTimePeriod(
-            $user->getId(),
-            $window_start->getTimestamp()
-        );
+        return $this->number_of_deletions_done;
     }
 }
