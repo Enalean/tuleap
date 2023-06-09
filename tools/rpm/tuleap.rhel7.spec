@@ -730,6 +730,8 @@ done
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/php
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/php/session
 
 # Log dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
@@ -1182,7 +1184,9 @@ fi
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
-%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
+%dir %attr(00750,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
+%dir %attr(00750,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/php
+%dir %attr(00750,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/php/session
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
