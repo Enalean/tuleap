@@ -72,7 +72,7 @@ class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $row['last_update_date'],
                     $this->getHTMLMessage($artifact, $project),
-                    "fas fa-check",
+                    "fas fa-check-double",
                     $this->getUser((int) $row['last_updated_by_id'])
                 )
             );

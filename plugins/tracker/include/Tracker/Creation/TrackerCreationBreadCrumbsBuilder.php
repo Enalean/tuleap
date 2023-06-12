@@ -39,7 +39,7 @@ class TrackerCreationBreadCrumbsBuilder
             new BreadCrumbLinkWithIcon(
                 dgettext('tuleap-tracker', 'Trackers'),
                 TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()),
-                'fa-list-ol'
+                'fa-tlp-tracker'
             )
         );
 

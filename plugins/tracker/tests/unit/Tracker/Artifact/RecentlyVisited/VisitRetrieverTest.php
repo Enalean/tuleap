@@ -138,7 +138,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             self::assertSame(VisitRetriever::TYPE, $entry->getType());
             self::assertNotNull($entry->getSmallIcon());
             self::assertNotNull($entry->getNormalIcon());
-            self::assertSame('fa-solid fa-list-ol', $entry->getIconName());
+            self::assertSame('fa-solid fa-tlp-tracker', $entry->getIconName());
             self::assertSame($project, $entry->getProject());
             self::assertEmpty($entry->getQuickLinks());
             self::assertEmpty($entry->getBadges());

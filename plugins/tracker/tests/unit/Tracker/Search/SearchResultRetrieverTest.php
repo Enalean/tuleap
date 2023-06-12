@@ -111,7 +111,7 @@ final class SearchResultRetrieverTest extends TestCase
                     ->withColorName(self::TRACKER_COLOR)
                     ->withType(SearchResultRetriever::TYPE)
                     ->withPerTypeId(self::ARTIFACT_ID)
-                    ->withIconName('fa-solid fa-list-ol')
+                    ->withIconName('fa-solid fa-tlp-tracker')
                     ->inProject($project)
                     ->withCroppedContent(self::CROPPED_CONTENT)
                     ->build(),
@@ -152,7 +152,7 @@ final class SearchResultRetrieverTest extends TestCase
                     ->withColorName(self::TRACKER_COLOR)
                     ->withType(SearchResultRetriever::TYPE)
                     ->withPerTypeId(self::ARTIFACT_ID)
-                    ->withIconName('fa-solid fa-list-ol')
+                    ->withIconName('fa-solid fa-tlp-tracker')
                     ->inProject($project)
                     ->withCroppedContent(self::CROPPED_CONTENT)
                     ->build(),

@@ -98,7 +98,7 @@ class TrackerCreationBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             new BreadCrumbLinkWithIcon(
                 'Trackers',
                 TRACKER_BASE_URL . '/?group_id=101',
-                'fa-list-ol'
+                'fa-tlp-tracker'
             )
         );
     }

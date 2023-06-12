@@ -897,7 +897,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
                 $collection->getArtifactIconName()
             )
         );
-        $collection->setIconName('fa-check');
+        $collection->setIconName('fa-check-double');
         $collection->setMainUri($url);
     }
 
