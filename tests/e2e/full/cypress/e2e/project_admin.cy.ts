@@ -61,15 +61,7 @@ context("Suspended users", function () {
         cy.get("[data-test=project-admin-ugroups-members-list]").should("not.contain", "Suspended");
 
         cy.log("Check user can be removed from members");
-        cy.get("[data-test=admin-nav-members]").click();
-        cy.get("[data-test=project-admin-members-list]")
-            .contains("Suspended")
-            .should("have.attr", "data-user-id")
-            .then((user_id) => {
-                cy.get(`[data-test=remove-user-${user_id}]`).click();
-                cy.get("[data-test=remove-from-member]").click();
-            });
-        cy.get("[data-test=project-admin-members-list]").should("not.contain", "Suspended");
+        cy.removeProjectMember("Suspended");
     });
 });
 

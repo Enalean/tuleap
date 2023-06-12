@@ -36,6 +36,7 @@
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-shortcut-notifications
+        data-test="notifications-menu-link"
     >
         <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
         <span>{{ $gettext("Notifications") }}</span>

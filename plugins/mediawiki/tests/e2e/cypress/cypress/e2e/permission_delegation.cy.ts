@@ -50,7 +50,7 @@ describe("Permission delegation", function () {
                 ).click();
                 // ignore rule for select2
                 // eslint-disable-next-line cypress/require-data-selectors
-                cy.get(".select2-search__field").type("RegularUser{enter}");
+                cy.get(".select2-search__field").type("ARegularUser{enter}");
                 // eslint-disable-next-line cypress/require-data-selectors
                 cy.get(".select2-result-user").first().click();
                 cy.get("[data-test=add-user-permission-button").click();
@@ -81,7 +81,7 @@ describe("Permission delegation", function () {
 
         cy.get("[data-test=permission-delegation-page]").then(($permissions) => {
             if ($permissions.find("[data-test=admin-delegation-no-user]").length === 0) {
-                cy.get("[data-test=RegularUser]").check();
+                cy.get("[data-test=ARegularUser]").check();
                 cy.get("[data-test=permission-delegation-remove-permission-button]").click();
             }
         });

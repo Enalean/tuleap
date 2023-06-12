@@ -18,6 +18,8 @@
  */
 
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
+import { createAWikiDocument } from "../support/create-document";
+import { updateWikiPage } from "../support/helpers";
 
 describe("Document PhpWiki integration", () => {
     let project_unixname: string, public_name: string, now: number;
@@ -178,25 +180,3 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=document-confirm-deletion-button]").click();
     });
 });
-
-function createAWikiDocument(document_title: string, page_name: string, project_id: number): void {
-    cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
-        const root_folder_id = response.body.root_item.id;
-
-        const payload = {
-            title: document_title,
-            description: "",
-            type: "empty",
-            wiki_properties: {
-                page_name: page_name,
-            },
-        };
-        cy.postFromTuleapApi(`api/docman_folders/${root_folder_id}/wikis`, payload);
-    });
-}
-
-function updateWikiPage(page_content: string): void {
-    cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
-    cy.get("[data-test=textarea-wiki-content]").clear().type(page_content);
-    cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
-}

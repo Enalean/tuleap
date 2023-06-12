@@ -39,7 +39,7 @@ Cypress.Commands.add("siteAdministratorSession", () => {
 });
 
 Cypress.Commands.add("regularUserSession", () => {
-    sessionThroughWebUI("RegularUser", "Correct Horse Battery Staple");
+    sessionThroughWebUI("ARegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("anonymousSession", () => {
@@ -210,6 +210,17 @@ Cypress.Commands.add("addProjectMember", (user_name: string): void => {
 
     cy.get(".select2-result-user").click();
     cy.get('[data-test="project-admin-submit-add-member"]').click();
+});
+
+Cypress.Commands.add("removeProjectMember", (user_name: string): void => {
+    cy.visitProjectAdministrationInCurrentProject();
+    cy.get("[data-test=project-admin-members-list]")
+        .contains(user_name)
+        .should("have.attr", "data-user-id")
+        .then((user_id) => {
+            cy.get(`[data-test=remove-user-${user_id}]`).click();
+            cy.get("[data-test=remove-from-member]").click();
+        });
 });
 
 interface Tracker {

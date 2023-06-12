@@ -84,6 +84,8 @@ declare global {
 
             addProjectMember(user_name: string): void;
 
+            removeProjectMember(user_name: string): void;
+
             getTrackerIdFromREST(project_id: number, tracker_name: string): Chainable<number>;
 
             createArtifact(payload: ArtifactCreationPayload): Chainable<number>;

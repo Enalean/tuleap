@@ -15,10 +15,10 @@
         <ldapid></ldapid>
     </user>
     <user>
-        <id>103</id>
-        <username>RegularUser</username>
-        <realname>RegularUser</realname>
-        <email>RegularUser@example.com</email>
-        <ldapid></ldapid>
+      <id>103</id>
+      <username>ARegularUser</username>
+      <realname>ARegularUser</realname>
+      <email>ARegularUser@example.com</email>
+      <ldapid></ldapid>
     </user>
 </users>
