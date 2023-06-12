@@ -96,6 +96,25 @@ describe(`Option`, () => {
             expect(map_value).toBe(value);
         });
 
+        it(`match() calls the given function with the inner value and returns its result`, () => {
+            const value = "initial";
+            let map_value;
+
+            const mapped = Option.fromValue(value).match(
+                (received_value) => {
+                    map_value = received_value;
+                    return "callback";
+                },
+                () => {
+                    map_value = "fault";
+                    return "fault callback";
+                }
+            );
+
+            expect(mapped).toBe("callback");
+            expect(map_value).toBe(value);
+        });
+
         it(`unwrapOr() returns the inner value`, () => {
             const value = 486;
             const unwrapped_value = Option.fromValue(value).unwrapOr(null);
@@ -134,6 +153,24 @@ describe(`Option`, () => {
 
             expect(mapped).toBe("default");
             expect(callback).not.toHaveBeenCalled();
+        });
+
+        it(`match() calls the given default function and returns its result`, () => {
+            let map_value;
+
+            const mapped = Option.nothing<string>().match(
+                (received_value) => {
+                    map_value = received_value;
+                    return "callback";
+                },
+                () => {
+                    map_value = "fault";
+                    return "fault callback";
+                }
+            );
+
+            expect(mapped).toBe("fault callback");
+            expect(map_value).toBe("fault");
         });
 
         it(`unwrapOr() returns the given default value`, () => {

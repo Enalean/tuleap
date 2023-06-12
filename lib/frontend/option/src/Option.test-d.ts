@@ -122,6 +122,36 @@ describe(`Option type`, () => {
         });
     });
 
+    describe(`match()`, () => {
+        it(`has correct type for its callback`, () => {
+            const itCouldReturnNothing = (): Option<string> => Option.nothing();
+
+            const return_value = itCouldReturnNothing().match(
+                (value) => {
+                    expectTypeOf(value).toBeString();
+                    return "value";
+                },
+                () => {
+                    return "default";
+                }
+            );
+
+            expectTypeOf(return_value).toBeString();
+        });
+
+        it(`can return to a different type than the Option's original type`, () => {
+            const itCouldReturnNothing = (): Option<string> => Option.fromValue("33");
+
+            const return_value = itCouldReturnNothing().match(
+                (received_value) => {
+                    return Number.parseInt(received_value, 10) + 10;
+                },
+                () => 42
+            );
+            expectTypeOf(return_value).toBeNumber();
+        });
+    });
+
     describe(`unwrapOr()`, () => {
         it(`can return a different type of default value than the Option's initial type`, () => {
             const itCouldReturnNothing = (): Option<number> => Option.nothing();
