@@ -25,34 +25,38 @@
     align-items: center;
 }
 
-.list-picker-circular-color {
+%-circular-knob {
+    flex-shrink: 0;
     width: 20px;
     height: 20px;
+    border-radius: 50%;
+}
+
+.list-picker-circular-color {
+    @extend %-circular-knob;
+
     margin: 0 6px 0 0;
     border: 3px solid var(--primary-color);
-    border-radius: 50%;
     background-color: var(--secondary-color);
     color: var(--primary-color);
     cursor: pointer;
 }
 
 .list-picker-circular-legacy-color {
+    @extend %-circular-knob;
+
     display: flex;
     box-sizing: border-box; // To have the same round color size in BP and FP.
     align-items: center;
-    width: 20px;
-    height: 20px;
     margin: 0 6px 0 0;
-    border-radius: 50%;
 }
 
 .list-picker-avatar {
+    @extend %-circular-knob;
+
     display: inline-block;
-    width: 20px;
-    height: 20px;
     margin: 0 4px 0 0;
     overflow: hidden;
-    border-radius: 50%;
     background: var(--tlp-neutral-normal-color) url("./assets/list-picker-default-avatar.svg")
         no-repeat center center;
     background-size: contain;
