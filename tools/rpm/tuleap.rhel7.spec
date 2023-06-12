@@ -62,6 +62,7 @@ Requires: rh-mysql80-mysql
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate
 Requires: tuleap-realtime = @@VERSION@@
+Requires: tuleap-mercure = @@VERSION@@
 Requires: tuleap-smokescreen = @@VERSION@@
 Requires: tuleap-wasmtime-wrapper-lib = @@VERSION@@
 
