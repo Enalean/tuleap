@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
 
 use PFUser;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Report;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
@@ -32,25 +33,11 @@ use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 
 class FilteredItemCollectionRepresentationBuilder
 {
-    /** @var ReportArtifactFactory */
-    private $report_artifact_factory;
-    /** @var ReportFilterFromWhereBuilder */
-    private $from_where_builder;
-    /** @var Tracker_Artifact_PriorityDao */
-    private $priority_dao;
-    /** @var ItemRepresentationBuilder */
-    private $item_representation_builder;
-
     public function __construct(
-        ReportFilterFromWhereBuilder $from_where_builder,
-        ReportArtifactFactory $report_artifact_factory,
-        Tracker_Artifact_PriorityDao $priority_dao,
-        ItemRepresentationBuilder $item_representation_builder,
+        private readonly ReportFilterFromWhereBuilder $from_where_builder,
+        private readonly ReportArtifactFactory $report_artifact_factory,
+        private readonly ItemRepresentationBuilder $item_representation_builder,
     ) {
-        $this->report_artifact_factory     = $report_artifact_factory;
-        $this->from_where_builder          = $from_where_builder;
-        $this->priority_dao                = $priority_dao;
-        $this->item_representation_builder = $item_representation_builder;
     }
 
     public function build(
@@ -62,7 +49,7 @@ class FilteredItemCollectionRepresentationBuilder
     ) {
         $additional_from_where = $this->from_where_builder->getFromWhere($report->getTracker(), $column_identifier);
 
-        $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
+        $artifact_collection = $this->report_artifact_factory->getRankedArtifactsMatchingReportWithAdditionalFromWhere(
             $report,
             $additional_from_where,
             $limit,
@@ -84,7 +71,6 @@ class FilteredItemCollectionRepresentationBuilder
         ArtifactMatchingReportCollection $artifact_collection,
     ) {
         $item_collection = [];
-        $artifact_ids    = [];
         foreach ($artifact_collection->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($user)) {
                 continue;
@@ -95,31 +81,9 @@ class FilteredItemCollectionRepresentationBuilder
                 $artifact
             );
 
-            $id                   = $artifact->getId();
-            $artifact_ids[]       = $id;
-            $item_collection[$id] = $item_representation;
+            $item_collection[] = $item_representation;
         }
 
-        if (! $item_collection) {
-            return $item_collection;
-        }
-
-        return $this->sort($item_collection, $artifact_ids);
-    }
-
-    private function sort(array $item_collection, array $artifact_ids)
-    {
-        $rank = [];
-        foreach ($this->priority_dao->getGlobalRanks($artifact_ids) as $row) {
-            $rank[$row['rank']] = $row['artifact_id'];
-        }
-        ksort($rank);
-
-        $sorted_collection = [];
-        foreach ($rank as $artifact_id) {
-            $sorted_collection[] = $item_collection[$artifact_id];
-        }
-
-        return $sorted_collection;
+        return $item_collection;
     }
 }

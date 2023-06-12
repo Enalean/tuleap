@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
+use Tracker_Artifact_PriorityDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
@@ -75,6 +76,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\UsedArtifactLinkTypeRepresentation;
+use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -125,7 +127,8 @@ class TrackersResource extends AuthenticatedResource
         $this->tracker_factory          = TrackerFactory::instance();
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
         $this->report_artifact_factory  = new ReportArtifactFactory(
-            $this->tracker_artifact_factory
+            $this->tracker_artifact_factory,
+            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
         );
     }
 

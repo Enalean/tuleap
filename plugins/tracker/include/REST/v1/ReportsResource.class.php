@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
@@ -50,6 +51,7 @@ use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Report\MatchingArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use UserManager;
@@ -74,7 +76,8 @@ class ReportsResource extends AuthenticatedResource
     {
         $artifact_factory              = Tracker_ArtifactFactory::instance();
         $this->report_artifact_factory = new ReportArtifactFactory(
-            $artifact_factory
+            $artifact_factory,
+            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
         );
     }
 

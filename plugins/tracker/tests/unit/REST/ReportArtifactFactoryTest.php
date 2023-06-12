@@ -18,66 +18,141 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tracker_Artifact_PriorityDao;
 use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ReportArtifactFactory */
-    private $report_artifact_factory;
-    /** @var \Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
+    private ReportArtifactFactory $report_artifact_factory;
+    private \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $tracker_artifact_factory;
+    private Tracker_Artifact_PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->tracker_artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker_artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->dao                      = $this->createMock(Tracker_Artifact_PriorityDao::class);
 
         $this->report_artifact_factory = new ReportArtifactFactory(
-            $this->tracker_artifact_factory
+            $this->tracker_artifact_factory,
+            new MatchingIdsOrderer($this->dao),
         );
     }
 
     public function testItReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts(): void
     {
-        $empty_report = \Mockery::spy(\Tracker_Report::class);
+        $empty_report = $this->createMock(\Tracker_Report::class);
         $from_where   = new FromWhere('', '');
 
-        $collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
+        $empty_report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
+            ['id' => '', 'last_changeset_id' => '']
+        );
+
+        $collection = $this->report_artifact_factory->getRankedArtifactsMatchingReportWithAdditionalFromWhere(
             $empty_report,
             $from_where,
             10,
-            0
+            0,
         );
 
-        $this->assertEquals([], $collection->getArtifacts());
-        $this->assertEquals(0, $collection->getTotalSize());
+        self::assertEquals([], $collection->getArtifacts());
+        self::assertEquals(0, $collection->getTotalSize());
     }
 
     public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset(): void
     {
-        $report     = \Mockery::spy(\Tracker_Report::class);
+        $report     = $this->createMock(\Tracker_Report::class);
         $from_where = new FromWhere('', '');
 
-        $report->shouldReceive('getMatchingIdsWithAdditionalFromWhere')->andReturns(['id' => '12,85,217,98']);
-        $artifact_one = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact_one->shouldReceive('getId')->andReturn(85);
-        $artifact_two = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact_two->shouldReceive('getId')->andReturn(217);
-        $this->tracker_artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->andReturns([$artifact_one, $artifact_two]);
+        $report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
+            [
+                'id' => '12,85,217,98',
+                'last_changeset_id' => '12,85,217,98',
+            ],
+        );
 
-        $collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
+        $this->dao->method('getGlobalRanks')->willReturn([
+            [
+                'rank' => 1,
+                'artifact_id' => 12,
+            ],
+            [
+                'rank' => 2,
+                'artifact_id' => 85,
+            ],
+            [
+                'rank' => 3,
+                'artifact_id' => 217,
+            ],
+            [
+                'rank' => 4,
+                'artifact_id' => 98,
+            ],
+        ]);
+
+        $artifact_one = ArtifactTestBuilder::anArtifact(85)->build();
+        $artifact_two = ArtifactTestBuilder::anArtifact(217)->build();
+        $this->tracker_artifact_factory->method('getArtifactsByArtifactIdList')->willReturn([$artifact_one, $artifact_two]);
+
+        $collection = $this->report_artifact_factory->getRankedArtifactsMatchingReportWithAdditionalFromWhere(
             $report,
             $from_where,
             2,
-            1
+            1,
         );
 
-        $this->assertEquals([$artifact_one, $artifact_two], $collection->getArtifacts());
-        $this->assertEquals(4, $collection->getTotalSize());
+        self::assertEquals([$artifact_one, $artifact_two], $collection->getArtifacts());
+        self::assertEquals(4, $collection->getTotalSize());
+    }
+
+    public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffsetWithRank(): void
+    {
+        $report     = $this->createMock(\Tracker_Report::class);
+        $from_where = new FromWhere('', '');
+
+        $report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
+            [
+                'id' => '12,85,217,98',
+                'last_changeset_id' => '12,85,217,98',
+            ],
+        );
+
+        $this->dao->method('getGlobalRanks')->willReturn([
+            [
+                'rank' => 1,
+                'artifact_id' => 98,
+            ],
+            [
+                'rank' => 2,
+                'artifact_id' => 85,
+            ],
+            [
+                'rank' => 3,
+                'artifact_id' => 217,
+            ],
+            [
+                'rank' => 4,
+                'artifact_id' => 12,
+            ],
+        ]);
+
+        $artifact_one = ArtifactTestBuilder::anArtifact(85)->build();
+        $artifact_two = ArtifactTestBuilder::anArtifact(98)->build();
+        $this->tracker_artifact_factory->method('getArtifactsByArtifactIdList')->willReturn([$artifact_one, $artifact_two]);
+
+        $collection = $this->report_artifact_factory->getRankedArtifactsMatchingReportWithAdditionalFromWhere(
+            $report,
+            $from_where,
+            2,
+            0,
+        );
+
+        self::assertEquals([$artifact_two, $artifact_one], $collection->getArtifacts());
+        self::assertEquals(4, $collection->getTotalSize());
     }
 }

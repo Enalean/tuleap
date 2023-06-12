@@ -18,18 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Report;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 
 class ReportArtifactFactory
 {
-    private $tracker_artifact_factory;
-
-    public function __construct(\Tracker_ArtifactFactory $tracker_artifact_factory)
-    {
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
+    public function __construct(
+        private readonly \Tracker_ArtifactFactory $tracker_artifact_factory,
+        private readonly MatchingIdsOrderer $matching_ids_orderer,
+    ) {
     }
 
     /**
@@ -37,15 +39,22 @@ class ReportArtifactFactory
      * @param int $offset
      * @return ArtifactMatchingReportCollection
      */
-    public function getArtifactsMatchingReportWithAdditionalFromWhere(
+    public function getRankedArtifactsMatchingReportWithAdditionalFromWhere(
         Tracker_Report $report,
         IProvideFromAndWhereSQLFragments $additional_from_where,
         $limit,
         $offset,
     ) {
-        $matching_ids = $report->getMatchingIdsWithAdditionalFromWhere($additional_from_where);
+        $matching_ids        = $report->getMatchingIdsWithAdditionalFromWhere($additional_from_where);
+        $ranked_matching_ids = $this->matching_ids_orderer->orderMatchingIdsByGlobalRank($matching_ids);
 
-        return $this->getPaginatedArtifactCollection($limit, $offset, $matching_ids);
+        $collection = $this->getPaginatedArtifactCollection($limit, $offset, $ranked_matching_ids);
+        return $this->sortPaginatedArtifactCollectionByRank(
+            $collection,
+            $limit,
+            $offset,
+            $ranked_matching_ids,
+        );
     }
 
     /**
@@ -63,7 +72,7 @@ class ReportArtifactFactory
         return $this->getPaginatedArtifactCollection($limit, $offset, $matching_ids);
     }
 
-    private function getPaginatedArtifactCollection($limit, $offset, $matching_ids)
+    private function getPaginatedArtifactCollection(int $limit, int $offset, array $matching_ids): ArtifactMatchingReportCollection
     {
         if (! isset($matching_ids['id']) || ! $matching_ids['id']) {
             return new ArtifactMatchingReportCollection(
@@ -81,6 +90,37 @@ class ReportArtifactFactory
         return new ArtifactMatchingReportCollection(
             array_filter($artifacts),
             $total_size
+        );
+    }
+
+    private function sortPaginatedArtifactCollectionByRank(
+        ArtifactMatchingReportCollection $collection,
+        int $limit,
+        int $offset,
+        array $ranked_matching_ids,
+    ): ArtifactMatchingReportCollection {
+        if ($collection->getTotalSize() === 0) {
+            return $collection;
+        }
+
+        $matching_artifact_ids = explode(',', $ranked_matching_ids['id']);
+        $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
+
+        $artifacts_map = [];
+        foreach ($collection->getArtifacts() as $artifact) {
+            $artifacts_map[$artifact->getId()] = $artifact;
+        }
+
+        $ranked_artifacts = [];
+        foreach ($slice_matching_ids as $slice_ranked_matching_id) {
+            if (isset($artifacts_map[(int) $slice_ranked_matching_id])) {
+                $ranked_artifacts[] = $artifacts_map[(int) $slice_ranked_matching_id];
+            }
+        }
+
+        return new ArtifactMatchingReportCollection(
+            array_filter($ranked_artifacts),
+            $collection->getTotalSize(),
         );
     }
 }
