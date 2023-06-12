@@ -36,6 +36,8 @@ import { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedL
 import { RetrieveProjectTrackersStub } from "../../../../../../tests/stubs/RetrieveProjectTrackersStub";
 import { en_US_LOCALE } from "@tuleap/core-constants";
 import type { Tracker } from "../../../../../domain/Tracker";
+import { CurrentProjectIdentifierStub } from "../../../../../../tests/stubs/CurrentProjectIdentifierStub";
+import { ProjectIdentifierStub } from "../../../../../../tests/stubs/ProjectIdentifierStub";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -45,20 +47,22 @@ describe(`ArtifactCreatorElement`, () => {
     });
 
     describe(`events`, () => {
-        let controller: ArtifactCreatorController, dispatchEvent: jest.SpyInstance;
+        let controller: ArtifactCreatorController;
         beforeEach(() => {
             const project: Project = { id: 144, label: "Next Omega" };
             controller = ArtifactCreatorController(
                 DispatchEventsStub.buildNoOp(),
                 RetrieveProjectsStub.withProjects(project),
                 RetrieveProjectTrackersStub.withoutTracker(),
+                CurrentProjectIdentifierStub.withId(144),
                 en_US_LOCALE
             );
-            dispatchEvent = jest.fn();
         });
 
         const getHost = (): HostElement => {
-            const element = doc.createElement("span");
+            const projects: ReadonlyArray<Project> = [];
+            const trackers: ReadonlyArray<Tracker> = [];
+            const element = doc.createElement("div");
             return Object.assign(element, {
                 controller,
                 current_artifact_reference: Option.nothing(),
@@ -67,16 +71,16 @@ describe(`ArtifactCreatorElement`, () => {
                 is_loading: false,
                 error_message: Option.nothing(),
                 show_error_details: false,
-                projects: [],
-                trackers: [],
-                content: () => element,
-                dispatchEvent,
-            }) as HostElement;
+                projects,
+                trackers,
+                content: () => element as HTMLElement,
+            } as HostElement);
         };
 
         it(`when I click on the "Cancel" button, it will enable the modal submit
             and dispatch a "cancel" event`, () => {
             const host = getHost();
+            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
             const enableSubmit = jest.spyOn(controller, "enableSubmit");
 
             onClickCancel(host);
@@ -106,16 +110,24 @@ describe(`ArtifactCreatorElement`, () => {
     });
 
     describe(`render`, () => {
-        let is_loading: boolean, error_message: Option<string>, show_error_details: boolean;
+        let is_loading: boolean,
+            error_message: Option<string>,
+            show_error_details: boolean,
+            trackers: ReadonlyArray<Tracker>,
+            projects: ReadonlyArray<Project>;
+        const selected_project_id = 806;
 
         beforeEach(() => {
             is_loading = true;
             error_message = Option.nothing();
             show_error_details = false;
+            projects = [];
+            trackers = [];
         });
+
         const render = (): HTMLElement => {
-            const target = doc.createElement("div");
-            const host = Object.assign(target, {
+            const element = doc.createElement("div");
+            const host = Object.assign(element, {
                 controller: {} as ArtifactCreatorController,
                 current_artifact_reference: Option.nothing(),
                 available_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
@@ -123,38 +135,15 @@ describe(`ArtifactCreatorElement`, () => {
                 is_loading,
                 error_message,
                 show_error_details,
-                projects: [],
-                trackers: [
-                    {
-                        id: 1,
-                        label: "GT",
-                        color_name: "deep-blue",
-                        cannot_create_reason: "",
-                    } as Tracker,
-                    {
-                        id: 2,
-                        label: "Shelby",
-                        color_name: "green",
-                        cannot_create_reason: "",
-                    } as Tracker,
-                    {
-                        id: 3,
-                        label: "Mach-e",
-                        color_name: "red",
-                        cannot_create_reason: "Not a Mustang",
-                    } as Tracker,
-                    {
-                        id: 4,
-                        label: "Mach 1",
-                        color_name: "red",
-                        cannot_create_reason: "",
-                    } as Tracker,
-                ],
-                content: () => target,
-            }) as HostElement;
+                projects,
+                trackers,
+                selected_project: ProjectIdentifierStub.withId(selected_project_id),
+                content: () => element as HTMLElement,
+            } as HostElement);
+
             const updateFunction = ArtifactCreatorElement.content(host);
-            updateFunction(host, target as unknown as ShadowRoot);
-            return target;
+            updateFunction(host, element as unknown as ShadowRoot);
+            return element;
         };
 
         it(`when it is loading, it will disable inputs and buttons and will show a spinner icon`, () => {
@@ -174,17 +163,53 @@ describe(`ArtifactCreatorElement`, () => {
             expect(submit.disabled).toBe(true);
             expect(target.querySelector("[data-test=artifact-creator-spinner]")).not.toBeNull();
         });
-        it(`disables the option when if the user cannot creates artifact`, () => {
-            const target = render();
-            const tracker_options = target.querySelectorAll(
-                "[data-test=artifact-modal-link-creator-trackers-option]"
-            ) as NodeListOf<HTMLOptionElement>;
 
+        it(`tracks the currently selected project in the select`, () => {
+            projects = [
+                { id: 775, label: "Next Omega" },
+                { id: selected_project_id, label: "Cloudy Bird" },
+            ];
+
+            const target = render();
+            const options = target.querySelectorAll<HTMLOptionElement>(
+                "[data-test=artifact-modal-link-creator-projects-option]"
+            );
+
+            expect(options).toHaveLength(2);
+            expect(options.item(0).selected).toBe(false);
+            expect(options.item(1).selected).toBe(true);
+        });
+
+        it(`disables the option when the user cannot create artifacts`, () => {
+            trackers = [
+                { id: 201, label: "GT", color_name: "deep-blue", cannot_create_reason: "" },
+                { id: 206, label: "Shelby", color_name: "green", cannot_create_reason: "" },
+                {
+                    id: 158,
+                    label: "Mach-e",
+                    color_name: "red",
+                    cannot_create_reason: "Not a Mustang",
+                },
+                {
+                    id: selected_project_id,
+                    label: "Mach 1",
+                    color_name: "red",
+                    cannot_create_reason: "",
+                },
+            ];
+
+            const target = render();
+            const tracker_options = target.querySelectorAll<HTMLOptionElement>(
+                "[data-test=artifact-modal-link-creator-trackers-option]"
+            );
+
+            expect(tracker_options).toHaveLength(4);
             expect(tracker_options.item(0).disabled).toBe(false);
             expect(tracker_options.item(1).disabled).toBe(false);
             expect(tracker_options.item(2).disabled).toBe(true);
             expect(tracker_options.item(3).disabled).toBe(false);
         });
+
         it(`when there is an error, it will show it`, () => {
             error_message = Option.fromValue("Shtopp dat cart!");
             const target = render();

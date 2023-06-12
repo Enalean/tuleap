@@ -22,13 +22,17 @@
 tuleap-artifact-modal-link-artifact-creator {
     display: flex;
     flex: auto;
-    flex-wrap: wrap;
+    flex-direction: column;
     padding: variables.$link-row-padding;
-    column-gap: variables.$link-row-padding;
 }
 
 .link-field-artifact-creator-alert {
     width: 100%;
+}
+
+.link-field-artifact-creator-main {
+    display: flex;
+    gap: variables.$link-row-padding;
 }
 
 .link-field-artifact-creator-form {
@@ -52,18 +56,17 @@ tuleap-artifact-modal-link-artifact-creator {
     opacity: 0.5;
 }
 
-// Override a more specific rule in the artifact modal for tlp-form-element
-#artifact-modal-link-creator-project-wrapper {
-    margin: 0;
-}
-
 .artifact-modal-link-creator-container {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
-.artifact-modal-link-creator-container-tracker-select {
-    flex-grow: 1;
+.link-field-artifact-creator-project-list,
+// Override a more specific rule in the artifact modal for tlp-form-element
+#artifact-modal-link-creator-tracker-wrapper {
+    flex: 1 1 40%;
+    margin: 0;
 }
 
 .artifact-modal-link-creator-list-picker-option-label {
