@@ -58,6 +58,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\FieldTypeCompatibilityChecker;
+use Tuleap\Tracker\Action\MovableStaticListFieldsChecker;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
@@ -67,6 +68,7 @@ use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
+use Tuleap\Tracker\Action\SingleStaticListFieldChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -137,6 +139,10 @@ use Tuleap\Tracker\REST\v1\Move\HeaderForMoveSender;
 use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -1177,11 +1183,17 @@ class ArtifactsResource extends AuthenticatedResource
         $this->checkAccess();
         $user = $this->user_manager->getCurrentUser();
 
-        $type_compatibility_checker = new FieldTypeCompatibilityChecker($this->formelement_factory, $this->formelement_factory);
-        $collector                  = new DryRunDuckTypingFieldCollector(
+        $user_finder                 = new XMLImportHelper($this->user_manager);
+        $movable_field_checker       = new MovableStaticListFieldsChecker(new FieldValueMatcher($user_finder));
+        $static_list_field_checker   = new SingleStaticListFieldChecker();
+        $field_compatibility_checker = new FieldTypeCompatibilityChecker($this->formelement_factory, $this->formelement_factory, $static_list_field_checker);
+
+        $collector = new DryRunDuckTypingFieldCollector(
             $this->formelement_factory,
             $this->formelement_factory,
-            $type_compatibility_checker
+            $movable_field_checker,
+            $static_list_field_checker,
+            $field_compatibility_checker
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);
@@ -1224,6 +1236,7 @@ class ArtifactsResource extends AuthenticatedResource
         $status_semantic_checker      = new MoveStatusSemanticChecker($this->formelement_factory);
         $contributor_semantic_checker = new MoveContributorSemanticChecker($this->formelement_factory);
 
+        $field_value_matcher = new FieldValueMatcher($user_finder);
         return new MegaMoverArtifact(
             new ArtifactsDeletionManager(
                 new ArtifactsDeletionDAO(),
@@ -1231,13 +1244,15 @@ class ArtifactsResource extends AuthenticatedResource
                 new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
             ),
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLUpdater(
-                $this->event_manager,
-                new FieldValueMatcher($user_finder),
+            new MoveChangesetXMLSemanticUpdater(
+                new MoveChangesetXMLUpdater(),
                 $title_semantic_checker,
                 $description_semantic_checker,
                 $status_semantic_checker,
-                $contributor_semantic_checker
+                $contributor_semantic_checker,
+                $this->event_manager,
+                new BindValueForSemanticUpdater($field_value_matcher),
+                $field_value_matcher
             ),
             $xml_import_builder->build(
                 $user_finder,
@@ -1369,13 +1384,9 @@ class ArtifactsResource extends AuthenticatedResource
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
         );
 
-        $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
-        $user_finder        = new XMLImportHelper($this->user_manager);
-
-        $title_semantic_checker       = new MoveTitleSemanticChecker();
-        $description_semantic_checker = new MoveDescriptionSemanticChecker($this->formelement_factory);
-        $status_semantic_checker      = new MoveStatusSemanticChecker($this->formelement_factory);
-        $contributor_semantic_checker = new MoveContributorSemanticChecker($this->formelement_factory);
+        $xml_import_builder  = new Tracker_Artifact_XMLImportBuilder();
+        $user_finder         = new XMLImportHelper($this->user_manager);
+        $field_value_matcher = new FieldValueMatcher($user_finder);
 
         return new MegaMoverArtifactByDuckTyping(
             new ArtifactsDeletionManager(
@@ -1384,13 +1395,9 @@ class ArtifactsResource extends AuthenticatedResource
                 new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
             ),
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLUpdater(
-                $this->event_manager,
-                new FieldValueMatcher($user_finder),
-                $title_semantic_checker,
-                $description_semantic_checker,
-                $status_semantic_checker,
-                $contributor_semantic_checker
+            new MoveChangesetXMLDuckTypingUpdater(
+                new MoveChangesetXMLUpdater(),
+                new BindValueForDuckTypingUpdater(new FieldValueMatcher($user_finder))
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

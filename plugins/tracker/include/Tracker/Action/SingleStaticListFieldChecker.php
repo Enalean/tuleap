@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface CollectDryRunTypingField
+final class SingleStaticListFieldChecker implements CheckIsSingleStaticListField
 {
-    public function collect(\Tracker $source_tracker, \Tracker $target_tracker, Artifact $artifact): DuckTypedMoveFieldCollection;
+    public function isSingleValueStaticListField(\Tracker_FormElement_Field $field): bool
+    {
+        if (! $field instanceof \Tracker_FormElement_Field_List) {
+            return false;
+        }
+
+        if ($field->isMultiple()) {
+            return false;
+        }
+
+        if ($field->getBind()->getType() !== \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
+            return false;
+        }
+
+        return true;
+    }
 }

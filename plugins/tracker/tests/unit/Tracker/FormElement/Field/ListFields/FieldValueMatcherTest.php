@@ -195,7 +195,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(true);
 
         $this->assertTrue(
-            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
         );
     }
 
@@ -205,7 +205,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
 
         $this->assertFalse(
-            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
         );
     }
 
@@ -216,7 +216,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(false);
 
         $this->assertFalse(
-            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
         );
     }
 }

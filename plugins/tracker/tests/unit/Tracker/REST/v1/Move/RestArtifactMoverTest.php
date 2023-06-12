@@ -37,7 +37,7 @@ use Tuleap\Tracker\Test\Stub\FeedbackFieldCollectorInterfaceStub;
 use Tuleap\Tracker\Test\Stub\MoveArtifactByDuckTypingStub;
 use Tuleap\Tracker\Test\Stub\MoveArtifactStub;
 
-final class ArtifactMoveTest extends TestCase
+final class RestArtifactMoverTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -54,7 +54,7 @@ final class ArtifactMoveTest extends TestCase
         $this->mega_mover         = MoveArtifactByDuckTypingStub::withReturnRandomLimit();
         $this->feedback_collector = FeedbackFieldCollectorInterfaceStub::withFields([], [], []);
         $dry_run_collector        =
-            CollectDryRunTypingFieldStub::withCollectionOfField(DuckTypedMoveFieldCollection::fromFields([], [], []));
+            CollectDryRunTypingFieldStub::withCollectionOfField(DuckTypedMoveFieldCollection::fromFields([], [], [], []));
 
         $this->artifact_move = new RestArtifactMover(
             $this->move_action,

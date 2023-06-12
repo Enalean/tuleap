@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,33 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement;
-use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Action\CheckIsSingleStaticListField;
 
-final class RetrieveFieldTypeStub implements RetrieveFieldType
+final class CheckIsSingleStaticListFieldStub implements CheckIsSingleStaticListField
 {
-    private const NO_TYPE = "notype";
-
-    private function __construct(private string $type)
+    private function __construct(private readonly bool $is_single_static_list_field)
     {
     }
 
-    public static function withType(string $type): self
+    public static function withSingleStaticListField(): self
     {
-        return new self($type);
+        return new self(true);
     }
 
-    public static function withNoType(): self
+    public static function withoutSingleStaticListField(): self
     {
-        return new self(self::NO_TYPE);
+        return new self(false);
     }
 
-    public function getType(Tracker_FormElement $form_element): string
+    public function isSingleValueStaticListField(Tracker_FormElement_Field $field): bool
     {
-        if ($this->type === self::NO_TYPE) {
-            throw new \RuntimeException("getType was called while the stub RetrieveFieldTypeStub is not configured to return a specific type.");
-        }
-
-        return $this->type;
+        return $this->is_single_static_list_field;
     }
 }

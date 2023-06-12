@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Stub\CheckMoveArtifactStub;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
 use Tuleap\Tracker\Test\Stub\FeedbackFieldCollectorInterfaceStub;
 
-final class DryRunMoveTest extends TestCase
+final class DryRunMoverTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -106,7 +106,8 @@ final class DryRunMoveTest extends TestCase
                 DuckTypedMoveFieldCollection::fromFields(
                     $migrated_fields,
                     $not_migrated_fields,
-                    $mapping_fields
+                    $mapping_fields,
+                    []
                 )
             ),
         );

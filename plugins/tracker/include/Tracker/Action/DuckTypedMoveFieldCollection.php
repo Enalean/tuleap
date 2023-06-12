@@ -30,9 +30,10 @@ final class DuckTypedMoveFieldCollection
     /**
      * @param \Tracker_FormElement_Field[] $migrateable_field_list
      * @param \Tracker_FormElement_Field[] $not_migrateable_field_list
+     * @param \Tracker_FormElement_Field[] $partially_migrated_fields
      * @param FieldMapping[] $mapping_fields
      */
-    private function __construct(public array $migrateable_field_list, public array $not_migrateable_field_list, public array $mapping_fields)
+    private function __construct(public array $migrateable_field_list, public array $not_migrateable_field_list, public array $partially_migrated_fields, public array $mapping_fields)
     {
     }
 
@@ -41,8 +42,8 @@ final class DuckTypedMoveFieldCollection
      * @param \Tracker_FormElement_Field[] $not_migrateable_field_list
      * @param FieldMapping[] $mapping_fields
      */
-    public static function fromFields(array $migrateable_field_list, array $not_migrateable_field_list, array $mapping_fields): self
+    public static function fromFields(array $migrateable_field_list, array $not_migrateable_field_list, array $partially_migrated_fields, array $mapping_fields): self
     {
-        return new self($migrateable_field_list, $not_migrateable_field_list, $mapping_fields);
+        return new self($migrateable_field_list, $not_migrateable_field_list, $partially_migrated_fields, $mapping_fields);
     }
 }

@@ -58,7 +58,6 @@ final class RestArtifactMover implements MoveRestArtifact
         if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
             return $this->perfomMoveBasedOnSemantic($artifact, $target_tracker, $user, $should_populate_feedback_on_success, $source_tracker);
         }
-
         return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success);
     }
 
@@ -79,7 +78,7 @@ final class RestArtifactMover implements MoveRestArtifact
 
     private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
-        $field_collection = $this->collector->collect($source_tracker, $target_tracker);
+        $field_collection = $this->collector->collect($source_tracker, $target_tracker, $artifact);
 
         $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);

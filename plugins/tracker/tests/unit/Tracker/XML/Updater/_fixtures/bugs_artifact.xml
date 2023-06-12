@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changesets>
+  <changeset id="CHANGESET_4">
+    <submitted_by format="ldap">102</submitted_by>
+    <submitted_on format="ISO8601">2023-05-31T10:45:34+02:00</submitted_on>
+    <comments/>
+    <field_change type="string" field_name="summary">
+      <value>Some bug</value>
+    </field_change>
+    <field_change type="text" field_name="details">
+      <value format="commonmark"><![CDATA[]]></value>
+    </field_change>
+    <field_change field_name="status" type="list" bind="static">
+      <value format="id"><![CDATA[106]]></value>
+    </field_change>
+    <field_change field_name="severity" type="list" bind="static">
+      <value format="id"><![CDATA[113]]></value>
+    </field_change>
+    <field_change field_name="assigned_to" type="list" bind="users">
+      <value format="username">ProjectMember</value>
+    </field_change>
+    <field_change field_name="close_date" type="date">
+      <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+    </field_change>
+    <field_change type="float" field_name="initial_effort">
+      <value>100</value>
+    </field_change>
+    <field_change type="float" field_name="remaining_effort">
+      <value>10</value>
+    </field_change>
+  </changeset>
+  <changeset id="CHANGESET_5">
+    <submitted_by format="ldap">102</submitted_by>
+    <submitted_on format="ISO8601">2023-05-31T10:58:18+02:00</submitted_on>
+    <comments>
+      <comment>
+        <submitted_by format="ldap">102</submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T10:58:18+02:00]]></submitted_on>
+        <body format="commonmark">A comment</body>
+      </comment>
+    </comments>
+    <field_change field_name="status" type="list" bind="static">
+      <value format="id"><![CDATA[107]]></value>
+    </field_change>
+  </changeset>
+  <changeset id="CHANGESET_113">
+      <submitted_by format="ldap">102</submitted_by>
+      <submitted_on format="ISO8601">2023-06-13T09:08:50+02:00</submitted_on>
+      <comments>
+        <comment>
+          <submitted_by format="ldap">102</submitted_by>
+          <submitted_on format="ISO8601"><![CDATA[2023-06-13T09:08:50+02:00]]></submitted_on>
+          <body format="commonmark">An other comment</body>
+        </comment>
+      </comments>
+      <field_change type="float" field_name="initial_effort">
+        <value><![CDATA[8]]></value>
+      </field_change>
+      <field_change type="float" field_name="remaining_effort">
+        <value><![CDATA[5]]></value>
+      </field_change>
+    </changeset>
+</changesets>
