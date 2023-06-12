@@ -48,6 +48,7 @@ import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 import "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
 import "./creation/ArtifactCreatorElement";
 import type { ArtifactCreatorController } from "../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
@@ -208,10 +209,19 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
     }, default_html);
 };
 
-const onCancel = (host: InternalLinkField): void => {
+export const onCancel = (host: InternalLinkField): void => {
     host.is_artifact_creator_shown = false;
-    // Re-assign to call "replaceDropdownContent", otherwise the dropdown becomes empty
-    host.matching_artifact_section = [...host.matching_artifact_section];
+};
+
+export const onArtifactCreated = (
+    host: InternalLinkField,
+    event: CustomEvent<ArtifactCreatedEvent>
+): void => {
+    host.new_links_presenter = host.controller.addNewLink(
+        event.detail.artifact,
+        host.current_link_type
+    );
+    host.is_artifact_creator_shown = false;
 };
 
 export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
@@ -227,6 +237,7 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
             available_types="${host.allowed_link_types}"
             oncancel="${onCancel}"
             ontype-changed="${onLinkTypeChanged}"
+            onartifact-created="${onArtifactCreated}"
         ></tuleap-artifact-modal-link-artifact-creator>`;
     }
     const link_selector = host.link_selector.mapOr((element) => html`${element}`, html``);
@@ -266,16 +277,14 @@ const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): voi
             host.autocompleter.autoComplete(host, query);
         },
         templating_callback: getLinkableArtifactTemplate,
-        selection_callback: (value) => {
-            const artifact = getLinkableArtifact(value);
-            if (artifact) {
+        selection_callback: (value) =>
+            getLinkableArtifact(value).apply((artifact) => {
                 link_selector.clearSelection();
                 host.new_links_presenter = host.controller.addNewLink(
                     artifact,
                     host.current_link_type
                 );
-            }
-        },
+            }),
         ...options_with_feature_flag,
     };
     link_selector.options = options;

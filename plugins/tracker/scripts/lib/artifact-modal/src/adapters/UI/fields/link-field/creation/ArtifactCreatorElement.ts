@@ -41,9 +41,10 @@ import { FaultDisplayer } from "./FaultDisplayer";
 import type { Tracker } from "../../../../../domain/Tracker";
 import { selectOrThrow } from "@tuleap/dom";
 import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
-import { createListPicker } from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
+import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;
@@ -61,6 +62,8 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     content(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
+
+export type ArtifactCreatedEvent = { readonly artifact: LinkableArtifact };
 
 const onClickShowMore = (host: InternalArtifactCreator): void => {
     host.show_error_details = true;
@@ -98,6 +101,24 @@ export const observeIsLoading = (host: HostElement, new_value: boolean): void =>
 export const onClickCancel = (host: HostElement): void => {
     host.controller.enableSubmit();
     dispatch(host, "cancel");
+};
+
+export const onSubmit = (host: HostElement, event: Event): void => {
+    event.preventDefault();
+    const fake_cross_reference: ArtifactCrossReference = {
+        ref: "art #-1",
+        color: "inca-silver",
+    };
+    const fake_new_artifact: LinkableArtifact = {
+        id: -1,
+        xref: fake_cross_reference,
+        title: "Fake Artifact for development purpose",
+        uri: "/",
+        is_open: true,
+        status: { value: "Ongoing", color: "sherwood-green" },
+        project: { id: 865, label: "Fake Project for development purpose" },
+    };
+    dispatch(host, "artifact-created", { detail: { artifact: fake_new_artifact } });
 };
 
 const getProjectOptions = (
@@ -234,7 +255,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     selected_project: undefined,
     content: (host) =>
         html`${getErrorTemplate(host)}
-            <div class="link-field-artifact-creator-main">
+            <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
                 <span class="link-field-row-type"
                     ><tuleap-artifact-modal-link-type-selector
                         value="${host.current_link_type}"
@@ -251,6 +272,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                             placeholder="${getArtifactCreationInputPlaceholderText()}"
                             disabled="${host.is_loading}"
                             data-test="artifact-creator-title"
+                            required
                         />${host.is_loading &&
                         html`<i
                             class="fa-solid fa-spin fa-circle-notch link-field-artifact-creator-spinner"
@@ -264,7 +286,6 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
                                 ><select
                                     class="tlp-select tlp-select-small"
-                                    form=""
                                     required
                                     id="artifact-modal-link-creator-projects"
                                     oninput="${onProjectInput}"
@@ -279,16 +300,16 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                 <label for="artifact-modal-link-creator-trackers" class="tlp-label"
                                     >${getArtifactCreationTrackerLabel()}
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
-                                ><select form="" id="artifact-modal-link-creator-trackers">
+                                ><select id="artifact-modal-link-creator-trackers" required>
                                     ${getTrackersOptions(host)}
                                 </select>
                             </div>
                         </div>
                     </div>
                     <button
-                        type="button"
+                        type="submit"
                         class="tlp-button-primary tlp-button-small link-field-artifact-creator-button"
-                        disabled
+                        disabled="${host.is_loading}"
                         data-test="artifact-creator-submit"
                     >
                         ${getCreateArtifactButtonInCreatorLabel()}
@@ -301,5 +322,5 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                         ${getCancelArtifactCreationLabel()}
                     </button>
                 </div>
-            </div>`,
+            </form>`,
 });

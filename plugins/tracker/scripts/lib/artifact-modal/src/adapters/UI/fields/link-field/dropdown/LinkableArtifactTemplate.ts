@@ -23,15 +23,16 @@ import type {
     Status,
 } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { getAlreadyLinkedTextTooltip, getAlreadyLinkedInfo } from "../../../../../gettext-catalog";
+import { Option } from "@tuleap/option";
 
 const isLinkableArtifact = (item: unknown): item is LinkableArtifact =>
     typeof item === "object" && item !== null && "id" in item;
 
-export const getLinkableArtifact = (item: unknown): LinkableArtifact | null => {
+export const getLinkableArtifact = (item: unknown): Option<LinkableArtifact> => {
     if (!isLinkableArtifact(item)) {
-        return null;
+        return Option.nothing();
     }
-    return item;
+    return Option.fromValue(item);
 };
 
 export const getStatusClasses = (status: Status): string[] => {
@@ -44,38 +45,36 @@ export const getStatusClasses = (status: Status): string[] => {
 export const getLinkableArtifactTemplate = (
     html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem
-): HTMLTemplateResult => {
-    const artifact = getLinkableArtifact(item.value);
-    if (!artifact) {
-        return html``;
-    }
+): HTMLTemplateResult =>
+    getLinkableArtifact(item.value).mapOr((artifact) => {
+        const item_classes = [
+            `tlp-swatch-${artifact.xref.color}`,
+            "cross-ref-badge",
+            "link-field-item-xref-badge",
+        ];
 
-    const item_classes = [
-        `tlp-swatch-${artifact.xref.color}`,
-        "cross-ref-badge",
-        "link-field-item-xref-badge",
-    ];
+        if (item.is_disabled) {
+            return html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
+                <span class="${item_classes}">${artifact.xref.ref}</span>
+                <span class="link-field-item-title">${artifact.title}</span>
+                <span class="link-field-disabled-item-already-linked-info"
+                    >${getAlreadyLinkedInfo()}</span
+                >
+                ${artifact.status &&
+                html`<span class="${getStatusClasses(artifact.status)}"
+                    >${artifact.status.value}</span
+                >`}
+                <span class="link-field-item-project">${artifact.project.label}</span>
+            </span>`;
+        }
 
-    if (item.is_disabled) {
-        return html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
+        return html`<span class="link-field-item">
             <span class="${item_classes}">${artifact.xref.ref}</span>
             <span class="link-field-item-title">${artifact.title}</span>
-            <span class="link-field-disabled-item-already-linked-info"
-                >${getAlreadyLinkedInfo()}</span
-            >
             ${artifact.status &&
             html`<span class="${getStatusClasses(artifact.status)}"
                 >${artifact.status.value}</span
             >`}
             <span class="link-field-item-project">${artifact.project.label}</span>
         </span>`;
-    }
-
-    return html`<span class="link-field-item">
-        <span class="${item_classes}">${artifact.xref.ref}</span>
-        <span class="link-field-item-title">${artifact.title}</span>
-        ${artifact.status &&
-        html`<span class="${getStatusClasses(artifact.status)}">${artifact.status.value}</span>`}
-        <span class="link-field-item-project">${artifact.project.label}</span>
-    </span>`;
-};
+    }, html``);
