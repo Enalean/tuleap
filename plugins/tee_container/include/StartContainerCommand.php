@@ -38,11 +38,12 @@ use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\LogToSyslog;
+use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
 use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
-use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
+use TuleapCfg\Command\Docker\VariableProviderInterface;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
@@ -68,12 +69,13 @@ final class StartContainerCommand extends Command
     private const OPTION_EXEC           = 'exec';
     private const OPTION_DEBUG          = 'debug';
 
-    private ProcessFactory $process_factory;
     private DataPersistence $data_persistence;
 
-    public function __construct(ProcessFactory $process_factory)
-    {
-        $this->process_factory  = $process_factory;
+    public function __construct(
+        private readonly ProcessFactory $process_factory,
+        private readonly PluginsInstallClosureBuilder $plugins_install_closure_builder,
+        private readonly VariableProviderInterface $variable_provider,
+    ) {
         $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
 
         parent::__construct();
@@ -98,7 +100,8 @@ final class StartContainerCommand extends Command
             $tuleap_fqdn = $tuleap->setupOrUpdate(
                 new SymfonyStyle($input, $output),
                 $this->data_persistence,
-                new VariableProviderFromEnvironment(),
+                $this->variable_provider,
+                $this->plugins_install_closure_builder->buildClosureToInstallPlugins(),
             );
 
             $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);

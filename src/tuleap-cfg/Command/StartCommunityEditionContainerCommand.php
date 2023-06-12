@@ -35,12 +35,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Option\Option;
 use TuleapCfg\Command\Docker\DataPersistence;
+use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
 use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
-use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
+use TuleapCfg\Command\Docker\VariableProviderInterface;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -69,8 +71,11 @@ final class StartCommunityEditionContainerCommand extends Command
 
     private DataPersistence $data_persistence;
 
-    public function __construct(private ProcessFactory $process_factory)
-    {
+    public function __construct(
+        private readonly ProcessFactory $process_factory,
+        private readonly PluginsInstallClosureBuilder $plugins_install_closure_builder,
+        private readonly VariableProviderInterface $variable_provider,
+    ) {
         $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
 
         parent::__construct();
@@ -84,7 +89,7 @@ final class StartCommunityEditionContainerCommand extends Command
             ->addOption(self::OPTION_NO_SUPERVISORD, '', InputOption::VALUE_NONE, 'Do not run supervisord at the end of the setup')
             ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)')
             ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug')
-            ->addOption(self::OPTION_SKIP_INSTALL_ALL, '', InputOption::VALUE_NONE, 'Do not install all plugins (default is to auto install and activate all plugins)');
+            ->addOption(self::OPTION_SKIP_INSTALL_ALL, '', InputOption::VALUE_NONE, 'Do not install plugins (default is to auto install and activate plugins defined by the env variable PLUGINS_TO_ENABLE_FIRST_INSTALL)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -93,16 +98,18 @@ final class StartCommunityEditionContainerCommand extends Command
             $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
             $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
 
-            $post_install = fn (): Process => $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun();
+            $post_install = $this->plugins_install_closure_builder->buildClosureToInstallPlugins();
             if ($input->getOption(self::OPTION_SKIP_INSTALL_ALL) === true) {
-                $post_install = null;
+                /** @psalm-var \Psl\Type\TypeInterface<Closure():void> $type */
+                $type         = '';
+                $post_install = Option::nothing($type);
             }
 
             $tuleap      = new Tuleap($this->process_factory, new DatabaseConfigurator(PasswordHandlerFactory::getPasswordHandler(), new ConnectionManager()));
             $tuleap_fqdn = $tuleap->setupOrUpdate(
                 new SymfonyStyle($input, $output),
                 $this->data_persistence,
-                new VariableProviderFromEnvironment(),
+                $this->variable_provider,
                 $post_install,
             );
 

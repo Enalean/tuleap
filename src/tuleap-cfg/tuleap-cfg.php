@@ -26,12 +26,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 use TuleapCfg\Command\ProcessFactory;
 
 $application = new Application();
 $application->add(new \TuleapCfg\Command\ConfigureCommand());
-$application->add(new \TuleapCfg\Command\SystemControlCommand(new ProcessFactory()));
-$application->add(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(new ProcessFactory()));
+$process_factory   = new ProcessFactory();
+$variable_provider = new VariableProviderFromEnvironment();
+$application->add(new \TuleapCfg\Command\SystemControlCommand($process_factory));
+$application->add(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(
+    $process_factory,
+    new \TuleapCfg\Command\Docker\PluginsInstallClosureBuilderFromVariable($variable_provider, $process_factory),
+    $variable_provider,
+));
 $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(
     new \TuleapCfg\Command\SetupMysql\ConnectionManager(),
     new \TuleapCfg\Command\SetupMysql\DatabaseConfigurator(

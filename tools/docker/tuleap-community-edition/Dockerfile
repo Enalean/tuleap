@@ -39,6 +39,7 @@ FROM scratch
 EXPOSE 22 80 443
 
 ENV TLP_SYSTEMCTL=docker-centos7
+ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer cardwall docman embed frs git gitlab gitlfs graphontrackersv5 hudson_git mediawiki_standalone onlyoffice openidconnectclient pullrequest tracker'
 
 COPY --from=0 / /
 
