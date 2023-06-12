@@ -65,7 +65,9 @@ function MercureService(
     }
     function getToken(id) {
         return $q.when(
-            post(encodeURI("mercure_realtime_token/" + id)).then((response) => response.text())
+            post(encodeURI("/plugins/agiledashboard/mercure_realtime_token/" + id)).then(
+                (response) => response.text()
+            )
         );
     }
     function requestJWTToRefreshToken() {
