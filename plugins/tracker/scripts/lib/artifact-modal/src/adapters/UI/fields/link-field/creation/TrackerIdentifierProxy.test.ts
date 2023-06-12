@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,40 +14,40 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
-import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { Option } from "@tuleap/option";
+import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
 
-describe("ProjectIdentifierProxy", () => {
-    let project_identifier: Option<ProjectIdentifier>, doc: Document;
-    const PROJECT_ID = 110;
+describe(`TrackerIdentifierProxy`, () => {
+    let doc: Document, tracker_identifier: Option<TrackerIdentifier>;
+    const TRACKER_ID = 97;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
     });
 
     const triggerEvent = (): void => {
         const select = doc.createElement("select");
-        select.insertAdjacentHTML(`afterbegin`, `<option selected value="${PROJECT_ID}"></option>`);
+        select.insertAdjacentHTML(`afterbegin`, `<option selected value="${TRACKER_ID}"></option>`);
         select.addEventListener("change", (event) => {
-            project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
+            tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
         });
         select.dispatchEvent(new Event("change"));
     };
 
-    it("build from the change event on project select", () => {
+    it(`builds from the change event on the trackers selector`, () => {
         triggerEvent();
-        expect(project_identifier.unwrapOr(null)?.id).toBe(PROJECT_ID);
+        expect(tracker_identifier.unwrapOr(null)?.id).toBe(TRACKER_ID);
     });
 
-    it("build nothing if the element is not a select", () => {
+    it(`builds nothing if the target element is not a select`, () => {
         const input = doc.createElement("input");
         input.addEventListener("change", (event) => {
-            project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
+            tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
         });
         input.dispatchEvent(new Event("change"));
-        expect(project_identifier.isNothing()).toBe(true);
+        expect(tracker_identifier.isNothing()).toBe(true);
     });
 });

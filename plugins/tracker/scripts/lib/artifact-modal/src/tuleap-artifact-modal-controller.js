@@ -19,6 +19,7 @@
 
 import { loadTooltips } from "@tuleap/tooltip";
 import { Option } from "@tuleap/option";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -111,11 +112,13 @@ function ArtifactModalController(
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
         modal_model.tracker_id
     );
-    const project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
+    const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
+        modal_model.tracker
+    );
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
 
-    const user_locale = document.body.dataset.userLocale ?? "en_US";
+    const user_locale = document.body.dataset.userLocale ?? en_US_LOCALE;
 
     Object.assign(self, {
         $onInit: init,
@@ -152,7 +155,7 @@ function ArtifactModalController(
             api_client,
             event_dispatcher,
             current_artifact_option.unwrapOr(null), // It is not built in creation mode
-            project_identifier,
+            current_project_identifier,
             {
                 locale: modal_model.user_locale,
                 date_time_format: modal_model.user_date_time_format,
@@ -206,7 +209,8 @@ function ArtifactModalController(
                 event_dispatcher,
                 api_client,
                 api_client,
-                project_identifier,
+                current_project_identifier,
+                current_tracker_identifier,
                 user_locale
             );
         },

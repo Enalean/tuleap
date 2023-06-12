@@ -22,7 +22,9 @@ import {
     ArtifactCreatorElement,
     observeIsLoading,
     onClickCancel,
+    onProjectInput,
     onSubmit,
+    onTrackerChange,
     setErrorMessage,
 } from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
@@ -39,6 +41,11 @@ import { en_US_LOCALE } from "@tuleap/core-constants";
 import type { Tracker } from "../../../../../domain/Tracker";
 import { CurrentProjectIdentifierStub } from "../../../../../../tests/stubs/CurrentProjectIdentifierStub";
 import { ProjectIdentifierStub } from "../../../../../../tests/stubs/ProjectIdentifierStub";
+import { TrackerStub } from "../../../../../../tests/stubs/TrackerStub";
+import { ProjectStub } from "../../../../../../tests/stubs/ProjectStub";
+import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
+import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import { CurrentTrackerIdentifierStub } from "../../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -48,14 +55,17 @@ describe(`ArtifactCreatorElement`, () => {
     });
 
     describe(`events`, () => {
+        const TRACKER_ID = 75;
         let controller: ArtifactCreatorController;
         beforeEach(() => {
-            const project: Project = { id: 144, label: "Next Omega" };
             controller = ArtifactCreatorController(
                 DispatchEventsStub.buildNoOp(),
-                RetrieveProjectsStub.withProjects(project),
-                RetrieveProjectTrackersStub.withoutTracker(),
+                RetrieveProjectsStub.withProjects(ProjectStub.withDefaults()),
+                RetrieveProjectTrackersStub.withTrackers(
+                    TrackerStub.withDefaults({ id: TRACKER_ID })
+                ),
                 CurrentProjectIdentifierStub.withId(144),
+                CurrentTrackerIdentifierStub.withId(209),
                 en_US_LOCALE
             );
         });
@@ -91,18 +101,68 @@ describe(`ArtifactCreatorElement`, () => {
             expect(event.type).toBe("cancel");
         });
 
-        it(`when I submit the creation form, it will prevent default (to avoid redirecting)
-            and it will dispatch an "artifact-created" event containing a LinkableArtifact`, () => {
+        it(`when I submit the creation form,
+            it will prevent default (to avoid redirecting)
+            and it will tell the controller to create an artifact with the title from the form
+            and it will dispatch an "artifact-created" event containing a LinkableArtifact`, async () => {
+            const TITLE = "overwillingly unpatriotic";
             const host = getHost();
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
             const inner_event = new Event("submit", { cancelable: true });
-            onSubmit(host, inner_event);
+            const form = doc.createElement("form");
+            form.insertAdjacentHTML(
+                "afterbegin",
+                `<input type="text" name="artifact_title" value="${TITLE}">`
+            );
+            form.dispatchEvent(inner_event);
+            await onSubmit(host, inner_event);
 
             expect(inner_event.defaultPrevented).toBe(true);
             const event = dispatchEvent.mock.calls[0][0] as CustomEvent<ArtifactCreatedEvent>;
             expect(event.type).toBe("artifact-created");
-            expect(event.detail.artifact.id).toBe(-1);
+            const new_artifact = event.detail.artifact;
+            expect(new_artifact.id).toBe(-1);
+            expect(new_artifact.title).toBe(TITLE);
+        });
+
+        it(`when I select a project,
+            it will tell the controller to select it and load its trackers
+            and will refresh the selected tracker`, async () => {
+            const PROJECT_ID = 218;
+            const host = getHost();
+            const select = doc.createElement("select");
+            select.insertAdjacentHTML(
+                `afterbegin`,
+                `<option selected value="${PROJECT_ID}"></option>`
+            );
+            const event = new Event("input");
+            select.dispatchEvent(event);
+
+            onProjectInput(host, event);
+            expect(host.is_loading).toBe(true);
+
+            await await null; // wait for promise to run
+            expect(host.is_loading).toBe(false);
+            expect(host.trackers).toHaveLength(1);
+            expect(host.selected_tracker.isNothing()).toBe(true);
+        });
+
+        it(`when I select a tracker,
+            it will tell the controller to select it`, () => {
+            const TRACKER_ID = 167;
+            const host = getHost();
+            const select = doc.createElement("select");
+            select.insertAdjacentHTML(
+                `afterbegin`,
+                `<option selected value="${TRACKER_ID}"></option>`
+            );
+            const event = new Event("change");
+            select.dispatchEvent(event);
+
+            onTrackerChange(host, event);
+
+            expect(host.controller.getSelectedTracker().unwrapOr(null)?.id).toBe(TRACKER_ID);
         });
 
         it(`when is_loading becomes true, it will disable the modal submit`, () => {
@@ -129,8 +189,10 @@ describe(`ArtifactCreatorElement`, () => {
             error_message: Option<string>,
             show_error_details: boolean,
             trackers: ReadonlyArray<Tracker>,
-            projects: ReadonlyArray<Project>;
-        const selected_project_id = 806;
+            projects: ReadonlyArray<Project>,
+            selected_tracker: Option<TrackerIdentifier>;
+        const selected_project_id = 806,
+            selected_tracker_id = 120;
 
         beforeEach(() => {
             is_loading = false;
@@ -138,6 +200,7 @@ describe(`ArtifactCreatorElement`, () => {
             show_error_details = false;
             projects = [];
             trackers = [];
+            selected_tracker = Option.fromValue(TrackerIdentifierStub.withId(selected_tracker_id));
         });
 
         const render = (): HTMLElement => {
@@ -153,6 +216,7 @@ describe(`ArtifactCreatorElement`, () => {
                 projects,
                 trackers,
                 selected_project: ProjectIdentifierStub.withId(selected_project_id),
+                selected_tracker,
                 content: () => element as HTMLElement,
             } as HostElement);
 
@@ -182,8 +246,8 @@ describe(`ArtifactCreatorElement`, () => {
 
         it(`tracks the currently selected project in the select`, () => {
             projects = [
-                { id: 775, label: "Next Omega" },
-                { id: selected_project_id, label: "Cloudy Bird" },
+                ProjectStub.withDefaults({ id: 775 }),
+                ProjectStub.withDefaults({ id: selected_project_id }),
             ];
 
             const target = render();
@@ -196,34 +260,38 @@ describe(`ArtifactCreatorElement`, () => {
             expect(options.item(1).selected).toBe(true);
         });
 
-        it(`disables the option when the user cannot create artifacts`, () => {
-            trackers = [
-                { id: 201, label: "GT", color_name: "deep-blue", cannot_create_reason: "" },
-                { id: 206, label: "Shelby", color_name: "green", cannot_create_reason: "" },
-                {
-                    id: 158,
-                    label: "Mach-e",
-                    color_name: "red",
-                    cannot_create_reason: "Not a Mustang",
-                },
-                {
-                    id: selected_project_id,
-                    label: "Mach 1",
-                    color_name: "red",
-                    cannot_create_reason: "",
-                },
-            ];
+        describe(`tracker options`, () => {
+            beforeEach(() => {
+                trackers = [
+                    TrackerStub.withDefaults({
+                        id: 158,
+                        label: "Mach-e",
+                        cannot_create_reason: "Not a Mustang",
+                    }),
+                    TrackerStub.withDefaults({ id: selected_tracker_id }),
+                ];
+            });
 
-            const target = render();
-            const tracker_options = target.querySelectorAll<HTMLOptionElement>(
-                "[data-test=artifact-modal-link-creator-trackers-option]"
-            );
+            const renderOptions = (): NodeListOf<HTMLOptionElement> => {
+                const target = render();
+                return target.querySelectorAll<HTMLOptionElement>(
+                    "[data-test=artifact-modal-link-creator-trackers-option]"
+                );
+            };
 
-            expect(tracker_options).toHaveLength(4);
-            expect(tracker_options.item(0).disabled).toBe(false);
-            expect(tracker_options.item(1).disabled).toBe(false);
-            expect(tracker_options.item(2).disabled).toBe(true);
-            expect(tracker_options.item(3).disabled).toBe(false);
+            it(`tracks the currently selected tracker in the select`, () => {
+                const options = renderOptions();
+                expect(options).toHaveLength(2);
+                expect(options.item(0).selected).toBe(false);
+                expect(options.item(1).selected).toBe(true);
+            });
+
+            it(`disables the tracker options when the user cannot create artifacts`, () => {
+                const options = renderOptions();
+                expect(options).toHaveLength(2);
+                expect(options.item(0).disabled).toBe(true);
+                expect(options.item(1).disabled).toBe(false);
+            });
         });
 
         it(`when there is an error, it will show it`, () => {

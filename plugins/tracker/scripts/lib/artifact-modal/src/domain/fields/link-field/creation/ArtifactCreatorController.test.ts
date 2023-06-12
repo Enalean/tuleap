@@ -21,8 +21,6 @@ import { Fault } from "@tuleap/fault";
 import { ArtifactCreatorController } from "./ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import type { RetrieveProjects } from "./RetrieveProjects";
-import type { Project } from "../../../Project";
-import type { Tracker } from "../../../Tracker";
 import { RetrieveProjectsStub } from "../../../../../tests/stubs/RetrieveProjectsStub";
 import { RetrieveProjectTrackersStub } from "../../../../../tests/stubs/RetrieveProjectTrackersStub";
 import type { RetrieveProjectTrackers } from "./RetrieveProjectTrackers";
@@ -30,32 +28,29 @@ import { ProjectIdentifierStub } from "../../../../../tests/stubs/ProjectIdentif
 import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { ProjectIdentifier } from "../../../ProjectIdentifier";
 import { en_US_LOCALE } from "@tuleap/core-constants";
+import { TrackerStub } from "../../../../../tests/stubs/TrackerStub";
+import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentifierStub";
 
 describe(`ArtifactCreatorController`, () => {
-    const CURRENT_PROJECT_ID = 101;
+    const CURRENT_PROJECT_ID = 101,
+        CURRENT_TRACKER_ID = 219;
     let event_dispatcher: DispatchEventsStub,
         projects_retriever: RetrieveProjects,
         tracker_retriever: RetrieveProjectTrackers;
 
     beforeEach(() => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
-        const first_project: Project = { id: 184, label: "Lucky Sledgehammer" };
-        const second_project: Project = { id: 198, label: "Indigo Sun" };
-        projects_retriever = RetrieveProjectsStub.withProjects(first_project, second_project);
+        projects_retriever = RetrieveProjectsStub.withProjects(
+            ProjectStub.withDefaults({ id: 184 }),
+            ProjectStub.withDefaults({ id: 198 })
+        );
 
-        const first_tracker: Tracker = {
-            id: 1,
-            color_name: "deep-blue",
-            label: "V-Series.R",
-            cannot_create_reason: "",
-        };
-        const second_tracker: Tracker = {
-            id: 2,
-            color_name: "graffiti-yellow",
-            label: "963",
-            cannot_create_reason: "",
-        };
-        tracker_retriever = RetrieveProjectTrackersStub.withTrackers(first_tracker, second_tracker);
+        tracker_retriever = RetrieveProjectTrackersStub.withTrackers(
+            TrackerStub.withDefaults({ id: 86 }),
+            TrackerStub.withDefaults({ id: 98 })
+        );
     });
 
     const getController = (): ArtifactCreatorController =>
@@ -64,10 +59,11 @@ describe(`ArtifactCreatorController`, () => {
             projects_retriever,
             tracker_retriever,
             CurrentProjectIdentifierStub.withId(CURRENT_PROJECT_ID),
+            CurrentTrackerIdentifierStub.withId(CURRENT_TRACKER_ID),
             en_US_LOCALE
         );
 
-    describe(`getSelectedProject`, () => {
+    describe(`getSelectedProject()`, () => {
         it(`will return the current project id`, () => {
             expect(getController().getSelectedProject().id).toBe(CURRENT_PROJECT_ID);
         });
@@ -80,6 +76,42 @@ describe(`ArtifactCreatorController`, () => {
             controller.selectProjectAndGetItsTrackers(project_id);
 
             expect(controller.getSelectedProject()).toBe(project_id);
+        });
+    });
+
+    describe(`getSelectedTracker()`, () => {
+        it(`will return the current tracker id`, () => {
+            expect(getController().getSelectedTracker().unwrapOr(null)?.id).toBe(
+                CURRENT_TRACKER_ID
+            );
+        });
+
+        it(`after calling selectTracker(),
+            it will memorize it and return it`, () => {
+            const tracker_id = TrackerIdentifierStub.withId(670);
+            const controller = getController();
+
+            controller.selectTracker(tracker_id);
+
+            expect(controller.getSelectedTracker().unwrapOr(null)).toBe(tracker_id);
+        });
+
+        it(`after calling selectProjectAndGetItsTrackers() with a different project than the one that was selected,
+            it will clear the selected tracker`, async () => {
+            const controller = getController();
+
+            await controller.selectProjectAndGetItsTrackers(ProjectIdentifierStub.withId(835));
+
+            expect(controller.getSelectedTracker().isNothing()).toBe(true);
+        });
+
+        it(`after calling selectProjectAndGetItsTrackers() with the project already selected,
+            it will keep the selected tracker memorized`, async () => {
+            const controller = getController();
+
+            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject());
+
+            expect(controller.getSelectedTracker().unwrapOr(null)?.id).toBe(CURRENT_TRACKER_ID);
         });
     });
 
@@ -129,6 +161,16 @@ describe(`ArtifactCreatorController`, () => {
 
             expect(trackers).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
+        });
+    });
+
+    describe(`createArtifact()`, () => {
+        it(`will create an artifact with the given title
+            and will return a LinkableArtifact`, async () => {
+            const title = "nonmathematical procontinuation";
+            const artifact = await getController().createArtifact(title);
+
+            expect(artifact.title).toBe(title);
         });
     });
 

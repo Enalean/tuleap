@@ -23,9 +23,6 @@ import type { Tracker } from "../../src/domain/Tracker";
 import type { Fault } from "@tuleap/fault";
 
 export const RetrieveProjectTrackersStub = {
-    withoutTracker: (): RetrieveProjectTrackers => ({
-        getTrackersByProject: () => okAsync([]),
-    }),
     withTrackers: (
         first_tracker: Tracker,
         ...other_trackers: Tracker[]

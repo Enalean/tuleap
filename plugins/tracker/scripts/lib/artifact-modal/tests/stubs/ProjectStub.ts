@@ -17,16 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "./Identifier";
-import type { CurrentTrackerIdentifier } from "./CurrentTrackerIdentifier";
+import type { Project } from "../../src/domain/Project";
 
-export type TrackerIdentifier = Identifier<"TrackerIdentifier">;
-
-export const TrackerIdentifier = {
-    fromCurrentTracker: (
-        current_tracker_identifier: CurrentTrackerIdentifier
-    ): TrackerIdentifier => ({
-        id: current_tracker_identifier.id,
-        _type: "TrackerIdentifier",
+export const ProjectStub = {
+    withDefaults: (data?: Partial<Project>): Project => ({
+        id: 152,
+        label: "Lucky Sledgehammer",
+        ...data,
     }),
 };

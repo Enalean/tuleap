@@ -30,6 +30,10 @@ import type { RetrieveProjectTrackers } from "./RetrieveProjectTrackers";
 import { ProjectTrackersRetrievalFault } from "./ProjectTrackersRetrievalFault";
 import { ProjectIdentifier } from "../../../ProjectIdentifier";
 import type { CurrentProjectIdentifier } from "../../../CurrentProjectIdentifier";
+import { TrackerIdentifier } from "../../../TrackerIdentifier";
+import type { ArtifactCrossReference } from "../../../ArtifactCrossReference";
+import type { LinkableArtifact } from "../LinkableArtifact";
+import type { CurrentTrackerIdentifier } from "../../../CurrentTrackerIdentifier";
 
 type OnFaultHandler = (fault: Fault) => void;
 
@@ -37,9 +41,12 @@ export type ArtifactCreatorController = {
     registerFaultListener(handler: OnFaultHandler): void;
     getProjects(): PromiseLike<readonly Project[]>;
     selectProjectAndGetItsTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
+    selectTracker(tracker_id: TrackerIdentifier): void;
+    createArtifact(title: string): PromiseLike<LinkableArtifact>;
     disableSubmit(reason: string): void;
     enableSubmit(): void;
     getSelectedProject(): ProjectIdentifier;
+    getSelectedTracker(): Option<TrackerIdentifier>;
     getUserLocale(): string;
 };
 
@@ -48,25 +55,18 @@ export const ArtifactCreatorController = (
     projects_retriever: RetrieveProjects,
     project_trackers_retriever: RetrieveProjectTrackers,
     current_project_identifier: CurrentProjectIdentifier,
+    current_tracker_identifier: CurrentTrackerIdentifier,
     user_locale: string
 ): ArtifactCreatorController => {
-    let _handler: Option<OnFaultHandler> = Option.nothing();
-    let selected_project: ProjectIdentifier = ProjectIdentifier.fromCurrentProject(
-        current_project_identifier
-    );
+    let _handler: Option<OnFaultHandler> = Option.nothing(),
+        selected_project: ProjectIdentifier = ProjectIdentifier.fromCurrentProject(
+            current_project_identifier
+        ),
+        selected_tracker: Option<TrackerIdentifier> = Option.fromValue(
+            TrackerIdentifier.fromCurrentTracker(current_tracker_identifier)
+        );
 
     return {
-        selectProjectAndGetItsTrackers(project_id): PromiseLike<readonly Tracker[]> {
-            selected_project = project_id;
-            return project_trackers_retriever.getTrackersByProject(selected_project).match(
-                (trackers) => trackers,
-                (fault) => {
-                    _handler.apply((handler) => handler(ProjectTrackersRetrievalFault(fault)));
-                    return [];
-                }
-            );
-        },
-
         registerFaultListener: (handler): void => {
             _handler = Option.fromValue(handler);
         },
@@ -80,6 +80,45 @@ export const ArtifactCreatorController = (
                 }
             ),
 
+        selectProjectAndGetItsTrackers(project_id): PromiseLike<readonly Tracker[]> {
+            const is_new_project = project_id !== selected_project;
+            selected_project = project_id;
+            return project_trackers_retriever.getTrackersByProject(selected_project).match(
+                (trackers) => {
+                    if (is_new_project) {
+                        selected_tracker = Option.nothing();
+                    }
+                    return trackers;
+                },
+                (fault) => {
+                    _handler.apply((handler) => handler(ProjectTrackersRetrievalFault(fault)));
+                    return [];
+                }
+            );
+        },
+
+        selectTracker(tracker_id): void {
+            selected_tracker = Option.fromValue(tracker_id);
+        },
+
+        createArtifact(title): PromiseLike<LinkableArtifact> {
+            const fake_cross_reference: ArtifactCrossReference = {
+                ref: "art #-1",
+                color: "inca-silver",
+            };
+            const fake_new_artifact: LinkableArtifact = {
+                id: -1,
+                xref: fake_cross_reference,
+                title,
+                uri: "/",
+                is_open: true,
+                status: { value: "Ongoing", color: "sherwood-green" },
+                project: { id: selected_project.id, label: "Fake Project for development purpose" },
+            };
+
+            return Promise.resolve(fake_new_artifact);
+        },
+
         disableSubmit(reason): void {
             event_dispatcher.dispatch(WillDisableSubmit(reason));
         },
@@ -89,6 +128,8 @@ export const ArtifactCreatorController = (
         },
 
         getSelectedProject: () => selected_project,
+
+        getSelectedTracker: () => selected_tracker,
 
         getUserLocale: () => user_locale,
     };
