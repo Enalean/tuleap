@@ -11,11 +11,11 @@
     "lodash": "4.17.21",
     "socket.io": "^4.6.1"
   },
-  "devDependencies": {
-    "pkg": "^5.5.2"
-  },
   "scripts": {
-    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/tuleap-realtime --targets node16-linuxstatic-x64 package.json",
+    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/tuleap-realtime --targets node18-linuxstatic-x64 package.json",
     "test": "vitest"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
   }
 }

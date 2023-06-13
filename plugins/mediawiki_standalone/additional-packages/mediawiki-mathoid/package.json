@@ -8,17 +8,17 @@
   "dependencies": {
     "mathoid": "https://github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb"
   },
-  "devDependencies": {
-    "pkg": "^5.8.0"
-  },
   "pkg": {
     "assets": "node_modules/**/*.js",
     "targets": [
-      "node16-linuxstatic-x64"
+      "node18-linuxstatic-x64"
     ]
   },
   "scripts": {
-    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/mathoid-cli package.json",
+    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/mathoid-cli --targets node18-linuxstatic-x64 package.json",
     "test": "./src/test.sh"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
   }
 }

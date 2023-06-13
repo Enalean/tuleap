@@ -79,7 +79,7 @@ mo:
 node:
 	cd $(BASE_DIR) &&\
 	     CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile &&\
-	     pnpm run build
+	     PKG_IGNORE_TAG=1 PKG_CACHE_PATH=`HOME=$(RPM_TMP)/nix nix-build --no-out-link $(BASE_DIR)/tools/utils/nix/vercel-pkg-fetch-node.nix` pnpm run build
 
 composer:
 	$(MAKE) -C $(BASE_DIR) composer preload MODE=Prod
