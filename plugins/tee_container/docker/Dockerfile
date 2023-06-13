@@ -49,6 +49,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-dynamic-credentials \
     tuleap-plugin-frs \
     tuleap-plugin-fts-db \
+    tuleap-plugin-fts-meilisearch \
     tuleap-plugin-roadmap \
     tuleap-plugin-git \
     tuleap-plugin-gitlab \
@@ -96,6 +97,7 @@ FROM scratch
 EXPOSE 22 80 443
 
 ENV TLP_SYSTEMCTL=docker-centos7
+ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
 
 COPY --from=0 / /
 

@@ -22,9 +22,18 @@
 
 declare(strict_types=1);
 
+use TuleapCfg\Command\Docker\PluginsInstallClosureBuilderFromVariable;
+use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
+
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$application = new \Symfony\Component\Console\Application();
-$application->add(new \Tuleap\TEEContainer\StartContainerCommand(new \TuleapCfg\Command\ProcessFactory()));
+$application       = new \Symfony\Component\Console\Application();
+$process_factory   = new \TuleapCfg\Command\ProcessFactory();
+$variable_provider = new VariableProviderFromEnvironment();
+$application->add(new \Tuleap\TEEContainer\StartContainerCommand(
+    $process_factory,
+    new PluginsInstallClosureBuilderFromVariable($variable_provider, $process_factory),
+    $variable_provider,
+));
 $application->run();

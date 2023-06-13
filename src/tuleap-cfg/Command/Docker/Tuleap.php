@@ -33,6 +33,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Tuleap\Option\Option;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
@@ -51,7 +52,10 @@ final class Tuleap
     {
     }
 
-    public function setupOrUpdate(SymfonyStyle $output, DataPersistence $data_persistence, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    /**
+     * @psalm-param Option<Closure():void> $post_install
+     */
+    public function setupOrUpdate(SymfonyStyle $output, DataPersistence $data_persistence, VariableProviderInterface $variable_provider, Option $post_install): string
     {
         if (! $data_persistence->isThereAnyData()) {
             $tuleap_fqdn = $this->installTuleap($output, $variable_provider, $post_install);
@@ -65,7 +69,10 @@ final class Tuleap
         }
     }
 
-    private function installTuleap(SymfonyStyle $output, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    /**
+     * @psalm-param Option<Closure():void> $post_install
+     */
+    private function installTuleap(SymfonyStyle $output, VariableProviderInterface $variable_provider, Option $post_install): string
     {
         $fqdn = $variable_provider->get(self::TULEAP_FQDN);
 
@@ -116,9 +123,7 @@ final class Tuleap
             $variable_provider->get(self::DB_ADMIN_PASSWORD),
         );
 
-        if ($post_install !== null) {
-            $post_install();
-        }
+        $post_install->apply(fn (callable $post_install_call) => $post_install_call());
 
         $ssh_daemon->shutdownDaemon($output);
 
