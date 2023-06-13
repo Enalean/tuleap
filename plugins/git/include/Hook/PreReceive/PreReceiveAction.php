@@ -61,13 +61,17 @@ final class PreReceiveAction
      */
     public function preReceiveExecute(string $repository_path, string $input_data): Ok|Err
     {
-        if (ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY) !== '1') {
-            return Result::ok(null);
-        }
-
         $repository = $this->git_repository_factory->getFromFullPath($repository_path);
         if ($repository === null) {
             return Result::ok(null);
+        }
+
+        $ids = ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY);
+        if ($ids) {
+            $ignored_repos_ids = array_map(static fn(string $value) => (int) trim($value), explode(',', $ids));
+            if (in_array($repository->getId(), $ignored_repos_ids, true)) {
+                return Result::ok(null);
+            }
         }
 
         $wasm_path = $this->getPossibleCustomPreReceiveHookPath($repository);
