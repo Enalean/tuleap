@@ -80,11 +80,16 @@ class AccessControlController
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
-        $accessfile_reader = new AccessFileReader($repository);
+        $accessfile_reader       = new AccessFileReader();
+        $svn_access_file_content = $accessfile_reader->getAccessFileContent($repository);
         if ($request->exist('form_accessfile')) {
-            $content = $request->get('form_accessfile');
-        } else {
-            $content = $accessfile_reader->readContentBlock($repository);
+            $svn_access_file_content = SvnAccessFileContent::fromSubmittedContent($svn_access_file_content, $request->get('form_accessfile'));
+        }
+
+        $duplicate_path_detector = new DuplicateSectionDetector();
+        $faults                  = $duplicate_path_detector->inspect($svn_access_file_content);
+        foreach ($faults as $fault) {
+            $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
         }
 
         $GLOBALS['HTML']->includeJavascriptSnippet(
@@ -99,8 +104,7 @@ class AccessControlController
                 $this->getToken($repository),
                 $repository,
                 $title,
-                $accessfile_reader->readDefaultBlock($repository),
-                $content,
+                $svn_access_file_content,
                 $versions,
                 $current_version_number,
                 $last_version_number

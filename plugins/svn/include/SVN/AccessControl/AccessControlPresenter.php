@@ -52,21 +52,20 @@ class AccessControlPresenter extends BaseAdminPresenter
     public function __construct(
         CSRFSynchronizerToken $token,
         Repository $repository,
-        $title,
-        $default_content,
-        $auth_file,
+        string $title,
+        SvnAccessFileContent $contents,
         array $versions,
         $current_version_number,
         $last_version_number,
     ) {
         parent::__construct();
 
-        $this->default_content = $default_content;
+        $this->default_content = $contents->default;
 
         $this->csrf                  = $token->fetchHTMLInput();
         $this->repository            = $repository;
         $this->project_id            = $repository->getProject()->getID();
-        $this->auth_file             = $auth_file;
+        $this->auth_file             = $contents->project_defined;
         $this->versions              = $versions;
         $this->repository_id         = $this->repository->getId();
         $this->repository_name       = $this->repository->getName();

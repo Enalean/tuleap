@@ -27,28 +27,24 @@ use Tuleap\SVN\Repository\Repository;
  */
 class AccessFileReader
 {
-    private static $FILENAME = ".SVNAccessFile";
+    private const FILENAME     = ".SVNAccessFile";
+    private const BEGIN_MARKER = '# BEGIN CODENDI DEFAULT';
+    private const END_MARKER   = '# END CODENDI DEFAULT';
 
-    public function readContentBlock(Repository $repository)
+    public function readContentBlock(Repository $repository): string
     {
-        $blocks = $this->extractBlocksFromAccessFile($repository);
-
-        return $blocks['content'];
+        return $this->getAccessFileContent($repository)->project_defined;
     }
 
-    public function readDefaultBlock(Repository $repository)
+    public function readDefaultBlock(Repository $repository): string
     {
-        $blocks = $this->extractBlocksFromAccessFile($repository);
-
-        return $blocks['default'];
+        return $this->getAccessFileContent($repository)->default;
     }
 
-    private function extractBlocksFromAccessFile(Repository $repository)
+    public function getAccessFileContent(Repository $repository): SvnAccessFileContent
     {
-        $blocks = [
-            'default' => '',
-            'content' => '',
-        ];
+        $default = '';
+        $content = '';
 
         $in_default_block = false;
         foreach (file($this->getPath($repository)) as $line) {
@@ -63,37 +59,27 @@ class AccessFileReader
             }
 
             if ($in_default_block) {
-                $blocks['default'] .= $line;
+                $default .= $line;
             } else {
-                $blocks['content'] .= $line;
+                $content .= $line;
             }
         }
 
-        return $blocks;
+        return new SvnAccessFileContent($default, $content);
     }
 
-    private function isDefaultBlockStarting($line)
+    private function isDefaultBlockStarting(string $line): bool
     {
-        return strpos($line, $this->getBeginDefault()) !== false;
+        return str_contains($line, self::BEGIN_MARKER);
     }
 
-    private function isDefaultBlockEnding($line)
+    private function isDefaultBlockEnding(string $line): bool
     {
-        return strpos($line, $this->getEndDefault()) !== false;
+        return str_contains($line, self::END_MARKER);
     }
 
-    private function getPath(Repository $repository)
+    private function getPath(Repository $repository): string
     {
-        return $repository->getSystemPath() . '/' . self::$FILENAME;
-    }
-
-    private function getBeginDefault()
-    {
-        return '# BEGIN CODENDI DEFAULT';
-    }
-
-    private function getEndDefault()
-    {
-        return '# END CODENDI DEFAULT';
+        return $repository->getSystemPath() . '/' . self::FILENAME;
     }
 }
