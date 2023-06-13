@@ -20,6 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
 import {
+    getArtifactCreationErrorMessage,
     getProjectsRetrievalErrorMessage,
     getProjectTrackersRetrievalErrorMessage,
 } from "../../../../../gettext-catalog";
@@ -28,9 +29,10 @@ export type FaultDisplayer = { formatForDisplay(fault: Fault): string };
 
 const isProjectsRetrievalFault = (fault: Fault): boolean =>
     "isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true;
-
 const isProjectTrackerRetrievalFault = (fault: Fault): boolean =>
     "isProjectTrackersRetrieval" in fault && fault.isProjectTrackersRetrieval() === true;
+const isArtifactCreationFault = (fault: Fault): boolean =>
+    "isArtifactCreation" in fault && fault.isArtifactCreation() === true;
 
 export const FaultDisplayer = (): FaultDisplayer => ({
     formatForDisplay(fault): string {
@@ -39,6 +41,9 @@ export const FaultDisplayer = (): FaultDisplayer => ({
         }
         if (isProjectTrackerRetrievalFault(fault)) {
             return sprintf(getProjectTrackersRetrievalErrorMessage(), fault);
+        }
+        if (isArtifactCreationFault(fault)) {
+            return sprintf(getArtifactCreationErrorMessage(), fault);
         }
         return String(fault);
     },

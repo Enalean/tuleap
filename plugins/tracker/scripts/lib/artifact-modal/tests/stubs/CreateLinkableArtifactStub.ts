@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BaseChangesetValue = {
-    readonly field_id: number;
-};
-type UnknownChangesetValue = BaseChangesetValue & {
-    readonly value: unknown;
-};
-type StringChangesetValue = BaseChangesetValue & {
-    readonly value: string;
-};
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { CreateLinkableArtifact } from "../../src/domain/fields/link-field/creation/CreateLinkableArtifact";
+import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 
-type ChangesetValue = UnknownChangesetValue | StringChangesetValue;
+export const CreateLinkableArtifactStub = {
+    withArtifact: (artifact: LinkableArtifact): CreateLinkableArtifact => ({
+        createLinkableArtifact: () => okAsync(artifact),
+    }),
 
-export type ChangesetValues = ChangesetValue[];
+    withFault: (fault: Fault): CreateLinkableArtifact => ({
+        createLinkableArtifact: () => errAsync(fault),
+    }),
+};

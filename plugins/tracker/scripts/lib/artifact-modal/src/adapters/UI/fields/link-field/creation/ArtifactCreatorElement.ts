@@ -115,8 +115,12 @@ export const onSubmit = async (host: HostElement, event: Event): Promise<void> =
     if (!(title_input instanceof HTMLInputElement)) {
         return;
     }
-    const artifact = await host.controller.createArtifact(title_input.value);
-    dispatch(host, "artifact-created", { detail: { artifact } });
+    host.is_loading = true;
+    const created_artifact = await host.controller.createArtifact(title_input.value);
+    host.is_loading = false;
+    created_artifact.apply((artifact) => {
+        dispatch(host, "artifact-created", { detail: { artifact } });
+    });
 };
 
 const getProjectOptions = (

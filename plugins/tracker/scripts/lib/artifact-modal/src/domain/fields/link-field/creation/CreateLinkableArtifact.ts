@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BaseChangesetValue = {
-    readonly field_id: number;
-};
-type UnknownChangesetValue = BaseChangesetValue & {
-    readonly value: unknown;
-};
-type StringChangesetValue = BaseChangesetValue & {
-    readonly value: string;
-};
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { TrackerIdentifier } from "../../../TrackerIdentifier";
+import type { LinkableArtifact } from "../LinkableArtifact";
 
-type ChangesetValue = UnknownChangesetValue | StringChangesetValue;
-
-export type ChangesetValues = ChangesetValue[];
+export type CreateLinkableArtifact = {
+    createLinkableArtifact(
+        tracker_identifier: TrackerIdentifier,
+        artifact_title: string
+    ): ResultAsync<LinkableArtifact, Fault>;
+};

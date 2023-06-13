@@ -49,8 +49,8 @@ const isSearchArtifacts = (fault: Fault): boolean =>
     "isSearchArtifacts" in fault && fault.isSearchArtifacts() === true;
 const isCommentsRetrieval = (fault: Fault): boolean =>
     "isCommentsRetrieval" in fault && fault.isCommentsRetrieval() === true;
-const isArtifactCreationFault = (fault: Fault): boolean =>
-    "isArtifactCreationFault" in fault && fault.isArtifactCreationFault() === true;
+const isArtifactCreation = (fault: Fault): boolean =>
+    "isArtifactCreation" in fault && fault.isArtifactCreation() === true;
 const isFileUploadFault = (fault: Fault): boolean =>
     "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -77,7 +77,7 @@ export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
         if (isCommentsRetrieval(fault)) {
             return sprintf(getCommentsRetrievalErrorMessage(), fault);
         }
-        if (isArtifactCreationFault(fault)) {
+        if (isArtifactCreation(fault)) {
             return sprintf(getArtifactCreationErrorMessage(), fault);
         }
         if (isFileUploadFault(fault)) {

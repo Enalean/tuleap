@@ -27,7 +27,7 @@ import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field
 import { UserHistoryRetrievalFault } from "../../../domain/fields/link-field/UserHistoryRetrievalFault";
 import { SearchArtifactsFault } from "../../../domain/fields/link-field/SearchArtifactsFault";
 import { CommentsRetrievalFault } from "../../../domain/comments/CommentsRetrievalFault";
-import { ArtifactCreationFault } from "../../../domain/submit/ArtifactCreationFault";
+import { ArtifactCreationFault } from "../../../domain/ArtifactCreationFault";
 import { FileUploadFault } from "../../../domain/fields/file-field/FileUploadFault";
 
 const FAULT_MESSAGE = "An error occurred";

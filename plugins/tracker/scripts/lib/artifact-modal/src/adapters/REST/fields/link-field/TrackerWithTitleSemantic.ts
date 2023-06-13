@@ -17,16 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BaseChangesetValue = {
-    readonly field_id: number;
-};
-type UnknownChangesetValue = BaseChangesetValue & {
-    readonly value: unknown;
-};
-type StringChangesetValue = BaseChangesetValue & {
-    readonly value: string;
-};
+import type {
+    SemanticsRepresentation,
+    TrackerResponseNoInstance,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
-type ChangesetValue = UnknownChangesetValue | StringChangesetValue;
-
-export type ChangesetValues = ChangesetValue[];
+export type TrackerWithTitleSemantic = Pick<TrackerResponseNoInstance, "id"> & {
+    readonly semantics: Pick<SemanticsRepresentation, "title">;
+};

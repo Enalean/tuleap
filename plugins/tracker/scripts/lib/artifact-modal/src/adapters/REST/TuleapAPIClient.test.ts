@@ -56,6 +56,7 @@ import type {
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
+import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
 
 const ARTIFACT_ID = 90;
 const ARTIFACT_2_ID = 10;
@@ -555,6 +556,27 @@ describe(`TuleapAPIClient`, () => {
                     with_creation_semantic_check: "title",
                 },
             });
+        });
+    });
+
+    describe(`getTrackerWithTitle()`, () => {
+        const TRACKER_ID = 32;
+        const getTracker = (): ResultAsync<TrackerWithTitleSemantic, Fault> => {
+            const client = TuleapAPIClient(current_artifact_option);
+            return client.getTrackerWithTitleSemantic(TrackerIdentifierStub.withId(TRACKER_ID));
+        };
+
+        it(`will return a Tracker with data about its Title field id`, async () => {
+            const tracker: TrackerWithTitleSemantic = {
+                id: TRACKER_ID,
+                semantics: { title: { field_id: 631 } },
+            };
+            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(tracker));
+
+            const result = await getTracker();
+
+            expect(result.unwrapOr(null)).toBe(tracker);
+            expect(getJSON.mock.calls[0][0]).toStrictEqual(uri`/api/trackers/${TRACKER_ID}`);
         });
     });
 });
