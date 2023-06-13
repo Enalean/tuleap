@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HostElement } from "./ArtifactCreatorElement";
+import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
     ArtifactCreatorElement,
     observeIsLoading,
     onClickCancel,
+    onSubmit,
     setErrorMessage,
 } from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
@@ -90,6 +91,20 @@ describe(`ArtifactCreatorElement`, () => {
             expect(event.type).toBe("cancel");
         });
 
+        it(`when I submit the creation form, it will prevent default (to avoid redirecting)
+            and it will dispatch an "artifact-created" event containing a LinkableArtifact`, () => {
+            const host = getHost();
+            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+
+            const inner_event = new Event("submit", { cancelable: true });
+            onSubmit(host, inner_event);
+
+            expect(inner_event.defaultPrevented).toBe(true);
+            const event = dispatchEvent.mock.calls[0][0] as CustomEvent<ArtifactCreatedEvent>;
+            expect(event.type).toBe("artifact-created");
+            expect(event.detail.artifact.id).toBe(-1);
+        });
+
         it(`when is_loading becomes true, it will disable the modal submit`, () => {
             const host = getHost();
             const disableSubmit = jest.spyOn(controller, "disableSubmit");
@@ -118,7 +133,7 @@ describe(`ArtifactCreatorElement`, () => {
         const selected_project_id = 806;
 
         beforeEach(() => {
-            is_loading = true;
+            is_loading = false;
             error_message = Option.nothing();
             show_error_details = false;
             projects = [];
@@ -147,6 +162,7 @@ describe(`ArtifactCreatorElement`, () => {
         };
 
         it(`when it is loading, it will disable inputs and buttons and will show a spinner icon`, () => {
+            is_loading = true;
             const target = render();
             const input = selectOrThrow(
                 target,

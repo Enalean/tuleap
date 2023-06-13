@@ -22,14 +22,14 @@ import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArti
 
 describe(`LinkableArtifactTemplate`, () => {
     describe(`getLinkableArtifact`, () => {
-        it(`will return null when a given item does not look like a Linkable Artifact`, () => {
+        it(`will return nothing when a given item does not look like a Linkable Artifact`, () => {
             const item = { not_a_linkable_artifact: true };
-            expect(getLinkableArtifact(item)).toBeNull();
+            expect(getLinkableArtifact(item).isNothing()).toBe(true);
         });
 
-        it(`will return the item when it looks like a Linkable Artifact`, () => {
+        it(`will return an Option holding the item when it looks like a Linkable Artifact`, () => {
             const item = LinkableArtifactStub.withDefaults();
-            expect(getLinkableArtifact(item)).toBe(item);
+            expect(getLinkableArtifact(item).unwrapOr(null)).toBe(item);
         });
     });
 

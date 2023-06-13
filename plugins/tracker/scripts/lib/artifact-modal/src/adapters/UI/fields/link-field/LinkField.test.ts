@@ -28,6 +28,8 @@ import {
     getEmptyStateIfNeeded,
     getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
+    onArtifactCreated,
+    onCancel,
     onLinkTypeChanged,
     setAllowedTypes,
     setLinkedArtifacts,
@@ -36,7 +38,7 @@ import {
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
-import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
+import { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LazyboxStub } from "../../../../../tests/stubs/LazyboxStub";
@@ -52,6 +54,8 @@ import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCol
 import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
+import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -326,7 +330,7 @@ describe("LinkField", () => {
     });
 
     describe(`events`, () => {
-        it(`when it receives a type-changed event from the link type selector element,
+        it(`when it receives a "type-changed" event from the link type selector element,
             it will set the current link type`, () => {
             const host = {
                 current_link_type: LinkTypeStub.buildUntyped(),
@@ -339,6 +343,49 @@ describe("LinkField", () => {
                 })
             );
             expect(LinkType.isReverseChild(host.current_link_type)).toBe(true);
+        });
+
+        it(`when it receives a "cancel" event from the artifact creator element,
+            it will hide the artifact creator element`, () => {
+            const matching_artifact_section: GroupCollection = [];
+            const host = {
+                is_artifact_creator_shown: true,
+                matching_artifact_section,
+            } as HostElement;
+
+            onCancel(host);
+
+            expect(host.is_artifact_creator_shown).toBe(false);
+        });
+
+        it(`when it receives an "artifact-created" event from the artifact creator element,
+            it will hide the artifact creator element
+            and tell the controller to add the NewLink from the event
+            and assign the list of new links with the result`, () => {
+            const ARTIFACT_ID = 278;
+            const new_links_presenter: ReadonlyArray<NewLink> = [];
+            const host = {
+                controller: {
+                    addNewLink(artifact, type): ReadonlyArray<NewLink> {
+                        return [NewLink.fromLinkableArtifactAndType(artifact, type)];
+                    },
+                },
+                current_link_type: LinkTypeStub.buildChildLinkType(),
+                new_links_presenter,
+                is_artifact_creator_shown: true,
+            } as HostElement;
+
+            const artifact = LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID });
+            onArtifactCreated(
+                host,
+                new CustomEvent<ArtifactCreatedEvent>("artifact-created", { detail: { artifact } })
+            );
+
+            expect(host.is_artifact_creator_shown).toBe(false);
+            expect(host.new_links_presenter).toHaveLength(1);
+            const [new_link] = host.new_links_presenter;
+            expect(new_link.identifier.id).toBe(ARTIFACT_ID);
+            expect(LinkType.isReverseChild(new_link.link_type)).toBe(true);
         });
     });
 });
