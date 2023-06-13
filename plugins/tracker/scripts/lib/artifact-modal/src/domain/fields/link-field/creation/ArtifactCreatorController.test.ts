@@ -113,6 +113,24 @@ describe(`ArtifactCreatorController`, () => {
 
             expect(controller.getSelectedTracker().unwrapOr(null)?.id).toBe(CURRENT_TRACKER_ID);
         });
+
+        it(`after calling selectProjectAndGetItsTrackers()
+            when the selected tracker is among the project's trackers
+            and user cannot create artifacts in it,
+            it will clear the selected tracker`, async () => {
+            tracker_retriever = RetrieveProjectTrackersStub.withTrackers(
+                TrackerStub.withDefaults({ id: 313 }),
+                TrackerStub.withDefaults({
+                    id: CURRENT_TRACKER_ID,
+                    cannot_create_reason: "Another field is required",
+                })
+            );
+            const controller = getController();
+
+            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject());
+
+            expect(controller.getSelectedTracker().isNothing()).toBe(true);
+        });
     });
 
     describe(`getProjects()`, () => {

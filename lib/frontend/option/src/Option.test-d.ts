@@ -37,6 +37,37 @@ describe(`Option type`, () => {
         ).toBeVoid();
     });
 
+    describe(`andThen()`, () => {
+        it(`has correct type for its callback`, () => {
+            const itCouldReturnNothing = (): Option<number> => Option.nothing();
+
+            const return_value = itCouldReturnNothing().andThen((received_value) => {
+                expectTypeOf(received_value).toBeNumber();
+                return Option.fromValue(789);
+            });
+
+            expectTypeOf(return_value).toMatchTypeOf<Option<number>>();
+        });
+
+        it(`can map to a different type than the Option's Initial type`, () => {
+            const itCouldReturnNothing = (): Option<number> => Option.fromValue(49);
+
+            const return_value = itCouldReturnNothing().andThen(() =>
+                Option.fromValue(CustomType("scrawk"))
+            );
+
+            expectTypeOf(return_value).toMatchTypeOf<Option<CustomType>>();
+        });
+
+        it(`can map Some to None`, () => {
+            const itCouldReturnNothing = (): Option<string> => Option.fromValue("forkable");
+
+            const return_value = itCouldReturnNothing().andThen(() => Option.nothing<number>());
+
+            expectTypeOf(return_value).toMatchTypeOf<Option<number>>();
+        });
+    });
+
     describe(`map()`, () => {
         it(`has correct type for its callback`, () => {
             const itCouldReturnNothing = (): Option<string> => Option.nothing();

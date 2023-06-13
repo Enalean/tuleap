@@ -66,6 +66,14 @@ export const ArtifactCreatorController = (
             TrackerIdentifier.fromCurrentTracker(current_tracker_identifier)
         );
 
+    const findSelectedTracker = (trackers: ReadonlyArray<Tracker>): Option<Tracker> =>
+        selected_tracker.andThen((selected) => {
+            const selected_tracker_found = trackers.find((tracker) => selected.id === tracker.id);
+            return selected_tracker_found
+                ? Option.fromValue(selected_tracker_found)
+                : Option.nothing();
+        });
+
     return {
         registerFaultListener: (handler): void => {
             _handler = Option.fromValue(handler);
@@ -88,6 +96,11 @@ export const ArtifactCreatorController = (
                     if (is_new_project) {
                         selected_tracker = Option.nothing();
                     }
+                    findSelectedTracker(trackers).apply((tracker) => {
+                        if (tracker.cannot_create_reason !== "") {
+                            selected_tracker = Option.nothing();
+                        }
+                    });
                     return trackers;
                 },
                 (fault) => {

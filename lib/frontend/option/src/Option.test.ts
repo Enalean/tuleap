@@ -48,6 +48,27 @@ describe(`Option`, () => {
             expect(applied_value).toBe(value);
         });
 
+        it(`andThen() calls a function that returns another Option with the inner value
+            and returns the new Option`, () => {
+            const value = "initial";
+            let then_value = null;
+
+            const then_option = Option.fromValue(value).andThen((received_value) => {
+                then_value = received_value;
+                return Option.fromValue(208);
+            });
+
+            expect(then_option.isValue()).toBe(true);
+            expect(then_option.unwrapOr(null)).toBe(208);
+            expect(then_value).toBe(value);
+        });
+
+        it(`andThen() can map Some to None`, () => {
+            const then_option = Option.fromValue("initial").andThen(() => Option.nothing());
+
+            expect(then_option.isNothing()).toBe(true);
+        });
+
         it(`map() calls the given function with the inner value and returns a new Some with its result`, () => {
             const value = "initial";
             let map_value = null;
@@ -87,6 +108,15 @@ describe(`Option`, () => {
             const callback = vi.fn();
             Option.nothing<CustomType>().apply(callback);
             expect(callback).not.toHaveBeenCalled();
+        });
+
+        it(`andThen() returns a new None`, () => {
+            const callback = vi.fn();
+            const initial_option = Option.nothing<string>();
+            const then_option = initial_option.andThen(callback);
+
+            expect(callback).not.toHaveBeenCalled();
+            expect(then_option).not.toBe(initial_option);
         });
 
         it(`map() returns a new None`, () => {

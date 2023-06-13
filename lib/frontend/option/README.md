@@ -44,6 +44,20 @@ const mapped_option = option.map((dataset: string): DerivedState => {
 // if option has a value, mapped_option is a new `Option<DerivedState>`.
 ```
 
+You can chain several functions returning Options using `.andThen()`. This also allows you to turn a `Value` variant into a `Nothing` variant (through some validation for example):
+
+```typescript
+const option = getOptionalDataset(mount_point);
+const new_option = option.andThen((dataset: string): Option<number> => {
+    if (dataset.includes("project-id")) {
+        return Option.fromValue(Number.parseInt(dataset, 10));
+    }
+    return Option.nothing();
+});
+// if option was `nothing`, new_option is still `nothing`.
+// if option has a value, new_option can have a value or can be `nothing`, depending on `dataset`.
+```
+
 At the end of a processing pipeline, you might want to retrieve the unwrapped value with `.mapOr()`:
 
 ```typescript
