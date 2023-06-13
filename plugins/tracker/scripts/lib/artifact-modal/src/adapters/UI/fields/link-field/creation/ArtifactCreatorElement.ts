@@ -45,6 +45,8 @@ import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
+import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
+import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;
@@ -59,6 +61,7 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     projects: ReadonlyArray<Project>;
     trackers: ReadonlyArray<Tracker>;
     selected_project: ProjectIdentifier;
+    selected_tracker: Option<TrackerIdentifier>;
     content(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
@@ -103,22 +106,17 @@ export const onClickCancel = (host: HostElement): void => {
     dispatch(host, "cancel");
 };
 
-export const onSubmit = (host: HostElement, event: Event): void => {
+export const onSubmit = async (host: HostElement, event: Event): Promise<void> => {
     event.preventDefault();
-    const fake_cross_reference: ArtifactCrossReference = {
-        ref: "art #-1",
-        color: "inca-silver",
-    };
-    const fake_new_artifact: LinkableArtifact = {
-        id: -1,
-        xref: fake_cross_reference,
-        title: "Fake Artifact for development purpose",
-        uri: "/",
-        is_open: true,
-        status: { value: "Ongoing", color: "sherwood-green" },
-        project: { id: 865, label: "Fake Project for development purpose" },
-    };
-    dispatch(host, "artifact-created", { detail: { artifact: fake_new_artifact } });
+    if (!(event.target instanceof HTMLFormElement)) {
+        return;
+    }
+    const title_input = event.target.elements.namedItem("artifact_title");
+    if (!(title_input instanceof HTMLInputElement)) {
+        return;
+    }
+    const artifact = await host.controller.createArtifact(title_input.value);
+    dispatch(host, "artifact-created", { detail: { artifact } });
 };
 
 const getProjectOptions = (
@@ -142,6 +140,10 @@ const getTrackersOptions = (
         (tracker) =>
             html`<option
                 value="${tracker.id}"
+                selected="${host.selected_tracker.mapOr(
+                    (identifier) => identifier.id === tracker.id,
+                    false
+                )}"
                 disabled="${tracker.cannot_create_reason !== ""}"
                 data-test="artifact-modal-link-creator-trackers-option"
             >
@@ -149,16 +151,21 @@ const getTrackersOptions = (
             </option>`
     );
 
-const onProjectInput = (host: InternalArtifactCreator, event: Event): void => {
+export const onProjectInput = (host: InternalArtifactCreator, event: Event): void => {
     host.is_loading = true;
     const project_id = ProjectIdentifierProxy.fromChangeEvent(event);
 
     project_id.apply((id) =>
         host.controller.selectProjectAndGetItsTrackers(id).then((trackers) => {
             host.trackers = trackers;
+            host.selected_tracker = host.controller.getSelectedTracker();
             host.is_loading = false;
         })
     );
+};
+
+export const onTrackerChange = (host: InternalArtifactCreator, event: Event): void => {
+    TrackerIdentifierProxy.fromChangeEvent(event).apply(host.controller.selectTracker);
 };
 
 let listPicker: ListPicker;
@@ -235,6 +242,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
             ]).then(([projects, trackers]) => {
                 host.projects = projects;
                 host.trackers = trackers;
+                host.selected_tracker = controller.getSelectedTracker();
                 host.is_loading = false;
             });
 
@@ -253,6 +261,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     projects: { set: (host, new_value) => new_value ?? [] },
     trackers: { set: (host, new_value) => new_value ?? [] },
     selected_project: undefined,
+    selected_tracker: undefined,
     content: (host) =>
         html`${getErrorTemplate(host)}
             <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
@@ -268,6 +277,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                     <div class="link-field-artifact-creator-inputs">
                         <input
                             type="text"
+                            name="artifact_title"
                             class="tlp-input tlp-input-small"
                             placeholder="${getArtifactCreationInputPlaceholderText()}"
                             disabled="${host.is_loading}"
@@ -300,7 +310,10 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                 <label for="artifact-modal-link-creator-trackers" class="tlp-label"
                                     >${getArtifactCreationTrackerLabel()}
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
-                                ><select id="artifact-modal-link-creator-trackers" required>
+                                ><select
+                                    id="artifact-modal-link-creator-trackers"
+                                    onchange="${onTrackerChange}"
+                                >
                                     ${getTrackersOptions(host)}
                                 </select>
                             </div>

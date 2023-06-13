@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "./Identifier";
-import type { CurrentTrackerIdentifier } from "./CurrentTrackerIdentifier";
+import type { Tracker } from "../../src/domain/Tracker";
 
-export type TrackerIdentifier = Identifier<"TrackerIdentifier">;
-
-export const TrackerIdentifier = {
-    fromCurrentTracker: (
-        current_tracker_identifier: CurrentTrackerIdentifier
-    ): TrackerIdentifier => ({
-        id: current_tracker_identifier.id,
-        _type: "TrackerIdentifier",
+export const TrackerStub = {
+    withDefaults: (data?: Partial<Tracker>): Tracker => ({
+        id: 25,
+        label: "V-Series.R",
+        color_name: "deep-blue",
+        cannot_create_reason: "",
+        ...data,
     }),
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,18 +14,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
+
 import { Option } from "@tuleap/option";
-export const ProjectIdentifierProxy = {
-    fromChangeEvent: (event: Event): Option<ProjectIdentifier> => {
+import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+
+export const TrackerIdentifierProxy = {
+    fromChangeEvent: (event: Event): Option<TrackerIdentifier> => {
         if (!(event.target instanceof HTMLSelectElement)) {
             return Option.nothing();
         }
-        const identifier: ProjectIdentifier = {
+        const identifier: TrackerIdentifier = {
             id: Number.parseInt(event.target.value, 10),
-            _type: "ProjectIdentifier",
+            _type: "TrackerIdentifier",
         };
         return Option.fromValue(identifier);
     },
