@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Modal } from "tlp";
-import { datePicker, openTargetModalIdOnClick } from "tlp";
+import { datePicker } from "tlp";
 import "@tuleap/copy-to-clipboard";
+import { authenticate } from "@tuleap/webauthn";
+import type { Modal } from "@tuleap/tlp-modal";
+import { EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import { selectOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleSSHKeys();
@@ -29,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
+const HIDDEN_CLASS = "user-preferences-hidden";
 const addSSHKeyButton = (): Modal | null =>
     openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
 const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
@@ -36,7 +40,10 @@ const addAccessKeyButton = (): Modal | null =>
     openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
 
 function handleSSHKeys(): void {
-    addSSHKeyButton();
+    const modal = addSSHKeyButton();
+    if (modal === null) {
+        throw new Error("add ssh key modal not created");
+    }
 
     toggleButtonAccordingToCheckBoxesStateWithIds("remove-ssh-keys-button", "ssh_key_selected[]");
 
@@ -49,6 +56,26 @@ function handleSSHKeys(): void {
         throw new Error("#submit-new-ssh-key-button not found or is not a button");
     }
     changeButtonStatusDependingTextareaStatus(button, ssh_key);
+    const button_icon = selectOrThrow(document, "#submit-new-ssh-key-button-icon");
+    const ssh_key_form_error = selectOrThrow(document, "#submit-ssh-key-error");
+    modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+        ssh_key_form_error.classList.add(HIDDEN_CLASS);
+    });
+    const ssh_key_form = selectOrThrow(document, "#submit-new-ssh-key-form", HTMLFormElement);
+    ssh_key_form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        button_icon.classList.remove(HIDDEN_CLASS);
+
+        authenticate().match(
+            () => ssh_key_form.submit(),
+            (fault) => {
+                button_icon.classList.add(HIDDEN_CLASS);
+                ssh_key_form_error.classList.remove(HIDDEN_CLASS);
+                ssh_key_form_error.innerText = fault.toString();
+            }
+        );
+    });
 
     const ssh_keys_list = document.querySelectorAll<HTMLElement>("[data-ssh_key_value]");
     ssh_keys_list.forEach((row) => {

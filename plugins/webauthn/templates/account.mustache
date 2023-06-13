@@ -19,7 +19,7 @@
                         </h1>
                     </div>
 
-                    <div class="tlp-pane-section webauthn-hidden" id="webauthn-section">
+                    <div class="tlp-pane-section user-preferences-hidden" id="webauthn-section">
                         {{# need_more_authenticators }}
                             <div class="tlp-alert-info">
                                 {{# dgettext }}
@@ -27,7 +27,7 @@
                             </div>
                         {{/ need_more_authenticators }}
 
-                        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-alert"
+                        <div class="tlp-alert-danger user-preferences-hidden" id="webauthn-alert"
                              data-test="webauthn-alert"></div>
 
                         <div class="tlp-table-actions">
@@ -39,7 +39,7 @@
                             {{# has_authenticator }}
                                 <button type="button" class="tlp-button-primary tlp-button-outline"
                                         id="webauthn-check-button" data-test="check-button">
-                                    <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden"
+                                    <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon user-preferences-hidden"
                                        aria-hidden="true"></i>
                                     {{# dgettext }} tuleap-webauthn | Check {{/ dgettext }}
                                 </button>
@@ -86,7 +86,7 @@
                         </table>
                     </div>
 
-                    <div class="tlp-pane-section webauthn-hidden" id="webauthn-disabled-section">
+                    <div class="tlp-pane-section user-preferences-hidden" id="webauthn-disabled-section">
                         <p class="tlp-text-warning">
                             <i class="fa-solid fa-warning" aria-hidden="true"></i>
                             {{# dgettext }} tuleap-webauthn | Your browser doesn't support WebAuthn {{/ dgettext }}

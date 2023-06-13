@@ -22,6 +22,9 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table
@@ -85,6 +88,9 @@ dependencies:
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../lib/frontend/vue2-gettext-init
+  '@tuleap/webauthn':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/webauthn
   ckeditor4:
     specifier: ^4.18.0
     version: 4.18.0
