@@ -24,7 +24,7 @@ import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettex
 import { selectOrThrow } from "@tuleap/dom";
 import "../themes/style.scss";
 import { register } from "./register";
-import { authenticate } from "./authenticate";
+import { authenticate } from "@tuleap/webauthn";
 import { deleteKey } from "./delete";
 
 const HIDDEN = "webauthn-hidden";

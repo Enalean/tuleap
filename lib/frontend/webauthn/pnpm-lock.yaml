@@ -7,24 +7,15 @@ dependencies:
   '@simplewebauthn/typescript-types':
     specifier: ^7.0.0
     version: 7.0.0
-  '@tuleap/dom':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
-    version: link:../../../../lib/frontend/fault
+    version: link:../fault
   '@tuleap/fetch-result':
     specifier: workspace:*
-    version: link:../../../../lib/frontend/fetch-result
-  '@tuleap/gettext':
+    version: link:../fetch-result
+  '@tuleap/option':
     specifier: workspace:*
-    version: link:../../../../lib/frontend/gettext
-  '@tuleap/tlp-modal':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-modal
-  '@tuleap/webauthn':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/webauthn
+    version: link:../option
   neverthrow:
     specifier: ^6.0.0
     version: 6.0.0
@@ -32,10 +23,7 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/po-gettext-plugin
+    version: link:../build-system-configurator
 
 packages:
 
