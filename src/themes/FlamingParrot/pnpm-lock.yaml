@@ -21,7 +21,7 @@ dependencies:
     version: link:../../../lib/frontend/project-sidebar-internal
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../tlp
+    version: link:../../scripts/tlp
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-dropdown

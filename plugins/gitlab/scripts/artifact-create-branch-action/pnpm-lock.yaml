@@ -15,7 +15,7 @@ dependencies:
     version: link:../../../../lib/frontend/fp-feedback
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../../../src/themes/tlp
+    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal

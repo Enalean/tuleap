@@ -25,6 +25,6 @@ src/www/scripts/tablekit/
 src/www/scripts/textboxlist/
 src/www/scripts/vendor/
 src/www/scripts/fieldDependencies.js
-src/themes/tlp/src/types/
+src/scripts/tlp/src/types/
 plugins/mediawiki/www/
 **/additional-packages/**

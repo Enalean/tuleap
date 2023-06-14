@@ -85,50 +85,6 @@ const webpack_config_for_ckeditor = {
     },
 };
 
-let entry_points = {
-    tlp: "./node_modules/@tuleap/tlp/src/scss/tlp.scss",
-    // DO NOT add new entrypoints unless it's for a new TLP locale. TLP is exported as a "library". If you add another
-    // entrypoint, all scripts that depend on TLP will try to access "select2" or "createModal" from your file
-    // (and they will fail).
-    "tlp-en_US": "./node_modules/@tuleap/tlp/src/index.en_US.ts",
-    "tlp-fr_FR": "./node_modules/@tuleap/tlp/src/index.fr_FR.ts",
-};
-
-const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of tlp_colors) {
-    entry_points[
-        `tlp-vars-${color}`
-    ] = `./node_modules/@tuleap/tlp/src/scss/tlp-vars-${color}.scss`;
-    entry_points[
-        `tlp-vars-${color}-condensed`
-    ] = `./node_modules/@tuleap/tlp/src/scss/tlp-vars-${color}-condensed.scss`;
-}
-
-const webpack_config_for_tlp = {
-    entry: entry_points,
-    context,
-    output: {
-        path: assets_dir_path,
-        filename: "tlp-[chunkhash].[name].js",
-        library: "tlp",
-    },
-    resolve: {
-        extensions: [".js", ".ts"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_scss_loader,
-            webpack_configurator.rule_css_assets,
-        ],
-    },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-        ...webpack_configurator.getCSSExtractionPlugins(),
-    ],
-};
-
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./src/FlamingParrot/index.ts",
@@ -427,7 +383,6 @@ module.exports = [
     webpack_config_for_ckeditor,
     webpack_config_legacy_combined,
     webpack_config_for_rich_text_editor,
-    webpack_config_for_tlp,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,

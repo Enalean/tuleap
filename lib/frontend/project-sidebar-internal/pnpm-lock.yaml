@@ -12,7 +12,7 @@ dependencies:
     version: link:../project-privacy-helper
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../../src/themes/tlp
+    version: link:../../../src/scripts/tlp
   '@tuleap/tlp-popovers':
     specifier: workspace:*
     version: link:../tlp-popovers

@@ -36,7 +36,7 @@ dependencies:
     version: link:../../lib/frontend/project-background
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/themes/tlp
+    version: link:../../src/scripts/tlp
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-badge

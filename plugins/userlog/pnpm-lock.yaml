@@ -3,7 +3,7 @@ lockfileVersion: '6.0'
 dependencies:
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/themes/tlp
+    version: link:../../src/scripts/tlp
 
 devDependencies:
   '@tuleap/build-system-configurator':

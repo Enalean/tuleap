@@ -66,7 +66,7 @@ if (isset($_GET['section'], $sections[$_GET['section']])) {
 }
 $sections[$current_section]['selected'] = true;
 
-$include_asset_framework = new \Tuleap\Layout\IncludeCoreAssets();
+$include_asset_framework = new IncludeAssets(__DIR__ . '/../../scripts/tlp/frontend-assets', '/assets/core/tlp');
 $tlp_script_url          = $include_asset_framework->getFileURL('tlp-en_US.js');
 $tlp_blue_css            = $include_asset_framework->getFileURL('tlp.css');
 $tlp_vars_blue_css       = $include_asset_framework->getFileURL('tlp-vars-blue.css');
@@ -274,7 +274,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
 <script type="text/javascript" src="<?php echo $tlp_script_url; ?>"></script>
 <script type="text/javascript">
     window.manifest_framework_file = <?php
-        echo (string) file_get_contents(__DIR__ . '/../../scripts/main/frontend-assets/manifest.json');
+        echo (string) file_get_contents(__DIR__ . '/../../scripts/tlp/frontend-assets/manifest.json');
     ?>
 </script>
 <script type="text/javascript" src="<?php echo $main_doc_script; ?>"></script>

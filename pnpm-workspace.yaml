@@ -3,7 +3,6 @@ packages:  # all packages in subdirs of packages/ and components/  - 'packages/*
   - "lib/test-utils/**/"
   - "src/scripts/*/"
   - "src/scripts/main/src/tlp-doc/"
-  - "src/themes/tlp"
   - "src/themes/common"
   - "src/themes/BurningParrot"
   - "src/themes/FlamingParrot"

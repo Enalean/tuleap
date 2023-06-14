@@ -39,7 +39,7 @@ dependencies:
     version: link:../rich-text-editor
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../../../../src/themes/tlp
+    version: link:../../../../../src/scripts/tlp
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-fetch
