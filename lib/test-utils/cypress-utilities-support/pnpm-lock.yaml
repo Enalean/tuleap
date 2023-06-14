@@ -4,3 +4,26 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../../../plugins/tracker/scripts/lib/rest-api-types
+  '@types/quoted-printable':
+    specifier: ^1.0.0
+    version: 1.0.0
+  quoted-printable:
+    specifier: ^1.0.1
+    version: 1.0.1
+
+packages:
+
+  /@types/quoted-printable@1.0.0:
+    resolution: {integrity: sha512-hgFjmHmgT5M8SvDVe+tMhiUb3xViwqkEAM/sTpWCpO0B2Z7RGAgwiQaxPcLVk4KLiZmqj7BMXZvaQQdX6uPM6A==}
+    dev: false
+
+  /quoted-printable@1.0.1:
+    resolution: {integrity: sha512-cihC68OcGiQOjGiXuo5Jk6XHANTHl1K4JLk/xlEJRTIXfy19Sg6XzB95XonYgr+1rB88bCpr7WZE7D7AlZow4g==}
+    hasBin: true
+    dependencies:
+      utf8: 2.1.2
+    dev: false
+
+  /utf8@2.1.2:
+    resolution: {integrity: sha512-QXo+O/QkLP/x1nyi54uQiG0XrODxdysuQvE5dtVqv7F5K2Qb6FsN+qbr6KhF5wQ20tfcV3VQp0/2x1e1MRSPWg==}
+    dev: false

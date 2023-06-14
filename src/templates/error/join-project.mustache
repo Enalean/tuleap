@@ -18,6 +18,7 @@
                           class="tlp-textarea"
                           name="msg_private_project"
                           id="message-private-project"
+                          data-test="message-ask-to-join-project"
                           required
                           placeholder="{{ placeholder }}">{{ placeholder }}</textarea>
             </div>
@@ -32,7 +33,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# gettext }}Cancel{{/ gettext }}
             </button>
-            <button type="submit" name="Submit" class="tlp-button-primary tlp-modal-action" id="send-join-message-button">
+            <button type="submit" name="Submit" class="tlp-button-primary tlp-modal-action" data-test="ask-to-join-project-button" id="send-join-message-button">
                 <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i> {{# gettext }}Ask to join{{/ gettext }}
             </button>
         </div>

@@ -18,7 +18,13 @@
  */
 
 describe("Core", function () {
+    let now = 0;
+    let restricted_project_notification: string;
+    let private_project_notification: string;
     before(() => {
+        now = Date.now();
+        restricted_project_notification = "restricted-" + now;
+        private_project_notification = "private-" + now;
         cy.projectAdministratorSession();
         cy.getProjectId("permissions-project-01").as("project_id");
     });
@@ -39,6 +45,53 @@ describe("Core", function () {
         checkPhpWikiPermissions(this.project_id);
         checkFrsPermissions(this.project_id);
         checkProjectAdminPermissions(this.project_id);
+    });
+
+    it("restricted users can request access to a project they are not members of", function () {
+        cy.projectAdministratorSession();
+        cy.createNewPrivateProject(restricted_project_notification);
+
+        cy.siteAdministratorSession();
+        cy.updatePlatformVisibilityAndAllowRestricted();
+
+        cy.restrictedRegularUserSession();
+        //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
+        cy.visit(`/projects/${restricted_project_notification}`, {
+            failOnStatusCode: false,
+        });
+        cy.get("[data-test=button-ask-to-join-for-restricted]").click();
+        const message = "restricted_join";
+        cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
+        cy.get("[data-test=ask-to-join-project-button]").click();
+
+        cy.assertUserMessagesReceivedByWithSpecificContent(
+            "ProjectAdministrator@example.com",
+            message
+        );
+
+        cy.siteAdministratorSession();
+        cy.updatePlatformVisibilityForAnonymous();
+    });
+
+    it("users can request access to a private project", function () {
+        cy.projectAdministratorSession();
+        cy.createNewPrivateProject(private_project_notification);
+
+        cy.regularUserSession();
+        //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
+        cy.visit(`/projects/${private_project_notification}`, {
+            failOnStatusCode: false,
+        });
+
+        cy.get("[data-test=button-ask-to-join-private-project]").click();
+        const message = "private_join";
+        cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
+        cy.get("[data-test=ask-to-join-project-button]").click();
+
+        cy.assertUserMessagesReceivedByWithSpecificContent(
+            "ProjectAdministrator@example.com",
+            message
+        );
     });
 });
 

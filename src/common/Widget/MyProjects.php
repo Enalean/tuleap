@@ -100,7 +100,7 @@ class MyProjects extends \Widget
 
                 $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
 
-                $html .= '<tr class="' . util_get_alt_row_color($i++) . '" >';
+                $html .= '<tr class="' . util_get_alt_row_color($i++) . '" data-test="my-project-widget">';
 
                 // Privacy
                 if ($display_privacy) {
@@ -162,7 +162,7 @@ class MyProjects extends \Widget
                     $warn       = $GLOBALS['Language']->getText('my_index', 'quit_proj');
                     $html      .= '<form method="post" action="' . $hp->purify($link) . '" onclick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">';
                     $html      .= $csrf_token->fetchHTMLInput();
-                    $html      .= '<button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"><i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>' . _('Leave project') . '</button>';
+                    $html      .= '<button type="submit" data-test="leave-project-button" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"><i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>' . _('Leave project') . '</button>';
                     $html      .= '</form>';
                 } else {
                     $html .= '&nbsp;';

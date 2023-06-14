@@ -121,13 +121,15 @@ describe("Document notifications", () => {
         cy.get("[data-test=wiki-document-link]").click();
 
         updateWikiPage("My wiki content");
-        assertUserMessagesReceivedByWithSpecificContent(
+        cy.log("assertion 1");
+        cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            "New version of Wiki page wiki page was created by ProjectAdministrator."
+            "New version of Wiki page wiki page was created by ProjectAdministrator"
         );
-        assertUserMessagesReceivedByWithSpecificContent(
+        cy.log("assertion 2");
+        cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            "https://tuleap/wiki/index.php?pagename=3DWiki%20page&action=3Ddiff"
+            "https://tuleap/wiki/index.php?pagename=Wiki%20page&action=diff"
         );
     });
 
@@ -147,7 +149,7 @@ describe("Document notifications", () => {
         deleteDocumentDisplayedInQuickLook();
         cy.wait("@deleteFolders", { timeout: 3000 });
 
-        assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
             `Folder has been removed by ProjectAdministrator.`
         );
@@ -227,18 +229,3 @@ describe("Document notifications", () => {
         cy.get("[data-test=notified-users]").should("not.contain", "ProjectMember");
     });
 });
-
-function assertUserMessagesReceivedByWithSpecificContent(
-    email: string,
-    specific_content_of_mail: string
-): void {
-    cy.request({
-        method: "GET",
-        url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email),
-        headers: {
-            accept: "application/json",
-        },
-    }).then((response) => {
-        expect(response.body.items[0].Content.Body).contains(specific_content_of_mail);
-    });
-}

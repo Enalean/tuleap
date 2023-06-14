@@ -102,6 +102,11 @@ declare global {
             searchItemInListPickerDropdown(
                 dropdown_item_label: string
             ): Chainable<JQuery<HTMLElement>>;
+
+            assertUserMessagesReceivedByWithSpecificContent(
+                email: string,
+                specific_content_of_mail: string
+            ): void;
         }
     }
 }
