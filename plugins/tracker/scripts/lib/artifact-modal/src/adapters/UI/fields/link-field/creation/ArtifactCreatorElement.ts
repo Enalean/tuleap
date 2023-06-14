@@ -53,6 +53,7 @@ export type ArtifactCreatorElement = {
     current_artifact_reference: Option<ArtifactCrossReference>;
     available_types: CollectionOfAllowedLinksTypesPresenters;
     current_link_type: LinkType;
+    artifact_title: string;
 };
 type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     is_loading: boolean;
@@ -262,6 +263,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     trackers: { set: (host, new_value) => new_value ?? [] },
     selected_project: undefined,
     selected_tracker: undefined,
+    artifact_title: "",
     content: (host) =>
         html`${getErrorTemplate(host)}
             <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
@@ -282,6 +284,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                             placeholder="${getArtifactCreationInputPlaceholderText()}"
                             disabled="${host.is_loading}"
                             data-test="artifact-creator-title"
+                            value="${host.artifact_title}"
                             required
                         />${host.is_loading &&
                         html`<i
