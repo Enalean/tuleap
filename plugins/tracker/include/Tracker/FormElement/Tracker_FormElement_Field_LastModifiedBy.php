@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
@@ -34,9 +37,9 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return true;
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
@@ -50,7 +53,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $a             = 'A_' . $this->id;
@@ -60,12 +63,14 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
                 array_merge([100], array_keys($this->getBind()->getAllValues()))
             );
             if (count($ids_to_search) > 1) {
-                return " c.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
+                $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $ids_to_search);
+                return Option::fromValue(new ParametrizedSQLFragment("c.submitted_by IN($in)", $in->values()));
             } elseif (count($ids_to_search)) {
-                return " c.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) . " ";
+                return Option::fromValue(new ParametrizedSQLFragment("c.submitted_by = ?", $ids_to_search[0]));
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

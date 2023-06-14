@@ -20,6 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use BaseLanguageFactory;
+use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -57,6 +58,11 @@ final class NotEqualFieldComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     FieldComparisonVisitor
 {
+    public function __construct(
+        private readonly EasyDB $db,
+    ) {
+    }
+
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
     {
@@ -117,7 +123,8 @@ final class NotEqualFieldComparisonVisitor implements
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
         return new NotEqualComparison\ForText(
-            new FromWhereComparisonFieldBuilder()
+            new FromWhereComparisonFieldBuilder(),
+            $this->db,
         );
     }
 

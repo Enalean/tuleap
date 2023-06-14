@@ -19,7 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+
 interface DateTimeConditionBuilder
 {
-    public function getCondition($value, $changeset_value_date_alias);
+    public function getCondition($value, string $changeset_value_date_alias): ParametrizedSQLFragment;
 }

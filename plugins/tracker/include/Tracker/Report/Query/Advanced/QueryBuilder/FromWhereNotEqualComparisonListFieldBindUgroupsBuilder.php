@@ -20,12 +20,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class FromWhereNotEqualComparisonListFieldBindUgroupsBuilder
 {
-    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
             SELECT c.artifact_id AS artifact_id
@@ -50,6 +50,6 @@ final class FromWhereNotEqualComparisonListFieldBindUgroupsBuilder
 
         $where = "$query_presenter->filter_alias.artifact_id IS NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [...$query_presenter->parameters, $query_presenter->field_id], []);
     }
 }

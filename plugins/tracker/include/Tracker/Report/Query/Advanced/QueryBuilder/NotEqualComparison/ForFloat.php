@@ -19,12 +19,11 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
-use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForFloat implements FieldFromWhereBuilder
 {
@@ -32,7 +31,7 @@ final class ForFloat implements FieldFromWhereBuilder
     {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
@@ -46,7 +45,7 @@ final class ForFloat implements FieldFromWhereBuilder
             $condition = "$changeset_value_float_alias.value IS NOT NULL";
         } else {
             $condition = "($changeset_value_float_alias.value IS NULL
-                OR $changeset_value_float_alias.value != " . $this->escapeFloat($value) . ")";
+                OR $changeset_value_float_alias.value != ?)";
         }
 
         return $this->from_where_builder->getFromWhere(
@@ -54,12 +53,8 @@ final class ForFloat implements FieldFromWhereBuilder
             $changeset_value_alias,
             $changeset_value_float_alias,
             'tracker_changeset_value_float',
-            $condition
+            $condition,
+            [$value],
         );
-    }
-
-    private function escapeFloat($value)
-    {
-        return CodendiDataAccess::instance()->escapeFloat($value);
     }
 }

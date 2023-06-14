@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison;
 
-use CodendiDataAccess;
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualCompariso
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
 {
@@ -38,7 +38,7 @@ final class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
     ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -53,16 +53,13 @@ final class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
             $normalized_values[] = $value;
         }
 
-        $escaped_values = $this->quoteSmartImplode($normalized_values);
-        $condition      = "$query_presenter->list_value_alias.name IN($escaped_values)";
+        $in = EasyStatement::open()->in('?*', $normalized_values);
+
+        $condition = "$query_presenter->list_value_alias.name IN($in)";
 
         $query_presenter->setCondition($condition);
+        $query_presenter->setParameters($in->values());
 
         return $this->from_where_builder->getFromWhere($query_presenter);
-    }
-
-    private function quoteSmartImplode($values): string
-    {
-        return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
     }
 }

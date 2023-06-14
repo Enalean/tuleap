@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Report;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 
 class ReportArtifactFactory
@@ -41,7 +41,7 @@ class ReportArtifactFactory
      */
     public function getRankedArtifactsMatchingReportWithAdditionalFromWhere(
         Tracker_Report $report,
-        IProvideFromAndWhereSQLFragments $additional_from_where,
+        IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
         $limit,
         $offset,
     ) {

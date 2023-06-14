@@ -22,11 +22,11 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class MetadataNotInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         throw new \RuntimeException("Metadata is not supported here");
     }

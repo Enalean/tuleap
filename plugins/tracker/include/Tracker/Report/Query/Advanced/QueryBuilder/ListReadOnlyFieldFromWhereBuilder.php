@@ -23,36 +23,18 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
 {
-    /**
-     * @var FromWhereComparisonFieldReadOnlyBuilder
-     */
-    private $from_where_builder;
-
-    /**
-     * @var ListReadOnlyConditionBuilder
-     */
-    private $condition_builder;
-
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereComparisonFieldReadOnlyBuilder $from_where_builder,
-        ListReadOnlyConditionBuilder $condition_builder,
+        private readonly CollectionOfListValuesExtractor $values_extractor,
+        private readonly FromWhereComparisonFieldReadOnlyBuilder $from_where_builder,
+        private readonly ListReadOnlyConditionBuilder $condition_builder,
     ) {
-        $this->values_extractor   = $values_extractor;
-        $this->from_where_builder = $from_where_builder;
-        $this->condition_builder  = $condition_builder;
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $values    = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $condition = $this->condition_builder->getCondition($values);

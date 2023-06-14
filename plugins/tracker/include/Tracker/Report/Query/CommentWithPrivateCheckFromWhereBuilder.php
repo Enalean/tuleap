@@ -22,35 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query;
 
-use CodendiDataAccess;
+use ParagonIE\EasyDB\EasyStatement;
 use Tracker;
 
 final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    public function __construct(\PFUser $user, Tracker $tracker)
+    public function __construct(private readonly \PFUser $user, private readonly Tracker $tracker)
     {
-        $this->user    = $user;
-        $this->tracker = $tracker;
     }
 
-    public function getFromWhereWithComment(string $value, string $suffix): FromWhere
+    public function getFromWhereWithComment(string $value, string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $value = $this->quoteSmart($value);
-        $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
+        $value = $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value);
+        $value = $this->surroundValueWithDoubleQuotesForFulltextMatching($value);
 
-        $ugroup_ids = CodendiDataAccess::instance()->escapeIntImplode(
-            $this->getUgroupIdsForUser()
-        );
+        $in = EasyStatement::open()->in('?*', $this->getUgroupIdsForUser());
 
         $from = " LEFT JOIN (
                     tracker_changeset_comment_fulltext AS TCCF_$suffix
@@ -58,19 +44,19 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
                      ON (
                         TCC_$suffix.id = TCCF_$suffix.comment_id
                         AND TCC_$suffix.parent_id = 0
-                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
+                        AND match(TCCF_$suffix.stripped_body) against (? IN BOOLEAN MODE)
                      )
                      INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
                      LEFT JOIN plugin_tracker_private_comment_permission PCP_$suffix on TCC_$suffix.id = PCP_$suffix.comment_id
                  ) ON TC_$suffix.artifact_id = artifact.id";
 
         $where = "TCC_$suffix.changeset_id IS NOT NULL AND
-            (PCP_$suffix.comment_id IS NULL OR PCP_$suffix.ugroup_id IN ($ugroup_ids))";
+            (PCP_$suffix.comment_id IS NULL OR PCP_$suffix.ugroup_id IN ($in))";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [$value], $in->values());
     }
 
-    public function getFromWhereWithoutComment(string $suffix): FromWhere
+    public function getFromWhereWithoutComment(string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
                     tracker_changeset AS TC_$suffix
@@ -82,7 +68,7 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
 
         $where = "TCCF_$suffix.comment_id IS NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 
     private function getUgroupIdsForUser(): array
@@ -90,20 +76,13 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
         return $this->user->getUgroups((int) $this->tracker->getGroupId(), []);
     }
 
-    private function quoteSmart(string $value): string
-    {
-        return $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(
-            CodendiDataAccess::instance()->quoteSmart($value)
-        );
-    }
-
     private function removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(string $value): string
     {
         return trim($value, "'");
     }
 
-    private function surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching(string $value): string
+    private function surroundValueWithDoubleQuotesForFulltextMatching(string $value): string
     {
-        return '\'"' . $value . '"\'';
+        return '"' . $value . '"';
     }
 }

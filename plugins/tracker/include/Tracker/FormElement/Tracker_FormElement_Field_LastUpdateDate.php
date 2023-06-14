@@ -19,9 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
@@ -45,27 +48,30 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return true;
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Last update date is stored in the changeset (the date of the changeset)
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
+        $criteria_value = $this->getCriteriaValue($criteria);
         //Only filter query if criteria is valuated
-        if ($criteria_value = $this->getCriteriaValue($criteria)) {
+        if ($criteria_value) {
             //Last update date is stored in the changeset (the date of the changeset)
-            return $this->getSQLCompareDate(
-                (bool) $criteria->is_advanced,
-                $criteria_value['op'],
-                $criteria_value['from_date'],
-                $criteria_value['to_date'],
-                'c.submitted_on'
+            return Option::fromValue(
+                $this->getSQLCompareDate(
+                    (bool) $criteria->is_advanced,
+                    $criteria_value['op'],
+                    $criteria_value['from_date'],
+                    $criteria_value['to_date'],
+                    'c.submitted_on'
+                )
             );
         }
 
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

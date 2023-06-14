@@ -26,10 +26,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 /**
- * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameter, IProvideFromAndWhereSQLFragments>
+ * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameter, IProvideParametrizedFromAndWhereSQLFragments>
  */
 final class FromWhereSearchableVisitor implements SearchableVisitor
 {

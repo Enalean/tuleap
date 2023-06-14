@@ -179,7 +179,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $float_field->shouldReceive('isUsed')->andReturn(true);
         $float_field->shouldReceive('getCriteriaValue')->andReturn('');
 
-        $this->assertEquals($float_field->getCriteriaFrom($criteria), '');
+        $this->assertTrue($float_field->getCriteriaFrom($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnNullCriteria(): void
@@ -190,7 +190,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $float_field->shouldReceive('isUsed')->andReturn(true);
         $float_field->shouldReceive('getCriteriaValue')->andReturn(null);
 
-        $this->assertEquals('', $float_field->getCriteriaFrom($criteria));
+        $this->assertTrue($float_field->getCriteriaFrom($criteria)->isNothing());
     }
 
     public function testItFetchCriteriaAndSetValueZero(): void

@@ -19,8 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison;
 
-use CodendiDataAccess;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListReadOnlyConditionBuilder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UserManager;
 
 final class ForSubmittedBy implements ListReadOnlyConditionBuilder
@@ -36,12 +37,13 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
         $this->user_manager = $user_manager;
     }
 
-    public function getCondition(array $values)
+    public function getCondition(array $values): ParametrizedSQLFragment
     {
-        $escaped_values = $this->escapeIntImplode($this->getUsersIdByUserNames($values));
-        $condition      = "artifact.submitted_by IN($escaped_values)";
+        $in = EasyStatement::open()->in('?*', $this->getUsersIdByUserNames($values));
 
-        return $condition;
+        $condition = "artifact.submitted_by IN($in)";
+
+        return new ParametrizedSQLFragment($condition, $in->values());
     }
 
     private function getUsersIdByUserNames($values)
@@ -51,10 +53,5 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
             $users_id[] = $this->user_manager->getUserByUserName($value)->getId();
         }
         return $users_id;
-    }
-
-    private function escapeIntImplode($values)
-    {
-        return CodendiDataAccess::instance()->escapeIntImplode($values);
     }
 }

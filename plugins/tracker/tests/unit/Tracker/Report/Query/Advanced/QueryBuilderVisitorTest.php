@@ -19,14 +19,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use CodendiDataAccess;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -43,7 +42,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -58,8 +57,6 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
-
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
         $this->parameters = new QueryBuilderParameters($tracker, UserTestBuilder::buildWithDefaults());
@@ -143,9 +140,12 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'date')->andReturn($date_field);
         $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'sb')->andReturn($selectbox_field);
 
+        $db = $this->createMock(EasyDB::class);
+        $db->method('escapeLikeValue')->willReturnArgument(0);
+
         $this->query_builder = new QueryBuilderVisitor(
-            new QueryBuilder\EqualFieldComparisonVisitor(),
-            new QueryBuilder\NotEqualFieldComparisonVisitor(),
+            new QueryBuilder\EqualFieldComparisonVisitor($db),
+            new QueryBuilder\NotEqualFieldComparisonVisitor($db),
             new QueryBuilder\LesserThanFieldComparisonVisitor(),
             new QueryBuilder\GreaterThanFieldComparisonVisitor(),
             new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
@@ -167,15 +167,9 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-        CodendiDataAccess::clearInstance();
-        parent::tearDown();
-    }
-
     public function testItRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
-        $from_where = new FromWhere("le_from", "le_where");
+        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
         $comparison = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -189,8 +183,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpressionConcatenatedToTheTailOnes(): void
     {
-        $from_where_expression = new FromWhere("le_from", "le_where");
-        $from_where_tail       = new FromWhere("le_from_tail", "le_where_tail");
+        $from_where_expression = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where_tail       = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
         $comparison            = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_expression);
@@ -202,13 +196,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitAndExpression($and_expression, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFromAsString());
-        $this->assertEquals("le_where AND le_where_tail", $result->getWhere());
+        $this->assertEquals("le_from le_from_tail", $result->getFrom());
+        $this->assertEquals("(le_where) AND (le_where_tail)", $result->getWhere());
     }
 
     public function testItRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
-        $from_where = new FromWhere("le_from", "le_where");
+        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
         $comparison = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -222,8 +216,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpressionConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new FromWhere("le_from", "le_where");
-        $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
+        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
         $comparison         = \Mockery::mock(EqualComparison::class);
         $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -235,13 +229,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitAndOperand($and_operand, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFromAsString());
-        $this->assertEquals("le_where AND le_where_tail", $result->getWhere());
+        $this->assertEquals("le_from le_from_tail", $result->getFrom());
+        $this->assertEquals("(le_where) AND (le_where_tail)", $result->getWhere());
     }
 
     public function testItRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperand(): void
     {
-        $from_where = new FromWhere("le_from", "le_where");
+        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
         $expression = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -255,8 +249,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperandConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new FromWhere("le_from", "le_where");
-        $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
+        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
         $expression         = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -268,13 +262,13 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitOrOperand($or_operand, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFromAsString());
-        $this->assertEquals("(le_where OR le_where_tail)", $result->getWhere());
+        $this->assertEquals("le_from le_from_tail", $result->getFrom());
+        $this->assertEquals("((le_where) OR (le_where_tail))", $result->getWhere());
     }
 
     public function testItRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperand(): void
     {
-        $from_where = new FromWhere("le_from", "le_where");
+        $from_where = new ParametrizedFromWhere("le_from", "le_where", [], []);
         $expression = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
@@ -288,8 +282,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperandConcatenatedToTheTailOnes(): void
     {
-        $from_where_operand = new FromWhere("le_from", "le_where");
-        $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
+        $from_where_operand = new ParametrizedFromWhere("le_from", "le_where", [], []);
+        $from_where_tail    = new ParametrizedFromWhere("le_from_tail", "le_where_tail", [], []);
         $expression         = \Mockery::mock(AndExpression::class);
         $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
@@ -301,8 +295,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitOrExpression($or_expression, $this->parameters);
 
-        $this->assertEquals("le_from le_from_tail", $result->getFromAsString());
-        $this->assertEquals("(le_where OR le_where_tail)", $result->getWhere());
+        $this->assertEquals("le_from le_from_tail", $result->getFrom());
+        $this->assertEquals("((le_where) OR (le_where_tail))", $result->getWhere());
     }
 
     public function testItRetrievesForTextInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -311,7 +305,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -320,7 +314,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -329,7 +323,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForDateFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -338,7 +332,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_date/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_date/', $result->getFrom());
     }
 
     public function testItRetrievesForTextInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -347,7 +341,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -356,7 +350,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -365,7 +359,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -374,7 +368,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -383,7 +377,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -392,7 +386,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -401,7 +395,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -410,7 +404,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -419,7 +413,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -428,7 +422,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -437,7 +431,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 
     public function testItRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -452,7 +446,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function testItRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -467,6 +461,6 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFrom());
     }
 }

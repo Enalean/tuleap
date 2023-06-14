@@ -19,15 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
 {
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
@@ -35,16 +38,36 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
             $criteria_value = $this->getCriteriaValue($criteria);
 
             if ($criteria_value !== '' && $criteria_value !== null) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                $a                = 'A_' . $this->id;
+                $b                = 'B_' . $this->id;
+                $match_expression = $this->getMatchExpressionAsParametrizedSQLFragment("$b.value", $criteria_value);
+
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_int AS $b ON (
                             $b.changeset_value_id = $a.id
-                            AND " . $this->buildMatchExpression("$b.value", $criteria_value) . "
-                         ) ";
+                            AND " . $match_expression->sql . "
+                         ) ",
+                        [
+                            $this->id,
+                            ...$match_expression->parameters,
+                        ]
+                    )
+                );
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
+    }
+
+    /**
+     * @param mixed $criteria_value
+     */
+    private function getMatchExpressionAsParametrizedSQLFragment(string $field_name, $criteria_value): ParametrizedSQLFragment
+    {
+        return $this->buildMatchExpression($field_name, $criteria_value)
+             ->unwrapOr(new ParametrizedSQLFragment('1', []));
     }
 
     public function fetchCriteriaValue($criteria)
@@ -61,9 +84,9 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $html;
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQueryFrom()
@@ -76,7 +99,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value)
+    protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }

@@ -19,20 +19,22 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
-use CodendiDataAccess;
+use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class ForText implements FieldFromWhereBuilder
 {
-    public function __construct(private readonly FromWhereComparisonFieldBuilder $from_where_builder)
-    {
+    public function __construct(
+        private readonly FromWhereComparisonFieldBuilder $from_where_builder,
+        private readonly EasyDB $db,
+    ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
@@ -42,10 +44,12 @@ final class ForText implements FieldFromWhereBuilder
         $changeset_value_text_alias = "CVText_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
+        $parameters = [];
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value = " LIKE " . $this->quoteLikeValueSurround($value);
+            $matches_value = " LIKE ?";
+            $parameters[]  = $this->quoteLikeValueSurround($value);
         }
 
         $condition = "$changeset_value_text_alias.value $matches_value";
@@ -55,12 +59,13 @@ final class ForText implements FieldFromWhereBuilder
             $changeset_value_alias,
             $changeset_value_text_alias,
             'tracker_changeset_value_text',
-            $condition
+            $condition,
+            $parameters,
         );
     }
 
-    private function quoteLikeValueSurround($value)
+    private function quoteLikeValueSurround($value): string
     {
-        return CodendiDataAccess::instance()->quoteLikeValueSurround($value);
+        return '%' . $this->db->escapeLikeValue($value) . '%';
     }
 }

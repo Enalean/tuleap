@@ -19,23 +19,17 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparison;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
 {
-    /**
-     * @var DateTimeValueRounder
-     */
-    private $date_time_value_rounder;
-
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    public function __construct(private readonly DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getCondition($value)
+    public function getCondition($value): ParametrizedSQLFragment
     {
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
@@ -43,17 +37,12 @@ final class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
         $min_value_floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($min_value);
         $max_value_ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($max_value);
 
-        $min_value_floored_timestamp = $this->escapeInt($min_value_floored_timestamp);
-        $max_value_ceiled_timestamp  = $this->escapeInt($max_value_ceiled_timestamp);
+        $condition = "c.submitted_on >= ?
+            AND c.submitted_on <= ?";
 
-        $condition = "c.submitted_on >= $min_value_floored_timestamp
-            AND c.submitted_on <= $max_value_ceiled_timestamp";
-
-        return $condition;
-    }
-
-    private function escapeInt($value)
-    {
-        return CodendiDataAccess::instance()->escapeInt($value);
+        return new ParametrizedSQLFragment(
+            $condition,
+            [$min_value_floored_timestamp, $max_value_ceiled_timestamp]
+        );
     }
 }

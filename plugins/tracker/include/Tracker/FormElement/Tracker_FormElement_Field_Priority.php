@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
@@ -42,17 +45,23 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $this->label;
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
-        return ' INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id';
+        return Option::fromValue(
+            new ParametrizedFrom(
+                'INNER JOIN tracker_artifact_priority_rank
+                    ON artifact.id = tracker_artifact_priority_rank.artifact_id',
+                [],
+            ),
+        );
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression('tracker_artifact_priority_rank.`rank`', $criteria_value);
         }
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function fetchChangesetValue(

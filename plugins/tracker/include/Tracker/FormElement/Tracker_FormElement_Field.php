@@ -20,10 +20,13 @@
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Option\Option;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
@@ -87,18 +90,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
+     *
+     * @return Option<ParametrizedFrom>
      */
-    abstract public function getCriteriaFrom($criteria);
+    abstract public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option;
 
     /**
      * Get the "where" statement to allow search with this field
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
+     *
+     *
+     * @return Option<ParametrizedSQLFragment>
      * @see getCriteriaFrom
      */
-    abstract public function getCriteriaWhere($criteria);
+    abstract public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option;
 
     /**
      * Return the dao of the criteria value used with this field.

@@ -19,17 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 {
     public const FLOAT_DECIMALS = 4;
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
@@ -37,17 +40,29 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
             $criteria_value = $this->getCriteriaValue($criteria);
 
             if ($criteria_value !== '' && $criteria_value !== null) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a
-                         ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
-                         INNER JOIN tracker_changeset_value_float AS $b
-                         ON ($b.changeset_value_id = $a.id
-                             AND " . $this->buildMatchExpression("$b.value", $criteria_value) . "
-                         ) ";
+                $a                = 'A_' . $this->id;
+                $b                = 'B_' . $this->id;
+                $match_expression = $this->buildMatchExpression("$b.value", $criteria_value)
+                     ->unwrapOr(new ParametrizedSQLFragment('1', []));
+
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a
+                             ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                             INNER JOIN tracker_changeset_value_float AS $b
+                             ON ($b.changeset_value_id = $a.id
+                                 AND " . $match_expression->sql . "
+                             ) ",
+                        [
+                            $this->id,
+                            $match_expression->parameters,
+                        ]
+                    )
+                );
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
     public function fetchCriteriaValue($criteria)
@@ -64,9 +79,9 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return $html;
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQueryFrom()
@@ -90,7 +105,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return (float) $value;
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value)
+    protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }

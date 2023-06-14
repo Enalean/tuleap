@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+
 class Tracker_Report_Criteria
 {
     public $id;
@@ -60,12 +64,18 @@ class Tracker_Report_Criteria
         $this->is_advanced = $is_advanced;
     }
 
-    public function getFrom()
+    /**
+     * @return Option<ParametrizedFrom>
+     */
+    public function getFrom(): Option
     {
         return $this->field->getCriteriaFrom($this);
     }
 
-    public function getWhere()
+    /**
+     * @return Option<ParametrizedSQLFragment>
+     */
+    public function getWhere(): Option
     {
         return $this->field->getCriteriaWhere($this);
     }

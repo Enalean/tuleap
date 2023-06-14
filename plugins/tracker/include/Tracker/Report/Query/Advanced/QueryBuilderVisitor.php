@@ -60,13 +60,13 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVis
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
-use Tuleap\Tracker\Report\Query\AndFromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\OrFromWhere;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
 
 /**
- * @template-implements LogicalVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
- * @template-implements TermVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
+ * @template-implements LogicalVisitor<QueryBuilderParameters, IProvideParametrizedFromAndWhereSQLFragments>
+ * @template-implements TermVisitor<QueryBuilderParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
 final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 {
@@ -357,7 +357,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
         $from_where_tail = $tail->acceptLogicalVisitor($this, $parameters);
 
-        return new AndFromWhere($from_where_expression, $from_where_tail);
+        return new ParametrizedAndFromWhere($from_where_expression, $from_where_tail);
     }
 
     private function buildOrClause(QueryBuilderParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
@@ -368,7 +368,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
         $from_where_tail = $tail->acceptLogicalVisitor($this, $parameters);
 
-        return new OrFromWhere($from_where_expression, $from_where_tail);
+        return new ParametrizedOrFromWhere($from_where_expression, $from_where_tail);
     }
 
     public function visitWithParent(WithParent $condition, $parameters)

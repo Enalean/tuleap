@@ -20,10 +20,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -32,14 +30,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, string>
  */
 final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
@@ -80,13 +79,6 @@ final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataCompar
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    private function quoteSmart($value)
-    {
-        return $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(
-            CodendiDataAccess::instance()->quoteSmart($value)
-        );
-    }
-
     private function removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value)
     {
         return trim($value, "'");
@@ -97,12 +89,12 @@ final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataCompar
      */
     protected function surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value)
     {
-        return '\'"' . $value . '"\'';
+        return '"' . $value . '"';
     }
 
-    protected function searchComment(Comparison $comparison, $value): IProvideFromAndWhereSQLFragments
+    protected function searchComment(Comparison $comparison, $value): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $value = $this->quoteSmart($value);
+        $value = $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value);
         $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
 
         $suffix = spl_object_hash($comparison);
@@ -113,17 +105,17 @@ final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataCompar
                      ON (
                         TCC_$suffix.id = TCCF_$suffix.comment_id
                         AND TCC_$suffix.parent_id = 0
-                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
+                        AND match(TCCF_$suffix.stripped_body) against (? IN BOOLEAN MODE)
                      )
                      INNER JOIN tracker_changeset AS TC_$suffix ON TC_$suffix.id = TCC_$suffix.changeset_id
                  ) ON TC_$suffix.artifact_id = artifact.id";
 
         $where = "TCC_$suffix.changeset_id IS NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [$value], []);
     }
 
-    private function searchArtifactsWithComments(Comparison $comparison): IProvideFromAndWhereSQLFragments
+    private function searchArtifactsWithComments(Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 
@@ -137,6 +129,6 @@ final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataCompar
 
         $where = "TCCF_$suffix.comment_id IS NOT NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 }

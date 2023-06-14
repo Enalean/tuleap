@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Artifact_PriorityDao;
-use Tuleap\Tracker\Report\Query\FromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -47,7 +47,7 @@ final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts(): void
     {
         $empty_report = $this->createMock(\Tracker_Report::class);
-        $from_where   = new FromWhere('', '');
+        $from_where   = new ParametrizedFromWhere('', '', [], []);
 
         $empty_report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
             ['id' => '', 'last_changeset_id' => '']
@@ -67,7 +67,7 @@ final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset(): void
     {
         $report     = $this->createMock(\Tracker_Report::class);
-        $from_where = new FromWhere('', '');
+        $from_where = new ParametrizedFromWhere('', '', [], []);
 
         $report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
             [
@@ -113,7 +113,7 @@ final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffsetWithRank(): void
     {
         $report     = $this->createMock(\Tracker_Report::class);
-        $from_where = new FromWhere('', '');
+        $from_where = new ParametrizedFromWhere('', '', [], []);
 
         $report->method('getMatchingIdsWithAdditionalFromWhere')->willReturn(
             [

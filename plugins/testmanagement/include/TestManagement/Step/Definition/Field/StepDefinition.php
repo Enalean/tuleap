@@ -32,6 +32,8 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
+use Tracker_Report_Criteria;
+use Tuleap\Option\Option;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -47,6 +49,8 @@ use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -131,20 +135,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
-    /**
-     * @param mixed $criteria
-     */
-    public function getCriteriaFrom($criteria): string
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    /**
-     * @param mixed $criteria
-     */
-    public function getCriteriaWhere($criteria): string
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQueryFrom(): string

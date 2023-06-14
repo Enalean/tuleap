@@ -22,6 +22,7 @@
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -34,6 +35,8 @@ use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
@@ -68,28 +71,45 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $this->getDao()->delete($this->id);
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a
-                         ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                $a                = 'A_' . $this->id;
+                $b                = 'B_' . $this->id;
+                $match_expression = $this->getCriteriaFromFragment("$b.value", $criteria_value);
+
+                return Option::fromValue(
+                    new ParametrizedFrom(
+                        " INNER JOIN tracker_changeset_value AS $a
+                         ON ($a.changeset_id = c.id AND $a.field_id = ?)
                          INNER JOIN tracker_changeset_value_text AS $b
                          ON ($b.changeset_value_id = $a.id
-                             AND " . $this->buildMatchExpression("$b.value", $criteria_value) . "
-                         ) ";
+                             AND " . $match_expression->sql . "
+                         ) ",
+                        [$this->id, ...$match_expression->parameters],
+                    ),
+                );
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    public function getCriteriaWhere($criteria)
+    /**
+     * @param mixed $criteria_value
+     */
+    private function getCriteriaFromFragment(string $field_name, $criteria_value): ParametrizedSQLFragment
     {
-        return '';
+        return $this->buildMatchExpression($field_name, $criteria_value)
+             ->unwrapOr(new ParametrizedSQLFragment('1', []));
+    }
+
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
+    {
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string
@@ -108,28 +128,35 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value)
+    protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
-        $matches = [];
-        $expr    = parent::buildMatchExpression($field_name, $criteria_value);
-        if (! $expr) {
+        $expr = parent::buildMatchExpression($field_name, $criteria_value);
+        if ($expr->isNothing()) {
             // else transform into a series of LIKE %word%
             if (is_array($criteria_value)) {
                 $split = preg_split('/\s+/', $criteria_value['value']);
             } else {
                 $split = preg_split('/\s+/', $criteria_value);
             }
-            $words        = [];
-            $criterie_dao = $this->getCriteriaDao();
-            if ($criterie_dao === null) {
-                return '';
-            }
+            $words      = [];
+            $parameters = [];
             foreach ($split as $w) {
-                $words[] = $field_name . " LIKE " . $criterie_dao->getDa()->quoteLikeValueSurround($w);
+                $words[]      = $field_name . ' LIKE ?';
+                $parameters[] = '%' . $this->getDb()->escapeLikeValue($w) . '%';
             }
-            $expr = join(' AND ', $words);
+            $expr = Option::fromValue(
+                new ParametrizedSQLFragment(
+                    join(' AND ', $words),
+                    $parameters
+                )
+            );
         }
         return $expr;
+    }
+
+    protected function getDb(): \ParagonIE\EasyDB\EasyDB
+    {
+        return \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     protected function getCriteriaDao()

@@ -31,7 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, string>
@@ -42,7 +42,7 @@ final class MetadataEqualComparisonFromWhereBuilder implements MetadataCompariso
     {
     }
 
-    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
@@ -83,14 +83,14 @@ final class MetadataEqualComparisonFromWhereBuilder implements MetadataCompariso
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    private function searchComment(Comparison $comparison, $value): IProvideFromAndWhereSQLFragments
+    private function searchComment(Comparison $comparison, $value): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 
         return $this->comment_from_where_builder->getFromWhereWithComment($value, $suffix);
     }
 
-    private function searchArtifactsWithoutComment(Comparison $comparison): IProvideFromAndWhereSQLFragments
+    private function searchArtifactsWithoutComment(Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 

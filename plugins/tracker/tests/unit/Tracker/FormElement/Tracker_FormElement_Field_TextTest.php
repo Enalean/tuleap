@@ -22,7 +22,9 @@
 declare(strict_types=1);
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -50,9 +52,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->user = \Mockery::spy(\PFUser::class);
 
+
         $this->text_field = \Mockery::mock(\Tracker_FormElement_Field_Text::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $this->text_field->shouldReceive('getCurrentUser')->andReturn($this->user);
+
+        $db = $this->createMock(\ParagonIE\EasyDB\EasyDB::class);
+        $db->method('escapeLikeValue')->willReturnArgument(0);
+        $this->text_field->shouldReceive('getDb')->andReturn($db);
 
         $this->value_dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\Text\TextValueDao::class);
         $this->text_field->shouldReceive('getValueDao')->andReturns($this->value_dao);
@@ -283,13 +290,40 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         )->getMock();
         $this->text_field->shouldReceive('getCriteriaDao')->andReturns($dao);
 
-        $this->assertEquals("field LIKE '%tutu%'", $this->text_field->buildMatchExpression('field', 'tutu'));
-        $this->assertEquals(
-            "field LIKE '%tutu%' AND field LIKE '%toto%'",
-            $this->text_field->buildMatchExpression('field', 'tutu toto')
+        $this->assertFragment(
+            "field LIKE ?",
+            ['%tutu%'],
+            $this->text_field->buildMatchExpression('field', 'tutu'),
         );
-        $this->assertEquals("field RLIKE 'regexp'", $this->text_field->buildMatchExpression('field', '/regexp/'));
-        $this->assertEquals("field NOT RLIKE 'regexp'", $this->text_field->buildMatchExpression('field', '!/regexp/'));
+        $this->assertFragment(
+            "field LIKE ? AND field LIKE ?",
+            ['%tutu%', '%toto%'],
+            $this->text_field->buildMatchExpression('field', 'tutu toto'),
+        );
+        $this->assertFragment(
+            "field RLIKE ?",
+            ['regexp'],
+            $this->text_field->buildMatchExpression('field', '/regexp/'),
+        );
+        $this->assertFragment(
+            "field NOT RLIKE ?",
+            ['regexp'],
+            $this->text_field->buildMatchExpression('field', '!/regexp/'),
+        );
+    }
+
+    /**
+     * @param Option<ParametrizedSQLFragment> $fragment
+     */
+    private function assertFragment(string $expected_sql, array $expected_parameters, Option $fragment): void
+    {
+        $fragment = $fragment->unwrapOr(null);
+        if ($fragment === null) {
+            self::fail('Does not match expected ' . $expected_sql);
+        }
+
+        self::assertEquals($expected_sql, $fragment->sql);
+        self::assertEquals($expected_parameters, $fragment->parameters);
     }
 
     public function testIsValidRegardingRequiredPropertyWhichIsTrue()

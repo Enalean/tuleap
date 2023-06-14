@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -118,14 +120,28 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $method     = $reflection->getMethod('buildMatchExpression');
         $method->setAccessible(true);
 
-        $this->assertEquals('field = 12', $method->invokeArgs($field, ['field', '12']));
-        $this->assertEquals('field < 12', $method->invokeArgs($field, ['field', '<12']));
-        $this->assertEquals('field <= 12', $method->invokeArgs($field, ['field', '<=12']));
-        $this->assertEquals('field > 12', $method->invokeArgs($field, ['field', '>12']));
-        $this->assertEquals('field >= 12', $method->invokeArgs($field, ['field', '>=12']));
-        $this->assertEquals('field >= 12 AND field <= 34', $method->invokeArgs($field, ['field', '12-34']));
-        $this->assertEquals(1, $method->invokeArgs($field, ['field', ' <12'])); //Invalid syntax, we don't search against this field
-        $this->assertEquals(1, $method->invokeArgs($field, ['field', '<=toto'])); //Invalid syntax, we don't search against this field
+        $this->assertFragment('field = ?', [12], $method->invokeArgs($field, ['field', '12']));
+        $this->assertFragment('field < ?', [12], $method->invokeArgs($field, ['field', '<12']));
+        $this->assertFragment('field <= ?', [12], $method->invokeArgs($field, ['field', '<=12']));
+        $this->assertFragment('field > ?', [12], $method->invokeArgs($field, ['field', '>12']));
+        $this->assertFragment('field >= ?', [12], $method->invokeArgs($field, ['field', '>=12']));
+        $this->assertFragment('field >= ? AND field <= ?', [12, 34], $method->invokeArgs($field, ['field', '12-34']));
+        self::assertTrue($method->invokeArgs($field, ['field', ' <12'])->isNothing()); //Invalid syntax, we don't search against this field
+        self::assertTrue($method->invokeArgs($field, ['field', '<=toto'])->isNothing()); //Invalid syntax, we don't search against this field
+    }
+
+    /**
+     * @param Option<ParametrizedSQLFragment> $fragment
+     */
+    private function assertFragment(string $expected_sql, array $expected_parameters, Option $fragment): void
+    {
+        $fragment = $fragment->unwrapOr(null);
+        if ($fragment === null) {
+            self::fail('Does not match expected ' . $expected_sql);
+        }
+
+        self::assertEquals($expected_sql, $fragment->sql);
+        self::assertEquals($expected_parameters, $fragment->parameters);
     }
 
     public function testItSearchOnZeroValue(): void
@@ -158,7 +174,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn('');
 
-        $this->assertEquals('', $field->getCriteriaFrom($criteria));
+        self::assertTrue($field->getCriteriaFrom($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnNullCriteria(): void
@@ -169,7 +185,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn(null);
 
-        $this->assertEquals('', $field->getCriteriaFrom($criteria));
+        $this->assertTrue($field->getCriteriaFrom($criteria)->isNothing());
     }
 
     public function testItFetchCriteriaAndSetValueZero(): void

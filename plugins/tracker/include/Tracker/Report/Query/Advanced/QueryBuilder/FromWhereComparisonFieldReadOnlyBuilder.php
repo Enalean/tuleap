@@ -19,17 +19,17 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 final class FromWhereComparisonFieldReadOnlyBuilder
 {
     public function getFromWhere(
-        $condition,
-    ): IProvideFromAndWhereSQLFragments {
-        $from  = "";
-        $where = "$condition";
+        ParametrizedSQLFragment $condition,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
+        $from = "";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $condition->sql, [], $condition->parameters);
     }
 }

@@ -17,9 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'null';
@@ -129,27 +133,14 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return '';
     }
 
-    /**
-     * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve
-     * the last changeset of all artifacts.
-     * @param array $criteria_value array of criteria_value (which are array)
-     * @return string
-     */
-    public function getCriteriaFrom($criteria_value)
+    public function getCriteriaFrom($criteria_value): Option
     {
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    /**
-     * Get the "where" statement to allow search with this field
-     * @param array $criteria array of id => criteria_value (which are array)
-     * @return string
-     * @see getCriteriaFrom
-     */
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere($criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     /**

@@ -19,19 +19,24 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class FromWhereEmptyComparisonListFieldBuilder
 {
-    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
+    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
             tracker_changeset_value AS $query_presenter->changeset_value_alias
             INNER JOIN $query_presenter->tracker_changeset_value_table AS $query_presenter->changeset_value_list_alias
              ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id)
-         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)";
+         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = ?)";
 
-        return new FromWhere($from, $query_presenter->condition);
+        return new ParametrizedFromWhere(
+            $from,
+            $query_presenter->condition,
+            [$query_presenter->field_id],
+            $query_presenter->parameters,
+        );
     }
 }

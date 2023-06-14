@@ -19,9 +19,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
-use CodendiDataAccess;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
@@ -32,16 +31,6 @@ final class ForTextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp(): void
-    {
-        CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
-    }
-
-    protected function tearDown(): void
-    {
-        CodendiDataAccess::clearInstance();
-    }
-
     public function testItUsesTheComparisonInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery(): void
     {
         $comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
@@ -49,13 +38,17 @@ final class ForTextTest extends \Tuleap\Test\PHPUnit\TestCase
         $field      = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $field->shouldReceive('getId')->andReturn($field_id);
 
+        $db = $this->createMock(EasyDB::class);
+        $db->method('escapeLikeValue')->willReturnArgument(0);
+
         $for_text   = new ForText(
-            new FromWhereComparisonFieldBuilder()
+            new FromWhereComparisonFieldBuilder(),
+            $db,
         );
         $from_where = $for_text->getFromWhere($comparison, $field);
 
         $suffix = spl_object_hash($comparison);
 
-        $this->assertMatchesRegularExpression("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
+        $this->assertMatchesRegularExpression("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFrom());
     }
 }

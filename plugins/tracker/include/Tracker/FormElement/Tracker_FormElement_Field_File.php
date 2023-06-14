@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -34,41 +35,52 @@ use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAtt
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 {
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field  is used
         if ($this->isUsed()) {
+            $criteria_value = $this->getCriteriaValue($criteria);
             //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            if ($criteria_value) {
                 $a = 'A_' . $this->id;
                 $b = 'B_' . $this->id;
                 $c = 'C_' . $this->id;
 
-                $da             = CodendiDataAccess::instance();
-                $criteria_value = $da->quoteLikeValueSurround($criteria_value);
+                $da             = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
+                $criteria_value = '%' . $da->escapeLikeValue($criteria_value) . '%';
 
-                return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                return Option::fromValue(new ParametrizedFrom(
+                    " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
                          INNER JOIN tracker_changeset_value_file AS $b ON ($b.changeset_value_id = $a.id)
                          INNER JOIN tracker_fileinfo AS $c ON (
                             $c.id = $b.fileinfo_id
                             AND (
-                                $c.description LIKE " . $criteria_value . "
+                                $c.description LIKE ?
                                 OR
-                                $c.filename LIKE " . $criteria_value . "
+                                $c.filename LIKE ?
                             )
-                         ) ";
+                         ) ",
+                    [
+                        $this->id,
+                        $criteria_value,
+                        $criteria_value,
+                    ]
+                ));
             }
         }
-        return '';
+
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

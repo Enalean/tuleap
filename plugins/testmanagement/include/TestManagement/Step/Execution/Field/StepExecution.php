@@ -25,6 +25,8 @@ use TemplateRendererFactory;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
+use Tracker_Report_Criteria;
+use Tuleap\Option\Option;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Execution\StepResultPresenter;
 use Tuleap\TestManagement\Step\Step;
@@ -32,6 +34,8 @@ use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 class StepExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -113,14 +117,14 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

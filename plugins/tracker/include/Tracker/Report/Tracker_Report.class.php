@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Option\Option;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -56,7 +58,12 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilderFactory;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\QueryDao;
 use Tuleap\Tracker\Report\TrackerCreationSuccess\SuccessPresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
@@ -142,7 +149,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      */
     private $collector;
 
-    private ?IProvideFromAndWhereSQLFragments $additional_from_where;
+    private ?IProvideParametrizedFromAndWhereSQLFragments $additional_from_where;
 
     private string $expert_query_from_db;
 
@@ -421,47 +428,79 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $matchingIds;
     }
 
+    /**
+     * @param Tracker_Report_Criteria[] $criteria
+     * @param Tracker_Report_AdditionalCriterion[] $additional_criteria
+     *
+     * @return string[]
+     */
     private function getMatchingIdsFromCriteriaInDb(array $criteria, array $additional_criteria)
     {
-        $additional_from  = [];
-        $additional_where = [];
-        foreach ($criteria as $c) {
-            if ($f = $c->getFrom()) {
-                $additional_from[] = $f;
-            }
+        $from_where = Option::nothing(IProvideParametrizedFromAndWhereSQLFragments::class);
+        foreach ($criteria as $criterion) {
+            $from = $criterion->getFrom()->unwrapOr(new ParametrizedFrom('', []));
 
-            if ($w = $c->getWhere()) {
-                $additional_where[] = $w;
+            $where = $criterion->getWhere()->unwrapOr(new ParametrizedSQLFragment('1', []));
+
+            if ($from->getFrom() !== '' || $where->sql !== '1') {
+                $from_where = $this->addFromWhere(
+                    $from_where,
+                    new ParametrizedFromWhere(
+                        $from->getFrom(),
+                        $where->sql,
+                        $from->getParameters(),
+                        $where->parameters,
+                    )
+                );
             }
         }
 
-        $this->addCommentCriterionFromWhere($additional_criteria, $additional_from, $additional_where);
+        $this->getCommentCriterionFromWhere($additional_criteria)
+             ->apply(function ($comment_from_where) use (&$from_where) {
+                 $from_where = $this->addFromWhere($from_where, $comment_from_where);
+             });
 
-        $matching_ids = $this->getMatchingIdsInDb(
-            $additional_from,
-            $additional_where
-        );
+        $matching_ids = $this->getMatchingIdsInDb($from_where);
 
         return $matching_ids;
     }
 
-    private function addCommentCriterionFromWhere(
-        array $additional_criteria,
-        array &$additional_from,
-        array &$additional_where,
-    ) {
-        $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
-        if (! $comment_criterion || (string) $comment_criterion->getValue() === '') {
-            return;
-        }
-
-        $from_where = $this->getCommentFromWhereBuilder()->getFromWhereWithComment(
-            $comment_criterion->getValue(),
-            self::COMMENT_CRITERION_NAME
+    /**
+     * @param Option<IProvideParametrizedFromAndWhereSQLFragments> $existing
+     *
+     * @return Option<IProvideParametrizedFromAndWhereSQLFragments>
+     */
+    private function addFromWhere(Option $existing, IProvideParametrizedFromAndWhereSQLFragments $from_where): Option
+    {
+        $new_from_where = Option::nothing(IProvideParametrizedFromAndWhereSQLFragments::class);
+        $existing->match(
+            function (IProvideParametrizedFromAndWhereSQLFragments $existing) use (&$new_from_where, $from_where) {
+                $new_from_where = Option::fromValue(new ParametrizedAndFromWhere($existing, $from_where));
+            },
+            function () use (&$new_from_where, $from_where) {
+                $new_from_where = Option::fromValue($from_where);
+            },
         );
 
-        $additional_from[]  = $from_where->getFromAsString();
-        $additional_where[] = $from_where->getWhere();
+        return $new_from_where;
+    }
+
+    /**
+     * @param Tracker_Report_AdditionalCriterion[] $additional_criteria
+     *
+     * @return Option<IProvideParametrizedFromAndWhereSQLFragments>
+     */
+    private function getCommentCriterionFromWhere(array $additional_criteria): Option
+    {
+        $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
+        if (! $comment_criterion || (string) $comment_criterion->getValue() === '') {
+            return Option::nothing(IProvideParametrizedFromAndWhereSQLFragments::class);
+        }
+
+        return Option::fromValue(
+            $this->getCommentFromWhereBuilder()
+                 ->getFromWhereWithComment($comment_criterion->getValue(), self::COMMENT_CRITERION_NAME)
+        );
     }
 
     /**
@@ -2013,15 +2052,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $expression = $this->parser->parse($expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
-                $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker(), $this->getCurrentUser());
-
-                $additional_from  = $from_where->getFromAsArray();
-                $additional_where = [$from_where->getWhere()];
-
-                $this->matching_ids = $this->getMatchingIdsInDb(
-                    $additional_from,
-                    $additional_where
+                $from_where = Option::fromValue(
+                    $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker(), $this->getCurrentUser())
                 );
+
+                $this->matching_ids = $this->getMatchingIdsInDb($from_where);
 
                 return $this->matching_ids;
             }
@@ -2033,38 +2068,38 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->matching_ids;
     }
 
-    private function getMatchingIdsInDb(
-        $from,
-        $where,
-    ) {
+    /**
+     * @param Option<IProvideParametrizedFromAndWhereSQLFragments> $from_where
+     *
+     * @return array{id: string, last_changeset_id: string}
+     */
+    private function getMatchingIdsInDb(Option $from_where): array
+    {
         $matching_ids = $this->getNoMatchingIds();
 
-        $dao                  = $this->getDao();
+        $dao                  = new QueryDao();
         $tracker              = $this->getTracker();
         $user                 = $this->getCurrentUser();
-        $group_id             = $tracker->getGroupId();
+        $group_id             = (int) $tracker->getGroupId();
         $permissions          = $this->getPermissionsManager()->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
 
         if (isset($this->additional_from_where)) {
-            $from[]  = $this->additional_from_where->getFromAsString();
-            $where[] = $this->additional_from_where->getWhere();
+            $from_where = $this->addFromWhere($from_where, $this->additional_from_where);
         }
 
         $matching_ids_result = $dao->searchMatchingIds(
             $group_id,
             $tracker->getId(),
-            $from,
-            $where,
+            $from_where,
             $user,
             $permissions,
             $contributor_field_id
         );
         if ($matching_ids_result) {
-            $matching_ids_result_array         = iterator_to_array($matching_ids_result);
-            $matching_ids['id']                = implode(',', array_column($matching_ids_result_array, 'id'));
-            $matching_ids['last_changeset_id'] = implode(',', array_column($matching_ids_result_array, 'last_changeset_id'));
+            $matching_ids['id']                = implode(',', array_column($matching_ids_result, 'id'));
+            $matching_ids['last_changeset_id'] = implode(',', array_column($matching_ids_result, 'last_changeset_id'));
         }
 
         return $matching_ids;
@@ -2077,10 +2112,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     private function getUnfilteredMatchingIds()
     {
-        $additional_from  = [];
-        $additional_where = [];
-
-        return $this->getMatchingIdsInDb($additional_from, $additional_where);
+        return $this->getMatchingIdsInDb(Option::nothing(IProvideParametrizedFromAndWhereSQLFragments::class));
     }
 
     private function canExecuteExpertQuery($parsed_query)
@@ -2107,7 +2139,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $invalid_searchables_collection;
     }
 
-    public function getMatchingIdsWithAdditionalFromWhere(IProvideFromAndWhereSQLFragments $from_where)
+    public function getMatchingIdsWithAdditionalFromWhere(IProvideParametrizedFromAndWhereSQLFragments $from_where)
     {
         $this->additional_from_where = $from_where;
         $matching_ids                = $this->getMatchingIds();
@@ -2162,9 +2194,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     private function getQueryBuilder(): QueryBuilderVisitor
     {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
         return new QueryBuilderVisitor(
-            new QueryBuilder\EqualFieldComparisonVisitor(),
-            new QueryBuilder\NotEqualFieldComparisonVisitor(),
+            new QueryBuilder\EqualFieldComparisonVisitor($db),
+            new QueryBuilder\NotEqualFieldComparisonVisitor($db),
             new QueryBuilder\LesserThanFieldComparisonVisitor(),
             new QueryBuilder\GreaterThanFieldComparisonVisitor(),
             new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),

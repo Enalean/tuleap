@@ -19,28 +19,30 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\FromWhere;
-use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class FromWhereComparisonFieldBuilder
 {
     public function getFromWhere(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_field_alias,
-        $tracker_changeset_value_table,
-        $condition,
-    ): IProvideFromAndWhereSQLFragments {
+        int $field_id,
+        string $changeset_value_alias,
+        string $changeset_value_field_alias,
+        string $tracker_changeset_value_table,
+        string|EasyStatement $condition,
+        array $from_parameters,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
         $from = " LEFT JOIN (
             tracker_changeset_value AS $changeset_value_alias
             INNER JOIN $tracker_changeset_value_table AS $changeset_value_field_alias
              ON ($changeset_value_field_alias.changeset_value_id = $changeset_value_alias.id
                  AND $condition
              )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
+         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = ?)";
 
         $where = "$changeset_value_alias.changeset_id IS NOT NULL";
 
-        return new FromWhere($from, $where);
+        return new ParametrizedFromWhere($from, $where, [...$from_parameters, $field_id], []);
     }
 }

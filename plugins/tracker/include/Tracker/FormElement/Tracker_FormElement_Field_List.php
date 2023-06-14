@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -30,6 +31,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
+use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -119,41 +122,23 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return ! $this->isMultiple();
     }
 
-    /**
-     * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve
-     * the last changeset of all artifacts.
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaFrom($criteria)
+    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
         if ($this->isUsed()) {
             return $this->getBind()->getCriteriaFrom($this->getCriteriaValue($criteria));
         }
 
-        return '';
+        return Option::nothing(ParametrizedFrom::class);
     }
 
-    /**
-     * Get the "where" statement to allow search with this field
-     *
-     * @see getCriteriaFrom
-     *
-     * @param Tracker_Report_Criteria $criteria
-     *
-     * @return string
-     */
-    public function getCriteriaWhere($criteria)
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
     {
         if ($this->isUsed()) {
             return $this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
         }
 
-        return '';
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     /**
