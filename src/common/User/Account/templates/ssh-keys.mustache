@@ -11,11 +11,11 @@
 
                 <div class="tlp-table-actions">
                     <button
-                            type="button"
-                            class="tlp-button-primary tlp-table-actions-element"
-                            id="add-ssh-key-button"
-                            data-test="add-ssh-key-button"
-                            data-target-modal-id="ssh-keys-add-modal"
+                        type="button"
+                        class="tlp-button-primary tlp-table-actions-element"
+                        id="add-ssh-key-button"
+                        data-test="add-ssh-key-button"
+                        data-target-modal-id="ssh-keys-add-modal"
                     >
                         <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Add SSH key{{/ gettext }}
                     </button>
@@ -27,7 +27,8 @@
                                 class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
                                 disabled
                         >
-                            <i class="tlp-button-icon far fa-trash-alt"></i> {{# gettext }}Delete selected SSH keys{{/ gettext }}
+                            <i class="tlp-button-icon far fa-trash-alt"></i> {{# gettext }}
+                            Delete selected SSH keys{{/ gettext }}
                         </button>
                     {{/ has_ssh_keys }}
                 </div>
@@ -39,30 +40,30 @@
                         <th class="ssh-keys-table-key">{{# gettext }}Key{{/ gettext }}</th>
                     </tr>
                     </thead>
-                        <tbody>
-                        {{# ssh_keys_list }}
-                            <tr>
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        name="ssh_key_selected[]"
-                                        value="{{ ssh_key_number }}"
-                                        data-test="user-prefs-remove-ssh-key-checkbox"
-                                    />
-                                </td>
-                                <td data-ssh_key_value="{{ ssh_key_value }}">
-                                    {{ ssh_key_ellipsis_value }}
-                                </td>
-                            </tr>
-                        {{/ ssh_keys_list }}
-                        {{^ ssh_keys_list }}
-                            <tr>
-                                <td class="tlp-table-cell-empty" colspan="2">
-                                    {{# gettext }}You don't have any SSH keys yet.{{/ gettext }}
-                                </td>
-                            </tr>
-                        {{/ ssh_keys_list }}
-                        </tbody>
+                    <tbody>
+                    {{# ssh_keys_list }}
+                        <tr>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    name="ssh_key_selected[]"
+                                    value="{{ ssh_key_number }}"
+                                    data-test="user-prefs-remove-ssh-key-checkbox"
+                                />
+                            </td>
+                            <td data-ssh_key_value="{{ ssh_key_value }}">
+                                {{ ssh_key_ellipsis_value }}
+                            </td>
+                        </tr>
+                    {{/ ssh_keys_list }}
+                    {{^ ssh_keys_list }}
+                        <tr>
+                            <td class="tlp-table-cell-empty" colspan="2">
+                                {{# gettext }}You don't have any SSH keys yet.{{/ gettext }}
+                            </td>
+                        </tr>
+                    {{/ ssh_keys_list }}
+                    </tbody>
                 </table>
             </form>
         </section>
@@ -80,26 +81,32 @@
         </button>
     </div>
 
-    <form action="/account/ssh_key/create" method="post">
+    <form action="/account/ssh_key/create" method="post" id="submit-new-ssh-key-form">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
 
         <div class="tlp-modal-body">
 
+            <div class="tlp-alert-danger user-preferences-hidden" id="submit-ssh-key-error"></div>
+
             <div class="tlp-form-element">
                 <label class="tlp-label" for="ssh-key">{{# gettext }}SSH key{{/ gettext }}</label>
-                <textarea id="ssh-key" data-test="ssh-key" name="ssh-key" rows="5" class="tlp-textarea" required></textarea>
+                <textarea id="ssh-key" data-test="ssh-key" name="ssh-key" rows="5" class="tlp-textarea"
+                          required></textarea>
             </div>
         </div>
         <div class="tlp-modal-footer">
-            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
             <button type="submit"
                     class="tlp-button-primary tlp-modal-action"
                     id="submit-new-ssh-key-button"
                     data-test="submit-new-ssh-key-button"
                     disabled
             >
+                <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon user-preferences-hidden" aria-hidden="true"
+                   id="submit-new-ssh-key-button-icon"></i>
                 {{# gettext }}Add new key{{/ gettext }}
             </button>
         </div>

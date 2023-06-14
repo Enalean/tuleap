@@ -22,12 +22,11 @@ import { EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-mo
 import type { GetText } from "@tuleap/gettext";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { selectOrThrow } from "@tuleap/dom";
-import "../themes/style.scss";
 import { register } from "./register";
 import { authenticate } from "@tuleap/webauthn";
 import { deleteKey } from "./delete";
 
-const HIDDEN = "webauthn-hidden";
+const HIDDEN = "user-preferences-hidden";
 
 document.addEventListener("DOMContentLoaded", (): void => {
     prepareGettext().then((gettext_provider) => {

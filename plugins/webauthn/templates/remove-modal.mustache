@@ -10,9 +10,9 @@
         </button>
     </div>
     <div class="tlp-modal-body">
-        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-remove-error"></div>
+        <div class="tlp-alert-danger user-preferences-hidden" id="webauthn-remove-error"></div>
         {{# dgettext }} tuleap-webauthn | Are you sure you want to remove your passkey? {{/ dgettext }}
-        <input type="hidden" class="tlp-input webauthn-hidden" id="webauthn-key-id-input" />
+        <input type="hidden" class="tlp-input user-preferences-hidden" id="webauthn-key-id-input" />
         {{# csrf_token_del }}
             {{> csrf_token_input }}
         {{/ csrf_token_del }}
@@ -23,7 +23,7 @@
         </button>
         <button class="tlp-button tlp-button-danger" type="submit" data-test="remove-modal-button"
                 id="webauthn-modal-remove-button">
-            <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden" aria-hidden="true"
+            <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon user-preferences-hidden" aria-hidden="true"
                id="webauthn-modal-remove"></i>
             {{# dgettext }} tuleap-webauthn | Confirm {{/ dgettext }}
         </button>
