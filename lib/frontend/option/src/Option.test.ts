@@ -178,4 +178,16 @@ describe(`Option`, () => {
             expect(unwrapped_value).toBeNull();
         });
     });
+
+    describe(`fromNullable()`, () => {
+        it.each([[null], [undefined]])(`returns None when its argument is %s`, (value) => {
+            expect(Option.fromNullable(value).isNothing()).toBe(true);
+        });
+
+        it(`returns Some otherwise`, () => {
+            const itCouldReturnValue = (): number | null => 246;
+            const value = itCouldReturnValue();
+            expect(Option.fromNullable(value).unwrapOr(false)).toBe(value);
+        });
+    });
 });

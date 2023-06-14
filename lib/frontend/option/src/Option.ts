@@ -83,4 +83,8 @@ export const Option = {
             isValue: () => false,
         };
     },
+
+    fromNullable<TypeOfValue>(value: null | undefined | TypeOfValue): Option<TypeOfValue> {
+        return value === undefined || value === null ? Option.nothing() : Option.fromValue(value);
+    },
 };

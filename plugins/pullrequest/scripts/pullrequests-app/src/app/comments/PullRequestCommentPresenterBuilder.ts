@@ -27,9 +27,7 @@ export const PullRequestCommentPresenterBuilder = {
         id: comment.id,
         user: comment.user,
         post_date: comment.post_date,
-        last_edition_date: comment.last_edition_date
-            ? Option.fromValue(comment.last_edition_date)
-            : Option.nothing(),
+        last_edition_date: Option.fromNullable(comment.last_edition_date),
         content: replaceLineReturns(comment.content),
         raw_content: comment.raw_content,
         post_processed_content: comment.post_processed_content,
