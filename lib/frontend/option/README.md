@@ -72,6 +72,24 @@ option.mapOr(
 );
 ```
 
+In the case you have a special treatment to do when it is `nothing`, you can use `.match()`:
+
+```typescript
+import { ok, err } from "neverthrow";
+import type { Ok } from "neverthrow";
+import { Fault } from "./Fault";
+
+const option = getOptionalDataset(mount_point);
+option.match(
+    (dataset: string) => {
+      initApplication(dataset);
+    },
+    () => {
+      showError("Missing dataset, could not initialize application");
+    }
+);
+```
+
 In unit tests when the inner value is a primitive or an array, and you want to run assertions, use `.unwrapOr()`:
 
 ```typescript

@@ -19,6 +19,10 @@
 
 type IOption<TypeOfValue> = {
     apply(fn: (value: TypeOfValue) => void): void;
+    match<TypeOfMapped>(
+        value_fn: (value: TypeOfValue) => TypeOfMapped,
+        nothing_fn: () => TypeOfMapped
+    ): TypeOfMapped;
 };
 
 type Some<TypeOfValue> = IOption<TypeOfValue> & {
@@ -58,6 +62,7 @@ export const Option = {
             andThen: (fn) => fn(value),
             map: (fn) => Option.fromValue(fn(value)),
             mapOr: (fn) => fn(value),
+            match: (value_fn) => value_fn(value),
             unwrapOr: () => value,
             isNothing: () => false,
             isValue: () => true,
@@ -72,6 +77,7 @@ export const Option = {
             andThen: () => Option.nothing(),
             map: () => Option.nothing(),
             mapOr: (fn, default_value) => default_value,
+            match: (value_fn, nothing_fn) => nothing_fn(),
             unwrapOr: (default_value) => default_value,
             isNothing: () => true,
             isValue: () => false,
