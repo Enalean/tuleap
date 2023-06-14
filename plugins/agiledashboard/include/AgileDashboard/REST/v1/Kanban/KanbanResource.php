@@ -100,6 +100,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
@@ -282,7 +283,8 @@ class KanbanResource extends AuthenticatedResource
         $this->report_factory = Tracker_ReportFactory::instance();
 
         $report_artifact_factory = new ReportArtifactFactory(
-            $this->artifact_factory
+            $this->artifact_factory,
+            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
         );
 
         $report_from_where_builder = new ReportFilterFromWhereBuilder();
@@ -290,8 +292,7 @@ class KanbanResource extends AuthenticatedResource
         $this->filtered_item_collection_builder = new FilteredItemCollectionRepresentationBuilder(
             $report_from_where_builder,
             $report_artifact_factory,
-            new Tracker_Artifact_PriorityDao(),
-            $this->item_representation_builder
+            $this->item_representation_builder,
         );
 
         $ordered_column_representation_builder = new OrderedColumnRepresentationsBuilder(
