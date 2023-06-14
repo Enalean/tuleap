@@ -52,7 +52,7 @@ final class DryRunMover implements MoveDryRun
     ): ArtifactPatchResponseRepresentation {
         if (MoveArtifactCompleteFeatureFlag::isEnabled()) {
             return ArtifactPatchResponseRepresentation::fromDuckTypedCollection(
-                $this->collect_dry_run_typing_field->collect($source_tracker, $target_tracker)
+                $this->collect_dry_run_typing_field->collect($source_tracker, $target_tracker, $artifact)
             );
         }
 

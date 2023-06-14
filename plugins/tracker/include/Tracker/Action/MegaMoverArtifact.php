@@ -33,14 +33,14 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
-use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
 
 final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
 {
     public function __construct(
         private readonly ArtifactsDeletionManager $artifacts_deletion_manager,
         private readonly Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
-        private readonly MoveChangesetXMLUpdater $xml_updater,
+        private readonly MoveChangesetXMLSemanticUpdater $xml_updater,
         private readonly Tracker_Artifact_XMLImport $xml_import,
         private readonly Tracker_Artifact_PriorityManager $artifact_priority_manager,
         private readonly BeforeMoveArtifact $before_move_artifact,

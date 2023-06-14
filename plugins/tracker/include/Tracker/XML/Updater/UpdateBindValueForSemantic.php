@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tracker\Tracker\XML\Updater;
 
-namespace Tuleap\Tracker\Action;
+use SimpleXMLElement;
+use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface CollectDryRunTypingField
+interface UpdateBindValueForSemantic
 {
-    public function collect(\Tracker $source_tracker, \Tracker $target_tracker, Artifact $artifact): DuckTypedMoveFieldCollection;
+    public function updateValueForSemanticMove(
+        SimpleXMLElement $changeset_xml,
+        Tracker_FormElement_Field_List $source_status_field,
+        Tracker_FormElement_Field_List $target_status_field,
+        int $index,
+        FeedbackFieldCollectorInterface $feedback_field_collector,
+    ): void;
 }

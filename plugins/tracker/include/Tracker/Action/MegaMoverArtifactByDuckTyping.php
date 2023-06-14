@@ -33,14 +33,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
-use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\UpdateMoveChangesetXMLDuckTyping;
 
 final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
 {
     public function __construct(
         private readonly ArtifactsDeletionManager $artifacts_deletion_manager,
         private readonly Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
-        private readonly MoveChangesetXMLUpdater $xml_updater,
+        private readonly UpdateMoveChangesetXMLDuckTyping $xml_updater,
         private readonly Tracker_Artifact_PriorityManager $artifact_priority_manager,
         private readonly DBTransactionExecutor $transaction_executor,
         private readonly Tracker_Artifact_XMLImport $xml_import,
@@ -78,7 +78,6 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
             $xml_artifacts,
             $artifact
         );
-
         $this->xml_updater->updateFromDuckTypingCollection(
             $user,
             $xml_artifacts->artifact,

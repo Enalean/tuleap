@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
 final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
@@ -29,32 +30,47 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     public function __construct(
         private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
         private readonly RetrieveUsedFields $retrieve_target_tracker_used_fields,
+        private readonly CheckStaticListFieldsValueIsMovable $check_static_list_fields_is_movable,
+        private readonly CheckIsSingleStaticListField $list_field_is_movable,
         private readonly CheckFieldTypeCompatibility $check_field_type_compatibility,
     ) {
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $target_tracker): DuckTypedMoveFieldCollection
+    public function collect(\Tracker $source_tracker, \Tracker $target_tracker, Artifact $artifact): DuckTypedMoveFieldCollection
     {
-        $migrateable_fields    = [];
-        $not_migrateable_field = [];
-        $mapping               = [];
+        $migrateable_fields        = [];
+        $not_migrateable_fields    = [];
+        $partially_migrated_fields = [];
+        $mapping                   = [];
 
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
             $target_field = $this->retrieve_target_tracker_used_fields->getUsedFieldByName($target_tracker->getId(), $source_field->getName());
             if ($target_field === null) {
-                $not_migrateable_field[] = $source_field;
+                $not_migrateable_fields[] = $source_field;
                 continue;
             }
 
             if (! $this->check_field_type_compatibility->areTypesCompatible($target_field, $source_field)) {
-                $not_migrateable_field[] = $source_field;
+                $not_migrateable_fields[] = $source_field;
                 continue;
+            }
+
+            if (
+                $this->list_field_is_movable->isSingleValueStaticListField($source_field)
+                && $this->list_field_is_movable->isSingleValueStaticListField($target_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_List);
+                assert($target_field instanceof \Tracker_FormElement_Field_List);
+                if (! $this->check_static_list_fields_is_movable->checkStaticFieldCanBeMoved($source_field, $target_field, $artifact)) {
+                    $not_migrateable_fields[] = $source_field;
+                    continue;
+                }
             }
 
             $mapping[]            = FieldMapping::fromFields($source_field, $target_field);
             $migrateable_fields[] = $source_field;
         }
 
-        return DuckTypedMoveFieldCollection::fromFields($migrateable_fields, $not_migrateable_field, $mapping);
+        return DuckTypedMoveFieldCollection::fromFields($migrateable_fields, $not_migrateable_fields, $partially_migrated_fields, $mapping);
     }
 }

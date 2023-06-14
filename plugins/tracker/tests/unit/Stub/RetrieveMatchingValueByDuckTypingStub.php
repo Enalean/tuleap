@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,33 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement;
-use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
 
-final class RetrieveFieldTypeStub implements RetrieveFieldType
+final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingValueByDuckTyping
 {
-    private const NO_TYPE = "notype";
-
-    private function __construct(private string $type)
+    private function __construct(private readonly ?int $value)
     {
     }
 
-    public static function withType(string $type): self
+    public static function withValue(int $value): self
     {
-        return new self($type);
+        return new self($value);
     }
 
-    public static function withNoType(): self
+    public static function withoutValue(): self
     {
-        return new self(self::NO_TYPE);
+        return new self(null);
     }
 
-    public function getType(Tracker_FormElement $form_element): string
-    {
-        if ($this->type === self::NO_TYPE) {
-            throw new \RuntimeException("getType was called while the stub RetrieveFieldTypeStub is not configured to return a specific type.");
-        }
-
-        return $this->type;
+    public function getMatchingValueByDuckTyping(
+        Tracker_FormElement_Field_List $source_field,
+        Tracker_FormElement_Field_List $target_field,
+        int $source_value_id,
+    ): ?int {
+        return $this->value;
     }
 }

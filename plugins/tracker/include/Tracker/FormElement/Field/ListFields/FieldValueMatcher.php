@@ -24,23 +24,17 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class FieldValueMatcher
+class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, RetrieveMatchingValueByDuckTyping
 {
-    /**
-     * @var IFindUserFromXMLReference
-     */
-    private $user_finder;
-
-    public function __construct(IFindUserFromXMLReference $user_finder)
+    public function __construct(private readonly IFindUserFromXMLReference $user_finder)
     {
-        $this->user_finder = $user_finder;
     }
 
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
         Tracker_FormElement_Field_List $target_field,
-        $source_value_id,
-    ) {
+        int $source_value_id,
+    ): ?int {
         if (! $source_value_id || $source_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
             return Tracker_FormElement_Field_List::NONE_VALUE;
         }
@@ -70,7 +64,7 @@ class FieldValueMatcher
         return null;
     }
 
-    public function isSourceUserValueMathingATargetUserValue(Tracker_FormElement_Field_List $target_contributor_field, SimpleXMLElement $value)
+    public function isSourceUserValueMatchingATargetUserValue(Tracker_FormElement_Field_List $target_contributor_field, SimpleXMLElement $value): bool
     {
         $user = $this->user_finder->getUser($value);
 

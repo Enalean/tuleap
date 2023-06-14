@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,33 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement;
-use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tuleap\Tracker\Action\CheckStaticListFieldsValueIsMovable;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class RetrieveFieldTypeStub implements RetrieveFieldType
+final class CheckStaticListFieldsValueIsMovableStub implements CheckStaticListFieldsValueIsMovable
 {
-    private const NO_TYPE = "notype";
-
-    private function __construct(private string $type)
+    private function __construct(private readonly bool $can_value_be_moved)
     {
     }
 
-    public static function withType(string $type): self
+    public static function withMovableStaticValue(): self
     {
-        return new self($type);
+        return new self(true);
     }
 
-    public static function withNoType(): self
+    public static function withNoMovableStaticValue(): self
     {
-        return new self(self::NO_TYPE);
+        return new self(false);
     }
 
-    public function getType(Tracker_FormElement $form_element): string
+    public function checkStaticFieldCanBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact): bool
     {
-        if ($this->type === self::NO_TYPE) {
-            throw new \RuntimeException("getType was called while the stub RetrieveFieldTypeStub is not configured to return a specific type.");
-        }
-
-        return $this->type;
+        return $this->can_value_be_moved;
     }
 }
