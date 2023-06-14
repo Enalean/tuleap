@@ -64,11 +64,6 @@ class LDAP
         'sys_ldap_tooltip_search_grp',
         'sys_ldap_threshold_users_suspension',
         'search_depth',
-        'sys_ldap_write_server',
-        'sys_ldap_write_dn',
-        'sys_ldap_write_password',
-        'sys_ldap_write_people_dn',
-        'sys_ldap_write_group_dn',
     ];
 
     /**
@@ -643,56 +638,6 @@ class LDAP
             default:
                 return self::SCOPE_ONELEVEL;
         }
-    }
-
-    public function add($dn, array $info)
-    {
-        $ds = $this->getWriteConnexion();
-        if (@ldap_add($ds, $dn, $info)) {
-            return true;
-        }
-        throw new LDAP_Exception_AddException(ldap_error($ds), $dn);
-    }
-
-    public function update($dn, array $info)
-    {
-        $ds = $this->getWriteConnexion();
-        if (@ldap_modify($ds, $dn, $info)) {
-            return true;
-        }
-        throw new LDAP_Exception_UpdateException(ldap_error($ds), $dn);
-    }
-
-    public function delete($dn)
-    {
-        $ds = $this->getWriteConnexion();
-        if (@ldap_delete($ds, $dn)) {
-            return true;
-        }
-        throw new LDAP_Exception_DeleteException(ldap_error($ds), $dn);
-    }
-
-    public function renameUser($old_dn, $new_root_dn)
-    {
-        return $this->rename($old_dn, $new_root_dn, $this->getLDAPParam('write_people_dn'));
-    }
-
-    private function rename($old_dn, $newrdn, $newparent)
-    {
-        $ds = $this->getWriteConnexion();
-        if (@ldap_rename($ds, $old_dn, $newrdn, $newparent, true)) {
-            return true;
-        }
-        throw new LDAP_Exception_RenameException(ldap_error($ds), $old_dn, $newrdn . ',' . $newparent);
-    }
-
-    private function getWriteConnexion()
-    {
-        return $this->authenticatedBindConnect(
-            $this->getLDAPParam('write_server'),
-            $this->getLDAPParam('write_dn'),
-            $this->getLDAPParam('write_password')
-        );
     }
 
     /**
