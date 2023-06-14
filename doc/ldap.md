@@ -1,5 +1,13 @@
 # LDAP
 
+## Add LDAP users to your platform
+
+Two commands are available to create users in development stack's LDAP:
+- `./tools/utils/tuleap-dev.php add-ldap-user` to create a new user
+- `./tools/utils/tuleap-dev.php mod-ldap-user` to modify an existing user
+
+Adding users into the LDAP is mandatory prior being able to login on the platform.
+
 ## Create a group in LDAP
 
 This examples illustrates how to create a group \"developers\" in the
