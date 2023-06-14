@@ -22,23 +22,29 @@ type IOption<TypeOfValue> = {
 };
 
 type Some<TypeOfValue> = IOption<TypeOfValue> & {
-    map: <TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped) => Some<TypeOfMapped>;
-    mapOr: <TypeOfMapped, TypeOfDefault>(
+    andThen<NewTypeOfValue>(
+        fn: (value: TypeOfValue) => Option<NewTypeOfValue>
+    ): Option<NewTypeOfValue>;
+    map<TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped): Some<TypeOfMapped>;
+    mapOr<TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
         default_value: TypeOfDefault
-    ) => TypeOfMapped;
-    unwrapOr: <TypeOfDefault>(default_value: TypeOfDefault) => TypeOfValue;
+    ): TypeOfMapped;
+    unwrapOr<TypeOfDefault>(default_value: TypeOfDefault): TypeOfValue;
     isValue(): true;
     isNothing(): false;
 };
 
 type None<TypeOfValue> = IOption<TypeOfValue> & {
-    map: <TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped) => None<TypeOfMapped>;
-    mapOr: <TypeOfMapped, TypeOfDefault>(
+    andThen<NewTypeOfValue>(
+        fn: (value: TypeOfValue) => Option<NewTypeOfValue>
+    ): None<NewTypeOfValue>;
+    map<TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped): None<TypeOfMapped>;
+    mapOr<TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
         default_value: TypeOfDefault
-    ) => TypeOfDefault;
-    unwrapOr: <TypeOfDefault>(default_value: TypeOfDefault) => TypeOfDefault;
+    ): TypeOfDefault;
+    unwrapOr<TypeOfDefault>(default_value: TypeOfDefault): TypeOfDefault;
     isValue(): false;
     isNothing(): true;
 };
@@ -46,23 +52,29 @@ type None<TypeOfValue> = IOption<TypeOfValue> & {
 export type Option<TypeOfValue> = Some<TypeOfValue> | None<TypeOfValue>;
 
 export const Option = {
-    fromValue: <TypeOfValue>(value: TypeOfValue): Some<TypeOfValue> => ({
-        apply: (fn) => fn(value),
-        map: (fn) => Option.fromValue(fn(value)),
-        mapOr: (fn) => fn(value),
-        unwrapOr: () => value,
-        isNothing: () => false,
-        isValue: () => true,
-    }),
+    fromValue<TypeOfValue>(value: TypeOfValue): Some<TypeOfValue> {
+        return {
+            apply: (fn) => fn(value),
+            andThen: (fn) => fn(value),
+            map: (fn) => Option.fromValue(fn(value)),
+            mapOr: (fn) => fn(value),
+            unwrapOr: () => value,
+            isNothing: () => false,
+            isValue: () => true,
+        };
+    },
 
-    nothing: <TypeOfValue>(): None<TypeOfValue> => ({
-        apply(): void {
-            // Do nothing
-        },
-        map: () => Option.nothing(),
-        mapOr: (fn, default_value) => default_value,
-        unwrapOr: (default_value) => default_value,
-        isNothing: () => true,
-        isValue: () => false,
-    }),
+    nothing<TypeOfValue>(): None<TypeOfValue> {
+        return {
+            apply(): void {
+                // Do nothing
+            },
+            andThen: () => Option.nothing(),
+            map: () => Option.nothing(),
+            mapOr: (fn, default_value) => default_value,
+            unwrapOr: (default_value) => default_value,
+            isNothing: () => true,
+            isValue: () => false,
+        };
+    },
 };
