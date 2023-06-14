@@ -1,4 +1,4 @@
-FROM rockylinux:9.1
+FROM rockylinux/rockylinux:9.2@sha256:8cc691b7e360f484092c50411e45a2ec52eb70b1dea75acb284886284c21d5fe
 
 COPY rpm/tuleap.repo /etc/yum.repos.d/
 COPY rpm/RPM-GPG-KEY-Tuleap /etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
