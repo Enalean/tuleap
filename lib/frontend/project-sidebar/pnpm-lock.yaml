@@ -2,22 +2,22 @@ lockfileVersion: '6.0'
 
 devDependencies:
   '@fortawesome/fontawesome-free':
-    specifier: ^6.1.1
-    version: 6.1.1
+    specifier: ^6.4.0
+    version: 6.4.0
   '@tuleap/build-system-configurator':
-    specifier: workspace:*
+    specifier: link:../build-system-configurator
     version: link:../build-system-configurator
   '@tuleap/project-sidebar-internal':
-    specifier: workspace:*
+    specifier: link:../project-sidebar-internal
     version: link:../project-sidebar-internal
   '@tuleap/tlp':
-    specifier: workspace:*
+    specifier: link:../../../src/scripts/tlp
     version: link:../../../src/scripts/tlp
 
 packages:
 
-  /@fortawesome/fontawesome-free@6.1.1:
-    resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
+  /@fortawesome/fontawesome-free@6.4.0:
+    resolution: {integrity: sha512-0NyytTlPJwB/BF5LtRV8rrABDbe3TdTXqNB3PdZ+UUUZAEIrdOJdmABqKjt4AXwIoJNaRVVZEXxpNrqvE1GAYQ==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: true

@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 2.2.0
 
 * Update bundled library `@vueuse/core` to 8.7.3 to avoid errors when using Chrome
-* Path of UMD script has been changed
+* Path of UMD script has been changed (`project-sidebar.umd.js` → `project-sidedar.umd.cjs`)
+* Updated Tuleap icons
 
 ## 2.1.0
 
