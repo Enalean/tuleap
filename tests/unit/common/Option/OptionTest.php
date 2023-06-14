@@ -77,4 +77,44 @@ final class OptionTest extends TestCase
         self::assertEquals('value', Option::fromValue('value')->unwrapOr('nothing'));
         self::assertEquals('nothing', Option::nothing(string())->unwrapOr('nothing'));
     }
+
+    public function testMatchValue(): void
+    {
+        $optional = Option::fromValue(new \stdClass());
+
+        $has_called_match_function         = false;
+        $has_called_match_nothing_function = false;
+
+        $optional->match(
+            function () use (&$has_called_match_function): void {
+                $has_called_match_function = true;
+            },
+            function () use (&$has_called_match_nothing_function): void {
+                $has_called_match_nothing_function = true;
+            },
+        );
+
+        self::assertTrue($has_called_match_function);
+        self::assertFalse($has_called_match_nothing_function);
+    }
+
+    public function testMatchNothing(): void
+    {
+        $optional = Option::nothing(\stdClass::class);
+
+        $has_called_match_function         = false;
+        $has_called_match_nothing_function = false;
+
+        $optional->match(
+            function () use (&$has_called_match_function): void {
+                $has_called_match_function = true;
+            },
+            function () use (&$has_called_match_nothing_function): void {
+                $has_called_match_nothing_function = true;
+            },
+        );
+
+        self::assertFalse($has_called_match_function);
+        self::assertTrue($has_called_match_nothing_function);
+    }
 }

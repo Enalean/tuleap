@@ -36,6 +36,19 @@ $option->apply(function(\PFUser $user): void {
 });
 ```
 
+If you need a separate treatment when the value is set or not, you can use `::match()`:
+```php
+$option = getSuperUser($current_user);
+$option->match(
+    function(\PFUser $user): void {
+        // $current_user is a superuser, do something with it
+    },
+    function (): void {
+        // $current_user is NOT a superuser, do something else
+    }
+);
+```
+
 At the end of a processing pipeline, you might want to retrieve the unwrapped value with `::mapOr()`:
 ```php
 $option = getSuperUser($current_user);

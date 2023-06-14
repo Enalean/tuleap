@@ -75,17 +75,17 @@ final class Option
     }
 
     /**
-     * @psalm-param callable(Value): void $fn
+     * @psalm-param callable(Value): void $value_fn
      * @psalm-param callable(): void $nothing_fn
      */
-    public function match(callable $fn, callable $nothing_fn): void
+    public function match(callable $value_fn, callable $nothing_fn): void
     {
         if (! $this->has_value) {
             $nothing_fn();
             return;
         }
 
-        $fn($this->value);
+        $value_fn($this->value);
     }
 
     /**
