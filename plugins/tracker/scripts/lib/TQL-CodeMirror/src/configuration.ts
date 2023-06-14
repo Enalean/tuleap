@@ -36,11 +36,11 @@ const TQL_mode_definition = {
             token: "number",
         },
         {
-            regex: /(?:and|or|with|without)\b/i,
+            regex: /(?:and|or)\b/i,
             token: "keyword",
         },
         {
-            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker)\b/i,
+            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child)\b/i,
             token: "variable-2",
         },
         {
@@ -98,5 +98,11 @@ export const TQL_autocomplete_keywords = [
     "WITHOUT PARENT",
     "WITHOUT PARENT ARTIFACT",
     "WITHOUT PARENT TRACKER",
+    "WITH CHILDREN",
+    "WITH CHILDREN ARTIFACT",
+    "WITH CHILDREN TRACKER",
+    "WITHOUT CHILDREN",
+    "WITHOUT CHILDREN ARTIFACT",
+    "WITHOUT CHILDREN TRACKER",
     "@comments",
 ];

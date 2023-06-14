@@ -36,6 +36,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
@@ -183,6 +185,16 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        $this->incrementSize($parameters);
+    }
+
+    public function visitWithChildren(WithChildren $condition, $parameters)
+    {
+        $this->incrementSize($parameters);
+    }
+
+    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }

@@ -25,17 +25,17 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentArtifactCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentConditionVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentTrackerCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ChildrenArtifactCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ChildrenConditionVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ChildrenTrackerCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilderParameters;
 
 /**
- * @template-implements ParentConditionVisitor<ArtifactLinkFromWhereBuilderParameters, array{0: string, 1: array}>
+ * @template-implements ChildrenConditionVisitor<ArtifactLinkFromWhereBuilderParameters, array{0: string, 1: array}>
  */
-final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
+final class ChildrenFromWhereBuilder implements ChildrenConditionVisitor
 {
     private const INVALID_ARTIFACT_ID = -1;
 
@@ -43,9 +43,9 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
     {
     }
 
-    public function getFromWhereForWithParent(WithParent $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhereForWithChildren(WithChildren $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user);
+        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren($term, $user);
 
         $from  = '';
         $where = '(' . $sql . ') = 1';
@@ -53,9 +53,9 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
         return new ParametrizedFromWhere($from, $where, [], $parameters);
     }
 
-    public function getFromWhereForWithoutParent(WithoutParent $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhereForWithoutChildren(WithoutChildren $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneParent($term, $user);
+        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren($term, $user);
 
         $from  = '';
         $where = '(' . $sql . ') IS NULL';
@@ -67,7 +67,7 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
      *
      * @return array{0: string, 1: array}
      */
-    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneParent(WithParent|WithoutParent $term, \PFUser $user): array
+    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren(WithChildren|WithoutChildren $term, \PFUser $user): array
     {
         $suffix = spl_object_hash($term);
 
@@ -80,17 +80,16 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
                 FROM
                     tracker_changeset_value_artifactlink AS TCVAL_$suffix
                     INNER JOIN tracker_changeset_value AS TCV_$suffix
-                        ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                    INNER JOIN tracker_artifact AS TCA_$suffix
-                        ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
-                    AND TCVAL_$suffix.nature = '_is_child'
+                        ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
+                            AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+                            AND TCVAL_$suffix.nature = '_is_child'
+                        )
                 LIMIT 1",
             [],
         ];
     }
 
-    public function visitParentArtifactCondition(ParentArtifactCondition $condition, $parameters)
+    public function visitChildrenArtifactCondition(ChildrenArtifactCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 
@@ -101,14 +100,11 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
-                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                INNER JOIN tracker_artifact AS TCA_$suffix
-                    ON (
-                        TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id AND
-                        TCA_$suffix.id = ?
+                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
+                        AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+                        AND TCVAL_$suffix.artifact_id = ?
+                        AND TCVAL_$suffix.nature = '_is_child'
                     )
-            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
-                AND TCVAL_$suffix.nature = '_is_child'
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
@@ -116,7 +112,7 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
         ];
     }
 
-    public function visitParentTrackerCondition(ParentTrackerCondition $condition, $parameters)
+    public function visitChildrenTrackerCondition(ChildrenTrackerCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 
@@ -125,15 +121,16 @@ final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
-                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                INNER JOIN tracker_artifact AS TCA_$suffix
-                    ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                INNER JOIN tracker AS T_$suffix
-                    ON (T_$suffix.id = TCA_$suffix.tracker_id AND
-                        T_$suffix.item_name = ?
+                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
+                        AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+                        AND TCVAL_$suffix.nature = '_is_child'
                     )
-            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
-                AND TCVAL_$suffix.nature = '_is_child'
+                INNER JOIN tracker_artifact AS TCA_$suffix
+                    ON (TCA_$suffix.id = TCVAL_$suffix.artifact_id)
+                INNER JOIN tracker AS T_$suffix
+                    ON (T_$suffix.id = TCA_$suffix.tracker_id
+                        AND T_$suffix.item_name = ?
+                    )
             LIMIT 1",
             [
                 $condition->tracker_name,

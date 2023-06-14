@@ -108,4 +108,18 @@ interface TermVisitor
      * @return ReturnType
      */
     public function visitWithoutParent(WithoutParent $condition, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitWithChildren(WithChildren $condition, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitWithoutChildren(WithoutChildren $condition, $parameters);
 }

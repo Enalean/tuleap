@@ -34,6 +34,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -110,5 +112,15 @@ final class IntegerToEmptyStringTermException extends InvalidFieldException impl
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
         throw new RuntimeException("The integer field '%s' is not supposed to be used with WITHOUT PARENT operator.");
+    }
+
+    public function visitWithChildren(WithChildren $condition, $parameters)
+    {
+        throw new RuntimeException("The integer field '%s' is not supposed to be used with WITH CHILDREN operator.");
+    }
+
+    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    {
+        throw new RuntimeException("The integer field '%s' is not supposed to be used with WITHOUT CHILDREN operator.");
     }
 }

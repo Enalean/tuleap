@@ -37,9 +37,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ChildrenFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
@@ -164,7 +167,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         MetadataBetweenComparisonFromWhereBuilder $metadata_between_comparison_from_where_builder,
         MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
         MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder,
-        private readonly ArtifactLinkFromWhereBuilder $artifact_link_from_where_builder,
+        private readonly ParentFromWhereBuilder $parent_link_from_where_builder,
+        private readonly ChildrenFromWhereBuilder $children_link_from_where_builder,
     ) {
         $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;
@@ -373,11 +377,21 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithParent(WithParent $condition, $parameters)
     {
-        return $this->artifact_link_from_where_builder->getFromWhereForWithParent($condition, $parameters->user);
+        return $this->parent_link_from_where_builder->getFromWhereForWithParent($condition, $parameters->user);
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
-        return $this->artifact_link_from_where_builder->getFromWhereForWithoutParent($condition, $parameters->user);
+        return $this->parent_link_from_where_builder->getFromWhereForWithoutParent($condition, $parameters->user);
+    }
+
+    public function visitWithChildren(WithChildren $condition, $parameters)
+    {
+        return $this->children_link_from_where_builder->getFromWhereForWithChildren($condition, $parameters->user);
+    }
+
+    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    {
+        return $this->children_link_from_where_builder->getFromWhereForWithoutChildren($condition, $parameters->user);
     }
 }
