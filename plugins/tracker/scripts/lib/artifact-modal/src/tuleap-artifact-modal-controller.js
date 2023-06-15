@@ -67,6 +67,7 @@ import { ArtifactCreatorController } from "./domain/fields/link-field/creation/A
 import { WillNotifyFault } from "./domain/WillNotifyFault";
 import { WillDisableSubmit } from "./domain/submit/WillDisableSubmit";
 import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
+import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
 
 export default ArtifactModalController;
 
@@ -207,7 +208,7 @@ function ArtifactModalController(
         getArtifactCreatorController() {
             return ArtifactCreatorController(
                 event_dispatcher,
-                api_client,
+                ProjectsCache(api_client),
                 api_client,
                 current_project_identifier,
                 current_tracker_identifier,
