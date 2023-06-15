@@ -315,7 +315,7 @@ class AgileDashboardRouter
                     $pane = $request->get('pane');
                     if ($pane === self::PANE_KANBAN) {
                         $this->renderAction($this->buildController($request), 'adminKanban', $request, [], ['body_class' => ['agiledashboard-body']]);
-                    } elseif (\ForgeConfig::get('use_burnup_count_elements') && $pane === self::PANE_CHARTS) {
+                    } elseif ($pane === self::PANE_CHARTS) {
                         $this->renderAction($this->buildController($request), 'adminCharts', $request, [], ['body_class' => ['agiledashboard-body']]);
                     } else {
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);

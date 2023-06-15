@@ -114,7 +114,6 @@ class ScrumPresenterBuilder
             $scrum_activated,
             $this->config_manager->getScrumTitle($group_id),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
-            (bool) \ForgeConfig::get('use_burnup_count_elements'),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
             $this->getAdditionalContent(),

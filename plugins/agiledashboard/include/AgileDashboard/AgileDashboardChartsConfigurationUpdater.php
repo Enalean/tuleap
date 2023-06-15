@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use ForgeConfig;
 use Project;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 
@@ -48,10 +47,8 @@ class AgileDashboardChartsConfigurationUpdater
     {
         $project = $this->request->getProject();
 
-        if (ForgeConfig::get('use_burnup_count_elements')) {
-            $use_count_mode = (bool) $this->request->get('burnup-count-mode');
-            $this->count_elements_mode_updater->updateBurnupMode($project, $use_count_mode);
-        }
+        $use_count_mode = (bool) $this->request->get('burnup-count-mode');
+        $this->count_elements_mode_updater->updateBurnupMode($project, $use_count_mode);
 
         $this->redirectToAdmin($project);
     }

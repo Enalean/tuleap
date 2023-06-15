@@ -10,11 +10,9 @@
             <a href="?group_id={{ group_id }}&action=admin&pane=kanban">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}</a>
         </li>
         {{# is_scrum_accessible }}
-            {{# can_burnup_be_configured }}
-                <li>
-                    <a href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}</a>
-                </li>
-            {{/ can_burnup_be_configured }}
+            <li>
+                <a href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}</a>
+            </li>
         {{/ is_scrum_accessible }}
     </ul>
 </div>
