@@ -112,16 +112,27 @@ final class QueryDao extends DataAccessObject
             $sql  = " SELECT id, last_changeset_id";
             $sql .= " FROM (" . implode(' UNION ', $queries) . ") AS R GROUP BY id, last_changeset_id";
 
-            $max_artifacts_in_report = ForgeConfig::getInt(Tracker_ReportDao::MAX_ARTIFACTS_IN_REPORT);
-            if ($max_artifacts_in_report > 0) {
-                $count_query = 'SELECT COUNT(*) as nb FROM (' . $sql . ') AS COUNT_ARTS';
-                $nb          = $this->getDB()->cell($count_query, ...$parameters);
-                if ($nb >= $max_artifacts_in_report) {
-                    throw new TooManyMatchingArtifactsException($tracker_id, $nb, $max_artifacts_in_report);
+            try {
+                $max_artifacts_in_report = ForgeConfig::getInt(Tracker_ReportDao::MAX_ARTIFACTS_IN_REPORT);
+                if ($max_artifacts_in_report > 0) {
+                    $count_query = 'SELECT COUNT(*) as nb FROM (' . $sql . ') AS COUNT_ARTS';
+                    $nb          = $this->getDB()->cell($count_query, ...$parameters);
+                    if ($nb >= $max_artifacts_in_report) {
+                        throw new TooManyMatchingArtifactsException($tracker_id, $nb, $max_artifacts_in_report);
+                    }
                 }
-            }
 
-            return $this->getDB()->run($sql, ...$parameters);
+                return $this->getDB()->run($sql, ...$parameters);
+            } catch (\PDOException $exception) {
+                \BackendLogger::getDefaultLogger()->error(
+                    sprintf(
+                        'Error while trying to execute the following report query with %d parameters: %s',
+                        count($parameters),
+                        $sql,
+                    )
+                );
+                throw $exception;
+            }
         }
     }
 
