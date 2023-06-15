@@ -24,6 +24,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\JWT\generators\MercureJWTGenerator;
 
@@ -31,6 +32,10 @@ class MercureClient implements Client
 {
     #[FeatureFlagConfigKey("Feature flag to enable mercure based real time in kanban ")]
     public const FEATURE_FLAG_KANBAN_KEY = 'enable_mercure_dev_kanban';
+
+    #[FeatureFlagConfigKey("Feature flag to enable mercure based real time in TestManagement")]
+    public const FEATURE_FLAG_TESTMANAGEMENT_KEY = 'enable_mercure_dev_testmanagement';
+    #[ConfigKeyInt(0)]
 
     private const MERCURE_LOCAL_URL = "http://localhost:3000/.well-known/mercure";
 
