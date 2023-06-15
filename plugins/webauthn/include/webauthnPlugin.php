@@ -48,7 +48,7 @@ final class WebAuthnPlugin extends Plugin
     private function getViteAssets(string $application): \Tuleap\Layout\IncludeViteAssets
     {
         return new \Tuleap\Layout\IncludeViteAssets(
-            __DIR__ . "/../scripts/${application}/frontend-assets",
+            __DIR__ . "/../scripts/$application/frontend-assets",
             "/assets/webauthn/$application"
         );
     }
