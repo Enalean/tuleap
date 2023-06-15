@@ -135,6 +135,9 @@ $GLOBALS['wgDebugLogGroups'] = [
     'TuleapFarm' => '/var/log/tuleap/mediawiki_log',
 ];
 
+// Disable parser cache
+$GLOBALS['wgParserCacheType'] = CACHE_NONE;
+
 // Make sure sessions are stored in DB
 $GLOBALS['wgSessionCacheType'] = CACHE_DB;
 
