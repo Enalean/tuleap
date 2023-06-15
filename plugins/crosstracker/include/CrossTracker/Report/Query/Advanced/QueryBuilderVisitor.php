@@ -21,7 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ChildrenFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\LinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
@@ -107,7 +107,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         InComparisonFromWhereBuilder $in_comparison_from_where_builder,
         NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
         private readonly ParentFromWhereBuilder $parent_link_from_where_builder,
-        private readonly ChildrenFromWhereBuilder $children_link_from_where_builder,
+        private readonly LinkFromWhereBuilder $children_link_from_where_builder,
     ) {
         $this->searchable_visitor                                  = $searchable_visitor;
         $this->equal_comparison_from_where_builder                 = $equal_comparison_from_where_builder;

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 final class WithoutChildren implements Term
 {
-    public function __construct(public readonly ?ChildrenCondition $condition)
+    public function __construct(public readonly ?LinkCondition $condition)
     {
     }
 

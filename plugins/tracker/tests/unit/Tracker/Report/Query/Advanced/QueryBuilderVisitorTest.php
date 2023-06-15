@@ -164,7 +164,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataNotInComparisonFromWhereBuilder(),
             new QueryBuilder\ArtifactLink\ParentFromWhereBuilder(\Tracker_ArtifactFactory::instance()),
-            new QueryBuilder\ArtifactLink\ChildrenFromWhereBuilder(\Tracker_ArtifactFactory::instance()),
+            new QueryBuilder\ArtifactLink\LinkFromWhereBuilder(\Tracker_ArtifactFactory::instance()),
         );
     }
 

@@ -43,7 +43,7 @@ use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ChildrenFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\LinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
@@ -357,7 +357,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 )
             ),
             new ParentFromWhereBuilder($artifact_factory),
-            new ChildrenFromWhereBuilder($artifact_factory),
+            new LinkFromWhereBuilder($artifact_factory),
         );
 
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
