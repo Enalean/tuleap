@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentArtifactCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentConditionVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentTrackerCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -33,9 +33,9 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 /**
- * @template-implements ParentConditionVisitor<ArtifactLinkFromWhereBuilderParameters, ParametrizedSQLFragment>
+ * @template-implements LinkConditionVisitor<ArtifactLinkFromWhereBuilderParameters, ParametrizedSQLFragment>
  */
-final class ParentFromWhereBuilder implements ParentConditionVisitor
+final class ParentFromWhereBuilder implements LinkConditionVisitor
 {
     private const INVALID_ARTIFACT_ID = -1;
 
@@ -86,7 +86,7 @@ final class ParentFromWhereBuilder implements ParentConditionVisitor
         );
     }
 
-    public function visitParentArtifactCondition(ParentArtifactCondition $condition, $parameters)
+    public function visitLinkArtifactCondition(LinkArtifactCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 
@@ -112,7 +112,7 @@ final class ParentFromWhereBuilder implements ParentConditionVisitor
         );
     }
 
-    public function visitParentTrackerCondition(ParentTrackerCondition $condition, $parameters)
+    public function visitLinkTrackerCondition(LinkTrackerCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 

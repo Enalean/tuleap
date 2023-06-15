@@ -41,7 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ChildrenFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\LinkFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
@@ -168,7 +168,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
         MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder,
         private readonly ParentFromWhereBuilder $parent_link_from_where_builder,
-        private readonly ChildrenFromWhereBuilder $children_link_from_where_builder,
+        private readonly LinkFromWhereBuilder $children_link_from_where_builder,
     ) {
         $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;

@@ -22,23 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-/**
- * @template Parameters of VisitorParameters
- * @template ReturnType
- */
-interface ChildrenConditionVisitor
+final class LinkTrackerCondition implements LinkCondition
 {
-    /**
-     * @param Parameters $parameters
-     *
-     * @return ReturnType
-     */
-    public function visitChildrenArtifactCondition(ChildrenArtifactCondition $condition, $parameters);
+    public function __construct(public readonly string $tracker_name)
+    {
+    }
 
-    /**
-     * @param Parameters $parameters
-     *
-     * @return ReturnType
-     */
-    public function visitChildrenTrackerCondition(ChildrenTrackerCondition $condition, $parameters);
+    public function accept(LinkConditionVisitor $visitor, $parameters)
+    {
+        return $visitor->visitLinkTrackerCondition($this, $parameters);
+    }
 }

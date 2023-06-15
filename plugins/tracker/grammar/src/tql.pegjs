@@ -58,7 +58,7 @@ and
 term
     = Comparison
         / ParenthesisTerm
-        / LinkCondition
+        / RelationshipCondition
 
 Comparison
     = EqualComparison
@@ -71,50 +71,38 @@ Comparison
         / InComparison
         / NotInComparison
 
-LinkCondition
+RelationshipCondition
     = WithParent
         / WithoutParent
         / WithChildren
         / WithoutChildren
 
-WithParent = "with parent"i _ condition:ParentCondition? {
+WithParent = "with"i _ "parent"i _ condition:LinkCondition? {
         return new WithParent($condition);
     }
 
-WithoutParent = "without parent"i _ condition:ParentCondition? {
+WithoutParent = "without"i _ "parent"i _ condition:LinkCondition? {
         return new WithoutParent($condition);
     }
 
-ParentCondition
-    = ParentArtifactCondition
-        / ParentTrackerCondition
+LinkCondition
+    = LinkArtifactCondition
+        / LinkTrackerCondition
 
-ParentArtifactCondition = "artifact"i _ "=" _ id:$[0-9]+ {
-        return new ParentArtifactCondition($id);
+LinkArtifactCondition = "artifact"i _ "=" _ id:$[0-9]+ {
+        return new LinkArtifactCondition($id);
     }
 
-ParentTrackerCondition = "tracker"i _ "=" _ tracker:String {
-        return new ParentTrackerCondition((string) $tracker->getValue());
+LinkTrackerCondition = "tracker"i _ "=" _ tracker:String {
+        return new LinkTrackerCondition((string) $tracker->getValue());
     }
 
-WithChildren = "with"i _ Children _ condition:ChildrenCondition? {
+WithChildren = "with"i _ Children _ condition:LinkCondition? {
         return new WithChildren($condition);
     }
 
-WithoutChildren = "without"i _ Children _ condition:ChildrenCondition? {
+WithoutChildren = "without"i _ Children _ condition:LinkCondition? {
         return new WithoutChildren($condition);
-    }
-
-ChildrenCondition
-    = ChildrenArtifactCondition
-        / ChildrenTrackerCondition
-
-ChildrenArtifactCondition = "artifact"i _ "=" _ id:$[0-9]+ {
-        return new ChildrenArtifactCondition($id);
-    }
-
-ChildrenTrackerCondition = "tracker"i _ "=" _ tracker:String {
-        return new ChildrenTrackerCondition((string) $tracker->getValue());
     }
 
 Children = "children"i / "child"i
