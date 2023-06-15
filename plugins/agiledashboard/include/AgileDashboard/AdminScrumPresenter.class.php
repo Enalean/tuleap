@@ -45,11 +45,6 @@ class AdminScrumPresenter
     /**
      * @var bool
      */
-    public $can_burnup_be_configured;
-
-    /**
-     * @var bool
-     */
     public $does_configuration_allows_planning_creation;
 
     private $root_planning_name;
@@ -96,7 +91,6 @@ class AdminScrumPresenter
         $scrum_activated,
         $scrum_title,
         $can_scrum_mono_milestone_be_enabled,
-        bool $can_burnup_be_configured,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
         $additional_content,
@@ -112,7 +106,6 @@ class AdminScrumPresenter
         $this->scrum_activated                             = $scrum_activated;
         $this->scrum_title                                 = $scrum_title;
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
-        $this->can_burnup_be_configured                    = $can_burnup_be_configured;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
         $this->additional_content                          = $additional_content;

@@ -37,10 +37,6 @@ class AdminKanbanPresenter
      * @psalm-readonly
      */
     public $is_scrum_accessible;
-    /**
-     * @var bool
-     */
-    public $can_burnup_be_configured;
 
     public function __construct(
         $group_id,
@@ -48,14 +44,12 @@ class AdminKanbanPresenter
         $kanban_title,
         $has_kanban,
         bool $is_scrum_accessible,
-        bool $can_burnup_be_configured,
     ) {
-        $this->group_id                 = $group_id;
-        $this->kanban_activated         = $kanban_activated;
-        $this->kanban_title             = $kanban_title;
-        $this->has_kanban               = $has_kanban;
-        $this->is_scrum_accessible      = $is_scrum_accessible;
-        $this->can_burnup_be_configured = $can_burnup_be_configured;
+        $this->group_id            = $group_id;
+        $this->kanban_activated    = $kanban_activated;
+        $this->kanban_title        = $kanban_title;
+        $this->has_kanban          = $has_kanban;
+        $this->is_scrum_accessible = $is_scrum_accessible;
     }
 
     public function config_submit_label()

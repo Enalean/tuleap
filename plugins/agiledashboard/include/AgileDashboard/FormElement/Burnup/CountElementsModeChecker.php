@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-use ForgeConfig;
 use Project;
 
 class CountElementsModeChecker
@@ -37,10 +36,6 @@ class CountElementsModeChecker
 
     public function burnupMustUseCountElementsMode(Project $project): bool
     {
-        if (! ForgeConfig::get('use_burnup_count_elements')) {
-            return false;
-        }
-
         return $this->projects_count_mode_dao->isBurnupInCountMode((int) $project->getID());
     }
 }

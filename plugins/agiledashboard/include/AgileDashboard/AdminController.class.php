@@ -219,7 +219,6 @@ class AdminController extends BaseController
             $this->config_manager->getKanbanTitle($project_id),
             $has_kanban,
             $this->isScrumAccessible(),
-            \ForgeConfig::get('use_burnup_count_elements')
         );
     }
 
