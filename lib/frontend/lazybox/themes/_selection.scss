@@ -52,11 +52,11 @@ tuleap-lazybox-selection {
         background-position: right 10px top 17px;
         background-size: 15px 5px;
     }
+}
 
-    &:focus {
-        border-color: var(--tlp-main-color);
-        box-shadow: var(--tlp-shadow-focus);
-    }
+tuleap-lazybox:focus > tuleap-lazybox-selection {
+    border-color: var(--tlp-main-color);
+    box-shadow: var(--tlp-shadow-focus);
 }
 
 .lazybox-with-open-dropdown {

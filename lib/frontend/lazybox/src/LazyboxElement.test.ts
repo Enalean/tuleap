@@ -93,14 +93,17 @@ describe(`LazyboxElement`, () => {
         });
     });
 
-    describe(`document events`, () => {
+    describe(`events`, () => {
+        let dropdown_open: boolean;
+        beforeEach(() => {
+            dropdown_open = true;
+        });
+
         const getHost = (): HostElement => {
-            return {
-                ownerDocument: doc,
-                parentNode: null,
-                dropdown_element: { open: true },
+            return Object.assign(doc.createElement("div"), {
+                dropdown_element: { open: dropdown_open },
                 scrolling_manager: undefined,
-            } as HostElement;
+            } as HostElement);
         };
 
         it(`when I press the "Escape" key on the document,
@@ -126,7 +129,37 @@ describe(`LazyboxElement`, () => {
             expect(host.dropdown_element.open).toBe(false);
         });
 
-        it(`on disconnect, it will remove event listeners on document and unlock scrolling`, () => {
+        it(`when I press the "enter" key while focusing the lazybox element,
+            it will open the dropdown`, () => {
+            dropdown_open = false;
+            const host = getHost();
+            connect(host);
+
+            host.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+
+            expect(host.dropdown_element.open).toBe(true);
+        });
+
+        it(`when I click on the lazybox element,
+            it toggles the dropdown
+            and stops propagation to avoid triggering the handler on Document that closes the dropdown`, () => {
+            dropdown_open = false;
+            const host = getHost();
+            connect(host);
+
+            const event = new Event("pointerup", { cancelable: true });
+            const stopPropagation = vi.spyOn(event, "stopPropagation");
+            host.dispatchEvent(event);
+
+            expect(stopPropagation).toHaveBeenCalled();
+            expect(host.dropdown_element.open).toBe(true);
+
+            host.dispatchEvent(new Event("pointerup"));
+
+            expect(host.dropdown_element.open).toBe(false);
+        });
+
+        it(`on disconnect, it will remove event listeners on document and will unlock scrolling`, () => {
             const host = getHost();
             const disconnect = connect(host);
             if (host.scrolling_manager === undefined) {
@@ -140,6 +173,18 @@ describe(`LazyboxElement`, () => {
 
             expect(host.dropdown_element.open).toBe(true);
             expect(unlock).toHaveBeenCalled();
+        });
+
+        it(`on disconnect, it will remove event listeners on the lazybox element`, () => {
+            dropdown_open = false;
+            const host = getHost();
+            const disconnect = connect(host);
+
+            disconnect();
+            host.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+            expect(host.dropdown_element.open).toBe(false);
+            host.dispatchEvent(new Event("pointerup"));
+            expect(host.dropdown_element.open).toBe(false);
         });
     });
 
@@ -209,11 +254,6 @@ describe(`LazyboxElement`, () => {
                 dropdown_element: { open: false },
             }) as HostElement;
 
-        it(`makes the element focusable`, () => {
-            const selection = getSelectionElement(getHost());
-            expect(selection.getAttribute("tabindex")).toBe("0");
-        });
-
         it(`when it receives "clear-selection" event, it will clear the search input`, () => {
             const host = getHost();
             const clear = vi.spyOn(host.search_input_element, "clear");
@@ -231,34 +271,6 @@ describe(`LazyboxElement`, () => {
             selection.dispatchEvent(new CustomEvent("open-dropdown"));
 
             expect(host.dropdown_element.open).toBe(true);
-        });
-
-        it(`when I press the "enter" key while focusing the selection element,
-            it will open the dropdown`, () => {
-            const host = getHost();
-            const selection = getSelectionElement(host);
-
-            selection.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-
-            expect(host.dropdown_element.open).toBe(true);
-        });
-
-        it(`when I click on the selection element,
-            it toggles the dropdown
-            and stops propagation to avoid triggering the handler on Document that closes the dropdown`, () => {
-            const host = getHost();
-            const selection = getSelectionElement(host);
-
-            const event = new Event("pointerup", { cancelable: true });
-            const stopPropagation = vi.spyOn(event, "stopPropagation");
-            selection.dispatchEvent(event);
-
-            expect(stopPropagation).toHaveBeenCalled();
-            expect(host.dropdown_element.open).toBe(true);
-
-            selection.dispatchEvent(new Event("pointerup"));
-
-            expect(host.dropdown_element.open).toBe(false);
         });
     });
 

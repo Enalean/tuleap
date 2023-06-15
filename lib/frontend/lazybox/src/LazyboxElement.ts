@@ -40,6 +40,7 @@ export type Lazybox = {
     replaceSelection(selection: ReadonlyArray<LazyboxItem>): void;
 };
 type InternalLazyboxElement = Readonly<Lazybox> & {
+    tabindex: 0 | -1;
     readonly search_input_element: SearchInput & HTMLElement;
     readonly selection_element: SelectionElement & HTMLElement;
     readonly dropdown_element: DropdownElement & HTMLElement;
@@ -61,6 +62,18 @@ const noop = (): void => {
     //Do nothing
 };
 
+const onHostKeyUp = (host: InternalLazyboxElement, event: KeyboardEvent): void => {
+    if (!isEnterKey(event)) {
+        return;
+    }
+    host.dropdown_element.open = true;
+};
+
+const onHostPointerUp = (host: InternalLazyboxElement, event: Event): void => {
+    event.stopPropagation();
+    host.dropdown_element.open = !host.dropdown_element.open;
+};
+
 const onDocumentKeyUp = (host: InternalLazyboxElement, event: KeyboardEvent): void => {
     if (!isEscapeKey(event)) {
         return;
@@ -77,15 +90,22 @@ type DisconnectFunction = () => void;
 export const connect = (host: HostElement): DisconnectFunction => {
     const scrolling_manager = new ScrollingManager(host);
     host.scrolling_manager = scrolling_manager;
-    const keyupHandler = (event: KeyboardEvent): void => onDocumentKeyUp(host, event);
-    const pointerHandler = (): void => onDocumentPointerUp(host);
+    const hostKeyupHandler = (event: KeyboardEvent): void => onHostKeyUp(host, event);
+    const hostPointerUpHandler = (event: Event): void => onHostPointerUp(host, event);
+    host.addEventListener("keyup", hostKeyupHandler);
+    host.addEventListener("pointerup", hostPointerUpHandler);
 
-    host.ownerDocument.addEventListener("keyup", keyupHandler);
-    host.ownerDocument.addEventListener("pointerup", pointerHandler);
+    const documentKeyupHandler = (event: KeyboardEvent): void => onDocumentKeyUp(host, event);
+    const documentPointerHandler = (): void => onDocumentPointerUp(host);
+
+    host.ownerDocument.addEventListener("keyup", documentKeyupHandler);
+    host.ownerDocument.addEventListener("pointerup", documentPointerHandler);
     return (): void => {
         scrolling_manager.unlockScrolling();
-        host.ownerDocument.removeEventListener("keyup", keyupHandler);
-        host.ownerDocument.removeEventListener("pointerup", pointerHandler);
+        host.removeEventListener("keyup", hostKeyupHandler);
+        host.removeEventListener("pointerup", hostPointerUpHandler);
+        host.ownerDocument.removeEventListener("keyup", documentKeyupHandler);
+        host.ownerDocument.removeEventListener("pointerup", documentPointerHandler);
     };
 };
 
@@ -157,7 +177,6 @@ export const getSelectionElement = (host: HostElement): SelectionElement & HTMLE
     element.templating_callback = host.options.templating_callback;
     element.selection_badge_callback = getSelectionBadgeCallback(host.options);
     element.setAttribute("data-test", "lazybox");
-    element.setAttribute("tabindex", "0");
     if (host.options.is_multiple) {
         element.role = "combobox";
         element.ariaHasPopup = "true";
@@ -172,16 +191,6 @@ export const getSelectionElement = (host: HostElement): SelectionElement & HTMLE
     });
     element.addEventListener("open-dropdown", () => {
         host.dropdown_element.open = true;
-    });
-    element.addEventListener("keyup", (event) => {
-        if (!isEnterKey(event)) {
-            return;
-        }
-        host.dropdown_element.open = true;
-    });
-    element.addEventListener("pointerup", (event) => {
-        event.stopPropagation();
-        host.dropdown_element.open = !host.dropdown_element.open;
     });
     return element;
 };
@@ -238,6 +247,7 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
 
 export const LazyboxElement = define<InternalLazyboxElement>({
     tag: TAG,
+    tabindex: 0,
     options: undefined,
     replaceDropdownContent: { get: buildReplaceDropdown, connect },
     clearSelection: { get: buildClearSelection },

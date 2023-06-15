@@ -28,6 +28,7 @@ import {
     getEmptyStateIfNeeded,
     getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
+    observeArtifactCreator,
     onArtifactCreated,
     onCancel,
     onLinkTypeChanged,
@@ -58,8 +59,10 @@ import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 describe("LinkField", () => {
+    let doc: Document;
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
+        doc = document.implementation.createHTMLDocument();
     });
 
     describe("Display", () => {
@@ -70,9 +73,7 @@ describe("LinkField", () => {
         beforeEach(() => {
             current_artifact_reference = Option.nothing();
             is_loading_links = false;
-            target = document.implementation
-                .createHTMLDocument()
-                .createElement("div") as unknown as ShadowRoot;
+            target = doc.createElement("div") as unknown as ShadowRoot;
         });
 
         const getHost = (): HostElement =>
@@ -329,6 +330,24 @@ describe("LinkField", () => {
         });
     });
 
+    describe(`observeArtifactCreator()`, () => {
+        const getLazybox = (): HTMLElement & LazyboxStub =>
+            Object.assign(doc.createElement("div"), LazyboxStub.build());
+
+        it(`when is_artifact_creator_shown becomes false, it focuses the link selector`, () => {
+            const lazybox = getLazybox();
+            const focus = jest.spyOn(lazybox, "focus");
+            const host = {
+                is_artifact_creator_shown: true,
+                link_selector: Option.fromValue(lazybox),
+                content: () => doc.createElement("div") as HTMLElement,
+            } as HostElement;
+            observeArtifactCreator(host, false);
+
+            expect(focus).toHaveBeenCalled();
+        });
+    });
+
     describe(`events`, () => {
         it(`when it receives a "type-changed" event from the link type selector element,
             it will set the current link type`, () => {
@@ -347,10 +366,8 @@ describe("LinkField", () => {
 
         it(`when it receives a "cancel" event from the artifact creator element,
             it will hide the artifact creator element`, () => {
-            const matching_artifact_section: GroupCollection = [];
             const host = {
                 is_artifact_creator_shown: true,
-                matching_artifact_section,
             } as HostElement;
 
             onCancel(host);
@@ -364,6 +381,7 @@ describe("LinkField", () => {
             and assign the list of new links with the result`, () => {
             const ARTIFACT_ID = 278;
             const new_links_presenter: ReadonlyArray<NewLink> = [];
+
             const host = {
                 controller: {
                     addNewLink(artifact, type): ReadonlyArray<NewLink> {
