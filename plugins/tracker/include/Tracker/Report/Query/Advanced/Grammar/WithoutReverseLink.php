@@ -21,14 +21,15 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-final class WithoutChildren implements Term
+
+final class WithoutReverseLink implements Term
 {
-    public function __construct(public readonly ?LinkCondition $condition)
+    public function __construct(public readonly ?LinkCondition $condition, public readonly string $link_type)
     {
     }
 
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
-        return $visitor->visitWithoutChildren($this, $parameters);
+        return $visitor->visitWithoutReverseLink($this, $parameters);
     }
 }

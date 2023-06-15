@@ -78,11 +78,11 @@ RelationshipCondition
         / WithoutChildren
 
 WithParent = "with"i _ "parent"i _ condition:LinkCondition? {
-        return new WithParent($condition);
+        return new WithReverseLink($condition, '_is_child');
     }
 
 WithoutParent = "without"i _ "parent"i _ condition:LinkCondition? {
-        return new WithoutParent($condition);
+        return new WithoutReverseLink($condition, '_is_child');
     }
 
 LinkCondition
@@ -98,11 +98,11 @@ LinkTrackerCondition = "tracker"i _ "=" _ tracker:String {
     }
 
 WithChildren = "with"i _ Children _ condition:LinkCondition? {
-        return new WithChildren($condition);
+        return new WithForwardLink($condition, '_is_child');
     }
 
 WithoutChildren = "without"i _ Children _ condition:LinkCondition? {
-        return new WithoutChildren($condition);
+        return new WithoutForwardLink($condition, '_is_child');
     }
 
 Children = "children"i / "child"i

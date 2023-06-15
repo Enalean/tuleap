@@ -28,14 +28,14 @@ use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerCondition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilderParameters;
 
 /**
  * @template-implements LinkConditionVisitor<ArtifactLinkFromWhereBuilderParameters, array{0: string, 1: array}>
  */
-final class LinkFromWhereBuilder implements LinkConditionVisitor
+final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
 {
     private const INVALID_ARTIFACT_ID = -1;
 
@@ -43,9 +43,9 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
     {
     }
 
-    public function getFromWhereForWithChildren(WithChildren $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhereForWithForwardLink(WithForwardLink $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren($term, $user);
+        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneForwardLink($term, $user);
 
         $from  = '';
         $where = '(' . $sql . ') = 1';
@@ -53,9 +53,9 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
         return new ParametrizedFromWhere($from, $where, [], $parameters);
     }
 
-    public function getFromWhereForWithoutChildren(WithoutChildren $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhereForWithoutForwardLink(WithoutForwardLink $term, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren($term, $user);
+        [$sql, $parameters] = $this->getQueryToKnowIfMatchingArtifactHasAtLeastOneForwardLink($term, $user);
 
         $from  = '';
         $where = '(' . $sql . ') IS NULL';
@@ -67,12 +67,14 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
      *
      * @return array{0: string, 1: array}
      */
-    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneChildren(WithChildren|WithoutChildren $term, \PFUser $user): array
-    {
+    private function getQueryToKnowIfMatchingArtifactHasAtLeastOneForwardLink(
+        WithForwardLink|WithoutForwardLink $term,
+        \PFUser $user,
+    ): array {
         $suffix = spl_object_hash($term);
 
         if ($term->condition) {
-            return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix));
+            return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix, $term->link_type));
         }
 
         return [
@@ -82,10 +84,12 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
                     INNER JOIN tracker_changeset_value AS TCV_$suffix
                         ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
                             AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
-                            AND TCVAL_$suffix.nature = '_is_child'
+                            AND TCVAL_$suffix.nature = ?
                         )
                 LIMIT 1",
-            [],
+            [
+                $term->link_type,
+            ],
         ];
     }
 
@@ -103,11 +107,12 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
                         AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
                         AND TCVAL_$suffix.artifact_id = ?
-                        AND TCVAL_$suffix.nature = '_is_child'
+                        AND TCVAL_$suffix.nature = ?
                     )
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
+                $parameters->link_type,
             ],
         ];
     }
@@ -123,7 +128,7 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
                         AND tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
-                        AND TCVAL_$suffix.nature = '_is_child'
+                        AND TCVAL_$suffix.nature = ?
                     )
                 INNER JOIN tracker_artifact AS TCA_$suffix
                     ON (TCA_$suffix.id = TCVAL_$suffix.artifact_id)
@@ -133,6 +138,7 @@ final class LinkFromWhereBuilder implements LinkConditionVisitor
                     )
             LIMIT 1",
             [
+                $parameters->link_type,
                 $condition->tracker_name,
             ],
         ];

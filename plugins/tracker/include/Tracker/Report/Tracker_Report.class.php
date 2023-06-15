@@ -2216,8 +2216,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataNotInComparisonFromWhereBuilder(),
-            new QueryBuilder\ArtifactLink\ParentFromWhereBuilder(Tracker_ArtifactFactory::instance()),
-            new QueryBuilder\ArtifactLink\LinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
         );
     }
 }

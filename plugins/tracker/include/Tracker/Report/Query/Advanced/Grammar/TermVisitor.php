@@ -100,26 +100,26 @@ interface TermVisitor
      *
      * @return ReturnType
      */
-    public function visitWithParent(WithParent $condition, $parameters);
+    public function visitWithReverseLink(WithReverseLink $condition, $parameters);
 
     /**
      * @param Parameters $parameters
      *
      * @return ReturnType
      */
-    public function visitWithoutParent(WithoutParent $condition, $parameters);
+    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters);
 
     /**
      * @param Parameters $parameters
      *
      * @return ReturnType
      */
-    public function visitWithChildren(WithChildren $condition, $parameters);
+    public function visitWithForwardLink(WithForwardLink $condition, $parameters);
 
     /**
      * @param Parameters $parameters
      *
      * @return ReturnType
      */
-    public function visitWithoutChildren(WithoutChildren $condition, $parameters);
+    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters);
 }

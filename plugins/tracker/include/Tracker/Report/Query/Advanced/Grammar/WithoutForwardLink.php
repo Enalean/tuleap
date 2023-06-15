@@ -21,14 +21,15 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-final class WithParent implements Term
+
+final class WithoutForwardLink implements Term
 {
-    public function __construct(public readonly ?LinkCondition $condition)
+    public function __construct(public readonly ?LinkCondition $condition, public readonly string $link_type)
     {
     }
 
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
-        return $visitor->visitWithParent($this, $parameters);
+        return $visitor->visitWithoutForwardLink($this, $parameters);
     }
 }
