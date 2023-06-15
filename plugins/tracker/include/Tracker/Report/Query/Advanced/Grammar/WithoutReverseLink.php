@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 final class WithoutReverseLink implements Term
 {
-    public function __construct(public readonly ?LinkCondition $condition, public readonly string $link_type)
+    public function __construct(public readonly ?LinkCondition $condition, public readonly ?string $link_type)
     {
     }
 

@@ -77,19 +77,25 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
             return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix, $term->link_type));
         }
 
+        $type_condition = '';
+        $parameters     = [];
+        if ($term->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $parameters[]   = $term->link_type;
+        }
+
+
         return [
             "SELECT 1
                 FROM
                     tracker_changeset_value_artifactlink AS TCVAL_$suffix
                     INNER JOIN tracker_changeset_value AS TCV_$suffix
                         ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
-                            AND TCVAL_$suffix.nature = ?
+                            $type_condition
                         )
                 WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
                 LIMIT 1",
-            [
-                $term->link_type,
-            ],
+            $parameters,
         ];
     }
 
@@ -99,6 +105,13 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
 
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($parameters->user, $condition->artifact_id);
 
+        $type_condition = '';
+        $params         = [];
+        if ($parameters->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $params[]       = $parameters->link_type;
+        }
+
         return [
             "SELECT 1
             FROM
@@ -106,13 +119,13 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
                         AND TCVAL_$suffix.artifact_id = ?
-                        AND TCVAL_$suffix.nature = ?
+                        $type_condition
                     )
                 WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
-                $parameters->link_type,
+                ...$params,
             ],
         ];
     }
@@ -121,13 +134,20 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
     {
         $suffix = $parameters->suffix;
 
+        $type_condition = '';
+        $params         = [];
+        if ($parameters->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $params[]       = $parameters->link_type;
+        }
+
         return [
             "SELECT 1
             FROM
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
-                        AND TCVAL_$suffix.nature = ?
+                        $type_condition
                     )
                 INNER JOIN tracker_artifact AS TCA_$suffix
                     ON (TCA_$suffix.id = TCVAL_$suffix.artifact_id)
@@ -138,7 +158,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
             WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
-                $parameters->link_type,
+                ...$params,
                 $condition->tracker_name,
             ],
         ];

@@ -25,6 +25,9 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -180,6 +183,12 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             new BetweenComparisonVisitor(),
             new InComparisonVisitor(),
             new NotInComparisonVisitor(),
+            new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao(),
+                ),
+            ),
             new EqualComparisonChecker(),
             new NotEqualComparisonChecker(),
             new LesserThanComparisonChecker(),

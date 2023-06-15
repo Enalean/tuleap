@@ -2161,6 +2161,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 new InvalidFields\BetweenComparisonVisitor(),
                 new InvalidFields\InComparisonVisitor(),
                 new InvalidFields\NotInComparisonVisitor(),
+                new InvalidFields\ArtifactLink\ArtifactLinkTypeChecker(
+                    new TypePresenterFactory(
+                        new TypeDao(),
+                        new ArtifactLinksUsageDao(),
+                    ),
+                ),
                 new InvalidMetadata\EqualComparisonChecker(),
                 new InvalidMetadata\NotEqualComparisonChecker(),
                 new InvalidMetadata\LesserThanComparisonChecker(),

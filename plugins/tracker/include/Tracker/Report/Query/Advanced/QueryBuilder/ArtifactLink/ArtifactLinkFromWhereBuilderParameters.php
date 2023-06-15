@@ -29,7 +29,7 @@ final class ArtifactLinkFromWhereBuilderParameters implements VisitorParameters
     public function __construct(
         public readonly \PFUser $user,
         public readonly string $suffix,
-        public readonly string $link_type,
+        public readonly ?string $link_type,
     ) {
     }
 }

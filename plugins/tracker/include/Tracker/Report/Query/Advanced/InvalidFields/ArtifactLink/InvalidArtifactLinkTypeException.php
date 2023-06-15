@@ -20,16 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink;
 
-final class WithReverseLink implements Term
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+
+final class InvalidArtifactLinkTypeException extends \Exception
 {
-    public function __construct(public readonly ?LinkCondition $condition, public readonly ?string $link_type)
+    public function __construct(string $link_type, array $visible_types)
     {
-    }
-
-    public function acceptTermVisitor(TermVisitor $visitor, $parameters)
-    {
-        return $visitor->visitWithReverseLink($this, $parameters);
+        parent::__construct(
+            sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    "Link type '%s' is invalid. Available type: %s",
+                    "Link type '%s' is invalid. Available types: %s",
+                    count($visible_types),
+                ),
+                $link_type,
+                implode(', ', array_map(static fn (TypePresenter $type): string => $type->shortname, $visible_types)),
+            )
+        );
     }
 }

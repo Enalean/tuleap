@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypesInProject, RetrieveCurrentlyUsedArtifactLinkTypesInTracker
+class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, IRetrieveAllUsableTypesInProject, RetrieveCurrentlyUsedArtifactLinkTypesInTracker
 {
     /**
      * Add new artifact link types
@@ -95,7 +95,8 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         return array_values($types);
     }
 
-    public function getOnlyVisibleTypes()
+    /** @return TypePresenter[] */
+    public function getOnlyVisibleTypes(): array
     {
         return array_filter(
             $this->getAllTypes(),

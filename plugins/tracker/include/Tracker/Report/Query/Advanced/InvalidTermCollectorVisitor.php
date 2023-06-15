@@ -41,6 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -133,6 +134,7 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         InvalidFields\BetweenComparisonVisitor $field_between_comparison_visitor,
         InvalidFields\InComparisonVisitor $field_in_comparison_visitor,
         InvalidFields\NotInComparisonVisitor $field_not_in_comparison_visitor,
+        private readonly InvalidFields\ArtifactLink\ArtifactLinkTypeChecker $artifact_link_type_checker,
         InvalidMetadata\EqualComparisonChecker $metadata_equal_comparison_checker,
         InvalidMetadata\NotEqualComparisonChecker $metadata_not_equal_comparison_checker,
         InvalidMetadata\LesserThanComparisonChecker $metadata_lesser_than_comparison_checker,
@@ -317,21 +319,32 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
-        // Always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
-        // Always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
-        // Always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
-        // Always valid
+        $this->visitRelationshipCondition($condition, $parameters);
+    }
+
+    private function visitRelationshipCondition(
+        WithReverseLink | WithoutReverseLink | WithForwardLink | WithoutForwardLink $condition,
+        InvalidComparisonCollectorParameters $parameters,
+    ): void {
+        try {
+            $this->artifact_link_type_checker->checkArtifactLinkTypeIsValid($condition);
+        } catch (InvalidArtifactLinkTypeException $exception) {
+            $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError($exception->getMessage());
+        }
     }
 }

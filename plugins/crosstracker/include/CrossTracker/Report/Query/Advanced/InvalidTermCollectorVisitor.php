@@ -56,6 +56,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\InvalidArtifactLinkTypeException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
 /**
@@ -109,6 +111,7 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         BetweenComparisonChecker $between_comparison_checker,
         InComparisonChecker $in_comparison_checker,
         NotInComparisonChecker $not_in_comparison_checker,
+        private readonly ArtifactLinkTypeChecker $artifact_link_type_checker,
     ) {
         $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
         $this->metadata_checker                         = $metadata_checker;
@@ -285,21 +288,32 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
-        // always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
-        // always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
-        // always valid
+        $this->visitRelationshipCondition($condition, $parameters);
     }
 
     public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
-        // always valid
+        $this->visitRelationshipCondition($condition, $parameters);
+    }
+
+    private function visitRelationshipCondition(
+        WithReverseLink | WithoutReverseLink | WithForwardLink | WithoutForwardLink $condition,
+        InvalidComparisonCollectorParameters $parameters,
+    ): void {
+        try {
+            $this->artifact_link_type_checker->checkArtifactLinkTypeIsValid($condition);
+        } catch (InvalidArtifactLinkTypeException $exception) {
+            $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError($exception->getMessage());
+        }
     }
 }
