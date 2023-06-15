@@ -149,16 +149,19 @@ class SVNAccessFile
      */
     public function parseGroupLines(Project $project, string $contents): SVNAccessFileContentAndFaults
     {
-        $faults       = new CollectionOfSVNAccessFileFaults();
-        $new_contents =  $this->parseGroup($project->getSVNRootPath(), $contents, $faults);
-        return new SVNAccessFileContentAndFaults($new_contents, $faults);
+        $faults = new CollectionOfSVNAccessFileFaults();
+        return $this->parse($project->getSVNRootPath(), $contents, $faults);
     }
 
     public function parseGroupLinesByRepositories(string $svn_dir, string $contents): SVNAccessFileContentAndFaults
     {
-        $faults       = new CollectionOfSVNAccessFileFaults();
-        $new_contents = $this->parseGroup($svn_dir, $contents, $faults);
-        return new SVNAccessFileContentAndFaults($new_contents, $faults);
+        $faults = new CollectionOfSVNAccessFileFaults();
+        return $this->parse($svn_dir, $contents, $faults);
+    }
+
+    private function parse(string $svn_dir, string $contents, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
+    {
+        return new SVNAccessFileContentAndFaults($this->parseGroup($svn_dir, $contents, $faults), $faults);
     }
 
     private function parseGroup(string $svn_dir, string $contents, CollectionOfSVNAccessFileFaults $faults): string

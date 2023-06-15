@@ -225,6 +225,12 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
+#, php-format
+msgid ""
+"Path `%s` is already defined, this will not be supported in the future "
+"(Subversion 1.10 & upper)."
+msgstr ""
+
 msgid "Permission"
 msgstr "Permissão"
 
@@ -547,6 +553,11 @@ msgid "Your settings have been successfully saved and will be applied shortly."
 msgstr ""
 
 msgid "Your settings have been successfully saved."
+msgstr ""
+
+msgid ""
+"[groups] is already defined, this will not be supported in the future "
+"(Subversion 1.10 & upper)."
 msgstr ""
 
 msgid "`SVN Query`, `My SVN commits` as well as SVN widgets are gone."
