@@ -71,7 +71,7 @@ export interface LinkField {
 }
 type InternalLinkField = LinkField & {
     content(): HTMLElement;
-    link_selector: Option<Lazybox>;
+    link_selector: Option<Lazybox & HTMLElement>;
     is_artifact_creator_shown: boolean;
     is_loading_links: boolean;
     linked_artifacts: ReadonlyArray<LinkedArtifact>;
@@ -224,6 +224,13 @@ export const onArtifactCreated = (
     host.is_artifact_creator_shown = false;
 };
 
+export const observeArtifactCreator = (host: InternalLinkField, new_value: boolean): void => {
+    if (!new_value) {
+        host.content();
+        host.link_selector.apply((lazybox) => lazybox.focus());
+    }
+};
+
 export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
     host.current_link_type = event.detail.new_link_type;
 };
@@ -337,7 +344,7 @@ export const LinkField = define<InternalLinkField>({
     recently_viewed_section: dropdown_section_descriptor,
     possible_parents_section: dropdown_section_descriptor,
     search_results_section: dropdown_section_descriptor,
-    is_artifact_creator_shown: false,
+    is_artifact_creator_shown: { value: false, observe: observeArtifactCreator },
     content: (host) => html`<div class="tracker-form-element" data-test="artifact-link-field">
         <label class="tlp-label">${host.field_presenter.label}</label>
         ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
