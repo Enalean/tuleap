@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingBindValueByDuckTyping;
 
-final class MovableStaticListFieldsChecker implements CheckStaticListFieldsValueIsMovable
+final class FullyMoveStaticFieldChecker implements CheckStaticFieldCanBeFullyMoved
 {
-    public function checkStaticFieldCanBeMoved(
+    public function __construct(private readonly RetrieveMatchingBindValueByDuckTyping $retrieve_matching_bind_value_by_duck_typing)
+    {
+    }
+
+    public function checkStaticFieldCanBeFullyMoved(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
@@ -38,6 +42,12 @@ final class MovableStaticListFieldsChecker implements CheckStaticListFieldsValue
         }
 
         $list_field_value = array_values($last_changeset_value->getListValues());
-        return (isset($list_field_value[0]) && $list_field_value[0] instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+
+        $list_bind_value = $this->retrieve_matching_bind_value_by_duck_typing->getMatchingBindValueByDuckTyping(
+            $list_field_value[0],
+            $target_field
+        );
+
+        return $list_bind_value !== null;
     }
 }

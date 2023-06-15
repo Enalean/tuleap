@@ -43,7 +43,11 @@ class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, Retrie
         if ($source_bind === null) {
             return null;
         }
-        $source_value = $source_bind->getValue($source_value_id);
+        try {
+            $source_value = $source_bind->getValue($source_value_id);
+        } catch (\Tracker_FormElement_InvalidFieldValueException $e) {
+            return null;
+        }
         if ($source_value === null || is_array($source_value)) {
             return null;
         }
