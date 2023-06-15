@@ -69,6 +69,23 @@ And voila, your server is up and running!
 
 ![It\'s Magic!](../images/its-Magic.gif)
 
+## Create a user
+
+You should never develop features by browsing as site administrators as it will bypass
+all permissions & access rights. You must create local users.
+
+In order to be as close as possible to most deployments, the development stack is configured
+to authenticate against an LDAP. You can create a new user like:
+
+```bash
+make bash-web
+[root@web tuleap]# ./tools/utils/tuleap-dev.php add-ldap-user disciplus_simplex "Disciplus Simplex" ds@example.com
+```
+
+Then you will be able to log in as `disciplus_simplex` in the web UI with the password you set when prompted.
+
+You can also have a look at the dedicated [LDAP documentation for developers](./../ldap.md).
+
 ## Descriptions of commands
 
 -   `make dev-setup`: This command generates some needed passwords
@@ -129,7 +146,7 @@ If your browser cannot manage to reach
 -   Check that all containers are up and running with `docker ps`. If it
     is not the case, inspect logs `docker-compose logs db` or
     `docker-compose logs web`.
--   Check that apache serves files by executing a
+-   Check that nginx serves files by executing a
     `wget -O - http://localhost/` once connected to the `web` container
     (see Pro-tips above). If you see a long
     html output that contains typical Tuleap homepage, then it means
