@@ -17,20 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import pkg from "./package.json";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
-
-export default vite.defineLibConfig({
-    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/main.ts"),
-            name: "WebAuthn",
-        },
-        rollupOptions: {
-            external: Object.keys(pkg.dependencies),
-        },
-    },
-});
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
+}
