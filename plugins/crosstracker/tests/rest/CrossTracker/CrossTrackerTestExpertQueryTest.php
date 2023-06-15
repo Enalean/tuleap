@@ -350,6 +350,126 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $this->allEpicArtifactsMustBeRetrievedByQuery();
     }
 
+    public function testWithChildren(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITH CHILDREN',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITH CHILDREN'
+        );
+
+        $this->getMatchingEpicArtifactByIds([]);
+    }
+
+    public function testWithChildrenArtifact(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITH CHILDREN ARTIFACT = 123',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITH CHILDREN ARTIFACT = 123'
+        );
+
+        $this->getMatchingEpicArtifactByIds([]);
+    }
+
+    public function testWithChildrenTracker(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITH CHILDREN TRACKER = "epic"',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITH CHILDREN TRACKER = "epic"'
+        );
+
+        $this->getMatchingEpicArtifactByIds([]);
+    }
+
+    public function testWithoutChildren(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITHOUT CHILDREN',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITHOUT CHILDREN'
+        );
+
+        $this->allEpicArtifactsMustBeRetrievedByQuery();
+    }
+
+    public function testWithoutChildrenArtifact(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITHOUT CHILDREN ARTIFACT = 123',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITHOUT CHILDREN ARTIFACT = 123'
+        );
+
+        $this->allEpicArtifactsMustBeRetrievedByQuery();
+    }
+
+    public function testWithoutChildrenTracker(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'WITHOUT CHILDREN TRACKER = "epic"',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'WITHOUT CHILDREN TRACKER = "epic"'
+        );
+
+        $this->allEpicArtifactsMustBeRetrievedByQuery();
+    }
+
     private function getMatchingArtifactsFromJson()
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0'));

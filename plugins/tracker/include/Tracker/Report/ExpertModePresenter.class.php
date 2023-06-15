@@ -71,7 +71,7 @@ class ExpertModePresenter
         $this->btn_search             = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->query_tooltip          = sprintf(
             dgettext('tuleap-tracker', 'You can use: %s, parenthesis. Autocomplete is activated with Ctrl + Space.'),
-            'AND, OR, WITH PARENT, WITHOUT PARENT, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN()'
+            'AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN()'
         );
     }
 

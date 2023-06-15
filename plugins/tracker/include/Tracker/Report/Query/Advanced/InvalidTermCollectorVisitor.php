@@ -37,6 +37,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
@@ -319,6 +321,16 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        // Always valid
+    }
+
+    public function visitWithChildren(WithChildren $condition, $parameters)
+    {
+        // Always valid
+    }
+
+    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
     {
         // Always valid
     }
