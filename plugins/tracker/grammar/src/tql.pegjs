@@ -72,18 +72,39 @@ Comparison
         / NotInComparison
 
 RelationshipCondition
-    = WithParent
-        / WithoutParent
-        / WithChildren
-        / WithoutChildren
-        / WithTypedReverseLink
-        / WithoutTypedReverseLink
-        / WithTypedForwardLink
-        / WithoutTypedForwardLink
-        / WithReverseLink
-        / WithoutReverseLink
-        / WithForwardLink
-        / WithoutForwardLink
+    = IsCoveredBy / IsNotCoveredBy
+        / IsCovered / IsNotCovered
+        / IsCovering / IsNotCovering
+        / WithParent / WithoutParent
+        / WithChildren / WithoutChildren
+        / WithTypedReverseLink / WithoutTypedReverseLink
+        / WithTypedForwardLink / WithoutTypedForwardLink
+        / WithReverseLink / WithoutReverseLink
+        / WithForwardLink / WithoutForwardLink
+
+IsCovered = "is"i _ "covered"i {
+        return new WithForwardLink(null, '_covered_by');
+    }
+
+IsCoveredBy = "is"i _ "covered"i _ "by"i _ condition:LinkArtifactCondition {
+        return new WithForwardLink($condition, '_covered_by');
+    }
+
+IsCovering = "is"i _ "covering"i _ condition:LinkArtifactCondition? {
+        return new WithReverseLink($condition, '_covered_by');
+    }
+
+IsNotCovered = "is"i _ "not"i _ "covered"i {
+        return new WithoutForwardLink(null, '_covered_by');
+    }
+
+IsNotCoveredBy = "is"i _ "not"i _ "covered"i _ "by"i _ condition:LinkArtifactCondition {
+        return new WithoutForwardLink($condition, '_covered_by');
+    }
+
+IsNotCovering = "is"i _ "not"i _ "covering"i _ condition:LinkArtifactCondition? {
+        return new WithoutReverseLink($condition, '_covered_by');
+    }
 
 WithParent = "with"i _ "parent"i _ condition:LinkCondition? {
         return new WithReverseLink($condition, '_is_child');
