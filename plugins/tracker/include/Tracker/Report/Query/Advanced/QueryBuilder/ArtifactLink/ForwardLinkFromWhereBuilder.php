@@ -79,9 +79,9 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
-                        AND c.id = TCV_$suffix.changeset_id
                         AND TCVAL_$suffix.nature = ?
                     )
+                WHERE c.id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 $term->link_type,
@@ -101,10 +101,10 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
-                        AND c.id = TCV_$suffix.changeset_id
                         AND TCVAL_$suffix.artifact_id = ?
                         AND TCVAL_$suffix.nature = ?
                     )
+                WHERE c.id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
@@ -123,7 +123,6 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                 tracker_changeset_value_artifactlink AS TCVAL_$suffix
                 INNER JOIN tracker_changeset_value AS TCV_$suffix
                     ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
-                        AND c.id = TCV_$suffix.changeset_id
                         AND TCVAL_$suffix.nature = ?
                     )
                 INNER JOIN tracker_artifact AS TCA_$suffix
@@ -132,6 +131,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                     ON (T_$suffix.id = TCA_$suffix.tracker_id
                         AND T_$suffix.item_name = ?
                     )
+                WHERE c.id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 $parameters->link_type,
