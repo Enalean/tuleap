@@ -44,6 +44,11 @@ class MoveChangesetXMLUpdater
         unset($changeset_xml->field_change[$index]);
     }
 
+    public function deleteFieldChangeValueNode(SimpleXMLElement $changeset_xml, $index): void
+    {
+        unset($changeset_xml->field_change[$index]->value);
+    }
+
     public function deleteEmptyCommentsNode(SimpleXMLElement $changeset_xml): void
     {
         $this->deleteEmptyCommentNodes($changeset_xml->comments);

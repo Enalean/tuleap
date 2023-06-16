@@ -29,8 +29,9 @@ final class TrackerFormElementListStaticBindBuilder
      * @var \Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     private array $bind_values;
-    private int $field_id = 123;
-    private string $name  = "A field";
+    private int $field_id           = 123;
+    private string $name            = "A field";
+    private bool $is_field_multiple = false;
 
     private function __construct()
     {
@@ -50,6 +51,12 @@ final class TrackerFormElementListStaticBindBuilder
     public function withFieldName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function withMultipleField(): self
+    {
+        $this->is_field_multiple = true;
         return $this;
     }
 
@@ -75,7 +82,7 @@ final class TrackerFormElementListStaticBindBuilder
 
     public function build(): \Tracker_FormElement_Field_List_Bind_Static
     {
-        $field = TrackerFormElementListFieldBuilder::aListField($this->field_id)->withName($this->name)->build();
+        $field = TrackerFormElementListFieldBuilder::aListField($this->field_id)->withName($this->name)->withMultipleField($this->is_field_multiple)->build();
         $bind  = new \Tracker_FormElement_Field_List_Bind_Static(
             $field,
             false,

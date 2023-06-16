@@ -24,11 +24,15 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
+use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
 {
-    public function __construct(private readonly RetrieveMatchingValueByDuckTyping $field_value_matcher)
-    {
+    public function __construct(
+        private readonly RetrieveMatchingValueByDuckTyping $field_value_matcher,
+        private readonly MoveChangesetXMLUpdater $XML_updater,
+        private readonly \XML_SimpleXMLCDATAFactory $cdata_factory,
+    ) {
     }
 
     public function updateValueForDuckTypingMove(
@@ -37,21 +41,40 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
         \Tracker_FormElement_Field_List $target_field,
         int $index,
     ): void {
-        $list_value_id = (int) $changeset_xml->field_change[$index]->value;
-
-        if ($list_value_id === 0) {
+        $list_value_ids = $changeset_xml->field_change[$index]->value;
+        if ($list_value_ids === null) {
             return;
         }
 
-        $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
-            $source_field,
-            $target_field,
-            $list_value_id
-        );
-        if ($destination_list_value_id === null) {
-            $destination_list_value_id = $target_field->getDefaultValue();
+        $destinations_values_ids = [];
+        foreach ($list_value_ids as $value_id) {
+            $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
+                $source_field,
+                $target_field,
+                (int) $value_id
+            );
+
+            if ($destination_list_value_id === null) {
+                continue;
+            }
+
+            $destinations_values_ids[] = $destination_list_value_id;
         }
 
-        $changeset_xml->field_change[$index]->value = (int) $destination_list_value_id;
+        if (empty($destinations_values_ids)) {
+            $changeset_xml->field_change[$index]->value = (int) $target_field->getDefaultValue();
+            return;
+        }
+
+        $this->XML_updater->deleteFieldChangeValueNode($changeset_xml, $index);
+
+        foreach (array_unique($destinations_values_ids) as $value_id) {
+            $this->cdata_factory->insertWithAttributes(
+                $changeset_xml->field_change[$index],
+                "value",
+                (string) $value_id,
+                ['format' => "id"]
+            );
+        }
     }
 }

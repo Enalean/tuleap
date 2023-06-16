@@ -28,6 +28,10 @@
     <field_change type="float" field_name="remaining_effort">
       <value>10</value>
     </field_change>
+    <field_change field_name="multiple" type="list" bind="static">
+      <value format="id">216</value>
+      <value format="id">218</value>
+    </field_change>
   </changeset>
   <changeset id="CHANGESET_5">
     <submitted_by format="ldap">102</submitted_by>

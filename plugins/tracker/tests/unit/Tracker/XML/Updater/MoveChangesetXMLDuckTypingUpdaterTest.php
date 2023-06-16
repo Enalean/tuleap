@@ -36,6 +36,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
 final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
@@ -59,7 +60,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 new XMLImportHelper(
                     $this->createMock(\UserManager::class)
                 )
-            )
+            ),
+            new MoveChangesetXMLUpdater(),
+            new XML_SimpleXMLCDATAFactory()
         );
         $this->tracker            = TrackerTestBuilder::aTracker()
             ->withName("Bugs")
@@ -72,13 +75,16 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         );
     }
 
-    public function testItParsesXmlChangesetAndRemoveNotMigrateableFields(): void
+    public function testItRemovesNotMigrateableFieldsFromChangesetAndUpdatesOtherFields(): void
     {
         $source_status_field_id      = 3;
         $destination_status_field_id = 23;
 
         $source_severity_field_id      = 2;
         $destination_severity_field_id = 22;
+
+        $source_multiple_list_field_id      = 4;
+        $destination_multiple_list_field_id = 24;
 
         $source_status_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($source_status_field_id)->withFieldName("status")->withStaticValues([
             105 => "New",
@@ -104,22 +110,36 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             215 => "Critical Impact",
         ])->build();
 
-        $source_title_field            = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("summary")->build();
-        $source_severity_field         = $source_severity_field_bind->getField();
-        $source_status_field           = $source_status_field_bind->getField();
-        $source_assigned_to_field      = TrackerFormElementListFieldBuilder::aListField(4)->withName("assigned_to")->build();
-        $source_details_field          = TrackerFormElementTextFieldBuilder::aTextField(5)->withName("details")->build();
-        $source_close_date_field       = TrackerFormElementDateFieldBuilder::aDateField(6)->withName("close_date")->build();
-        $source_initial_effort_field   = TrackerFormElementFloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
-        $source_remaining_effort_field = TrackerFormElementFloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
+        $source_static_multiple_list_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->withFieldId($source_multiple_list_field_id)->withFieldName("multiple")->withStaticValues([
+            216 => "Value A",
+            217 => "Value B",
+            218 => "Value C",
+        ])->build();
 
-        $destination_title_field            = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
-        $destination_severity_field         = $destination_severity_field_bind->getField();
-        $destination_status_field           = $destination_status_field_bind->getField();
-        $destination_details_field          = TrackerFormElementTextFieldBuilder::aTextField(25)->withName("details")->build();
-        $destination_close_date_field       = TrackerFormElementDateFieldBuilder::aDateField(26)->withName("close_date")->build();
-        $destination_initial_effort_field   = TrackerFormElementFloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
-        $destination_remaining_effort_field = TrackerFormElementFloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
+        $destination_static_multiple_list_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withMultipleField()->withFieldId($destination_multiple_list_field_id)->withFieldName("multiple")->withStaticValues([
+            316 => "Value B",
+            317 => "Value C",
+            318 => "Value D",
+        ])->build();
+
+        $source_title_field                = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("summary")->build();
+        $source_severity_field             = $source_severity_field_bind->getField();
+        $source_status_field               = $source_status_field_bind->getField();
+        $source_static_multiple_list_field = $source_static_multiple_list_field_bind->getField();
+        $source_assigned_to_field          = TrackerFormElementListFieldBuilder::aListField(4)->withName("assigned_to")->build();
+        $source_details_field              = TrackerFormElementTextFieldBuilder::aTextField(5)->withName("details")->build();
+        $source_close_date_field           = TrackerFormElementDateFieldBuilder::aDateField(6)->withName("close_date")->build();
+        $source_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
+        $source_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
+
+        $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
+        $destination_severity_field             = $destination_severity_field_bind->getField();
+        $destination_status_field               = $destination_status_field_bind->getField();
+        $destination_static_multiple_list_field = $destination_static_multiple_list_field_bind->getField();
+        $destination_details_field              = TrackerFormElementTextFieldBuilder::aTextField(25)->withName("details")->build();
+        $destination_close_date_field           = TrackerFormElementDateFieldBuilder::aDateField(26)->withName("close_date")->build();
+        $destination_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
+        $destination_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
 
         $fields = DuckTypedMoveFieldCollection::fromFields(
             [
@@ -134,7 +154,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             [
                 $source_assigned_to_field,
             ],
-            [],
+            [
+                $source_static_multiple_list_field,
+            ],
             [
                 FieldMapping::fromFields($source_title_field, $destination_title_field),
                 FieldMapping::fromFields($source_severity_field, $destination_severity_field),
@@ -143,6 +165,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 FieldMapping::fromFields($source_close_date_field, $destination_close_date_field),
                 FieldMapping::fromFields($source_initial_effort_field, $destination_initial_effort_field),
                 FieldMapping::fromFields($source_remaining_effort_field, $destination_remaining_effort_field),
+                FieldMapping::fromFields($source_static_multiple_list_field, $destination_static_multiple_list_field),
             ]
         );
 
@@ -158,7 +181,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $this->tracker,
         );
 
-        $this->assertCount(7, $artifact_xml->changeset->field_change);
+        $this->assertCount(8, $artifact_xml->changeset->field_change);
         $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
         $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
         $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
@@ -166,6 +189,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->assertSame($destination_close_date_field->getName(), (string) $artifact_xml->changeset->field_change[4]->attributes()->field_name);
         $this->assertSame($destination_initial_effort_field->getName(), (string) $artifact_xml->changeset->field_change[5]->attributes()->field_name);
         $this->assertSame($destination_remaining_effort_field->getName(), (string) $artifact_xml->changeset->field_change[6]->attributes()->field_name);
+        $this->assertSame($destination_static_multiple_list_field->getName(), (string) $artifact_xml->changeset->field_change[7]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement

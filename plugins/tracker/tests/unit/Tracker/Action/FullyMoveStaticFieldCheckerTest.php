@@ -22,35 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue_List;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 
 final class FullyMoveStaticFieldCheckerTest extends TestCase
 {
-    private \Tuleap\Tracker\Artifact\Artifact $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElement_Field_List|(\Tracker_FormElement_Field_List&\PHPUnit\Framework\MockObject\Stub)
-     */
-    private \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElement_Field_List $target_list_field;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElement_Field_List|(\Tracker_FormElement_Field_List&\PHPUnit\Framework\MockObject\Stub)
-     */
-    private \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElement_Field_List $source_list_field;
+    private Artifact $artifact;
+    private Stub & Tracker_FormElement_Field_List $target_list_field;
+    private Stub & Tracker_FormElement_Field_List $source_list_field;
 
     protected function setUp(): void
     {
-        $this->source_list_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-
-        $this->target_list_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-
-        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->source_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->target_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->artifact          = ArtifactTestBuilder::anArtifact(1)->build();
     }
 
-    public function testFieldCanBeFullyMovedWhenValueIsFoundInDestinationTracker(): void
+    public function testFieldIsPartiallyMovedWhenValueDoesNotExistsInDestinationTracker(): void
     {
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_UsersValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
@@ -61,7 +56,7 @@ final class FullyMoveStaticFieldCheckerTest extends TestCase
         $this->assertFalse($checker->checkStaticFieldCanBeFullyMoved($this->source_list_field, $this->target_list_field, $this->artifact));
     }
 
-    public function testFieldIsPartiallyMovedWhenValueDoesNotExistsInDestinationTracker(): void
+    public function testFieldCanBeFullyMovedWhenValueIsFoundInDestinationTracker(): void
     {
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_UsersValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);

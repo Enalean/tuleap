@@ -120,6 +120,20 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame("", trim((string) $changeset_xml));
     }
 
+    public function testItDeletesAFieldChangeValueNode(): void
+    {
+        $xml           = '<?xml version="1.0" encoding="UTF-8"?>
+            <changeset>
+                <field_change>
+                    <value/>
+                </field_change>
+            </changeset>';
+        $changeset_xml = new SimpleXMLElement($xml);
+
+        $this->updater->deleteFieldChangeValueNode($changeset_xml, 0);
+        $this->assertSame("", trim((string) $changeset_xml->value));
+    }
+
     public function testItDoesNotDeleteCommentsWhenThereIsAComment(): void
     {
         $xml           = '<?xml version="1.0" encoding="UTF-8"?>

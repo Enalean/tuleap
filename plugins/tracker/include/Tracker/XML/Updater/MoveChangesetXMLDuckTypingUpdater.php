@@ -127,7 +127,12 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
         string $field_change_name,
         int $index,
     ): void {
-        foreach ($field_collection->migrateable_field_list as $source_field) {
+        $fields_to_update = array_merge(
+            $field_collection->migrateable_field_list,
+            $field_collection->partially_migrated_fields
+        );
+
+        foreach ($fields_to_update as $source_field) {
             if ($source_field->getName() !== $field_change_name) {
                 continue;
             }

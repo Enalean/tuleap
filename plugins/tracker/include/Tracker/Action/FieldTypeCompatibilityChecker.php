@@ -41,7 +41,7 @@ final class FieldTypeCompatibilityChecker implements CheckFieldTypeCompatibility
     public function __construct(
         private readonly RetrieveFieldType $retrieve_source_field_type,
         private readonly RetrieveFieldType $retrieve_target_field_type,
-        private readonly CheckIsSingleStaticListField $check_is_single_list_field,
+        private readonly VerifyIsStaticListField $check_is_single_list_field,
     ) {
     }
 
@@ -50,8 +50,8 @@ final class FieldTypeCompatibilityChecker implements CheckFieldTypeCompatibility
         \Tracker_FormElement_Field $source_field,
     ): bool {
         if (
-            $this->check_is_single_list_field->isSingleValueStaticListField($source_field) &&
-            $this->check_is_single_list_field->isSingleValueStaticListField($target_field)
+            $this->check_is_single_list_field->isStaticListField($source_field) &&
+            $this->check_is_single_list_field->isStaticListField($target_field)
         ) {
             return true;
         }

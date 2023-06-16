@@ -31,7 +31,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
         private readonly RetrieveUsedFields $retrieve_target_tracker_used_fields,
         private readonly CheckStaticListFieldsValueIsMovable $check_static_list_fields_is_movable,
-        private readonly CheckIsSingleStaticListField $list_field_is_movable,
+        private readonly VerifyIsStaticListField $list_field_is_movable,
         private readonly CheckFieldTypeCompatibility $check_field_type_compatibility,
         private readonly CheckStaticFieldCanBeFullyMoved $check_static_list_fields_value_is_movable,
     ) {
@@ -57,8 +57,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             }
 
             if (
-                $this->list_field_is_movable->isSingleValueStaticListField($source_field)
-                && $this->list_field_is_movable->isSingleValueStaticListField($target_field)
+                $this->list_field_is_movable->isStaticListField($source_field)
+                && $this->list_field_is_movable->isStaticListField($target_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
@@ -70,6 +70,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
                 if (! $this->check_static_list_fields_value_is_movable->checkStaticFieldCanBeFullyMoved($source_field, $target_field, $artifact)) {
                     $partially_migrated_fields[] = $source_field;
+                    $fields_mapping[]            = FieldMapping::fromFields($source_field, $target_field);
                     continue;
                 }
             }

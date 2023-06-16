@@ -27,18 +27,21 @@ use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTypin
 
 final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingValueByDuckTyping
 {
-    private function __construct(private readonly ?int $value)
+    private function __construct(private readonly array $values)
     {
     }
 
-    public static function withValue(int $value): self
+    /**
+     * @psalm-param array{source_value_id: int, destination_value_id: int} $values
+     */
+    public static function withMatchingValues(array $values): self
     {
-        return new self($value);
+        return new self($values);
     }
 
-    public static function withoutValue(): self
+    public static function withoutAnyMatchingValue(): self
     {
-        return new self(null);
+        return new self([]);
     }
 
     public function getMatchingValueByDuckTyping(
@@ -46,6 +49,6 @@ final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingVal
         Tracker_FormElement_Field_List $target_field,
         int $source_value_id,
     ): ?int {
-        return $this->value;
+        return $this->values[$source_value_id] ?? null;
     }
 }

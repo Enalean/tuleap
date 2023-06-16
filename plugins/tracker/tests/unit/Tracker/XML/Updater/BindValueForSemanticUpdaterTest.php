@@ -50,7 +50,7 @@ final class BindValueForSemanticUpdaterTest extends TestCase
         $field_change        = $changeset_xml->addChild("field_change");
         $field_change->value = 0;
 
-        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withoutValue();
+        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withoutAnyMatchingValue();
         $updater                  = new BindValueForSemanticUpdater($field_value_matcher);
         $feedback_field_collector = new FeedbackFieldCollector();
 
@@ -66,7 +66,7 @@ final class BindValueForSemanticUpdaterTest extends TestCase
         $field_change        = $changeset_xml->addChild("field_change");
         $field_change->value = 101;
 
-        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withoutValue();
+        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withoutAnyMatchingValue();
         $updater                  = new BindValueForSemanticUpdater($field_value_matcher);
         $feedback_field_collector = new FeedbackFieldCollector();
 
@@ -85,12 +85,12 @@ final class BindValueForSemanticUpdaterTest extends TestCase
         $field_change        = $changeset_xml->addChild("field_change");
         $field_change->value = 101;
 
-        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withValue(101);
+        $field_value_matcher      = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([101 => 206]);
         $updater                  = new BindValueForSemanticUpdater($field_value_matcher);
         $feedback_field_collector = new FeedbackFieldCollector();
 
         $updater->updateValueForSemanticMove($changeset_xml, $this->source_field, $this->target_field, 0, $feedback_field_collector);
-        $this->assertSame("101", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame("206", (string) $changeset_xml->field_change[0]->value);
         $this->assertEmpty($feedback_field_collector->getFieldsPartiallyMigrated());
     }
 }

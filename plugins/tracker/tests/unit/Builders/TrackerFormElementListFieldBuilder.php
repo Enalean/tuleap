@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_MultiSelectbox;
+use Tracker_FormElement_Field_Selectbox;
 
 final class TrackerFormElementListFieldBuilder
 {
     private string $label                              = "A list field";
     private string $name                               = "list";
     private bool $is_required                          = false;
+    private bool $is_multiple                          = false;
     private ?Tracker_FormElement_Field_List_Bind $bind = null;
 
     private function __construct(private readonly int $id)
@@ -58,9 +61,26 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Selectbox
+    public function withMultipleField(bool $is_multiple = true): self
     {
-        $selectbox = new \Tracker_FormElement_Field_Selectbox(
+        $this->is_multiple = $is_multiple;
+        return $this;
+    }
+
+    public function build(): Tracker_FormElement_Field_Selectbox
+    {
+        $selectbox = $this->is_multiple
+            ? $this->buildSelectBox(Tracker_FormElement_Field_MultiSelectbox::class)
+            : $this->buildSelectBox(Tracker_FormElement_Field_Selectbox::class);
+
+        $selectbox->setBind($this->bind);
+
+        return $selectbox;
+    }
+
+    private function buildSelectBox(string $selectbox_class): Tracker_FormElement_Field_Selectbox
+    {
+        return new $selectbox_class(
             $this->id,
             10,
             15,
@@ -74,9 +94,5 @@ final class TrackerFormElementListFieldBuilder
             10,
             null
         );
-
-        $selectbox->setBind($this->bind);
-
-        return $selectbox;
     }
 }

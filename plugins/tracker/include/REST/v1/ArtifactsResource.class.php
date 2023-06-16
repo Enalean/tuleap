@@ -68,7 +68,7 @@ use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
-use Tuleap\Tracker\Action\SingleStaticListFieldChecker;
+use Tuleap\Tracker\Action\StaticListFieldVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -1185,7 +1185,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $user_finder                 = new XMLImportHelper($this->user_manager);
         $movable_field_checker       = new MovableStaticListFieldsChecker();
-        $static_list_field_checker   = new SingleStaticListFieldChecker();
+        $static_list_field_checker   = new StaticListFieldVerifier();
         $field_compatibility_checker = new FieldTypeCompatibilityChecker($this->formelement_factory, $this->formelement_factory, $static_list_field_checker);
         $fully_movable_field_checker = new \Tuleap\Tracker\Action\FullyMoveStaticFieldChecker(new FieldValueMatcher($user_finder));
 
@@ -1399,7 +1399,11 @@ class ArtifactsResource extends AuthenticatedResource
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
             new MoveChangesetXMLDuckTypingUpdater(
                 new MoveChangesetXMLUpdater(),
-                new BindValueForDuckTypingUpdater(new FieldValueMatcher($user_finder))
+                new BindValueForDuckTypingUpdater(
+                    new FieldValueMatcher($user_finder),
+                    new MoveChangesetXMLUpdater(),
+                    new XML_SimpleXMLCDATAFactory()
+                )
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),
