@@ -57,17 +57,17 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
+use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
 use Tuleap\Tracker\Action\FieldTypeCompatibilityChecker;
+use Tuleap\Tracker\Action\MegaMoverArtifact;
+use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
 use Tuleap\Tracker\Action\MovableStaticListFieldsChecker;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
-use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
-use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
-use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
 use Tuleap\Tracker\Action\SingleStaticListFieldChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
@@ -132,12 +132,12 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\v1\Move\BeforeMoveChecker;
 use Tuleap\Tracker\REST\v1\Move\DryRunMover;
 use Tuleap\Tracker\REST\v1\Move\HeaderForMoveSender;
 use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
+use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
@@ -1184,16 +1184,18 @@ class ArtifactsResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
 
         $user_finder                 = new XMLImportHelper($this->user_manager);
-        $movable_field_checker       = new MovableStaticListFieldsChecker(new FieldValueMatcher($user_finder));
+        $movable_field_checker       = new MovableStaticListFieldsChecker();
         $static_list_field_checker   = new SingleStaticListFieldChecker();
         $field_compatibility_checker = new FieldTypeCompatibilityChecker($this->formelement_factory, $this->formelement_factory, $static_list_field_checker);
+        $fully_movable_field_checker = new \Tuleap\Tracker\Action\FullyMoveStaticFieldChecker(new FieldValueMatcher($user_finder));
 
         $collector = new DryRunDuckTypingFieldCollector(
             $this->formelement_factory,
             $this->formelement_factory,
             $movable_field_checker,
             $static_list_field_checker,
-            $field_compatibility_checker
+            $field_compatibility_checker,
+            $fully_movable_field_checker
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);

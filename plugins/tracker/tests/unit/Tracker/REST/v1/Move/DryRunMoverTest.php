@@ -106,8 +106,8 @@ final class DryRunMoverTest extends TestCase
                 DuckTypedMoveFieldCollection::fromFields(
                     $migrated_fields,
                     $not_migrated_fields,
+                    [],
                     $mapping_fields,
-                    []
                 )
             ),
         );

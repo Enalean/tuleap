@@ -84,6 +84,9 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
         }
 
         $fields_partially_migrated = [];
+        foreach ($feedback_field_collector->partially_migrated_fields as $field) {
+            $fields_partially_migrated[] = new MinimalFieldRepresentation($field);
+        }
 
         return new self($fields_not_migrated, $fields_migrated, $fields_partially_migrated);
     }

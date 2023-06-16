@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Stub\CheckIsSingleStaticListFieldStub;
+use Tuleap\Tracker\Test\Stub\CheckStaticFieldCanBeFullyMovedStub;
 use Tuleap\Tracker\Test\Stub\CheckStaticListFieldsValueIsMovableStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\CheckFieldTypeCompatibilityStub;
@@ -67,7 +68,8 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
             CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
-            CheckFieldTypeCompatibilityStub::withCompatibleTypes()
+            CheckFieldTypeCompatibilityStub::withCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -75,6 +77,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
         self::assertEmpty($collection->mapping_fields);
+        self::assertEmpty($collection->partially_migrated_fields);
     }
 
     public function testFieldWillNotBeMigratedWhenFieldInTargetTrackerHasNoCompatibleType(): void
@@ -104,7 +107,8 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
             CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
-            CheckFieldTypeCompatibilityStub::withoutCompatibleTypes()
+            CheckFieldTypeCompatibilityStub::withoutCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -112,6 +116,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
         self::assertEmpty($collection->mapping_fields);
+        self::assertEmpty($collection->partially_migrated_fields);
     }
 
     public function testFieldWillBeMigratedWhenFieldInTargetTrackerHasTheSameNameAndACompatibleType(): void
@@ -128,11 +133,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withoutSingleStaticListField(),
             CheckFieldTypeCompatibilityStub::withCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_string_field, $collection->migrateable_field_list);
         self::assertCount(1, $collection->mapping_fields);
         self::assertEquals($source_string_field, $collection->mapping_fields[0]->source);
@@ -153,11 +160,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
             CheckFieldTypeCompatibilityStub::withCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_string_field, $collection->migrateable_field_list);
         self::assertCount(1, $collection->mapping_fields);
         self::assertEquals($source_string_field, $collection->mapping_fields[0]->source);
@@ -178,12 +187,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
             CheckFieldTypeCompatibilityStub::withoutCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
         self::assertEmpty($collection->mapping_fields);
     }
 
@@ -201,12 +212,39 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             CheckStaticListFieldsValueIsMovableStub::withNoMovableStaticValue(),
             CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
             CheckFieldTypeCompatibilityStub::withCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withMovableField()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
+        self::assertEmpty($collection->mapping_fields);
+    }
+
+    public function testStaticFieldCanBePartiallyMoved(): void
+    {
+        $source_string_field        = TrackerFormElementListFieldBuilder::aListField(101)->withName("source_string")->build();
+        $source_tracker_used_fields = [$source_string_field];
+
+        $target_string_field        = TrackerFormElementListFieldBuilder::aListField(102)->withName("source_string")->build();
+        $target_tracker_used_fields = [$target_string_field];
+
+        $collector = new DryRunDuckTypingFieldCollector(
+            RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            CheckStaticListFieldsValueIsMovableStub::withMovableStaticValue(),
+            CheckIsSingleStaticListFieldStub::withSingleStaticListField(),
+            CheckFieldTypeCompatibilityStub::withCompatibleTypes(),
+            CheckStaticFieldCanBeFullyMovedStub::withoutMovableField()
+        );
+
+        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+
+        self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertEmpty($collection->migrateable_field_list);
+        self::assertContains($source_string_field, $collection->partially_migrated_fields);
         self::assertEmpty($collection->mapping_fields);
     }
 }

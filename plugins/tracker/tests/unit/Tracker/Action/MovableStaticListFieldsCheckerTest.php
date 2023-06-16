@@ -27,12 +27,12 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 
 final class MovableStaticListFieldsCheckerTest extends TestCase
 {
     private Tracker_FormElement_Field_List & Stub $source_field;
     private Tracker_FormElement_Field_List & Stub $target_field;
+    private \Tuleap\Tracker\Artifact\Artifact $artifact;
 
     protected function setUp(): void
     {
@@ -43,9 +43,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testReturnsFalseWhenCheckIsDoneOnANonStaticBind(): void
     {
-        $checker = new MovableStaticListFieldsChecker(
-            RetrieveMatchingBindValueByDuckTypingStub::withoutMatchingBindValue()
-        );
+        $checker = new MovableStaticListFieldsChecker();
 
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_UsersValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
@@ -64,13 +62,10 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testReturnsFalseWhenThereIsNoMatchingValueInDestinationTracker(): void
     {
-        $checker = new MovableStaticListFieldsChecker(
-            RetrieveMatchingBindValueByDuckTypingStub::withoutMatchingBindValue()
-        );
+        $checker = new MovableStaticListFieldsChecker();
 
-        $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
+        $last_changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
+        $last_changeset_value->method('getListValues')->willReturn([]);
 
         $this->source_field->expects(self::once())->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
 
@@ -85,13 +80,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testReturnsTrueWhenBindIsStaticAndThereIsAMatchingValueInDestinationTracker(): void
     {
-        $bind_value_in_destination_tracker = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-
-        $checker = new MovableStaticListFieldsChecker(
-            RetrieveMatchingBindValueByDuckTypingStub::withMatchingBindValue(
-                $bind_value_in_destination_tracker
-            )
-        );
+        $checker = new MovableStaticListFieldsChecker();
 
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);

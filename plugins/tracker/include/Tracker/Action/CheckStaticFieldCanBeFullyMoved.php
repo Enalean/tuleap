@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,22 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MovableStaticListFieldsChecker implements CheckStaticListFieldsValueIsMovable
+interface CheckStaticFieldCanBeFullyMoved
 {
-    public function checkStaticFieldCanBeMoved(
+    public function checkStaticFieldCanBeFullyMoved(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
-    ): bool {
-        $last_changeset_value = $source_field->getLastChangesetValue($artifact);
-        if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            return false;
-        }
-
-        $list_field_value = array_values($last_changeset_value->getListValues());
-        return (isset($list_field_value[0]) && $list_field_value[0] instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
-    }
+    ): bool;
 }

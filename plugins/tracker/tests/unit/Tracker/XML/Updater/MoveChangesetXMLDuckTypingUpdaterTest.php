@@ -48,6 +48,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
     private MoveChangesetXMLDuckTypingUpdater $updater;
     private \PFUser $current_user;
     private \PFUser $artifact_submitter;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {

@@ -28,6 +28,8 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 
 final class SingleStaticListFieldCheckerTest extends TestCase
 {
+    private SingleStaticListFieldChecker $checker;
+
     protected function setUp(): void
     {
         $this->checker = new SingleStaticListFieldChecker();

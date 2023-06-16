@@ -33,6 +33,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly CheckStaticListFieldsValueIsMovable $check_static_list_fields_is_movable,
         private readonly CheckIsSingleStaticListField $list_field_is_movable,
         private readonly CheckFieldTypeCompatibility $check_field_type_compatibility,
+        private readonly CheckStaticFieldCanBeFullyMoved $check_static_list_fields_value_is_movable,
     ) {
     }
 
@@ -41,7 +42,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         $migrateable_fields        = [];
         $not_migrateable_fields    = [];
         $partially_migrated_fields = [];
-        $mapping                   = [];
+        $fields_mapping            = [];
 
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
             $target_field = $this->retrieve_target_tracker_used_fields->getUsedFieldByName($target_tracker->getId(), $source_field->getName());
@@ -61,16 +62,22 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
+
                 if (! $this->check_static_list_fields_is_movable->checkStaticFieldCanBeMoved($source_field, $target_field, $artifact)) {
                     $not_migrateable_fields[] = $source_field;
                     continue;
                 }
+
+                if (! $this->check_static_list_fields_value_is_movable->checkStaticFieldCanBeFullyMoved($source_field, $target_field, $artifact)) {
+                    $partially_migrated_fields[] = $source_field;
+                    continue;
+                }
             }
 
-            $mapping[]            = FieldMapping::fromFields($source_field, $target_field);
+            $fields_mapping[]     = FieldMapping::fromFields($source_field, $target_field);
             $migrateable_fields[] = $source_field;
         }
 
-        return DuckTypedMoveFieldCollection::fromFields($migrateable_fields, $not_migrateable_fields, $partially_migrated_fields, $mapping);
+        return DuckTypedMoveFieldCollection::fromFields($migrateable_fields, $not_migrateable_fields, $partially_migrated_fields, $fields_mapping);
     }
 }

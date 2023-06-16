@@ -48,6 +48,9 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
             $target_field,
             $list_value_id
         );
+        if ($destination_list_value_id === null) {
+            $destination_list_value_id = $target_field->getDefaultValue();
+        }
 
         $changeset_xml->field_change[$index]->value = (int) $destination_list_value_id;
     }
