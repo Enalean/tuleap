@@ -1,0 +1,5 @@
+[Path]
+PathChanged=/etc/tuleap/conf/mercure.env
+
+[Install]
+WantedBy=multi-user.target

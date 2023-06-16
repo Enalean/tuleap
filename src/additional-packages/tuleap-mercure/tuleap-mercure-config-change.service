@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart Tuleap Mercure Server service (realtime) on configuration change
+Documentation=https://docs.tuleap.org
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl try-restart tuleap-mercure.service

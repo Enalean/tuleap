@@ -15,6 +15,8 @@ License:	MIT
 Source0:	tuleap-mercure
 Source1:    tuleap-mercure.service
 Source2:    Caddyfile
+Source3:    tuleap-mercure-config-change.service
+Source4:    tuleap-mercure-config-change.path
 
 %description
 %{summary}.
@@ -27,7 +29,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 cp %{SOURCE0} .
 cp %{SOURCE1} .
 cp %{SOURCE2} .
-
+cp %{SOURCE3} .
+cp %{SOURCE4} .
 
 %build
 
@@ -44,8 +47,9 @@ fi
 %preun
 if [ $1 -eq "0" ]; then
     /usr/bin/systemctl stop tuleap-mercure.service ||:
-
+    /usr/bin/systemctl stop tuleap-mercure-config-change.path ||:
     /usr/bin/systemctl disable tuleap-mercure.service ||:
+    /usr/bin/systemctl disable tuleap-mercure-config-change.path ||:
 fi
 
 
@@ -55,8 +59,9 @@ mkdir -p %{buildroot}%{_bindir}/
 cp tuleap-mercure %{buildroot}%{_bindir}/
 chmod 755 %{buildroot}%{_bindir}/tuleap-mercure
 mkdir -p %{buildroot}%{_unitdir}/
-cp tuleap-mercure.service %{buildroot}%{_unitdir}/tuleap-mercure.service
-chmod 664 %{buildroot}%{_unitdir}/tuleap-mercure.service
+install --mode=644 tuleap-mercure.service %{buildroot}%{_unitdir}/
+install --mode=644 tuleap-mercure-config-change.service %{buildroot}%{_unitdir}/
+install --mode=644 tuleap-mercure-config-change.path %{buildroot}%{_unitdir}/
 mkdir -p %{buildroot}/usr/share/tuleap-mercure/
 cp Caddyfile %{buildroot}/usr/share/tuleap-mercure/Caddyfile
 chmod 664 %{buildroot}/usr/share/tuleap-mercure/Caddyfile
@@ -66,6 +71,7 @@ chmod 664 %{buildroot}/usr/share/tuleap-mercure/Caddyfile
 /usr/bin/systemctl daemon-reload &> /dev/null || :
 if [ $1 -eq "1" ]; then
     /usr/bin/systemctl enable tuleap-mercure.service ||:
+    /usr/bin/systemctl enable --now tuleap-mercure-config-change.path ||:
 fi
 
 %files
@@ -74,3 +80,5 @@ fi
 %attr(-,tuleap-mercure,root) /var/lib/tuleap-mercure
 /usr/share/tuleap-mercure/Caddyfile
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-config-change.service
+%{_unitdir}/%{name}-config-change.path

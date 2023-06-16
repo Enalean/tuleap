@@ -1,0 +1,5 @@
+[Path]
+PathChanged=/var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env
+
+[Install]
+WantedBy=multi-user.target

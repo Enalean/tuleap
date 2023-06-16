@@ -22,6 +22,8 @@ in pkgs.stdenvNoCC.mkDerivation {
    "${tuleapMercureBin}/bin/tuleap-mercure"
   ./tuleap-mercure/Caddyfile
   ./tuleap-mercure/tuleap-mercure.service
+  ./tuleap-mercure/tuleap-mercure-config-change.service
+  ./tuleap-mercure/tuleap-mercure-config-change.path
   ];
 
   nativeBuildInputs = [ pkgs.rpm ];
