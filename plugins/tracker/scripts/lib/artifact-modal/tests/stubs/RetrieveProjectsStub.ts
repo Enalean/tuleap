@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import type { Project } from "../../src/domain/Project";
 import type { RetrieveProjects } from "../../src/domain/fields/link-field/creation/RetrieveProjects";
@@ -30,4 +31,20 @@ export const RetrieveProjectsStub = {
     withFault: (fault: Fault): RetrieveProjects => ({
         getProjects: () => errAsync(fault),
     }),
+
+    withSuccessiveProjects: (
+        projects: readonly Project[],
+        ...other_projects: readonly Project[][]
+    ): RetrieveProjects => {
+        const all_batches = [projects, ...other_projects];
+        return {
+            getProjects: (): ResultAsync<readonly Project[], Fault> => {
+                const batch = all_batches.shift();
+                if (batch !== undefined) {
+                    return okAsync(batch);
+                }
+                throw Error("No projects configured");
+            },
+        };
+    },
 };
