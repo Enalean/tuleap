@@ -31,8 +31,8 @@ use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\LinkFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
@@ -365,8 +365,8 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
                     $user_manager
                 )
             ),
-            new ParentFromWhereBuilder(Tracker_ArtifactFactory::instance()),
-            new LinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new ReverseLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new ForwardLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
         );
 
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(

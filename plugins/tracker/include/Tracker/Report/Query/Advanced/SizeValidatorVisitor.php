@@ -36,10 +36,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 
 /**
  * @template-implements LogicalVisitor<SizeValidatorParameters, void>
@@ -179,22 +179,22 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->checkSize($parameters->getSize());
     }
 
-    public function visitWithParent(WithParent $condition, $parameters)
+    public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
-    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
-    public function visitWithChildren(WithChildren $condition, $parameters)
+    public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
-    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }

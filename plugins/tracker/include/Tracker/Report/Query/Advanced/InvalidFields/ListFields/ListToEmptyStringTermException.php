@@ -34,10 +34,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 /**
@@ -104,22 +104,22 @@ final class ListToEmptyStringTermException extends InvalidFieldException impleme
         throw new RuntimeException("We should not end up here.");
     }
 
-    public function visitWithParent(WithParent $condition, $parameters)
+    public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         throw new RuntimeException("The list field '%s' is not supposed to be used with WITH PARENT operator.");
     }
 
-    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         throw new RuntimeException("The list field '%s' is not supposed to be used with WITHOUT PARENT operator.");
     }
 
-    public function visitWithChildren(WithChildren $condition, $parameters)
+    public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         throw new RuntimeException("The list field '%s' is not supposed to be used with WITH CHILDREN operator.");
     }
 
-    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         throw new RuntimeException("The list field '%s' is not supposed to be used with WITHOUT CHILDREN operator.");
     }

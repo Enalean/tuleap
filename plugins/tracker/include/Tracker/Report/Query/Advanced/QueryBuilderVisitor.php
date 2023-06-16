@@ -37,12 +37,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\LinkFromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ParentFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
@@ -167,8 +167,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         MetadataBetweenComparisonFromWhereBuilder $metadata_between_comparison_from_where_builder,
         MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
         MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder,
-        private readonly ParentFromWhereBuilder $parent_link_from_where_builder,
-        private readonly LinkFromWhereBuilder $children_link_from_where_builder,
+        private readonly ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
+        private readonly ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
     ) {
         $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;
@@ -375,23 +375,23 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return new ParametrizedOrFromWhere($from_where_expression, $from_where_tail);
     }
 
-    public function visitWithParent(WithParent $condition, $parameters)
+    public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
-        return $this->parent_link_from_where_builder->getFromWhereForWithParent($condition, $parameters->user);
+        return $this->reverse_link_from_where_builder->getFromWhereForWithReverseLink($condition, $parameters->user);
     }
 
-    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
-        return $this->parent_link_from_where_builder->getFromWhereForWithoutParent($condition, $parameters->user);
+        return $this->reverse_link_from_where_builder->getFromWhereForWithoutReverseLink($condition, $parameters->user);
     }
 
-    public function visitWithChildren(WithChildren $condition, $parameters)
+    public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
-        return $this->children_link_from_where_builder->getFromWhereForWithChildren($condition, $parameters->user);
+        return $this->forward_link_from_where_builder->getFromWhereForWithForwardLink($condition, $parameters->user);
     }
 
-    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
-        return $this->children_link_from_where_builder->getFromWhereForWithoutChildren($condition, $parameters->user);
+        return $this->forward_link_from_where_builder->getFromWhereForWithoutForwardLink($condition, $parameters->user);
     }
 }

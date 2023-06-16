@@ -37,10 +37,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutChildren;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
@@ -315,22 +315,22 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
-    public function visitWithParent(WithParent $condition, $parameters)
+    public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         // Always valid
     }
 
-    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         // Always valid
     }
 
-    public function visitWithChildren(WithChildren $condition, $parameters)
+    public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         // Always valid
     }
 
-    public function visitWithoutChildren(WithoutChildren $condition, $parameters)
+    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         // Always valid
     }

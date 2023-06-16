@@ -26,7 +26,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 final class ArtifactLinkFromWhereBuilderParameters implements VisitorParameters
 {
-    public function __construct(public readonly \PFUser $user, public readonly string $suffix)
-    {
+    public function __construct(
+        public readonly \PFUser $user,
+        public readonly string $suffix,
+        public readonly string $link_type,
+    ) {
     }
 }
