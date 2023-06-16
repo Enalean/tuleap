@@ -38,7 +38,7 @@ final class FromWhereNotEqualComparisonListFieldBuilder
               INNER JOIN $query_presenter->list_value_table AS $query_presenter->list_value_alias ON (
                 $query_presenter->condition
               )
-            ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)
+            ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = ?)
             WHERE artifact.tracker_id = $query_presenter->tracker_id AND ( $query_presenter->changeset_value_alias.changeset_id IS NOT NULL )
         ) AS $query_presenter->filter_alias ON (artifact.id = $query_presenter->filter_alias.artifact_id)";
 

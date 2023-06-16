@@ -32,7 +32,7 @@ final class FromWhereEmptyNotEqualComparisonFieldBuilder
              ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id
                  AND $query_presenter->condition
              )
-         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)";
+         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = ?)";
 
         $where = "$query_presenter->changeset_value_alias.changeset_id IS NOT NULL";
 
