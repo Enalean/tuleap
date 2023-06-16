@@ -40,6 +40,7 @@ codendi.tracker.textboxlist = {
                             loadOnInit: false,
                             newValues: true,
                             newValuePrefix: "!",
+                            encodeEntities: true,
                         }
                     );
                 }
