@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BaseChangesetValue = {
-    readonly field_id: number;
-};
-type UnknownChangesetValue = BaseChangesetValue & {
-    readonly value: unknown;
-};
-type StringChangesetValue = BaseChangesetValue & {
-    readonly value: string;
-};
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { TrackerWithTitleSemantic } from "../../src/adapters/REST/fields/link-field/TrackerWithTitleSemantic";
+import type { RetrieveTrackerWithTitleSemantic } from "../../src/adapters/REST/RetrieveTrackerWithTitleSemantic";
 
-type ChangesetValue = UnknownChangesetValue | StringChangesetValue;
+export const RetrieveTrackerWithTitleSemanticStub = {
+    withTracker: (tracker: TrackerWithTitleSemantic): RetrieveTrackerWithTitleSemantic => ({
+        getTrackerWithTitleSemantic: () => okAsync(tracker),
+    }),
 
-export type ChangesetValues = ChangesetValue[];
+    withFault: (fault: Fault): RetrieveTrackerWithTitleSemantic => ({
+        getTrackerWithTitleSemantic: () => errAsync(fault),
+    }),
+};

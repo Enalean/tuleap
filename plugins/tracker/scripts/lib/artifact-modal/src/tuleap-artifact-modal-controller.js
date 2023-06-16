@@ -68,6 +68,7 @@ import { WillNotifyFault } from "./domain/WillNotifyFault";
 import { WillDisableSubmit } from "./domain/submit/WillDisableSubmit";
 import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
 import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
+import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/LinkableArtifactCreator";
 
 export default ArtifactModalController;
 
@@ -210,6 +211,7 @@ function ArtifactModalController(
                 event_dispatcher,
                 ProjectsCache(api_client),
                 api_client,
+                LinkableArtifactCreator(api_client, api_client),
                 current_project_identifier,
                 current_tracker_identifier,
                 user_locale

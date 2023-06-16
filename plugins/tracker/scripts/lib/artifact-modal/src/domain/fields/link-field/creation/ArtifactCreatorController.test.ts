@@ -32,13 +32,24 @@ import { TrackerStub } from "../../../../../tests/stubs/TrackerStub";
 import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentifierStub";
+import { CreateLinkableArtifactStub } from "../../../../../tests/stubs/CreateLinkableArtifactStub";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
+
+const isProjectsRetrieval = (fault: Fault): boolean =>
+    "isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true;
+const isProjectTrackersRetrieval = (fault: Fault): boolean =>
+    "isProjectTrackersRetrieval" in fault && fault.isProjectTrackersRetrieval() === true;
+const isArtifactCreation = (fault: Fault): boolean =>
+    "isArtifactCreation" in fault && fault.isArtifactCreation() === true;
 
 describe(`ArtifactCreatorController`, () => {
     const CURRENT_PROJECT_ID = 101,
         CURRENT_TRACKER_ID = 219;
     let event_dispatcher: DispatchEventsStub,
         projects_retriever: RetrieveProjects,
-        tracker_retriever: RetrieveProjectTrackers;
+        tracker_retriever: RetrieveProjectTrackers,
+        artifact_creator: CreateLinkableArtifact;
 
     beforeEach(() => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
@@ -51,6 +62,9 @@ describe(`ArtifactCreatorController`, () => {
             TrackerStub.withDefaults({ id: 86 }),
             TrackerStub.withDefaults({ id: 98 })
         );
+        artifact_creator = CreateLinkableArtifactStub.withArtifact(
+            LinkableArtifactStub.withDefaults()
+        );
     });
 
     const getController = (): ArtifactCreatorController =>
@@ -58,6 +72,7 @@ describe(`ArtifactCreatorController`, () => {
             event_dispatcher,
             projects_retriever,
             tracker_retriever,
+            artifact_creator,
             CurrentProjectIdentifierStub.withId(CURRENT_PROJECT_ID),
             CurrentTrackerIdentifierStub.withId(CURRENT_TRACKER_ID),
             en_US_LOCALE
@@ -142,16 +157,17 @@ describe(`ArtifactCreatorController`, () => {
         it(`when there is a problem when projects are retrieved,
             it will call the previously registered Fault listener
             and it will return an empty array`, async () => {
-            const fault = Fault.fromMessage("Not found");
-            projects_retriever = RetrieveProjectsStub.withFault(fault);
+            projects_retriever = RetrieveProjectsStub.withFault(Fault.fromMessage("Not found"));
             const handler = jest.fn();
-
             const controller = getController();
             controller.registerFaultListener(handler);
+
             const projects = await controller.getProjects();
 
             expect(projects).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
+            const fault = handler.mock.calls[0][0];
+            expect(isProjectsRetrieval(fault)).toBe(true);
         });
     });
 
@@ -169,26 +185,59 @@ describe(`ArtifactCreatorController`, () => {
         it(`when there is a problem when trackers are retrieved,
             it will call the previously registered Fault listener
             and it will return an empty array`, async () => {
-            const fault = Fault.fromMessage("Not found");
-            tracker_retriever = RetrieveProjectTrackersStub.withFault(fault);
+            tracker_retriever = RetrieveProjectTrackersStub.withFault(
+                Fault.fromMessage("Not found")
+            );
             const handler = jest.fn();
-
             const controller = getController();
             controller.registerFaultListener(handler);
+
             const trackers = await controller.selectProjectAndGetItsTrackers(project_id);
 
             expect(trackers).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
+            const fault = handler.mock.calls[0][0];
+            expect(isProjectTrackersRetrieval(fault)).toBe(true);
         });
     });
 
     describe(`createArtifact()`, () => {
-        it(`will create an artifact with the given title
+        it(`will create an artifact with the given title and the selected tracker
             and will return a LinkableArtifact`, async () => {
             const title = "nonmathematical procontinuation";
-            const artifact = await getController().createArtifact(title);
+            const expected_artifact = LinkableArtifactStub.withDefaults({ title });
+            artifact_creator = CreateLinkableArtifactStub.withArtifact(expected_artifact);
 
-            expect(artifact.title).toBe(title);
+            const result = await getController().createArtifact(title);
+
+            expect(result.unwrapOr(null)).toBe(expected_artifact);
+        });
+
+        it(`when there is no selected tracker, it will return Nothing`, async () => {
+            const controller = getController();
+            await controller.selectProjectAndGetItsTrackers(ProjectIdentifierStub.withId(835));
+
+            const result = await controller.createArtifact("angiophorous");
+
+            expect(result.isNothing()).toBe(true);
+        });
+
+        it(`when there is a problem,
+            it will call the previously registered Fault listener
+            and will return Nothing`, async () => {
+            artifact_creator = CreateLinkableArtifactStub.withFault(
+                Fault.fromMessage("Bad Request")
+            );
+            const handler = jest.fn();
+            const controller = getController();
+            controller.registerFaultListener(handler);
+
+            const result = await controller.createArtifact("flaglike shanksman");
+
+            expect(result.isNothing()).toBe(true);
+            expect(handler).toHaveBeenCalled();
+            const fault = handler.mock.calls[0][0];
+            expect(isArtifactCreation(fault)).toBe(true);
         });
     });
 

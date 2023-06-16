@@ -114,12 +114,18 @@ export interface StructureFormat {
     readonly content: null | ReadonlyArray<this>;
 }
 
+export type TrackerProjectRepresentation = ProjectReference;
+
+export type SemanticsRepresentation = {
+    readonly title: {
+        readonly field_id: number;
+    };
+};
+
 export interface MinimalTrackerResponse {
     readonly id: number;
     readonly label: string;
 }
-
-export type TrackerProjectRepresentation = ProjectReference;
 
 export interface TrackerResponseWithColor extends MinimalTrackerResponse {
     readonly color_name: ColorName;
@@ -134,12 +140,13 @@ export interface TrackerResponseWithCannotCreateReason extends TrackerResponseWi
  * Instead, create your own type with Pick:
  * `type Subset = Pick<TrackerResponseNoInstance, "id" | "label" | "fields">;`
  */
-export interface TrackerResponseNoInstance extends MinimalTrackerResponse {
+export interface TrackerResponseNoInstance extends TrackerResponseWithColor {
     readonly _pick_what_you_need: never;
     readonly item_name: string;
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
     readonly project: TrackerProjectRepresentation;
+    readonly semantics: SemanticsRepresentation;
 }
 
 export interface TrackerUsedArtifactLinkResponse {

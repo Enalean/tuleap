@@ -31,9 +31,10 @@ import { ProjectTrackersRetrievalFault } from "./ProjectTrackersRetrievalFault";
 import { ProjectIdentifier } from "../../../ProjectIdentifier";
 import type { CurrentProjectIdentifier } from "../../../CurrentProjectIdentifier";
 import { TrackerIdentifier } from "../../../TrackerIdentifier";
-import type { ArtifactCrossReference } from "../../../ArtifactCrossReference";
 import type { LinkableArtifact } from "../LinkableArtifact";
 import type { CurrentTrackerIdentifier } from "../../../CurrentTrackerIdentifier";
+import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
+import { ArtifactCreationFault } from "../../../ArtifactCreationFault";
 
 type OnFaultHandler = (fault: Fault) => void;
 
@@ -42,7 +43,7 @@ export type ArtifactCreatorController = {
     getProjects(): PromiseLike<readonly Project[]>;
     selectProjectAndGetItsTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
     selectTracker(tracker_id: TrackerIdentifier): void;
-    createArtifact(title: string): PromiseLike<LinkableArtifact>;
+    createArtifact(title: string): PromiseLike<Option<LinkableArtifact>>;
     disableSubmit(reason: string): void;
     enableSubmit(): void;
     getSelectedProject(): ProjectIdentifier;
@@ -54,6 +55,7 @@ export const ArtifactCreatorController = (
     event_dispatcher: DispatchEvents,
     projects_retriever: RetrieveProjects,
     project_trackers_retriever: RetrieveProjectTrackers,
+    artifact_creator: CreateLinkableArtifact,
     current_project_identifier: CurrentProjectIdentifier,
     current_tracker_identifier: CurrentTrackerIdentifier,
     user_locale: string
@@ -114,22 +116,18 @@ export const ArtifactCreatorController = (
             selected_tracker = Option.fromValue(tracker_id);
         },
 
-        createArtifact(title): PromiseLike<LinkableArtifact> {
-            const fake_cross_reference: ArtifactCrossReference = {
-                ref: "art #-1",
-                color: "inca-silver",
-            };
-            const fake_new_artifact: LinkableArtifact = {
-                id: -1,
-                xref: fake_cross_reference,
-                title,
-                uri: "/",
-                is_open: true,
-                status: { value: "Ongoing", color: "sherwood-green" },
-                project: { id: selected_project.id, label: "Fake Project for development purpose" },
-            };
-
-            return Promise.resolve(fake_new_artifact);
+        createArtifact(title): PromiseLike<Option<LinkableArtifact>> {
+            return selected_tracker.match(
+                (tracker_identifier) =>
+                    artifact_creator.createLinkableArtifact(tracker_identifier, title).match(
+                        (artifact): Option<LinkableArtifact> => Option.fromValue(artifact),
+                        (fault) => {
+                            _handler.apply((handler) => handler(ArtifactCreationFault(fault)));
+                            return Option.nothing();
+                        }
+                    ),
+                () => Promise.resolve(Option.nothing())
+            );
         },
 
         disableSubmit(reason): void {

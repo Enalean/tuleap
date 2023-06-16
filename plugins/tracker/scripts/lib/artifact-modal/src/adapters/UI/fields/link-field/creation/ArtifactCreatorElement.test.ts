@@ -46,6 +46,10 @@ import { ProjectStub } from "../../../../../../tests/stubs/ProjectStub";
 import { TrackerIdentifierStub } from "../../../../../../tests/stubs/TrackerIdentifierStub";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
 import { CurrentTrackerIdentifierStub } from "../../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import { CreateLinkableArtifactStub } from "../../../../../../tests/stubs/CreateLinkableArtifactStub";
+import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
+import type { CreateLinkableArtifact } from "../../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
+import { Fault } from "@tuleap/fault";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -56,26 +60,33 @@ describe(`ArtifactCreatorElement`, () => {
 
     describe(`events`, () => {
         const TRACKER_ID = 75;
-        let controller: ArtifactCreatorController;
+        let artifact_creator: CreateLinkableArtifact;
+
         beforeEach(() => {
-            controller = ArtifactCreatorController(
+            artifact_creator = CreateLinkableArtifactStub.withArtifact(
+                LinkableArtifactStub.withDefaults()
+            );
+        });
+
+        const getController = (): ArtifactCreatorController =>
+            ArtifactCreatorController(
                 DispatchEventsStub.buildNoOp(),
                 RetrieveProjectsStub.withProjects(ProjectStub.withDefaults()),
                 RetrieveProjectTrackersStub.withTrackers(
                     TrackerStub.withDefaults({ id: TRACKER_ID })
                 ),
+                artifact_creator,
                 CurrentProjectIdentifierStub.withId(144),
                 CurrentTrackerIdentifierStub.withId(209),
                 en_US_LOCALE
             );
-        });
 
         const getHost = (): HostElement => {
             const projects: ReadonlyArray<Project> = [];
             const trackers: ReadonlyArray<Tracker> = [];
             const element = doc.createElement("div");
             return Object.assign(element, {
-                controller,
+                controller: getController(),
                 current_artifact_reference: Option.nothing(),
                 available_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
                 current_link_type: LinkTypeStub.buildUntyped(),
@@ -92,7 +103,7 @@ describe(`ArtifactCreatorElement`, () => {
             and dispatch a "cancel" event`, () => {
             const host = getHost();
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const enableSubmit = jest.spyOn(controller, "enableSubmit");
+            const enableSubmit = jest.spyOn(host.controller, "enableSubmit");
 
             onClickCancel(host);
 
@@ -101,29 +112,54 @@ describe(`ArtifactCreatorElement`, () => {
             expect(event.type).toBe("cancel");
         });
 
-        it(`when I submit the creation form,
-            it will prevent default (to avoid redirecting)
-            and it will tell the controller to create an artifact with the title from the form
-            and it will dispatch an "artifact-created" event containing a LinkableArtifact`, async () => {
+        describe(`when I submit the creation form`, () => {
             const TITLE = "overwillingly unpatriotic";
-            const host = getHost();
-            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
-            const inner_event = new Event("submit", { cancelable: true });
-            const form = doc.createElement("form");
-            form.insertAdjacentHTML(
-                "afterbegin",
-                `<input type="text" name="artifact_title" value="${TITLE}">`
-            );
-            form.dispatchEvent(inner_event);
-            await onSubmit(host, inner_event);
+            const triggerSubmit = (): Event => {
+                const inner_event = new Event("submit", { cancelable: true });
+                const form = doc.createElement("form");
+                form.insertAdjacentHTML(
+                    "afterbegin",
+                    `<input type="text" name="artifact_title" value="${TITLE}">`
+                );
+                form.dispatchEvent(inner_event);
+                return inner_event;
+            };
 
-            expect(inner_event.defaultPrevented).toBe(true);
-            const event = dispatchEvent.mock.calls[0][0] as CustomEvent<ArtifactCreatedEvent>;
-            expect(event.type).toBe("artifact-created");
-            const new_artifact = event.detail.artifact;
-            expect(new_artifact.id).toBe(-1);
-            expect(new_artifact.title).toBe(TITLE);
+            it(`will prevent default (to avoid redirecting)
+                and it will tell the controller to create an artifact with the title from the form
+                and it will dispatch an "artifact-created" event containing a LinkableArtifact`, async () => {
+                const expected_artifact = LinkableArtifactStub.withDefaults({ title: TITLE });
+                artifact_creator = CreateLinkableArtifactStub.withArtifact(expected_artifact);
+                const host = getHost();
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+
+                const inner_event = triggerSubmit();
+                const promise = onSubmit(host, inner_event);
+
+                expect(host.is_loading).toBe(true);
+                await promise;
+                expect(host.is_loading).toBe(false);
+                expect(inner_event.defaultPrevented).toBe(true);
+                const event = dispatchEvent.mock.calls[0][0] as CustomEvent<ArtifactCreatedEvent>;
+                expect(event.type).toBe("artifact-created");
+                expect(event.detail.artifact).toBe(expected_artifact);
+            });
+
+            it(`and the creation fails for some reason,
+                it will NOT dispatch an "artifact-created" event`, async () => {
+                artifact_creator = CreateLinkableArtifactStub.withFault(
+                    Fault.fromMessage("Something happened")
+                );
+                const host = getHost();
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+
+                const inner_event = triggerSubmit();
+                await onSubmit(host, inner_event);
+
+                expect(host.is_loading).toBe(false);
+                expect(dispatchEvent).not.toHaveBeenCalled();
+            });
         });
 
         it(`when I select a project,
@@ -167,7 +203,7 @@ describe(`ArtifactCreatorElement`, () => {
 
         it(`when is_loading becomes true, it will disable the modal submit`, () => {
             const host = getHost();
-            const disableSubmit = jest.spyOn(controller, "disableSubmit");
+            const disableSubmit = jest.spyOn(host.controller, "disableSubmit");
 
             observeIsLoading(host, true);
 
@@ -176,7 +212,7 @@ describe(`ArtifactCreatorElement`, () => {
 
         it(`when is_loading becomes false, it will enable the modal submit`, () => {
             const host = getHost();
-            const enableSubmit = jest.spyOn(controller, "enableSubmit");
+            const enableSubmit = jest.spyOn(host.controller, "enableSubmit");
 
             observeIsLoading(host, false);
 

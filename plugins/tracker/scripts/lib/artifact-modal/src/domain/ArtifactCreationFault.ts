@@ -20,6 +20,6 @@
 import type { Fault } from "@tuleap/fault";
 
 export const ArtifactCreationFault = (previous: Fault): Fault => ({
-    isArtifactCreationFault: () => true,
+    isArtifactCreation: () => true,
     ...previous,
 });

@@ -66,10 +66,12 @@ import type { Project } from "../../domain/Project";
 import { ProjectProxy } from "./ProjectProxy";
 import type { CreateArtifact } from "../../domain/submit/CreateArtifact";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
-import { ArtifactCreationFault } from "../../domain/submit/ArtifactCreationFault";
+import { ArtifactCreationFault } from "../../domain/ArtifactCreationFault";
 import type { Tracker } from "../../domain/Tracker";
 import { MINIMAL_REPRESENTATION, SEMANTIC_TO_CHECK, TrackerProxy } from "./TrackerProxy";
 import type { RetrieveProjectTrackers } from "../../domain/fields/link-field/creation/RetrieveProjectTrackers";
+import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
+import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -87,7 +89,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveFeatureFlag &
     RetrieveProjects &
     CreateArtifact &
-    RetrieveProjectTrackers;
+    RetrieveProjectTrackers &
+    RetrieveTrackerWithTitleSemantic;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -234,5 +237,9 @@ export const TuleapAPIClient = (
                 with_creation_semantic_check: SEMANTIC_TO_CHECK,
             },
         }).map((trackers) => trackers.map(TrackerProxy.fromAPIProject));
+    },
+
+    getTrackerWithTitleSemantic(tracker_id): ResultAsync<TrackerWithTitleSemantic, Fault> {
+        return getJSON<TrackerWithTitleSemantic>(uri`/api/trackers/${tracker_id.id}`);
     },
 });

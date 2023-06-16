@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BaseChangesetValue = {
-    readonly field_id: number;
-};
-type UnknownChangesetValue = BaseChangesetValue & {
-    readonly value: unknown;
-};
-type StringChangesetValue = BaseChangesetValue & {
-    readonly value: string;
-};
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { TrackerIdentifier } from "../../domain/TrackerIdentifier";
+import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
 
-type ChangesetValue = UnknownChangesetValue | StringChangesetValue;
-
-export type ChangesetValues = ChangesetValue[];
+export type RetrieveTrackerWithTitleSemantic = {
+    getTrackerWithTitleSemantic(
+        tracker_id: TrackerIdentifier
+    ): ResultAsync<TrackerWithTitleSemantic, Fault>;
+};
