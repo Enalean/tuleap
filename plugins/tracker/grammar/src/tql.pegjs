@@ -76,13 +76,37 @@ RelationshipCondition
         / WithoutParent
         / WithChildren
         / WithoutChildren
+        / WithTypedReverseLink
+        / WithoutTypedReverseLink
+        / WithTypedForwardLink
+        / WithoutTypedForwardLink
+        / WithReverseLink
+        / WithoutReverseLink
+        / WithForwardLink
+        / WithoutForwardLink
 
 WithParent = "with"i _ "parent"i _ condition:LinkCondition? {
         return new WithReverseLink($condition, '_is_child');
     }
 
+WithReverseLink = IsLinkedFrom _ condition:LinkCondition? {
+        return new WithReverseLink($condition, null);
+    }
+
+WithTypedReverseLink = IsLinkedFrom _ condition:LinkCondition? _ WithType _ type:String {
+        return new WithReverseLink($condition, (string) $type->getValue());
+    }
+
 WithoutParent = "without"i _ "parent"i _ condition:LinkCondition? {
         return new WithoutReverseLink($condition, '_is_child');
+    }
+
+WithoutReverseLink = IsNotLinkedFrom _ condition:LinkCondition? {
+        return new WithoutReverseLink($condition, null);
+    }
+
+WithoutTypedReverseLink = IsNotLinkedFrom _ condition:LinkCondition? _ WithType _ type:String {
+        return new WithoutReverseLink($condition, (string) $type->getValue());
     }
 
 LinkCondition
@@ -101,11 +125,32 @@ WithChildren = "with"i _ Children _ condition:LinkCondition? {
         return new WithForwardLink($condition, '_is_child');
     }
 
+WithForwardLink = IsLinkedTo _ condition:LinkCondition? {
+        return new WithForwardLink($condition, null);
+    }
+
+WithTypedForwardLink = IsLinkedTo _ condition:LinkCondition? _ WithType _ type:String {
+        return new WithForwardLink($condition, (string) $type->getValue());
+    }
+
 WithoutChildren = "without"i _ Children _ condition:LinkCondition? {
         return new WithoutForwardLink($condition, '_is_child');
     }
 
+WithoutForwardLink = IsNotLinkedTo _ condition:LinkCondition? {
+        return new WithoutForwardLink($condition, null);
+    }
+
+WithoutTypedForwardLink = IsNotLinkedTo _ condition:LinkCondition? _ WithType _ type:String {
+        return new WithoutForwardLink($condition, (string) $type->getValue());
+    }
+
 Children = "children"i / "child"i
+IsLinkedFrom = "is"i _ "linked"i _ "from"i
+IsNotLinkedFrom = "is"i _ "not"i _ "linked"i _ "from"i
+IsLinkedTo = "is"i _ "linked"i _ "to"i
+IsNotLinkedTo = "is"i _ "not"i _ "linked"i _ "to"i
+WithType = "with"i _ "type"i
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" {
         return new Parenthesis($e);

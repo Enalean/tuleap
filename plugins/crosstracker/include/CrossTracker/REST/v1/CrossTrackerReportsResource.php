@@ -83,6 +83,10 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
@@ -192,7 +196,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
             new BetweenComparisonChecker($date_validator, $list_value_validator),
             new InComparisonChecker($date_validator, $list_value_validator_not_empty),
-            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty)
+            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
+            new ArtifactLinkTypeChecker(
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao(),
+                ),
+            ),
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';

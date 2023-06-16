@@ -1648,6 +1648,12 @@ msgstr ""
 msgid "Line Break"
 msgstr ""
 
+#, php-format
+msgid "Link type '%s' is invalid. Available type: %s"
+msgid_plural "Link type '%s' is invalid. Available types: %s"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "Links between artifacts may have a type for a better semantics between "
 "artifacts. Here is the list of allowed types for this platform."

@@ -73,15 +73,31 @@ class TQLTest extends RestBase
             'attachment = "awesome"'                                       => ['bug3'],
             'attachment != "document"'                                     => ['bug1', 'bug2', 'bug3'],
             'WITH PARENT'                                                  => ['bug1'],
+            'IS LINKED FROM WITH TYPE "_is_child"'                         => ['bug1'],
             'WITH PARENT TRACKER = "tql"'                                  => ['bug1'],
+            'IS LINKED FROM TRACKER = "tql" WITH TYPE "_is_child"'         => ['bug1'],
             'WITHOUT PARENT'                                               => ['bug2', 'bug3'],
+            'IS NOT LINKED FROM WITH TYPE "_is_child"'                     => ['bug2', 'bug3'],
             'WITHOUT PARENT TRACKER = "epic"'                              => ['bug1', 'bug2', 'bug3'],
+            'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"'    => ['bug1', 'bug2', 'bug3'],
             'WITH CHILD'                                                   => ['bug2'],
             'WITH CHILDREN'                                                => ['bug2'],
+            'IS LINKED TO WITH TYPE "_is_child"'                           => ['bug2'],
             'WITH CHILDREN TRACKER = "tql"'                                => ['bug2'],
+            'IS LINKED TO TRACKER = "tql" WITH TYPE "_is_child"'           => ['bug2'],
             'WITHOUT CHILD'                                                => ['bug1', 'bug3'],
             'WITHOUT CHILDREN'                                             => ['bug1', 'bug3'],
+            'IS NOT LINKED TO WITH TYPE "_is_child"'                       => ['bug1', 'bug3'],
             'WITHOUT CHILDREN TRACKER = "epic"'                            => ['bug1', 'bug2', 'bug3'],
+            'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'      => ['bug1', 'bug2', 'bug3'],
+            'IS LINKED FROM'                                               => ['bug1'],
+            'IS LINKED FROM TRACKER = "tql"'                               => ['bug1'],
+            'IS LINKED TO'                                                 => ['bug2'],
+            'IS LINKED TO TRACKER = "tql"'                                 => ['bug2'],
+            'IS NOT LINKED FROM'                                           => ['bug2', 'bug3'],
+            'IS NOT LINKED FROM TRACKER = "tql"'                           => ['bug2', 'bug3'],
+            'IS NOT LINKED TO'                                             => ['bug1', 'bug3'],
+            'IS NOT LINKED TO TRACKER = "tql"'                             => ['bug1', 'bug3'],
         ];
         foreach ($tests as $query => $expectation) {
             $message = "Query $query should returns " . implode(', ', $expectation);
@@ -118,6 +134,20 @@ class TQLTest extends RestBase
         self::assertEquals('bug2', $artifacts[0]['title']);
         self::assertEquals('bug3', $artifacts[1]['title']);
 
+        $response = $this->performExpertQuery('IS LINKED FROM ARTIFACT = ' . $artifact['id'] . ' WITH TYPE "_is_child"');
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $artifacts);
+        self::assertEquals('bug1', $artifacts[0]['title']);
+        $bug1_id = $artifacts[0]['id'];
+
+        $response = $this->performExpertQuery('IS NOT LINKED FROM ARTIFACT = ' . $artifact['id'] . ' WITH TYPE "_is_child"');
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(2, $artifacts);
+        self::assertEquals('bug2', $artifacts[0]['title']);
+        self::assertEquals('bug3', $artifacts[1]['title']);
+
         $response = $this->performExpertQuery('WITH CHILDREN ARTIFACT = ' . $bug1_id);
         $this->assertEquals($response->getStatusCode(), 200);
         $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -125,6 +155,19 @@ class TQLTest extends RestBase
         self::assertEquals('bug2', $artifacts[0]['title']);
 
         $response = $this->performExpertQuery('WITHOUT CHILDREN ARTIFACT = ' . $bug1_id);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(2, $artifacts);
+        self::assertEquals('bug1', $artifacts[0]['title']);
+        self::assertEquals('bug3', $artifacts[1]['title']);
+
+        $response = $this->performExpertQuery('IS LINKED TO ARTIFACT = ' . $bug1_id . ' WITH TYPE "_is_child"');
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $artifacts);
+        self::assertEquals('bug2', $artifacts[0]['title']);
+
+        $response = $this->performExpertQuery('IS NOT LINKED TO ARTIFACT = ' . $bug1_id . ' WITH TYPE "_is_child"');
         $this->assertEquals($response->getStatusCode(), 200);
         $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(2, $artifacts);

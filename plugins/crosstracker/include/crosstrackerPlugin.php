@@ -71,10 +71,14 @@ use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
@@ -202,7 +206,13 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             new LesserThanOrEqualComparisonChecker($date_validator, $list_value_validator),
             new BetweenComparisonChecker($date_validator, $list_value_validator),
             new InComparisonChecker($date_validator, $list_value_validator_not_empty),
-            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty)
+            new NotInComparisonChecker($date_validator, $list_value_validator_not_empty),
+            new ArtifactLinkTypeChecker(
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao(),
+                ),
+            ),
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';

@@ -73,6 +73,13 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
             return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix, $term->link_type));
         }
 
+        $type_condition = '';
+        $parameters     = [];
+        if ($term->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $parameters[]   = $term->link_type;
+        }
+
         return new ParametrizedSQLFragment(
             "SELECT 1
             FROM
@@ -82,11 +89,9 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                 INNER JOIN tracker_artifact AS TCA_$suffix
                     ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
             WHERE TCVAL_$suffix.artifact_id = artifact.id
-                AND TCVAL_$suffix.nature = ?
+                $type_condition
             LIMIT 1",
-            [
-                $term->link_type,
-            ],
+            $parameters,
         );
     }
 
@@ -95,6 +100,13 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
         $suffix = $parameters->suffix;
 
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($parameters->user, $condition->artifact_id);
+
+        $type_condition = '';
+        $params         = [];
+        if ($parameters->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $params[]       = $parameters->link_type;
+        }
 
         return new ParametrizedSQLFragment(
             "SELECT 1
@@ -108,11 +120,11 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                         TCA_$suffix.id = ?
                     )
             WHERE TCVAL_$suffix.artifact_id = artifact.id
-                AND TCVAL_$suffix.nature = ?
+                $type_condition
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
-                $parameters->link_type,
+                ...$params,
             ]
         );
     }
@@ -120,6 +132,13 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
     public function visitLinkTrackerCondition(LinkTrackerCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
+
+        $type_condition = '';
+        $params         = [];
+        if ($parameters->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $params[]       = $parameters->link_type;
+        }
 
         return new ParametrizedSQLFragment(
             "SELECT 1
@@ -134,11 +153,11 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                         T_$suffix.item_name = ?
                     )
             WHERE TCVAL_$suffix.artifact_id = artifact.id
-                AND TCVAL_$suffix.nature = ?
+                $type_condition
             LIMIT 1",
             [
                 $condition->tracker_name,
-                $parameters->link_type,
+                ...$params,
             ],
         );
     }
