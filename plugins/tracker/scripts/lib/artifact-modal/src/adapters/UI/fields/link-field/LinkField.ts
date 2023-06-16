@@ -76,6 +76,7 @@ type InternalLinkField = LinkField & {
     is_loading_links: boolean;
     linked_artifacts: ReadonlyArray<LinkedArtifact>;
     linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter>;
+    new_artifact_title: string;
 };
 export type HostElement = InternalLinkField & HTMLElement;
 
@@ -242,6 +243,7 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
             current_link_type="${host.current_link_type}"
             current_artifact_reference="${host.current_artifact_reference}"
             available_types="${host.allowed_link_types}"
+            artifact_title="${host.new_artifact_title}"
             oncancel="${onCancel}"
             ontype-changed="${onLinkTypeChanged}"
             onartifact-created="${onArtifactCreated}"
@@ -264,8 +266,9 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
 const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): void => {
     const options_with_feature_flag = is_feature_flag_enabled
         ? {
-              new_item_clicked_callback: (): void => {
+              new_item_clicked_callback: (title: string): void => {
                   host.is_artifact_creator_shown = true;
+                  host.new_artifact_title = title;
               },
               new_item_label_callback: (title: string) =>
                   title !== ""
@@ -344,7 +347,8 @@ export const LinkField = define<InternalLinkField>({
     recently_viewed_section: dropdown_section_descriptor,
     possible_parents_section: dropdown_section_descriptor,
     search_results_section: dropdown_section_descriptor,
-    is_artifact_creator_shown: { value: false, observe: observeArtifactCreator },
+    is_artifact_creator_shown: false,
+    new_artifact_title: "",
     content: (host) => html`<div class="tracker-form-element" data-test="artifact-link-field">
         <label class="tlp-label">${host.field_presenter.label}</label>
         ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
