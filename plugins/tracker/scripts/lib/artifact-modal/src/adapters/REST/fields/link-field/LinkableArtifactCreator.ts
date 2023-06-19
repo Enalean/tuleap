@@ -18,17 +18,18 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { CreateLinkableArtifact } from "../../../../domain/fields/link-field/creation/CreateLinkableArtifact";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { RetrieveTrackerWithTitleSemantic } from "../../RetrieveTrackerWithTitleSemantic";
 import type { CreateArtifact } from "../../../../domain/submit/CreateArtifact";
+import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
+import { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNumber";
 
 export const LinkableArtifactCreator = (
     tracker_retriever: RetrieveTrackerWithTitleSemantic,
-    artifact_creator: CreateArtifact
+    artifact_creator: CreateArtifact,
+    artifact_retriever: RetrieveMatchingArtifact
 ): CreateLinkableArtifact => ({
     createLinkableArtifact: (tracker_identifier, title): ResultAsync<LinkableArtifact, Fault> =>
         tracker_retriever
@@ -39,20 +40,7 @@ export const LinkableArtifactCreator = (
                     { field_id: title_field_id, value: title },
                 ]);
             })
-            .andThen((artifact) => {
-                const fake_cross_reference: ArtifactCrossReference = {
-                    ref: `art #${artifact.id}`,
-                    color: "inca-silver",
-                };
-                const fake_new_artifact: LinkableArtifact = {
-                    id: artifact.id,
-                    xref: fake_cross_reference,
-                    title,
-                    uri: "#",
-                    is_open: true,
-                    status: { value: "Ongoing", color: "sherwood-green" },
-                    project: { id: -1, label: "Fake Project for development purpose" },
-                };
-                return okAsync(fake_new_artifact);
-            }),
+            .andThen((artifact) =>
+                artifact_retriever.getMatchingArtifact(LinkableNumber.fromArtifactCreated(artifact))
+            ),
 });

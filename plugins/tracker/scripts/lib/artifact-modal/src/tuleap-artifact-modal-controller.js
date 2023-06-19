@@ -211,7 +211,7 @@ function ArtifactModalController(
                 event_dispatcher,
                 ProjectsCache(api_client),
                 api_client,
-                LinkableArtifactCreator(api_client, api_client),
+                LinkableArtifactCreator(api_client, api_client, api_client),
                 current_project_identifier,
                 current_tracker_identifier,
                 user_locale

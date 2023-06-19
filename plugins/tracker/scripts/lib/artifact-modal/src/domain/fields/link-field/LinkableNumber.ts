@@ -18,6 +18,14 @@
  */
 
 import type { Identifier } from "../../Identifier";
+import type { ArtifactCreated } from "../../ArtifactCreated";
 
 // I hold a number that is maybe an artifact id that can be linked to the current artifact
 export type LinkableNumber = Identifier<"LinkableNumber">;
+
+export const LinkableNumber = {
+    fromArtifactCreated: (artifact: ArtifactCreated): LinkableNumber => ({
+        id: artifact.id,
+        _type: "LinkableNumber",
+    }),
+};
