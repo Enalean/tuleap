@@ -40,7 +40,7 @@ const TQL_mode_definition = {
             token: "keyword",
         },
         {
-            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child|is|linked|from|to|type)\b/i,
+            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child|is|linked|from|to|type|covering|covered|by)\b/i,
             token: "variable-2",
         },
         {
@@ -117,5 +117,13 @@ export const TQL_autocomplete_keywords = [
     "IS NOT LINKED TO",
     "IS NOT LINKED TO ARTIFACT",
     "IS NOT LINKED TO TRACKER",
+    "IS COVERED",
+    "IS COVERED BY ARTIFACT",
+    "IS NOT COVERED",
+    "IS NOT COVERED BY ARTIFACT",
+    "IS COVERING",
+    "IS COVERING ARTIFACT",
+    "IS NOT COVERING",
+    "IS NOT COVERING ARTIFACT",
     "@comments",
 ];

@@ -100,6 +100,11 @@ class TQLTest extends RestBase
             'IS NOT LINKED FROM TRACKER = "tql"'                           => ['bug2', 'bug3'],
             'IS NOT LINKED TO'                                             => ['bug1', 'bug3'],
             'IS NOT LINKED TO TRACKER = "tql"'                             => ['bug1', 'bug3'],
+            'IS COVERED'                                                   => [],
+            'IS COVERED BY artifact = 123'                                 => [],
+            'IS COVERING'                                                  => [],
+            'IS COVERING artifact = 123'                                   => [],
+
         ];
         foreach ($tests as $query => $expectation) {
             $message = "Query $query should returns " . implode(', ', $expectation);
