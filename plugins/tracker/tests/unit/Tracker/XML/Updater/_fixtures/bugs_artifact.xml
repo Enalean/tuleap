@@ -16,8 +16,8 @@
     <field_change field_name="severity" type="list" bind="static">
       <value format="id"><![CDATA[113]]></value>
     </field_change>
-    <field_change field_name="assigned_to" type="list" bind="users">
-      <value format="username">ProjectMember</value>
+    <field_change field_name="notexisting" type="text">
+      <value format="commonmark"><![CDATA[]]></value>
     </field_change>
     <field_change field_name="close_date" type="date">
       <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
@@ -31,6 +31,9 @@
     <field_change field_name="multiple" type="list" bind="static">
       <value format="id">216</value>
       <value format="id">218</value>
+    </field_change>
+    <field_change field_name="assigned_to" type="list" bind="users">
+      <value format="username">ProjectMember</value>
     </field_change>
   </changeset>
   <changeset id="CHANGESET_5">

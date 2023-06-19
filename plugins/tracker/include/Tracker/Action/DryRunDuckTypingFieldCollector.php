@@ -27,58 +27,127 @@ use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
 final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 {
+    /**
+     * @var \Tracker_FormElement_Field[]
+     */
+    private array $migrateable_fields = [];
+    /**
+     * @var \Tracker_FormElement_Field[]
+     */
+    private array $not_migrateable_fields = [];
+    /**
+     * @var \Tracker_FormElement_Field[]
+     */
+    private array $partially_migrated_fields = [];
+    /**
+     * @var FieldMapping[]
+     */
+    private array $fields_mapping = [];
+
     public function __construct(
         private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
         private readonly RetrieveUsedFields $retrieve_target_tracker_used_fields,
-        private readonly CheckStaticListFieldsValueIsMovable $check_static_list_fields_is_movable,
-        private readonly VerifyIsStaticListField $list_field_is_movable,
-        private readonly CheckFieldTypeCompatibility $check_field_type_compatibility,
-        private readonly CheckStaticFieldCanBeFullyMoved $check_static_list_fields_value_is_movable,
+        private readonly VerifyFieldCanBeEasilyMigrated $verify_field_can_be_easily_migrated,
+        private readonly VerifyIsStaticListField $verify_is_static_list_field,
+        private readonly VerifyStaticListFieldsAreCompatible $verify_static_fields_are_compatible,
+        private readonly VerifyStaticFieldValuesCanBeFullyMoved $verify_static_field_values_can_be_fully_moved,
+        private readonly VerifyIsUserListField $verify_is_user_list_field,
+        private readonly VerifyUserFieldsAreCompatible $verify_user_fields_are_compatible,
+        private readonly VerifyUserFieldValuesCanBeFullyMoved $verify_user_field_values_can_be_fully_moved,
     ) {
     }
 
     public function collect(\Tracker $source_tracker, \Tracker $target_tracker, Artifact $artifact): DuckTypedMoveFieldCollection
     {
-        $migrateable_fields        = [];
-        $not_migrateable_fields    = [];
-        $partially_migrated_fields = [];
-        $fields_mapping            = [];
-
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
             $target_field = $this->retrieve_target_tracker_used_fields->getUsedFieldByName($target_tracker->getId(), $source_field->getName());
             if ($target_field === null) {
-                $not_migrateable_fields[] = $source_field;
+                $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
 
-            if (! $this->check_field_type_compatibility->areTypesCompatible($target_field, $source_field)) {
-                $not_migrateable_fields[] = $source_field;
+            if ($this->verify_field_can_be_easily_migrated->canFieldBeEasilyMigrated($target_field, $source_field)) {
+                $this->addFieldToMigrateableList($source_field, $target_field);
+
                 continue;
             }
 
             if (
-                $this->list_field_is_movable->isStaticListField($source_field)
-                && $this->list_field_is_movable->isStaticListField($target_field)
+                $this->verify_is_static_list_field->isStaticListField($source_field)
+                && $this->verify_is_static_list_field->isStaticListField($target_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
-
-                if (! $this->check_static_list_fields_is_movable->checkStaticFieldCanBeMoved($source_field, $target_field, $artifact)) {
-                    $not_migrateable_fields[] = $source_field;
-                    continue;
-                }
-
-                if (! $this->check_static_list_fields_value_is_movable->checkStaticFieldCanBeFullyMoved($source_field, $target_field, $artifact)) {
-                    $partially_migrated_fields[] = $source_field;
-                    $fields_mapping[]            = FieldMapping::fromFields($source_field, $target_field);
-                    continue;
-                }
+                $this->collectStaticFields($source_field, $target_field, $artifact);
+                continue;
             }
 
-            $fields_mapping[]     = FieldMapping::fromFields($source_field, $target_field);
-            $migrateable_fields[] = $source_field;
+            if (
+                $this->verify_is_user_list_field->isUserListField($source_field)
+                && $this->verify_is_user_list_field->isUserListField($target_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_List);
+                assert($target_field instanceof \Tracker_FormElement_Field_List);
+                $this->collectUserBoundedFields($source_field, $target_field, $artifact);
+                continue;
+            }
+
+            $this->addFieldToNotMigrateableList($source_field);
         }
 
-        return DuckTypedMoveFieldCollection::fromFields($migrateable_fields, $not_migrateable_fields, $partially_migrated_fields, $fields_mapping);
+        return DuckTypedMoveFieldCollection::fromFields($this->migrateable_fields, $this->not_migrateable_fields, $this->partially_migrated_fields, $this->fields_mapping);
+    }
+
+    private function collectStaticFields(
+        \Tracker_FormElement_Field_List $source_field,
+        \Tracker_FormElement_Field_List $target_field,
+        Artifact $artifact,
+    ): void {
+        if (! $this->verify_static_fields_are_compatible->areStaticFieldsCompatible($source_field, $target_field, $artifact)) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        if (! $this->verify_static_field_values_can_be_fully_moved->canAllStaticFieldValuesBeMoved($source_field, $target_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+            return;
+        }
+
+        $this->addFieldToMigrateableList($source_field, $target_field);
+    }
+
+    private function collectUserBoundedFields(
+        \Tracker_FormElement_Field_List $source_field,
+        \Tracker_FormElement_Field_List $target_field,
+        Artifact $artifact,
+    ): void {
+        if (! $this->verify_user_fields_are_compatible->areUserFieldsCompatible($source_field, $target_field, $artifact)) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        if (! $this->verify_user_field_values_can_be_fully_moved->canAllUserFieldValuesBeMoved($source_field, $target_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+            return;
+        }
+
+        $this->addFieldToMigrateableList($source_field, $target_field);
+    }
+
+    private function addFieldToMigrateableList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $target_field): void
+    {
+        $this->fields_mapping[]     = FieldMapping::fromFields($source_field, $target_field);
+        $this->migrateable_fields[] = $source_field;
+    }
+
+    private function addFieldToPartiallyMigratedList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $target_field): void
+    {
+        $this->partially_migrated_fields[] = $source_field;
+        $this->fields_mapping[]            = FieldMapping::fromFields($source_field, $target_field);
+    }
+
+    private function addFieldToNotMigrateableList(\Tracker_FormElement_Field $source_field): void
+    {
+        $this->not_migrateable_fields[] = $source_field;
     }
 }

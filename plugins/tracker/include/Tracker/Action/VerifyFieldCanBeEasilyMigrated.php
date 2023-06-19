@@ -20,33 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub;
+namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Action\CheckFieldTypeCompatibility;
-
-/**
- * @psalm-immutable
- */
-final class CheckFieldTypeCompatibilityStub implements CheckFieldTypeCompatibility
+interface VerifyFieldCanBeEasilyMigrated
 {
-    private function __construct(private readonly bool $are_types_compatible)
-    {
-    }
-
-    public static function withCompatibleTypes(): self
-    {
-        return new self(true);
-    }
-
-    public static function withoutCompatibleTypes(): self
-    {
-        return new self(false);
-    }
-
-    public function areTypesCompatible(
+    public function canFieldBeEasilyMigrated(
         \Tracker_FormElement_Field $target_field,
         \Tracker_FormElement_Field $source_field,
-    ): bool {
-        return $this->are_types_compatible;
-    }
+    ): bool;
 }

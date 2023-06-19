@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Tracker\Action;
 
-interface CheckFieldTypeCompatibility
+use Tuleap\Tracker\Artifact\Artifact;
+
+interface VerifyUserFieldsAreCompatible
 {
-    public function areTypesCompatible(
-        \Tracker_FormElement_Field $target_field,
-        \Tracker_FormElement_Field $source_field,
+    public function areUserFieldsCompatible(
+        \Tracker_FormElement_Field_List $source_field,
+        \Tracker_FormElement_Field_List $target_field,
+        Artifact $artifact,
     ): bool;
 }
