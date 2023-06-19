@@ -123,7 +123,7 @@ class MilestoneCrumbBuilder
         $links[] = new BreadCrumbLinkWithIcon(
             dgettext('tuleap-tracker', 'Artifact'),
             $this->getArtifactUrl($milestone),
-            'fa-tlp-tracker'
+            'fa-list-ol'
         );
         $sub_items->addSection(
             new SubItemsUnlabelledSection(

@@ -30,7 +30,7 @@
                 <h1 class="tlp-pane-title">{{ campaign.label }}</h1>
                 <div class="test-plan-campaign-header-stats">
                     <span class="test-plan-campaign-header-stats-info">
-                        <i class="fa-solid fa-check-double" aria-hidden="true"></i>
+                        <i class="fa fa-check" aria-hidden="true"></i>
                         {{ nb_tests_title }}
                     </span>
                 </div>
