@@ -13,6 +13,9 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/fault
@@ -87,9 +90,6 @@ devDependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/constants
-  '@tuleap/dom':
-    specifier: workspace:*
-    version: link:../../../../../lib/frontend/dom
   '@types/ckeditor':
     specifier: ^4.9.10
     version: 4.9.10

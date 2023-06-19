@@ -11,6 +11,7 @@
     "@tuleap/ckeditor-image-upload": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
+    "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/lazybox": "workspace:*",
@@ -40,7 +41,6 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/core-constants": "workspace:*",
-    "@tuleap/dom": "workspace:*",
     "@types/ckeditor": "^4.9.10",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2"

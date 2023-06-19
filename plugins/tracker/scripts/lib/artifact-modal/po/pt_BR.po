@@ -147,6 +147,9 @@ msgstr ""
 msgid "No result found"
 msgstr ""
 
+msgid "No tracker selected, please choose one"
+msgstr ""
+
 msgid "None"
 msgstr "Nenhum"
 

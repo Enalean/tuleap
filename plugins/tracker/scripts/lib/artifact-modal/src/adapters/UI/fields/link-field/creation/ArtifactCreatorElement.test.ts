@@ -20,11 +20,13 @@
 import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
     ArtifactCreatorElement,
+    getTrackerSelectClasses,
     onClickCancel,
     onProjectInput,
     onSubmit,
     onTrackerChange,
     setErrorMessage,
+    setSelectedTracker,
 } from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
@@ -94,7 +96,7 @@ describe(`ArtifactCreatorElement`, () => {
                 show_error_details: false,
                 projects,
                 trackers,
-                content: () => element as HTMLElement,
+                content: (): HTMLElement => element,
             } as HostElement);
         };
 
@@ -197,7 +199,7 @@ describe(`ArtifactCreatorElement`, () => {
 
             onTrackerChange(host, event);
 
-            expect(host.controller.getSelectedTracker().unwrapOr(null)?.id).toBe(TRACKER_ID);
+            expect(host.selected_tracker.unwrapOr(null)?.id).toBe(TRACKER_ID);
         });
     });
 
@@ -234,7 +236,7 @@ describe(`ArtifactCreatorElement`, () => {
                 trackers,
                 selected_project: ProjectIdentifierStub.withId(selected_project_id),
                 selected_tracker,
-                content: () => element as HTMLElement,
+                content: (): HTMLElement => element,
             } as HostElement);
 
             const updateFunction = ArtifactCreatorElement.content(host);
@@ -323,21 +325,35 @@ describe(`ArtifactCreatorElement`, () => {
             const target = render();
             expect(target.querySelector("[data-test=creation-error-details]")).not.toBeNull();
         });
+
+        it.each([[true, false]])(
+            `will set the form element class when error is %s`,
+            (has_error) => {
+                const host = { has_tracker_selection_error: has_error } as HostElement;
+
+                const classes = getTrackerSelectClasses(host);
+                expect(classes["tlp-form-element"]).toBe(true);
+                expect(classes["tlp-form-element-error"]).toBe(has_error);
+            }
+        );
     });
 
     describe(`setters`, () => {
-        let form: HTMLElement;
+        let form: HTMLElement, tracker_selectbox: HTMLSelectElement;
 
         beforeEach(() => {
             form = doc.createElement("div");
             form.setAttribute("data-form", "");
+            tracker_selectbox = doc.createElement("select");
         });
         const getHost = (): HostElement => {
             const target = doc.createElement("div");
             target.append(form);
             return Object.assign(target, {
-                content: () => target,
-            }) as unknown as HostElement;
+                tracker_selectbox,
+                has_tracker_selection_error: false,
+                content: (): HTMLElement => target,
+            } as HostElement);
         };
 
         it(`defaults error message to Nothing`, () => {
@@ -354,6 +370,39 @@ describe(`ArtifactCreatorElement`, () => {
             const result = setErrorMessage(host, option);
 
             expect(scrollIntoView).toHaveBeenCalled();
+            expect(result).toBe(option);
+        });
+
+        it(`defaults selected tracker to Nothing`, () => {
+            const result = setSelectedTracker(getHost(), undefined);
+            expect(result.isNothing()).toBe(true);
+        });
+
+        it(`when the selected tracker is Nothing,
+            it will set a custom validity error message on the tracker selectbox
+            and will clear the selectbox's value to avoid cache effects`, () => {
+            const option = Option.nothing<TrackerIdentifier>();
+            const setCustomValidity = jest.spyOn(tracker_selectbox, "setCustomValidity");
+            const host = getHost();
+
+            const result = setSelectedTracker(host, option);
+
+            expect(setCustomValidity).toHaveBeenCalled();
+            expect(host.has_tracker_selection_error).toBe(true);
+            expect(host.tracker_selectbox.selectedIndex).toBe(-1);
+            expect(result).toBe(option);
+        });
+
+        it(`when the selected tracker has a value,
+            it will set an empty custom validity message (meaning it is valid) on the tracker selectbox`, () => {
+            const option = Option.fromValue(TrackerIdentifierStub.withId(64));
+            const setCustomValidity = jest.spyOn(tracker_selectbox, "setCustomValidity");
+            const host = getHost();
+
+            const result = setSelectedTracker(host, option);
+
+            expect(setCustomValidity).toHaveBeenCalledWith("");
+            expect(host.has_tracker_selection_error).toBe(false);
             expect(result).toBe(option);
         });
     });

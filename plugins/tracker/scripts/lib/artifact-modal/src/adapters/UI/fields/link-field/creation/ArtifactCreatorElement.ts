@@ -28,6 +28,7 @@ import {
     getArtifactFeedbackShowMoreLabel,
     getCancelArtifactCreationLabel,
     getCreateArtifactButtonInCreatorLabel,
+    getNoTrackerSelectedErrorMessage,
     getProjectTrackersListPickerPlaceholder,
     getSubmitDisabledForLinkableArtifactCreationReason,
     getSubmitDisabledForProjectsAndTrackersReason,
@@ -65,6 +66,8 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     trackers: ReadonlyArray<Tracker>;
     selected_project: ProjectIdentifier;
     selected_tracker: Option<TrackerIdentifier>;
+    has_tracker_selection_error: boolean;
+    tracker_selectbox: HTMLSelectElement;
     content(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
@@ -135,6 +138,13 @@ const getProjectOptions = (
             </option>`
     );
 
+export const getTrackerSelectClasses = (
+    host: InternalArtifactCreator
+): Record<string, boolean> => ({
+    "tlp-form-element": true,
+    "tlp-form-element-error": host.has_tracker_selection_error,
+});
+
 const getTrackersOptions = (
     host: InternalArtifactCreator
 ): UpdateFunction<ArtifactCreatorElement>[] =>
@@ -173,7 +183,31 @@ export const onProjectInput = (host: InternalArtifactCreator, event: Event): voi
 };
 
 export const onTrackerChange = (host: InternalArtifactCreator, event: Event): void => {
-    TrackerIdentifierProxy.fromChangeEvent(event).apply(host.controller.selectTracker);
+    TrackerIdentifierProxy.fromChangeEvent(event).apply((tracker_id) => {
+        host.selected_tracker = host.controller.selectTracker(tracker_id);
+    });
+};
+
+const CLEAR_SELECTION = -1;
+export const setSelectedTracker = (
+    host: InternalArtifactCreator,
+    new_value: Option<TrackerIdentifier> | undefined
+): Option<TrackerIdentifier> => {
+    if (!new_value) {
+        return Option.nothing();
+    }
+    new_value.match(
+        () => {
+            host.has_tracker_selection_error = false;
+            host.tracker_selectbox.setCustomValidity("");
+        },
+        () => {
+            host.has_tracker_selection_error = true;
+            host.tracker_selectbox.selectedIndex = CLEAR_SELECTION;
+            host.tracker_selectbox.setCustomValidity(getNoTrackerSelectedErrorMessage());
+        }
+    );
+    return new_value;
 };
 
 let listPicker: ListPicker;
@@ -181,13 +215,7 @@ const initListPicker = (
     host: InternalArtifactCreator,
     controller: ArtifactCreatorController
 ): void => {
-    const select_element = selectOrThrow(
-        host.content(),
-        "#artifact-modal-link-creator-trackers",
-        HTMLSelectElement
-    );
-
-    listPicker = createListPicker(select_element, {
+    listPicker = createListPicker(host.tracker_selectbox, {
         locale: controller.getUserLocale(),
         placeholder: getProjectTrackersListPickerPlaceholder(),
         is_filterable: true,
@@ -217,7 +245,7 @@ const initListPicker = (
 };
 
 export const setErrorMessage = (
-    host: HostElement,
+    host: InternalArtifactCreator,
     new_value: Option<string> | undefined
 ): Option<string> => {
     if (new_value) {
@@ -270,8 +298,17 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     projects: { set: (host, new_value) => new_value ?? [] },
     trackers: { set: (host, new_value) => new_value ?? [] },
     selected_project: undefined,
-    selected_tracker: undefined,
+    selected_tracker: { set: setSelectedTracker },
     artifact_title: "",
+    has_tracker_selection_error: false,
+    tracker_selectbox: {
+        get: (host) =>
+            selectOrThrow(
+                host.content(),
+                "#artifact-modal-link-creator-trackers",
+                HTMLSelectElement
+            ),
+    },
     content: (host) =>
         html`${getErrorTemplate(host)}
             <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
@@ -315,7 +352,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                 </select>
                             </div>
                             <div
-                                class="tlp-form-element"
+                                class="${getTrackerSelectClasses(host)}"
                                 id="artifact-modal-link-creator-tracker-wrapper"
                             >
                                 <label for="artifact-modal-link-creator-trackers" class="tlp-label"
