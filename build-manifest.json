@@ -9,6 +9,10 @@
             "src": "lib/frontend/list-picker/src",
             "po": "lib/frontend/list-picker/po"
         },
+        "webauthn": {
+            "src": "lib/frontend/webauthn/src",
+            "po": "lib/frontend/webauthn/po"
+        },
         "access-denied-error": {
             "src": "src/scripts/main/src/BurningParrot/src/",
             "po": "src/scripts/main/src/BurningParrot/po"

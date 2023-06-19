@@ -53,7 +53,7 @@ export function openAllTargetModalsOnClick(doc: Document, buttons_selector: stri
     }
 }
 
-function getTargetModal(doc: Document, button: HTMLElement): Modal {
+export function getTargetModal(doc: Document, button: HTMLElement): Modal {
     if (!button.dataset.targetModalId) {
         throw new Error("Missing data-target-modal-id attribute on button");
     }

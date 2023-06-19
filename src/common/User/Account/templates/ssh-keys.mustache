@@ -81,15 +81,12 @@
         </button>
     </div>
 
-    <form action="/account/ssh_key/create" method="post" id="submit-new-ssh-key-form">
+    <form action="/account/ssh_key/create" method="post">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
 
         <div class="tlp-modal-body">
-
-            <div class="tlp-alert-danger user-preferences-hidden" id="submit-ssh-key-error"></div>
-
             <div class="tlp-form-element">
                 <label class="tlp-label" for="ssh-key">{{# gettext }}SSH key{{/ gettext }}</label>
                 <textarea id="ssh-key" data-test="ssh-key" name="ssh-key" rows="5" class="tlp-textarea"
@@ -105,8 +102,6 @@
                     data-test="submit-new-ssh-key-button"
                     disabled
             >
-                <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon user-preferences-hidden" aria-hidden="true"
-                   id="submit-new-ssh-key-button-icon"></i>
                 {{# gettext }}Add new key{{/ gettext }}
             </button>
         </div>

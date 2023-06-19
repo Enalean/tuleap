@@ -16,42 +16,51 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Fault } from "@tuleap/fault";
-import { post, postJSON, uri } from "@tuleap/fetch-result";
-import type { PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/typescript-types";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
-import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
 
-export function authenticate(): ResultAsync<null, Fault> {
-    if (!browserSupportsWebAuthn()) {
-        return okAsync(null);
-    }
+import type { Modal } from "@tuleap/tlp-modal";
+import { getTargetModal, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import { selectOrThrow } from "@tuleap/dom";
+import { authenticate, canUserDoWebAuthn } from "./authenticate";
+import fr_FR from "../po/fr_FR.po";
+import pt_BR from "../po/pt_BR.po";
+import { initGettextSync } from "@tuleap/gettext";
+import { AUTHENTICATION_MODAL_TAG, AuthenticationModal } from "./AuthenticationModal";
 
-    return postJSON<PublicKeyCredentialRequestOptionsJSON>(
-        uri`/webauthn/authentication-challenge`,
-        {}
-    )
-        .andThen((options) => {
-            options.timeout = 30_000; // ms
+export { authenticate, AUTHENTICATION_MODAL_TAG };
 
-            return ResultAsync.fromPromise(
-                startAuthentication(options),
-                (error: unknown): Fault =>
-                    error instanceof Error
-                        ? Fault.fromError(error)
-                        : Fault.fromMessage("Failed to authenticate with your passkey")
-            );
-        })
-        .andThen((assertion_response) =>
-            post(uri`/webauthn/authentication`, {}, assertion_response)
-        )
-        .map(() => null)
-        .orElse((fault) => {
-            if ("isForbidden" in fault && fault.isForbidden()) {
-                // 403 is returned by first fetch when user has no key
-                // In this case authentication is considered ok
-                return okAsync(null);
-            }
-            return errAsync(fault);
+/**
+ * Open an authentication modal before opening target modal
+ */
+export function openTargetModalIdAfterAuthentication(
+    doc: Document,
+    button_id: string
+): Promise<Modal | null> {
+    return canUserDoWebAuthn().then((result) => {
+        if (!result) {
+            return openTargetModalIdOnClick(doc, button_id);
+        }
+
+        const gettext_provider = initGettextSync(
+            "tuleap-webauthn",
+            { fr_FR, pt_BR },
+            doc.body.dataset.userLocale ?? "en_US"
+        );
+
+        const button = selectOrThrow(doc, `#${button_id}`);
+        const target_modal = getTargetModal(doc, button);
+
+        const auth_modal = doc.createElement(AUTHENTICATION_MODAL_TAG);
+        if (!(auth_modal instanceof AuthenticationModal)) {
+            throw new Error("Created auth modal is not an AuthenticationModal");
+        }
+        auth_modal.setTargetModal(target_modal);
+        auth_modal.setGettextProvider(gettext_provider);
+        doc.body.appendChild(auth_modal);
+
+        button.addEventListener("click", () => {
+            auth_modal.show();
         });
+
+        return target_modal;
+    });
 }
