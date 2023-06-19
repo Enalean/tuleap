@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.2
+
+Revert updated Tuleap icons due to build/release pipeline issue.
+
 ## 2.2.1
 
 No changes since 2.2.0. This version exists because the 2.0.0 version was tagged as 2.2.0.
