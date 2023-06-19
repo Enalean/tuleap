@@ -26,17 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         button_field.addEventListener("mousedown", function () {
             password_field.type = "text";
-            icon_field.className = "fa-solid fa-eye";
+            icon_field.className = "fa fa-eye";
         });
 
         button_field.addEventListener("mouseup", function () {
             password_field.type = "password";
-            icon_field.className = "fa-solid fa-eye-slash";
+            icon_field.className = "fa fa-eye-slash";
         });
 
         button_field.addEventListener("mouseout", function () {
             password_field.type = "password";
-            icon_field.className = "fa-solid fa-eye-slash";
+            icon_field.className = "fa fa-eye-slash";
         });
     });
 });

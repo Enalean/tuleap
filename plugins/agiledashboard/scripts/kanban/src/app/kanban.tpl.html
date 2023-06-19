@@ -65,7 +65,7 @@
                         for="kanban-header-compact-toggler"
                         class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-compact-toggler-label"
                 >
-                    <i class="fa fa-tlp-small-cards"></i>
+                    <i class="fa fa-list tlp-button-icon"></i>
                 </label>
             </div>
             <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
@@ -83,7 +83,7 @@
                         class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-compact-toggler-label"
                         data-test="kanban-header-detailed-toggler-label"
                 >
-                    <i class="fa fa-tlp-big-cards"></i>
+                    <i class="fa fa-th-list tlp-button-icon"></i>
                 </label>
             </div>
         </div>
@@ -117,7 +117,7 @@
                   title="{{ 'Toggle the backlog' | translate }}"
                   ng-click="kanban.toggleBacklog(); $event.stopPropagation();"
             >
-                <i class="fa fa-tlp-backlog"></i>
+                <i class="fa fa-inbox"></i>
             </span>
             <span ng-if="kanban.backlog.is_open"
                   class="kanban-column-header-label"

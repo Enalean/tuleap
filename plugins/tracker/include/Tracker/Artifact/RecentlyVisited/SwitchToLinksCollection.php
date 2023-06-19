@@ -86,7 +86,7 @@ class SwitchToLinksCollection implements Dispatchable
 
     public function getArtifactIconName(): string
     {
-        return 'fa-solid fa-tlp-tracker';
+        return 'fa-solid fa-list-ol';
     }
 
     public function setMainUri(string $main_uri): void

@@ -37,7 +37,7 @@ final class HistoryEntryBuilder
     private int $per_type_id    = 67;
     private ?Glyph $small_icon  = null;
     private ?Glyph $normal_icon = null;
-    private string $icon_name   = 'fa-solid fa-tlp-tracker';
+    private string $icon_name   = 'fa-solid fa-list-ol';
     private \Project $project;
     /**
      * @var SwitchToQuickLink[]

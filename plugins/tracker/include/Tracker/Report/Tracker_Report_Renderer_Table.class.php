@@ -712,7 +712,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             dgettext('tuleap-tracker', 'Columns'),
             $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns(), Tracker_Report::TYPE_TABLE)
         );
-        $add_columns_presenter->setIcon('fa-solid fa-eye-slash');
+        $add_columns_presenter->setIcon('fa fa-eye-slash');
 
         return $this->report->getTemplateRenderer()->renderToString('button_dropdowns', $add_columns_presenter);
     }

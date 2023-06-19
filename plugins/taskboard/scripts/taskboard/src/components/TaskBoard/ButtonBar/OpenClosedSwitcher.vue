@@ -36,7 +36,7 @@
                 v-bind:title="view_closed_items_title"
                 data-test="show-closed-items"
             >
-                <i class="fa-solid fa-eye tlp-button-icon" aria-hidden="true"></i>
+                <i class="fa fa-eye tlp-button-icon" aria-hidden="true"></i>
             </label>
         </div>
         <div class="tlp-button-bar-item">
@@ -55,7 +55,7 @@
                 v-bind:title="hide_closed_items_title"
                 data-test="hide-closed-items"
             >
-                <i class="fa-solid fa-eye-slash tlp-button-icon" aria-hidden="true"></i>
+                <i class="fa fa-eye-slash tlp-button-icon" aria-hidden="true"></i>
             </label>
         </div>
     </div>

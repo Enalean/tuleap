@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     private function fetchButton()
     {
         $html = '<button class="btn" type="button" id="show_password_' . $this->id . '">
-                     <span id="show_password_icon_' . $this->id . '" class="fa-solid fa-eye-slash"></span>
+                     <span id="show_password_icon_' . $this->id . '" class="fa fa-eye-slash"></span>
                  </button>';
 
         return $html;
