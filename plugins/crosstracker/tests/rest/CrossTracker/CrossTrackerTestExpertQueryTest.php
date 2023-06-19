@@ -650,6 +650,26 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $this->getMatchingEpicArtifactByIds([]);
     }
 
+    public function testIsLinkedToNotTracker(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(
+            $cross_tracker_report["expert_query"],
+            'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"'
+        );
+
+        $this->getMatchingEpicArtifactByIds([]);
+    }
+
     public function testIsLinkedTo(): void
     {
         $params = [
@@ -728,6 +748,22 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
+    }
+
+    public function testIsNotLinkedToNotTracker(): void
+    {
+        $params = [
+            "trackers_id"  => [ $this->epic_tracker_id ],
+            "expert_query" => 'IS NOT LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+        ];
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertStringContainsString(
+            "Double negative",
+            $body['error']['message']
+        );
     }
 
     public function testIsNotLinkedTo(): void

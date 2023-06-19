@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class LinkTrackerCondition implements LinkCondition
+final class LinkTrackerEqualCondition implements LinkCondition
 {
     public function __construct(public readonly string $tracker_name)
     {
@@ -30,6 +30,6 @@ final class LinkTrackerCondition implements LinkCondition
 
     public function accept(LinkConditionVisitor $visitor, $parameters)
     {
-        return $visitor->visitLinkTrackerCondition($this, $parameters);
+        return $visitor->visitLinkTrackerEqualCondition($this, $parameters);
     }
 }

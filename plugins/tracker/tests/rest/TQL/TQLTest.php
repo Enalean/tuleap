@@ -94,6 +94,7 @@ class TQLTest extends RestBase
             'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'      => ['bug1', 'bug2', 'bug3'],
             'IS LINKED FROM'                                               => ['bug1'],
             'IS LINKED FROM TRACKER = "tql"'                               => ['bug1'],
+            'IS LINKED FROM TRACKER != "tql"'                              => [],
             'IS LINKED TO'                                                 => ['bug2'],
             'IS LINKED TO TRACKER = "tql"'                                 => ['bug2'],
             'IS NOT LINKED FROM'                                           => ['bug2', 'bug3'],
@@ -222,6 +223,17 @@ class TQLTest extends RestBase
         $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
             "We cannot search on 'test', we don't know what it refers to",
+            $body['error']['message']
+        );
+    }
+
+    public function testDoubleNegativeInArtifactLinks(): void
+    {
+        $response = $this->performExpertQuery('IS NOT LINKED TO TRACKER != "tql"');
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertStringContainsString(
+            "Double negative",
             $body['error']['message']
         );
     }
