@@ -3217,7 +3217,6 @@ class Tracker implements Tracker_Dispatchable_Interface
             new InitialChangesetCreator(
                 $fields_validator,
                 $fields_retriever,
-                $event_manager,
                 $field_initializator,
                 $logger,
                 $artifact_changeset_saver,

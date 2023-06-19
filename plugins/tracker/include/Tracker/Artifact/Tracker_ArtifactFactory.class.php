@@ -626,7 +626,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         $changeset_creator = new InitialChangesetCreator(
             Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
             $fields_retriever,
-            EventManager::instance(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $logger,
             ArtifactChangesetSaver::build(),

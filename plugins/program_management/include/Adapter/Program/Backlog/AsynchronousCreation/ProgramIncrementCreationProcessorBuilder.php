@@ -193,7 +193,6 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 new InitialChangesetCreator(
                     Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                     $fields_retriever,
-                    $event_manager,
                     new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
                     $logger,
                     ArtifactChangesetSaver::build(),
