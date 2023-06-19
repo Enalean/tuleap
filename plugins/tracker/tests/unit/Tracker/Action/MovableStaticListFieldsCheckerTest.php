@@ -26,19 +26,24 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class MovableStaticListFieldsCheckerTest extends TestCase
 {
     private Tracker_FormElement_Field_List & Stub $source_field;
     private Tracker_FormElement_Field_List & Stub $target_field;
-    private \Tuleap\Tracker\Artifact\Artifact $artifact;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
         $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
         $this->target_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->artifact     = ArtifactTestBuilder::anArtifact(101)->build();
+
+        $this->source_field->method("isMultiple")->willReturn(false);
+        $this->target_field->method("isMultiple")->willReturn(false);
+
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
     }
 
     public function testReturnsFalseWhenCheckIsDoneOnANonStaticBind(): void
@@ -58,6 +63,35 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
                 $this->artifact
             )
         );
+    }
+
+    public function testItReturnsFalseWhenSelectBoxesHaveNotTheSameMultiplicity(): void
+    {
+        $checker = new MovableStaticListFieldsChecker();
+
+        $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
+        $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
+
+        $source_single   = $this->createStub(Tracker_FormElement_Field_List::class);
+        $source_multiple = $this->createStub(Tracker_FormElement_Field_List::class);
+
+        $target_single   = $this->createStub(Tracker_FormElement_Field_List::class);
+        $target_multiple = $this->createStub(Tracker_FormElement_Field_List::class);
+
+        $source_single->method("isMultiple")->willReturn(false);
+        $source_single->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
+
+        $source_multiple->method("isMultiple")->willReturn(true);
+        $source_multiple->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
+
+        $target_single->method("isMultiple")->willReturn(false);
+        $target_multiple->method("isMultiple")->willReturn(true);
+
+        self::assertFalse($checker->checkStaticFieldCanBeMoved($source_single, $target_multiple, $this->artifact));
+        self::assertFalse($checker->checkStaticFieldCanBeMoved($source_multiple, $target_single, $this->artifact));
+        self::assertTrue($checker->checkStaticFieldCanBeMoved($source_single, $target_single, $this->artifact));
+        self::assertTrue($checker->checkStaticFieldCanBeMoved($source_multiple, $target_multiple, $this->artifact));
     }
 
     public function testReturnsFalseWhenThereIsNoMatchingValueInDestinationTracker(): void

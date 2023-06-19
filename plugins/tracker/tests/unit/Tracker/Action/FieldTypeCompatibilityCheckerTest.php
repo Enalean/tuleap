@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Stub\CheckIsSingleStaticListFieldStub;
+use Tuleap\Tracker\Test\Stub\VerifyIsStaticListFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
 final class FieldTypeCompatibilityCheckerTest extends TestCase
@@ -61,7 +61,7 @@ final class FieldTypeCompatibilityCheckerTest extends TestCase
         $checker = new FieldTypeCompatibilityChecker(
             $source_type_retrieve,
             $target_type_retrieve,
-            CheckIsSingleStaticListFieldStub::withoutSingleStaticListField()
+            VerifyIsStaticListFieldStub::withoutSingleStaticListField()
         );
         self::assertSame($are_compatible, $checker->areTypesCompatible($source_field, $target_field));
     }
@@ -77,7 +77,7 @@ final class FieldTypeCompatibilityCheckerTest extends TestCase
         $checker = new FieldTypeCompatibilityChecker(
             $source_type_retrieve,
             $target_type_retrieve,
-            CheckIsSingleStaticListFieldStub::withSingleStaticListField()
+            VerifyIsStaticListFieldStub::withSingleStaticListField()
         );
 
         self::assertTrue($checker->areTypesCompatible($source_field, $target_field));
@@ -94,7 +94,7 @@ final class FieldTypeCompatibilityCheckerTest extends TestCase
         $checker = new FieldTypeCompatibilityChecker(
             $source_type_retrieve,
             $target_type_retrieve,
-            CheckIsSingleStaticListFieldStub::withoutSingleStaticListField()
+            VerifyIsStaticListFieldStub::withoutSingleStaticListField()
         );
 
         self::assertFalse($checker->areTypesCompatible($source_field, $target_field));

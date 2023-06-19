@@ -41,13 +41,19 @@ final class FullyMoveStaticFieldChecker implements CheckStaticFieldCanBeFullyMov
             return false;
         }
 
-        $list_field_value = array_values($last_changeset_value->getListValues());
+        $list_field_values = array_values($last_changeset_value->getListValues());
 
-        $list_bind_value = $this->retrieve_matching_bind_value_by_duck_typing->getMatchingBindValueByDuckTyping(
-            $list_field_value[0],
-            $target_field
-        );
+        foreach ($list_field_values as $value) {
+            $list_bind_value = $this->retrieve_matching_bind_value_by_duck_typing->getMatchingBindValueByDuckTyping(
+                $value,
+                $target_field
+            );
 
-        return $list_bind_value !== null;
+            if ($list_bind_value === null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

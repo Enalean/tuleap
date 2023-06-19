@@ -23,31 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Tracker\Action;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Action\SingleStaticListFieldChecker;
+use Tuleap\Tracker\Action\StaticListFieldVerifier;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 
-final class SingleStaticListFieldCheckerTest extends TestCase
+final class StaticListFieldVerifierTest extends TestCase
 {
-    private SingleStaticListFieldChecker $checker;
+    private StaticListFieldVerifier $verifier;
 
     protected function setUp(): void
     {
-        $this->checker = new SingleStaticListFieldChecker();
+        $this->verifier = new StaticListFieldVerifier();
     }
 
     public function testItIsNotASingleValueListWhenFieldTypeIsNotAList(): void
     {
         $field = TrackerFormElementStringFieldBuilder::aStringField(10)->build();
 
-        self::assertFalse($this->checker->isSingleValueStaticListField($field));
-    }
-
-    public function testItIsNotASingleValueWhenListCanHaveMultipleChoices(): void
-    {
-        $field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $field->method('isMultiple')->willReturn(true);
-
-        self::assertFalse($this->checker->isSingleValueStaticListField($field));
+        self::assertFalse($this->verifier->isStaticListField($field));
     }
 
     public function testItIsNotASingleValueWhenBindIsNotStatic(): void
@@ -59,7 +51,7 @@ final class SingleStaticListFieldCheckerTest extends TestCase
         $field->method('getBind')->willReturn($field_bind);
         $field->method('isMultiple')->willReturn(false);
 
-        self::assertFalse($this->checker->isSingleValueStaticListField($field));
+        self::assertFalse($this->verifier->isStaticListField($field));
     }
 
     public function testItIsASingleListValue(): void
@@ -71,6 +63,6 @@ final class SingleStaticListFieldCheckerTest extends TestCase
         $field->method('getBind')->willReturn($field_bind);
         $field->method('isMultiple')->willReturn(false);
 
-        self::assertTrue($this->checker->isSingleValueStaticListField($field));
+        self::assertTrue($this->verifier->isStaticListField($field));
     }
 }

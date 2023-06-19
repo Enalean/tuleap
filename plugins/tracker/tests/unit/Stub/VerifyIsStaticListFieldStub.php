@@ -20,24 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Test\Stub;
 
-final class SingleStaticListFieldChecker implements CheckIsSingleStaticListField
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Action\VerifyIsStaticListField;
+
+final class VerifyIsStaticListFieldStub implements VerifyIsStaticListField
 {
-    public function isSingleValueStaticListField(\Tracker_FormElement_Field $field): bool
+    private function __construct(private readonly bool $is_single_static_list_field)
     {
-        if (! $field instanceof \Tracker_FormElement_Field_List) {
-            return false;
-        }
+    }
 
-        if ($field->isMultiple()) {
-            return false;
-        }
+    public static function withSingleStaticListField(): self
+    {
+        return new self(true);
+    }
 
-        if ($field->getBind()->getType() !== \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
-            return false;
-        }
+    public static function withoutSingleStaticListField(): self
+    {
+        return new self(false);
+    }
 
-        return true;
+    public function isStaticListField(Tracker_FormElement_Field $field): bool
+    {
+        return $this->is_single_static_list_field;
     }
 }

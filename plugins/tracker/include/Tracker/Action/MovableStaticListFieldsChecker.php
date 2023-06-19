@@ -37,6 +37,13 @@ final class MovableStaticListFieldsChecker implements CheckStaticListFieldsValue
             return false;
         }
 
+        if (
+            ($source_field->isMultiple() && ! $target_field->isMultiple()) ||
+            (! $source_field->isMultiple() && $target_field->isMultiple())
+        ) {
+            return false;
+        }
+
         $list_field_value = array_values($last_changeset_value->getListValues());
         return (isset($list_field_value[0]) && $list_field_value[0] instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
     }

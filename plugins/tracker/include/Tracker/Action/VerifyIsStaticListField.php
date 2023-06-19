@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Action;
 
-interface CheckIsSingleStaticListField
+interface VerifyIsStaticListField
 {
-    public function isSingleValueStaticListField(\Tracker_FormElement_Field $field): bool;
+    public function isStaticListField(\Tracker_FormElement_Field $field): bool;
 }

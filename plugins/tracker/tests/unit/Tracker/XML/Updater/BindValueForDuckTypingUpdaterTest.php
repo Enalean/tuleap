@@ -26,6 +26,8 @@ use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
+use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use XML_SimpleXMLCDATAFactory;
 
 final class BindValueForDuckTypingUpdaterTest extends TestCase
 {
@@ -45,24 +47,66 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $field_change        = $changeset_xml->addChild("field_change");
         $field_change->value = 0;
 
-        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withValue(0);
-        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher);
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([0 => 0]);
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         $this->assertSame("0", (string) $changeset_xml->field_change[0]->value);
     }
 
-    public function testItSetBindValue(): void
+    public function testItSetBindValueForSingleValueSelect(): void
     {
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
         $field_change        = $changeset_xml->addChild("field_change");
         $field_change->value = 101;
 
-        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withValue(101);
-        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher);
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([101 => 309]);
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
-        $this->assertSame("101", (string) $changeset_xml->field_change[0]->value);
+        $this->assertSame("309", (string) $changeset_xml->field_change[0]->value);
+    }
+
+    public function testItSetBindValueForMultipleValuesSelect(): void
+    {
+        $xml           = '<?xml version="1.0" encoding="UTF-8"?>'
+            . '<changeset>'
+            . '    <field_change field_name="plop" type="list" bind="static">'
+            . '        <value format="id">101</value>'
+            . '        <value format="id">102</value>'
+            . '    </field_change>'
+            . '</changeset>';
+        $changeset_xml = new SimpleXMLElement($xml);
+
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([102 => 190]);
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
+
+        $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
+        $this->assertSame("190", (string) $changeset_xml->field_change[0]->value);
+    }
+
+    public function testItIgnoresDuplicates(): void
+    {
+        $xml           = '<?xml version="1.0" encoding="UTF-8"?>'
+            . '<changeset>'
+            . '    <field_change field_name="plop" type="list" bind="static">'
+            . '        <value format="id">101</value>'
+            . '        <value format="id">102</value>'
+            . '    </field_change>'
+            . '</changeset>';
+        $changeset_xml = new SimpleXMLElement($xml);
+
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([
+            101 => 190,
+            102 => 190,
+        ]);
+
+        $cdata_factory = $this->createStub(XML_SimpleXMLCDATAFactory::class);
+        $updater       = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), $cdata_factory);
+
+        $cdata_factory->expects(self::once())->method("insertWithAttributes")->willReturn($changeset_xml);
+        $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
+        $this->addToAssertionCount(1);
     }
 }
