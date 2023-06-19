@@ -21,8 +21,7 @@ import { dispatch, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { HostElement, SelectionElement } from "./SelectionElement";
 
-const onClick = (host: HostElement, event: Event): void => {
-    event.stopPropagation();
+const onClick = (host: HostElement): void => {
     host.clearSelection();
     dispatch(host, "clear-selection");
     dispatch(host, "open-dropdown");

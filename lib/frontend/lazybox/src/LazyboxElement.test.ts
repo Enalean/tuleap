@@ -36,6 +36,7 @@ import * as floating_ui from "@floating-ui/dom";
 import { OptionsBuilder } from "../tests/builders/OptionsBuilder";
 import type { LazyboxOptions } from "./Options";
 import type { SearchInput } from "./SearchInput";
+import type { DropdownElement } from "./dropdown/DropdownElement";
 
 vi.mock("@floating-ui/dom", () => {
     return {
@@ -100,8 +101,12 @@ describe(`LazyboxElement`, () => {
         });
 
         const getHost = (): HostElement => {
+            const dropdown_element = Object.assign(
+                doc.createElement("div") as HTMLElement,
+                { open: dropdown_open } as DropdownElement
+            );
             return Object.assign(doc.createElement("div"), {
-                dropdown_element: { open: dropdown_open },
+                dropdown_element,
                 scrolling_manager: undefined,
             } as HostElement);
         };
@@ -140,23 +145,30 @@ describe(`LazyboxElement`, () => {
             expect(host.dropdown_element.open).toBe(true);
         });
 
-        it(`when I click on the lazybox element,
-            it toggles the dropdown
-            and stops propagation to avoid triggering the handler on Document that closes the dropdown`, () => {
+        it(`when I click on the lazybox element, it toggles the dropdown`, () => {
             dropdown_open = false;
             const host = getHost();
+            doc.body.append(host);
             connect(host);
 
-            const event = new Event("pointerup", { cancelable: true });
-            const stopPropagation = vi.spyOn(event, "stopPropagation");
+            const event = new Event("pointerup", { bubbles: true });
             host.dispatchEvent(event);
 
-            expect(stopPropagation).toHaveBeenCalled();
             expect(host.dropdown_element.open).toBe(true);
 
             host.dispatchEvent(new Event("pointerup"));
 
             expect(host.dropdown_element.open).toBe(false);
+        });
+
+        it(`when I click in the dropdown, it does not close it`, () => {
+            const host = getHost();
+            host.append(host.dropdown_element);
+            connect(host);
+
+            host.dropdown_element.dispatchEvent(new Event("pointerup", { bubbles: true }));
+
+            expect(host.dropdown_element.open).toBe(true);
         });
 
         it(`on disconnect, it will remove event listeners on document and will unlock scrolling`, () => {
@@ -369,18 +381,6 @@ describe(`LazyboxElement`, () => {
             host.search_input_element.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalledWith(query);
-        });
-
-        it(`when I click on the dropdown, it stops propagation
-            to avoid triggering the handler on Document that closes the dropdown`, () => {
-            const host = getHost();
-            const dropdown = getDropdownElement(host);
-
-            const event = new Event("pointerup", { cancelable: true });
-            const stopPropagation = vi.spyOn(event, "stopPropagation");
-            dropdown.dispatchEvent(event);
-
-            expect(stopPropagation).toHaveBeenCalled();
         });
     });
 });

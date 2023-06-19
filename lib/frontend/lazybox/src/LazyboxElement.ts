@@ -69,8 +69,10 @@ const onHostKeyUp = (host: InternalLazyboxElement, event: KeyboardEvent): void =
     host.dropdown_element.open = true;
 };
 
-const onHostPointerUp = (host: InternalLazyboxElement, event: Event): void => {
-    event.stopPropagation();
+const onHostPointerUp = (host: HostElement, event: Event): void => {
+    if (event.composedPath().includes(host.dropdown_element)) {
+        return;
+    }
     host.dropdown_element.open = !host.dropdown_element.open;
 };
 
@@ -82,7 +84,10 @@ const onDocumentKeyUp = (host: InternalLazyboxElement, event: KeyboardEvent): vo
     host.dropdown_element.open = false;
 };
 
-const onDocumentPointerUp = (host: InternalLazyboxElement): void => {
+const onDocumentPointerUp = (host: HostElement, event: Event): void => {
+    if (event.composedPath().includes(host)) {
+        return;
+    }
     host.dropdown_element.open = false;
 };
 
@@ -96,7 +101,7 @@ export const connect = (host: HostElement): DisconnectFunction => {
     host.addEventListener("pointerup", hostPointerUpHandler);
 
     const documentKeyupHandler = (event: KeyboardEvent): void => onDocumentKeyUp(host, event);
-    const documentPointerHandler = (): void => onDocumentPointerUp(host);
+    const documentPointerHandler = (event: Event): void => onDocumentPointerUp(host, event);
 
     host.ownerDocument.addEventListener("keyup", documentKeyupHandler);
     host.ownerDocument.addEventListener("pointerup", documentPointerHandler);
@@ -238,10 +243,6 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
     element.search_input = host.search_input_element;
     element.addEventListener("open", () => onOpen(host));
     element.addEventListener("close", () => onClose(host));
-    element.addEventListener("pointerup", (event) => {
-        // Do not bubble up to avoid closing the dropdown
-        event.stopPropagation();
-    });
     return element;
 };
 
