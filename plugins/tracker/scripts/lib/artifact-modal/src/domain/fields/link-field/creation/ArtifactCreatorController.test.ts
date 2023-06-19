@@ -35,6 +35,7 @@ import { TrackerIdentifierStub } from "../../../../../tests/stubs/TrackerIdentif
 import { CreateLinkableArtifactStub } from "../../../../../tests/stubs/CreateLinkableArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { CreateLinkableArtifact } from "./CreateLinkableArtifact";
+import { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
 
 const isProjectsRetrieval = (fault: Fault): boolean =>
     "isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true;
@@ -88,13 +89,21 @@ describe(`ArtifactCreatorController`, () => {
             const project_id = ProjectIdentifierStub.withId(993);
             const controller = getController();
 
-            controller.selectProjectAndGetItsTrackers(project_id);
+            controller.selectProjectAndGetItsTrackers(
+                project_id,
+                WillDisableSubmit("Retrieving trackers")
+            );
 
             expect(controller.getSelectedProject()).toBe(project_id);
         });
     });
 
     describe(`getSelectedTracker()`, () => {
+        let event: WillDisableSubmit;
+        beforeEach(() => {
+            event = WillDisableSubmit("Retrieving trackers");
+        });
+
         it(`will return the current tracker id`, () => {
             expect(getController().getSelectedTracker().unwrapOr(null)?.id).toBe(
                 CURRENT_TRACKER_ID
@@ -115,7 +124,10 @@ describe(`ArtifactCreatorController`, () => {
             it will clear the selected tracker`, async () => {
             const controller = getController();
 
-            await controller.selectProjectAndGetItsTrackers(ProjectIdentifierStub.withId(835));
+            await controller.selectProjectAndGetItsTrackers(
+                ProjectIdentifierStub.withId(835),
+                event
+            );
 
             expect(controller.getSelectedTracker().isNothing()).toBe(true);
         });
@@ -124,7 +136,7 @@ describe(`ArtifactCreatorController`, () => {
             it will keep the selected tracker memorized`, async () => {
             const controller = getController();
 
-            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject());
+            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject(), event);
 
             expect(controller.getSelectedTracker().unwrapOr(null)?.id).toBe(CURRENT_TRACKER_ID);
         });
@@ -142,15 +154,24 @@ describe(`ArtifactCreatorController`, () => {
             );
             const controller = getController();
 
-            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject());
+            await controller.selectProjectAndGetItsTrackers(controller.getSelectedProject(), event);
 
             expect(controller.getSelectedTracker().isNothing()).toBe(true);
         });
     });
 
     describe(`getProjects()`, () => {
-        it(`will return a list of projects`, async () => {
-            const projects = await getController().getProjects();
+        let event: WillDisableSubmit;
+        beforeEach(() => {
+            event = WillDisableSubmit("Projects are loading");
+        });
+
+        it(`will return a list of projects
+            and will disable the modal submit while the promise is not resolved`, async () => {
+            const promise = getController().getProjects(event);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillDisableSubmit");
+            const projects = await promise;
+
             expect(projects).toHaveLength(2);
         });
 
@@ -162,7 +183,7 @@ describe(`ArtifactCreatorController`, () => {
             const controller = getController();
             controller.registerFaultListener(handler);
 
-            const projects = await controller.getProjects();
+            const projects = await controller.getProjects(event);
 
             expect(projects).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
@@ -172,13 +193,18 @@ describe(`ArtifactCreatorController`, () => {
     });
 
     describe(`selectProjectAndGetItsTrackers()`, () => {
-        let project_id: ProjectIdentifier;
+        let project_id: ProjectIdentifier, event: WillDisableSubmit;
         beforeEach(() => {
             project_id = ProjectIdentifierStub.withId(184);
+            event = WillDisableSubmit("Retrieving trackers");
         });
 
-        it(`will return a list of trackers`, async () => {
-            const projects = await getController().selectProjectAndGetItsTrackers(project_id);
+        it(`will return a list of trackers
+            and will disable the modal submit while the promise is not resolved`, async () => {
+            const promise = getController().selectProjectAndGetItsTrackers(project_id, event);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillDisableSubmit");
+            const projects = await promise;
+
             expect(projects).toHaveLength(2);
         });
 
@@ -192,7 +218,7 @@ describe(`ArtifactCreatorController`, () => {
             const controller = getController();
             controller.registerFaultListener(handler);
 
-            const trackers = await controller.selectProjectAndGetItsTrackers(project_id);
+            const trackers = await controller.selectProjectAndGetItsTrackers(project_id, event);
 
             expect(trackers).toHaveLength(0);
             expect(handler).toHaveBeenCalled();
@@ -202,24 +228,37 @@ describe(`ArtifactCreatorController`, () => {
     });
 
     describe(`createArtifact()`, () => {
+        let title: string, event: WillDisableSubmit;
+        beforeEach(() => {
+            title = "nonmathematical procontinuation";
+            event = WillDisableSubmit("Creating artifact");
+        });
+
         it(`will create an artifact with the given title and the selected tracker
+            and will disable the modal submit while the creation is ongoing
             and will return a LinkableArtifact`, async () => {
-            const title = "nonmathematical procontinuation";
             const expected_artifact = LinkableArtifactStub.withDefaults({ title });
             artifact_creator = CreateLinkableArtifactStub.withArtifact(expected_artifact);
 
-            const result = await getController().createArtifact(title);
+            const promise = getController().createArtifact(title, event);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillDisableSubmit");
+            const result = await promise;
 
             expect(result.unwrapOr(null)).toBe(expected_artifact);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillEnableSubmit");
         });
 
         it(`when there is no selected tracker, it will return Nothing`, async () => {
             const controller = getController();
-            await controller.selectProjectAndGetItsTrackers(ProjectIdentifierStub.withId(835));
+            await controller.selectProjectAndGetItsTrackers(
+                ProjectIdentifierStub.withId(835),
+                WillDisableSubmit("Retrieving trackers")
+            );
 
-            const result = await controller.createArtifact("angiophorous");
+            const result = await controller.createArtifact(title, event);
 
             expect(result.isNothing()).toBe(true);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillEnableSubmit");
         });
 
         it(`when there is a problem,
@@ -232,19 +271,13 @@ describe(`ArtifactCreatorController`, () => {
             const controller = getController();
             controller.registerFaultListener(handler);
 
-            const result = await controller.createArtifact("flaglike shanksman");
+            const result = await controller.createArtifact(title, event);
 
             expect(result.isNothing()).toBe(true);
             expect(handler).toHaveBeenCalled();
             const fault = handler.mock.calls[0][0];
             expect(isArtifactCreation(fault)).toBe(true);
-        });
-    });
-
-    describe(`disableSubmit()`, () => {
-        it(`will dispatch an event to disable the modal submit`, () => {
-            getController().disableSubmit("No you cannot");
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillDisableSubmit");
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillEnableSubmit");
         });
     });
 

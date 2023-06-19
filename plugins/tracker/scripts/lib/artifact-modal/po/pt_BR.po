@@ -132,6 +132,9 @@ msgstr ""
 msgid "New artifact"
 msgstr ""
 
+msgid "New artifact to link is being created"
+msgstr ""
+
 msgid "No follow-ups"
 msgstr ""
 
