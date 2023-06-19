@@ -20,7 +20,6 @@
 import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
     ArtifactCreatorElement,
-    observeIsLoading,
     onClickCancel,
     onProjectInput,
     onSubmit,
@@ -199,24 +198,6 @@ describe(`ArtifactCreatorElement`, () => {
             onTrackerChange(host, event);
 
             expect(host.controller.getSelectedTracker().unwrapOr(null)?.id).toBe(TRACKER_ID);
-        });
-
-        it(`when is_loading becomes true, it will disable the modal submit`, () => {
-            const host = getHost();
-            const disableSubmit = jest.spyOn(host.controller, "disableSubmit");
-
-            observeIsLoading(host, true);
-
-            expect(disableSubmit).toHaveBeenCalled();
-        });
-
-        it(`when is_loading becomes false, it will enable the modal submit`, () => {
-            const host = getHost();
-            const enableSubmit = jest.spyOn(host.controller, "enableSubmit");
-
-            observeIsLoading(host, false);
-
-            expect(enableSubmit).toHaveBeenCalled();
         });
     });
 

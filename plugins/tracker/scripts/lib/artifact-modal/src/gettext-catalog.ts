@@ -153,3 +153,5 @@ export const getProjectTrackersRetrievalErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the list of trackers: %s");
 export const getProjectTrackersListPickerPlaceholder = (): string =>
     gettextCatalog.getString("Select the tracker");
+export const getSubmitDisabledForLinkableArtifactCreationReason = (): string =>
+    gettextCatalog.getString("New artifact to link is being created");

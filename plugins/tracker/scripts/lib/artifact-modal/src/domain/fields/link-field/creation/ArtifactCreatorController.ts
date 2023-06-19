@@ -20,7 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import type { DispatchEvents } from "../../../DispatchEvents";
-import { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
+import type { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../../../submit/WillEnableSubmit";
 import type { RetrieveProjects } from "./RetrieveProjects";
 import type { Project } from "../../../Project";
@@ -40,11 +40,13 @@ type OnFaultHandler = (fault: Fault) => void;
 
 export type ArtifactCreatorController = {
     registerFaultListener(handler: OnFaultHandler): void;
-    getProjects(): PromiseLike<readonly Project[]>;
-    selectProjectAndGetItsTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
+    getProjects(event: WillDisableSubmit): PromiseLike<readonly Project[]>;
+    selectProjectAndGetItsTrackers(
+        project_id: ProjectIdentifier,
+        event: WillDisableSubmit
+    ): PromiseLike<readonly Tracker[]>;
     selectTracker(tracker_id: TrackerIdentifier): void;
-    createArtifact(title: string): PromiseLike<Option<LinkableArtifact>>;
-    disableSubmit(reason: string): void;
+    createArtifact(title: string, event: WillDisableSubmit): PromiseLike<Option<LinkableArtifact>>;
     enableSubmit(): void;
     getSelectedProject(): ProjectIdentifier;
     getSelectedTracker(): Option<TrackerIdentifier>;
@@ -81,18 +83,24 @@ export const ArtifactCreatorController = (
             _handler = Option.fromValue(handler);
         },
 
-        getProjects: () =>
-            projects_retriever.getProjects().match(
+        getProjects(event: WillDisableSubmit): PromiseLike<readonly Project[]> {
+            event_dispatcher.dispatch(event);
+            return projects_retriever.getProjects().match(
                 (projects) => projects,
                 (fault) => {
                     _handler.apply((handler) => handler(ProjectsRetrievalFault(fault)));
                     return [];
                 }
-            ),
+            );
+        },
 
-        selectProjectAndGetItsTrackers(project_id): PromiseLike<readonly Tracker[]> {
+        selectProjectAndGetItsTrackers(
+            project_id,
+            event: WillDisableSubmit
+        ): PromiseLike<readonly Tracker[]> {
             const is_new_project = project_id !== selected_project;
             selected_project = project_id;
+            event_dispatcher.dispatch(event);
             return project_trackers_retriever.getTrackersByProject(selected_project).match(
                 (trackers) => {
                     if (is_new_project) {
@@ -116,22 +124,24 @@ export const ArtifactCreatorController = (
             selected_tracker = Option.fromValue(tracker_id);
         },
 
-        createArtifact(title): PromiseLike<Option<LinkableArtifact>> {
-            return selected_tracker.match(
-                (tracker_identifier) =>
-                    artifact_creator.createLinkableArtifact(tracker_identifier, title).match(
-                        (artifact): Option<LinkableArtifact> => Option.fromValue(artifact),
-                        (fault) => {
-                            _handler.apply((handler) => handler(ArtifactCreationFault(fault)));
-                            return Option.nothing();
-                        }
-                    ),
-                () => Promise.resolve(Option.nothing())
-            );
-        },
-
-        disableSubmit(reason): void {
-            event_dispatcher.dispatch(WillDisableSubmit(reason));
+        createArtifact(title, event: WillDisableSubmit): PromiseLike<Option<LinkableArtifact>> {
+            event_dispatcher.dispatch(event);
+            return selected_tracker
+                .mapOr(
+                    (tracker_identifier) =>
+                        artifact_creator.createLinkableArtifact(tracker_identifier, title).match(
+                            (artifact): Option<LinkableArtifact> => Option.fromValue(artifact),
+                            (fault) => {
+                                _handler.apply((handler) => handler(ArtifactCreationFault(fault)));
+                                return Option.nothing();
+                            }
+                        ),
+                    Promise.resolve(Option.nothing<LinkableArtifact>())
+                )
+                .then((option) => {
+                    event_dispatcher.dispatch(WillEnableSubmit());
+                    return option;
+                });
         },
 
         enableSubmit(): void {

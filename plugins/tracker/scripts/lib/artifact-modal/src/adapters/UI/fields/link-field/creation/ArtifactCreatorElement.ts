@@ -29,6 +29,7 @@ import {
     getCancelArtifactCreationLabel,
     getCreateArtifactButtonInCreatorLabel,
     getProjectTrackersListPickerPlaceholder,
+    getSubmitDisabledForLinkableArtifactCreationReason,
     getSubmitDisabledForProjectsAndTrackersReason,
 } from "../../../../../gettext-catalog";
 import type { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
@@ -47,6 +48,7 @@ import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier"
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
 import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier";
+import { WillDisableSubmit } from "../../../../../domain/submit/WillDisableSubmit";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;
@@ -94,14 +96,6 @@ const getErrorTemplate = (host: InternalArtifactCreator): UpdateFunction<Artifac
         </div>`;
     }, html``);
 
-export const observeIsLoading = (host: HostElement, new_value: boolean): void => {
-    if (new_value) {
-        host.controller.disableSubmit(getSubmitDisabledForProjectsAndTrackersReason());
-        return;
-    }
-    host.controller.enableSubmit();
-};
-
 export const onClickCancel = (host: HostElement): void => {
     host.controller.enableSubmit();
     dispatch(host, "cancel");
@@ -117,7 +111,10 @@ export const onSubmit = async (host: HostElement, event: Event): Promise<void> =
         return;
     }
     host.is_loading = true;
-    const created_artifact = await host.controller.createArtifact(title_input.value);
+    const created_artifact = await host.controller.createArtifact(
+        title_input.value,
+        WillDisableSubmit(getSubmitDisabledForLinkableArtifactCreationReason())
+    );
     host.is_loading = false;
     created_artifact.apply((artifact) => {
         dispatch(host, "artifact-created", { detail: { artifact } });
@@ -161,11 +158,17 @@ export const onProjectInput = (host: InternalArtifactCreator, event: Event): voi
     const project_id = ProjectIdentifierProxy.fromChangeEvent(event);
 
     project_id.apply((id) =>
-        host.controller.selectProjectAndGetItsTrackers(id).then((trackers) => {
-            host.trackers = trackers;
-            host.selected_tracker = host.controller.getSelectedTracker();
-            host.is_loading = false;
-        })
+        host.controller
+            .selectProjectAndGetItsTrackers(
+                id,
+                WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason())
+            )
+            .then((trackers) => {
+                host.controller.enableSubmit();
+                host.trackers = trackers;
+                host.selected_tracker = host.controller.getSelectedTracker();
+                host.is_loading = false;
+            })
     );
 };
 
@@ -195,21 +198,19 @@ const initListPicker = (
                 return html``;
             }
 
-            const tooltip = html` <span
+            const tooltip = html`<span
                 class="artifact-modal-link-creator-list-picker-tooltip"
                 title="${current_tracker.cannot_create_reason}"
-            >
-                <i class="fa-solid fa-question-circle tlp-button-icon" aria-hidden="true"></i
+                ><i class="fa-solid fa-question-circle tlp-button-icon" aria-hidden="true"></i
             ></span>`;
-            return html` <span class="artifact-modal-link-creator-list-picker-container">
-                <span class="artifact-modal-link-creator-list-picker-option-label">
-                    <span
+            return html`<span class="artifact-modal-link-creator-list-picker-container"
+                ><span class="artifact-modal-link-creator-list-picker-option-label"
+                    ><span
                         class="tlp-swatch-${current_tracker.color_name} list-picker-circular-color"
-                    ></span>
-                    ${option_label}
-                </span>
-                ${current_tracker.cannot_create_reason === "" ? html`` : tooltip}
-            </span>`;
+                    ></span
+                    >${option_label}</span
+                >${current_tracker.cannot_create_reason === "" ? html`` : tooltip}</span
+            >`;
         },
     });
 };
@@ -241,10 +242,12 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
             });
             host.selected_project = controller.getSelectedProject();
             host.is_loading = true;
+            const event = WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason());
             Promise.all([
-                controller.getProjects(),
-                controller.selectProjectAndGetItsTrackers(host.selected_project),
+                controller.getProjects(event),
+                controller.selectProjectAndGetItsTrackers(host.selected_project, event),
             ]).then(([projects, trackers]) => {
+                host.controller.enableSubmit();
                 host.projects = projects;
                 host.trackers = trackers;
                 host.selected_tracker = controller.getSelectedTracker();
@@ -260,7 +263,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     current_artifact_reference: undefined,
     available_types: undefined,
     current_link_type: undefined,
-    is_loading: { value: false, observe: observeIsLoading },
+    is_loading: false,
     error_message: { set: setErrorMessage },
     show_error_details: false,
     projects: { set: (host, new_value) => new_value ?? [] },

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-06-07 17:35+0200\n"
+"PO-Revision-Date: 2023-06-19 14:31+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -143,6 +143,9 @@ msgstr "Taille max d'envoi de fichiers : %s"
 msgid "New artifact"
 msgstr "Nouvel artéfact"
 
+msgid "New artifact to link is being created"
+msgstr "Le nouvel artéfact à lier est en cours de création"
+
 msgid "No follow-ups"
 msgstr "Aucun commentaire"
 
@@ -219,7 +222,7 @@ msgid "Search results"
 msgstr "Résultats de recherche"
 
 msgid "Select the tracker"
-msgstr "Selectionner l'outil de suivi "
+msgstr "Sélectionner l'outil de suivi"
 
 msgid "Size: %s"
 msgstr "Taille: %s"
