@@ -25,7 +25,8 @@ describe(`Link field of Artifact Modal`, function () {
         CHILD_TITLE = "Child Artifact",
         PARENT_TITLE = "Parent Artifact",
         LINKS_FIELD_NAME = "Links",
-        HISTORY_ARTIFACT_TITLE = "History Artifact";
+        HISTORY_ARTIFACT_TITLE = "History Artifact",
+        TASKS_TRACKER_NAME = "Tasks";
 
     before(function () {
         now = Date.now();
@@ -122,6 +123,32 @@ describe(`Link field of Artifact Modal`, function () {
         });
         cy.get("[data-test=artifact-modal-loading]").should("not.exist");
         cy.getContains("[data-test=backlog-item]", ARTIFACT_TITLE).should("contain", PARENT_TITLE);
+    });
+
+    it(`can create a new artifact and add it to the links`, function () {
+        const NEW_LINK_TITLE = "Nocturnal Beam";
+        cy.projectMemberSession();
+        cy.log("Open the Artifact modal");
+        cy.visit(
+            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`
+        );
+        cy.getContains("[data-test=backlog-item]", ARTIFACT_TITLE).within(() => {
+            cy.get("[data-test=backlog-item-details-link]").click();
+            cy.get("[data-test=edit-item]").click();
+        });
+        cy.get("[data-test=artifact-modal-form]").within(() => {
+            cy.getContains("[data-test=artifact-link-field]", LINKS_FIELD_NAME).within(() => {
+                cy.get("[data-test=lazybox]").click();
+                cy.get("[data-test=new-item-button]").click();
+                cy.get("[data-test=artifact-creator-title]").type(NEW_LINK_TITLE);
+                cy.get("[data-test=tracker-picker-form-element]").within(() => {
+                    cy.searchItemInListPickerDropdown(TASKS_TRACKER_NAME).click();
+                });
+                cy.get("[data-test=artifact-creator-submit]").click();
+                cy.get("[data-test=link-row]").should("contain", NEW_LINK_TITLE);
+            });
+            cy.get("[data-test=artifact-modal-save-button]").click();
+        });
     });
 });
 
