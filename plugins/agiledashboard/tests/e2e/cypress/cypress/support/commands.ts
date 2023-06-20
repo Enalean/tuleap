@@ -31,6 +31,10 @@ declare global {
                 query: string,
                 dropdown_item_label: string
             ): Chainable<JQuery<HTMLElement>>;
+
+            searchItemInListPickerDropdown(
+                dropdown_item_label: string
+            ): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
@@ -45,11 +49,11 @@ Cypress.Commands.add("dragAndDrop", (source: string, destination: string, positi
 });
 
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
+    cy.get("[data-test=lazybox]").click();
     // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
     return cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body).find("[data-test=lazybox]").click();
         cy.wrap(body).find("[data-test=lazybox-search-field]").type(query);
-        // Link field auto-completer waits a delay before loading items
+        // Lazybox waits a delay before loading items
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
         cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
@@ -59,6 +63,18 @@ Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label)
             .contains(dropdown_item_label)
             .first()
             .parents("[data-test=lazybox-item]");
+    });
+});
+
+Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => {
+    cy.get("[data-test=list-picker-selection]").click();
+    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
+    return cy.wrap(Cypress.$("body")).then((body) => {
+        cy.wrap(body)
+            .find("[data-test-list-picker-dropdown-open]")
+            .then((dropdown) =>
+                cy.wrap(dropdown).find("[data-test=list-picker-item]").contains(dropdown_item_label)
+            );
     });
 });
 

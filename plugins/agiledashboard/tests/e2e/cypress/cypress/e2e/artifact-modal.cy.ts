@@ -104,18 +104,18 @@ describe(`Artifact Modal`, function () {
 
             getFieldsetWithLabel("List fields").within(() => {
                 getFieldWithLabel("Selectbox static", "[data-test=selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Dos");
+                    cy.searchItemInListPickerDropdown("Dos").click();
                 });
 
                 getFieldWithLabel(
                     "Selectbox users (members)",
                     "[data-test=selectbox-field]"
                 ).within(() => {
-                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
+                    cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
                 });
 
                 getFieldWithLabel("Selectbox ugroups", "[data-test=selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Integrators");
+                    cy.searchItemInListPickerDropdown("Integrators").click();
                 });
 
                 getFieldWithLabel("Radio static", "[data-test=radiobutton-field]").within(() => {
@@ -133,20 +133,22 @@ describe(`Artifact Modal`, function () {
                 });
 
                 getFieldWithLabel("MSB static", "[data-test=multi-selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Deux");
-                    selectLabelInListPickerDropdown("Trois");
+                    cy.searchItemInListPickerDropdown("Deux").click();
+                    cy.searchItemInListPickerDropdown("Trois").click();
                 });
 
                 getFieldWithLabel(
                     "MSB users (members)",
                     "[data-test=multi-selectbox-field]"
                 ).within(() => {
-                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
-                    selectLabelInListPickerDropdown("ProjectAdministrator (ProjectAdministrator)");
+                    cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
+                    cy.searchItemInListPickerDropdown(
+                        "ProjectAdministrator (ProjectAdministrator)"
+                    ).click();
                 });
 
                 getFieldWithLabel("MSB ugroups", "[data-test=multi-selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Integrators");
+                    cy.searchItemInListPickerDropdown("Integrators").click();
                 });
 
                 getFieldWithLabel("Checkbox static", "[data-test=checkbox-field]").within(() => {
@@ -271,18 +273,20 @@ describe(`Artifact Modal`, function () {
 
             getFieldsetWithLabel("List fields").within(() => {
                 getFieldWithLabel("Selectbox static", "[data-test=selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Tres");
+                    cy.searchItemInListPickerDropdown("Tres").click();
                 });
 
                 getFieldWithLabel(
                     "Selectbox users (members)",
                     "[data-test=selectbox-field]"
                 ).within(() => {
-                    selectLabelInListPickerDropdown("ProjectAdministrator (ProjectAdministrator)");
+                    cy.searchItemInListPickerDropdown(
+                        "ProjectAdministrator (ProjectAdministrator)"
+                    ).click();
                 });
 
                 getFieldWithLabel("Selectbox ugroups", "[data-test=selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Contributors");
+                    cy.searchItemInListPickerDropdown("Contributors").click();
                 });
 
                 getFieldWithLabel("Radio static", "[data-test=radiobutton-field]").within(() => {
@@ -300,20 +304,20 @@ describe(`Artifact Modal`, function () {
                 });
 
                 getFieldWithLabel("MSB static", "[data-test=multi-selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Un");
-                    selectLabelInListPickerDropdown("Quatre");
+                    cy.searchItemInListPickerDropdown("Un").click();
+                    cy.searchItemInListPickerDropdown("Quatre").click();
                 });
 
                 getFieldWithLabel(
                     "MSB users (members)",
                     "[data-test=multi-selectbox-field]"
                 ).within(() => {
-                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
+                    cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
                 });
 
                 getFieldWithLabel("MSB ugroups", "[data-test=multi-selectbox-field]").within(() => {
-                    selectLabelInListPickerDropdown("Project administrators");
-                    selectLabelInListPickerDropdown("Contributors");
+                    cy.searchItemInListPickerDropdown("Project administrators").click();
+                    cy.searchItemInListPickerDropdown("Contributors").click();
                 });
 
                 getFieldWithLabel("Checkbox static", "[data-test=checkbox-field]").within(() => {
@@ -430,20 +434,6 @@ function uncheckBoxWithLabel(label: string): void {
         .contains(label)
         .within(() => {
             cy.get("[data-test=checkbox-field-input]").uncheck();
-        });
-}
-
-function selectLabelInListPickerDropdown(
-    label: string
-): Cypress.Chainable<JQuery<HTMLBodyElement>> {
-    cy.get("[data-test=list-picker-selection]").click();
-    return cy
-        .root()
-        .parents("body")
-        .within(() => {
-            cy.get("[data-test-list-picker-dropdown-open]").within(() => {
-                cy.get("[data-test=list-picker-item]").contains(label).click();
-            });
         });
 }
 

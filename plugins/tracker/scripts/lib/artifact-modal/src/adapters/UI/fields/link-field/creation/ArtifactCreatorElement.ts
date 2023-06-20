@@ -358,6 +358,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                             <div
                                 class="${getTrackerSelectClasses(host)}"
                                 id="artifact-modal-link-creator-tracker-wrapper"
+                                data-test="tracker-picker-form-element"
                             >
                                 <label for="artifact-modal-link-creator-trackers" class="tlp-label"
                                     >${getArtifactCreationTrackerLabel()}
