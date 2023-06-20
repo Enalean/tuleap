@@ -25,6 +25,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fault
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table
@@ -112,6 +115,9 @@ dependencies:
   mustache:
     specifier: ^4.2.0
     version: 4.2.0
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
   node-gettext:
     specifier: ^3.0.0
     version: 3.0.0
@@ -527,7 +533,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile@5.0.0:
@@ -607,6 +613,10 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
 
   /node-gettext@3.0.0:
     resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}

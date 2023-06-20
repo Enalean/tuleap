@@ -18,7 +18,10 @@
  */
 import { Fault } from "@tuleap/fault";
 import { post, postJSON, uri } from "@tuleap/fetch-result";
-import type { PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/typescript-types";
+import type {
+    AuthenticationResponseJSON,
+    PublicKeyCredentialRequestOptionsJSON,
+} from "@simplewebauthn/typescript-types";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
 
@@ -27,21 +30,7 @@ export function authenticate(): ResultAsync<null, Fault> {
         return okAsync(null);
     }
 
-    return postJSON<PublicKeyCredentialRequestOptionsJSON>(
-        uri`/webauthn/authentication-challenge`,
-        {}
-    )
-        .andThen((options) => {
-            options.timeout = 30_000; // ms
-
-            return ResultAsync.fromPromise(
-                startAuthentication(options),
-                (error: unknown): Fault =>
-                    error instanceof Error
-                        ? Fault.fromError(error)
-                        : Fault.fromMessage("Failed to authenticate with your passkey")
-            );
-        })
+    return beginAuth()
         .andThen((assertion_response) =>
             post(uri`/webauthn/authentication`, {}, assertion_response)
         )
@@ -56,16 +45,44 @@ export function authenticate(): ResultAsync<null, Fault> {
         });
 }
 
-export function canUserDoWebAuthn(): Promise<boolean> {
+function beginAuth(): ResultAsync<AuthenticationResponseJSON, Fault> {
+    return postJSON<PublicKeyCredentialRequestOptionsJSON>(
+        uri`/webauthn/authentication-challenge`,
+        {}
+    ).andThen((options) => {
+        options.timeout = 30_000; // ms
+
+        return ResultAsync.fromPromise(
+            startAuthentication(options),
+            (error: unknown): Fault =>
+                error instanceof Error
+                    ? Fault.fromError(error)
+                    : Fault.fromMessage("Failed to authenticate with your passkey")
+        );
+    });
+}
+
+export function getAuthenticationResult(): ResultAsync<AuthenticationResponseJSON | null, Fault> {
+    return beginAuth()
+        .map((response): AuthenticationResponseJSON | null => response)
+        .orElse((fault) => {
+            if ("isForbidden" in fault && fault.isForbidden()) {
+                // 403 is returned by first fetch when user has no key
+                // In this case authentication is considered ok
+                return okAsync(null);
+            }
+            return errAsync(fault);
+        });
+}
+
+export function canUserDoWebAuthn(): ResultAsync<null, Fault> {
     if (!browserSupportsWebAuthn()) {
-        return Promise.resolve(false);
+        // Should not happens has minimum Tuleap support of browsers is above minimum WebAuthn support
+        return errAsync(Fault.fromMessage("Your browser does not support WebAuthn"));
     }
 
     return postJSON<PublicKeyCredentialRequestOptionsJSON>(
         uri`/webauthn/authentication-challenge`,
         {}
-    ).match(
-        () => true,
-        () => false
-    );
+    ).map(() => null);
 }

@@ -20,13 +20,16 @@
 import type { Modal } from "@tuleap/tlp-modal";
 import { getTargetModal, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import { selectOrThrow } from "@tuleap/dom";
-import { authenticate, canUserDoWebAuthn } from "./authenticate";
+import { authenticate, canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
 import fr_FR from "../po/fr_FR.po";
 import pt_BR from "../po/pt_BR.po";
 import { initGettextSync } from "@tuleap/gettext";
+import type { Fault } from "@tuleap/fault";
 import { AUTHENTICATION_MODAL_TAG, AuthenticationModal } from "./AuthenticationModal";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 
-export { authenticate, AUTHENTICATION_MODAL_TAG };
+export { authenticate, getAuthenticationResult, AUTHENTICATION_MODAL_TAG };
 
 /**
  * Open an authentication modal before opening target modal
@@ -34,37 +37,43 @@ export { authenticate, AUTHENTICATION_MODAL_TAG };
 export function openTargetModalIdAfterAuthentication(
     doc: Document,
     button_id: string
-): Promise<Modal | null> {
+): ResultAsync<Modal | null, Fault> {
     const button = selectOrThrow(doc, `#${button_id}`, HTMLButtonElement);
     button.disabled = true;
 
-    return canUserDoWebAuthn().then((result) => {
-        button.disabled = false;
+    return canUserDoWebAuthn()
+        .map((): Modal | null => {
+            button.disabled = false;
 
-        if (!result) {
-            return openTargetModalIdOnClick(doc, button_id);
-        }
+            const gettext_provider = initGettextSync(
+                "tuleap-webauthn",
+                { fr_FR, pt_BR },
+                doc.body.dataset.userLocale ?? "en_US"
+            );
 
-        const gettext_provider = initGettextSync(
-            "tuleap-webauthn",
-            { fr_FR, pt_BR },
-            doc.body.dataset.userLocale ?? "en_US"
-        );
+            const target_modal = getTargetModal(doc, button);
 
-        const target_modal = getTargetModal(doc, button);
+            const auth_modal = doc.createElement(AUTHENTICATION_MODAL_TAG);
+            if (!(auth_modal instanceof AuthenticationModal)) {
+                throw new Error("Created auth modal is not an AuthenticationModal");
+            }
+            auth_modal.setTargetModal(target_modal);
+            auth_modal.setGettextProvider(gettext_provider);
+            doc.body.appendChild(auth_modal);
 
-        const auth_modal = doc.createElement(AUTHENTICATION_MODAL_TAG);
-        if (!(auth_modal instanceof AuthenticationModal)) {
-            throw new Error("Created auth modal is not an AuthenticationModal");
-        }
-        auth_modal.setTargetModal(target_modal);
-        auth_modal.setGettextProvider(gettext_provider);
-        doc.body.appendChild(auth_modal);
+            button.addEventListener("click", () => {
+                auth_modal.show();
+            });
 
-        button.addEventListener("click", () => {
-            auth_modal.show();
+            return target_modal;
+        })
+        .orElse((fault) => {
+            button.disabled = false;
+
+            if ("isForbidden" in fault && fault.isForbidden() === true) {
+                return okAsync(openTargetModalIdOnClick(doc, button_id));
+            }
+
+            return errAsync(fault);
         });
-
-        return target_modal;
-    });
 }

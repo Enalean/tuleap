@@ -18,11 +18,8 @@
  */
 
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import { authenticate } from "./authenticate";
+import { createModal } from "@tuleap/tlp-modal";
 import type { GettextProvider } from "@tuleap/gettext";
-
-export const HIDDEN_CLASS = "user-preferences-hidden";
 
 /**
  * A custom modal to authenticate with WebAuthn.
@@ -34,8 +31,6 @@ export class AuthenticationModal extends HTMLElement {
 
     // DOM properties
     private modal_form: HTMLFormElement | null;
-    modal_error: HTMLDivElement | null;
-    modal_button_icon: HTMLElement | null;
 
     private gettext_provider: GettextProvider | null;
 
@@ -44,8 +39,6 @@ export class AuthenticationModal extends HTMLElement {
         this.current_modal = null;
         this.target_modal = null;
         this.modal_form = null;
-        this.modal_error = null;
-        this.modal_button_icon = null;
         this.gettext_provider = null;
     }
 
@@ -53,31 +46,12 @@ export class AuthenticationModal extends HTMLElement {
         this.buildModal();
 
         this.modal_form?.addEventListener("submit", (event) => this.submitForm(event));
-
-        this.current_modal?.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
-            this.modal_error?.classList.add(HIDDEN_CLASS);
-        });
     }
 
-    submitForm(event: Event): Promise<void> {
+    submitForm(event: Event): void {
         event.preventDefault();
-
-        this.modal_button_icon?.classList.remove(HIDDEN_CLASS);
-
-        return authenticate().match(
-            () => {
-                this.modal_button_icon?.classList.add(HIDDEN_CLASS);
-                this.hide();
-                this.target_modal?.show();
-            },
-            (fault) => {
-                this.modal_button_icon?.classList.add(HIDDEN_CLASS);
-                if (this.modal_error) {
-                    this.modal_error.innerText = fault.toString();
-                    this.modal_error.classList.remove(HIDDEN_CLASS);
-                }
-            }
-        );
+        this.hide();
+        this.target_modal?.show();
     }
 
     buildModal(): void {
@@ -115,9 +89,6 @@ export class AuthenticationModal extends HTMLElement {
         this.modal_form = document.createElement("form");
         const modal_body = document.createElement("div");
         modal_body.classList.add("tlp-modal-body");
-        this.modal_error = document.createElement("div");
-        this.modal_error.classList.add("tlp-alert-danger", HIDDEN_CLASS);
-        modal_body.appendChild(this.modal_error);
         const modal_body_text = document.createElement("div");
         modal_body_text.innerText = this.gettext_provider.gettext(
             "Please prepare your passkey to confirm your identity"
@@ -139,19 +110,7 @@ export class AuthenticationModal extends HTMLElement {
         const modal_footer_submit = document.createElement("button");
         modal_footer_submit.type = "submit";
         modal_footer_submit.classList.add("tlp-button-primary", "tlp-modal-action");
-        this.modal_button_icon = document.createElement("i");
-        this.modal_button_icon.classList.add(
-            "fa-solid",
-            "fa-circle-notch",
-            "fa-spin",
-            "tlp-button-icon",
-            HIDDEN_CLASS
-        );
-        this.modal_button_icon.ariaHidden = "true";
-        modal_footer_submit.append(
-            this.modal_button_icon,
-            this.gettext_provider.gettext("Confirm my identity")
-        );
+        modal_footer_submit.append(this.gettext_provider.gettext("OK"));
         modal_footer.appendChild(modal_footer_submit);
         this.modal_form.appendChild(modal_footer);
 

@@ -19,7 +19,14 @@
 
 import { datePicker } from "tlp";
 import "@tuleap/copy-to-clipboard";
-import { openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
+import { getAuthenticationResult, openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
+import { selectOrThrow } from "@tuleap/dom";
+import type { ResultAsync } from "neverthrow";
+import type { Modal } from "@tuleap/tlp-modal";
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import type { Fault } from "@tuleap/fault";
+
+const HIDDEN_CLASS = "user-preferences-hidden";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleSSHKeys();
@@ -28,17 +35,46 @@ document.addEventListener("DOMContentLoaded", () => {
     handleCopySecretsToClipboard();
 });
 
+const ALERT_DANGER_ID = "keys-tokens-alert-danger";
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
-const addSSHKeyButton = (): void => {
+const addSSHKeyButton = (): ResultAsync<Modal | null, Fault> =>
     openTargetModalIdAfterAuthentication(document, ADD_SSH_KEY_BUTTON_ID);
-};
 const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
-const addAccessKeyButton = (): void => {
+const addAccessKeyButton = (): ResultAsync<Modal | null, Fault> =>
     openTargetModalIdAfterAuthentication(document, GENERATE_ACCESS_KEY_BUTTON_ID);
-};
 
 function handleSSHKeys(): void {
-    addSSHKeyButton();
+    const error_div = selectOrThrow(document, `#${ALERT_DANGER_ID}`);
+    addSSHKeyButton().match(
+        () => {
+            const error = selectOrThrow(document, "#ssh-key-error");
+            const form = selectOrThrow(document, "#ssh-key-form", HTMLFormElement);
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                getAuthenticationResult().match(
+                    (result) => {
+                        const input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "webauthn_result";
+                        input.value = JSON.stringify(result);
+                        form.appendChild(input);
+
+                        form.submit();
+                    },
+                    (fault) => {
+                        error.innerText = fault.toString();
+                        error.classList.remove(HIDDEN_CLASS);
+                    }
+                );
+            });
+        },
+        (fault) => {
+            error_div.innerText = fault.toString();
+            error_div.classList.remove(HIDDEN_CLASS);
+            openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
+        }
+    );
 
     toggleButtonAccordingToCheckBoxesStateWithIds("remove-ssh-keys-button", "ssh_key_selected[]");
 
@@ -66,7 +102,37 @@ function handleSSHKeys(): void {
 }
 
 function handleAccessKeys(): void {
-    addAccessKeyButton();
+    const error_div = selectOrThrow(document, `#${ALERT_DANGER_ID}`);
+    addAccessKeyButton().match(
+        () => {
+            const error = selectOrThrow(document, "#access-key-error");
+            const form = selectOrThrow(document, "#access-key-form", HTMLFormElement);
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                getAuthenticationResult().match(
+                    (result) => {
+                        const input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "webauthn_result";
+                        input.value = JSON.stringify(result);
+                        form.appendChild(input);
+
+                        form.submit();
+                    },
+                    (fault) => {
+                        error.innerText = fault.toString();
+                        error.classList.remove(HIDDEN_CLASS);
+                    }
+                );
+            });
+        },
+        (fault) => {
+            error_div.innerText = fault.toString();
+            error_div.classList.remove(HIDDEN_CLASS);
+            openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
+        }
+    );
     addAccessKeyDatePicker();
 
     toggleButtonAccordingToCheckBoxesStateWithIds(

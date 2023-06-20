@@ -21,13 +21,29 @@
 
 namespace Tuleap\User\SSHKey;
 
+use Cose\Algorithm\Manager;
+use Cose\Algorithm\Signature\ECDSA\ES256;
+use Cose\Algorithm\Signature\EdDSA\Ed25519;
+use Cose\Algorithm\Signature\RSA\RS256;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
+use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAssertionResponseValidator;
+use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialRpEntity;
 
 final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,6 +57,7 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
      */
     private $user_manager;
+    private WebAuthnCredentialSourceDaoStub $source_dao;
     /**
      * @var SSHKeyCreateController
      */
@@ -48,9 +65,37 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->csrf_token   = M::mock(\CSRFSynchronizerToken::class);
-        $this->user_manager = M::mock(\UserManager::class);
-        $this->controller   = new SSHKeyCreateController($this->csrf_token, $this->user_manager);
+        $this->csrf_token              = M::mock(\CSRFSynchronizerToken::class);
+        $this->user_manager            = M::mock(\UserManager::class);
+        $this->source_dao              = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
+        $attestation_statement_manager = new AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $this->controller = new SSHKeyCreateController(
+            $this->csrf_token,
+            $this->user_manager,
+            new WebAuthnAuthentication(
+                $this->source_dao,
+                new WebAuthnChallengeDaoStub(),
+                new PublicKeyCredentialRpEntity(
+                    \ForgeConfig::get(ConfigurationVariables::NAME),
+                    ServerHostname::rawHostname()
+                ),
+                new PublicKeyCredentialLoader(
+                    new AttestationObjectLoader($attestation_statement_manager)
+                ),
+                new AuthenticatorAssertionResponseValidator(
+                    $this->source_dao,
+                    null,
+                    new ExtensionOutputCheckerHandler(),
+                    Manager::create()
+                        ->add(
+                            Ed25519::create(),
+                            RS256::create(),
+                            ES256::create()
+                        )
+                ),
+            ),
+        );
     }
 
     public function testItForbidsAnonymousUsers()
@@ -72,7 +117,9 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));
         $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('ssh-key', 'ssh-rsa blabla')->build(),
+            HTTPRequestBuilder::get()->withUser($user)
+                ->withParam('ssh-key', 'ssh-rsa blabla')
+                ->withParam('webauthn_result', '{}')->build(),
             LayoutBuilder::build(),
             []
         );

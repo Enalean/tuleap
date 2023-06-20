@@ -32,6 +32,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -42,6 +43,7 @@ use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 use Tuleap\User\Account\DisplayKeysTokensController;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
@@ -50,8 +52,10 @@ class AccessKeyCreationController implements DispatchableWithRequest
      */
     private $csrf_token;
 
-    public function __construct(\CSRFSynchronizerToken $csrf_token)
-    {
+    public function __construct(
+        \CSRFSynchronizerToken $csrf_token,
+        private readonly WebAuthnAuthentication $web_authn_authentication,
+    ) {
         $this->csrf_token = $csrf_token;
     }
 
@@ -63,6 +67,15 @@ class AccessKeyCreationController implements DispatchableWithRequest
         }
 
         $this->csrf_token->check(DisplayKeysTokensController::URL);
+
+        $result = $this->web_authn_authentication->checkKeyResult(
+            $current_user,
+            $request->get('webauthn_result') ?: ''
+        );
+        if (Result::isErr($result)) {
+            $layout->addFeedback(\Feedback::ERROR, (string) $result->error);
+            $layout->redirect(DisplayKeysTokensController::URL);
+        }
 
         $access_key_creator = new AccessKeyCreator(
             new LastAccessKeyIdentifierStore(

@@ -18,8 +18,8 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Confirm my identity"
-msgstr "Confirmer mon identité"
+msgid "OK"
+msgstr "OK"
 
 msgid "Passkey authentication"
 msgstr "Authentification avec clé d'authentification"
