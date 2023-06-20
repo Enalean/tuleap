@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-06-19 14:31+0200\n"
+"PO-Revision-Date: 2023-06-19 16:28+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -157,6 +157,9 @@ msgstr "Aucun parent possible trouvé"
 
 msgid "No result found"
 msgstr "Aucun résultat trouvé"
+
+msgid "No tracker selected, please choose one"
+msgstr "Aucun outil de suivi sélectionné, veuillez en choisir un"
 
 msgid "None"
 msgstr "Aucun"

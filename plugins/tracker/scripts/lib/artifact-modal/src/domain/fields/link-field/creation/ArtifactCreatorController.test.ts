@@ -115,9 +115,10 @@ describe(`ArtifactCreatorController`, () => {
             const tracker_id = TrackerIdentifierStub.withId(670);
             const controller = getController();
 
-            controller.selectTracker(tracker_id);
+            const selected_tracker = controller.selectTracker(tracker_id);
 
-            expect(controller.getSelectedTracker().unwrapOr(null)).toBe(tracker_id);
+            expect(selected_tracker.unwrapOr(null)).toBe(tracker_id);
+            expect(controller.getSelectedTracker()).toBe(selected_tracker);
         });
 
         it(`after calling selectProjectAndGetItsTrackers() with a different project than the one that was selected,
