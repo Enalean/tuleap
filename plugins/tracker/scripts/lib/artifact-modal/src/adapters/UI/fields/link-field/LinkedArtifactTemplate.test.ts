@@ -53,7 +53,6 @@ import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkT
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
-import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 describe(`LinkedArtifactTemplate`, () => {
@@ -191,7 +190,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 RetrievePossibleParentsStub.withoutParents(),
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
-                RetrieveFeatureFlagStub.withEnabledFlag(),
                 LabeledFieldStub.withDefaults(),
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),

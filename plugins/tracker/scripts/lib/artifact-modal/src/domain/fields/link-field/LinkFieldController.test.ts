@@ -58,8 +58,6 @@ import { ChangeLinkTypeStub } from "../../../../tests/stubs/ChangeLinkTypeStub";
 import { LabeledFieldStub } from "../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
 import { ParentTrackerIdentifierStub } from "../../../../tests/stubs/ParentTrackerIdentifierStub";
-import type { RetrieveFeatureFlag } from "../../RetrieveFeatureFlag";
-import { RetrieveFeatureFlagStub } from "../../../../tests/stubs/RetrieveFeatureFlagStub";
 import type { LinkTypesCollection } from "./LinkTypesCollection";
 import type { LinkedArtifact } from "./LinkedArtifact";
 import type { NewLink } from "./NewLink";
@@ -83,7 +81,6 @@ describe(`LinkFieldController`, () => {
         event_dispatcher: DispatchEventsStub,
         new_link_type_changer: ChangeNewLinkTypeStub,
         link_type_changer: ChangeLinkTypeStub,
-        flag_retriever: RetrieveFeatureFlag,
         parent_tracker_identifier: Option<ParentTrackerIdentifier>;
 
     beforeEach(() => {
@@ -100,7 +97,6 @@ describe(`LinkFieldController`, () => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         new_link_type_changer = ChangeNewLinkTypeStub.withCount();
         link_type_changer = ChangeLinkTypeStub.withCount();
-        flag_retriever = RetrieveFeatureFlagStub.withEnabledFlag();
     });
 
     const getController = (): LinkFieldController => {
@@ -127,7 +123,6 @@ describe(`LinkFieldController`, () => {
             parents_retriever,
             link_verifier,
             event_dispatcher,
-            flag_retriever,
             LabeledFieldStub.withDefaults({ field_id: FIELD_ID }),
             current_tracker_identifier,
             parent_tracker_identifier,
@@ -442,19 +437,6 @@ describe(`LinkFieldController`, () => {
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(parents).toHaveLength(0);
-        });
-    });
-
-    describe(`getFeatureFlag()`, () => {
-        const getFeatureFlag = (): PromiseLike<boolean> => getController().getFeatureFlag();
-
-        it(`will return true when the feature flag is active`, async () => {
-            await expect(getFeatureFlag()).resolves.toBe(true);
-        });
-
-        it(`when there is an error during the retrieval of the flag, it will return false`, async () => {
-            flag_retriever = RetrieveFeatureFlagStub.withFault(Fault.fromMessage("Ooops"));
-            await expect(getFeatureFlag()).resolves.toBe(false);
         });
     });
 });

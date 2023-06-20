@@ -47,7 +47,6 @@ import { WillNotifyFault } from "../../WillNotifyFault";
 import type { ChangeNewLinkType } from "./ChangeNewLinkType";
 import type { ChangeLinkType } from "./ChangeLinkType";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
-import type { RetrieveFeatureFlag } from "../../RetrieveFeatureFlag";
 
 export type LinkFieldController = {
     getCurrentArtifactReference(): Option<ArtifactCrossReference>;
@@ -65,7 +64,6 @@ export type LinkFieldController = {
     changeNewLinkType(link: NewLink, new_link_type: LinkType): ReadonlyArray<NewLink>;
     getPossibleParents(): PromiseLike<ReadonlyArray<LinkableArtifact>>;
     hasParentLink(): boolean;
-    getFeatureFlag(): PromiseLike<boolean>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
 };
@@ -88,7 +86,6 @@ export const LinkFieldController = (
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     event_dispatcher: DispatchEvents,
-    flag_retriever: RetrieveFeatureFlag,
     field: LabeledField,
     current_tracker_identifier: CurrentTrackerIdentifier,
     parent_tracker_identifier: Option<ParentTrackerIdentifier>,
@@ -187,9 +184,5 @@ export const LinkFieldController = (
 
     hasParentLink(): boolean {
         return parent_verifier.hasParentLink();
-    },
-
-    getFeatureFlag(): PromiseLike<boolean> {
-        return flag_retriever.getCreateArtifactFeatureFlag().unwrapOr(false);
     },
 });
