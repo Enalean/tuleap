@@ -43,7 +43,6 @@ import { FaultDisplayer } from "./FaultDisplayer";
 import type { Tracker } from "../../../../../domain/Tracker";
 import { selectOrThrow } from "@tuleap/dom";
 import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
-import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
@@ -66,6 +65,7 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     trackers: ReadonlyArray<Tracker>;
     selected_project: ProjectIdentifier;
     selected_tracker: Option<TrackerIdentifier>;
+    project_selectbox: HTMLSelectElement;
     has_tracker_selection_error: boolean;
     tracker_selectbox: HTMLSelectElement;
     content(): HTMLElement;
@@ -163,14 +163,12 @@ const getTrackersOptions = (
             </option>`
     );
 
-export const onProjectInput = (host: InternalArtifactCreator, event: Event): void => {
+export const onProjectChange = (host: InternalArtifactCreator, event: Event): void => {
     host.is_loading = true;
-    const project_id = ProjectIdentifierProxy.fromChangeEvent(event);
-
-    project_id.apply((id) =>
+    ProjectIdentifierProxy.fromChangeEvent(event).apply((project_identifier) =>
         host.controller
             .selectProjectAndGetItsTrackers(
-                id,
+                project_identifier,
                 WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason())
             )
             .then((trackers) => {
@@ -210,13 +208,16 @@ export const setSelectedTracker = (
     return new_value;
 };
 
-let listPicker: ListPicker;
-const initListPicker = (
-    host: InternalArtifactCreator,
-    controller: ArtifactCreatorController
-): void => {
-    listPicker = createListPicker(host.tracker_selectbox, {
-        locale: controller.getUserLocale(),
+type DisconnectFunction = () => void;
+const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
+    const locale = host.controller.getUserLocale();
+    const project_picker = createListPicker(host.project_selectbox, {
+        locale,
+        is_filterable: true,
+    });
+
+    const tracker_picker = createListPicker(host.tracker_selectbox, {
+        locale,
         placeholder: getProjectTrackersListPickerPlaceholder(),
         is_filterable: true,
         items_template_formatter: (html, value_id, option_label) => {
@@ -242,6 +243,10 @@ const initListPicker = (
             >`;
         },
     });
+    return (): void => {
+        project_picker.destroy();
+        tracker_picker.destroy();
+    };
 };
 
 export const setErrorMessage = (
@@ -254,12 +259,6 @@ export const setErrorMessage = (
     }
     return Option.nothing();
 };
-
-function getDisconnectedCallback(): () => void {
-    return () => {
-        listPicker.destroy();
-    };
-}
 
 export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     tag: "tuleap-artifact-modal-link-artifact-creator",
@@ -283,11 +282,9 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                 host.is_loading = false;
             });
 
-            initListPicker(host, controller);
-
             return controller;
         },
-        connect: () => getDisconnectedCallback(),
+        connect: initListPickers,
     },
     current_artifact_reference: undefined,
     available_types: undefined,
@@ -300,6 +297,14 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     selected_project: undefined,
     selected_tracker: { set: setSelectedTracker },
     artifact_title: "",
+    project_selectbox: {
+        get: (host) =>
+            selectOrThrow(
+                host.content(),
+                "#artifact-modal-link-creator-projects",
+                HTMLSelectElement
+            ),
+    },
     has_tracker_selection_error: false,
     tracker_selectbox: {
         get: (host) =>
@@ -343,10 +348,9 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                     >${getArtifactCreationProjectLabel()}
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
                                 ><select
-                                    class="tlp-select tlp-select-small"
                                     required
                                     id="artifact-modal-link-creator-projects"
-                                    oninput="${onProjectInput}"
+                                    onchange="${onProjectChange}"
                                 >
                                     ${getProjectOptions(host)}
                                 </select>

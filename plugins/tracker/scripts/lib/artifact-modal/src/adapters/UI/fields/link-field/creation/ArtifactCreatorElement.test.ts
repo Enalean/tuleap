@@ -22,7 +22,7 @@ import {
     ArtifactCreatorElement,
     getTrackerSelectClasses,
     onClickCancel,
-    onProjectInput,
+    onProjectChange,
     onSubmit,
     onTrackerChange,
     setErrorMessage,
@@ -176,7 +176,7 @@ describe(`ArtifactCreatorElement`, () => {
             const event = new Event("input");
             select.dispatchEvent(event);
 
-            onProjectInput(host, event);
+            onProjectChange(host, event);
             expect(host.is_loading).toBe(true);
 
             await await null; // wait for promise to run
