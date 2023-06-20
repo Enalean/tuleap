@@ -71,7 +71,7 @@ export interface LinkField {
 }
 type InternalLinkField = LinkField & {
     content(): HTMLElement;
-    link_selector: Option<Lazybox & HTMLElement>;
+    link_selector: Lazybox & HTMLElement;
     is_artifact_creator_shown: boolean;
     is_loading_links: boolean;
     linked_artifacts: ReadonlyArray<LinkedArtifact>;
@@ -168,14 +168,12 @@ export const dropdown_section_descriptor = {
     set: (host: InternalLinkField, collection: GroupCollection | undefined): GroupCollection =>
         collection ?? [],
     observe: (host: InternalLinkField): void => {
-        host.link_selector.apply((lazybox) => {
-            lazybox.replaceDropdownContent([
-                ...host.matching_artifact_section,
-                ...host.recently_viewed_section,
-                ...host.search_results_section,
-                ...host.possible_parents_section,
-            ]);
-        });
+        host.link_selector.replaceDropdownContent([
+            ...host.matching_artifact_section,
+            ...host.recently_viewed_section,
+            ...host.search_results_section,
+            ...host.possible_parents_section,
+        ]);
     },
 };
 
@@ -228,7 +226,7 @@ export const onArtifactCreated = (
 export const observeArtifactCreator = (host: InternalLinkField, new_value: boolean): void => {
     if (!new_value) {
         host.content();
-        host.link_selector.apply((lazybox) => lazybox.focus());
+        host.link_selector.focus();
     }
 };
 
@@ -249,7 +247,7 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
             onartifact-created="${onArtifactCreated}"
         ></tuleap-artifact-modal-link-artifact-creator>`;
     }
-    const link_selector = host.link_selector.mapOr((element) => html`${element}`, html``);
+    const link_selector = host.link_selector;
     return html`<div class="link-field-add-link-row">
         <span class="link-field-row-type">
             <tuleap-artifact-modal-link-type-selector
@@ -263,20 +261,7 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
     </div>`;
 };
 
-const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): void => {
-    const options_with_feature_flag = is_feature_flag_enabled
-        ? {
-              new_item_clicked_callback: (title: string): void => {
-                  host.is_artifact_creator_shown = true;
-                  host.new_artifact_title = title;
-              },
-              new_item_label_callback: (title: string) =>
-                  title !== ""
-                      ? sprintf(getCreateNewArtifactButtonInLinkWithNameLabel(), { title })
-                      : getCreateNewArtifactButtonInLinkLabel(),
-          }
-        : {};
-
+const createLazyBox = (host: HostElement): void => {
     const link_selector = createLazybox(host.ownerDocument);
     const options: LazyboxOptions = {
         is_multiple: false,
@@ -295,10 +280,17 @@ const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): voi
                     host.current_link_type
                 );
             }),
-        ...options_with_feature_flag,
+        new_item_clicked_callback: (title: string): void => {
+            host.is_artifact_creator_shown = true;
+            host.new_artifact_title = title;
+        },
+        new_item_label_callback: (title: string) =>
+            title !== ""
+                ? sprintf(getCreateNewArtifactButtonInLinkWithNameLabel(), { title })
+                : getCreateNewArtifactButtonInLinkLabel(),
     };
     link_selector.options = options;
-    host.link_selector = Option.fromValue(link_selector);
+    host.link_selector = link_selector;
 };
 
 export const LinkField = define<InternalLinkField>({
@@ -319,9 +311,7 @@ export const LinkField = define<InternalLinkField>({
                 host.linked_artifacts = artifacts;
                 host.is_loading_links = false;
             });
-            controller.getFeatureFlag().then((is_feature_flag_enabled) => {
-                createLazyBox(host, is_feature_flag_enabled);
-            });
+            createLazyBox(host);
             controller.getPossibleParents().then((parents) => {
                 host.current_link_type = controller.getCurrentLinkType(parents.length > 0);
                 host.allowed_link_types =

@@ -173,7 +173,7 @@ describe("LinkField", () => {
                 const initial_dropdown_content: GroupCollection = [];
                 return {
                     controller: {} as LinkFieldController,
-                    link_selector: Option.fromValue(link_selector),
+                    link_selector,
                     current_link_type: LinkTypeStub.buildUntyped(),
                     matching_artifact_section: initial_dropdown_content,
                     possible_parents_section: initial_dropdown_content,
@@ -339,7 +339,7 @@ describe("LinkField", () => {
             const focus = jest.spyOn(lazybox, "focus");
             const host = {
                 is_artifact_creator_shown: true,
-                link_selector: Option.fromValue(lazybox),
+                link_selector: lazybox,
                 content: () => doc.createElement("div") as HTMLElement,
             } as HostElement;
             observeArtifactCreator(host, false);

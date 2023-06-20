@@ -29,7 +29,6 @@ import type {
     TrackerResponseWithCannotCreateReason,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
-    FeatureFlagResponse,
     ProjectResponse,
     SearchResultEntry,
     UserHistoryResponse,
@@ -60,7 +59,6 @@ import type { RetrieveComments } from "../../domain/comments/RetrieveComments";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
 import { LinkableArtifactRESTFilter } from "./fields/link-field/LinkableArtifactRESTFilter";
-import type { RetrieveFeatureFlag } from "../../domain/RetrieveFeatureFlag";
 import type { RetrieveProjects } from "../../domain/fields/link-field/creation/RetrieveProjects";
 import type { Project } from "../../domain/Project";
 import { ProjectProxy } from "./ProjectProxy";
@@ -86,7 +84,6 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveUserHistory &
     SearchArtifacts &
     RetrieveComments &
-    RetrieveFeatureFlag &
     RetrieveProjects &
     CreateArtifact &
     RetrieveProjectTrackers &
@@ -199,14 +196,6 @@ export const TuleapAPIClient = (
         }).map((comments) => {
             const sorted_comments = is_order_inverted ? Array.from(comments).reverse() : comments;
             return sorted_comments.map(FollowUpCommentProxy.fromRepresentation);
-        });
-    },
-
-    getCreateArtifactFeatureFlag(): ResultAsync<boolean, Fault> {
-        return getJSON<FeatureFlagResponse>(
-            uri`/feature_flag?name=feature_flag_create_artifact`
-        ).map((feature_flag) => {
-            return feature_flag.value === "1";
         });
     },
 

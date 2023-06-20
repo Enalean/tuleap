@@ -183,7 +183,6 @@ function ArtifactModalController(
                 possible_parents_cache,
                 already_linked_verifier,
                 event_dispatcher,
-                api_client,
                 field,
                 current_tracker_identifier,
                 ParentTrackerIdentifierProxy.fromTrackerModel(modal_model.tracker.parent),
