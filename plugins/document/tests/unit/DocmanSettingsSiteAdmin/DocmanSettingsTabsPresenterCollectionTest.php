@@ -22,18 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsAnArrayWithActiveTab(): void
     {
         $collection = new DocmanSettingsTabsPresenterCollection();
 
         $tabs = $collection->getTabs('/admin/document/files-upload-limits');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '/admin/document/files-upload-limits',
                 '/admin/document/files-download-limits',
@@ -44,7 +40,7 @@ class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\Tes
                 $tabs,
             )
         );
-        $this->assertEquals(
+        self::assertEquals(
             [
                 true,
                 false,
@@ -57,7 +53,7 @@ class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $tabs = $collection->getTabs('/admin/document/history-enforcement');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '/admin/document/files-upload-limits',
                 '/admin/document/files-download-limits',
@@ -68,7 +64,7 @@ class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\Tes
                 $tabs,
             )
         );
-        $this->assertEquals(
+        self::assertEquals(
             [
                 false,
                 false,

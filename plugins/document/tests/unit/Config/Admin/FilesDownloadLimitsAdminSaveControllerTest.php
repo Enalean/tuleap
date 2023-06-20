@@ -22,46 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $token;
-    /**
-     * @var ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $config_dao;
-    /**
-     * @var FilesDownloadLimitsAdminSaveController
-     */
-    private $controller;
+    private CSRFSynchronizerToken&MockObject $token;
+    private ConfigDao&MockObject $config_dao;
+    private FilesDownloadLimitsAdminSaveController $controller;
 
     protected function setUp(): void
     {
-        $this->token      = Mockery::mock(CSRFSynchronizerToken::class);
-        $this->config_dao = Mockery::mock(ConfigDao::class);
+        $this->token      = $this->createMock(CSRFSynchronizerToken::class);
+        $this->config_dao = $this->createMock(ConfigDao::class);
 
         $this->controller = new FilesDownloadLimitsAdminSaveController($this->token, $this->config_dao);
     }
 
     public function testItThrowExceptionForNonSiteAdminUser(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -74,27 +61,22 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
     public function testItSavesTheSettings(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('max-archive-size', 2000)
-            ->withParam('warning-threshold', 25)
+            ->withParam('max-archive-size', "2000")
+            ->withParam('warning-threshold', "25")
             ->build();
 
-        $this->token->shouldReceive('check')->once();
+        $this->token->expects(self::once())->method('check');
 
         $this->config_dao
-            ->shouldReceive('saveInt')
-            ->with('plugin_document_max_archive_size', 2000)
-            ->once()
-            ->andReturnTrue();
-        $this->config_dao
-            ->shouldReceive('saveInt')
-            ->with('plugin_document_warning_threshold', 25)
-            ->once()
-            ->andReturnTrue();
+            ->method('saveInt')
+            ->withConsecutive(
+                ['plugin_document_warning_threshold', 25],
+                ['plugin_document_max_archive_size', 2000],
+            );
 
         $inspector = new LayoutInspector();
 
@@ -108,7 +90,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
             self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => 'info',
@@ -121,20 +103,18 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
     public function testItDoesNotSaveAnythingIfMaxArchiveSizeIsInvalid(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withParam('max-archive-size', 'not-valid')
-            ->withParam('warning-threshold', 25)
+            ->withParam('warning-threshold', "25")
             ->build();
 
-        $this->token->shouldReceive('check')->once();
+        $this->token->expects(self::once())->method('check');
 
-        $this->config_dao
-            ->shouldReceive('save')
-            ->never();
+        $this->config_dao->expects(self::never())
+            ->method('save');
 
         $inspector = new LayoutInspector();
 
@@ -147,7 +127,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
         } catch (LayoutInspectorRedirection $ex) {
             self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
         }
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => 'error',
@@ -160,20 +140,19 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
     public function testItDoesNotSaveAnythingIfWarningThresholdIsInvalid(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('max-archive-size', 2000)
+            ->withParam('max-archive-size', "2000")
             ->withParam('warning-threshold', 'not-valid')
             ->build();
 
-        $this->token->shouldReceive('check')->once();
+        $this->token->expects(self::once())->method('check');
 
         $this->config_dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $inspector = new LayoutInspector();
 
@@ -187,7 +166,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
             self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => 'error',

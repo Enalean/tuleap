@@ -29,8 +29,7 @@ use Docman_Folder;
 use Docman_Link;
 use Docman_Version;
 use Docman_Wiki;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrioritizedList;
 use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
@@ -38,22 +37,13 @@ use ZipStream\ZipStream;
 
 class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ZipStream|M\LegacyMockInterface|M\MockInterface
-     */
-    private $zip;
-
-    /**
-     * @var ZipStreamerLoggingHelper|M\LegacyMockInterface|M\MockInterface
-     */
-    private $error_logging_helper;
+    private ZipStream&MockObject $zip;
+    private ZipStreamerLoggingHelper&MockObject $error_logging_helper;
 
     protected function setUp(): void
     {
-        $this->zip                  = M::mock(ZipStream::class);
-        $this->error_logging_helper = M::mock(ZipStreamerLoggingHelper::class);
+        $this->zip                  = $this->createMock(ZipStream::class);
+        $this->error_logging_helper = $this->createMock(ZipStreamerLoggingHelper::class);
     }
 
     public function testItStreamsAllFilesInTheFolderKeepingItsStructure(): void
@@ -66,8 +56,10 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file')->atLeast()->once();
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
+        $this->zip->expects(self::exactly(2))->method('addFileFromPath')->withConsecutive(
+            ['/my files/file.pdf', '/path/to/file'],
+            ['/my files/an embedded file.html', '/path/to/embedded'],
+        );
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -82,9 +74,9 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
-        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotFoundException::class)->atLeast()->once();
-        $this->error_logging_helper->shouldReceive('logFileNotFoundException')->atLeast()->once();
+        $this->zip->method('addFileFromPath')->willThrowException(new FileNotFoundException('/path'));
+
+        $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotFoundException');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -99,9 +91,9 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
-        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotReadableException::class)->atLeast()->once();
-        $this->error_logging_helper->shouldReceive('logFileNotReadableException')->atLeast()->once();
+        $this->zip->method('addFileFromPath')->willThrowException(new FileNotReadableException('/path'));
+
+        $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotReadableException');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -116,9 +108,12 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems(true);
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file')->atLeast()->once();
-        $this->error_logging_helper->shouldReceive('logCorruptedFile')->atLeast()->once();
+        $this->zip->expects(self::exactly(2))->method('addFileFromPath')->withConsecutive(
+            ['/my files/file.pdf', '/path/to/file'],
+            ['/my files/an embedded file.html', '/path/to/embedded'],
+        );
+
+        $this->error_logging_helper->expects(self::atLeast(1))->method('logCorruptedFile');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }

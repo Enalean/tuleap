@@ -22,43 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
-class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FilesDownloadLimitsAdminController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminPageRenderer
-     */
-    private $admin_page_renderer;
+    private FilesDownloadLimitsAdminController $controller;
+    private MockObject&AdminPageRenderer $admin_page_renderer;
 
     protected function setUp(): void
     {
-        $this->admin_page_renderer = Mockery::mock(AdminPageRenderer::class);
+        $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);
 
         $this->controller = new FilesDownloadLimitsAdminController(
             $this->admin_page_renderer,
             new FileDownloadLimitsBuilder(),
-            Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
         );
     }
 
     public function testItThrowExceptionForNonSiteAdminUser(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -71,12 +62,12 @@ class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItRendersThePage(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
 
         $this->admin_page_renderer
-            ->shouldReceive('renderANoFramedPresenter')
-            ->once();
+            ->expects(self::once())
+            ->method('renderANoFramedPresenter');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),

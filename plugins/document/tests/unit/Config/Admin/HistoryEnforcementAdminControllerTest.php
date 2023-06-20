@@ -22,43 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var HistoryEnforcementAdminController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminPageRenderer
-     */
-    private $admin_page_renderer;
+    private HistoryEnforcementAdminController $controller;
+    private MockObject&AdminPageRenderer $admin_page_renderer;
 
     protected function setUp(): void
     {
-        $this->admin_page_renderer = Mockery::mock(AdminPageRenderer::class);
+        $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);
 
         $this->controller = new HistoryEnforcementAdminController(
             $this->admin_page_renderer,
             new HistoryEnforcementSettingsBuilder(),
-            Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
         );
     }
 
     public function testItThrowExceptionForNonSiteAdminUser(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -71,12 +61,11 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItRendersThePage(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->admin_page_renderer
-            ->shouldReceive('renderANoFramedPresenter')
-            ->once();
+            ->expects(self::once())
+            ->method('renderANoFramedPresenter');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),

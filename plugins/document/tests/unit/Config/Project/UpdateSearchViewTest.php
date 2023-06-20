@@ -30,8 +30,6 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertFalse;
-use function PHPUnit\Framework\assertTrue;
 
 final class UpdateSearchViewTest extends TestCase
 {
@@ -45,43 +43,44 @@ final class UpdateSearchViewTest extends TestCase
         $assertions->columns  = false;
         $assertions->criteria = false;
 
-        $update = $this->createPartialMock(UpdateSearchView::class, ['checkCsrfToken']);
-        $update->__construct(
-            new class ($project) implements IExtractProjectFromVariables {
-                public function __construct(private $project)
-                {
-                }
+        $update = $this->getMockBuilder(UpdateSearchView::class)
+            ->onlyMethods(['checkCsrfToken'])
+            ->setConstructorArgs([
+                new class ($project) implements IExtractProjectFromVariables {
+                    public function __construct(private \Project $project)
+                    {
+                    }
 
-                public function getProject(array $variables): \Project
-                {
-                    return $this->project;
-                }
-            },
-            new class ($assertions) implements IUpdateColumns {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function getProject(array $variables): \Project
+                    {
+                        return $this->project;
+                    }
+                },
+                new class ($assertions) implements IUpdateColumns {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveColumns(int $project_id, array $columns): void
-                {
-                    assertEquals(101, $project_id);
-                    assertEquals(["title", "status"], $columns);
-                    $this->assertions->columns = true;
-                }
-            },
-            new class ($assertions) implements IUpdateCriteria {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function saveColumns(int $project_id, array $columns): void
+                    {
+                        assertEquals(101, $project_id);
+                        assertEquals(["title", "status"], $columns);
+                        $this->assertions->columns = true;
+                    }
+                },
+                new class ($assertions) implements IUpdateCriteria {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveCriteria(int $project_id, array $criteria): void
-                {
-                    assertEquals(101, $project_id);
-                    assertEquals(["title", "description"], $criteria);
-                    $this->assertions->criteria = true;
-                }
-            }
-        );
+                    public function saveCriteria(int $project_id, array $criteria): void
+                    {
+                        assertEquals(101, $project_id);
+                        assertEquals(["title", "description"], $criteria);
+                        $this->assertions->criteria = true;
+                    }
+                },
+            ])->getMock();
 
         $update->method('checkCsrfToken');
 
@@ -100,9 +99,9 @@ final class UpdateSearchViewTest extends TestCase
             self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
         }
 
-        assertTrue($assertions->columns);
-        assertTrue($assertions->criteria);
-        assertEquals(
+        self::assertTrue($assertions->columns);
+        self::assertTrue($assertions->criteria);
+        self::assertEquals(
             [
                 [
                     'level' => 'info',
@@ -123,39 +122,40 @@ final class UpdateSearchViewTest extends TestCase
         $assertions->columns  = false;
         $assertions->criteria = false;
 
-        $update = $this->createPartialMock(UpdateSearchView::class, ['checkCsrfToken']);
-        $update->__construct(
-            new class ($project) implements IExtractProjectFromVariables {
-                public function __construct(private $project)
-                {
-                }
+        $update = $this->getMockBuilder(UpdateSearchView::class)
+            ->onlyMethods(['checkCsrfToken'])
+            ->setConstructorArgs([
+                new class ($project) implements IExtractProjectFromVariables {
+                    public function __construct(private \Project $project)
+                    {
+                    }
 
-                public function getProject(array $variables): \Project
-                {
-                    return $this->project;
-                }
-            },
-            new class ($assertions) implements IUpdateColumns {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function getProject(array $variables): \Project
+                    {
+                        return $this->project;
+                    }
+                },
+                new class ($assertions) implements IUpdateColumns {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveColumns(int $project_id, array $columns): void
-                {
-                    $this->assertions->columns = true;
-                }
-            },
-            new class ($assertions) implements IUpdateCriteria {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function saveColumns(int $project_id, array $columns): void
+                    {
+                        $this->assertions->columns = true;
+                    }
+                },
+                new class ($assertions) implements IUpdateCriteria {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveCriteria(int $project_id, array $criteria): void
-                {
-                    $this->assertions->criteria = true;
-                }
-            }
-        );
+                    public function saveCriteria(int $project_id, array $criteria): void
+                    {
+                        $this->assertions->criteria = true;
+                    }
+                },
+            ])->getMock();
 
         $exception = new \Exception();
         $update->method('checkCsrfToken')->willThrowException($exception);
@@ -171,8 +171,8 @@ final class UpdateSearchViewTest extends TestCase
             ['project_name' => 'acme']
         );
 
-        assertFalse($assertions->columns);
-        assertFalse($assertions->criteria);
+        self::assertFalse($assertions->columns);
+        self::assertFalse($assertions->criteria);
     }
 
     public function testColumnsIsInvalid(): void
@@ -184,34 +184,35 @@ final class UpdateSearchViewTest extends TestCase
         $assertions          = new \stdClass();
         $assertions->columns = false;
 
-        $update = $this->createPartialMock(UpdateSearchView::class, ['checkCsrfToken']);
-        $update->__construct(
-            new class ($project) implements IExtractProjectFromVariables {
-                public function __construct(private $project)
-                {
-                }
+        $update = $this->getMockBuilder(UpdateSearchView::class)
+            ->onlyMethods(['checkCsrfToken'])
+            ->setConstructorArgs([
+                new class ($project) implements IExtractProjectFromVariables {
+                    public function __construct(private \Project $project)
+                    {
+                    }
 
-                public function getProject(array $variables): \Project
-                {
-                    return $this->project;
-                }
-            },
-            new class ($assertions) implements IUpdateColumns {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function getProject(array $variables): \Project
+                    {
+                        return $this->project;
+                    }
+                },
+                new class ($assertions) implements IUpdateColumns {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveColumns(int $project_id, array $columns): void
-                {
-                    $this->assertions->columns = true;
-                }
-            },
-            new class () implements IUpdateCriteria {
-                public function saveCriteria(int $project_id, array $criteria): void
-                {
-                }
-            }
-        );
+                    public function saveColumns(int $project_id, array $columns): void
+                    {
+                        $this->assertions->columns = true;
+                    }
+                },
+                new class () implements IUpdateCriteria {
+                    public function saveCriteria(int $project_id, array $criteria): void
+                    {
+                    }
+                },
+            ])->getMock();
 
         $update->method('checkCsrfToken');
 
@@ -230,8 +231,8 @@ final class UpdateSearchViewTest extends TestCase
             self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
         }
 
-        assertFalse($assertions->columns);
-        assertEquals(
+        self::assertFalse($assertions->columns);
+        self::assertEquals(
             [
                 [
                     'level' => 'error',
@@ -251,34 +252,35 @@ final class UpdateSearchViewTest extends TestCase
         $assertions           = new \stdClass();
         $assertions->criteria = false;
 
-        $update = $this->createPartialMock(UpdateSearchView::class, ['checkCsrfToken']);
-        $update->__construct(
-            new class ($project) implements IExtractProjectFromVariables {
-                public function __construct(private $project)
-                {
-                }
+        $update = $this->getMockBuilder(UpdateSearchView::class)
+            ->onlyMethods(['checkCsrfToken'])
+            ->setConstructorArgs([
+                new class ($project) implements IExtractProjectFromVariables {
+                    public function __construct(private \Project $project)
+                    {
+                    }
 
-                public function getProject(array $variables): \Project
-                {
-                    return $this->project;
-                }
-            },
-            new class implements IUpdateColumns {
-                public function saveColumns(int $project_id, array $columns): void
-                {
-                }
-            },
-            new class ($assertions) implements IUpdateCriteria {
-                public function __construct(private $assertions)
-                {
-                }
+                    public function getProject(array $variables): \Project
+                    {
+                        return $this->project;
+                    }
+                },
+                new class implements IUpdateColumns {
+                    public function saveColumns(int $project_id, array $columns): void
+                    {
+                    }
+                },
+                new class ($assertions) implements IUpdateCriteria {
+                    public function __construct(private object $assertions)
+                    {
+                    }
 
-                public function saveCriteria(int $project_id, array $criteria): void
-                {
-                    $this->assertions->criteria = true;
-                }
-            }
-        );
+                    public function saveCriteria(int $project_id, array $criteria): void
+                    {
+                        $this->assertions->criteria = true;
+                    }
+                },
+            ])->getMock();
 
         $update->method('checkCsrfToken');
 
@@ -297,8 +299,8 @@ final class UpdateSearchViewTest extends TestCase
             self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
         }
 
-        assertFalse($assertions->criteria);
-        assertEquals(
+        self::assertFalse($assertions->criteria);
+        self::assertEquals(
             [
                 [
                     'level' => 'error',
