@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAssetCollection;
@@ -2680,10 +2679,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
 
-        $where_statement = EasyStatement::open()
-            ->in('c.id IN (?*)', explode(',', $matching_ids['last_changeset_id']));
+        // Due to MySQL limitation of number of parameters in a prepared statements, we have to manually quote the ids
+        // Using EasyStatement::in() on a tracker with lot of artifacts (> 65k) will generate a fatal error
+        $matching_changeset_ids = implode(',', array_map(static fn ($id) => $dao->quote($id), explode(',', $matching_ids['last_changeset_id'])));
 
-        $where = "WHERE $where_statement";
+        $where = "WHERE c.id IN ($matching_changeset_ids)";
 
         $sys_server_join = $this->getNumberServerJoin();
 
@@ -2706,7 +2706,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $query .= $limit;
 
-        $results = $dao->safeQuery($query, array_merge($where_statement->values(), [$offset, $this->chunksz]));
+        $results = $dao->safeQuery($query, [$offset, $this->chunksz]);
 
         $matching_ids_from_result                      = [];
         $matching_ids_from_result["last_changeset_id"] = "";
