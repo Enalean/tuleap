@@ -112,7 +112,6 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator            = new InitialChangesetCreator(
             $fields_validator,
             $fields_retriever,
-            \Mockery::spy(\EventManager::class),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->factory),
             new \Psr\Log\NullLogger(),
             $this->changeset_saver,
@@ -121,7 +120,7 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $fields_retriever
             ),
             $workflow_retriever,
-            new InitialChangesetValueSaver()
+            new InitialChangesetValueSaver(),
         );
 
         return $creator->create(

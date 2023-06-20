@@ -18,11 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Creation;
 
 use DataAccessException;
 use DataAccessQueryException;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -36,6 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -49,45 +53,18 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
  */
 class TrackerArtifactCreator
 {
-    /** @var Tracker_ArtifactDao */
-    private $artifact_dao;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var Tracker_Artifact_Changeset_FieldsValidator */
-    private $fields_validator;
-
-    /** @var CreateInitialChangeset */
-    private $changeset_creator;
-    /**
-     * @var VisitRecorder
-     */
-    private $visit_recorder;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
+    private Tracker_ArtifactDao $artifact_dao;
 
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        CreateInitialChangeset $changeset_creator,
-        VisitRecorder $visit_recorder,
-        \Psr\Log\LoggerInterface $logger,
-        DBTransactionExecutor $db_transaction_executor,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
+        private readonly CreateInitialChangeset $changeset_creator,
+        private readonly VisitRecorder $visit_recorder,
+        private readonly \Psr\Log\LoggerInterface $logger,
+        private readonly DBTransactionExecutor $db_transaction_executor,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
-        $this->artifact_dao            = $artifact_factory->getDao();
-        $this->artifact_factory        = $artifact_factory;
-        $this->fields_validator        = $fields_validator;
-        $this->changeset_creator       = $changeset_creator;
-        $this->visit_recorder          = $visit_recorder;
-        $this->logger                  = $logger;
-        $this->db_transaction_executor = $db_transaction_executor;
+        $this->artifact_dao = $artifact_factory->getDao();
     }
 
     public static function build(
@@ -102,6 +79,7 @@ class TrackerArtifactCreator
             new VisitRecorder(new RecentlyVisitedDao()),
             $logger,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            \EventManager::instance(),
         );
     }
 
@@ -111,7 +89,7 @@ class TrackerArtifactCreator
      */
     public function createBare(Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact
     {
-        $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
+        $artifact = $this->getBareArtifact($tracker, $submitted_on, (int) $user->getId(), 0);
         $success  = $this->insertArtifact($tracker, $user, $artifact, $submitted_on);
         if (! $success) {
             return null;
@@ -195,6 +173,10 @@ class TrackerArtifactCreator
 
         $changeset = $this->createNewChangeset($changeset_id, $artifact, $user);
 
+        $this->event_dispatcher->dispatch(
+            new ArtifactCreated($artifact, $changeset, $user)
+        );
+
         if (! $tracker_import_config->isFromXml()) {
             $changeset->executePostCreationActions($send_notification);
         }
@@ -211,7 +193,7 @@ class TrackerArtifactCreator
         bool $should_visit_be_recorded,
         ChangesetValidationContext $context,
     ): ?Artifact {
-        $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
+        $artifact = $this->getBareArtifact($tracker, $submitted_on, (int) $user->getId(), 0);
 
         if (! $this->fields_validator->validate($artifact, $user, $fields_data, $context)) {
             $this->logger->debug(

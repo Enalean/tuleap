@@ -83,7 +83,6 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             new InitialChangesetCreator(
                 $fields_validator,
                 $fields_retriever,
-                $event_manager,
                 $field_initializator,
                 $logger,
                 $artifact_changeset_saver,

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use EventManager;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
@@ -33,7 +32,6 @@ use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\SaveInitialChangesetValue;
-use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -47,7 +45,6 @@ final class InitialChangesetCreator implements CreateInitialChangeset
     public function __construct(
         private Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        private EventManager $event_manager,
         private Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         private LoggerInterface $logger,
         private ArtifactChangesetSaver $artifact_changeset_saver,
@@ -121,8 +118,6 @@ final class InitialChangesetCreator implements CreateInitialChangeset
         );
 
         $artifact->clearChangesets();
-
-        $this->event_manager->processEvent(new ArtifactCreated($artifact, $changeset, $submitter));
 
         return $changeset_id;
     }
