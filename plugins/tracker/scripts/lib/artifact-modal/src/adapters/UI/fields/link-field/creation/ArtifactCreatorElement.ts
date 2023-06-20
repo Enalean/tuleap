@@ -190,6 +190,7 @@ const initListPicker = (
     listPicker = createListPicker(select_element, {
         locale: controller.getUserLocale(),
         placeholder: getProjectTrackersListPickerPlaceholder(),
+        is_filterable: true,
         items_template_formatter: (html, value_id, option_label) => {
             const current_tracker = host.trackers.find(
                 (tracker) => Number(value_id) === tracker.id
