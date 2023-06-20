@@ -1309,6 +1309,14 @@ msgstr "Les valeurs finies ont été supprimées avec succès."
 msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
 
+#, php-format
+msgid ""
+"Double negative like `%s` or `%s` is not supported. Please use simpler form "
+"like `%s` or `%s`"
+msgstr ""
+"La double négation comme `%s` ou `%s` n'est pas supportée. Merci d'utiliser "
+"la forme simple comme `%s` ou `%s`"
+
 msgid "Duplicate this artifact"
 msgstr "Dupliquer cet artéfact"
 

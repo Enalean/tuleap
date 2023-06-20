@@ -38,6 +38,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerEqualCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerNotEqualCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
@@ -63,8 +67,9 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
  * @template-implements TermVisitor<InvalidComparisonCollectorParameters, void>
+ * @template-implements LinkConditionVisitor<InvalidComparisonCollectorParameters, void>
  */
-final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
+final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, LinkConditionVisitor
 {
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;
@@ -291,9 +296,12 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         $this->visitRelationshipCondition($condition, $parameters);
     }
 
-    public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
+    public function visitWithoutReverseLink(WithoutReverseLink $term, $parameters)
     {
-        $this->visitRelationshipCondition($condition, $parameters);
+        $this->visitRelationshipCondition($term, $parameters);
+        if ($term->condition) {
+            $term->condition->accept($this, $parameters);
+        }
     }
 
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
@@ -301,9 +309,12 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         $this->visitRelationshipCondition($condition, $parameters);
     }
 
-    public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
+    public function visitWithoutForwardLink(WithoutForwardLink $term, $parameters)
     {
-        $this->visitRelationshipCondition($condition, $parameters);
+        $this->visitRelationshipCondition($term, $parameters);
+        if ($term->condition) {
+            $term->condition->accept($this, $parameters);
+        }
     }
 
     private function visitRelationshipCondition(
@@ -315,5 +326,28 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
         } catch (InvalidArtifactLinkTypeException $exception) {
             $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError($exception->getMessage());
         }
+    }
+
+    public function visitLinkArtifactCondition(LinkArtifactCondition $condition, $parameters)
+    {
+        // It's always ok
+    }
+
+    public function visitLinkTrackerEqualCondition(LinkTrackerEqualCondition $condition, $parameters)
+    {
+        // It's always ok
+    }
+
+    public function visitLinkTrackerNotEqualCondition(LinkTrackerNotEqualCondition $condition, $parameters)
+    {
+        $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError(
+            sprintf(
+                dgettext('tuleap-tracker', 'Double negative like `%s` or `%s` is not supported. Please use simpler form like `%s` or `%s`'),
+                'IS NOT LINKED ... TRACKER != ...',
+                'WITHOUT ... TRACKER != ...',
+                'IS LINKED ... TRACKER = ...',
+                'WITH ... TRACKER = ...',
+            )
+        );
     }
 }

@@ -138,8 +138,16 @@ LinkArtifactCondition = "artifact"i _ "=" _ id:$[0-9]+ {
         return new LinkArtifactCondition($id);
     }
 
-LinkTrackerCondition = "tracker"i _ "=" _ tracker:String {
-        return new LinkTrackerCondition((string) $tracker->getValue());
+LinkTrackerCondition
+    = LinkTrackerEqualCondition
+        / LinkTrackerNotEqualCondition
+
+LinkTrackerEqualCondition = "tracker"i _ "=" _ tracker:String {
+        return new LinkTrackerEqualCondition((string) $tracker->getValue());
+    }
+
+LinkTrackerNotEqualCondition = "tracker"i _ "!=" _ tracker:String {
+        return new LinkTrackerNotEqualCondition((string) $tracker->getValue());
     }
 
 WithChildren = "with"i _ Children _ condition:LinkCondition? {

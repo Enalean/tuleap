@@ -25,7 +25,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkConditionVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerEqualCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkTrackerNotEqualCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -129,7 +130,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
         );
     }
 
-    public function visitLinkTrackerCondition(LinkTrackerCondition $condition, $parameters)
+    public function visitLinkTrackerEqualCondition(LinkTrackerEqualCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
 
@@ -151,6 +152,39 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                 INNER JOIN tracker AS T_$suffix
                     ON (T_$suffix.id = TCA_$suffix.tracker_id AND
                         T_$suffix.item_name = ?
+                    )
+            WHERE TCVAL_$suffix.artifact_id = artifact.id
+                $type_condition
+            LIMIT 1",
+            [
+                $condition->tracker_name,
+                ...$params,
+            ],
+        );
+    }
+
+    public function visitLinkTrackerNotEqualCondition(LinkTrackerNotEqualCondition $condition, $parameters)
+    {
+        $suffix = $parameters->suffix;
+
+        $type_condition = '';
+        $params         = [];
+        if ($parameters->link_type !== null) {
+            $type_condition = "AND TCVAL_$suffix.nature = ?";
+            $params[]       = $parameters->link_type;
+        }
+
+        return new ParametrizedSQLFragment(
+            "SELECT 1
+            FROM
+                tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                INNER JOIN tracker_changeset_value AS TCV_$suffix
+                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                INNER JOIN tracker_artifact AS TCA_$suffix
+                    ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
+                INNER JOIN tracker AS T_$suffix
+                    ON (T_$suffix.id = TCA_$suffix.tracker_id AND
+                        T_$suffix.item_name != ?
                     )
             WHERE TCVAL_$suffix.artifact_id = artifact.id
                 $type_condition

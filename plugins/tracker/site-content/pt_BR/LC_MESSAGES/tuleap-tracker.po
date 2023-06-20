@@ -1148,6 +1148,12 @@ msgstr ""
 msgid "Done values successfully updated."
 msgstr ""
 
+#, php-format
+msgid ""
+"Double negative like `%s` or `%s` is not supported. Please use simpler form "
+"like `%s` or `%s`"
+msgstr ""
+
 msgid "Duplicate this artifact"
 msgstr ""
 
