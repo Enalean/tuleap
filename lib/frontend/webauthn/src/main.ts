@@ -35,7 +35,12 @@ export function openTargetModalIdAfterAuthentication(
     doc: Document,
     button_id: string
 ): Promise<Modal | null> {
+    const button = selectOrThrow(doc, `#${button_id}`, HTMLButtonElement);
+    button.disabled = true;
+
     return canUserDoWebAuthn().then((result) => {
+        button.disabled = false;
+
         if (!result) {
             return openTargetModalIdOnClick(doc, button_id);
         }
@@ -46,7 +51,6 @@ export function openTargetModalIdAfterAuthentication(
             doc.body.dataset.userLocale ?? "en_US"
         );
 
-        const button = selectOrThrow(doc, `#${button_id}`);
         const target_modal = getTargetModal(doc, button);
 
         const auth_modal = doc.createElement(AUTHENTICATION_MODAL_TAG);
