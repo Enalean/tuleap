@@ -46,6 +46,7 @@ export type ArtifactCreatorController = {
         event: WillDisableSubmit
     ): PromiseLike<readonly Tracker[]>;
     selectTracker(tracker_id: TrackerIdentifier): Option<TrackerIdentifier>;
+    clearTracker(): Option<TrackerIdentifier>;
     createArtifact(title: string, event: WillDisableSubmit): PromiseLike<Option<LinkableArtifact>>;
     enableSubmit(): void;
     getSelectedProject(): ProjectIdentifier;
@@ -122,6 +123,11 @@ export const ArtifactCreatorController = (
 
         selectTracker(tracker_id): Option<TrackerIdentifier> {
             selected_tracker = Option.fromValue(tracker_id);
+            return selected_tracker;
+        },
+
+        clearTracker(): Option<TrackerIdentifier> {
+            selected_tracker = Option.nothing();
             return selected_tracker;
         },
 

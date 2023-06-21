@@ -23,10 +23,11 @@ export const ProjectIdentifierProxy = {
         if (!(event.target instanceof HTMLSelectElement)) {
             return Option.nothing();
         }
-        const identifier: ProjectIdentifier = {
-            id: Number.parseInt(event.target.value, 10),
-            _type: "ProjectIdentifier",
-        };
+        const project_id = Number.parseInt(event.target.value, 10);
+        if (Number.isNaN(project_id)) {
+            return Option.nothing();
+        }
+        const identifier: ProjectIdentifier = { id: project_id, _type: "ProjectIdentifier" };
         return Option.fromValue(identifier);
     },
 };

@@ -25,10 +25,11 @@ export const TrackerIdentifierProxy = {
         if (!(event.target instanceof HTMLSelectElement)) {
             return Option.nothing();
         }
-        const identifier: TrackerIdentifier = {
-            id: Number.parseInt(event.target.value, 10),
-            _type: "TrackerIdentifier",
-        };
+        const tracker_id = Number.parseInt(event.target.value, 10);
+        if (Number.isNaN(tracker_id)) {
+            return Option.nothing();
+        }
+        const identifier: TrackerIdentifier = { id: tracker_id, _type: "TrackerIdentifier" };
         return Option.fromValue(identifier);
     },
 };

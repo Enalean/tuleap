@@ -22,32 +22,39 @@ import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier"
 import type { Option } from "@tuleap/option";
 
 describe("ProjectIdentifierProxy", () => {
-    let project_identifier: Option<ProjectIdentifier>, doc: Document;
+    let project_identifier: Option<ProjectIdentifier>, doc: Document, option: string;
     const PROJECT_ID = 110;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+        option = `<option selected value="${PROJECT_ID}"></option>`;
     });
 
     const triggerEvent = (): void => {
         const select = doc.createElement("select");
-        select.insertAdjacentHTML(`afterbegin`, `<option selected value="${PROJECT_ID}"></option>`);
+        select.insertAdjacentHTML("afterbegin", option);
         select.addEventListener("change", (event) => {
             project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
         });
         select.dispatchEvent(new Event("change"));
     };
 
-    it("build from the change event on project select", () => {
+    it("builds from the change event on project select", () => {
         triggerEvent();
         expect(project_identifier.unwrapOr(null)?.id).toBe(PROJECT_ID);
     });
 
-    it("build nothing if the element is not a select", () => {
+    it("builds nothing if the element is not a select", () => {
         const input = doc.createElement("input");
         input.addEventListener("change", (event) => {
             project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
         });
         input.dispatchEvent(new Event("change"));
+        expect(project_identifier.isNothing()).toBe(true);
+    });
+
+    it(`builds nothing when the option's value is empty`, () => {
+        option = `<option value=""></option>`;
+        triggerEvent();
         expect(project_identifier.isNothing()).toBe(true);
     });
 });

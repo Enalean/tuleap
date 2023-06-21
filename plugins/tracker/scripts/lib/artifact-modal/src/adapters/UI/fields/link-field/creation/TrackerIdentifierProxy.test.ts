@@ -22,15 +22,16 @@ import type { TrackerIdentifier } from "../../../../../domain/TrackerIdentifier"
 import { TrackerIdentifierProxy } from "./TrackerIdentifierProxy";
 
 describe(`TrackerIdentifierProxy`, () => {
-    let doc: Document, tracker_identifier: Option<TrackerIdentifier>;
+    let doc: Document, tracker_identifier: Option<TrackerIdentifier>, option: string;
     const TRACKER_ID = 97;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+        option = `<option selected value="${TRACKER_ID}"></option>`;
     });
 
     const triggerEvent = (): void => {
         const select = doc.createElement("select");
-        select.insertAdjacentHTML(`afterbegin`, `<option selected value="${TRACKER_ID}"></option>`);
+        select.insertAdjacentHTML("afterbegin", option);
         select.addEventListener("change", (event) => {
             tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
         });
@@ -48,6 +49,12 @@ describe(`TrackerIdentifierProxy`, () => {
             tracker_identifier = TrackerIdentifierProxy.fromChangeEvent(event);
         });
         input.dispatchEvent(new Event("change"));
+        expect(tracker_identifier.isNothing()).toBe(true);
+    });
+
+    it(`builds nothing when the option's value is empty`, () => {
+        option = `<option value=""></option>`;
+        triggerEvent();
         expect(tracker_identifier.isNothing()).toBe(true);
     });
 });

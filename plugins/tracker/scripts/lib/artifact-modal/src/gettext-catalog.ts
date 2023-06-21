@@ -155,5 +155,3 @@ export const getProjectTrackersListPickerPlaceholder = (): string =>
     gettextCatalog.getString("Select the tracker");
 export const getSubmitDisabledForLinkableArtifactCreationReason = (): string =>
     gettextCatalog.getString("New artifact to link is being created");
-export const getNoTrackerSelectedErrorMessage = (): string =>
-    gettextCatalog.getString("No tracker selected, please choose one");
