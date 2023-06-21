@@ -67,6 +67,7 @@ document.observe("dom:loaded", function () {
                 Event.stop(evt);
                 return false;
             });
+        link.dataset.test = "add-new-rule";
         add.update(link);
         add.next().hide();
     });

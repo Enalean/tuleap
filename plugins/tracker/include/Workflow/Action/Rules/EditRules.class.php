@@ -240,12 +240,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         echo '<div class="workflow_rules">';
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<p class="help">' . dgettext('tuleap-tracker', 'Those rules will be applied on each creation/update of artifacts.') . '</p>';
-        echo '<form method="post" action="' . $this->url_query . '">';
+        echo '<form method="post" data-test="global-rules-form" action="' . $this->url_query . '">';
         // CSRF Protection
         echo $this->token->fetchHTMLInput();
         $this->displayRules();
         $this->displayAdd();
-        echo '<p><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
+        echo '<p><input type="submit" data-test="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
         echo '</form>';
         echo '</div>';
         $this->displayFooter($layout);
@@ -261,7 +261,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
             $name_prefix = self::PARAMETER_UPDATE_RULES . '[' . $rule->getId() . ']';
             echo '<tr>';
             echo '<td>';
-            echo '<div class="workflow_rule">';
+            echo '<div class="workflow_rule" data-test="global-rule">';
             $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_SOURCE_FIELD . ']', $rule->getSourceField()->getId());
             $this->displayComparatorSelector($name_prefix . '[' . self::PARAMETER_COMPARATOR . ']', $rule->getComparator());
             $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_TARGET_FIELD . ']', $rule->getTargetField()->getId());
