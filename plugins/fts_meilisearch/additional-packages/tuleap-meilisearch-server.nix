@@ -14,12 +14,12 @@ let
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";
-    version = "1.0.2";
+    version = "1.2.0";
     src = pkgs.fetchFromGitHub {
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      hash = "sha256-2HfwNoluPPOOAdCaqUVaZcAd8M2naPYAsphZO1Inefg=";
+      hash = "sha256-j+tz47dQFyKy51UAzFOc2YkAeYDUdsiteenC38cWrLI=";
     };
     cargoDeps = pkgs.rustPlatform.importCargoLock {
       lockFile = "${src.out}/Cargo.lock";
@@ -33,7 +33,7 @@ let
 
     buildPhase = ''
       runHook preBuild
-      HOME="$TMPDIR" CC="zigcc" cargo build --release --no-default-features --target ${buildTargetRust}
+      HOME="$TMPDIR" CC="zigcc" cargo build --release --package=meilisearch --no-default-features --target ${buildTargetRust}
       runHook postBuild
     '';
 
