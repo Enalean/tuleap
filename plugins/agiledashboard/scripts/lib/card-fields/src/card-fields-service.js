@@ -1,12 +1,11 @@
-import moment from "moment";
+import { html } from "hybrids";
+import { highlightFilterElements } from "./highlight-filter-template";
 
 export default CardFieldsService;
 
-CardFieldsService.$inject = ["$sce", "$filter"];
+CardFieldsService.$inject = ["$sce"];
 
-function CardFieldsService($sce, $filter) {
-    const highlight = $filter("tuleapHighlight");
-
+function CardFieldsService($sce) {
     return {
         cardFieldIsSimpleValue,
         cardFieldIsList,
@@ -18,7 +17,6 @@ function CardFieldsService($sce, $filter) {
         cardFieldIsPermissions,
         cardFieldIsUser,
         cardFieldIsComputed,
-        getCardFieldDateValue,
         getCardFieldListValues,
         getCardFieldFileValue,
         getCardFieldPermissionsValue,
@@ -99,35 +97,35 @@ function CardFieldsService($sce, $filter) {
             } else if (value.tlp_color) {
                 return getValueRenderedWithTlpColor(value, filter_terms);
             } else if (value.avatar_url) {
-                return getCardFieldUserValue(value, filter_terms);
+                return getCardFieldUserValueTemplate(value, filter_terms);
             }
 
-            return highlight(value.label, filter_terms);
+            return highlightFilterElements(value.label, filter_terms);
         }
 
         function getValueRenderedWithColor(value, filter_terms) {
             const r = parseInt(value.color.r, 10);
             const g = parseInt(value.color.g, 10);
             const b = parseInt(value.color.b, 10);
-            const color = $sce.getTrustedHtml(`<span class="extra-card-field-color"
-                style="background: rgb(${r}, ${g}, ${b})"></span>`);
 
-            return color + highlight(value.label, filter_terms);
+            const styles = {
+                background: `rgb(${r}, ${g}, ${b})`,
+            };
+
+            return html`<span class="extra-card-field-color" style="${styles}"></span
+                >${highlightFilterElements(value.label, filter_terms)}`;
         }
 
         function getValueRenderedWithTlpColor({ label, tlp_color }, filter_terms) {
-            const color = $sce.getTrustedHtml(
-                `<span class="extra-card-field-color card-field-${tlp_color}"></span>`
-            );
+            const classlist = ["extra-card-field-color", `card-field-${tlp_color}`];
 
-            return color + highlight(label, filter_terms);
+            return html`<span class="${classlist}"></span>${highlightFilterElements(
+                    label,
+                    filter_terms
+                )}`;
         }
 
-        return $sce.trustAsHtml(values.map(getValueRendered).join(", "));
-    }
-
-    function getCardFieldDateValue(value) {
-        return moment(value).fromNow();
+        return getHTMLStringFromTemplate(renderListItems(values, getValueRendered));
     }
 
     function getCardFieldFileValue(artifact_id, field_id, file_descriptions, filter_terms) {
@@ -141,41 +139,64 @@ function CardFieldsService($sce, $filter) {
         }
 
         function getFileLink(file) {
-            var file_name = highlight(file.name, filter_terms);
-
-            return (
-                '<a data-nodrag="true" href="' +
-                getFileUrl(file) +
-                '" title="' +
-                file.description +
-                '"><i class="fas fa-paperclip extra-card-field-file-icon"></i>' +
-                file_name +
-                "</a>"
-            );
+            const file_display = html`<i class="fas fa-paperclip extra-card-field-file-icon"></i
+                >${highlightFilterElements(file.name, filter_terms)}`;
+            return html`<a data-nodrag="true" href="${getFileUrl(file)}" title="${file.description}"
+                >${file_display}</a
+            >`;
         }
 
-        return file_descriptions.map(getFileLink).join(", ");
+        return getHTMLStringFromTemplate(renderListItems(file_descriptions, getFileLink));
     }
 
-    function getCardFieldPermissionsValue(values) {
-        return values.join(", ");
+    function getCardFieldPermissionsValue(values, filter_terms) {
+        return getHTMLStringFromTemplate(
+            renderListItems(
+                values,
+                (value) => html`${highlightFilterElements(value, filter_terms)}`
+            )
+        );
+    }
+
+    function getCardFieldUserValueTemplate(value, filter_terms) {
+        const display_name = highlightFilterElements(value.display_name, filter_terms);
+        if (value.user_url === null) {
+            return html`<div class="tlp-avatar-mini"></div>
+                <span>${display_name}</span>`;
+        }
+
+        return html`<a data-nodrag="true" class="extra-card-field-user" href="${value.user_url}">
+            <div class="tlp-avatar-mini"><img loading="lazy" src="${value.avatar_url}" /></div>
+            <span>${display_name}</span>
+        </a>`;
     }
 
     function getCardFieldUserValue(value, filter_terms) {
-        let display_name;
-
-        if (value.user_url === null) {
-            display_name = highlight(value.display_name, filter_terms);
-            return `<div class="tlp-avatar-mini"> </div><span>${display_name}</span>`;
-        }
-
-        display_name = highlight(value.display_name, filter_terms);
-        return `<a data-nodrag="true" class="extra-card-field-user" href="${value.user_url}">
-                            <div class="tlp-avatar-mini"><img src="${value.avatar_url}" /></div><span>${display_name}</span>
-                        </a>`;
+        return getHTMLStringFromTemplate(getCardFieldUserValueTemplate(value, filter_terms));
     }
 
     function isListBoundToAValueDifferentFromNone(values) {
         return values.find((value) => value.id !== null);
+    }
+
+    function renderListItems(items, render_item) {
+        let templated_content = html``;
+
+        for (const [i, file] of items.entries()) {
+            if (i === 0) {
+                templated_content = render_item(file);
+            } else {
+                templated_content = html`${templated_content}, ${render_item(file)}`;
+            }
+        }
+
+        return templated_content;
+    }
+
+    function getHTMLStringFromTemplate(template) {
+        const element = document.createElement("div");
+        template({}, element);
+
+        return $sce.trustAsHtml(element.innerHTML);
     }
 }

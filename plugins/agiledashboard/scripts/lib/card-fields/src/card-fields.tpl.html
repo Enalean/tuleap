@@ -62,7 +62,7 @@
                 ng-if="card_ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
-            <span ng-bind-html="card_ctrl.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:card_ctrl.filter_terms"></span>
+            <span ng-bind-html="card_ctrl.getCardFieldPermissionsValue(card_field.granted_groups, card_ctrl.filter_terms)"></span>
         </div>
         <div
                 class="extra-card-field-content"

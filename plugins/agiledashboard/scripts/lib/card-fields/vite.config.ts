@@ -27,12 +27,11 @@ export default vite.defineLibConfig({
             name: "PluginAgileDashboardCardFields",
         },
         rollupOptions: {
-            external: ["angular", "angular-sanitize", "moment"],
+            external: ["angular", "hybrids"],
             output: {
                 globals: {
                     angular: "angular",
-                    "angular-sanitize": "angular-sanitize",
-                    moment: "moment",
+                    hybrids: "hybrids",
                 },
             },
         },
