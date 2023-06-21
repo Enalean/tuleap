@@ -159,6 +159,15 @@ describe(`ArtifactCreatorController`, () => {
 
             expect(controller.getSelectedTracker().isNothing()).toBe(true);
         });
+
+        it(`after calling clearTracker(), it will clear the selected tracker`, () => {
+            const controller = getController();
+
+            const selected_tracker = controller.clearTracker();
+
+            expect(selected_tracker.isNothing()).toBe(true);
+            expect(controller.getSelectedTracker()).toBe(selected_tracker);
+        });
     });
 
     describe(`getProjects()`, () => {

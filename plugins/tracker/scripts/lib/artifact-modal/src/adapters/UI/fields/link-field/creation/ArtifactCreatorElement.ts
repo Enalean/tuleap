@@ -28,7 +28,6 @@ import {
     getArtifactFeedbackShowMoreLabel,
     getCancelArtifactCreationLabel,
     getCreateArtifactButtonInCreatorLabel,
-    getNoTrackerSelectedErrorMessage,
     getProjectTrackersListPickerPlaceholder,
     getSubmitDisabledForLinkableArtifactCreationReason,
     getSubmitDisabledForProjectsAndTrackersReason,
@@ -164,9 +163,9 @@ const getTrackersOptions = (
     );
 
 export const onProjectChange = (host: InternalArtifactCreator, event: Event): void => {
-    host.is_loading = true;
-    ProjectIdentifierProxy.fromChangeEvent(event).apply((project_identifier) =>
-        host.controller
+    ProjectIdentifierProxy.fromChangeEvent(event).apply((project_identifier) => {
+        host.is_loading = true;
+        return host.controller
             .selectProjectAndGetItsTrackers(
                 project_identifier,
                 WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason())
@@ -176,36 +175,20 @@ export const onProjectChange = (host: InternalArtifactCreator, event: Event): vo
                 host.trackers = trackers;
                 host.selected_tracker = host.controller.getSelectedTracker();
                 host.is_loading = false;
-            })
-    );
-};
-
-export const onTrackerChange = (host: InternalArtifactCreator, event: Event): void => {
-    TrackerIdentifierProxy.fromChangeEvent(event).apply((tracker_id) => {
-        host.selected_tracker = host.controller.selectTracker(tracker_id);
+            });
     });
 };
 
-const CLEAR_SELECTION = -1;
-export const setSelectedTracker = (
-    host: InternalArtifactCreator,
-    new_value: Option<TrackerIdentifier> | undefined
-): Option<TrackerIdentifier> => {
-    if (!new_value) {
-        return Option.nothing();
-    }
-    new_value.match(
-        () => {
-            host.has_tracker_selection_error = false;
-            host.tracker_selectbox.setCustomValidity("");
+export const onTrackerChange = (host: InternalArtifactCreator, event: Event): void => {
+    host.has_tracker_selection_error = !host.tracker_selectbox.checkValidity();
+    TrackerIdentifierProxy.fromChangeEvent(event).match(
+        (tracker_id) => {
+            host.selected_tracker = host.controller.selectTracker(tracker_id);
         },
         () => {
-            host.has_tracker_selection_error = true;
-            host.tracker_selectbox.selectedIndex = CLEAR_SELECTION;
-            host.tracker_selectbox.setCustomValidity(getNoTrackerSelectedErrorMessage());
+            host.selected_tracker = host.controller.clearTracker();
         }
     );
-    return new_value;
 };
 
 type DisconnectFunction = () => void;
@@ -222,7 +205,7 @@ const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
         is_filterable: true,
         items_template_formatter: (html, value_id, option_label) => {
             const current_tracker = host.trackers.find(
-                (tracker) => Number(value_id) === tracker.id
+                (tracker) => Number.parseInt(value_id, 10) === tracker.id
             );
             if (!current_tracker) {
                 return html``;
@@ -295,7 +278,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     projects: { set: (host, new_value) => new_value ?? [] },
     trackers: { set: (host, new_value) => new_value ?? [] },
     selected_project: undefined,
-    selected_tracker: { set: setSelectedTracker },
+    selected_tracker: { set: (host, new_value) => new_value ?? Option.nothing() },
     artifact_title: "",
     project_selectbox: {
         get: (host) =>
@@ -348,10 +331,10 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                     >${getArtifactCreationProjectLabel()}
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
                                 ><select
-                                    required
                                     id="artifact-modal-link-creator-projects"
                                     onchange="${onProjectChange}"
                                 >
+                                    <option value=""></option>
                                     ${getProjectOptions(host)}
                                 </select>
                             </div>
@@ -364,9 +347,11 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                     >${getArtifactCreationTrackerLabel()}
                                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
                                 ><select
+                                    required
                                     id="artifact-modal-link-creator-trackers"
                                     onchange="${onTrackerChange}"
                                 >
+                                    <option value=""></option>
                                     ${getTrackersOptions(host)}
                                 </select>
                             </div>

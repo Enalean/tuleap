@@ -158,9 +158,6 @@ msgstr "Aucun parent possible trouvé"
 msgid "No result found"
 msgstr "Aucun résultat trouvé"
 
-msgid "No tracker selected, please choose one"
-msgstr "Aucun outil de suivi sélectionné, veuillez en choisir un"
-
 msgid "None"
 msgstr "Aucun"
 
