@@ -37,10 +37,12 @@
         </div>
     </div>
 
-    <labels-box class="pull-request-summary-labels-box"
-                pull-request-id="{{ ::summary_controller.pull_request.id }}"
-                project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
-    ></labels-box>
+    <tuleap-pull-request-labels-list
+        class="pull-request-labels-list"
+        ce-one-way
+        pull-request-id="{{ ::summary_controller.pull_request.id }}"
+        on-fetch-error="summary_controller.onFetchErrorCallback($event)"
+    ></tuleap-pull-request-labels-list>
 
     <span
         ng-if="::summary_controller.isAbandoned()"

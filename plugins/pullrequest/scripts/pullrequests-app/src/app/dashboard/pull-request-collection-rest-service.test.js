@@ -25,7 +25,7 @@ describe("PullRequestCollectionRestService -", function () {
             PullRequestCollectionRestService = _PullRequestCollectionRestService_;
         });
 
-        jest.spyOn(ErrorModalService, "showError").mockImplementation(() => {});
+        jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -91,7 +91,7 @@ describe("PullRequestCollectionRestService -", function () {
             );
             $httpBackend.flush();
 
-            await expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toStrictEqual({
                 results: pull_requests,
                 total: total_pull_requests,
             });
@@ -143,7 +143,7 @@ describe("PullRequestCollectionRestService -", function () {
             );
             $httpBackend.flush();
 
-            await expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toStrictEqual({
                 results: pull_requests,
                 total: total_pull_requests,
             });
@@ -164,7 +164,7 @@ describe("PullRequestCollectionRestService -", function () {
             await expect(promise).rejects.toMatchObject({
                 status: 403,
             });
-            expect(ErrorModalService.showError).toHaveBeenCalledWith(
+            expect(ErrorModalService.showErrorResponseMessage).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
@@ -226,7 +226,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                await expect(promise).resolves.toEqual(all_pull_requests);
+                await expect(promise).resolves.toStrictEqual(all_pull_requests);
                 expect(progress_callback).toHaveBeenCalledWith(first_pull_requests);
                 expect(progress_callback).toHaveBeenCalledWith(second_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
@@ -256,7 +256,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                await expect(promise).resolves.toEqual(all_pull_requests);
+                await expect(promise).resolves.toStrictEqual(all_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,
@@ -284,7 +284,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                await expect(promise).resolves.toEqual(all_pull_requests);
+                await expect(promise).resolves.toStrictEqual(all_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,

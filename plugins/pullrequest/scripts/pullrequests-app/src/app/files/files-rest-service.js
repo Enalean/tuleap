@@ -12,7 +12,7 @@ function FilesRestService($http, $q, ErrorModalService) {
             .get("/api/v1/pull_requests/" + pull_request_id + "/files")
             .then(({ data }) => data)
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

@@ -34,7 +34,7 @@ function ReviewersRestService($http, $q, ErrorModalService) {
         return $http
             .get("/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/reviewers")
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
             });
     }
 
@@ -44,7 +44,7 @@ function ReviewersRestService($http, $q, ErrorModalService) {
                 users: reviewer_representations,
             })
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
             });
     }
 
@@ -59,7 +59,7 @@ function ReviewersRestService($http, $q, ErrorModalService) {
                 return response;
             })
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
             });
     }
 }

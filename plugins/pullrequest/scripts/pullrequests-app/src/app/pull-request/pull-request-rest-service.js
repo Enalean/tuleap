@@ -20,7 +20,7 @@ function PullRequestRestService($http, $q, ErrorModalService) {
                 return response.data;
             })
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }
@@ -29,7 +29,7 @@ function PullRequestRestService($http, $q, ErrorModalService) {
         return $http
             .patch("/api/v1/pull_requests/" + pull_request_id, { status: status })
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }
@@ -41,7 +41,7 @@ function PullRequestRestService($http, $q, ErrorModalService) {
                 description: new_description,
             })
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

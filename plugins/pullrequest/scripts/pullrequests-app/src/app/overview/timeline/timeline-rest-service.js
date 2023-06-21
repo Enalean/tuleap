@@ -21,7 +21,7 @@ function TimelineRestService($http, $q, ErrorModalService) {
                     offset
             )
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }
@@ -38,7 +38,7 @@ function TimelineRestService($http, $q, ErrorModalService) {
                 return response.data;
             })
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

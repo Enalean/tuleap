@@ -20,7 +20,7 @@ function UserRestService($http, $q, ErrorModalService) {
                 return response.data;
             })
             .catch(function (response) {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }
@@ -30,7 +30,7 @@ function UserRestService($http, $q, ErrorModalService) {
             .get(`/api/v1/users/${user_id}/preferences`, { params: { key } })
             .then((response) => response.data)
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

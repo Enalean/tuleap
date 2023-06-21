@@ -50,7 +50,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
                 };
             })
             .catch(function (error) {
-                ErrorModalService.showError(error);
+                ErrorModalService.showErrorResponseMessage(error);
                 return $q.reject(error);
             });
     }

@@ -11,7 +11,7 @@ function CommitsRestService($http, $q, ErrorModalService) {
         return $http
             .get(`/api/v1/pull_requests/${pull_request_id}/commits?limit=${limit}&offset=${offset}`)
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

@@ -19,7 +19,7 @@ function FileDiffRestService($q, $http, ErrorModalService) {
             )
             .then(({ data }) => data)
             .catch((response) => {
-                ErrorModalService.showError(response);
+                ErrorModalService.showErrorResponseMessage(response);
                 return $q.reject(response);
             });
     }

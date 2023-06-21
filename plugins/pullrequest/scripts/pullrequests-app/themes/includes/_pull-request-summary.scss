@@ -54,18 +54,10 @@
     }
 }
 
-.pull-request-summary-labels-box {
-    display: inline-block;
-    margin: 0 0 0 var(--tlp-small-spacing);
-
-    // stylelint-disable-next-line selector-class-pattern
-    .select2.select2-container--disabled > .selection > .item-labels-box-select2 {
-        min-height: auto;
-        /* stylelint-disable-next-line selector-max-compound-selectors, selector-class-pattern */
-        > .select2-selection__rendered > .select2-selection__choice {
-            margin: 1px 3px;
-        }
-    }
+.pull-request-labels-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 .pull-request-summary-status {

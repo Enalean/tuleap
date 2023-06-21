@@ -41,7 +41,7 @@ describe("UserRestService -", function () {
             ErrorModalService = _ErrorModalService_;
         });
 
-        jest.spyOn(ErrorModalService, "showError").mockImplementation(() => {});
+        jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -69,7 +69,7 @@ describe("UserRestService -", function () {
             const promise = wrapPromise(UserRestService.getUser(user_id));
             $httpBackend.flush();
 
-            await expect(promise).resolves.toEqual(user);
+            await expect(promise).resolves.toStrictEqual(user);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async function () {
@@ -83,7 +83,7 @@ describe("UserRestService -", function () {
             await expect(promise).rejects.toMatchObject({
                 status: 403,
             });
-            expect(ErrorModalService.showError).toHaveBeenCalledWith(
+            expect(ErrorModalService.showErrorResponseMessage).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
@@ -108,7 +108,7 @@ describe("UserRestService -", function () {
             const promise = wrapPromise(UserRestService.getPreference(user_id, "preferred_color"));
             $httpBackend.flush();
 
-            await expect(promise).resolves.toEqual(preference);
+            await expect(promise).resolves.toStrictEqual(preference);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async () => {
@@ -124,7 +124,7 @@ describe("UserRestService -", function () {
             await expect(promise).rejects.toMatchObject({
                 status: 403,
             });
-            expect(ErrorModalService.showError).toHaveBeenCalledWith(
+            expect(ErrorModalService.showErrorResponseMessage).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
