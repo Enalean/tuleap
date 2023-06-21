@@ -31,7 +31,7 @@ export interface LogEntry {
 }
 
 export const getLogs = (item_id: number): ResultAsync<readonly LogEntry[], Fault> => {
-    return getAllJSON<readonly LogEntry[], LogEntry>(uri`/api/v1/docman_items/${item_id}/logs`, {
+    return getAllJSON<LogEntry>(uri`/api/v1/docman_items/${item_id}/logs`, {
         params: {
             limit: 50,
         },

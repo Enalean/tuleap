@@ -33,13 +33,13 @@ type GetAllLimitParameters = {
     readonly offset?: number;
 };
 
-export type GetAllCollectionCallback<TypeOfJSONPayload, TypeOfArrayItem> = (
+export type GetAllCollectionCallback<TypeOfArrayItem, TypeOfJSONPayload> = (
     json: TypeOfJSONPayload
 ) => ReadonlyArray<TypeOfArrayItem>;
 
-export type GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem> = {
+export type GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {
     readonly params?: AutoEncodedParameters & GetAllLimitParameters;
-    getCollectionCallback?: GetAllCollectionCallback<TypeOfJSONPayload, TypeOfArrayItem>;
+    getCollectionCallback?: GetAllCollectionCallback<TypeOfArrayItem, TypeOfJSONPayload>;
     readonly max_parallel_requests?: number;
 };
 
@@ -74,16 +74,16 @@ const flatten = <TypeOfArrayItem>(
         );
 
 export type GetAll = {
-    getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
+    getAllJSON<TypeOfArrayItem, TypeOfJSONPayload = ReadonlyArray<TypeOfArrayItem>>(
         uri: EncodedURI,
-        options?: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem>
+        options?: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload>
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
 
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
-    function getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
+    function getAllJSON<TypeOfArrayItem, TypeOfJSONPayload>(
         uri: EncodedURI,
-        options: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem> = {}
+        options: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {}
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> {
         const { params = {}, max_parallel_requests = 6 } = options;
         if (max_parallel_requests < 1) {

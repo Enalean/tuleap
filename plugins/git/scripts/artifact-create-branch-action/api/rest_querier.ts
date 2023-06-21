@@ -30,7 +30,7 @@ export const getProjectRepositories = (
     project_id: number,
     branch_name_preview: string
 ): ResultAsync<readonly GitRepository[], Fault> =>
-    getAllJSON<RecursiveGetProjectRepositories, GitRepository>(
+    getAllJSON<GitRepository, RecursiveGetProjectRepositories>(
         uri`/api/v1/projects/${project_id}/git`,
         {
             params: {

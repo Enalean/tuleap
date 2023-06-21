@@ -104,8 +104,8 @@ export const getJSON = buildGetJSON(response_retriever);
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
- * @template TypeOfJSONPayload
  * @template TypeOfArrayItem
+ * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {GetAllOptions=} options (optional) An object with a `params` key containing a list of URI
  * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.

@@ -41,22 +41,19 @@ export async function getFileVersionHistory(id: number): Promise<ReadonlyArray<F
 }
 
 export function getAllFileVersionHistory(id: number): ResultAsync<readonly FileHistory[], Fault> {
-    return getAllJSON<readonly FileHistory[], FileHistory>(uri`/api/docman_files/${id}/versions`);
+    return getAllJSON<FileHistory>(uri`/api/docman_files/${id}/versions`);
 }
 
 export function getAllEmbeddedFileVersionHistory(
     id: number
 ): ResultAsync<readonly EmbeddedFileVersion[], Fault> {
-    return getAllJSON<readonly EmbeddedFileVersion[], EmbeddedFileVersion>(
-        uri`/api/docman_embedded_files/${id}/versions`,
-        {
-            params: { limit: 50 },
-        }
-    );
+    return getAllJSON<EmbeddedFileVersion>(uri`/api/docman_embedded_files/${id}/versions`, {
+        params: { limit: 50 },
+    });
 }
 
 export function getAllLinkVersionHistory(id: number): ResultAsync<readonly LinkVersion[], Fault> {
-    return getAllJSON<readonly LinkVersion[], LinkVersion>(uri`/api/docman_links/${id}/versions`, {
+    return getAllJSON<LinkVersion>(uri`/api/docman_links/${id}/versions`, {
         params: { limit: 50 },
     });
 }

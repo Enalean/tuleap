@@ -208,7 +208,6 @@ describe(`TuleapAPIClient`, () => {
             expect(options).toStrictEqual({
                 params: {
                     limit: 50,
-                    offset: 0,
                     direction: FORWARD_DIRECTION,
                     nature: IS_CHILD_LINK_TYPE,
                 },
@@ -588,7 +587,7 @@ function getMockLinkedArtifactsRetrieval(
     recursiveGetSpy.mockImplementation(
         <TypeOfLinkedArtifact>(
             url: string,
-            options?: GetAllOptions<LinkedArtifactCollection, TypeOfLinkedArtifact>
+            options?: GetAllOptions<TypeOfLinkedArtifact, LinkedArtifactCollection>
         ): ResultAsync<readonly TypeOfLinkedArtifact[], Fault> => {
             if (!options || !options.getCollectionCallback) {
                 throw new Error("Unexpected options for getAllJSON");

@@ -333,12 +333,9 @@ function loadReportsAccordingToSelectedTracker(): void {
     reports_to_display.value = [];
     load_reports_error.value = null;
 
-    getAllJSON<ReportDefinition[], ReportDefinition>(
-        uri`/api/v1/trackers/${selected_tracker_id}/tracker_reports`,
-        {
-            params: { limit: 1000, offset: 0 },
-        }
-    )
+    getAllJSON<ReportDefinition>(uri`/api/v1/trackers/${selected_tracker_id}/tracker_reports`, {
+        params: { limit: 1000 },
+    })
         .map((reports: readonly ReportDefinition[]) =>
             reports.reduce((public_reports: ReportDefinition[], report) => {
                 if (report.is_public) {
