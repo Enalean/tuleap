@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Tracker\Action;
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 
 final class StaticListFieldVerifierTest extends TestCase
@@ -35,34 +38,29 @@ final class StaticListFieldVerifierTest extends TestCase
         $this->verifier = new StaticListFieldVerifier();
     }
 
-    public function testItIsNotASingleValueListWhenFieldTypeIsNotAList(): void
+    public function testItReturnsFalseWhenTheFieldIsNotAListField(): void
     {
         $field = TrackerFormElementStringFieldBuilder::aStringField(10)->build();
 
         self::assertFalse($this->verifier->isStaticListField($field));
     }
 
-    public function testItIsNotASingleValueWhenBindIsNotStatic(): void
+    public function testItReturnsFalseWhenTheFieldIsBoundToUsers(): void
     {
-        $field_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Users::class);
-        $field_bind->method('getType')->willReturn(\Tracker_FormElement_Field_List_Bind_Users::TYPE);
+        $user_bind = TrackerFormElementListUserBindBuilder::aBind()->withUsers([
+            UserTestBuilder::anActiveUser()->build(),
+        ])->build();
 
-        $field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $field->method('getBind')->willReturn($field_bind);
-        $field->method('isMultiple')->willReturn(false);
-
-        self::assertFalse($this->verifier->isStaticListField($field));
+        self::assertFalse($this->verifier->isStaticListField($user_bind->getField()));
     }
 
-    public function testItIsASingleListValue(): void
+    public function testItReturnsTrueWhenTheFieldIsBoundToStaticValues(): void
     {
-        $field_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $field_bind->method('getType')->willReturn(\Tracker_FormElement_Field_List_Bind_Static::TYPE);
+        $static_bind = TrackerFormElementListStaticBindBuilder::aBind()->withStaticValues([
+            1 => "Open",
+            2 => "Closed",
+        ])->build();
 
-        $field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $field->method('getBind')->willReturn($field_bind);
-        $field->method('isMultiple')->willReturn(false);
-
-        self::assertTrue($this->verifier->isStaticListField($field));
+        self::assertTrue($this->verifier->isStaticListField($static_bind->getField()));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,27 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\Action\CheckStaticFieldCanBeFullyMoved;
+use Tuleap\Tracker\Action\VerifyUserFieldsAreCompatible;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class CheckStaticFieldCanBeFullyMovedStub implements CheckStaticFieldCanBeFullyMoved
+final class VerifyUserFieldsAreCompatibleStub implements VerifyUserFieldsAreCompatible
 {
-    private function __construct(private bool $can_be_fully_moved)
+    private function __construct(private readonly bool $can_be_moved)
     {
     }
 
-    public static function withMovableField(): self
+    public static function withMovableUserListField(): self
     {
         return new self(true);
     }
 
-    public static function withoutMovableField(): self
+    public static function withoutMovableUserListField(): self
     {
         return new self(false);
     }
 
-    public function checkStaticFieldCanBeFullyMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact,): bool
+    public function areUserFieldsCompatible(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact,): bool
     {
-        return $this->can_be_fully_moved;
+        return $this->can_be_moved;
     }
 }

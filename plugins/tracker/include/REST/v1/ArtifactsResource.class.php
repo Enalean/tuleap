@@ -57,11 +57,12 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
+use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
-use Tuleap\Tracker\Action\FieldTypeCompatibilityChecker;
+use Tuleap\Tracker\Action\FieldCanBeEasilyMigratedVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
-use Tuleap\Tracker\Action\MovableStaticListFieldsChecker;
+use Tuleap\Tracker\Action\AreStaticListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
@@ -69,6 +70,9 @@ use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
+use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
+use Tuleap\Tracker\Action\AreUserFieldsCompatibleVerifier;
+use Tuleap\Tracker\Action\UserListFieldVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -1183,19 +1187,23 @@ class ArtifactsResource extends AuthenticatedResource
         $this->checkAccess();
         $user = $this->user_manager->getCurrentUser();
 
-        $user_finder                 = new XMLImportHelper($this->user_manager);
-        $movable_field_checker       = new MovableStaticListFieldsChecker();
-        $static_list_field_checker   = new StaticListFieldVerifier();
-        $field_compatibility_checker = new FieldTypeCompatibilityChecker($this->formelement_factory, $this->formelement_factory, $static_list_field_checker);
-        $fully_movable_field_checker = new \Tuleap\Tracker\Action\FullyMoveStaticFieldChecker(new FieldValueMatcher($user_finder));
-
         $collector = new DryRunDuckTypingFieldCollector(
             $this->formelement_factory,
             $this->formelement_factory,
-            $movable_field_checker,
-            $static_list_field_checker,
-            $field_compatibility_checker,
-            $fully_movable_field_checker
+            new FieldCanBeEasilyMigratedVerifier(
+                $this->formelement_factory,
+                $this->formelement_factory,
+            ),
+            new StaticListFieldVerifier(),
+            new AreStaticListFieldsCompatibleVerifier(),
+            new CanStaticFieldValuesBeFullyMovedVerifier(
+                new FieldValueMatcher(
+                    new XMLImportHelper($this->user_manager)
+                )
+            ),
+            new UserListFieldVerifier(),
+            new AreUserFieldsCompatibleVerifier(),
+            new CanUserFieldValuesBeFullyMovedVerifier($this->user_manager)
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);

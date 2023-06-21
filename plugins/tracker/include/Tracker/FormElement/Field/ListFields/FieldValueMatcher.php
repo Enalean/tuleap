@@ -24,7 +24,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, RetrieveMatchingValueByDuckTyping
+class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, RetrieveMatchingValueByDuckTyping, RetrieveMatchingUserValue
 {
     public function __construct(private readonly IFindUserFromXMLReference $user_finder)
     {

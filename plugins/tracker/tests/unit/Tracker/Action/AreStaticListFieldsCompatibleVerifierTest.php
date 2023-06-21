@@ -29,7 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class MovableStaticListFieldsCheckerTest extends TestCase
+final class AreStaticListFieldsCompatibleVerifierTest extends TestCase
 {
     private Tracker_FormElement_Field_List & Stub $source_field;
     private Tracker_FormElement_Field_List & Stub $target_field;
@@ -48,7 +48,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testReturnsFalseWhenCheckIsDoneOnANonStaticBind(): void
     {
-        $checker = new MovableStaticListFieldsChecker();
+        $verifier = new AreStaticListFieldsCompatibleVerifier();
 
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_UsersValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
@@ -57,7 +57,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
         $this->source_field->expects(self::once())->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
 
         self::assertFalse(
-            $checker->checkStaticFieldCanBeMoved(
+            $verifier->areStaticFieldsCompatible(
                 $this->source_field,
                 $this->target_field,
                 $this->artifact
@@ -67,7 +67,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testItReturnsFalseWhenSelectBoxesHaveNotTheSameMultiplicity(): void
     {
-        $checker = new MovableStaticListFieldsChecker();
+        $verifier = new AreStaticListFieldsCompatibleVerifier();
 
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
@@ -88,15 +88,15 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
         $target_single->method("isMultiple")->willReturn(false);
         $target_multiple->method("isMultiple")->willReturn(true);
 
-        self::assertFalse($checker->checkStaticFieldCanBeMoved($source_single, $target_multiple, $this->artifact));
-        self::assertFalse($checker->checkStaticFieldCanBeMoved($source_multiple, $target_single, $this->artifact));
-        self::assertTrue($checker->checkStaticFieldCanBeMoved($source_single, $target_single, $this->artifact));
-        self::assertTrue($checker->checkStaticFieldCanBeMoved($source_multiple, $target_multiple, $this->artifact));
+        self::assertFalse($verifier->areStaticFieldsCompatible($source_single, $target_multiple, $this->artifact));
+        self::assertFalse($verifier->areStaticFieldsCompatible($source_multiple, $target_single, $this->artifact));
+        self::assertTrue($verifier->areStaticFieldsCompatible($source_single, $target_single, $this->artifact));
+        self::assertTrue($verifier->areStaticFieldsCompatible($source_multiple, $target_multiple, $this->artifact));
     }
 
     public function testReturnsFalseWhenThereIsNoMatchingValueInDestinationTracker(): void
     {
-        $checker = new MovableStaticListFieldsChecker();
+        $verifier = new AreStaticListFieldsCompatibleVerifier();
 
         $last_changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $last_changeset_value->method('getListValues')->willReturn([]);
@@ -104,7 +104,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
         $this->source_field->expects(self::once())->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
 
         self::assertFalse(
-            $checker->checkStaticFieldCanBeMoved(
+            $verifier->areStaticFieldsCompatible(
                 $this->source_field,
                 $this->target_field,
                 $this->artifact
@@ -114,7 +114,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
 
     public function testReturnsTrueWhenBindIsStaticAndThereIsAMatchingValueInDestinationTracker(): void
     {
-        $checker = new MovableStaticListFieldsChecker();
+        $verifier = new AreStaticListFieldsCompatibleVerifier();
 
         $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
@@ -123,7 +123,7 @@ final class MovableStaticListFieldsCheckerTest extends TestCase
         $this->source_field->expects(self::once())->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
 
         self::assertTrue(
-            $checker->checkStaticFieldCanBeMoved(
+            $verifier->areStaticFieldsCompatible(
                 $this->source_field,
                 $this->target_field,
                 $this->artifact

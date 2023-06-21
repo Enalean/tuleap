@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
-final class FieldTypeCompatibilityChecker implements CheckFieldTypeCompatibility
+final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMigrated
 {
     private const STRING_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_STRING_TYPE, \Tracker_FormElementFactory::FIELD_TEXT_TYPE];
     private const NUMBER_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_FLOAT_TYPE, \Tracker_FormElementFactory::FIELD_INTEGER_TYPE];
@@ -41,31 +41,18 @@ final class FieldTypeCompatibilityChecker implements CheckFieldTypeCompatibility
     public function __construct(
         private readonly RetrieveFieldType $retrieve_source_field_type,
         private readonly RetrieveFieldType $retrieve_target_field_type,
-        private readonly VerifyIsStaticListField $check_is_single_list_field,
     ) {
     }
 
-    public function areTypesCompatible(
+    public function canFieldBeEasilyMigrated(
         \Tracker_FormElement_Field $target_field,
         \Tracker_FormElement_Field $source_field,
     ): bool {
-        if (
-            $this->check_is_single_list_field->isStaticListField($source_field) &&
-            $this->check_is_single_list_field->isStaticListField($target_field)
-        ) {
-            return true;
-        }
-
         $target_field_type = $this->retrieve_source_field_type->getType($target_field);
         $source_field_type = $this->retrieve_target_field_type->getType($source_field);
 
-        return (
-                in_array($source_field_type, self::STRING_TYPES_COMPATIBILITIES, true) &&
-                in_array($target_field_type, self::STRING_TYPES_COMPATIBILITIES, true)
-            ) || (
-                in_array($source_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true) &&
-                in_array($target_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true)
-            ) || $this->isAnEasilyMovableField($target_field_type, $source_field_type);
+        return $this->areTypesCompatible($source_field_type, $target_field_type) ||
+            $this->isAnEasilyMovableField($target_field_type, $source_field_type);
     }
 
     private function isAnEasilyMovableField(
@@ -73,5 +60,16 @@ final class FieldTypeCompatibilityChecker implements CheckFieldTypeCompatibility
         string $source_field_type,
     ): bool {
         return $source_field_type === $target_field_type && in_array($source_field_type, self::EASILY_MOVABLE_FIELDS, true);
+    }
+
+    private function areTypesCompatible(string $source_field_type, string $target_field_type): bool
+    {
+        return (
+                in_array($source_field_type, self::STRING_TYPES_COMPATIBILITIES, true) &&
+                in_array($target_field_type, self::STRING_TYPES_COMPATIBILITIES, true)
+            ) || (
+                in_array($source_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true) &&
+                in_array($target_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true)
+            );
     }
 }

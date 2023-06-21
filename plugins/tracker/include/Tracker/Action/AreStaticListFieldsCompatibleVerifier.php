@@ -18,15 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Action;
 
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Artifact\Artifact;
 
-interface CheckStaticListFieldsValueIsMovable
+final class AreStaticListFieldsCompatibleVerifier implements VerifyStaticListFieldsAreCompatible
 {
-    public function checkStaticFieldCanBeMoved(
+    public function areStaticFieldsCompatible(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
-    ): bool;
+    ): bool {
+        $last_changeset_value = $source_field->getLastChangesetValue($artifact);
+        if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
+            return false;
+        }
+
+        if (
+            ($source_field->isMultiple() && ! $target_field->isMultiple()) ||
+            (! $source_field->isMultiple() && $target_field->isMultiple())
+        ) {
+            return false;
+        }
+
+        $list_field_value = array_values($last_changeset_value->getListValues());
+        return (isset($list_field_value[0]) && $list_field_value[0] instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+    }
 }

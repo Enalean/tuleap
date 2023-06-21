@@ -22,27 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\Action\CheckStaticListFieldsValueIsMovable;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Action\VerifyIsUserListField;
 
-final class CheckStaticListFieldsValueIsMovableStub implements CheckStaticListFieldsValueIsMovable
+final class VerifyIsUserListFieldStub implements VerifyIsUserListField
 {
-    private function __construct(private readonly bool $can_value_be_moved)
+    private function __construct(private readonly bool $is_user_list_field)
     {
     }
 
-    public static function withMovableStaticValue(): self
+    public static function withUserListField(): self
     {
         return new self(true);
     }
 
-    public static function withNoMovableStaticValue(): self
+    public static function withoutUserListField(): self
     {
         return new self(false);
     }
 
-    public function checkStaticFieldCanBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact): bool
+    public function isUserListField(\Tracker_FormElement_Field $field): bool
     {
-        return $this->can_value_be_moved;
+        return $this->is_user_list_field;
     }
 }

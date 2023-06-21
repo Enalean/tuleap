@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Stub\VerifyIsStaticListFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
-final class FieldTypeCompatibilityCheckerTest extends TestCase
+final class FieldCanBeEasilyMigratedVerifierTest extends TestCase
 {
     /**
      * @testWith ["string", "text", true]
@@ -58,45 +57,10 @@ final class FieldTypeCompatibilityCheckerTest extends TestCase
         $source_field = $this->createStub(\Tracker_FormElement_Field::class);
         $target_field = $this->createStub(\Tracker_FormElement_Field::class);
 
-        $checker = new FieldTypeCompatibilityChecker(
+        $checker = new FieldCanBeEasilyMigratedVerifier(
             $source_type_retrieve,
             $target_type_retrieve,
-            VerifyIsStaticListFieldStub::withoutSingleStaticListField()
         );
-        self::assertSame($are_compatible, $checker->areTypesCompatible($source_field, $target_field));
-    }
-
-    public function testListFieldsTypesAreCompatibles(): void
-    {
-        $source_type_retrieve = RetrieveFieldTypeStub::withNoType();
-        $target_type_retrieve = RetrieveFieldTypeStub::withNoType();
-
-        $source_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $target_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-
-        $checker = new FieldTypeCompatibilityChecker(
-            $source_type_retrieve,
-            $target_type_retrieve,
-            VerifyIsStaticListFieldStub::withSingleStaticListField()
-        );
-
-        self::assertTrue($checker->areTypesCompatible($source_field, $target_field));
-    }
-
-    public function testListFieldsTypesAreNotCompatibles(): void
-    {
-        $source_type_retrieve = RetrieveFieldTypeStub::withType(\Tracker_FormElement_Field_List::class);
-        $target_type_retrieve = RetrieveFieldTypeStub::withType(\Tracker_FormElement_Field_List::class);
-
-        $source_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $target_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-
-        $checker = new FieldTypeCompatibilityChecker(
-            $source_type_retrieve,
-            $target_type_retrieve,
-            VerifyIsStaticListFieldStub::withoutSingleStaticListField()
-        );
-
-        self::assertFalse($checker->areTypesCompatible($source_field, $target_field));
+        self::assertSame($are_compatible, $checker->canFieldBeEasilyMigrated($source_field, $target_field));
     }
 }

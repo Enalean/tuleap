@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Action;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingBindValueByDuckTyping;
 
-final class FullyMoveStaticFieldChecker implements CheckStaticFieldCanBeFullyMoved
+final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFieldValuesCanBeFullyMoved
 {
     public function __construct(private readonly RetrieveMatchingBindValueByDuckTyping $retrieve_matching_bind_value_by_duck_typing)
     {
     }
 
-    public function checkStaticFieldCanBeFullyMoved(
+    public function canAllStaticFieldValuesBeMoved(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
