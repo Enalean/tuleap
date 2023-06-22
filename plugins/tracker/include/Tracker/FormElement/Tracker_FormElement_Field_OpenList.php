@@ -615,7 +615,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $statement = new ParametrizedSQLFragment('1', []);
                 if ($openvalues) {
                     $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $openvalues);
-                    $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in))", $in->values());
+                    $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in)", $in->values());
                 }
                 if ($bindvalues) {
                     $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $bindvalues);
@@ -653,6 +653,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function formatCriteriaValue($value_to_match)
     {
         return 'b' . $value_to_match;
+    }
+
+    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
+    {
+        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     /**
