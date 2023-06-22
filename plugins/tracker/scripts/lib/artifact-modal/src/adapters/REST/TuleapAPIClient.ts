@@ -118,18 +118,15 @@ export const TuleapAPIClient = (
         link_type: LinkType
     ): ResultAsync<readonly LinkedArtifact[], Fault> {
         const id = artifact_id.id;
-        return getAllJSON<LinkedArtifactCollection, LinkedArtifact>(
+        return getAllJSON<LinkedArtifact, LinkedArtifactCollection>(
             uri`/api/v1/artifacts/${id}/linked_artifacts`,
             {
                 params: {
                     limit: 50,
-                    offset: 0,
                     nature: link_type.shortname,
                     direction: link_type.direction,
                 },
-                getCollectionCallback: (
-                    payload: LinkedArtifactCollection
-                ): readonly LinkedArtifact[] =>
+                getCollectionCallback: (payload): readonly LinkedArtifact[] =>
                     payload.collection.map((artifact) =>
                         LinkedArtifactProxy.fromAPIArtifactAndType(artifact, link_type)
                     ),
@@ -139,10 +136,9 @@ export const TuleapAPIClient = (
 
     getPossibleParents(tracker_id): ResultAsync<readonly LinkableArtifact[], Fault> {
         const id = tracker_id.id;
-        return getAllJSON<readonly ArtifactWithStatus[], ArtifactWithStatus>(
-            uri`/api/v1/trackers/${id}/parent_artifacts`,
-            { params: { limit: 1000 } }
-        )
+        return getAllJSON<ArtifactWithStatus>(uri`/api/v1/trackers/${id}/parent_artifacts`, {
+            params: { limit: 1000 },
+        })
             .map((artifacts) => artifacts.map(LinkableArtifactProxy.fromAPIArtifact))
             .mapErr(PossibleParentsRetrievalFault);
     },
@@ -188,19 +184,17 @@ export const TuleapAPIClient = (
     },
 
     getComments(artifact_id, is_order_inverted): ResultAsync<readonly FollowUpComment[], Fault> {
-        return getAllJSON<
-            readonly ChangesetWithCommentRepresentation[],
-            ChangesetWithCommentRepresentation
-        >(uri`/api/v1/artifacts/${artifact_id.id}/changesets`, {
-            params: { limit: 50, fields: "comments", order: "asc" },
-        }).map((comments) => {
+        return getAllJSON<ChangesetWithCommentRepresentation>(
+            uri`/api/v1/artifacts/${artifact_id.id}/changesets`,
+            { params: { limit: 50, fields: "comments", order: "asc" } }
+        ).map((comments) => {
             const sorted_comments = is_order_inverted ? Array.from(comments).reverse() : comments;
             return sorted_comments.map(FollowUpCommentProxy.fromRepresentation);
         });
     },
 
     getProjects(): ResultAsync<readonly Project[], Fault> {
-        return getAllJSON<readonly ProjectResponse[], ProjectResponse>(uri`/api/projects`, {
+        return getAllJSON<ProjectResponse>(uri`/api/projects`, {
             params: { limit: 50 },
         }).map((projects) => projects.map(ProjectProxy.fromAPIProject));
     },
@@ -216,16 +210,16 @@ export const TuleapAPIClient = (
     },
 
     getTrackersByProject(project_id): ResultAsync<readonly Tracker[], Fault> {
-        return getAllJSON<
-            readonly TrackerResponseWithCannotCreateReason[],
-            TrackerResponseWithCannotCreateReason
-        >(uri`/api/projects/${project_id.id}/trackers`, {
-            params: {
-                limit: 50,
-                representation: MINIMAL_REPRESENTATION,
-                with_creation_semantic_check: SEMANTIC_TO_CHECK,
-            },
-        }).map((trackers) => trackers.map(TrackerProxy.fromAPIProject));
+        return getAllJSON<TrackerResponseWithCannotCreateReason>(
+            uri`/api/projects/${project_id.id}/trackers`,
+            {
+                params: {
+                    limit: 50,
+                    representation: MINIMAL_REPRESENTATION,
+                    with_creation_semantic_check: SEMANTIC_TO_CHECK,
+                },
+            }
+        ).map((trackers) => trackers.map(TrackerProxy.fromAPIProject));
     },
 
     getTrackerWithTitleSemantic(tracker_id): ResultAsync<TrackerWithTitleSemantic, Fault> {

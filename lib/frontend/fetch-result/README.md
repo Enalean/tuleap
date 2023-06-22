@@ -187,7 +187,7 @@ function getCollectionCallback({ collection }: ProjectCollection): ReadonlyArray
 }
 
 function getTrackersOfProject(project_id: number): ResultAsync<ReadonlyArray<Project>, Fault> {
-    return getAllJSON<ProjectCollection, Project>(uri`/api/v1/projects/${project_id}/trackers`, {
+    return getAllJSON<Project, ProjectCollection>(uri`/api/v1/projects/${project_id}/trackers`, {
         params: {
             // These parameters are URI-encoded and appended to the base URI
             limit: 50,

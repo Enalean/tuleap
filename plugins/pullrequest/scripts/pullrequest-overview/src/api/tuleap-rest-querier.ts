@@ -51,13 +51,11 @@ export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
 export const fetchPullRequestTimelineItems = (
     pull_request_id: number
 ): ResultAsync<readonly TimelineItem[], Fault> => {
-    return getAllJSON<TimelineItemsCollection, TimelineItem>(
+    return getAllJSON<TimelineItem, TimelineItemsCollection>(
         uri`/api/v1/pull_requests/${pull_request_id}/timeline`,
         {
-            params: { limit: 50, offset: 0 },
-            getCollectionCallback: (
-                payload: TimelineItemsCollection
-            ): ReadonlyArray<TimelineItem> => payload.collection,
+            params: { limit: 50 },
+            getCollectionCallback: (payload) => payload.collection,
         }
     );
 };
@@ -121,29 +119,25 @@ export const putReviewers = (
 export const fetchPullRequestLabels = (
     pull_request_id: number
 ): ResultAsync<readonly ProjectLabel[], Fault> => {
-    return getAllJSON(uri`/api/v1/pull_requests/${pull_request_id}/labels`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-        getCollectionCallback: (payload: ProjectLabelsCollection) => {
-            return payload.labels;
-        },
-    });
+    return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
+        uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+        {
+            params: { limit: 50 },
+            getCollectionCallback: (payload) => payload.labels,
+        }
+    );
 };
 
 export const fetchProjectLabels = (
     project_id: number
 ): ResultAsync<readonly ProjectLabel[], Fault> => {
-    return getAllJSON(uri`/api/v1/projects/${project_id}/labels`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-        getCollectionCallback: (payload: ProjectLabelsCollection) => {
-            return payload.labels;
-        },
-    });
+    return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
+        uri`/api/v1/projects/${project_id}/labels`,
+        {
+            params: { limit: 50 },
+            getCollectionCallback: (payload) => payload.labels,
+        }
+    );
 };
 
 export const patchPullRequestLabels = (
