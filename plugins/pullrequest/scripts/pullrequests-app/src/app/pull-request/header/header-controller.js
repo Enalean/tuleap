@@ -1,12 +1,22 @@
+import { LegacyLabelsBoxDisplay } from "./LegacyLabelsBoxDisplay";
+
 export default PullRequestHeaderController;
 
-PullRequestHeaderController.$inject = ["SharedPropertiesService"];
+PullRequestHeaderController.$inject = ["$state", "SharedPropertiesService"];
 
-function PullRequestHeaderController(SharedPropertiesService) {
+function PullRequestHeaderController($state, SharedPropertiesService) {
     const self = this;
-    self.$onInit = init;
 
-    function init() {
+    Object.assign(self, {
+        $onInit,
+        isLabelsBoxDisplayed: () =>
+            LegacyLabelsBoxDisplay.shouldLegacyLabelsBoxBeDisplayed(
+                $state,
+                SharedPropertiesService
+            ),
+    });
+
+    function $onInit() {
         SharedPropertiesService.whenReady()
             .then(function () {
                 self.pull_request = SharedPropertiesService.getPullRequest();

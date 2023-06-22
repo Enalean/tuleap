@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AngularUIRouterState } from "./PullRequestCommentPresenterBuilder";
+import type { AngularUIRouterState } from "../types";
 import {
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
@@ -34,6 +34,7 @@ import type {
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenterBuilder } from "./PullRequestCommentPresenterBuilder";
 import { setCatalog } from "../gettext-catalog";
+import { AngularUIRouterStateStub } from "../../../tests/stubs/AngularUIRouterStateStub";
 
 const user: User = {
     id: 102,
@@ -48,7 +49,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
 
-        $state = { href: jest.fn().mockReturnValue("url/to/file") };
+        $state = AngularUIRouterStateStub.withHref("url/to/file");
     });
 
     it("Builds a presenter from a timeline item of type TYPE_GLOBAL_COMMENT", () => {
