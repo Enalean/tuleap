@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as popover from "@tuleap/tlp-popovers";
 import { connect, CommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
-import { setCatalog } from "../gettext-catalog";
+import { setCatalog } from "../../gettext-catalog";
 
 const emptyFunction = (): void => {
     //Do nothing
@@ -62,11 +62,12 @@ describe(`CommonmarkSyntaxHelper`, () => {
                 hide: emptyFunction,
             };
             const destroyPopover = jest.spyOn(fake_popover, "destroy");
-            jest.spyOn(tlp, "createPopover").mockReturnValue(fake_popover);
+            jest.spyOn(popover, "createPopover").mockReturnValue(fake_popover);
+            const section: HTMLElement = doc.createElement("div");
             const host = {
-                section: doc.createElement("div"),
+                section,
                 button: doc.createElement("button"),
-            } as unknown as HostElement;
+            } as HostElement;
 
             const disconnect = connect(host);
             if (typeof disconnect !== "function") {

@@ -18,7 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import { getEditButtonLabel, getPreviewButtonLabel } from "../gettext-catalog";
+import { getEditButtonLabel, getPreviewButtonLabel } from "../../gettext-catalog";
 
 export interface CommonmarkPreviewButton {
     isInPreviewMode: boolean;

@@ -20,11 +20,11 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import { sanitize } from "dompurify";
-import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
+import { getCommonMarkPreviewErrorIntroduction } from "../../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
-import "../common/FormatSelector";
-import "../common/RichTextEditor";
+import type { FormattedTextControllerType } from "../../domain/common/FormattedTextController";
+import "./FormatSelector";
+import "./RichTextEditor";
 
 export interface TextAndFormat {
     label: string;

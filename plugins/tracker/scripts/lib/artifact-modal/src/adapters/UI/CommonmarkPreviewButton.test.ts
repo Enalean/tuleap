@@ -19,7 +19,7 @@
  */
 
 import { buttonLabel, CommonmarkPreviewButton, iconClasses } from "./CommonmarkPreviewButton";
-import { setCatalog } from "../gettext-catalog";
+import { setCatalog } from "../../gettext-catalog";
 
 type HostElement = CommonmarkPreviewButton & HTMLElement;
 

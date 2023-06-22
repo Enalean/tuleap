@@ -19,12 +19,12 @@
 
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
-import { setCatalog } from "../gettext-catalog";
-import { FormattedTextController } from "../domain/common/FormattedTextController";
-import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
+import { setCatalog } from "../../gettext-catalog";
+import { FormattedTextController } from "../../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
-import type { InterpretCommonMark } from "../domain/common/InterpretCommonMark";
-import { InterpretCommonMarkStub } from "../../tests/stubs/InterpretCommonMarkStub";
+import type { InterpretCommonMark } from "../../domain/common/InterpretCommonMark";
+import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
 import { Fault } from "@tuleap/fault";
 
 const noop = (): void => {

@@ -22,6 +22,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "angular-custom-elements": "^2.1.0",

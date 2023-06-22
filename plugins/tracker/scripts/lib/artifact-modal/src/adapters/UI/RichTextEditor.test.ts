@@ -31,7 +31,7 @@ import {
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
-import { setCatalog } from "../gettext-catalog";
+import { setCatalog } from "../../gettext-catalog";
 import type { HostElement } from "./RichTextEditor";
 import {
     connect,
@@ -42,10 +42,10 @@ import {
     RichTextEditor,
     setupImageUpload,
 } from "./RichTextEditor";
-import { FormattedTextController } from "../domain/common/FormattedTextController";
-import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
-import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
-import { InterpretCommonMarkStub } from "../../tests/stubs/InterpretCommonMarkStub";
+import { FormattedTextController } from "../../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
+import type { FileUploadSetup } from "../../domain/fields/file-field/FileUploadSetup";
+import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
 
 type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 

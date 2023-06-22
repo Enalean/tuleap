@@ -46,6 +46,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-relative-date
