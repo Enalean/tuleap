@@ -31,6 +31,14 @@ final class ParametrizedAndFromWhere extends ParametrizedBase
 
     public function getWhere(): string|EasyStatement
     {
+        if ($this->left->getWhere() === '') {
+            return $this->right->getWhere();
+        }
+
+        if ($this->right->getWhere() === '') {
+            return $this->left->getWhere();
+        }
+
         return '(' . $this->left->getWhere() . ') AND (' . $this->right->getWhere() . ')';
     }
 

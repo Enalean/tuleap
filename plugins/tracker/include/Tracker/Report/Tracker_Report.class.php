@@ -60,9 +60,6 @@ use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilderFactory;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Report\Query\QueryDao;
 use Tuleap\Tracker\Report\TrackerCreationSuccess\SuccessPresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -438,21 +435,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $from_where = Option::nothing(IProvideParametrizedFromAndWhereSQLFragments::class);
         foreach ($criteria as $criterion) {
-            $from = $criterion->getFrom()->unwrapOr(new ParametrizedFrom('', []));
-
-            $where = $criterion->getWhere()->unwrapOr(new ParametrizedSQLFragment('1', []));
-
-            if ($from->getFrom() !== '' || $where->sql !== '1') {
-                $from_where = $this->addFromWhere(
-                    $from_where,
-                    new ParametrizedFromWhere(
-                        $from->getFrom(),
-                        $where->sql,
-                        $from->getParameters(),
-                        $where->parameters,
-                    )
-                );
-            }
+            $criterion->getFromWhere()->apply(function ($additional_from_where) use (&$from_where) {
+                $from_where = $this->addFromWhere($from_where, $additional_from_where);
+            });
         }
 
         $this->getCommentCriterionFromWhere($additional_criteria)

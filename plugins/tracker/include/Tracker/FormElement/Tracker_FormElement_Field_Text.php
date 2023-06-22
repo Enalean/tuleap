@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -71,45 +72,44 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $this->getDao()->delete($this->id);
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a                = 'A_' . $this->id;
-                $b                = 'B_' . $this->id;
-                $match_expression = $this->getCriteriaFromFragment("$b.value", $criteria_value);
-
-                return Option::fromValue(
-                    new ParametrizedFrom(
-                        " INNER JOIN tracker_changeset_value AS $a
-                         ON ($a.changeset_id = c.id AND $a.field_id = ?)
-                         INNER JOIN tracker_changeset_value_text AS $b
-                         ON ($b.changeset_value_id = $a.id
-                             AND " . $match_expression->sql . "
-                         ) ",
-                        [$this->id, ...$match_expression->parameters],
-                    ),
-                );
-            }
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return Option::nothing(ParametrizedFrom::class);
-    }
+        //Only filter query if criteria is valuated
+        $criteria_value = $this->getCriteriaValue($criteria);
 
-    /**
-     * @param mixed $criteria_value
-     */
-    private function getCriteriaFromFragment(string $field_name, $criteria_value): ParametrizedSQLFragment
-    {
-        return $this->buildMatchExpression($field_name, $criteria_value)
-             ->unwrapOr(new ParametrizedSQLFragment('1', []));
-    }
+        if ($criteria_value === '' || $criteria_value === null) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
 
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
+        $a = 'A_' . $this->id;
+        $b = 'B_' . $this->id;
+
+        return $this->buildMatchExpression("$b.value", $criteria_value)->mapOr(
+            function (ParametrizedSQLFragment $match_expression) use ($a, $b) {
+                return Option::fromValue(
+                    ParametrizedFromWhere::fromParametrizedFrom(
+                        new ParametrizedFrom(
+                            " INNER JOIN tracker_changeset_value AS $a
+                             ON ($a.changeset_id = c.id AND $a.field_id = ?)
+                             INNER JOIN tracker_changeset_value_text AS $b
+                             ON ($b.changeset_value_id = $a.id
+                                 AND " . $match_expression->sql . "
+                             ) ",
+                            [
+                                $this->id,
+                                ...$match_expression->parameters,
+                            ],
+                        )
+                    )
+                );
+            },
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     public function getQuerySelect(): string

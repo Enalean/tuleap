@@ -20,8 +20,7 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind
@@ -133,14 +132,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getCriteriaFrom($criteria_value): Option
+    public function getCriteriaFromWhere($criteria_value): Option
     {
-        return Option::nothing(ParametrizedFrom::class);
-    }
-
-    public function getCriteriaWhere($criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
+        return Option::nothing(ParametrizedFromWhere::class);
     }
 
     /**

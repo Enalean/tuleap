@@ -20,7 +20,7 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -45,23 +45,24 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $this->label;
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return Option::fromValue(
-            new ParametrizedFrom(
-                'INNER JOIN tracker_artifact_priority_rank
-                    ON artifact.id = tracker_artifact_priority_rank.artifact_id',
-                [],
-            ),
-        );
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            return $this->buildMatchExpression('tracker_artifact_priority_rank.`rank`', $criteria_value);
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if (! $criteria_value) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
-        return Option::nothing(ParametrizedSQLFragment::class);
+
+        return $this->buildMatchExpression('tracker_artifact_priority_rank.`rank`', $criteria_value)->mapOr(
+            static fn (ParametrizedSQLFragment $match) => Option::fromValue(
+                new ParametrizedFromWhere(
+                    'INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id',
+                    $match->sql,
+                    [],
+                    $match->parameters
+                )
+            ),
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     public function fetchChangesetValue(

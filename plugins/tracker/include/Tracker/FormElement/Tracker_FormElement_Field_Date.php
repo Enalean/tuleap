@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -267,40 +268,46 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->getDao()->delete($this->id);
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            $criteria_value = $this->getCriteriaValue($criteria);
-            //Only filter query if criteria is valuated
-            if ($criteria_value) {
-                $a                 = 'A_' . $this->id;
-                $b                 = 'B_' . $this->id;
-                $compare_date_stmt = $this->getSQLCompareDate(
-                    (bool) $criteria->is_advanced,
-                    $criteria_value['op'],
-                    $criteria_value['from_date'],
-                    $criteria_value['to_date'],
-                    $b . '.value'
-                );
-                return Option::fromValue(
-                    new ParametrizedFrom(
-                        " INNER JOIN tracker_changeset_value AS $a
-                             ON ($a.changeset_id = c.id AND $a.field_id = ? )
-                             INNER JOIN tracker_changeset_value_date AS $b
-                             ON ($a.id = $b.changeset_value_id
-                                 AND $compare_date_stmt->sql
-                             ) ",
-                        [
-                            $this->id,
-                            ...$compare_date_stmt->parameters,
-                        ]
-                    )
-                );
-            }
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return Option::nothing(ParametrizedFrom::class);
+        //Only filter query if criteria is valuated
+        $criteria_value = $this->getCriteriaValue($criteria);
+
+        if ($criteria_value === '' || $criteria_value === null) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
+
+        $a = 'A_' . $this->id;
+        $b = 'B_' . $this->id;
+
+        $compare_date_stmt = $this->getSQLCompareDate(
+            (bool) $criteria->is_advanced,
+            $criteria_value['op'],
+            $criteria_value['from_date'],
+            $criteria_value['to_date'],
+            $b . '.value'
+        );
+        return Option::fromValue(
+            ParametrizedFromWhere::fromParametrizedFrom(
+                new ParametrizedFrom(
+                    " INNER JOIN tracker_changeset_value AS $a
+                                 ON ($a.changeset_id = c.id AND $a.field_id = ? )
+                                 INNER JOIN tracker_changeset_value_date AS $b
+                                 ON ($a.id = $b.changeset_value_id
+                                     AND $compare_date_stmt->sql
+                                 ) ",
+                    [
+                        $this->id,
+                        ...$compare_date_stmt->parameters,
+                    ]
+                )
+            )
+        );
     }
 
      /**
@@ -406,11 +413,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             '=' => new ParametrizedSQLFragment("$column BETWEEN ? AND ?", [$to, $to + $seconds_in_a_day - 1]),
             default => new ParametrizedSQLFragment("$column > ?", [$to + $seconds_in_a_day - 1]),
         };
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

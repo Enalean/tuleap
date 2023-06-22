@@ -48,6 +48,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 #[ConfigKeyCategory('Tracker')]
@@ -314,34 +315,43 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $link_ids;
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-
-                $match_expression = $this->buildMatchExpression("$b.artifact_id", $criteria_value);
-
-                return Option::fromValue(
-                    new ParametrizedFrom(
-                        " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
-                         INNER JOIN tracker_changeset_value_artifactlink AS $b ON (
-                            $b.changeset_value_id = $a.id
-                            AND " . $match_expression->sql . "
-                         ) ",
-                        [
-                            $this->id,
-                            ...$match_expression->parameters,
-                        ]
-                    )
-                );
-            }
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return Option::nothing(ParametrizedFrom::class);
+        //Only filter query if criteria is valuated
+        $criteria_value = $this->getCriteriaValue($criteria);
+
+        if ($criteria_value === '' || $criteria_value === null) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
+
+        $a = 'A_' . $this->id;
+        $b = 'B_' . $this->id;
+
+        return $this->buildMatchExpression("$b.artifact_id", $criteria_value)->mapOr(
+            function (ParametrizedSQLFragment $match_expression) use ($a, $b) {
+                return Option::fromValue(
+                    ParametrizedFromWhere::fromParametrizedFrom(
+                        new ParametrizedFrom(
+                            " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
+                             INNER JOIN tracker_changeset_value_artifactlink AS $b ON (
+                                $b.changeset_value_id = $a.id
+                                AND " . $match_expression->sql . "
+                             ) ",
+                            [
+                                $this->id,
+                                ...$match_expression->parameters,
+                            ]
+                        )
+                    )
+                );
+            },
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     /**
@@ -353,38 +363,36 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return (int) $value;
     }
 
-    private function buildMatchExpression(string $field_name, string $criteria_value): ParametrizedSQLFragment
+    /**
+     * @return Option<ParametrizedSQLFragment>
+     */
+    private function buildMatchExpression(string $field_name, string $criteria_value): Option
     {
         $matches = [];
         if (preg_match('/\/(.*)\//', $criteria_value, $matches)) {
             // If it is sourrounded by /.../ then assume a regexp
-            return new ParametrizedSQLFragment($field_name . " RLIKE ?", [$matches[1]]);
+            return Option::fromValue(new ParametrizedSQLFragment($field_name . " RLIKE ?", [$matches[1]]));
         }
 
         $matches = [];
         if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)\$/", $criteria_value, $matches)) {
             // It's < or >,  = and a number then use as is
             $number = (string) ($this->cast($matches[2]));
-            return new ParametrizedSQLFragment($field_name . ' ' . $matches[1] . ' ?', [$number]);
+            return Option::fromValue(new ParametrizedSQLFragment($field_name . ' ' . $matches[1] . ' ?', [$number]));
         } elseif (preg_match("/^($this->pattern)\$/", $criteria_value, $matches)) {
             // It's a number so use  equality
             $number = $this->cast($matches[1]);
-            return new ParametrizedSQLFragment($field_name . ' = ?', [$number]);
+            return Option::fromValue(new ParametrizedSQLFragment($field_name . ' = ?', [$number]));
         } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)\$/", $criteria_value, $matches)) {
             // it's a range number1-number2
             $min  = (string) ($this->cast($matches[1]));
             $max  = (string) ($this->cast($matches[2]));
             $expr = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
-            return new ParametrizedSQLFragment($field_name . ' >= ? AND ' . $field_name . ' <= ?', [$min, $max]);
+            return Option::fromValue(new ParametrizedSQLFragment($field_name . ' >= ? AND ' . $field_name . ' <= ?', [$min, $max]));
         } else {
             // Invalid syntax - no condition
-            return new ParametrizedSQLFragment('1', []);
+            return Option::nothing(ParametrizedSQLFragment::class);
         }
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQuerySelect(): string

@@ -152,7 +152,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn(0);
 
-        $this->assertNotEquals('', $field->getCriteriaFrom($criteria));
+        self::assertFalse($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItSearchOnCustomQuery(): void
@@ -163,7 +163,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn('>1');
 
-        $this->assertNotEquals('', $field->getCriteriaFrom($criteria));
+        self::assertFalse($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnEmptyString(): void
@@ -174,7 +174,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn('');
 
-        self::assertTrue($field->getCriteriaFrom($criteria)->isNothing());
+        self::assertTrue($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnNullCriteria(): void
@@ -185,7 +185,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('isUsed')->andReturn(true);
         $field->shouldReceive('getCriteriaValue')->andReturn(null);
 
-        $this->assertTrue($field->getCriteriaFrom($criteria)->isNothing());
+        $this->assertTrue($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItFetchCriteriaAndSetValueZero(): void

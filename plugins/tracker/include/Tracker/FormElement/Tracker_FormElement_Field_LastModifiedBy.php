@@ -21,7 +21,7 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -37,9 +37,19 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return true;
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return Option::nothing(ParametrizedFrom::class);
+        return $this->getCriteriaWhereFragment($criteria)->mapOr(
+            static fn (ParametrizedSQLFragment $where) => Option::fromValue(
+                new ParametrizedFromWhere(
+                    '',
+                    $where->sql,
+                    [],
+                    $where->parameters,
+                )
+            ),
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
@@ -53,9 +63,13 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
+    /**
+     * @return Option<ParametrizedSQLFragment>
+     */
+    public function getCriteriaWhereFragment(Tracker_Report_Criteria $criteria): Option
     {
-        if ($criteria_value = $this->getCriteriaValue($criteria)) {
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if ($criteria_value) {
             $a             = 'A_' . $this->id;
             $b             = 'B_' . $this->id;
             $ids_to_search = array_intersect(

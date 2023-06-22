@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -592,42 +593,51 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return new Tracker_Report_Criteria_OpenList_ValueDao();
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            $criteria_value = $this->extractCriteriaValue($this->getCriteriaValue($criteria));
-            $openvalues     = [];
-            $bindvalues     = [];
-            foreach ($criteria_value as $v) {
-                if ($v instanceof \Tracker_FormElement_Field_List_UnsavedValue) {
-                    //ignore it
-                } elseif ($v instanceof \Tracker_FormElement_Field_List_OpenValue) {
-                    $openvalues[] = $v->getId();
-                } else { //bindvalue
-                    $bindvalues[] = $v->getId();
-                }
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
+
+        $criteria_value = $this->extractCriteriaValue($this->getCriteriaValue($criteria));
+        $openvalues     = [];
+        $bindvalues     = [];
+        foreach ($criteria_value as $v) {
+            if ($v instanceof \Tracker_FormElement_Field_List_UnsavedValue) {
+                //ignore it
+            } elseif ($v instanceof \Tracker_FormElement_Field_List_OpenValue) {
+                $openvalues[] = $v->getId();
+            } else { //bindvalue
+                $bindvalues[] = $v->getId();
             }
-            //Only filter query if criteria is valuated
-            if ($openvalues || $bindvalues) {
-                $a         = 'A_' . $this->id;
-                $b         = 'B_' . $this->id;
-                $statement = new ParametrizedSQLFragment('1', []);
-                if ($openvalues) {
-                    $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $openvalues);
-                    $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in)", $in->values());
-                }
-                if ($bindvalues) {
-                    $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $bindvalues);
-                    $statement = new ParametrizedSQLFragment(
-                        $statement->sql . ' OR ' . "$b.bindvalue_id IN ($in)",
-                        [
-                            ...$statement->parameters,
-                            ...$in->values(),
-                        ]
-                    );
-                }
-                return Option::fromValue(
+        }
+
+        //Only filter query if criteria is valuated
+        if ($openvalues || $bindvalues) {
+            $a         = 'A_' . $this->id;
+            $b         = 'B_' . $this->id;
+            $statement = new ParametrizedSQLFragment('1', []);
+            if ($openvalues) {
+                $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $openvalues);
+                $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in)", $in->values());
+            }
+            if ($bindvalues) {
+                $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $bindvalues);
+                $statement = new ParametrizedSQLFragment(
+                    $statement->sql . ' OR ' . "$b.bindvalue_id IN ($in)",
+                    [
+                        ...$statement->parameters,
+                        ...$in->values(),
+                    ]
+                );
+            }
+            if ($statement->sql === '1') {
+                return Option::nothing(ParametrizedFromWhere::class);
+            }
+
+            return Option::fromValue(
+                ParametrizedFromWhere::fromParametrizedFrom(
                     new ParametrizedFrom(
                         " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id
@@ -643,21 +653,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                             ...$statement->parameters,
                         ]
                     )
-                );
-            }
+                )
+            );
         }
 
-        return Option::nothing(ParametrizedFrom::class);
+        return Option::nothing(ParametrizedFromWhere::class);
     }
 
     protected function formatCriteriaValue($value_to_match)
     {
         return 'b' . $value_to_match;
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     /**

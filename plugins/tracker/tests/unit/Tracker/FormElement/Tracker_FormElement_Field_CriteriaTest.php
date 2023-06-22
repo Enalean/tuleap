@@ -34,8 +34,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -110,14 +109,9 @@ class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCa
             {
             }
 
-            public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+            public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
             {
-                return Option::nothing(ParametrizedFrom::class);
-            }
-
-            public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-            {
-                return Option::nothing(ParametrizedSQLFragment::class);
+                return Option::nothing(ParametrizedFromWhere::class);
             }
 
             protected function getCriteriaDao()
