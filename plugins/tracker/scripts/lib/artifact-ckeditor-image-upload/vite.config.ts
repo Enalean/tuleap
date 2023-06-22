@@ -18,8 +18,9 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import pkg from "./package.json";
 
 export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite()],
@@ -27,6 +28,15 @@ export default vite.defineLibConfig({
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
             name: "TuleapCkeditorImageUploadForm",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
+            output: {
+                globals: {
+                    "@tuleap/ckeditor-image-upload": "TuleapCkeditorUploadImage",
+                    "@tuleap/gettext": "TuleapGettext",
+                },
+            },
         },
     },
 });
