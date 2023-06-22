@@ -1,4 +1,3 @@
-import angular from "angular";
 import { escape, isEmpty } from "lodash-es";
 import moment from "moment";
 
@@ -76,19 +75,11 @@ function InPropertiesFilter($filter) {
                     case "sb":
                     case "rb":
                     case "cb":
-                    case "tbl":
                     case "msb":
                     case "shared":
-                        if (typeof card_field.values === "undefined") {
-                            return false;
-                        }
-
-                        return card_field.values.some(function (value) {
-                            if (angular.isDefined(value.display_name)) {
-                                return match(value.display_name);
-                            }
-                            return match(value.label);
-                        });
+                        return matchListValues(card_field.values ?? []);
+                    case "tbl":
+                        return matchListValues(card_field.bind_value_objects ?? []);
                     case "string":
                     case "int":
                     case "float":
@@ -125,6 +116,12 @@ function InPropertiesFilter($filter) {
                         }
                         return match(card_field.value);
                 }
+            }
+
+            function matchListValues(values) {
+                return values.some(function (value) {
+                    return match(value.display_name ?? value.label);
+                });
             }
         });
 
