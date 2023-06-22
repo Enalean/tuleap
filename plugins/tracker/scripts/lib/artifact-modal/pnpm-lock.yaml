@@ -80,8 +80,8 @@ dependencies:
     specifier: ^1.1.2
     version: 1.1.2
   tus-js-client:
-    specifier: ^3.0.1
-    version: 3.0.1
+    specifier: ^3.1.0
+    version: 3.1.0
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -141,8 +141,8 @@ packages:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
-  /graceful-fs@4.2.10:
-    resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
+  /graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: false
 
   /hybrids@8.1.8:
@@ -155,8 +155,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /js-base64@3.7.2:
-    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+  /js-base64@3.7.5:
+    resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
     dev: false
 
   /lodash-es@4.17.21:
@@ -221,7 +221,7 @@ packages:
   /proper-lockfile@4.1.2:
     resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       retry: 0.12.0
       signal-exit: 3.0.7
     dev: false
@@ -247,13 +247,13 @@ packages:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false
 
-  /tus-js-client@3.0.1:
-    resolution: {integrity: sha512-2EZIUvswv1xG3KtzJO9FZ2wvTtVzltUN23Nse/nZwWE06dbn/8RBeRqi2clV/ilpEomOQOOMdHkIPUQmTum/xg==}
+  /tus-js-client@3.1.0:
+    resolution: {integrity: sha512-Hfpc8ho4C9Lhs/OflPUA/nHUHZJUrKD5upoPBq7dYJJ9DQhWocsjJU2RZYfN16Y5n19j9dFDszwCvVZ5sfcogw==}
     dependencies:
       buffer-from: 1.1.2
       combine-errors: 3.0.3
       is-stream: 2.0.1
-      js-base64: 3.7.2
+      js-base64: 3.7.5
       lodash.throttle: 4.1.1
       proper-lockfile: 4.1.2
       url-parse: 1.5.10
