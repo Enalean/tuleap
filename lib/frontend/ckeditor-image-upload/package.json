@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@tuleap/tlp-fetch": "workspace:*",
-    "tus-js-client": "^2.3.1"
+    "tus-js-client": "^3.1.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
