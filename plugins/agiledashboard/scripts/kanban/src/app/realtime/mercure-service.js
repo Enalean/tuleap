@@ -202,6 +202,7 @@ function MercureService(
                     "You are disconnected from real time. Please reload your page."
                 )
             );
+            SharedPropertiesService.setIsMercureServerConnected(false);
         }
         if (err instanceof RetriableError || err instanceof FatalError) {
             let timeout = Math.pow(2, mercureRetryNumber) * 1000 + Math.floor(Math.random() * 1000);
@@ -213,6 +214,7 @@ function MercureService(
         if (mercureRetryNumber > 1) {
             resetError();
         }
+        SharedPropertiesService.setIsMercureServerConnected(true);
         mercureRetryNumber = 0;
     }
 }

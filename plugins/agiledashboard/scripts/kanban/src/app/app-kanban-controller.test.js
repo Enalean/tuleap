@@ -791,6 +791,9 @@ describe("KanbanCtrl", function () {
             });
 
             it("does not use the KanbanColumnService when the node server (realtime) is up", () => {
+                jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
+                    false
+                );
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(true);
 
                 KanbanCtrl.openAddArtifactModal(fake_event);
@@ -806,8 +809,30 @@ describe("KanbanCtrl", function () {
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
             });
 
-            it("uses the KanbanColumnService to add the created item when the node server (realtime) is down", () => {
+            it("does not use the KanbanColumnService when the mercure server (realtime) is up", () => {
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
+                jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
+                    true
+                );
+
+                KanbanCtrl.openAddArtifactModal(fake_event);
+                get_request.resolve(created_artifact);
+
+                $scope.$apply();
+                expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
+                expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
+                expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
+                    archive
+                );
+                expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
+                expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
+            });
+
+            it("uses the KanbanColumnService to add the created item when the node server & the mercure server (realtime) are down", () => {
+                jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
+                jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
+                    false
+                );
 
                 KanbanCtrl.openAddArtifactModal(fake_event);
                 get_request.resolve(created_artifact);
