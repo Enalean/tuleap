@@ -18,13 +18,23 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json";
 
 export default vite.defineLibConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
             name: "TuleapCkeditorUploadImage",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
+            output: {
+                globals: {
+                    "@tuleap/tlp-fetch": "TlpFetch",
+                    "tus-js-client": "tus",
+                },
+            },
         },
     },
 });

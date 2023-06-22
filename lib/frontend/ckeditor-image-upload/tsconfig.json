@@ -2,7 +2,8 @@
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": ["ES2017", "DOM"],
-        "types": ["ckeditor"]
+        "types": ["ckeditor"],
+        "resolveJsonModule": true
     },
     "include": ["src/**/*"]
 }

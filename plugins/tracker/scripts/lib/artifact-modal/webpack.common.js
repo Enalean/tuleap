@@ -51,6 +51,8 @@ const webpack_config = {
                 __dirname,
                 "../../../../../lib/frontend/lazybox/node_modules/@floating-ui/dom"
             ),
+            "tus-js-client": path.resolve(__dirname, "node_modules/tus-js-client"),
+            "@tuleap/tlp-fetch": path.resolve(__dirname, "node_modules/@tuleap/tlp-fetch"),
         },
     },
     module: {

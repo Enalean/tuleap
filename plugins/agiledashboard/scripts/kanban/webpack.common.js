@@ -58,6 +58,7 @@ const webpack_config_for_kanban = {
         ],
     },
     plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         webpack_configurator.getMomentLocalePlugin(),
         ...webpack_configurator.getCSSExtractionPlugins(),
