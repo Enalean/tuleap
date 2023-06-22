@@ -144,6 +144,18 @@ const onClickAddNewFileToAttach = (host: HostElement): void => {
     host.new_files = host.controller.addNewFileToAttach();
 };
 
+export const isRequired = (host: HostElement): boolean => {
+    if (host.attached_files) {
+        const all_marked_as_removed = host.attached_files.every(
+            (attached_file: AttachedFileDescription) => attached_file.marked_for_removal
+        );
+        if (!all_marked_as_removed) {
+            return false;
+        }
+    }
+    return host.field.required;
+};
+
 export const getAddNewFileToAttachButtonTemplate = (host: FileField): UpdateFunction<FileField> =>
     html`
         <button
@@ -207,7 +219,7 @@ export const FileField = define<FileField>({
                 return html`
                     <tuleap-artifact-modal-new-file-attach
                         disabled="${host.disabled}"
-                        required="${host.field.required}"
+                        required="${isRequired(host)}"
                         description="${file.description}"
                         onfile-changed="${onFileChanged}"
                         ondescription-changed="${onDescriptionChanged}"

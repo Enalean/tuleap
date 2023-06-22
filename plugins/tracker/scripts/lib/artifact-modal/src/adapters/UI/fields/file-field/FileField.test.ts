@@ -23,6 +23,7 @@ import {
     getActionButton,
     getAddNewFileToAttachButtonTemplate,
     getAttachedFileTemplate,
+    isRequired,
 } from "./FileField";
 import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
 import { setCatalog } from "../../../../gettext-catalog";
@@ -30,6 +31,7 @@ import { AttachedFileDescriptionStub } from "../../../../../tests/stubs/Attached
 import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
 import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
+import type { AttachedFileCollection } from "../../../../domain/fields/file-field/FileFieldController";
 import { FileFieldController } from "../../../../domain/fields/file-field/FileFieldController";
 import { EventDispatcher } from "../../../../domain/EventDispatcher";
 
@@ -268,7 +270,63 @@ describe(`FileField`, () => {
             it will dispatch a "reset-file" event with added info`, () => {
             triggerEvent(new CustomEvent("reset"));
 
-            expect(value_model.temporary_files[0]).toEqual(NewFileToAttach.build());
+            expect(value_model.temporary_files[0]).toStrictEqual(NewFileToAttach.build());
+        });
+    });
+
+    describe(`File field is required`, () => {
+        it(`when the field is configured as required and there is no attached file then the field is required`, () => {
+            const host = {
+                attached_files: undefined,
+                field: {
+                    required: true,
+                } as FileFieldType,
+            } as HostElement;
+
+            expect(isRequired(host)).toBe(true);
+        });
+
+        it(`when the field is configured as not required and there is no attached file then the field is not required`, () => {
+            const host = {
+                attached_files: undefined,
+                field: {
+                    required: false,
+                } as FileFieldType,
+            } as HostElement;
+
+            expect(isRequired(host)).toBe(false);
+        });
+
+        it(`when the field is configured as required and there is at least an uploaded file not marked as removed then the field is not required`, () => {
+            const attached_files: AttachedFileCollection = [
+                { marked_for_removal: false } as AttachedFileDescription,
+                { marked_for_removal: true } as AttachedFileDescription,
+            ];
+
+            const host = {
+                attached_files,
+                field: {
+                    required: true,
+                } as FileFieldType,
+            } as HostElement;
+
+            expect(isRequired(host)).toBe(false);
+        });
+
+        it(`when the field is configured as required and all uploaded file are marked as removed then the field is required`, () => {
+            const attached_files: AttachedFileCollection = [
+                { marked_for_removal: true } as AttachedFileDescription,
+                { marked_for_removal: true } as AttachedFileDescription,
+            ];
+
+            const host = {
+                attached_files,
+                field: {
+                    required: true,
+                } as FileFieldType,
+            } as HostElement;
+
+            expect(isRequired(host)).toBe(true);
         });
     });
 });
