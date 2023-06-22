@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use Luracast\Restler\RestException;
 
 /**
  * @psalm-immutable
  */
-class KanbanAddRepresentation
+final class KanbanAddRepresentation
 {
     /**
      * @var array {@type int}
@@ -35,7 +35,7 @@ class KanbanAddRepresentation
     /**
      * @throws RestException
      */
-    public function checkFormat()
+    public function checkFormat(): void
     {
         $this->isArrayOfInt('ids');
         if (count($this->ids) == 0) {
@@ -43,7 +43,7 @@ class KanbanAddRepresentation
         }
     }
 
-    private function isArrayOfInt($name)
+    private function isArrayOfInt(string $name): void
     {
         if (! is_array($this->$name)) {
             throw new RestException(400, "invalid value specified for `$name`. Expected: array of integers");

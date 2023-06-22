@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;

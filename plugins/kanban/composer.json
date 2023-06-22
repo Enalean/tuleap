@@ -1,0 +1,21 @@
+{
+  "name": "tuleap/plugin-kanban",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Kanban\\": ["include/Kanban/"]
+    },
+    "classmap": ["include/"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Kanban\\": "tests/unit/"
+    }
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
+  }
+}

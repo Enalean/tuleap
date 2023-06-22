@@ -1349,6 +1349,7 @@ fi
 %files plugin-agiledashboard
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/agiledashboard
+%{APP_DIR}/plugins/kanban
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 

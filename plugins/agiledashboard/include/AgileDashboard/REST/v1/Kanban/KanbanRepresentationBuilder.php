@@ -26,6 +26,7 @@ use AgileDashboard_KanbanUserPreferences;
 use Exception;
 use PFUser;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+use Tuleap\Kanban\REST\v1\KanbanRepresentation;
 
 class KanbanRepresentationBuilder
 {
@@ -34,7 +35,7 @@ class KanbanRepresentationBuilder
      */
     private $user_preferences;
     /**
-     * @var AgileDashboard_KankanColumnFactory
+     * @var AgileDashboard_KanbanColumnFactory
      */
     private $kanban_column_factory;
 

@@ -21,8 +21,8 @@
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\AgileDashboard\REST\v1\PlanningRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
+use Tuleap\Kanban\REST\v1\KanbanRepresentation;
+use Tuleap\Kanban\REST\v1\KanbanColumnRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemPOSTRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
@@ -38,7 +38,7 @@ class AgileDashboard_REST_ResourcesInjector
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource', PlanningRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource', BacklogItemRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanResource', KanbanRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Kanban\\REST\\v1\\KanbanResource', KanbanRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanColumnsResource', KanbanColumnRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanItemsResource', KanbanItemPOSTRepresentation::ROUTE);
     }
