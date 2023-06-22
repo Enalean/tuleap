@@ -30,6 +30,7 @@
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "dragular": "4.2.0",
+    "escape-string-regexp": "^5.0.0",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "ng-scrollbar": "0.0.7",

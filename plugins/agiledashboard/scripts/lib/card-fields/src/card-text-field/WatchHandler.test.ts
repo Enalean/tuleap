@@ -21,10 +21,6 @@ import type { RequestAnimationFrame, WatchHandlerType, CardField } from "./Watch
 import { WatchHandler } from "./WatchHandler";
 import { PurifyHTMLStub } from "../../tests/stubs/PurifyHTMLStub";
 
-jest.mock("escape-string-regexp", () => ({
-    default: jest.requireActual("escape-string-regexp"),
-}));
-
 describe(`WatchHandler`, () => {
     let doc: Document, target_element: Element, purifier: PurifyHTMLStub, card_field: CardField;
 

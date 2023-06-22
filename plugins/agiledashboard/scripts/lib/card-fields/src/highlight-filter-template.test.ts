@@ -20,10 +20,6 @@
 import { highlightFilterElements } from "./highlight-filter-template";
 import type { UpdateFunctionWithMethods } from "hybrids";
 
-jest.mock("escape-string-regexp", () => ({
-    default: jest.requireActual("escape-string-regexp"),
-}));
-
 const TEST_PHRASE = "Prefix Highlight Suffix";
 
 describe("highlight-filter-template", () => {
