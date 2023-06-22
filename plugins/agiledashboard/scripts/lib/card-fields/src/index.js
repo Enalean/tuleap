@@ -1,5 +1,4 @@
 import angular from "angular";
-import ngSanitize from "angular-sanitize";
 import "../themes/main.scss";
 
 import HighlightFilter from "./highlight-filter.js";
@@ -11,7 +10,7 @@ import cardComputedFieldDirective from "./card-computed-field/card-computed-fiel
 import cardTextFieldDirective from "./card-text-field/card-text-field-directive.js";
 
 export default angular
-    .module("card-fields", [ngSanitize])
+    .module("card-fields", [])
     .service("CardFieldsService", CardFieldsService)
     .directive("cardFields", CardFieldsDirective)
     .directive("tuleapSimpleField", tuleapSimpleFieldDirective)

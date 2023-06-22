@@ -18,19 +18,18 @@
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "dompurify": "^3.0.0",
-    "escape-string-regexp": "^2.0.0"
+    "escape-string-regexp": "^2.0.0",
+    "hybrids": "^8.2.1"
   },
   "peerDependencies": {
     "angular": "^1.8.0",
-    "angular-sanitize": "^1.8.0",
     "moment": "^2.29.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/dompurify": "^2.4.0",
     "angular": "^1.8.2",
-    "angular-mocks": "^1.8.2",
-    "angular-sanitize": "^1.8.2"
+    "angular-mocks": "^1.8.2"
   },
   "scripts": {
     "build": "vite build",

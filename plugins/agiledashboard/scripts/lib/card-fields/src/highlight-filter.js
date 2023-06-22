@@ -5,9 +5,7 @@
  * @license MIT
  */
 
-import { isNumber } from "angular";
-import { Classifier } from "./highlight/Classifier";
-import { HighlightedText } from "./highlight/HighlightedText";
+import { highlightFilterElements } from "./highlight-filter-template";
 
 export default TuleapHighlightFilter;
 
@@ -19,22 +17,17 @@ TuleapHighlightFilter.$inject = [];
  * @returns HTML-encoded string
  */
 function TuleapHighlightFilter() {
-    function isTextSearchable(text, search) {
-        return text && (search || isNumber(search));
+    function getHTMLStringFromTemplate(template) {
+        const element = document.createElement("div");
+        template({}, element);
+
+        return element.innerHTML;
     }
 
     return function (text, search) {
-        if (!isTextSearchable(text, search)) {
-            return text ? text.toString() : text;
+        if (text === null) {
+            return null;
         }
-
-        const classifier = Classifier(String(search));
-        const parts = classifier.classify(String(text)).map((highlighted_text) => {
-            if (!HighlightedText.isHighlight(highlighted_text)) {
-                return highlighted_text.content;
-            }
-            return `<span class="highlight">${highlighted_text.content}</span>`;
-        });
-        return parts.join("");
+        return getHTMLStringFromTemplate(highlightFilterElements(text, search));
     };
 }

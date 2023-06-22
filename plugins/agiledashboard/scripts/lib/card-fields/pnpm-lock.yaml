@@ -10,6 +10,9 @@ dependencies:
   escape-string-regexp:
     specifier: ^2.0.0
     version: 2.0.0
+  hybrids:
+    specifier: ^8.2.1
+    version: 8.2.1
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -22,9 +25,6 @@ devDependencies:
     specifier: ^1.8.2
     version: 1.8.2
   angular-mocks:
-    specifier: ^1.8.2
-    version: 1.8.2
-  angular-sanitize:
     specifier: ^1.8.2
     version: 1.8.2
 
@@ -44,10 +44,6 @@ packages:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular-sanitize@1.8.2:
-    resolution: {integrity: sha512-OB6Goa+QN3byf5asQ7XRl7DKZejm/F/ZOqa9z1skqYVOWA2hoBxoCmt9E7+i7T/TbxZP5zYzKxNZVVJNu860Hg==}
-    dev: true
-
   /angular@1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
@@ -59,4 +55,10 @@ packages:
   /escape-string-regexp@2.0.0:
     resolution: {integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==}
     engines: {node: '>=8'}
+    dev: false
+
+  /hybrids@8.2.1:
+    resolution: {integrity: sha512-ZIjDLZi6aBOL+Cdry1xtBLJJnMzx99HNwmOCQXEvqdawyYu949z469vxgExyAgq0CA4lSfJsjh1rsiIsGdqXdw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
     dev: false
