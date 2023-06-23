@@ -20,10 +20,6 @@
 import { Classifier } from "../highlight/Classifier";
 import { getHighlightedDOM, getHighlightedNodes } from "./dom-modifier";
 
-jest.mock("escape-string-regexp", () => ({
-    default: jest.requireActual("escape-string-regexp"),
-}));
-
 describe(`dom-modifier`, () => {
     let doc: Document;
     beforeEach(() => {

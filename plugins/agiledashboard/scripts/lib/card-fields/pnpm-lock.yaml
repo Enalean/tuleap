@@ -8,8 +8,8 @@ dependencies:
     specifier: ^3.0.0
     version: 3.0.0
   escape-string-regexp:
-    specifier: ^2.0.0
-    version: 2.0.0
+    specifier: ^5.0.0
+    version: 5.0.0
   hybrids:
     specifier: ^8.2.1
     version: 8.2.1
@@ -52,9 +52,9 @@ packages:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
-  /escape-string-regexp@2.0.0:
-    resolution: {integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==}
-    engines: {node: '>=8'}
+  /escape-string-regexp@5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
     dev: false
 
   /hybrids@8.2.1:

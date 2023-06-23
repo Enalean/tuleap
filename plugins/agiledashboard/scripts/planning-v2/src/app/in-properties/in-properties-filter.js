@@ -1,5 +1,6 @@
 import { escape, isEmpty } from "lodash-es";
 import moment from "moment";
+import escapeStringRegexp from "escape-string-regexp";
 
 export default InPropertiesFilter;
 
@@ -18,8 +19,8 @@ function InPropertiesFilter($filter) {
             filtered_list = list;
 
         keywords.forEach(function (keyword) {
-            const regexp = new RegExp(keyword, "gi");
-            const encoded_regexp = new RegExp(escape(keyword), "gi");
+            const regexp = new RegExp(escapeStringRegexp(keyword), "gi");
+            const encoded_regexp = new RegExp(escapeStringRegexp(escape(keyword)), "gi");
 
             filtered_list = $filter("filter")(filtered_list, function (item) {
                 if (

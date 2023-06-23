@@ -9,10 +9,6 @@ import "angular-mocks";
 
 import card_fields_module from "./index.js";
 
-jest.mock("escape-string-regexp", () => ({
-    default: jest.requireActual("escape-string-regexp"),
-}));
-
 describe("tuleapHighlight", () => {
     let highlightFilter, test_phrase;
 

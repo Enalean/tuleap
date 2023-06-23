@@ -20,10 +20,6 @@
 import { Classifier } from "./Classifier";
 import { HighlightedText } from "./HighlightedText";
 
-jest.mock("escape-string-regexp", () => ({
-    default: jest.requireActual("escape-string-regexp"),
-}));
-
 const countBackgrounds = (array_of_texts: ReadonlyArray<HighlightedText>): number =>
     array_of_texts.reduce(
         (accumulator, text) => (HighlightedText.isHighlight(text) ? accumulator : accumulator + 1),

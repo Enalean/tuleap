@@ -52,6 +52,9 @@ dependencies:
   dragular:
     specifier: 4.2.0
     version: 4.2.0
+  escape-string-regexp:
+    specifier: ^5.0.0
+    version: 5.0.0
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -110,6 +113,11 @@ packages:
     resolution: {integrity: sha1-RGMl6Xb8uIqbQYbDHI4SpvhfztI=}
     dependencies:
       angular: 1.8.2
+    dev: false
+
+  /escape-string-regexp@5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
     dev: false
 
   /jquery@3.6.0:
