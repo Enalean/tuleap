@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Kanban\RealTime;
 
-use AgileDashboard_KanbanItemDao;
+use Tuleap\Kanban\KanbanItemDao;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
@@ -29,19 +29,10 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 
 class KanbanArtifactMessageBuilder
 {
-    /**
-     * @var AgileDashboard_KanbanItemDao
-     */
-    private $kanban_item_dao;
-    /**
-     * @var Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-
-    public function __construct(AgileDashboard_KanbanItemDao $kanban_item_dao, Tracker_Artifact_ChangesetFactory $changeset_factory)
-    {
-        $this->kanban_item_dao   = $kanban_item_dao;
-        $this->changeset_factory = $changeset_factory;
+    public function __construct(
+        private readonly KanbanItemDao $kanban_item_dao,
+        private readonly Tracker_Artifact_ChangesetFactory $changeset_factory,
+    ) {
     }
 
     /**

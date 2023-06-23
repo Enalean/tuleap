@@ -105,6 +105,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
+use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -1199,7 +1200,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
      */
     private function getKanbanArtifactMessageSender()
     {
-        $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
+        $kanban_item_dao                   = new KanbanItemDao();
         $permissions_serializer            = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
@@ -1225,7 +1226,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getKanbanArtifactMessageSenderMercure(): KanbanArtifactMessageSenderMercure
     {
-        $kanba_item_dao                           = new AgileDashboard_KanbanItemDao();
+        $kanba_item_dao                           = new KanbanItemDao();
         $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
         $realtime_artifact_message_builder_kanban = new KanbanArtifactMessageBuilderMercure(
             $kanba_item_dao,

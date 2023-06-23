@@ -27,7 +27,7 @@ use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanItemDao;
+use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanUserPreferences;
@@ -155,7 +155,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
-    /** @var AgileDashboard_KanbanItemDao */
+    /** @var KanbanItemDao */
     private $kanban_item_dao;
 
     /** @var AgileDashboard_KanbanDao */
@@ -223,7 +223,7 @@ final class KanbanResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->kanban_item_dao     = new AgileDashboard_KanbanItemDao();
+        $this->kanban_item_dao     = new KanbanItemDao();
         $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
         $this->tracker_factory     = TrackerFactory::instance();
 

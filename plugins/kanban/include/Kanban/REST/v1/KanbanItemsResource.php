@@ -23,7 +23,7 @@ use AgileDashboard_Kanban;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanItemDao;
+use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboardStatisticsAggregator;
@@ -117,7 +117,7 @@ final class KanbanItemsResource extends AuthenticatedResource
             new AgileDashboard_KanbanDao()
         );
 
-        $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
+        $kanban_item_dao                   = new KanbanItemDao();
         $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
         $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
         $color_builder                     = new BackgroundColorBuilder(new BindDecoratorRetriever());

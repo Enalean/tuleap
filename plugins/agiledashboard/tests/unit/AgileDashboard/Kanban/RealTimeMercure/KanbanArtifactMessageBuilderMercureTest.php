@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 {
-    private \AgileDashboard_KanbanItemDao $kanban_item_dao;
+    private \Tuleap\Kanban\KanbanItemDao $kanban_item_dao;
     private Tracker_Artifact_ChangesetFactory $changeset_factory;
     private KanbanArtifactMessageBuilderMercure $message_builder;
     private \Tracker_Semantic_Status $tracker_semantic;
@@ -38,7 +38,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->kanban_item_dao   = $this->createStub(\AgileDashboard_KanbanItemDao::class);
+        $this->kanban_item_dao   = $this->createStub(\Tuleap\Kanban\KanbanItemDao::class);
         $this->changeset_factory = $this->createStub(Tracker_Artifact_ChangesetFactory::class);
         $this->message_builder   = new KanbanArtifactMessageBuilderMercure($this->kanban_item_dao, $this->changeset_factory);
         $this->tracker_semantic  = $this->createStub(\Tracker_Semantic_Status::class);

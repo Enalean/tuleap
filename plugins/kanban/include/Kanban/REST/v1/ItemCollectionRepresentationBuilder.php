@@ -21,7 +21,7 @@
 namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
-use AgileDashboard_KanbanItemDao;
+use Tuleap\Kanban\KanbanItemDao;
 use Tracker_ArtifactFactory;
 use PFUser;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
@@ -29,7 +29,7 @@ use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 final class ItemCollectionRepresentationBuilder
 {
     public function __construct(
-        private readonly AgileDashboard_KanbanItemDao $kanban_item_dao,
+        private readonly KanbanItemDao $kanban_item_dao,
         private readonly Tracker_ArtifactFactory $artifact_factory,
         private readonly ItemRepresentationBuilder $item_representation_builder,
     ) {
@@ -57,13 +57,13 @@ final class ItemCollectionRepresentationBuilder
         } else {
             $data = $this->kanban_item_dao->searchPaginatedItemsInColumn(
                 $kanban->getTrackerId(),
-                $column_identifier->getColumnId(),
+                (int) $column_identifier->getColumnId(),
                 $limit,
                 $offset
             );
         }
 
-        $total_size = (int) $this->kanban_item_dao->foundRows();
+        $total_size = $this->kanban_item_dao->foundRows();
         $collection = [];
         foreach ($data as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
