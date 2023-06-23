@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\AgileDashboard\REST\DataBuilder;
-use Tuleap\AgileDashboard\REST\TestBase;
+namespace Tuleap\Kanban\REST;
 
-require_once dirname(__FILE__) . '/bootstrap.php';
+use REST_TestDataBuilder;
 
 /**
  * @group KanbanTests

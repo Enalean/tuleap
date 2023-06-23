@@ -20,12 +20,9 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
-use AgileDashboard_KanbanDao;
-use AgileDashboard_KanbanManager;
 use BackendLogger;
 use BrokerLogger;
 use EventManager;
-use Exception;
 use ForgeConfig;
 use Log_ConsoleLogger;
 use REST_TestDataBuilder;
@@ -38,42 +35,18 @@ use Tuleap\Project\SystemEventRunner;
 
 class DataBuilder extends REST_TestDataBuilder
 {
-    public const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
-    public const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
-    public const RELEASE_TRACKER_SHORTNAME                = 'rel';
-    public const PROJECT_BURNUP_SHORTNAME                 = 'burnup';
-    public const KANBAN_CUMULATIVE_FLOW_ID                = 2;
-
+    public const RELEASE_TRACKER_SHORTNAME          = 'rel';
+    public const PROJECT_BURNUP_SHORTNAME           = 'burnup';
     public const EXPLICIT_BACKLOG_PROJECT_SHORTNAME = 'explicitadbacklog';
 
-    /**
-     * @var SystemEventManager
-     */
-    private $system_event_manager;
-    /**
-     * @var SystemEventRunner
-     */
-    private $system_event_runner;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $tracker_artifact_factory;
-
-    /**
-     * @var AgileDashboard_KanbanManager
-     */
-    private $kanban_manager;
+    private SystemEventManager $system_event_manager;
+    private SystemEventRunner $system_event_runner;
+    private \Tracker_ArtifactFactory $tracker_artifact_factory;
 
     public function __construct()
     {
         parent::__construct();
         $this->instanciateFactories();
-
-        $kanban_dao           = new AgileDashboard_KanbanDao();
-        $this->kanban_manager = new AgileDashboard_KanbanManager(
-            $kanban_dao,
-            $this->tracker_factory
-        );
 
         $this->tracker_artifact_factory = \Tracker_ArtifactFactory::instance();
         $this->system_event_manager     = SystemEventManager::instance();
@@ -92,30 +65,7 @@ class DataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
-        $this->createKanbanCumulativeFlow();
         $this->generateBurnupCache();
-    }
-
-    private function createKanbanCumulativeFlow()
-    {
-        $project_kanban_cumulative_flow = $this->project_manager->getProjectByUnixName(
-            self::PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME
-        );
-        $trackers                       = $this->tracker_factory->getTrackersByGroupId(
-            $project_kanban_cumulative_flow->getID()
-        );
-        $tracker_kanban_cumulative_flow = array_shift($trackers);
-
-        $kanban_id = $this->kanban_manager->createKanban(
-            self::KANBAN_CUMULATIVE_FLOW_NAME,
-            $tracker_kanban_cumulative_flow->getId()
-        );
-
-        if ($kanban_id !== self::KANBAN_CUMULATIVE_FLOW_ID) {
-            throw new Exception(
-                'The kanban used for the test of the cumulative flow is not the one expected. Please update the builder accordingly.'
-            );
-        }
     }
 
     private function generateBurnupCache()
