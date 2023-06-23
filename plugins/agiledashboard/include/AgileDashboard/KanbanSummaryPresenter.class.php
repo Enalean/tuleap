@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Kanban\KanbanItemDao;
+
 class AgileDashboard_Presenter_KanbanSummaryPresenter
 {
     /** @var AgileDashboard_Kanban */
     private $kanban;
 
-    /** @var AgileDashboard_KanbanItemDao */
+    /** @var KanbanItemDao */
     private $kanban_item_dao;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
-        AgileDashboard_KanbanItemDao $kanban_item_dao,
+        KanbanItemDao $kanban_item_dao,
     ) {
         $this->kanban          = $kanban;
         $this->kanban_item_dao = $kanban_item_dao;
@@ -46,16 +48,16 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter
 
     public function count_open_kanban_items()
     {
-        return $this->kanban_item_dao->getOpenItemIds(
+        return count($this->kanban_item_dao->getOpenItemIds(
             $this->kanban->getTrackerId()
-        )->count();
+        ));
     }
 
     public function count_closed_kanban_items()
     {
-        return $this->kanban_item_dao->getKanbanArchiveItemIds(
+        return count($this->kanban_item_dao->getKanbanArchiveItemIds(
             $this->kanban->getTrackerId()
-        )->count();
+        ));
     }
 
     public function open()

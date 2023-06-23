@@ -17,51 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_KanbanItemManager
 {
     /**
-     * @var AgileDashboard_KanbanItemDao
+     * @var KanbanItemDao
      */
     private $item_dao;
 
-    public function __construct(AgileDashboard_KanbanItemDao $item_dao)
+    public function __construct(KanbanItemDao $item_dao)
     {
         $this->item_dao = $item_dao;
     }
 
     public function isKanbanItemInBacklog(Artifact $artifact)
     {
-        $row = $this->item_dao->isKanbanItemInBacklog($artifact->getTrackerId(), $artifact->getId())->getRow();
-
-        if (! $row) {
-            return false;
-        }
-
-        return true;
+        return count($this->item_dao->isKanbanItemInBacklog($artifact->getTrackerId(), $artifact->getId())) > 0;
     }
 
     public function isKanbanItemInArchive(Artifact $artifact)
     {
-        $row = $this->item_dao->isKanbanItemInArchive($artifact->getTrackerId(), $artifact->getId())->getRow();
-
-        if (! $row) {
-            return false;
-        }
-
-        return true;
+        return count($this->item_dao->isKanbanItemInArchive($artifact->getTrackerId(), $artifact->getId())) > 0;
     }
 
     public function getColumnIdOfKanbanItem(Artifact $artifact)
     {
-        $row = $this->item_dao->getColumnIdOfKanbanItem($artifact->getTrackerId(), $artifact->getId())->getRow();
-
-        if (! $row) {
-            return null;
-        }
-
-        return (int) $row['bindvalue_id'];
+        return $this->item_dao->getColumnIdOfKanbanItem($artifact->getTrackerId(), $artifact->getId());
     }
 
     public function getKanbanItemIndexInBacklog(Artifact $artifact)

@@ -19,18 +19,18 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_KanbanItemDao;
+use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class TimeInfoFactory
 {
     /**
-     * @var AgileDashboard_KanbanItemDao
+     * @var KanbanItemDao
      */
     private $dao;
 
-    public function __construct(AgileDashboard_KanbanItemDao $dao)
+    public function __construct(KanbanItemDao $dao)
     {
         $this->dao = $dao;
     }
