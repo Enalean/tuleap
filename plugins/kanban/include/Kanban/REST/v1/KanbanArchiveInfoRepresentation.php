@@ -17,26 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class KanbanArchiveInfoRepresentation
+final class KanbanArchiveInfoRepresentation
 {
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var bool
-     */
-    public $is_open;
-
-    public function __construct($label, $is_open)
+    public function __construct(public readonly string $label, public readonly bool $is_open)
     {
-        $this->label   = $label;
-        $this->is_open = $is_open;
     }
 }

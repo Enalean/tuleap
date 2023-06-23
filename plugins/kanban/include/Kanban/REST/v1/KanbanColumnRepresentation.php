@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_KanbanColumn;
 use Tuleap\REST\JsonCast;
@@ -26,7 +26,7 @@ use Tuleap\REST\JsonCast;
 /**
  * @psalm-immutable
  */
-class KanbanColumnRepresentation
+final class KanbanColumnRepresentation
 {
     public const ROUTE = "kanban_columns";
 
@@ -55,34 +55,16 @@ class KanbanColumnRepresentation
      */
     public $color;
 
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_add_in_place;
-
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_remove_column;
-
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_edit_label;
-
     public function __construct(
         AgileDashboard_KanbanColumn $column,
-        $user_can_add_in_place,
-        $user_can_remove_column,
-        $user_can_edit_label,
+        public readonly bool $user_can_add_in_place,
+        public readonly bool $user_can_remove_column,
+        public readonly bool $user_can_edit_label,
     ) {
-        $this->id                     = JsonCast::toInt($column->getId());
-        $this->label                  = $column->getLabel();
-        $this->is_open                = $column->isOpen();
-        $this->color                  = $column->getColor();
-        $this->limit                  = JsonCast::toInt($column->getLimit());
-        $this->user_can_add_in_place  = $user_can_add_in_place;
-        $this->user_can_remove_column = $user_can_remove_column;
-        $this->user_can_edit_label    = $user_can_edit_label;
+        $this->id      = JsonCast::toInt($column->getId());
+        $this->label   = $column->getLabel();
+        $this->is_open = $column->isOpen();
+        $this->color   = $column->getColor();
+        $this->limit   = JsonCast::toInt($column->getLimit());
     }
 }

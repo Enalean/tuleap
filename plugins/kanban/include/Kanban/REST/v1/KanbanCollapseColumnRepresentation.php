@@ -17,33 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class KanbanBacklogInfoRepresentation
+final class KanbanCollapseColumnRepresentation
 {
     /**
-     * @var string
+     * @var int
      */
-    public $label;
+    public $column_id;
 
     /**
      * @var bool
      */
-    public $is_open;
-
-    /**
-     * @var bool
-     */
-    public $user_can_add_in_place;
-
-    public function __construct($label, $is_open, $user_can_add_in_place)
-    {
-        $this->label   = $label;
-        $this->is_open = $is_open;
-
-        $this->user_can_add_in_place = $user_can_add_in_place;
-    }
+    public $value;
 }

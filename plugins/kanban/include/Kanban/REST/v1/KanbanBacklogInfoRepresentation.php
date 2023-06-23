@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,20 +13,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class KanbanColumnPOSTRepresentation
+final class KanbanBacklogInfoRepresentation
 {
-    public const ROUTE = "kanban";
-
-    /**
-     * @var string {@type string}
-     */
-    public $label;
+    public function __construct(
+        public readonly string $label,
+        public readonly bool $is_open,
+        public readonly bool $user_can_add_in_place,
+    ) {
+    }
 }

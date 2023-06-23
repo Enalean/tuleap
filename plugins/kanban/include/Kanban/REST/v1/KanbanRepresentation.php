@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanActionsChecker;
@@ -31,7 +31,7 @@ use Tuleap\REST\JsonCast;
 /**
  * @psalm-immutable
  */
-class KanbanRepresentation
+final class KanbanRepresentation
 {
     public const ROUTE         = 'kanban';
     public const BACKLOG_ROUTE = 'backlog';
@@ -63,7 +63,7 @@ class KanbanRepresentation
     public $label;
 
     /**
-     * @var array {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation}
+     * @var array {@type Tuleap\Kanban\REST\v1\KanbanColumnRepresentation}
      */
     public $columns;
 
@@ -130,9 +130,9 @@ class KanbanRepresentation
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanUserPreferences $user_preferences,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
-        $user_can_add_columns,
-        $user_can_reorder_columns,
-        $user_can_add_in_place,
+        bool $user_can_add_columns,
+        bool $user_can_reorder_columns,
+        bool $user_can_add_in_place,
         bool $user_can_add_artifact,
         PFUser $user,
     ): self {

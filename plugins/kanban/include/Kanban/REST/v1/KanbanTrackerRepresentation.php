@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use TrackerFactory;
@@ -33,37 +33,17 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 final class KanbanTrackerRepresentation
 {
     /**
-     * @var int ID of the tracker
-     */
-    public $id;
-
-    /**
      * @var string URI of the tracker
      */
     public $uri;
 
-    /**
-     * @var string Display Name of the tracker
-     */
-    public $label;
-
-    /**
-     * @var string Name of the item of the tracker
-     */
-    public $item_name;
-
-    /**
-     * @var ProjectReference
-     */
-    public $project;
-
-    private function __construct(int $id, string $label, string $item_name, ProjectReference $project)
-    {
-        $this->id        = $id;
-        $this->uri       = CompleteTrackerRepresentation::ROUTE . '/' . $id;
-        $this->label     = $label;
-        $this->item_name = $item_name;
-        $this->project   = $project;
+    private function __construct(
+        public readonly int $id,
+        public readonly string $label,
+        public readonly string $item_name,
+        public readonly ProjectReference $project,
+    ) {
+        $this->uri = CompleteTrackerRepresentation::ROUTE . '/' . $id;
     }
 
     public static function fromKanban(TrackerFactory $tracker_factory, AgileDashboard_Kanban $kanban): self

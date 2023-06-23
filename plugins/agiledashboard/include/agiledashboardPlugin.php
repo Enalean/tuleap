@@ -179,6 +179,7 @@ use Tuleap\User\ProvideCurrentUser;
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../kanban/vendor/autoload.php';
 require_once 'constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
