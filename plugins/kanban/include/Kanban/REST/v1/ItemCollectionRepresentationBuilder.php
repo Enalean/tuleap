@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.w
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanItemDao;
@@ -26,32 +26,22 @@ use Tracker_ArtifactFactory;
 use PFUser;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 
-class ItemCollectionRepresentationBuilder
+final class ItemCollectionRepresentationBuilder
 {
-    /** @var AgileDashboard_KanbanItemDao */
-    private $kanban_item_dao;
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-    /** @var ItemRepresentationBuilder */
-    private $item_representation_builder;
-
     public function __construct(
-        AgileDashboard_KanbanItemDao $kanban_item_dao,
-        Tracker_ArtifactFactory $artifact_factory,
-        ItemRepresentationBuilder $item_representation_builder,
+        private readonly AgileDashboard_KanbanItemDao $kanban_item_dao,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly ItemRepresentationBuilder $item_representation_builder,
     ) {
-        $this->kanban_item_dao             = $kanban_item_dao;
-        $this->artifact_factory            = $artifact_factory;
-        $this->item_representation_builder = $item_representation_builder;
     }
 
     public function build(
         ColumnIdentifier $column_identifier,
         PFUser $user,
         AgileDashboard_Kanban $kanban,
-        $limit,
-        $offset,
-    ) {
+        int $limit,
+        int $offset,
+    ): ItemCollectionRepresentation {
         if ($column_identifier->isBacklog()) {
             $data = $this->kanban_item_dao->searchPaginatedBacklogItemsByTrackerId(
                 $kanban->getTrackerId(),

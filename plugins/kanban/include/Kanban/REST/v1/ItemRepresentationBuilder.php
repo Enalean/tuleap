@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_KanbanItemManager;
 use Cardwall_Semantic_CardFields;
@@ -26,43 +26,23 @@ use EventManager;
 use PFUser;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
-class ItemRepresentationBuilder
+final class ItemRepresentationBuilder
 {
-    /** @var AgileDashboard_KanbanItemManager */
-    private $kanban_item_manager;
-    /** @var TimeInfoFactory */
-    private $time_info_factory;
-    /** @var UserManager */
-    private $user_manager;
-    /** @var EventManager */
-    private $event_manager;
-    /**
-     * @var BackgroundColorBuilder
-     */
-    private $background_color_builder;
-
     public function __construct(
-        AgileDashboard_KanbanItemManager $kanban_item_manager,
-        TimeInfoFactory $time_info_factory,
-        UserManager $user_manager,
-        EventManager $event_manager,
-        BackgroundColorBuilder $background_color_builder,
+        private readonly AgileDashboard_KanbanItemManager $kanban_item_manager,
+        private readonly TimeInfoFactory $time_info_factory,
+        private readonly UserManager $user_manager,
+        private readonly EventManager $event_manager,
+        private readonly BackgroundColorBuilder $background_color_builder,
     ) {
-        $this->kanban_item_manager      = $kanban_item_manager;
-        $this->time_info_factory        = $time_info_factory;
-        $this->user_manager             = $user_manager;
-        $this->event_manager            = $event_manager;
-        $this->background_color_builder = $background_color_builder;
     }
 
-    /**
-     * @return KanbanItemRepresentation
-     */
-    public function buildItemRepresentation(Artifact $artifact)
+    public function buildItemRepresentation(Artifact $artifact): KanbanItemRepresentation
     {
         $item_in_backlog = $this->kanban_item_manager->isKanbanItemInBacklog($artifact);
         $in_column       = ($item_in_backlog) ? ColumnIdentifier::BACKLOG_COLUMN : null;
@@ -85,30 +65,33 @@ class ItemRepresentationBuilder
         return $item_representation;
     }
 
-    /**
-     * @return KanbanItemRepresentation
-     */
-    public function buildItemRepresentationInColumn(ColumnIdentifier $column_identifier, Artifact $artifact)
-    {
+    public function buildItemRepresentationInColumn(
+        ColumnIdentifier $column_identifier,
+        Artifact $artifact,
+    ): KanbanItemRepresentation {
         $time_info = $column_identifier->isBacklog() ? [] : $this->time_info_factory->getTimeInfo($artifact);
 
         return $this->buildItem($column_identifier, $artifact, $time_info);
     }
 
-    /**
-     * @param $time_info
-     * @return KanbanItemRepresentation
-     */
-    private function buildItem(ColumnIdentifier $column_identifier, Artifact $artifact, array $time_info)
-    {
+    private function buildItem(
+        ColumnIdentifier $column_identifier,
+        Artifact $artifact,
+        array $time_info,
+    ): KanbanItemRepresentation {
         $current_user         = $this->user_manager->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($artifact);
-        $card_fields          = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
-        $background_color     = $this->background_color_builder->build(
-            $card_fields_semantic,
-            $artifact,
-            $current_user
-        );
+
+        $card_fields      = [];
+        $background_color = new BackgroundColor('');
+        if ($card_fields_semantic) {
+            $card_fields      = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
+            $background_color = $this->background_color_builder->build(
+                $card_fields_semantic,
+                $artifact,
+                $current_user
+            );
+        }
 
         return KanbanItemRepresentation::build(
             $artifact,
@@ -119,33 +102,33 @@ class ItemRepresentationBuilder
         );
     }
 
-    /**
-     * @return array
-     */
     private function getCardFields(
         Cardwall_Semantic_CardFields $card_fields_semantic,
         Artifact $artifact,
         PFUser $current_user,
-    ) {
+    ): array {
         $card_fields = [];
 
         foreach ($card_fields_semantic->getFields() as $field) {
-            if ($field->userCanRead($current_user)) {
-                $value = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+            if (! $field->userCanRead($current_user)) {
+                continue;
+            }
 
-                if ($value) {
-                    $card_fields[] = $value;
-                }
+            $changeset = $artifact->getLastChangeset();
+            if (! $changeset) {
+                continue;
+            }
+
+            $value = $field->getFullRESTValue($current_user, $changeset);
+            if ($value) {
+                $card_fields[] = $value;
             }
         }
 
         return $card_fields;
     }
 
-    /**
-     * @return Cardwall_Semantic_CardFields|null
-     */
-    private function getCardFieldsSemantic(Artifact $artifact)
+    private function getCardFieldsSemantic(Artifact $artifact): ?Cardwall_Semantic_CardFields
     {
         $card_fields_semantic = null;
 

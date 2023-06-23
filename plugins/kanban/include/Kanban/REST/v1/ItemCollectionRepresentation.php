@@ -17,12 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class ItemCollectionRepresentation
+final class ItemCollectionRepresentation
 {
     /** @var KanbanItemRepresentation[] */
     public $collection;
@@ -32,9 +32,8 @@ class ItemCollectionRepresentation
 
     /**
      * @param KanbanItemRepresentation[] $collection
-     * @param int $total_size
      */
-    public function __construct($collection, $total_size)
+    public function __construct(array $collection, int $total_size)
     {
         $this->collection = $collection;
         $this->total_size = $total_size;

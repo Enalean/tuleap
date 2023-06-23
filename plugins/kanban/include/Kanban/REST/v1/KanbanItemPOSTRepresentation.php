@@ -17,12 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class KanbanItemPOSTRepresentation
+final class KanbanItemPOSTRepresentation
 {
     public const ROUTE = 'kanban_items';
 
@@ -39,5 +39,5 @@ class KanbanItemPOSTRepresentation
     /**
      * @var int {@type int} {@required false}
      */
-    public $column_id = null;
+    public $column_id = 0;
 }

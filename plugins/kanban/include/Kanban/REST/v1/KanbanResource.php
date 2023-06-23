@@ -62,11 +62,6 @@ use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
 use TransitionFactory;
 use Tuleap\Kanban\Realtime\KanbanStructureRealTimeMercure;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
@@ -109,7 +104,7 @@ use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresenta
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredDiagramRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredItemCollectionRepresentationBuilder;
+use Tuleap\Kanban\REST\v1\TrackerReport\FilteredItemCollectionRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
@@ -149,7 +144,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
 
-class KanbanResource extends AuthenticatedResource
+final class KanbanResource extends AuthenticatedResource
 {
     public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';

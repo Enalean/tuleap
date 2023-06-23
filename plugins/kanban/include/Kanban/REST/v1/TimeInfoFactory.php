@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_KanbanItemDao;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TimeInfoFactory
+final class TimeInfoFactory
 {
     /**
      * @var AgileDashboard_KanbanItemDao

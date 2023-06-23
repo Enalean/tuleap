@@ -243,11 +243,9 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject
      * then goes back to Done column at t4, and finally come back at t5.
      * The returned value is expected to be t5.
      *
-     * @param type $item_id The archived item id
-     *
      * @return int|null
      */
-    public function getTimeInfoForArchivedItem($item_id)
+    public function getTimeInfoForArchivedItem(int $item_id)
     {
         $item_id = $this->da->escapeInt($item_id);
 
