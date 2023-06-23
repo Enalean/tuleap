@@ -82,8 +82,6 @@ let
 
     patches = [
       ./mediawiki-extensions/mpdf-extension-mpdf-8.patch
-      # To be removed when https://gerrit.wikimedia.org/r/c/mediawiki/extensions/TuleapWikiFarm/+/910770 is released
-      ./mediawiki-extensions/Disable-process-default-timeout-when-running-install-migration.patch
     ];
 
     unpackPhase = ''
