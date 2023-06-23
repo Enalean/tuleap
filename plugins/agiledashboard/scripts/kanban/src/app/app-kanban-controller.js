@@ -414,7 +414,6 @@ function KanbanCtrl(
                 if (!artifact) {
                     return;
                 }
-
                 highlightColumn($scope, artifact, SharedPropertiesService.getKanban());
 
                 Object.assign(artifact, {
@@ -431,7 +430,10 @@ function KanbanCtrl(
                 const column = ColumnCollectionService.getColumn(artifact.in_column),
                     compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
 
-                if (!SharedPropertiesService.isNodeServerConnected()) {
+                if (
+                    !SharedPropertiesService.isNodeServerConnected() &&
+                    !SharedPropertiesService.isMercureServerConnected()
+                ) {
                     KanbanColumnService.addItem(artifact, column, compared_to);
                     KanbanColumnService.filterItems(column);
                 }

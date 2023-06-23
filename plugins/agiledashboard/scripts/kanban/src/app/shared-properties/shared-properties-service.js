@@ -16,6 +16,7 @@ function SharedPropertiesService() {
         widget_id: 0,
         kanban_url: "",
         mercure_enabled: false,
+        is_mercure_server_connected: false,
     };
 
     return {
@@ -62,6 +63,12 @@ function SharedPropertiesService() {
         },
         isNodeServerConnected() {
             return property.is_node_server_connected;
+        },
+        setIsMercureServerConnected(is_mercure_server_connected) {
+            property.is_mercure_server_connected = is_mercure_server_connected;
+        },
+        isMercureServerConnected() {
+            return property.is_mercure_server_connected;
         },
         getUUID() {
             return property.uuid;
