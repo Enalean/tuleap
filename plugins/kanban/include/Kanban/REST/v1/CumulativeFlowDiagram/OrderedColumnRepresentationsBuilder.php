@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
@@ -28,29 +28,22 @@ use PFUser;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 
-class OrderedColumnRepresentationsBuilder
+final class OrderedColumnRepresentationsBuilder
 {
     public const BACKLOG_BINDVALUE_ID = 100;
     public const MAX_POSSIBLE_POINTS  = 90;
 
-    /** @var AgileDashboard_KanbanColumnFactory */
-    private $kanban_column_factory;
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
     public function __construct(
-        AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        Tracker_ArtifactFactory $artifact_factory,
+        private readonly AgileDashboard_KanbanColumnFactory $kanban_column_factory,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
     ) {
-        $this->kanban_column_factory = $kanban_column_factory;
-        $this->artifact_factory      = $artifact_factory;
     }
 
     /**
      * @return array
      * @throws TooManyPointsException
      */
-    public function getDates(DateTime $start_date, DateTime $end_date, $interval_between_point)
+    public function getDates(DateTime $start_date, DateTime $end_date, int $interval_between_point)
     {
         $dates = [];
 
@@ -68,16 +61,14 @@ class OrderedColumnRepresentationsBuilder
     }
 
     /**
-     * @param array $dates
-     * @param $items_in_columns
-     * @return array
+     * @return DiagramColumnRepresentation[]
      */
     public function build(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         array $dates,
-        $items_in_columns,
-    ) {
+        array $items_in_columns,
+    ): array {
         $items_count_for_archive            = array_fill_keys($dates, 0);
         $items_count_grouped_by_open_column = [
             self::BACKLOG_BINDVALUE_ID => array_fill_keys($dates, 0),
@@ -112,8 +103,10 @@ class OrderedColumnRepresentationsBuilder
     /**
      * @return DiagramColumnRepresentation[]
      */
-    private function buildOpenColumnsRepresentation(array $items_count_grouped_by_open_column, array $open_columns)
-    {
+    private function buildOpenColumnsRepresentation(
+        array $items_count_grouped_by_open_column,
+        array $open_columns,
+    ): array {
         $open_column_representations_item_counts = [];
         foreach ($items_count_grouped_by_open_column as $column_id => $items_count) {
             foreach ($items_count as $day => $count) {
@@ -148,11 +141,9 @@ class OrderedColumnRepresentationsBuilder
         return $ordered_open_column_representations;
     }
 
-    /**
-     * @return DiagramColumnRepresentation
-     */
-    private function buildBacklogColumnRepresentation(array $open_column_representations_item_counts)
-    {
+    private function buildBacklogColumnRepresentation(
+        array $open_column_representations_item_counts,
+    ): DiagramColumnRepresentation {
         return new DiagramColumnRepresentation(
             ColumnIdentifier::BACKLOG_COLUMN,
             'Backlog',
@@ -160,10 +151,7 @@ class OrderedColumnRepresentationsBuilder
         );
     }
 
-    /**
-     * @return DiagramColumnRepresentation
-     */
-    private function buildArchiveColumnRepresentation(array $archive_items_count)
+    private function buildArchiveColumnRepresentation(array $archive_items_count): DiagramColumnRepresentation
     {
         $archive_representation_item_counts = [];
         foreach ($archive_items_count as $day => $kanban_item_counts) {

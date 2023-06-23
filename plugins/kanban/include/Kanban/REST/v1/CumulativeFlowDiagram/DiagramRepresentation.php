@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
-use Tuleap\REST\JsonCast;
-
-class DiagramPointRepresentation
+/**
+ * @psalm-immutable
+ */
+final class DiagramRepresentation
 {
-    /** @var string */
-    public $start_date;
+    /** @var DiagramColumnRepresentation[] */
+    public array $columns;
 
-    /** @var int */
-    public $kanban_items_count;
-
-    public function build(
-        $start_date,
-        $kanban_items_count,
-    ) {
-        $this->start_date         = $start_date;
-        $this->kanban_items_count = JsonCast::toInt($kanban_items_count);
+    /**
+     * @param DiagramColumnRepresentation[] $columns
+     */
+    public function __construct(array $columns)
+    {
+        $this->columns = $columns;
     }
 }
