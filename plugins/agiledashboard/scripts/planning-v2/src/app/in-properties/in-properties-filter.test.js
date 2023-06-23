@@ -662,7 +662,7 @@ describe("InPropertiesItemFilter", () => {
                     {
                         id: null,
                         label: null,
-                        card_fields: [{ type: "tbl", values: [{ label: "Reopen" }] }],
+                        card_fields: [{ type: "tbl", bind_value_objects: [{ label: "Reopen" }] }],
                     },
                 ];
 
@@ -679,7 +679,7 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "tbl",
-                                values: [{ display_name: "Mr Toto " }],
+                                bind_value_objects: [{ display_name: "Mr Toto " }],
                             },
                         ],
                     },

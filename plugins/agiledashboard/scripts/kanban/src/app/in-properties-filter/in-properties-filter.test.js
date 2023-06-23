@@ -382,7 +382,7 @@ describe("InPropertiesItemFilter", () => {
                 "toto"
             )
         ).toHaveLength(1);
-        ["sb", "rb", "cb", "msb", "tbl", "shared"].forEach(function (list_type) {
+        ["sb", "rb", "cb", "msb", "shared"].forEach(function (list_type) {
             expect(
                 in_properties_filter(
                     [
@@ -442,6 +442,23 @@ describe("InPropertiesItemFilter", () => {
                 )
             ).toHaveLength(0);
         });
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "tbl",
+                                bind_value_objects: [{ label: "Mr Toto" }],
+                            },
+                        ],
+                    },
+                ],
+                "toto"
+            )
+        ).toHaveLength(1);
         ["date", "lud", "subon"].forEach(function (date_type) {
             var today = new Date();
 
