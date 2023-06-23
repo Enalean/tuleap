@@ -16,19 +16,22 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-namespace Tuleap\AgileDashboard;
+namespace Tuleap\Kanban;
 
 use Tracker;
 use Tuleap\RealTime\MessageRightsPresenter;
 use Tracker_Permission_PermissionsSerializer;
 
-class KanbanRightsPresenter implements MessageRightsPresenter
+final class KanbanRightsPresenter implements MessageRightsPresenter
 {
-    public $submitter_id;
-    public $submitter_can_view;
-    public $submitter_only;
-    public $artifact;
-    public $tracker;
+    public ?int $submitter_id;
+    public bool $submitter_can_view;
+    public array $submitter_only;
+    public array $artifact;
+    /**
+     * @var list<string>
+     */
+    public array $tracker;
 
     public function __construct(
         Tracker $tracker,
