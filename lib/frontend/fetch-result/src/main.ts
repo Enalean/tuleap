@@ -95,7 +95,7 @@ export const getJSON = buildGetJSON(response_retriever);
  * until all elements have been retrieved. If `limit` and `offset` `params` are not supplied, it defaults
  * `limit` to 100 and `offset` to 0.
  *
- * It is possible to control the number of parallel requests by providing a `max_parralel_requests` key in `options`.
+ * It is possible to control the number of parallel requests by providing a `max_parallel_requests` key in `options`.
  * Default value is 6 parallel requests.
  *
  * `getAllJSON` returns an `Ok` variant containing a single, flat array of `TypeOfArrayItem`.
@@ -256,7 +256,6 @@ export const del = buildDelete(response_retriever);
 /**
  * `postFormWithTextResponse` sends a `FormData` body with POST method and returns an `Ok` variant containing the
  * response text.
- * It automatically sets the "Content-Type" header to "application/x-www-form-urlencoded".
  * If there was a problem (network error, remote API error, Text parsing error), it returns an `Err` variant
  * containing a `Fault` with the response text.
  *

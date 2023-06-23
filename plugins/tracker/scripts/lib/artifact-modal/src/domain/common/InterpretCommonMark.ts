@@ -17,5 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const credentials: RequestCredentials = "same-origin";
-export const json_headers = new Headers({ "Content-Type": "application/json" });
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+
+export type InterpretCommonMark = {
+    interpretCommonMark(commonmark: string): ResultAsync<string, Fault>;
+};

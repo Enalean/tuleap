@@ -25,8 +25,11 @@ import { DidUploadImage } from "../fields/file-field/DidUploadImage";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
+import { InterpretCommonMarkStub } from "../../../tests/stubs/InterpretCommonMarkStub";
+import { WillDisableSubmit } from "../submit/WillDisableSubmit";
 
 const DEFAULT_TEXT_FORMAT: TextFieldFormat = TEXT_FORMAT_COMMONMARK;
+const HTML_STRING = "<strong>HTML</strong>";
 
 describe(`FormattedTextController`, () => {
     let dispatcher: EventDispatcher | DispatchEventsStub;
@@ -36,7 +39,11 @@ describe(`FormattedTextController`, () => {
     });
 
     const getController = (): FormattedTextControllerType =>
-        FormattedTextController(dispatcher, DEFAULT_TEXT_FORMAT);
+        FormattedTextController(
+            dispatcher,
+            InterpretCommonMarkStub.withHTML(HTML_STRING),
+            DEFAULT_TEXT_FORMAT
+        );
 
     describe(`getDefaultTextFormat()`, () => {
         it(`returns the default text format (text, html or commonmark)`, () => {
@@ -60,6 +67,34 @@ describe(`FormattedTextController`, () => {
 
         it(`when nobody responds, it returns nothing`, () => {
             expect(getController().getFileUploadSetup().isNothing()).toBe(true);
+        });
+    });
+
+    describe(`interpretCommonMark()`, () => {
+        it(`calls the interpreter and returns the result`, async () => {
+            const result = await getController().interpretCommonMark("**CommonMark**");
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toBe(HTML_STRING);
+        });
+    });
+
+    describe(`onFileUploadStart()`, () => {
+        it(`dispatches the event it receives`, () => {
+            dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+            getController().onFileUploadStart(WillDisableSubmit("Some reason"));
+
+            expect(dispatcher.getDispatchedEventTypes()).toContain("WillDisableSubmit");
+        });
+    });
+
+    describe(`onFileUploadError()`, () => {
+        it(`dispatches an Enable submit event`, () => {
+            dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+            getController().onFileUploadError();
+
+            expect(dispatcher.getDispatchedEventTypes()).toContain("WillEnableSubmit");
         });
     });
 

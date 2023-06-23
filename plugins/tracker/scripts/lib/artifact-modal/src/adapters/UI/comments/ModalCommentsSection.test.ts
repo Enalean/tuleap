@@ -34,7 +34,6 @@ import type { FollowupEditor } from "./FollowupEditor";
 import { CommentsController } from "../../../domain/comments/CommentsController";
 import { RetrieveCommentsStub } from "../../../../tests/stubs/RetrieveCommentsStub";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { CurrentProjectIdentifierStub } from "../../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { CommentUserPreferences } from "../../../domain/comments/CommentUserPreferences";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
@@ -84,8 +83,6 @@ describe(`ModalCommentsSection`, () => {
     describe(`template`, () => {
         let target: ShadowRoot, presenter: CommentsPresenter, preferences: CommentUserPreferences;
 
-        const PROJECT_ID = 146;
-
         beforeEach(() => {
             setCatalog({ getString: (msgid) => msgid });
             const doc = document.implementation.createHTMLDocument();
@@ -101,7 +98,6 @@ describe(`ModalCommentsSection`, () => {
                     RetrieveCommentsStub.withoutComments(),
                     DispatchEventsStub.buildNoOp(),
                     CurrentArtifactIdentifierStub.withId(91),
-                    CurrentProjectIdentifierStub.withId(PROJECT_ID),
                     preferences
                 ),
             } as HostElement;
@@ -148,7 +144,6 @@ describe(`ModalCommentsSection`, () => {
                 "[data-test=add-comment-form]"
             ) as FollowupEditor & HTMLElement;
             expect(followup_editor.format).toBe(TEXT_FORMAT_HTML);
-            expect(followup_editor.projectId).toBe(PROJECT_ID);
         });
     });
 });

@@ -22,7 +22,7 @@ import type { RetrieveResponse } from "./ResponseRetriever";
 import type { PostMethod } from "./constants";
 import { getURI } from "./auto-encoder";
 import type { EncodedURI } from "./uri-string-template";
-import { credentials, form_headers } from "./headers";
+import { credentials } from "./headers";
 import type { Fault } from "@tuleap/fault";
 import { TextErrorHandler } from "./faults/TextErrorHandler";
 import { decodeAsText } from "./text-decoder";
@@ -31,11 +31,6 @@ export const buildSendFormAndReceiveText =
     (response_retriever: RetrieveResponse, method: PostMethod) =>
     (uri: EncodedURI, payload: FormData): ResultAsync<string, Fault> =>
         response_retriever
-            .retrieveResponse(getURI(uri), {
-                method,
-                credentials,
-                headers: form_headers,
-                body: payload,
-            })
+            .retrieveResponse(getURI(uri), { method, credentials, body: payload })
             .andThen(TextErrorHandler().handleErrorResponse)
             .andThen(decodeAsText);

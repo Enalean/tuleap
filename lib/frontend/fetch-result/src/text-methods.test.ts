@@ -63,7 +63,6 @@ describe(`text-methods`, () => {
     it.each([...provider()])(
         `it will encode the given URI
         and set the %s method
-        and add the URL-encoded form Content-Type header
         and add the given FormData payload
         and will return a ResultAsync with the Response decoded as text`,
         async (expected_http_method, method_under_test) => {
@@ -82,13 +81,6 @@ describe(`text-methods`, () => {
             }
             expect(request_init.method).toBe(expected_http_method);
             expect(request_init.credentials).toBe("same-origin");
-
-            if (!(request_init.headers instanceof Headers)) {
-                throw Error("Expected headers to be set");
-            }
-            expect(request_init.headers.get("Content-Type")).toBe(
-                "application/x-www-form-urlencoded"
-            );
 
             if (!(request_init.body instanceof FormData)) {
                 throw Error("Expected body to be set");

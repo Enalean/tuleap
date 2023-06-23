@@ -22,7 +22,6 @@ import { html } from "hybrids";
 import { sanitize } from "dompurify";
 import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import { postInterpretCommonMark } from "../api/tuleap-api";
 import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
 import "../common/FormatSelector";
 import "../common/RichTextEditor";
@@ -33,7 +32,6 @@ export interface TextAndFormat {
     contentValue: string;
     required: boolean;
     disabled: boolean;
-    projectId: number;
     interpreted_commonmark: string;
     is_in_preview_mode: boolean;
     is_preview_loading: boolean;
@@ -59,18 +57,20 @@ export const interpretCommonMark = async (host: TextAndFormat, content: string):
         host.is_in_preview_mode = false;
         return;
     }
-    try {
-        host.is_preview_loading = true;
-        host.interpreted_commonmark = await postInterpretCommonMark(content, host.projectId);
-    } catch (error) {
-        host.has_error = true;
-        if (error instanceof Error) {
-            host.error_message = error.message;
+    host.is_preview_loading = true;
+    await host.controller.interpretCommonMark(content).match(
+        (html_string) => {
+            host.is_preview_loading = false;
+            host.is_in_preview_mode = true;
+            host.interpreted_commonmark = html_string;
+        },
+        (fault) => {
+            host.is_preview_loading = false;
+            host.is_in_preview_mode = true;
+            host.has_error = true;
+            host.error_message = String(fault);
         }
-    } finally {
-        host.is_in_preview_mode = true;
-        host.is_preview_loading = false;
-    }
+    );
 };
 
 const togglePreview = (host: TextAndFormat): void => {

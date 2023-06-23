@@ -102,7 +102,10 @@ function ArtifactModalController(
     const current_artifact_option = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
-    const api_client = TuleapAPIClient(current_artifact_option);
+    const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
+        modal_model.tracker
+    );
+    const api_client = TuleapAPIClient(current_artifact_option, current_project_identifier);
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
@@ -113,9 +116,6 @@ function ArtifactModalController(
     );
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
         modal_model.tracker_id
-    );
-    const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
-        modal_model.tracker
     );
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
@@ -157,7 +157,6 @@ function ArtifactModalController(
             api_client,
             event_dispatcher,
             current_artifact_option.unwrapOr(null), // It is not built in creation mode
-            current_project_identifier,
             {
                 locale: modal_model.user_locale,
                 date_time_format: modal_model.user_date_time_format,
@@ -243,7 +242,11 @@ function ArtifactModalController(
             );
         },
         getFormattedTextController: () => {
-            return FormattedTextController(event_dispatcher, modal_model.text_fields_format);
+            return FormattedTextController(
+                event_dispatcher,
+                api_client,
+                modal_model.text_fields_format
+            );
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,

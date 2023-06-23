@@ -57,6 +57,8 @@ import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
 import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
+import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
+import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
 const ARTIFACT_ID = 90;
 const ARTIFACT_2_ID = 10;
@@ -64,19 +66,24 @@ const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
-const PROJECT = { id: 179, label: "Guinea Pig", icon: "🐹" };
+const PROJECT_ID = 179;
+const PROJECT = { id: PROJECT_ID, label: "Guinea Pig", icon: "🐹" };
 
 describe(`TuleapAPIClient`, () => {
-    let current_artifact_option: Option<CurrentArtifactIdentifier>;
+    let current_artifact_option: Option<CurrentArtifactIdentifier>,
+        current_project_identifier: CurrentProjectIdentifier;
 
     beforeEach(() => {
         current_artifact_option = Option.nothing();
+        current_project_identifier = CurrentProjectIdentifierStub.withId(PROJECT_ID);
     });
+
+    const getClient = (): ReturnType<typeof TuleapAPIClient> =>
+        TuleapAPIClient(current_artifact_option, current_project_identifier);
 
     describe(`getParent()`, () => {
         const getParent = (): ResultAsync<ParentArtifact, Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return getClient().getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
         it(`will return the parent artifact matching the given id`, async () => {
@@ -97,8 +104,7 @@ describe(`TuleapAPIClient`, () => {
         const COLOR = "deep-blue";
 
         const getMatching = (): ResultAsync<LinkableArtifact, Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getMatchingArtifact(LinkableNumberStub.withId(ARTIFACT_ID));
+            return getClient().getMatchingArtifact(LinkableNumberStub.withId(ARTIFACT_ID));
         };
 
         it(`will return a Linkable Artifact matching the given number`, async () => {
@@ -127,8 +133,7 @@ describe(`TuleapAPIClient`, () => {
 
     describe(`getAllLinkTypes()`, () => {
         const getAllLinkTypes = (): ResultAsync<readonly LinkType[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return getClient().getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
         it(`will return an array of link types`, async () => {
@@ -169,8 +174,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getLinkedArtifactsByLinkType(
+            return getClient().getLinkedArtifactsByLinkType(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
                 link_type
             );
@@ -220,8 +224,7 @@ describe(`TuleapAPIClient`, () => {
         const TRACKER_ID = 36;
 
         const getPossibleParents = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getPossibleParents(CurrentTrackerIdentifierStub.withId(TRACKER_ID));
+            return getClient().getPossibleParents(CurrentTrackerIdentifierStub.withId(TRACKER_ID));
         };
 
         it(`will return an array of linkable artifacts`, async () => {
@@ -269,8 +272,7 @@ describe(`TuleapAPIClient`, () => {
                 file_handle: { name: FILE_NAME, size: FILE_SIZE } as File,
             };
 
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.createFileUpload(new_file_upload);
+            return getClient().createFileUpload(new_file_upload);
         };
 
         it(`will create a new file upload to be completed with TUS`, async () => {
@@ -305,8 +307,7 @@ describe(`TuleapAPIClient`, () => {
     describe("getUserArtifactHistory()", () => {
         const USER_ID = 102;
         const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getUserArtifactHistory(UserIdentifierStub.fromUserId(USER_ID));
+            return getClient().getUserArtifactHistory(UserIdentifierStub.fromUserId(USER_ID));
         };
         it(`will return user history entries which are "artifact" type as linkable artifact`, async () => {
             const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };
@@ -333,8 +334,7 @@ describe(`TuleapAPIClient`, () => {
         const SEARCH_QUERY = "bookwright";
 
         const searchArtifacts = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.searchArtifacts(SEARCH_QUERY);
+            return getClient().searchArtifacts(SEARCH_QUERY);
         };
 
         it(`will return search results with type "artifact" as linkable artifacts`, async () => {
@@ -379,8 +379,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getComments(
+            return getClient().getComments(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
                 is_order_inverted
             );
@@ -438,8 +437,7 @@ describe(`TuleapAPIClient`, () => {
             SECOND_PROJECT_LABEL = "Hidden Street";
 
         const getProjects = (): ResultAsync<readonly Project[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getProjects();
+            return getClient().getProjects();
         };
 
         it(`will return an array of Projects`, async () => {
@@ -479,8 +477,7 @@ describe(`TuleapAPIClient`, () => {
                 { field_id: FIELD_ID, value: "genetic doctrinarianism" },
             ];
 
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.createArtifact(
+            return getClient().createArtifact(
                 TrackerIdentifierStub.withId(TRACKER_ID),
                 changeset_values
             );
@@ -516,8 +513,7 @@ describe(`TuleapAPIClient`, () => {
             SECOND_TRACKER_COLOR = "deep-blue";
 
         const getTrackers = (): ResultAsync<readonly Tracker[], Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getTrackersByProject(ProjectIdentifierStub.withId(PROJECT_ID));
+            return getClient().getTrackersByProject(ProjectIdentifierStub.withId(PROJECT_ID));
         };
 
         it(`will return an array of Trackers`, async () => {
@@ -561,8 +557,9 @@ describe(`TuleapAPIClient`, () => {
     describe(`getTrackerWithTitle()`, () => {
         const TRACKER_ID = 32;
         const getTracker = (): ResultAsync<TrackerWithTitleSemantic, Fault> => {
-            const client = TuleapAPIClient(current_artifact_option);
-            return client.getTrackerWithTitleSemantic(TrackerIdentifierStub.withId(TRACKER_ID));
+            return getClient().getTrackerWithTitleSemantic(
+                TrackerIdentifierStub.withId(TRACKER_ID)
+            );
         };
 
         it(`will return a Tracker with data about its Title field id`, async () => {
@@ -576,6 +573,31 @@ describe(`TuleapAPIClient`, () => {
 
             expect(result.unwrapOr(null)).toBe(tracker);
             expect(getJSON.mock.calls[0][0]).toStrictEqual(uri`/api/trackers/${TRACKER_ID}`);
+        });
+    });
+
+    describe(`interpretCommonMark()`, () => {
+        const MARKDOWN_STRING = `**Markdown** content`;
+        const HTML_STRING = `<p><strong>Markdown</strong> content</p>`;
+        const interpretCuiller = (): ResultAsync<string, Fault> => {
+            return getClient().interpretCommonMark(MARKDOWN_STRING);
+        };
+
+        it(`will return the HTML string resulting from interpretation of the given CommonMark`, async () => {
+            const postSpy = jest
+                .spyOn(fetch_result, "postFormWithTextResponse")
+                .mockReturnValue(okAsync(HTML_STRING));
+
+            const result = await interpretCuiller();
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toBe(HTML_STRING);
+            expect(postSpy.mock.calls[0][0]).toStrictEqual(
+                uri`/project/${PROJECT_ID}/interpret-commonmark`
+            );
+            const request_body = postSpy.mock.calls[0][1];
+            expect(request_body.get("content")).toBe(MARKDOWN_STRING);
         });
     });
 });

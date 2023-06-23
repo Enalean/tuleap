@@ -25,10 +25,14 @@ import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSe
 import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../submit/WillEnableSubmit";
 import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { InterpretCommonMark } from "./InterpretCommonMark";
 
 export type FormattedTextControllerType = {
     getDefaultTextFormat(): TextFieldFormat;
     getFileUploadSetup(): Option<FileUploadSetup>;
+    interpretCommonMark(commonmark: string): ResultAsync<string, Fault>;
     onFileUploadStart(event: WillDisableSubmit): void;
     onFileUploadError(): void;
     onFileUploadSuccess(event: DidUploadImage): void;
@@ -36,6 +40,7 @@ export type FormattedTextControllerType = {
 
 export const FormattedTextController = (
     event_dispatcher: DispatchEvents,
+    commonmark_retriever: InterpretCommonMark,
     default_text_format: TextFieldFormat
 ): FormattedTextControllerType => ({
     getDefaultTextFormat: () => default_text_format,
@@ -45,6 +50,8 @@ export const FormattedTextController = (
         event_dispatcher.dispatch(event);
         return event.setup;
     },
+
+    interpretCommonMark: commonmark_retriever.interpretCommonMark,
 
     onFileUploadStart(event): void {
         event_dispatcher.dispatch(event);
