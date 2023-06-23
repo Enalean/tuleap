@@ -20,18 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
+namespace Tuleap\Kanban\REST\v1\TrackerReport;
 
 use PFUser;
 use Tracker_Report;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
+use Tuleap\Kanban\REST\v1\ItemCollectionRepresentation;
+use Tuleap\Kanban\REST\v1\ItemRepresentationBuilder;
+use Tuleap\Kanban\REST\v1\KanbanItemRepresentation;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 
-class FilteredItemCollectionRepresentationBuilder
+final class FilteredItemCollectionRepresentationBuilder
 {
     public function __construct(
         private readonly ReportFilterFromWhereBuilder $from_where_builder,
@@ -44,9 +45,9 @@ class FilteredItemCollectionRepresentationBuilder
         ColumnIdentifier $column_identifier,
         PFUser $user,
         Tracker_Report $report,
-        $limit,
-        $offset,
-    ) {
+        int $limit,
+        int $offset,
+    ): ItemCollectionRepresentation {
         $additional_from_where = $this->from_where_builder->getFromWhere($report->getTracker(), $column_identifier);
 
         $artifact_collection = $this->report_artifact_factory->getRankedArtifactsMatchingReportWithAdditionalFromWhere(
@@ -65,11 +66,14 @@ class FilteredItemCollectionRepresentationBuilder
         return new ItemCollectionRepresentation($item_collection, $artifact_collection->getTotalSize());
     }
 
+    /**
+     * @return KanbanItemRepresentation[]
+     */
     private function getItemCollectionFromArtifactCollection(
         ColumnIdentifier $column_identifier,
         PFUser $user,
         ArtifactMatchingReportCollection $artifact_collection,
-    ) {
+    ): array {
         $item_collection = [];
         foreach ($artifact_collection->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($user)) {

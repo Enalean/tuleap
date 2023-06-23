@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanActionsChecker;
@@ -26,38 +26,17 @@ use AgileDashboard_KanbanUserPreferences;
 use Exception;
 use PFUser;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
-use Tuleap\Kanban\REST\v1\KanbanRepresentation;
 
-class KanbanRepresentationBuilder
+final class KanbanRepresentationBuilder
 {
-    /**
-     * @var AgileDashboard_KanbanUserPreferences
-     */
-    private $user_preferences;
-    /**
-     * @var AgileDashboard_KanbanColumnFactory
-     */
-    private $kanban_column_factory;
-
-    /**
-     * @var AgileDashboard_KanbanActionsChecker
-     */
-    private $kanban_actions_checker;
-
     public function __construct(
-        AgileDashboard_KanbanUserPreferences $user_preferences,
-        AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
+        private readonly AgileDashboard_KanbanUserPreferences $user_preferences,
+        private readonly AgileDashboard_KanbanColumnFactory $kanban_column_factory,
+        private readonly AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
-        $this->kanban_column_factory  = $kanban_column_factory;
-        $this->user_preferences       = $user_preferences;
-        $this->kanban_actions_checker = $kanban_actions_checker;
     }
 
-    /**
-     * @return KanbanRepresentation
-     */
-    public function build(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function build(AgileDashboard_Kanban $kanban, PFUser $user): KanbanRepresentation
     {
         try {
             $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);

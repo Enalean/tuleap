@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 /**
  * @psalm-immutable
  */
-class KanbanItemRepresentation
+final class KanbanItemRepresentation
 {
     /**
      * @var Int
@@ -96,7 +96,7 @@ class KanbanItemRepresentation
      */
     public static function build(
         Artifact $artifact,
-        $timeinfo,
+        array $timeinfo,
         $in_column,
         array $card_fields,
         BackgroundColor $background_color,

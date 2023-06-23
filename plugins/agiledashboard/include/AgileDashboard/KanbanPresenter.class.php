@@ -60,7 +60,7 @@ final class KanbanPresenter
         int $selected_tracker_report_id,
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
-        $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
+        $kanban_representation_builder = new \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder(
             $user_preferences,
             new AgileDashboard_KanbanColumnFactory(
                 new AgileDashboard_KanbanColumnDao(),

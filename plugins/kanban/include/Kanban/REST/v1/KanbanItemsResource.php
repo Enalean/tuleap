@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanCannotAccessException;
@@ -81,7 +81,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 
-class KanbanItemsResource extends AuthenticatedResource
+final class KanbanItemsResource extends AuthenticatedResource
 {
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -137,7 +137,7 @@ class KanbanItemsResource extends AuthenticatedResource
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptionsGetPost();
     }
@@ -158,12 +158,12 @@ class KanbanItemsResource extends AuthenticatedResource
      *
      * @url POST
      *
-     * @param KanbanItemPOSTRepresentation $item The created kanban item {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemPOSTRepresentation}
+     * @param KanbanItemPOSTRepresentation $item The created kanban item {@from body} {@type Tuleap\Kanban\REST\v1\KanbanItemPOSTRepresentation}
      *
      * @status 201
      * @throws RestException 403
      */
-    protected function post(KanbanItemPOSTRepresentation $item)
+    protected function post(KanbanItemPOSTRepresentation $item): KanbanItemRepresentation
     {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $item->kanban_id);
@@ -300,10 +300,11 @@ class KanbanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param  int $id Id of the artifact
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
+     *
+     *
      * @throws RestException 403
      */
-    protected function get($id)
+    protected function get($id): KanbanItemRepresentation
     {
         $this->checkAccess();
 
@@ -328,7 +329,10 @@ class KanbanItemsResource extends AuthenticatedResource
         return $item_representation;
     }
 
-    private function buildFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item)
+    /**
+     * @return ArtifactValuesRepresentation[]
+     */
+    private function buildFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item): array
     {
         $fields_data = [];
 
@@ -338,8 +342,14 @@ class KanbanItemsResource extends AuthenticatedResource
         return $fields_data;
     }
 
-    private function addSummaryToFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item, array &$fields_data)
-    {
+    /**
+     * @param ArtifactValuesRepresentation[] $fields_data
+     */
+    private function addSummaryToFieldsData(
+        Tracker $tracker,
+        KanbanItemPOSTRepresentation $item,
+        array &$fields_data,
+    ): void {
         $summary_field = $tracker->getTitleField();
 
         if (! $summary_field) {
@@ -347,14 +357,20 @@ class KanbanItemsResource extends AuthenticatedResource
         }
 
         $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = (int) $summary_field->getId();
+        $representation->field_id = $summary_field->getId();
         $representation->value    = $item->label;
 
         $fields_data[] = $representation;
     }
 
-    private function addStatusToFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item, array &$fields_data)
-    {
+    /**
+     * @param ArtifactValuesRepresentation[] $fields_data
+     */
+    private function addStatusToFieldsData(
+        Tracker $tracker,
+        KanbanItemPOSTRepresentation $item,
+        array &$fields_data,
+    ): void {
         $status_field = $tracker->getStatusField();
 
         if (! $status_field) {
@@ -377,14 +393,13 @@ class KanbanItemsResource extends AuthenticatedResource
         }
 
         $representation                 = new ArtifactValuesRepresentation();
-        $representation->field_id       = (int) $status_field->getId();
-        $representation->bind_value_ids = [(int) $value];
+        $representation->field_id       = $status_field->getId();
+        $representation->bind_value_ids = [$value];
 
         $fields_data[] = $representation;
     }
 
-    /** @return AgileDashboard_Kanban */
-    private function getKanban(PFUser $user, $id)
+    private function getKanban(PFUser $user, int $id): AgileDashboard_Kanban
     {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
@@ -397,10 +412,8 @@ class KanbanItemsResource extends AuthenticatedResource
         return $kanban;
     }
 
-    private function getCurrentUser()
+    private function getCurrentUser(): PFUser
     {
-        $user = UserManager::instance()->getCurrentUser();
-
-        return $user;
+        return UserManager::instance()->getCurrentUser();
     }
 }

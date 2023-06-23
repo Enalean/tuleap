@@ -1105,6 +1105,9 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>getRow</code>
+      <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
@@ -1158,9 +1161,9 @@
       <code>searchPaginatedItemsInColumn</code>
       <code>searchTimeInfoForItem</code>
     </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code>type</code>
-    </UndefinedDocblockClass>
+    <PossiblyFalseReference>
+      <code>getRow</code>
+    </PossiblyFalseReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanItemManager.class.php">
     <MissingParamType>
@@ -2130,17 +2133,10 @@
       <code>$items_in_columns</code>
     </MissingParamType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/ItemCollectionRepresentationBuilder.php">
+  <file src="plugins/kanban/include/Kanban/REST/v1/ItemCollectionRepresentationBuilder.php">
     <DeprecatedMethod>
       <code>foundRows</code>
     </DeprecatedMethod>
-    <MissingParamType>
-      <code>$limit</code>
-      <code>$offset</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>build</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/ItemRepresentationBuilder.php">
     <PossiblyNullArgument>
