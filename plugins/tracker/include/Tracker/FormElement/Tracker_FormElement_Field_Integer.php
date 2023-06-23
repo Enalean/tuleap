@@ -44,7 +44,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
 
                 return Option::fromValue(
                     new ParametrizedFrom(
-                        " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                        " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ? )
                          INNER JOIN tracker_changeset_value_int AS $b ON (
                             $b.changeset_value_id = $a.id
                             AND " . $match_expression->sql . "

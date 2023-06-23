@@ -40,24 +40,26 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
             $criteria_value = $this->getCriteriaValue($criteria);
 
             if ($criteria_value !== '' && $criteria_value !== null) {
-                $a                = 'A_' . $this->id;
-                $b                = 'B_' . $this->id;
-                $match_expression = $this->buildMatchExpression("$b.value", $criteria_value)
-                     ->unwrapOr(new ParametrizedSQLFragment('1', []));
-
-                return Option::fromValue(
-                    new ParametrizedFrom(
-                        " INNER JOIN tracker_changeset_value AS $a
-                             ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                $a = 'A_' . $this->id;
+                $b = 'B_' . $this->id;
+                return $this->buildMatchExpression("$b.value", $criteria_value)->mapOr(
+                    function (ParametrizedSQLFragment $match_expression) use ($a, $b) {
+                        return Option::fromValue(
+                            new ParametrizedFrom(
+                                " INNER JOIN tracker_changeset_value AS $a
+                             ON ($a.changeset_id = c.id AND $a.field_id = ? )
                              INNER JOIN tracker_changeset_value_float AS $b
                              ON ($b.changeset_value_id = $a.id
                                  AND " . $match_expression->sql . "
                              ) ",
-                        [
-                            $this->id,
-                            $match_expression->parameters,
-                        ]
-                    )
+                                [
+                                    $this->id,
+                                    ...$match_expression->parameters,
+                                ]
+                            )
+                        );
+                    },
+                    Option::nothing(ParametrizedFrom::class)
                 );
             }
         }
