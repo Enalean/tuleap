@@ -17,14 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanStructureRealTimeMercure;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Kanban\Realtime\KanbanStructureRealTimeMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
@@ -54,7 +54,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\AgileDashboard\KanbanRightsPresenter;
+use Tuleap\Kanban\KanbanRightsPresenter;
 
 class KanbanColumnsResource
 {
@@ -64,7 +64,7 @@ class KanbanColumnsResource
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
-    /** @var AgileDashboard_KankanColumnFactory */
+    /** @var AgileDashboard_KanbanColumnFactory */
     private $kanban_column_factory;
 
     /** @var AgileDashboard_KanbanColumnManager */
@@ -136,7 +136,7 @@ class KanbanColumnsResource
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptionsPatchDelete();
     }
@@ -154,13 +154,13 @@ class KanbanColumnsResource
      *
      * @param int                             $id        Id of the column
      * @param int                             $kanban_id Id of the Kanban {@from query}
-     * @param KanbanColumnPATCHRepresentation $updated_column_properties The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
+     * @param KanbanColumnPATCHRepresentation $updated_column_properties The kanban column {@from body} {@type Tuleap\Kanban\REST\v1\KanbanColumnPATCHRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties)
+    protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties): void
     {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
@@ -234,7 +234,7 @@ class KanbanColumnsResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function delete($id, $kanban_id)
+    protected function delete($id, $kanban_id): void
     {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
@@ -289,8 +289,7 @@ class KanbanColumnsResource
         }
     }
 
-    /** @return AgileDashboard_Kanban */
-    private function getKanban(PFUser $user, $id)
+    private function getKanban(PFUser $user, int $id): AgileDashboard_Kanban
     {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
@@ -303,20 +302,17 @@ class KanbanColumnsResource
         return $kanban;
     }
 
-    private function getCurrentUser()
+    private function getCurrentUser(): PFUser
     {
         return UserManager::instance()->getCurrentUser();
     }
 
-    /**
-     * @return int
-     */
-    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban)
+    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban): int
     {
-        return $this->getKanbanProject($kanban)->getGroupId();
+        return (int) $this->getKanbanProject($kanban)->getGroupId();
     }
 
-    private function getKanbanProject(AgileDashboard_Kanban $kanban)
+    private function getKanbanProject(AgileDashboard_Kanban $kanban): \Project
     {
         $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($kanban_tracker === null) {

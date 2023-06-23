@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTime;
 
+namespace Tuleap\Kanban\Realtime;
+
+use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSenderMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
 

@@ -39,7 +39,7 @@ class AgileDashboard_REST_ResourcesInjector
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource', PlanningRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource', BacklogItemRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Kanban\\REST\\v1\\KanbanResource', KanbanRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanColumnsResource', KanbanColumnRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Kanban\\REST\\v1\\KanbanColumnsResource', KanbanColumnRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanItemsResource', KanbanItemPOSTRepresentation::ROUTE);
     }
 
