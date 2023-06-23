@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -397,36 +397,43 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            $criteria_value = $this->getCriteriaValue($criteria);
-            if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
-                $a    = 'A_' . $this->id;
-                $b    = 'B_' . $this->id;
-                 $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
-                          INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
-                            $b.use_artifact_permissions = 0) ";
-
-                 return Option::fromValue(new ParametrizedFrom($sql, [$this->id]));
-            } elseif ($criteria_value) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-                $c = 'C_' . $this->id;
-
-                $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', array_keys($criteria_value));
-
-                $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
-                         INNER JOIN tracker_changeset_value_permissionsonartifact AS $b ON ($b.changeset_value_id = $a.id
-                            AND $b.ugroup_id IN ($in)
-                      )";
-
-                return Option::fromValue(new ParametrizedFrom($sql, [$this->id, ...$in->values()]));
-            }
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return Option::nothing(ParametrizedFrom::class);
+        $a = 'A_' . $this->id;
+        $b = 'B_' . $this->id;
+
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
+            $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
+                      INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
+                        $b.use_artifact_permissions = 0) ";
+
+            return Option::fromValue(
+                ParametrizedFromWhere::fromParametrizedFrom(
+                    new ParametrizedFrom($sql, [$this->id])
+                )
+            );
+        } elseif ($criteria_value) {
+            $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', array_keys($criteria_value));
+
+            $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ?)
+                     INNER JOIN tracker_changeset_value_permissionsonartifact AS $b ON ($b.changeset_value_id = $a.id
+                        AND $b.ugroup_id IN ($in)
+                  )";
+
+            return Option::fromValue(
+                ParametrizedFromWhere::fromParametrizedFrom(
+                    new ParametrizedFrom($sql, [$this->id, ...$in->values()])
+                )
+            );
+        }
+
+        return Option::nothing(ParametrizedFromWhere::class);
     }
 
     /**
@@ -489,11 +496,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
     {
         return;
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function fetchCriteriaValue($criteria)

@@ -20,8 +20,7 @@
  */
 
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 class Tracker_Report_Criteria
 {
@@ -65,19 +64,11 @@ class Tracker_Report_Criteria
     }
 
     /**
-     * @return Option<ParametrizedFrom>
+     * @return Option<ParametrizedFromWhere>
      */
-    public function getFrom(): Option
+    public function getFromWhere(): Option
     {
-        return $this->field->getCriteriaFrom($this);
-    }
-
-    /**
-     * @return Option<ParametrizedSQLFragment>
-     */
-    public function getWhere(): Option
-    {
-        return $this->field->getCriteriaWhere($this);
+        return $this->field->getCriteriaFromWhere($this);
     }
 
     public function fetch()

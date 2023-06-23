@@ -137,4 +137,139 @@ final class ParametrizedAndFromWhereTest extends TestCase
             $all_parametrized_from[3]->getParameters(),
         );
     }
+
+    public function testWithFromParametrizedFromRight(): void
+    {
+        $and = new ParametrizedAndFromWhere(
+            new ParametrizedFromWhere('INNER JOIN left ON (left.col = ?)', 'left.col = ?', [1], [2]),
+            ParametrizedFromWhere::fromParametrizedFrom(new ParametrizedFrom('INNER JOIN right ON (right.col = ?)', [3])),
+        );
+
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?) INNER JOIN right ON (right.col = ?)',
+            $and->getFrom(),
+        );
+        self::assertEquals(
+            [1, 3],
+            $and->getFromParameters(),
+        );
+
+        self::assertEquals(
+            'left.col = ?',
+            $and->getWhere(),
+        );
+        self::assertEquals(
+            [2],
+            $and->getWhereParameters(),
+        );
+
+        $all_parametrized_from = $and->getAllParametrizedFrom();
+        self::assertCount(2, $all_parametrized_from);
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?)',
+            $all_parametrized_from[0]->getFrom(),
+        );
+        self::assertEquals(
+            'INNER JOIN right ON (right.col = ?)',
+            $all_parametrized_from[1]->getFrom(),
+        );
+        self::assertEquals(
+            [1],
+            $all_parametrized_from[0]->getParameters(),
+        );
+        self::assertEquals(
+            [3],
+            $all_parametrized_from[1]->getParameters(),
+        );
+    }
+
+    public function testWithFromParametrizedFromLeft(): void
+    {
+        $and = new ParametrizedAndFromWhere(
+            ParametrizedFromWhere::fromParametrizedFrom(new ParametrizedFrom('INNER JOIN left ON (left.col = ?)', [1])),
+            new ParametrizedFromWhere('INNER JOIN right ON (right.col = ?)', 'right.col = ?', [3], [4]),
+        );
+
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?) INNER JOIN right ON (right.col = ?)',
+            $and->getFrom(),
+        );
+        self::assertEquals(
+            [1, 3],
+            $and->getFromParameters(),
+        );
+
+        self::assertEquals(
+            'right.col = ?',
+            $and->getWhere(),
+        );
+        self::assertEquals(
+            [4],
+            $and->getWhereParameters(),
+        );
+
+        $all_parametrized_from = $and->getAllParametrizedFrom();
+        self::assertCount(2, $all_parametrized_from);
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?)',
+            $all_parametrized_from[0]->getFrom(),
+        );
+        self::assertEquals(
+            'INNER JOIN right ON (right.col = ?)',
+            $all_parametrized_from[1]->getFrom(),
+        );
+        self::assertEquals(
+            [1],
+            $all_parametrized_from[0]->getParameters(),
+        );
+        self::assertEquals(
+            [3],
+            $all_parametrized_from[1]->getParameters(),
+        );
+    }
+
+    public function testWithFromParametrizedFromLeftAndRight(): void
+    {
+        $and = new ParametrizedAndFromWhere(
+            ParametrizedFromWhere::fromParametrizedFrom(new ParametrizedFrom('INNER JOIN left ON (left.col = ?)', [1])),
+            ParametrizedFromWhere::fromParametrizedFrom(new ParametrizedFrom('INNER JOIN right ON (right.col = ?)', [3])),
+        );
+
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?) INNER JOIN right ON (right.col = ?)',
+            $and->getFrom(),
+        );
+        self::assertEquals(
+            [1, 3],
+            $and->getFromParameters(),
+        );
+
+        self::assertEquals(
+            '',
+            $and->getWhere(),
+        );
+        self::assertEquals(
+            [],
+            $and->getWhereParameters(),
+        );
+
+        $all_parametrized_from = $and->getAllParametrizedFrom();
+        self::assertCount(2, $all_parametrized_from);
+        self::assertEquals(
+            'INNER JOIN left ON (left.col = ?)',
+            $all_parametrized_from[0]->getFrom(),
+        );
+        self::assertEquals(
+            'INNER JOIN right ON (right.col = ?)',
+            $all_parametrized_from[1]->getFrom(),
+        );
+        self::assertEquals(
+            [1],
+            $all_parametrized_from[0]->getParameters(),
+        );
+        self::assertEquals(
+            [3],
+            $all_parametrized_from[1]->getParameters(),
+        );
+    }
 }

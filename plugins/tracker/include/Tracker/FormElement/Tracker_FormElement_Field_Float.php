@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -32,39 +33,44 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 {
     public const FLOAT_DECIMALS = 4;
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            //Only filter query if criteria is valuated
-            $criteria_value = $this->getCriteriaValue($criteria);
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
 
-            if ($criteria_value !== '' && $criteria_value !== null) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
-                return $this->buildMatchExpression("$b.value", $criteria_value)->mapOr(
-                    function (ParametrizedSQLFragment $match_expression) use ($a, $b) {
-                        return Option::fromValue(
-                            new ParametrizedFrom(
-                                " INNER JOIN tracker_changeset_value AS $a
+        //Only filter query if criteria is valuated
+        $criteria_value = $this->getCriteriaValue($criteria);
+
+        if ($criteria_value === '' || $criteria_value === null) {
+            return Option::nothing(ParametrizedFromWhere::class);
+        }
+
+        $a = 'A_' . $this->id;
+        $b = 'B_' . $this->id;
+
+        return $this->buildMatchExpression("$b.value", $criteria_value)->mapOr(
+            function (ParametrizedSQLFragment $match_expression) use ($a, $b) {
+                return Option::fromValue(
+                    ParametrizedFromWhere::fromParametrizedFrom(
+                        new ParametrizedFrom(
+                            " INNER JOIN tracker_changeset_value AS $a
                              ON ($a.changeset_id = c.id AND $a.field_id = ? )
                              INNER JOIN tracker_changeset_value_float AS $b
                              ON ($b.changeset_value_id = $a.id
                                  AND " . $match_expression->sql . "
                              ) ",
-                                [
-                                    $this->id,
-                                    ...$match_expression->parameters,
-                                ]
-                            )
-                        );
-                    },
-                    Option::nothing(ParametrizedFrom::class)
+                            [
+                                $this->id,
+                                ...$match_expression->parameters,
+                            ],
+                        )
+                    )
                 );
-            }
-        }
-
-        return Option::nothing(ParametrizedFrom::class);
+            },
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     public function fetchCriteriaValue($criteria)
@@ -79,11 +85,6 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
         $html .= '" />';
         return $html;
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     public function getQueryFrom()

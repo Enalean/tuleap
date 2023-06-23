@@ -24,17 +24,25 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
 class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId
 {
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            return $this->buildMatchExpression("artifact.per_tracker_artifact_id", $criteria_value);
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if (! $criteria_value) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
-        return Option::nothing(ParametrizedSQLFragment::class);
+
+        return $this->buildMatchExpression("artifact.per_tracker_artifact_id", $criteria_value)->mapOr(
+            static fn (ParametrizedSQLFragment $match) => Option::fromValue(
+                new ParametrizedFromWhere('', $match->sql, [], $match->parameters)
+            ),
+            Option::nothing(ParametrizedFromWhere::class)
+        );
     }
 
     public function getQuerySelect(): string

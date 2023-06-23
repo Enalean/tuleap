@@ -31,8 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -122,23 +121,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return ! $this->isMultiple();
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
-        if ($this->isUsed()) {
-            return $this->getBind()->getCriteriaFrom($this->getCriteriaValue($criteria));
+        if (! $this->isUsed()) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
 
-        return Option::nothing(ParametrizedFrom::class);
-    }
 
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        if ($this->isUsed()) {
-            return $this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
-        }
-
-        return Option::nothing(ParametrizedSQLFragment::class);
+        return $this->getBind()->getCriteriaFromWhere($this->getCriteriaValue($criteria));
     }
 
     /**

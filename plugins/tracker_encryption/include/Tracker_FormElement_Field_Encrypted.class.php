@@ -23,8 +23,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
@@ -171,9 +170,9 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return '';
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return Option::nothing(ParametrizedFrom::class);
+        return Option::nothing(ParametrizedFromWhere::class);
     }
 
     public function getQueryFrom()
@@ -191,11 +190,6 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $R2 = 'R2_' . $this->id;
 
         return "$R2.value AS " . $this->getQuerySelectName();
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
     }
 
     protected function getCriteriaDao()

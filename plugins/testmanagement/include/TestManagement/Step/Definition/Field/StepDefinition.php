@@ -49,8 +49,7 @@ use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -135,14 +134,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        return Option::nothing(ParametrizedFrom::class);
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        return Option::nothing(ParametrizedSQLFragment::class);
+        return Option::nothing(ParametrizedFromWhere::class);
     }
 
     public function getQueryFrom(): string

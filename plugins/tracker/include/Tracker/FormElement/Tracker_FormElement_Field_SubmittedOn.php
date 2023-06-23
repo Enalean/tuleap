@@ -23,8 +23,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\Report\Query\ParametrizedFrom;
-use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
@@ -48,28 +47,29 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         return true;
     }
 
-    public function getCriteriaFrom(Tracker_Report_Criteria $criteria): Option
+    public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
-        // SubmittedOn is stored in the artifact
-        return Option::nothing(ParametrizedFrom::class);
-    }
-
-    public function getCriteriaWhere(Tracker_Report_Criteria $criteria): Option
-    {
-        //Only filter query if criteria is valuated
-        if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            // SubmittedOn is stored in the artifact
-            return Option::fromValue(
-                $this->getSQLCompareDate(
-                    (bool) $criteria->is_advanced,
-                    $criteria_value['op'],
-                    $criteria_value['from_date'],
-                    $criteria_value['to_date'],
-                    'artifact.submitted_on'
-                )
-            );
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if (! $criteria_value) {
+            return Option::nothing(ParametrizedFromWhere::class);
         }
-        return Option::nothing(ParametrizedSQLFragment::class);
+
+        $where = $this->getSQLCompareDate(
+            (bool) $criteria->is_advanced,
+            $criteria_value['op'],
+            $criteria_value['from_date'],
+            $criteria_value['to_date'],
+            'artifact.submitted_on'
+        );
+
+        return Option::fromValue(
+            new ParametrizedFromWhere(
+                '',
+                $where->sql,
+                [],
+                $where->parameters,
+            )
+        );
     }
 
     public function getQuerySelect(): string
