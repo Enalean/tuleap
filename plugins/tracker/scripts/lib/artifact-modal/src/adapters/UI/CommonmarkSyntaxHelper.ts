@@ -18,14 +18,14 @@
  */
 
 import { define, html } from "hybrids";
-import { createPopover } from "tlp";
-import example_image from "../assets/image_example_commonmark.png";
+import { createPopover } from "@tuleap/tlp-popovers";
+import example_image from "../../assets/image_example_commonmark.png";
 import {
     getCommonMarkSyntaxHelperPopoverTitle as for_your_information,
     getSyntaxHelperTitle as help,
     getSyntaxHelperToGet as to_get,
     getSyntaxHelperType as type,
-} from "../gettext-catalog";
+} from "../../gettext-catalog";
 
 export interface CommonmarkSyntaxHelper {
     disabled: boolean;

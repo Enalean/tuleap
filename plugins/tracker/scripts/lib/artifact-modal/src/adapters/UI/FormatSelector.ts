@@ -18,7 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
+import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     TEXT_FORMAT_COMMONMARK,

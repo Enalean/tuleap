@@ -18,9 +18,9 @@
  */
 
 import { define, html, dispatch } from "hybrids";
-import type { TextAndFormat } from "../../../../common/text-and-format";
-import { getTextAndFormatTemplate } from "../../../../common/text-and-format";
-import { getValidFormat } from "../../../../common/RichTextEditor";
+import type { TextAndFormat } from "../../text-and-format";
+import { getTextAndFormatTemplate } from "../../text-and-format";
+import { getValidFormat } from "../../RichTextEditor";
 
 export interface TextField extends TextAndFormat {
     fieldId: number;
