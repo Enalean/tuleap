@@ -19,34 +19,23 @@
 
 @use "./selection";
 @use "./dropdown";
+@use "./common";
 
 tuleap-lazybox {
     display: inline-block;
     width: 100%;
 }
 
-%-placeholder {
-    font-size: var(--tlp-form-element-font-size);
-}
-
 .lazybox-placeholder {
-    @extend %-placeholder;
+    @include common.placeholder;
 
     color: var(--tlp-form-element-placeholder-color);
-}
-
-.lazybox-search-field {
-    @extend %-placeholder;
-
-    width: 100%;
-    background: var(--tlp-form-element-background);
-    font-family: var(--tlp-font-family);
 }
 
 .lazybox-single-search-section {
     padding: 4px;
 
-    > .lazybox-search-field {
+    &::part(input) {
         height: var(--tlp-form-element-small-height);
         padding: 0 4px;
         transition: border-color var(--tlp-form-element-border-transition-duration) linear;
@@ -66,7 +55,7 @@ tuleap-lazybox {
 .lazybox-multiple-search-section {
     flex: 1;
 
-    > .lazybox-search-field {
+    &::part(input) {
         min-width: 100px;
         height: 100%;
         margin: 5px 0 0;

@@ -207,12 +207,12 @@ const onOpen = (host: HostElement): void => {
     host.search_input_element.focus();
 };
 
-const onClose = (host: InternalLazyboxElement): void => {
+const onClose = (host: HostElement): void => {
     host.scrolling_manager?.unlockScrolling();
     host.selection_element.classList.remove("lazybox-with-open-dropdown");
     host.search_input_element.clear();
     host.cleanupAutoUpdate();
-    host.selection_element.focus();
+    host.focus();
 };
 
 export const getDropdownElement = (host: HostElement): DropdownElement & HTMLElement => {
