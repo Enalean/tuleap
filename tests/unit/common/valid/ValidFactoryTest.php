@@ -23,24 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\valid;
 
 use ValidFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-class ValidFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ValidFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetInstance(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createMock(\Valid::class);
 
-        $this->assertInstanceOf('Valid', ValidFactory::getInstance($v));
+        self::assertInstanceOf('Valid', ValidFactory::getInstance($v));
 
-        $this->assertInstanceOf('Valid_String', ValidFactory::getInstance('string'));
-        $this->assertInstanceOf('Valid_UInt', ValidFactory::getInstance('uint'));
-        $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
+        self::assertInstanceOf('Valid_String', ValidFactory::getInstance('string'));
+        self::assertInstanceOf('Valid_UInt', ValidFactory::getInstance('uint'));
+        self::assertNull(ValidFactory::getInstance('machinbidulechose'));
 
         $key = bin2hex(random_bytes(16));
         $w   = ValidFactory::getInstance('string', $key);
-        $this->assertEquals($key, $w->getKey());
+        self::assertEquals($key, $w->getKey());
     }
 }

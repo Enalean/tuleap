@@ -20,13 +20,10 @@
 
 namespace Tuleap\Authentication\SplitToken;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
-class SplitTokenVerificationStringTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SplitTokenVerificationStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testIncorrectlySizedVerificationStringAreRejected()
     {
         $this->expectException(IncorrectSizeVerificationStringException::class);
@@ -38,6 +35,6 @@ class SplitTokenVerificationStringTest extends \Tuleap\Test\PHPUnit\TestCase
         $generated_access_key = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $access_key           = new SplitTokenVerificationString($generated_access_key->getString());
 
-        $this->assertSame($generated_access_key->getString(), $access_key->getString());
+        self::assertSame($generated_access_key->getString(), $access_key->getString());
     }
 }

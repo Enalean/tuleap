@@ -23,33 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\FRS\Events;
 
 use FRSRelease;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class GetReleaseNotesLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var FRSRelease */
-    private $release;
-    /** @var GetReleaseNotesLink */
-    private $event;
+    private FRSRelease $release;
+    private GetReleaseNotesLink $event;
 
     protected function setUp(): void
     {
-        $this->release = M::mock(FRSRelease::class)->shouldReceive("getReleaseID")->andReturn(124)->getMock();
+        $this->release = new FRSRelease(['release_id' => 124]);
         $this->event   = new GetReleaseNotesLink($this->release);
     }
 
     public function testItDefaultsToCoreFRSURL(): void
     {
-        $this->assertEquals("/file/shownotes.php?release_id=124", $this->event->getUrl());
+        self::assertEquals("/file/shownotes.php?release_id=124", $this->event->getUrl());
     }
 
     public function testItReturnsURLProvidedByPlugin(): void
     {
-        $plugin_url = "/piarhemia.com/124/squatinoidei";
+        $plugin_url = "/example.com/124/squatinoidei";
         $this->event->setUrl($plugin_url);
-        $this->assertEquals($plugin_url, $this->event->getUrl());
+        self::assertEquals($plugin_url, $this->event->getUrl());
     }
 }

@@ -19,41 +19,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testValidNamesAreValid(): void
     {
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->willReturn(null);
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
+        $backend = $this->createMock(\Backend::class);
+        $backend->method('unixUserExists')->willReturn(false);
+        $backend->method('unixGroupExists')->willReturn(false);
 
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-        $sm->shouldReceive('isProjectNameAvailable')->andReturns(true);
+        $sm = $this->createMock(\SystemEventManager::class);
+        $sm->method('isUserNameAvailable')->willReturn(true);
+        $sm->method('isProjectNameAvailable')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_ProjectName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+        $r = $this->getMockBuilder(\Rule_ProjectName::class)
+            ->onlyMethods(['_getUserManager', '_getProjectManager', '_getBackend', '_getSystemEventManager', 'isNameAvailable'])
+            ->getMock();
 
-        $r->shouldReceive('isNameAvailable')->with("group-test")->andReturns(true);
-        $r->shouldReceive('isNameAvailable')->with("test")->andReturns(true);
-        $r->shouldReceive('isNameAvailable')->with("test1")->andReturns(true);
+        $r->method('_getUserManager')->willReturn($um);
+        $r->method('_getProjectManager')->willReturn($pm);
+        $r->method('_getBackend')->willReturn($backend);
+        $r->method('_getSystemEventManager')->willReturn($sm);
 
-        $this->assertTrue($r->isValid("group-test"));
-        $this->assertTrue($r->isValid("test"));
-        $this->assertTrue($r->isValid("test1"));
+        $r->method('isNameAvailable')->willReturnMap([
+            ['group-test', true],
+            ['test', true],
+            ['test1', true],
+        ]);
+
+        self::assertTrue($r->isValid("group-test"));
+        self::assertTrue($r->isValid("test"));
+        self::assertTrue($r->isValid("test1"));
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server\Authentication;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -31,22 +30,20 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider dataProviderValidAuthorizationHeaders
      */
     public function testExtractsCredentialFromValidAuthorizationHeader(string $authorization_header_line, string $expected_password): void
     {
-        $server_request = \Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn($authorization_header_line);
+        $server_request = $this->createMock(ServerRequestInterface::class);
+        $server_request->method('getHeaderLine')->with('Authorization')->willReturn($authorization_header_line);
 
         $extractor = new BasicAuthLoginExtractor();
 
         $login_credential = $extractor->extract($server_request);
-        $this->assertNotNull($login_credential);
-        $this->assertEquals('username', $login_credential->getUsername());
-        $this->assertEquals($expected_password, $login_credential->getPassword()->getString());
+        self::assertNotNull($login_credential);
+        self::assertEquals('username', $login_credential->getUsername());
+        self::assertEquals($expected_password, $login_credential->getPassword()->getString());
     }
 
     public static function dataProviderValidAuthorizationHeaders(): array
@@ -70,13 +67,13 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testNoCredentialsAreExtractedWhenTheAuthorizationHeaderLineIsNotValid(string $authorization_header_line): void
     {
-        $server_request = \Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn($authorization_header_line);
+        $server_request = $this->createMock(ServerRequestInterface::class);
+        $server_request->method('getHeaderLine')->with('Authorization')->willReturn($authorization_header_line);
 
         $extractor = new BasicAuthLoginExtractor();
 
         $login_credential = $extractor->extract($server_request);
-        $this->assertNull($login_credential);
+        self::assertNull($login_credential);
     }
 
     public static function dataProviderNotValidAuthorizationHeaders(): array

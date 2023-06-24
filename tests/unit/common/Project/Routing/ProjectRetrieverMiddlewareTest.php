@@ -22,32 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Routing;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ProjectRetriever;
 
 final class ProjectRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testProcessAttachesProjectToRequest(): void
     {
-        $project_retriever = M::mock(ProjectRetriever::class);
+        $project_retriever = $this->createMock(ProjectRetriever::class);
         $middleware        = new ProjectRetrieverMiddleware($project_retriever);
 
         $project = new \Project(['group_id' => 102]);
-        $project_retriever->shouldReceive('getProjectFromId')
+        $project_retriever->expects(self::once())
+            ->method('getProjectFromId')
             ->with('102')
-            ->once()
-            ->andReturn($project);
-        $handler = M::mock(RequestHandlerInterface::class);
-        $handler->shouldReceive('handle')->once()->with(M::capture($enriched_request));
+            ->willReturn($project);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->with(self::callback(function (ServerRequestInterface $enriched_request) use ($project): bool {
+            return $enriched_request->getAttribute(\Project::class) === $project;
+        }));
 
         $request = (new NullServerRequest())->withAttribute('project_id', '102');
 
         $middleware->process($request, $handler);
-        $this->assertSame($project, $enriched_request->getAttribute(\Project::class));
     }
 }

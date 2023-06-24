@@ -18,26 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItMayWrapAnObject()
+    public function testItMayWrapAnObject(): void
     {
-        $object = \Mockery::spy(\stdClass::class);
+        $object = new stdClass();
         $node   = new TreeNode();
 
         $node->setObject($object);
-        $this->assertEquals($object, $node->getObject());
+        self::assertEquals($object, $node->getObject());
     }
 
     public function testItReturnsAnEmptyArrayWhenNoChildren(): void
     {
         $node = new TreeNode();
-        $this->assertSame([], $node->flattenChildren());
+        self::assertSame([], $node->flattenChildren());
     }
 
     public function testItReturnsTheChildrenWhenNoSubChildren(): void
@@ -49,7 +45,7 @@ class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
         $node->addChild($child1);
         $node->addChild($child2);
 
-        $this->assertEquals([$child1, $child2], $node->flattenChildren());
+        self::assertEquals([$child1, $child2], $node->flattenChildren());
     }
 
     public function testItReturnsTheChildrenAndSubChildrenAsAFlatList(): void
@@ -62,7 +58,7 @@ class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $node->addChild($child1);
         $node->addChild($child2);
-        $this->assertEquals([$child1, $subchild1, $child2], $node->flattenChildren());
+        self::assertEquals([$child1, $subchild1, $child2], $node->flattenChildren());
     }
 
     public function testItBuildsATreeInline(): void
@@ -84,11 +80,11 @@ class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
             $node_2
         );
 
-        $this->assertEquals($node_1, $root->getChild(0));
-        $this->assertEquals($node_1_1, $root->getChild(0)->getChild(0));
-        $this->assertEquals($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
-        $this->assertEquals($node_1_2, $root->getChild(0)->getChild(1));
-        $this->assertEquals($node_2, $root->getChild(1));
+        self::assertEquals($node_1, $root->getChild(0));
+        self::assertEquals($node_1_1, $root->getChild(0)->getChild(0));
+        self::assertEquals($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
+        self::assertEquals($node_1_2, $root->getChild(0)->getChild(1));
+        self::assertEquals($node_2, $root->getChild(1));
     }
 
     public function testItAddsTheGivenChildren(): void
@@ -96,7 +92,7 @@ class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
         $root     = new TreeNode();
         $children = [new TreeNode(), new TreeNode()];
         $root->setChildren($children);
-        $this->assertEquals($children, $root->getChildren());
+        self::assertEquals($children, $root->getChildren());
     }
 
     public function testItSetsTheParentNodeOfTheChildren(): void
@@ -106,7 +102,7 @@ class TreeNodeTest extends \Tuleap\Test\PHPUnit\TestCase
         $node_2   = new TreeNode();
         $children = [$node_1, $node_2];
         $root->setChildren($children);
-        $this->assertEquals($root, $node_2->getParentNode());
-        $this->assertEquals($root, $node_1->getParentNode());
+        self::assertEquals($root, $node_2->getParentNode());
+        self::assertEquals($root, $node_1->getParentNode());
     }
 }

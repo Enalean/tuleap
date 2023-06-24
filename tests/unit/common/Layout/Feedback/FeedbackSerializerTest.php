@@ -22,22 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Feedback;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeedbackSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testSerialize(): void
     {
         $user = UserTestBuilder::aUser()->build();
         $user->setSessionId(12);
-        $dao                 = M::mock(\FeedbackDao::class);
+        $dao                 = $this->createMock(\FeedbackDao::class);
         $feedback_serializer = new FeedbackSerializer($dao);
-        $dao->shouldReceive('create')
-            ->once()
+        $dao->expects(self::once())
+            ->method('create')
             ->with(
                 12,
                 [

@@ -29,24 +29,24 @@ final class UserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao = new UserDao($this->createStub(DBConnection::class));
 
-        $this->assertEquals('tutu', $dao->replaceStringInList('foo', 'foo', 'tutu'));
-        $this->assertEquals('   tutu', $dao->replaceStringInList('   foo', 'foo', 'tutu'));
-        $this->assertEquals('tutu   ', $dao->replaceStringInList('foo   ', 'foo', 'tutu'));
+        self::assertEquals('tutu', $dao->replaceStringInList('foo', 'foo', 'tutu'));
+        self::assertEquals('   tutu', $dao->replaceStringInList('   foo', 'foo', 'tutu'));
+        self::assertEquals('tutu   ', $dao->replaceStringInList('foo   ', 'foo', 'tutu'));
 
-        $this->assertEquals('tutu,bar', $dao->replaceStringInList('foo,bar', 'foo', 'tutu'));
-        $this->assertEquals('tutu, bar', $dao->replaceStringInList('foo, bar', 'foo', 'tutu'));
-        $this->assertEquals('tutu ,bar', $dao->replaceStringInList('foo ,bar', 'foo', 'tutu'));
+        self::assertEquals('tutu,bar', $dao->replaceStringInList('foo,bar', 'foo', 'tutu'));
+        self::assertEquals('tutu, bar', $dao->replaceStringInList('foo, bar', 'foo', 'tutu'));
+        self::assertEquals('tutu ,bar', $dao->replaceStringInList('foo ,bar', 'foo', 'tutu'));
 
-        $this->assertEquals('bar,tutu,toto', $dao->replaceStringInList('bar,foo,toto', 'foo', 'tutu'));
-        $this->assertEquals('bar  ,  tutu  ,  toto', $dao->replaceStringInList('bar  ,  foo  ,  toto', 'foo', 'tutu'));
+        self::assertEquals('bar,tutu,toto', $dao->replaceStringInList('bar,foo,toto', 'foo', 'tutu'));
+        self::assertEquals('bar  ,  tutu  ,  toto', $dao->replaceStringInList('bar  ,  foo  ,  toto', 'foo', 'tutu'));
 
-        $this->assertEquals('bar,wwwfoo,toto', $dao->replaceStringInList('bar,wwwfoo,toto', 'foo', 'tutu'));
-        $this->assertEquals('bar,  wwwfoo,toto ', $dao->replaceStringInList('bar,  wwwfoo,toto ', 'foo', 'tutu'));
+        self::assertEquals('bar,wwwfoo,toto', $dao->replaceStringInList('bar,wwwfoo,toto', 'foo', 'tutu'));
+        self::assertEquals('bar,  wwwfoo,toto ', $dao->replaceStringInList('bar,  wwwfoo,toto ', 'foo', 'tutu'));
 
-        $this->assertEquals('bar,foowww,tutu', $dao->replaceStringInList('bar,foowww,foo', 'foo', 'tutu'));
-        $this->assertEquals('bar, foowww, tutu', $dao->replaceStringInList('bar, foowww, foo', 'foo', 'tutu'));
+        self::assertEquals('bar,foowww,tutu', $dao->replaceStringInList('bar,foowww,foo', 'foo', 'tutu'));
+        self::assertEquals('bar, foowww, tutu', $dao->replaceStringInList('bar, foowww, foo', 'foo', 'tutu'));
 
-        $this->assertEquals('tutu,tutu', $dao->replaceStringInList('foo,foo', 'foo', 'tutu'));
-        $this->assertEquals('tutu,bar,tutu', $dao->replaceStringInList('foo,bar,foo', 'foo', 'tutu'));
+        self::assertEquals('tutu,tutu', $dao->replaceStringInList('foo,foo', 'foo', 'tutu'));
+        self::assertEquals('tutu,bar,tutu', $dao->replaceStringInList('foo,bar,foo', 'foo', 'tutu'));
     }
 }

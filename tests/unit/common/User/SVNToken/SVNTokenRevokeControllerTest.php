@@ -21,8 +21,10 @@
 
 namespace Tuleap\User\SVNToken;
 
+use CSRFSynchronizerToken;
 use Feedback;
-use Mockery as M;
+use PHPUnit\Framework\MockObject\MockObject;
+use SVN_TokenHandler;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -32,16 +34,14 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $csrf_token;
-    private $svn_token_handler;
-    private $controller;
+    private MockObject&CSRFSynchronizerToken $csrf_token;
+    private MockObject&SVN_TokenHandler $svn_token_handler;
+    private SVNTokenRevokeController $controller;
 
     protected function setUp(): void
     {
-        $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
-        $this->svn_token_handler = M::mock(\SVN_TokenHandler::class);
+        $this->csrf_token        = $this->createMock(CSRFSynchronizerToken::class);
+        $this->svn_token_handler = $this->createMock(SVN_TokenHandler::class);
 
         $this->controller = new SVNTokenRevokeController($this->csrf_token, $this->svn_token_handler);
     }
@@ -64,8 +64,8 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
-        $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser');
+        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
+        $this->svn_token_handler->method('deleteSVNTokensForUser');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -80,9 +80,9 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDeletesSelectedToken(): void
     {
         $user = UserTestBuilder::aUser()->withId(120)->build();
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token->method('check');
 
-        $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser')->with($user, ['2', '5'])->once()->andReturnTrue();
+        $this->svn_token_handler->expects(self::once())->method('deleteSVNTokensForUser')->with($user, ['2', '5']);
 
         $layout_inspector = new LayoutInspector();
         $redirect_url     = null;
@@ -97,8 +97,8 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $feedback = $layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::INFO, $feedback[0]['level']);
-        $this->assertEquals('/account/keys-tokens', $redirect_url);
+        self::assertCount(1, $feedback);
+        self::assertEquals(Feedback::INFO, $feedback[0]['level']);
+        self::assertEquals('/account/keys-tokens', $redirect_url);
     }
 }

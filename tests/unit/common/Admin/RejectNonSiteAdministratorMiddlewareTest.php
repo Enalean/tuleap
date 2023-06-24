@@ -22,50 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\Admin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var RejectNonSiteAdministratorMiddleware
-     */
-    private $middleware;
+    private MockObject&\UserManager $user_manager;
+    private RejectNonSiteAdministratorMiddleware $middleware;
 
     protected function setUp(): void
     {
-        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
         $this->middleware   = new RejectNonSiteAdministratorMiddleware($this->user_manager);
     }
 
     public function testProcessTheRequestWhenTheUserIsSiteAdministrator(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldReceive('handle')->once()->with(\Mockery::capture($enriched_request));
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->will(self::returnCallback(function (ServerRequestInterface $enriched_request) use ($user): ResponseInterface {
+            self::assertSame($user, $enriched_request->getAttribute(\PFUser::class));
+
+            return $this->createMock(ResponseInterface::class);
+        }));
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
 
         $this->middleware->process(new NullServerRequest(), $handler);
-        self::assertSame($user, $enriched_request->getAttribute(\PFUser::class));
     }
 
     public function testRequestIsRejectedWhenTheUserIsNotASiteAdministrator(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldReceive('handle')->never();
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);
         $this->middleware->process(new NullServerRequest(), $handler);

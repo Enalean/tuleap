@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Asymmetric;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
 
 final class AsymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCannotBeInstantiated(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -46,7 +43,7 @@ final class AsymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
         $signature          = AsymmetricCrypto::sign($message, $secret_key);
         $is_signature_valid = AsymmetricCrypto::verify($message, $public_key, $signature);
 
-        $this->assertTrue($is_signature_valid);
+        self::assertTrue($is_signature_valid);
     }
 
     public function testAnInvalidSignedMessageIsNotVerified(): void
@@ -62,12 +59,14 @@ final class AsymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
         $signature          = AsymmetricCrypto::sign($message, $secret_key1);
         $is_signature_valid = AsymmetricCrypto::verify($message, $public_key2, $signature);
 
-        $this->assertFalse($is_signature_valid);
+        self::assertFalse($is_signature_valid);
     }
 
     public function testInvalidSignatureIsRejected(): void
     {
-        $public_key = \Mockery::mock(SignaturePublicKey::class);
+        $public_key = new SignaturePublicKey(
+            new ConcealedString(str_repeat('b', SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES))
+        );
 
         $message   = 'The quick brown fox jumps over the lazy dog';
         $signature = 'invalid_signature';

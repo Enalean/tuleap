@@ -25,27 +25,13 @@
 namespace Tuleap\Date;
 
 use DateTime;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TimePeriodWithoutWeekEnd;
 
 class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var int
-     */
-    private $week_day_timestamp;
-
-    /**
-     * @var int
-     */
-    private $following_week_day_timestamp;
-    /**
-     * @var string
-     */
-    private $request_time;
+    private int $week_day_timestamp;
+    private int $following_week_day_timestamp;
+    private string $request_time;
 
     protected function setUp(): void
     {
@@ -67,7 +53,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date  = mktime(0, 0, 0, 7, 4, 2012);
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
-        $this->assertSame(
+        self::assertSame(
             ['Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'],
             $time_period->getHumanReadableDates()
         );
@@ -78,7 +64,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date  = mktime(0, 0, 0, 7, 4, 2012);
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
-        $this->assertSame('Tue 10', date('D d', $time_period->getEndDate()));
+        self::assertSame('Tue 10', date('D d', $time_period->getEndDate()));
     }
 
     public function testItProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsBeforeToday()
@@ -89,7 +75,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $today      = mktime(23, 59, 59, 11, 12, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
 
-        $this->assertSame(5, $timestamps);
+        self::assertSame(5, $timestamps);
     }
 
     public function testItProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsAfterToday()
@@ -100,7 +86,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $today      = mktime(23, 59, 59, 11, 8, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
 
-        $this->assertSame(1, $timestamps);
+        self::assertSame(1, $timestamps);
     }
 
     public function testDoesNotAssumeTheEndDateWhenDurationIsNotProvided(): void
@@ -134,7 +120,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertSame($expected_number_of_days_since_start, $time_period->getNumberOfDaysSinceStart());
+        self::assertSame($expected_number_of_days_since_start, $time_period->getNumberOfDaysSinceStart());
     }
 
     public static function providerForNumberOfDaysSinceStart(): array
@@ -192,7 +178,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertEquals($should_today_be_within_time_period, $time_period->isTodayWithinTimePeriod());
+        self::assertEquals($should_today_be_within_time_period, $time_period->isTodayWithinTimePeriod());
     }
 
     public static function providerForIsTodayWithinTimePeriod(): array
@@ -250,7 +236,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertSame($expected_number_of_days_until_end, $time_period->getNumberOfDaysUntilEnd());
+        self::assertSame($expected_number_of_days_until_end, $time_period->getNumberOfDaysUntilEnd());
     }
 
     public static function providerForGetNumberOfDaysUntilEnd(): array
@@ -335,14 +321,14 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, -2);
 
-        $this->assertSame($this->week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesNullDuration()
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 0);
 
-        $this->assertSame($this->week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesNullDurationWithAWeekEnd()
@@ -351,35 +337,35 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $next_week_day = new DateTime('2016-02-08');
         $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($week_end_day->getTimestamp(), 0);
 
-        $this->assertSame($next_week_day->getTimestamp(), $time_period->getEndDate());
+        self::assertSame($next_week_day->getTimestamp(), $time_period->getEndDate());
     }
 
     public function testItProcessesPositiveDuration()
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 1);
 
-        $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesFloatDuration()
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 0.21);
 
-        $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesPositiveDurationAsStringValue()
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "1");
 
-        $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesFloatDurationAsStringValue()
     {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "0.21");
 
-        $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     /**
@@ -392,11 +378,11 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         int $expected_duration,
         ?string $expected_error_message,
     ): void {
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
         if ($expected_error_message === null) {
-            $logger->shouldReceive('warning')->never();
+            $logger->expects(self::never())->method('warning');
         } else {
-            $logger->shouldReceive('warning')->with($expected_error_message)->once();
+            $logger->expects(self::once())->method('warning')->with($expected_error_message);
         }
 
         $start_date_timestamp = (new \DateTime($start_date))->getTimestamp();
@@ -407,10 +393,10 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $this->assertSame($expected_duration, $time_period->getDuration());
+        self::assertSame($expected_duration, $time_period->getDuration());
 
         $expected_end_date_timestamp = (new DateTime($expected_end_date))->getTimestamp();
-        $this->assertSame(
+        self::assertSame(
             $expected_end_date_timestamp,
             $time_period->getEndDate(),
             "End date should be $expected_end_date"
@@ -460,8 +446,8 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreationFromEndDateWithNullValues(): void
     {
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $logger->shouldReceive('error')->never();
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->expects(self::never())->method('error');
 
         $a_date = (new \DateTimeImmutable('2019-08-05'))->getTimestamp();
 
@@ -470,17 +456,17 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
             $a_date,
             $logger
         );
-        $this->assertNull($time_period->getStartDate());
-        $this->assertNull($time_period->getDuration());
-        $this->assertEquals($a_date, $time_period->getEndDate());
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertEquals($a_date, $time_period->getEndDate());
 
         $time_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
             $a_date,
             null,
             $logger
         );
-        $this->assertNull($time_period->getEndDate());
-        $this->assertNull($time_period->getDuration());
-        $this->assertEquals($a_date, $time_period->getStartDate());
+        self::assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getDuration());
+        self::assertEquals($a_date, $time_period->getStartDate());
     }
 }
