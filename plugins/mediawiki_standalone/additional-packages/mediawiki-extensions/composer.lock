@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a71a6e00709e6dd0584b6bde6f124f8",
+    "content-hash": "2070a19f814ba0de203a551ffb6bfd37",
     "packages": [
         {
             "name": "composer/installers",
@@ -430,16 +430,16 @@
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.1.5",
+            "version": "dev-REL1_35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "2b2397ef60293cd90f1bd7177d43c3411ac4d14c"
+                "reference": "2435d7c103b134c88ddfed9ec4fe15855eb768a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/2b2397ef60293cd90f1bd7177d43c3411ac4d14c",
-                "reference": "2b2397ef60293cd90f1bd7177d43c3411ac4d14c",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/2435d7c103b134c88ddfed9ec4fe15855eb768a3",
+                "reference": "2435d7c103b134c88ddfed9ec4fe15855eb768a3",
                 "shasum": ""
             },
             "require": {
@@ -477,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.5"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_35"
             },
-            "time": "2023-04-20T06:15:53+00:00"
+            "time": "2023-06-16T06:00:04+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -1101,7 +1101,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mediawiki/tuleap-wiki-farm": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
