@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
@@ -32,6 +33,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -88,6 +90,20 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
 
         $source_assigned_to_field_id      = 5;
         $destination_assigned_to_field_id = 25;
+
+        $source_cc_field_id      = 6;
+        $destination_cc_field_id = 26;
+
+        $source_cc_field_bind = TrackerFormElementListUserGroupBindBuilder::aBind()->withFieldId($source_cc_field_id)->withMultipleField()->withFieldName("cc")->withUserGroups([
+            ProjectUGroupTestBuilder::buildProjectMembers(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(100)->withName("semi-crispy")->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName("crispy")->build(),
+        ])->build();
+
+        $destination_cc_field_bind = TrackerFormElementListUserGroupBindBuilder::aBind()->withFieldId($destination_cc_field_id)->withMultipleField()->withFieldName("cc")->withUserGroups([
+            ProjectUGroupTestBuilder::buildProjectMembers(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(200)->withName("semi-crispy")->build(),
+        ])->build();
 
         $source_status_field_bind = TrackerFormElementListStaticBindBuilder::aBind()->withFieldId($source_status_field_id)->withFieldName("status")->withStaticValues([
             105 => "New",
@@ -146,6 +162,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(7)->withName("initial_effort")->build();
         $source_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(8)->withName("remaining_effort")->build();
         $source_not_existing_field         = TrackerFormElementStringFieldBuilder::aStringField(9)->withName("notexisting")->build();
+        $source_cc_field                   = $source_cc_field_bind->getField();
 
         $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
         $destination_severity_field             = $destination_severity_field_bind->getField();
@@ -156,6 +173,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $destination_initial_effort_field       = TrackerFormElementFloatFieldBuilder::aFloatField(27)->withName("initial_effort")->build();
         $destination_remaining_effort_field     = TrackerFormElementFloatFieldBuilder::aFloatField(28)->withName("remaining_effort")->build();
         $destination_assigned_to_field          = $destination_assigned_to_field_bind->getField();
+        $destination_cc_field                   = $destination_cc_field_bind->getField();
 
         $fields = DuckTypedMoveFieldCollection::fromFields(
             [
@@ -173,6 +191,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             [
                 $source_static_multiple_list_field,
                 $source_assigned_to_field,
+                $source_cc_field,
             ],
             [
                 FieldMapping::fromFields($source_title_field, $destination_title_field),
@@ -184,6 +203,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 FieldMapping::fromFields($source_remaining_effort_field, $destination_remaining_effort_field),
                 FieldMapping::fromFields($source_static_multiple_list_field, $destination_static_multiple_list_field),
                 FieldMapping::fromFields($source_assigned_to_field, $destination_assigned_to_field),
+                FieldMapping::fromFields($source_cc_field, $destination_cc_field),
             ]
         );
 
@@ -199,7 +219,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $this->tracker,
         );
 
-        $this->assertCount(9, $artifact_xml->changeset->field_change);
+        $this->assertCount(10, $artifact_xml->changeset->field_change);
         $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
         $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
         $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
@@ -209,6 +229,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->assertSame($destination_remaining_effort_field->getName(), (string) $artifact_xml->changeset->field_change[6]->attributes()->field_name);
         $this->assertSame($destination_static_multiple_list_field->getName(), (string) $artifact_xml->changeset->field_change[7]->attributes()->field_name);
         $this->assertSame($destination_assigned_to_field->getName(), (string) $artifact_xml->changeset->field_change[8]->attributes()->field_name);
+        $this->assertSame($destination_cc_field->getName(), (string) $artifact_xml->changeset->field_change[9]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement

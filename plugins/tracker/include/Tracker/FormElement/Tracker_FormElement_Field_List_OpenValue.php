@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field_List_Value
 {
     public const OPEN_PREFIX = 'o';
@@ -37,7 +37,7 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
         return $this->getLabel();
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }

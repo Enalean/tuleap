@@ -294,17 +294,17 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     {
         return new class ($id) extends \Tracker_FormElement_Field_List_Value
         {
-            public function getJsonId()
+            public function getJsonId(): string
             {
                 return 'test';
             }
 
-            public function __toString()
+            public function __toString(): string
             {
                 return 'test';
             }
 
-            public function getLabel()
+            public function getLabel(): string
             {
                 return 'test';
             }

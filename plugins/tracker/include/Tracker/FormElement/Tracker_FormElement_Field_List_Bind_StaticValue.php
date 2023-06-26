@@ -75,11 +75,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }

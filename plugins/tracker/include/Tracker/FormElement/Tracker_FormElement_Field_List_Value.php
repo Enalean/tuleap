@@ -93,7 +93,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     abstract public function __toString(): string;
 
-    abstract public function getLabel();
+    abstract public function getLabel(): string;
 
     /**
      * Get the data to bind on select <option> through a data- attribute

@@ -56,10 +56,13 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Action\AreUserGroupFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
+use Tuleap\Tracker\Action\CanUserGroupValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
 use Tuleap\Tracker\Action\FieldCanBeEasilyMigratedVerifier;
+use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
 use Tuleap\Tracker\Action\AreStaticListFieldsCompatibleVerifier;
@@ -1203,7 +1206,10 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new UserListFieldVerifier(),
             new AreUserFieldsCompatibleVerifier(),
-            new CanUserFieldValuesBeFullyMovedVerifier($this->user_manager)
+            new CanUserFieldValuesBeFullyMovedVerifier($this->user_manager),
+            new IsUserGroupListFieldVerifier(),
+            new AreUserGroupFieldsCompatibleVerifier(),
+            new CanUserGroupValuesBeFullyMovedVerifier()
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);

@@ -19,6 +19,7 @@
 
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
@@ -34,9 +35,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public const TYPE = 'ugroups';
 
     /**
-     * @var UGroupManager
+     * @var UGroupRetriever
      */
-    private $ugroup_manager;
+    private $ugroup_retriever;
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_UgroupsValue[]
@@ -53,12 +54,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     protected $value_dao;
 
-    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager, BindUgroupsValueDao $value_dao)
+    public function __construct($field, $values, $default_values, $decorators, UGroupRetriever $ugroup_manager, BindUgroupsValueDao $value_dao)
     {
         parent::__construct($field, $default_values, $decorators);
-        $this->values         = $values;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->value_dao      = $value_dao;
+        $this->values           = $values;
+        $this->ugroup_retriever = $ugroup_manager;
+        $this->value_dao        = $value_dao;
 
         $this->values_indexed_by_ugroup_id = [];
         foreach ($values as $value) {
@@ -156,7 +157,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getValueFromRow($row)
     {
-        $ugroup = $this->ugroup_manager->getUGroup($this->field->getTracker()->getProject(), $row['ugroup_id']);
+        $ugroup = $this->ugroup_retriever->getUGroup($this->field->getTracker()->getProject(), $row['ugroup_id']);
         if ($ugroup) {
             $is_hidden = isset($row['is_hidden']) ? $row['is_hidden'] : false;
 
@@ -651,7 +652,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             $user_group_name = substr($separated_value, 1);
 
             $project = $this->getField()->getTracker()->getProject();
-            $ugroup  = $this->ugroup_manager->getUGroupByName($project, $user_group_name);
+            $ugroup  = $this->ugroup_retriever->getUGroupByName($project, $user_group_name);
 
             if ($ugroup === null) {
                 return false;
@@ -691,7 +692,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if (! $project) {
             throw new Project_NotFoundException();
         }
-        $ugroup = $this->ugroup_manager->getUGroup($project, $value->getUgroupId());
+        $ugroup = $this->ugroup_retriever->getUGroup($project, $value->getUgroupId());
         if (! $ugroup) {
             throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
         }
@@ -731,7 +732,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                 return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $bind_value->getId();
             }
 
-            $user_group = $this->ugroup_manager->getUGroup($project, $id);
+            $user_group = $this->ugroup_retriever->getUGroup($project, $id);
             if (! $user_group) {
                 throw new Tracker_FormElement_InvalidFieldValueException('User Group with ID ' . $id . ' does not exist for field ID ' . $field->getId());
             }
@@ -741,7 +742,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             }
         } elseif (isset($rest_data['short_name'])) {
             $name       = (string) $rest_data['short_name'];
-            $user_group = $this->ugroup_manager->getUGroupByName($project, $name);
+            $user_group = $this->ugroup_retriever->getUGroupByName($project, $name);
 
             if (! $user_group) {
                 throw new Tracker_FormElement_InvalidFieldValueException('User Group with short_name ' . $name . ' does not exist for field ID ' . $field->getId());
