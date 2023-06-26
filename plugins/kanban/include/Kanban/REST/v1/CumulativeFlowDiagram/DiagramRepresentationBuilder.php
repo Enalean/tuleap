@@ -18,32 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
 use AgileDashboard_Kanban;
-use DataAccessException;
 use DateTime;
 use PFUser;
-use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
+use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
 
-class DiagramRepresentationBuilder
+final class DiagramRepresentationBuilder
 {
-    /** @var KanbanCumulativeFlowDiagramDao */
-    private $kanban_cumulative_flow_diagram_dao;
-    /** @var OrderedColumnRepresentationsBuilder */
-    private $column_builder;
-
     public function __construct(
-        KanbanCumulativeFlowDiagramDao $kanban_cumulative_flow_diagram_dao,
-        OrderedColumnRepresentationsBuilder $column_builder,
+        private readonly KanbanCumulativeFlowDiagramDao $kanban_cumulative_flow_diagram_dao,
+        private readonly OrderedColumnRepresentationsBuilder $column_builder,
     ) {
-        $this->kanban_cumulative_flow_diagram_dao = $kanban_cumulative_flow_diagram_dao;
-        $this->column_builder                     = $column_builder;
     }
 
     /**
-     * @return DiagramRepresentation
-     * @throws DataAccessException
      * @throws TooManyPointsException
      */
     public function build(
@@ -51,8 +41,8 @@ class DiagramRepresentationBuilder
         PFUser $user,
         DateTime $start_date,
         DateTime $end_date,
-        $interval_between_point,
-    ) {
+        int $interval_between_point,
+    ): DiagramRepresentation {
         $dates = $this->column_builder->getDates($start_date, $end_date, $interval_between_point);
 
         $cumulative_flow_columns_representation = $this->getColumnsRepresentation($kanban, $user, $dates);
@@ -62,20 +52,16 @@ class DiagramRepresentationBuilder
 
     /**
      * @return DiagramColumnRepresentation[]
-     * @throws DataAccessException
      */
     private function getColumnsRepresentation(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         array $dates,
-    ) {
+    ): array {
         $items_in_columns = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsByDates(
             $kanban->getTrackerId(),
             $dates
         );
-        if ($items_in_columns === false) {
-            throw new DataAccessException();
-        }
 
         return $this->column_builder->build($kanban, $user, $dates, $items_in_columns);
     }

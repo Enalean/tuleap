@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,29 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
-/**
- * @psalm-immutable
- */
-class DiagramColumnRepresentation
+use Exception;
+
+final class TooManyPointsException extends Exception
 {
-    /** @var string */
-    public $id;
-
-    /** @var string */
-    public $label;
-
-    /** @var array */
-    public $values;
-
-    public function __construct(
-        string $id,
-        string $label,
-        array $values,
-    ) {
-        $this->id     = $id;
-        $this->label  = $label;
-        $this->values = $values;
-    }
 }

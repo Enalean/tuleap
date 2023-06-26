@@ -18,10 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
-use Exception;
+use Tuleap\REST\JsonCast;
 
-class TooManyPointsException extends Exception
+final class DiagramPointRepresentation
 {
+    /** @var string */
+    public $start_date;
+
+    /** @var int */
+    public $kanban_items_count;
+
+    /**
+     * @param mixed $kanban_items_count
+     */
+    public function build(
+        string $start_date,
+        $kanban_items_count,
+    ): void {
+        $this->start_date         = $start_date;
+        $this->kanban_items_count = JsonCast::toInt($kanban_items_count);
+    }
 }

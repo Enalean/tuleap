@@ -18,21 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
 /**
  * @psalm-immutable
  */
-class DiagramRepresentation
+final class DiagramColumnRepresentation
 {
-    /** @var DiagramColumnRepresentation[] */
-    public $columns;
+    /** @var string */
+    public $id;
 
-    /**
-     * @param DiagramColumnRepresentation[] $columns
-     */
-    public function __construct(array $columns)
-    {
-        $this->columns = $columns;
+    /** @var string */
+    public $label;
+
+    /** @var array */
+    public $values;
+
+    public function __construct(
+        string $id,
+        string $label,
+        array $values,
+    ) {
+        $this->id     = $id;
+        $this->label  = $label;
+        $this->values = $values;
     }
 }

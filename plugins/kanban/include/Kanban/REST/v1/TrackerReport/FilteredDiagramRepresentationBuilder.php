@@ -18,36 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport;
+namespace Tuleap\Kanban\REST\v1\TrackerReport;
 
 use AgileDashboard_Kanban;
-use DataAccessException;
 use DateTime;
 use PFUser;
 use Tracker_Report;
-use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
+use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
+use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramColumnRepresentation;
+use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentation;
+use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
+use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\TooManyPointsException;
 
-class FilteredDiagramRepresentationBuilder
+final class FilteredDiagramRepresentationBuilder
 {
-    /** @var KanbanCumulativeFlowDiagramDao */
-    private $kanban_cumulative_flow_diagram_dao;
-    /** @var OrderedColumnRepresentationsBuilder */
-    private $column_builder;
-
     public function __construct(
-        KanbanCumulativeFlowDiagramDao $kanban_cumulative_flow_diagram_dao,
-        OrderedColumnRepresentationsBuilder $column_builder,
+        private readonly KanbanCumulativeFlowDiagramDao $kanban_cumulative_flow_diagram_dao,
+        private readonly OrderedColumnRepresentationsBuilder $column_builder,
     ) {
-        $this->kanban_cumulative_flow_diagram_dao = $kanban_cumulative_flow_diagram_dao;
-        $this->column_builder                     = $column_builder;
     }
 
     /**
-     * @return DiagramRepresentation
-     * @throws DataAccessException
      * @throws TooManyPointsException
      */
     public function build(
@@ -55,9 +46,9 @@ class FilteredDiagramRepresentationBuilder
         PFUser $user,
         DateTime $start_date,
         DateTime $end_date,
-        $interval_between_point,
+        int $interval_between_point,
         Tracker_Report $report,
-    ) {
+    ): DiagramRepresentation {
         $dates = $this->column_builder->getDates($start_date, $end_date, $interval_between_point);
 
         $cumulative_flow_columns_representation = $this->getFilteredColumnsRepresentation(
@@ -70,12 +61,15 @@ class FilteredDiagramRepresentationBuilder
         return new DiagramRepresentation($cumulative_flow_columns_representation);
     }
 
+    /**
+     * @return DiagramColumnRepresentation[]
+     */
     private function getFilteredColumnsRepresentation(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         array $dates,
         Tracker_Report $report,
-    ) {
+    ): array {
         $matching_ids = $report->getMatchingIds();
         if (! $matching_ids['id']) {
             return $this->column_builder->build($kanban, $user, $dates, []);
@@ -88,9 +82,6 @@ class FilteredDiagramRepresentationBuilder
             $matching_artifact_ids,
             $dates
         );
-        if ($items_in_columns === false) {
-            throw new DataAccessException();
-        }
 
         return $this->column_builder->build($kanban, $user, $dates, $items_in_columns);
     }
