@@ -18,7 +18,8 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import { isBackspaceKey, isEnterKey } from "./helpers/keys-helper";
+import { isBackspaceKey } from "./helpers/keys-helper";
+import input_style from "./search_input.scss";
 
 export type SearchInput = {
     disabled: boolean;
@@ -30,7 +31,6 @@ export type HostElement = HTMLElement & InternalSearchInput;
 type InternalSearchInput = Readonly<SearchInput> & {
     query: string;
     timeout_id: number | undefined;
-    content(): HTMLElement;
 };
 const TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
@@ -55,10 +55,6 @@ export const onInput = (host: HostElement, event: Event): void => {
     }, TRIGGER_CALLBACK_DELAY_IN_MS);
 };
 
-const preventEnterFromSubmittingParentForms = (event: KeyboardEvent): void => {
-    event.preventDefault();
-};
-
 const hasBackspaceBeenPressedWhileQueryWasAlreadyEmpty = (
     host: InternalSearchInput,
     event: KeyboardEvent
@@ -77,23 +73,9 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     host.query = event.target.value;
 };
 
-export const onKeyDown = (host: unknown, event: KeyboardEvent): void => {
-    if (!isEnterKey(event)) {
-        return;
-    }
-    preventEnterFromSubmittingParentForms(event);
-    event.stopPropagation();
-};
-
 export const buildClear = (host: HostElement) => (): void => {
     host.query = "";
     dispatch(host, "search-input");
-};
-
-export const connect = (host: HostElement): void => {
-    host.addEventListener("focus", () => {
-        host.content().querySelector("input")?.focus();
-    });
 };
 
 export const TAG = "tuleap-lazybox-search";
@@ -102,25 +84,29 @@ export const SearchInput = define<InternalSearchInput>({
     disabled: false,
     placeholder: "",
     query: "",
-    clear: { get: buildClear, connect },
+    clear: { get: buildClear },
     getQuery: { get: (host: InternalSearchInput) => (): string => host.query },
     timeout_id: undefined,
-    content: (host) => html`<input
-        type="search"
-        disabled="${host.disabled}"
-        data-test="lazybox-search-field"
-        class="lazybox-search-field"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="none"
-        spellcheck="false"
-        role="searchbox"
-        aria-autocomplete="list"
-        aria-controls="lazybox-dropdown-value"
-        placeholder="${host.placeholder}"
-        value="${host.query}"
-        oninput="${onInput}"
-        onkeydown="${onKeyDown}"
-        onkeyup="${onKeyUp}"
-    />`,
+    render: Object.assign(
+        (host: InternalSearchInput) =>
+            html`<input
+                type="search"
+                disabled="${host.disabled}"
+                data-test="lazybox-search-field"
+                class="lazybox-search-field"
+                part="input"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+                role="searchbox"
+                aria-autocomplete="list"
+                aria-controls="lazybox-dropdown-value"
+                placeholder="${host.placeholder}"
+                value="${host.query}"
+                oninput="${onInput}"
+                onkeyup="${onKeyUp}"
+            />`.style(input_style),
+        { delegatesFocus: true }
+    ),
 });

@@ -73,13 +73,6 @@ describe(`DropdownElement`, () => {
             updateFunction(host, target);
         };
 
-        it(`renders nothing when dropdown is closed
-            to avoid weird bugs where things stop reacting`, () => {
-            open = false;
-            render(getHost());
-            expect(target.children).toHaveLength(0);
-        });
-
         it(`renders a search section in the dropdown when multiple selection is disabled`, () => {
             multiple_selection = false;
             render(getHost());

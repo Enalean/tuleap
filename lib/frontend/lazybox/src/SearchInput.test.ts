@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./SearchInput";
-import { buildClear, connect, onInput, onKeyDown, onKeyUp } from "./SearchInput";
+import { buildClear, onInput, onKeyUp } from "./SearchInput";
 
 describe(`SearchInput`, () => {
     let inner_input: HTMLInputElement, doc: Document;
@@ -133,36 +133,12 @@ describe(`SearchInput`, () => {
             expect(event.type).toBe("backspace-pressed");
         });
 
-        it(`prevents the "enter" key from submitting forms
-            and stops propagation to avoid triggering the handler in SelectionElement`, () => {
-            const event = new KeyboardEvent("keydown", { key: "Enter", cancelable: true });
-            const stopPropagation = vi.spyOn(event, "stopPropagation");
-            onKeyDown({}, event);
-
-            expect(event.defaultPrevented).toBe(true);
-            expect(stopPropagation).toHaveBeenCalled();
-        });
-
         it(`assigns host query on keyUp`, () => {
             const host = getHost();
             const inner_event = buildKeyboardEvent("a", "a");
             onKeyUp(host, inner_event);
 
             expect(host.query).toBe("a");
-        });
-
-        it(`when focused, it transmits focus to the inner input element`, () => {
-            const focus = vi.spyOn(inner_input, "focus");
-            const target = doc.createElement("div");
-            target.append(inner_input);
-            const host = Object.assign(doc.createElement("span"), {
-                content: (): HTMLElement => target,
-            } as HostElement);
-
-            connect(host);
-
-            host.dispatchEvent(new Event("focus"));
-            expect(focus).toHaveBeenCalled();
         });
     });
 

@@ -327,7 +327,7 @@ describe(`LazyboxElement`, () => {
             const unlock = vi.spyOn(host.scrolling_manager, "unlockScrolling");
             const clearSearch = vi.spyOn(host.search_input_element, "clear");
             const focusSearch = vi.spyOn(host.search_input_element, "focus");
-            const focusSelection = vi.spyOn(host.selection_element, "focus");
+            const focusHost = vi.spyOn(host, "focus");
             const dropdown = getDropdownElement(host);
 
             dropdown.dispatchEvent(new CustomEvent("open"));
@@ -347,7 +347,7 @@ describe(`LazyboxElement`, () => {
             );
             expect(cleanup).toHaveBeenCalledOnce();
             expect(clearSearch).toHaveBeenCalledOnce();
-            expect(focusSelection).toHaveBeenCalledOnce();
+            expect(focusHost).toHaveBeenCalledOnce();
         });
 
         it(`when it receives "click-create-item" event,

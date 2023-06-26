@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin unset-button-style {
-    padding: 0;
-    border: unset;
-    background: unset;
-    color: unset;
-    text-align: unset;
-}
+@use "../themes/common";
 
-@mixin focusable-button {
+.lazybox-search-field {
+    @include common.placeholder;
+
+    width: 100%;
+    background: var(--tlp-form-element-background);
+    font-family: var(--tlp-font-family);
+
     &:focus {
-        box-shadow: var(--tlp-shadow-focus);
+        outline: 0;
     }
-}
-
-@mixin placeholder {
-    font-size: var(--tlp-form-element-font-size);
 }

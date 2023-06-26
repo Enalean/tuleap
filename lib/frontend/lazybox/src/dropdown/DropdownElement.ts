@@ -93,11 +93,7 @@ export const DropdownElement = define<InternalDropdownElement>({
     search_input: undefined,
     selection: undefined,
     content: (host) => {
-        if (!host.open) {
-            return html``;
-        }
         const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
-
         const new_item_button = host.has_new_item
             ? html`<button
                   type="button"
