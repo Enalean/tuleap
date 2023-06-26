@@ -1253,9 +1253,6 @@ msgstr "Liste des objets étant référencés par cet objet ou le référençant
 msgid "Display original email"
 msgstr "Afficher l'email original"
 
-msgid "Display reverse artifact links"
-msgstr "Afficher les artéfacts qui référencent cet artéfact"
-
 msgid "Display settings"
 msgstr "Paramètres d'affichage"
 

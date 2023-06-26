@@ -1098,9 +1098,6 @@ msgstr ""
 msgid "Display original email"
 msgstr ""
 
-msgid "Display reverse artifact links"
-msgstr ""
-
 msgid "Display settings"
 msgstr ""
 
