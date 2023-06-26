@@ -986,13 +986,11 @@ chmod 750 /var/lib/gitolite
 #
 #
 %post
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl enable \
-        tuleap.service \
-        tuleap-workers.service \
-        tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask php81-php-fpm || :
-fi
+/usr/bin/systemctl enable \
+    tuleap.service \
+    tuleap-workers.service \
+    tuleap-php-fpm.service &>/dev/null || :
+/usr/bin/systemctl mask php81-php-fpm || :
 
 # Clean old tuleap cache file
 /usr/bin/rm -rf %{APP_CACHE_DIR}/tuleap_hooks_cache
@@ -1021,10 +1019,8 @@ if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
 fi
 
 %post plugin-mediawiki-standalone
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl enable mediawiki-tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask php74-php-fpm || :
-fi
+/usr/bin/systemctl enable mediawiki-tuleap-php-fpm.service &>/dev/null || :
+/usr/bin/systemctl mask php74-php-fpm || :
 
 %preun
 if [ $1 -eq 0 ]; then
