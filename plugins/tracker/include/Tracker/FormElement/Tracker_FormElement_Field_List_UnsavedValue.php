@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Field_List_Value
 {
     protected $label;
@@ -30,12 +30,12 @@ class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Fi
 
     public function __toString(): string
     {
-        return (string) $this->getLabel();
+        return $this->getLabel();
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 
     public function getJsonId()

@@ -35,6 +35,12 @@
     <field_change field_name="assigned_to" type="list" bind="users">
       <value format="username">ProjectMember</value>
     </field_change>
+    <field_change field_name="cc" type="list" bind="ugroups">
+      <value format="label">semi-crispy</value>
+      <value format="label">crispy</value>
+      <value format="label">semi-crispy</value>
+      <value format="label">Project member</value>
+    </field_change>
   </changeset>
   <changeset id="CHANGESET_5">
     <submitted_by format="ldap">102</submitted_by>

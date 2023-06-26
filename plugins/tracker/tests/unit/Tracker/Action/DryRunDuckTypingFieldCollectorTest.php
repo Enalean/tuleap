@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Stub\VerifyIsUserGroupListFieldStub;
 use Tuleap\Tracker\Test\Stub\VerifyUserFieldValuesCanBeFullyMovedStub;
 use Tuleap\Tracker\Test\Stub\VerifyUserFieldsAreCompatibleStub;
 use Tuleap\Tracker\Test\Stub\VerifyIsStaticListFieldStub;
@@ -37,6 +38,8 @@ use Tuleap\Tracker\Test\Stub\VerifyStaticListFieldsAreCompatibleStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifyFieldCanBeEasilyMigratedStub;
 use Tuleap\Tracker\Test\Stub\VerifyIsUserListFieldStub;
+use Tuleap\Tracker\Test\Stub\VerifyUserGroupFieldsAreCompatibleStub;
+use Tuleap\Tracker\Test\Stub\VerifyUserGroupValuesCanBeFullyMovedStub;
 
 final class DryRunDuckTypingFieldCollectorTest extends TestCase
 {
@@ -76,6 +79,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -118,6 +124,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -146,6 +155,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -176,6 +188,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -206,6 +221,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -234,6 +252,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -262,6 +283,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withoutUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -291,6 +315,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withUserListField(),
             VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -319,6 +346,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withUserListField(),
             VerifyUserFieldsAreCompatibleStub::withMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
@@ -348,6 +378,104 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyIsUserListFieldStub::withUserListField(),
             VerifyUserFieldsAreCompatibleStub::withMovableUserListField(),
             VerifyUserFieldValuesCanBeFullyMovedStub::withCompleteMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
+        );
+
+        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+
+        self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
+        self::assertContains($source_list_field, $collection->migrateable_field_list);
+        self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
+        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+    }
+
+    public function testUserGroupBoundFieldWillBeNotMigratedWhenTheDestinationFieldIsNotBoundToUserGroups(): void
+    {
+        $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
+        $source_tracker_used_fields = [$source_list_field];
+
+        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $target_tracker_used_fields = [$target_list_field];
+
+        $collector = new DryRunDuckTypingFieldCollector(
+            RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
+            VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
+            VerifyStaticListFieldsAreCompatibleStub::withoutMovableStaticValue(),
+            VerifyStaticFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserListFieldStub::withUserListField(),
+            VerifyUserFieldsAreCompatibleStub::withoutMovableUserListField(),
+            VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withoutUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withoutCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
+        );
+
+        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+
+        self::assertContains($source_list_field, $collection->not_migrateable_field_list);
+        self::assertEmpty($collection->migrateable_field_list);
+        self::assertEmpty($collection->partially_migrated_fields);
+        self::assertEmpty($collection->mapping_fields);
+    }
+
+    public function testUserGroupsBoundFieldCanBePartiallyMovedWhenTheDestinationFieldDoesNotContainAllTheSelectedUserGroups(): void
+    {
+        $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
+        $source_tracker_used_fields = [$source_list_field];
+
+        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $target_tracker_used_fields = [$target_list_field];
+
+        $collector = new DryRunDuckTypingFieldCollector(
+            RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
+            VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
+            VerifyStaticListFieldsAreCompatibleStub::withoutMovableStaticValue(),
+            VerifyStaticFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserListFieldStub::withoutUserListField(),
+            VerifyUserFieldsAreCompatibleStub::withMovableUserListField(),
+            VerifyUserFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserGroupListFieldStub::withUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withPartialMove()
+        );
+
+        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+
+        self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertEmpty($collection->migrateable_field_list);
+        self::assertContains($source_list_field, $collection->partially_migrated_fields);
+        self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
+        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+    }
+
+    public function testUserGroupsBoundListFieldWillBeMigratedWhenMatchingDestinationFieldContainsAllTheSelectedUserGroups(): void
+    {
+        $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
+        $source_tracker_used_fields = [$source_list_field];
+
+        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $target_tracker_used_fields = [$target_list_field];
+
+        $collector = new DryRunDuckTypingFieldCollector(
+            RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
+            VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
+            VerifyStaticListFieldsAreCompatibleStub::withoutMovableStaticValue(),
+            VerifyStaticFieldValuesCanBeFullyMovedStub::withPartialMove(),
+            VerifyIsUserListFieldStub::withoutUserListField(),
+            VerifyUserFieldsAreCompatibleStub::withMovableUserListField(),
+            VerifyUserFieldValuesCanBeFullyMovedStub::withCompleteMove(),
+            VerifyIsUserGroupListFieldStub::withUserGroupListField(),
+            VerifyUserGroupFieldsAreCompatibleStub::withCompatibleField(),
+            VerifyUserGroupValuesCanBeFullyMovedStub::withCompleteMove()
         );
 
         $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);

@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->user_name;
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
         if ($this->display_name) {
             return $this->display_name;
