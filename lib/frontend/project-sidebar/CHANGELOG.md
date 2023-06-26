@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.3
+
+* Changes regarding the Tuleap icons have been re-introduced
+* Release pipeline has been fixed (hopefully)
+
 ## 2.2.2
 
 Revert updated Tuleap icons due to build/release pipeline issue.

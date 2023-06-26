@@ -349,7 +349,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 }
                 $add .= '<div class="tracker_artifact_attachment_size">(' . $hp->purify($fileinfo->getHumanReadableFilesize()) . ')</div>';
                 $add .= '<div>';
-                $add .= $link_show . '<i class="fa fa-eye"></i></a>';
+                $add .= $link_show . '<i class="fa-solid fa-eye"></i></a>';
                 $add .= '<a href="' . $query_link . '" download><i class="fa fa-download"></i></a>';
                 $add .= '</div>';
                 $add .= '</div>';

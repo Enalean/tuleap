@@ -292,8 +292,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return '<div class="header-spacer"></div>
             <div class="show-hide-fieldsets">' . dgettext('tuleap-tracker', 'Hidden fieldsets:') . '
                 <div class="btn-group" data-toggle="buttons-radio">
-                    <button type="button" class="btn show-fieldsets"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn active hide-fieldsets"><i class="fa fa-eye-slash"></i></button>
+                    <button type="button" class="btn show-fieldsets"><i class="fa-solid fa-eye"></i></button>
+                    <button type="button" class="btn active hide-fieldsets"><i class="fa-solid fa-eye-slash"></i></button>
                 </div>
             </div>';
     }
