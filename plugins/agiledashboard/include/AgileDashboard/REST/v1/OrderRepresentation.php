@@ -74,4 +74,22 @@ class OrderRepresentation
             }
         }
     }
+
+    /**
+     * @param int[] $ids
+     */
+    private function __construct(array $ids, string $direction, int $compared_to)
+    {
+        $this->ids         = $ids;
+        $this->direction   = $direction;
+        $this->compared_to = $compared_to;
+    }
+
+    /**
+     * @param int[] $ids
+     */
+    public static function build(array $ids, string $direction, int $compared_to): self
+    {
+        return new self($ids, $direction, $compared_to);
+    }
 }

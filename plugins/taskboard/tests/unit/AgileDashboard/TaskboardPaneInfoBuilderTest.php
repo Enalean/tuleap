@@ -22,32 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 
-class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TaskboardPaneInfoBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_Milestone
-     */
-    private $milestone;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneIsAllowedChecker
-     */
-    private $checker;
+    private TaskboardPaneInfoBuilder $builder;
+    private MockObject&Planning_Milestone $milestone;
+    private MockObject&MilestoneIsAllowedChecker $checker;
 
     protected function setUp(): void
     {
-        $this->milestone = Mockery::mock(Planning_Milestone::class);
-
-        $this->checker = Mockery::mock(MilestoneIsAllowedChecker::class);
+        $this->milestone = $this->createMock(Planning_Milestone::class);
+        $this->checker   = $this->createMock(MilestoneIsAllowedChecker::class);
 
         $this->builder = new TaskboardPaneInfoBuilder($this->checker);
     }
@@ -55,21 +42,21 @@ class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfMilestoneIsNotAllowed(): void
     {
         $this->checker
-            ->shouldReceive('checkMilestoneIsAllowed')
+            ->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
             ->with($this->milestone)
-            ->once()
-            ->andThrow(MilestoneIsNotAllowedException::class);
+            ->willThrowException(new MilestoneIsNotAllowedException());
 
-        $this->assertNull($this->builder->getPaneForMilestone($this->milestone));
+        self::assertNull($this->builder->getPaneForMilestone($this->milestone));
     }
 
     public function testItReturnsPaneInfo(): void
     {
         $this->checker
-            ->shouldReceive('checkMilestoneIsAllowed')
-            ->with($this->milestone)
-            ->once();
+            ->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
+            ->with($this->milestone);
 
-        $this->assertInstanceOf(TaskboardPaneInfo::class, $this->builder->getPaneForMilestone($this->milestone));
+        self::assertInstanceOf(TaskboardPaneInfo::class, $this->builder->getPaneForMilestone($this->milestone));
     }
 }

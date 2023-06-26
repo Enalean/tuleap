@@ -22,43 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Routing;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Project;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $factory;
-    /**
-     * @var MilestoneExtractor
-     */
-    private $extractor;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneIsAllowedChecker
-     */
-    private $checker;
+    private Planning_MilestoneFactory&MockObject $factory;
+    private MilestoneExtractor $extractor;
+    private PFUser $user;
+    private MilestoneIsAllowedChecker&MockObject $checker;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = UserTestBuilder::aUser()->build();
 
-        $this->factory = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->checker = Mockery::mock(MilestoneIsAllowedChecker::class);
+        $this->factory = $this->createMock(Planning_MilestoneFactory::class);
+        $this->checker = $this->createMock(MilestoneIsAllowedChecker::class);
 
         $this->extractor = new MilestoneExtractor($this->factory, $this->checker);
     }
@@ -66,10 +53,10 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNotFoundExceptionWhenMilestoneDoesNotExist(): void
     {
         $this->factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -78,18 +65,15 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotFoundExceptionWhenProjectMilestoneIsNotTheOneGivenInArgument(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixNameMixedCase')->andReturn('another-project');
+        $project = $this->buildAnotherProject();
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getTrackerId')->andReturn(101);
-        $milestone->shouldReceive('getProject')->andReturn($project);
+        $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->expectException(NotFoundException::class);
 
@@ -98,26 +82,21 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotFoundExceptionWhenMilestoneIsNotAllowed(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
-        $project->shouldReceive('getPublicName')->andReturn('My project');
-        $project->shouldReceive('getID')->andReturn(42);
+        $project = $this->buildProject();
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getTrackerId')->andReturn(101);
-        $milestone->shouldReceive('getProject')->andReturn($project);
+        $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->checker
-            ->shouldReceive('checkMilestoneIsAllowed')
+            ->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
             ->with($milestone)
-            ->once()
-            ->andThrow(MilestoneIsNotAllowedException::class);
+            ->willThrowException(new MilestoneIsNotAllowedException());
 
         $this->expectException(NotFoundException::class);
 
@@ -126,28 +105,51 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheMilestone(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
-        $project->shouldReceive('getID')->andReturn(42);
+        $project = $this->buildProject();
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getTrackerId')->andReturn(101);
-        $milestone->shouldReceive('getProject')->andReturn($project);
+        $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->checker
-            ->shouldReceive('checkMilestoneIsAllowed')
-            ->with($milestone)
-            ->once();
+            ->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
+            ->with($milestone);
 
-        $this->assertEquals(
+        self::assertEquals(
             $milestone,
             $this->extractor->getMilestone($this->user, ['id' => 1, 'project_name' => 'my-project'])
         );
+    }
+
+    private function buildProject(): Project
+    {
+        return ProjectTestBuilder::aProject()
+            ->withId(42)
+            ->withUnixName('my-project')
+            ->withPublicName('My project')
+            ->build();
+    }
+
+    private function buildAnotherProject(): Project
+    {
+        return ProjectTestBuilder::aProject()
+            ->withId(43)
+            ->withUnixName('another-project')
+            ->withPublicName('Another project')
+            ->build();
+    }
+
+    private function buildMockMilestone(Project $project): \PHPUnit\Framework\MockObject\MockObject&Planning_Milestone
+    {
+        $milestone = $this->createMock(Planning_Milestone::class);
+        $milestone->method('getTrackerId')->willReturn(101);
+        $milestone->method('getProject')->willReturn($project);
+
+        return $milestone;
     }
 }

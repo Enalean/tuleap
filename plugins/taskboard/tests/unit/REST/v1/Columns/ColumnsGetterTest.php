@@ -23,34 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1\Columns;
 
 use Luracast\Restler\RestException;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Rest_Exception_InvalidTokenException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
 final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ColumnsGetter */
-    private $columns_getter;
-    /** @var M\LegacyMockInterface|M\MockInterface|UserManager */
-    private $user_manager;
-    /** @var M\LegacyMockInterface|M\MockInterface|\Planning_MilestoneFactory */
-    private $milestone_factory;
-    /** @var M\LegacyMockInterface|M\MockInterface|MilestoneIsAllowedChecker */
-    private $milestone_checker;
-    /** @var \Cardwall_OnTop_ColumnDao|M\LegacyMockInterface|M\MockInterface */
-    private $column_dao;
+    private ColumnsGetter $columns_getter;
+    private UserManager&MockObject $user_manager;
+    private \Planning_MilestoneFactory&MockObject $milestone_factory;
+    private MilestoneIsAllowedChecker&MockObject $milestone_checker;
+    private \Cardwall_OnTop_ColumnDao&MockObject $column_dao;
 
     protected function setUp(): void
     {
-        $this->user_manager      = M::mock(UserManager::class);
-        $this->milestone_factory = M::mock(\Planning_MilestoneFactory::class);
-        $this->milestone_checker = M::mock(MilestoneIsAllowedChecker::class);
-        $this->column_dao        = M::mock(\Cardwall_OnTop_ColumnDao::class);
+        $this->user_manager      = $this->createMock(UserManager::class);
+        $this->milestone_factory = $this->createMock(\Planning_MilestoneFactory::class);
+        $this->milestone_checker = $this->createMock(MilestoneIsAllowedChecker::class);
+        $this->column_dao        = $this->createMock(\Cardwall_OnTop_ColumnDao::class);
         $this->columns_getter    = new ColumnsGetter(
             $this->user_manager,
             $this->milestone_factory,
@@ -61,7 +54,7 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetColumnsThrowsWhenCurrentUserIsNotAuthenticated(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andThrow(new Rest_Exception_InvalidTokenException());
+        $this->user_manager->method('getCurrentUser')->willThrowException(new Rest_Exception_InvalidTokenException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(401);
@@ -70,11 +63,11 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetColumnsThrowsWhenMilestoneCantBeFound(): void
     {
-        $current_user = $this->mockCurrentUser();
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifactId')
+        $current_user = $this->buildCurrentUser();
+        $this->milestone_factory->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -83,16 +76,16 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetColumnsThrowsWhenMilestoneIsNotAllowed(): void
     {
-        $current_user = $this->mockCurrentUser();
-        $milestone    = M::mock(\Planning_ArtifactMilestone::class);
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifactId')
+        $current_user = $this->buildCurrentUser();
+        $milestone    = $this->createMock(\Planning_ArtifactMilestone::class);
+        $this->milestone_factory->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
-            ->once()
-            ->andReturn($milestone);
-        $this->milestone_checker->shouldReceive('checkMilestoneIsAllowed')
+            ->willReturn($milestone);
+        $this->milestone_checker->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
             ->with($milestone)
-            ->once()
-            ->andThrow(MilestoneIsNotAllowedException::class);
+            ->willThrowException(new MilestoneIsNotAllowedException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -101,37 +94,37 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetColumnsReturnsEmptyArray(): void
     {
-        $current_user = $this->mockCurrentUser();
+        $current_user = $this->buildCurrentUser();
         $milestone    = $this->mockMilestone($current_user);
-        $planning     = M::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTrackerId')
-            ->once()
-            ->andReturn(98);
-        $milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->column_dao->shouldReceive('searchColumnsByTrackerId')
-            ->once()
-            ->andReturn([]);
+        $planning     = $this->createMock(\Planning::class);
+        $planning->expects(self::once())
+            ->method('getPlanningTrackerId')
+            ->willReturn(98);
+        $milestone->expects(self::once())
+            ->method('getPlanning')
+            ->willReturn($planning);
+        $this->column_dao->expects(self::once())
+            ->method('searchColumnsByTrackerId')
+            ->willReturn([]);
 
         $result = $this->columns_getter->getColumns(18);
-        $this->assertEmpty($result);
+        self::assertEmpty($result);
     }
 
     public function testGetColumnsReturnsColumnsRepresentations(): void
     {
-        $current_user = $this->mockCurrentUser();
+        $current_user = $this->buildCurrentUser();
         $milestone    = $this->mockMilestone($current_user);
-        $planning     = M::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTrackerId')
-            ->once()
-            ->andReturn(98);
-        $milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->column_dao->shouldReceive('searchColumnsByTrackerId')
-            ->once()
-            ->andReturn(
+        $planning     = $this->createMock(\Planning::class);
+        $planning->expects(self::once())
+            ->method('getPlanningTrackerId')
+            ->willReturn(98);
+        $milestone->expects(self::once())
+            ->method('getPlanning')
+            ->willReturn($planning);
+        $this->column_dao->expects(self::once())
+            ->method('searchColumnsByTrackerId')
+            ->willReturn(
                 [
                     ['id' => 26, 'label' => 'Todo', 'tlp_color_name' => 'fiesta-red', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null],
                     ['id' => 27, 'label' => 'On Going', 'tlp_color_name' => 'acid-green', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null],
@@ -139,42 +132,41 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $result = $this->columns_getter->getColumns(18);
-        $this->assertSame(2, count($result));
+        self::assertSame(2, count($result));
         $first_column  = $result[0];
         $second_column = $result[1];
-        $this->assertSame(26, $first_column->id);
-        $this->assertSame('Todo', $first_column->label);
-        $this->assertSame('fiesta-red', $first_column->header_color);
-        $this->assertSame(27, $second_column->id);
-        $this->assertSame('On Going', $second_column->label);
-        $this->assertSame('acid-green', $second_column->header_color);
+        self::assertSame(26, $first_column->id);
+        self::assertSame('Todo', $first_column->label);
+        self::assertSame('fiesta-red', $first_column->header_color);
+        self::assertSame(27, $second_column->id);
+        self::assertSame('On Going', $second_column->label);
+        self::assertSame('acid-green', $second_column->header_color);
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\PFUser
-     */
-    private function mockCurrentUser()
+    private function buildCurrentUser(): \PFUser
     {
-        $current_user = M::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user);
+        $current_user = UserTestBuilder::aUser()->build();
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
+
         return $current_user;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Planning_ArtifactMilestone
-     */
-    private function mockMilestone(\PFUser $current_user)
+    private function mockMilestone(\PFUser $current_user): \Planning_ArtifactMilestone&MockObject
     {
-        $milestone = M::mock(\Planning_ArtifactMilestone::class);
-        $this->milestone_factory->shouldReceive('getBareMilestoneByArtifactId')
+        $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
+        $this->milestone_factory
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
-            ->once()
-            ->andReturn($milestone);
-        $this->milestone_checker->shouldReceive('checkMilestoneIsAllowed')
-            ->with($milestone)
-            ->once();
+            ->willReturn($milestone);
+        $this->milestone_checker
+            ->expects(self::once())
+            ->method('checkMilestoneIsAllowed')
+            ->with($milestone);
+
         return $milestone;
     }
 }

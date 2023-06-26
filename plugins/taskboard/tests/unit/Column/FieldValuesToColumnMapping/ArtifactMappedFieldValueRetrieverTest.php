@@ -22,128 +22,109 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ArtifactMappedFieldValueRetriever */
-    private $retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever
-     */
-    private $mapped_field_retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Planning_Milestone
-     */
-    private $milestone;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker
-     */
-    private $release_tracker;
+    private ArtifactMappedFieldValueRetriever $retriever;
+    private MappedFieldRetriever&MockObject $mapped_field_retriever;
+    private \Planning_Milestone&MockObject $milestone;
+    private \Tuleap\Tracker\Artifact\Artifact&MockObject $artifact;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->mapped_field_retriever = M::mock(MappedFieldRetriever::class);
+        $this->mapped_field_retriever = $this->createMock(MappedFieldRetriever::class);
         $this->retriever              = new ArtifactMappedFieldValueRetriever($this->mapped_field_retriever);
-        $this->release_tracker        = M::mock(\Tracker::class);
-        $release_artifact             = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $release_artifact->shouldReceive('getTracker')
-            ->andReturn($this->release_tracker);
-        $this->milestone = M::mock(\Planning_Milestone::class);
-        $this->milestone->shouldReceive('getArtifact')
-            ->andReturn($release_artifact);
-        $this->artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user     = M::mock(\PFUser::class);
+        $release_tracker              = TrackerTestBuilder::aTracker()->build();
+        $release_artifact             = ArtifactTestBuilder::anArtifact(1)->inTracker($release_tracker)->build();
+
+        $this->milestone = $this->createMock(\Planning_Milestone::class);
+        $this->milestone->method('getArtifact')->willReturn($release_artifact);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->user     = UserTestBuilder::aUser()->build();
     }
 
     public function testReturnsNullWhenNoMappedField(): void
     {
-        $tracker = M::mock(\Tracker::class);
-        $this->artifact->shouldReceive('getTracker')
-            ->once()
-            ->andReturn($tracker);
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->withArgs(
+        $tracker = $this->createMock(\Tracker::class);
+        $this->artifact->expects(self::once())
+            ->method('getTracker')
+            ->willReturn($tracker);
+        $this->mapped_field_retriever->method('getField')
+            ->with(self::callback(
                 function (TaskboardTracker $taskboard_tracker) use ($tracker) {
                     return $taskboard_tracker->getTracker() === $tracker;
                 }
-            )
-            ->once()
-            ->andReturnNull();
+            ))
+            ->willReturn(null);
 
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
+        self::assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
     }
 
     public function testReturnsNullWhenUserCantReadMappedField(): void
     {
         $mapped_field = $this->mockField();
-        $mapped_field->shouldReceive('userCanRead')
+        $mapped_field->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
+        self::assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
     }
 
     public function testReturnsNullWhenNoLastChangeset(): void
     {
         $this->mockFieldUserCanRead();
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturnNull();
+        $this->artifact->expects(self::once())
+            ->method('getLastChangeset')
+            ->willReturn(null);
 
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
+        self::assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
     }
 
     public function testReturnsNullWhenValueIsNotListValue(): void
     {
         $mapped_field   = $this->mockFieldUserCanRead();
-        $last_changeset = M::mock(\Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($last_changeset);
-        $last_changeset->shouldReceive('getValue')
+        $last_changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $this->artifact->expects(self::once())
+            ->method('getLastChangeset')
+            ->willReturn($last_changeset);
+        $last_changeset->expects(self::once())
+            ->method('getValue')
             ->with($mapped_field)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
+        self::assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
     }
 
     public function testReturnsNullWhenValueIsEmpty(): void
     {
         $mapped_field   = $this->mockFieldUserCanRead();
-        $last_changeset = M::mock(\Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($last_changeset);
+        $last_changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $this->artifact->expects(self::once())
+            ->method('getLastChangeset')
+            ->willReturn($last_changeset);
         $changeset_value = new \Tracker_Artifact_ChangesetValue_List(8608, $last_changeset, $mapped_field, false, []);
-        $last_changeset->shouldReceive('getValue')
-            ->once()
-            ->andReturn($changeset_value);
+        $last_changeset->expects(self::once())
+            ->method('getValue')
+            ->willReturn($changeset_value);
 
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
+        self::assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
     }
 
     public function testReturnsFirstValueOfMappedField(): void
     {
         $mapped_field   = $this->mockFieldUserCanRead();
-        $last_changeset = M::mock(\Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')
-            ->once()
-            ->andReturn($last_changeset);
+        $last_changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $this->artifact->expects(self::once())
+            ->method('getLastChangeset')
+            ->willReturn($last_changeset);
         $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(9074, 'On Going', '', 10, false);
         $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(9086, 'Blocked', '', 12, false);
         $changeset_value   = new \Tracker_Artifact_ChangesetValue_List(
@@ -153,42 +134,41 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
             false,
             [$first_list_value, $second_list_value]
         );
-        $last_changeset->shouldReceive('getValue')
-            ->once()
-            ->andReturn($changeset_value);
+        $last_changeset->expects(self::once())
+            ->method('getValue')
+            ->willReturn($changeset_value);
 
-        $this->assertSame(
+        self::assertSame(
             $first_list_value,
             $this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user)
         );
     }
 
-    private function mockFieldUserCanRead(): M\MockInterface
+    private function mockFieldUserCanRead(): Tracker_FormElement_Field_Selectbox&MockObject
     {
         $mapped_field = $this->mockField();
-        $mapped_field->shouldReceive('userCanRead')
+        $mapped_field->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
+
         return $mapped_field;
     }
 
-    private function mockField(): M\MockInterface
+    private function mockField(): Tracker_FormElement_Field_Selectbox&MockObject
     {
-        $tracker = M::mock(\Tracker::class);
-        $this->artifact->shouldReceive('getTracker')
-            ->once()
-            ->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $this->artifact->expects(self::once())->method('getTracker')->willReturn($tracker);
 
-        $mapped_field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->withArgs(
-                function (TaskboardTracker $taskboard_tracker) use ($tracker) {
+        $mapped_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->mapped_field_retriever->expects(self::once())
+            ->method('getField')
+            ->with(self::callback(
+                function (TaskboardTracker $taskboard_tracker) use ($tracker): bool {
                     return $taskboard_tracker->getTracker() === $tracker;
                 }
-            )
-            ->once()
-            ->andReturn($mapped_field);
+            ))
+            ->willReturn($mapped_field);
 
         return $mapped_field;
     }

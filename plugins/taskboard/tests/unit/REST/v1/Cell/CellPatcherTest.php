@@ -23,42 +23,35 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
 final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var CellPatcher */
-    private $patcher;
-    /** @var M\LegacyMockInterface|M\MockInterface|UserManager */
-    private $user_manager;
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_ArtifactFactory */
-    private $artifact_factory;
-    /** @var M\LegacyMockInterface|M\MockInterface|SwimlaneChildrenRetriever */
-    private $children_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|ArtifactsRankOrderer */
-    private $rank_orderer;
-    /** @var M\LegacyMockInterface|M\MockInterface|CardMappedFieldUpdater */
-    private $mapped_field_updater;
-
-    /** @var M\LegacyMockInterface|M\MockInterface|\PFUser */
-    private $current_user;
+    private CellPatcher $patcher;
+    private MockObject&UserManager $user_manager;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private SwimlaneChildrenRetriever&MockObject $children_retriever;
+    private ArtifactsRankOrderer&MockObject $rank_orderer;
+    private CardMappedFieldUpdater&MockObject $mapped_field_updater;
+    private \PFUser $current_user;
 
     protected function setUp(): void
     {
-        $this->user_manager         = M::mock(UserManager::class);
-        $this->artifact_factory     = M::mock(Tracker_ArtifactFactory::class);
-        $this->children_retriever   = M::mock(SwimlaneChildrenRetriever::class);
-        $this->rank_orderer         = M::mock(ArtifactsRankOrderer::class);
-        $this->mapped_field_updater = M::mock(CardMappedFieldUpdater::class);
+        $this->user_manager         = $this->createMock(UserManager::class);
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->children_retriever   = $this->createMock(SwimlaneChildrenRetriever::class);
+        $this->rank_orderer         = $this->createMock(ArtifactsRankOrderer::class);
+        $this->mapped_field_updater = $this->createMock(CardMappedFieldUpdater::class);
         $this->patcher              = new CellPatcher(
             $this->user_manager,
             $this->artifact_factory,
@@ -71,13 +64,13 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPatchCellThrowsWhenSwimlaneArtifactCantBeFound(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->andReturnNull();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->willReturn(null);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
-        $this->patcher->patchCell(45, 7, new CellPatchRepresentation());
+        $this->patcher->patchCell(45, 7, CellPatchRepresentation::build(null, null));
     }
 
     public function testPatchCellThrowsWhenCurrentUserCantSeeSwimlane(): void
@@ -86,174 +79,191 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
-        $this->patcher->patchCell(45, 7, new CellPatchRepresentation());
+        $this->patcher->patchCell(45, 7, CellPatchRepresentation::build(null, null));
     }
 
     public function testPatchCellThrowsWhenProjectIsSuspended(): void
     {
         $swimlane_artifact = $this->mockArtifact(45, true);
-        $project           = M::mock(\Project::class)->shouldReceive(['isSuspended' => true])->getMock();
-        $tracker           = M::mock(\Tracker::class)->shouldReceive(['getProject' => $project])->getMock();
-        $swimlane_artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $project           = ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        $tracker           = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $swimlane_artifact->method('getTracker')->willReturn($tracker);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
-        $this->rank_orderer->shouldNotReceive('reorder');
-        $this->mapped_field_updater->shouldNotReceive('updateCardMappedField');
-        $this->patcher->patchCell(45, 7, new CellPatchRepresentation());
+        $this->rank_orderer->expects(self::never())->method('reorder');
+        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
+        $this->patcher->patchCell(45, 7, CellPatchRepresentation::build(null, null));
     }
 
     public function testPatchCellThrowsWhenPatchPayloadIsInvalid(): void
     {
-        $this->mockSwimlaneArtifactWithValidProject();
-        $payload = new CellPatchRepresentation();
+        $artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with(45)
+            ->willReturn($artifact);
+
+        $payload = CellPatchRepresentation::build(null, null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->shouldNotReceive('reorder');
-        $this->mapped_field_updater->shouldNotReceive('updateCardMappedField');
+        $this->rank_orderer->expects(self::never())->method('reorder');
+        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellThrowsWhenArtifactToAddCantBeFound(): void
     {
-        $this->mockSwimlaneArtifactWithValidProject();
-        $payload      = new CellPatchRepresentation();
-        $payload->add = 9999;
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(9999)
-            ->andReturnNull();
+        $artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $payload  = CellPatchRepresentation::build(9999, null);
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [45, $artifact],
+                [9999, null],
+            ]);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->mapped_field_updater->shouldNotReceive('updateCardMappedField');
+        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellThrowsWhenCurrentUserCantSeeArtifactToAdd(): void
     {
-        $this->mockSwimlaneArtifactWithValidProject();
-        $this->mockArtifact(456, false);
-        $payload      = new CellPatchRepresentation();
-        $payload->add = 456;
+        $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $artifact          = $this->mockArtifactWithoutFactory(456, false);
+
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [45, $swimlane_artifact],
+                [456, $artifact],
+            ]);
+
+        $payload = CellPatchRepresentation::build(456, null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->mapped_field_updater->shouldNotReceive('updateCardMappedField');
+        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellUpdatesArtifactToAdd(): void
     {
         $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
-        $artifact_to_add   = $this->mockArtifact(456, true);
-        $payload           = new CellPatchRepresentation();
-        $payload->add      = 456;
+        $artifact_to_add   = $this->mockArtifactWithoutFactory(456, true);
+        $payload           = CellPatchRepresentation::build(456, null);
 
-        $this->mapped_field_updater->shouldReceive('updateCardMappedField')
-            ->with($swimlane_artifact, 7, $artifact_to_add, $this->current_user)
-            ->once();
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [45, $swimlane_artifact],
+                [456, $artifact_to_add],
+            ]);
+
+        $this->mapped_field_updater
+            ->expects(self::once())
+            ->method('updateCardMappedField')
+            ->with($swimlane_artifact, 7, $artifact_to_add, $this->current_user);
+
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellThrowsWhenOrderRepresentationIsInvalid(): void
     {
-        $this->mockSwimlaneArtifactWithValidProject();
+        $artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with(45)
+            ->willReturn($artifact);
 
-        $order              = new OrderRepresentation();
-        $order->compared_to = 123;
-        $order->direction   = "invalid";
-        $order->ids         = [456];
-        $payload            = new CellPatchRepresentation();
-        $payload->order     = $order;
+        $order   = OrderRepresentation::build([456], "invalid", 123);
+        $payload = CellPatchRepresentation::build(null, $order);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->rank_orderer->expects(self::never())->method('reorder');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellThrowsWhenOrderRepresentationDoesNotHaveUniqueIds(): void
     {
         $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with(45)
+            ->willReturn($swimlane_artifact);
 
-        $order              = new OrderRepresentation();
-        $order->compared_to = 123;
-        $order->direction   = OrderRepresentation::BEFORE;
-        $order->ids         = [456, 456];
-        $payload            = new CellPatchRepresentation();
-        $payload->order     = $order;
-        $this->children_retriever->shouldReceive('getSwimlaneArtifactIds')
+        $order   = OrderRepresentation::build([456, 456], OrderRepresentation::BEFORE, 123);
+        $payload = CellPatchRepresentation::build(null, $order);
+        $this->children_retriever->expects(self::once())
+            ->method('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $this->current_user)
-            ->once()
-            ->andReturn([123, 456]);
+            ->willReturn([123, 456]);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->rank_orderer->expects(self::never())->method('reorder');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
     public function testPatchCellReordersChildrenOfSwimlane(): void
     {
         $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with(45)
+            ->willReturn($swimlane_artifact);
 
-        $order              = new OrderRepresentation();
-        $order->compared_to = 123;
-        $order->direction   = OrderRepresentation::BEFORE;
-        $order->ids         = [456];
-        $payload            = new CellPatchRepresentation();
-        $payload->order     = $order;
-        $this->children_retriever->shouldReceive('getSwimlaneArtifactIds')
+        $order   = OrderRepresentation::build([456], OrderRepresentation::BEFORE, 123);
+        $payload = CellPatchRepresentation::build(null, $order);
+        $this->children_retriever
+            ->expects(self::once())
+            ->method('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $this->current_user)
-            ->once()
-            ->andReturn([123, 456]);
-        $this->rank_orderer->shouldReceive('reorder')
-            ->with($order, \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, M::any())
-            ->once();
+            ->willReturn([123, 456]);
+        $this->rank_orderer
+            ->expects(self::once())
+            ->method('reorder')
+            ->with($order, \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, self::isInstanceOf(\Project::class));
 
         $this->patcher->patchCell(45, 7, $payload);
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\PFUser
-     */
-    private function mockCurrentUser()
+    private function mockCurrentUser(): \PFUser
     {
-        $current_user = M::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user);
+        $current_user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn($current_user);
         return $current_user;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private function mockArtifact(int $artifact_id, bool $user_can_view)
+    private function mockArtifactWithoutFactory(int $artifact_id, bool $user_can_view): MockObject&Artifact
     {
-        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with($artifact_id)
-            ->andReturn($artifact);
-        $artifact->shouldReceive('userCanView')
-            ->once()
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn($artifact_id);
+        $artifact->expects(self::once())
+            ->method('userCanView')
             ->with($this->current_user)
-            ->andReturn($user_can_view);
+            ->willReturn($user_can_view);
         return $artifact;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private function mockSwimlaneArtifactWithValidProject()
+    private function mockArtifact(int $artifact_id, bool $user_can_view): MockObject&Artifact
     {
-        $swimlane_artifact = $this->mockArtifact(45, true);
-        $project           = M::mock(\Project::class)->shouldReceive(['isSuspended' => false])->getMock();
-        $tracker           = M::mock(\Tracker::class)->shouldReceive(['getProject' => $project])->getMock();
-        $swimlane_artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->mockArtifactWithoutFactory($artifact_id, $user_can_view);
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with($artifact_id)
+            ->willReturn($artifact);
+        return $artifact;
+    }
+
+    private function mockSwimlaneArtifactWithValidProject(): MockObject&Artifact
+    {
+        $swimlane_artifact = $this->mockArtifactWithoutFactory(45, true);
+        $project           = ProjectTestBuilder::aProject()->withStatusActive()->build();
+        $tracker           = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $swimlane_artifact->method('getTracker')->willReturn($tracker);
 
         return $swimlane_artifact;
     }

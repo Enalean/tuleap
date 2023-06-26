@@ -25,10 +25,8 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Cardwall_Column;
 use Cardwall_OnTop_Config_ColumnFactory;
 use Luracast\Restler\RestException;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -39,54 +37,43 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
-    /** @var CardMappedFieldUpdater */
-    private $updater;
-    /** @var Cardwall_OnTop_Config_ColumnFactory|M\LegacyMockInterface|M\MockInterface */
-    private $column_factory;
-    /** @var M\LegacyMockInterface|M\MockInterface|MilestoneTrackerRetriever */
-    private $milestone_tracker_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|AddValidator */
-    private $add_validator;
-    /** @var M\LegacyMockInterface|M\MockInterface & ArtifactUpdater */
-    private $artifact_updater;
-    /** @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever */
-    private $mapped_field_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|MappedValuesRetriever */
-    private $mapped_values_retriever;
+    private CardMappedFieldUpdater $updater;
+    private MockObject&Cardwall_OnTop_Config_ColumnFactory $column_factory;
+    private MockObject&MilestoneTrackerRetriever $milestone_tracker_retriever;
+    private MockObject&AddValidator $add_validator;
+    private MockObject&ArtifactUpdater $artifact_updater;
+    private MockObject&MappedFieldRetriever $mapped_field_retriever;
+    private MockObject&MappedValuesRetriever $mapped_values_retriever;
 
-    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
-    private $swimlane_artifact;
-    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
-    private $artifact_to_add;
-    /** @var M\LegacyMockInterface|M\MockInterface|PFUser */
-    private $current_user;
-    private Tracker_FormElement_Field_Selectbox|M\LegacyMockInterface|M\MockInterface $mapped_field;
-    /**
-     * @var FirstPossibleValueInListRetriever&M\MockInterface
-     */
-    private $first_possible_value_retriever;
+    private Artifact $swimlane_artifact;
+    private MockObject&Artifact $artifact_to_add;
+    private PFUser $current_user;
+    private Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
+    private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
 
     protected function setUp(): void
     {
-        $this->mapped_field                   = M::mock(Tracker_FormElement_Field_Selectbox::class);
-        $this->column_factory                 = M::mock(Cardwall_OnTop_Config_ColumnFactory::class);
-        $this->milestone_tracker_retriever    = M::mock(MilestoneTrackerRetriever::class);
-        $this->add_validator                  = M::mock(AddValidator::class);
-        $this->artifact_updater               = M::mock(ArtifactUpdater::class);
-        $this->mapped_field_retriever         = M::mock(MappedFieldRetriever::class);
-        $this->mapped_values_retriever        = M::mock(MappedValuesRetriever::class);
-        $this->first_possible_value_retriever = M::mock(FirstPossibleValueInListRetriever::class);
+        $this->mapped_field                   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->column_factory                 = $this->createMock(Cardwall_OnTop_Config_ColumnFactory::class);
+        $this->milestone_tracker_retriever    = $this->createMock(MilestoneTrackerRetriever::class);
+        $this->add_validator                  = $this->createMock(AddValidator::class);
+        $this->artifact_updater               = $this->createMock(ArtifactUpdater::class);
+        $this->mapped_field_retriever         = $this->createMock(MappedFieldRetriever::class);
+        $this->mapped_values_retriever        = $this->createMock(MappedValuesRetriever::class);
+        $this->first_possible_value_retriever = $this->createMock(FirstPossibleValueInListRetriever::class);
         $this->updater                        = new CardMappedFieldUpdater(
             $this->column_factory,
             $this->milestone_tracker_retriever,
@@ -97,16 +84,16 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->first_possible_value_retriever
         );
 
-        $this->swimlane_artifact = M::mock(Artifact::class);
-        $this->artifact_to_add   = M::mock(Artifact::class);
-        $this->current_user      = M::mock(PFUser::class);
+        $this->swimlane_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->artifact_to_add   = $this->createMock(Artifact::class);
+        $this->current_user      = UserTestBuilder::aUser()->build();
     }
 
     public function testUpdateCardMappedFieldThrowsWhenColumnCantBeFound(): void
     {
-        $this->column_factory->shouldReceive('getColumnById')
+        $this->column_factory->method('getColumnById')
             ->with(9)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -117,21 +104,17 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->artifactsAreValid();
         $done_column       = $this->mockColumn(9);
-        $milestone_tracker = M::mock(Tracker::class)
-            ->shouldReceive(['getId' => 76])
-            ->getMock();
-        $this->milestone_tracker_retriever->shouldReceive('getMilestoneTrackerOfColumn')
+        $milestone_tracker = TrackerTestBuilder::aTracker()->withId(76)->build();
+        $this->milestone_tracker_retriever->method('getMilestoneTrackerOfColumn')
             ->with($done_column)
-            ->andReturn($milestone_tracker);
-        $tracker = M::mock(Tracker::class)
-            ->shouldReceive(['getName' => 'Tasks'])
-            ->getMock();
-        $this->artifact_to_add->shouldReceive('getTracker')
-            ->andReturn($tracker);
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->andReturnNull();
+            ->willReturn($milestone_tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withName('Tasks')->build();
+        $this->artifact_to_add->method('getTracker')
+            ->willReturn($tracker);
+        $this->mapped_field_retriever->method('getField')
+            ->willReturn(null);
 
-        $this->artifact_updater->shouldNotReceive('update');
+        $this->artifact_updater->expects(self::never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->update(9);
@@ -143,7 +126,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, false);
 
-        $this->artifact_updater->shouldNotReceive('update');
+        $this->artifact_updater->expects(self::never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(403);
         $this->update(9);
@@ -154,10 +137,10 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn(new EmptyMappedValues());
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn(new EmptyMappedValues());
 
-        $this->artifact_updater->shouldNotReceive('update');
+        $this->artifact_updater->expects(self::never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->update(9);
@@ -170,16 +153,19 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-        )->andReturn(1024);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willReturn(1024);
 
-        $this->artifact_updater->shouldReceive('update')
-            ->once()
-            ->andThrow(new \Tracker_FormElement_InvalidFieldException());
+        $this->artifact_updater->expects(self::once())
+            ->method('update')
+            ->willThrowException(new \Tracker_FormElement_InvalidFieldException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -192,15 +178,18 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-        )->andReturn(1024);
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willReturn(1024);
 
-        $this->artifact_updater->shouldReceive('update')
-            ->once()
-            ->andThrow(new \Tracker_FormElement_InvalidFieldValueException());
+        $this->artifact_updater->expects(self::once())
+            ->method('update')
+            ->willThrowException(new \Tracker_FormElement_InvalidFieldValueException());
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
         $this->update(9);
@@ -212,14 +201,17 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-        )->andThrow(NoPossibleValueException::class);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willThrowException(new NoPossibleValueException());
 
-        $this->artifact_updater->shouldReceive('update')->never();
+        $this->artifact_updater->expects(self::never())->method('update');
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -233,16 +225,19 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
 
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-        )->andReturn(1024);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willReturn(1024);
 
-        $this->artifact_updater->shouldReceive('update')
-            ->once()
-            ->andThrow(new \Tracker_NoChangeException(40, 'user_story #40'));
+        $this->artifact_updater->expects(self::once())
+            ->method('update')
+            ->willThrowException(new \Tracker_NoChangeException(40, 'user_story #40'));
 
         $this->update(9);
     }
@@ -254,16 +249,19 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
 
-          $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-              [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-          )->andReturn(1024);
+          $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+              $this->artifact_to_add,
+              $this->mapped_field,
+              $mapped_values,
+              $this->current_user,
+          )->willReturn(1024);
 
-        $this->artifact_updater->shouldReceive('update')
-            ->once()
-            ->andThrow(new \Tracker_Exception());
+        $this->artifact_updater->expects(self::once())
+            ->method('update')
+            ->willThrowException(new \Tracker_Exception());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(500);
@@ -277,20 +275,25 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifactsAreValid();
         $done_column = $this->mockColumn(9);
         $this->mockCanUserUpdateField($done_column, 789, true);
-        $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
-            ->andReturn($mapped_values);
-        $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
-        )->andReturn(1024);
-        $this->artifact_updater->shouldReceive('update')
-            ->once()
-            ->withArgs(
-                function (PFUser $user, Artifact $art, array $values) {
-                    return $user === $this->current_user
-                        && $art === $this->artifact_to_add
-                        && $values[0]->field_id === 789
-                        && $values[0]->bind_value_ids = [1024];
-                }
+        $this->mapped_values_retriever->method('getValuesMappedToColumn')
+            ->willReturn($mapped_values);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willReturn(1024);
+        $this->artifact_updater->expects(self::once())
+            ->method('update')
+            ->with(
+                $this->current_user,
+                $this->artifact_to_add,
+                self::callback(
+                    function (array $values): bool {
+                        return $values[0]->field_id === 789
+                            && $values[0]->bind_value_ids = [1024];
+                    }
+                ),
             );
 
         $this->update(9);
@@ -301,34 +304,30 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         int $field_id,
         bool $can_update_mapped_field,
     ): void {
-        $milestone_tracker = M::mock(Tracker::class)
-            ->shouldReceive(['getId' => 76])
-            ->getMock();
-        $tracker           = M::mock(Tracker::class)
-            ->shouldReceive(['getName' => 'Tasks'])
-            ->getMock();
-        $this->artifact_to_add->shouldReceive('getTracker')
-            ->andReturn($tracker);
-        $this->milestone_tracker_retriever->shouldReceive('getMilestoneTrackerOfColumn')
+        $milestone_tracker = TrackerTestBuilder::aTracker()->withId(76)->build();
+        $tracker           = TrackerTestBuilder::aTracker()->withName('Tasks')->build();
+        $this->artifact_to_add->method('getTracker')
+            ->willReturn($tracker);
+        $this->milestone_tracker_retriever->method('getMilestoneTrackerOfColumn')
             ->with($done_column)
-            ->andReturn($milestone_tracker);
+            ->willReturn($milestone_tracker);
 
-        $this->mapped_field->shouldReceive('userCanUpdate')
+        $this->mapped_field->method('userCanUpdate')
             ->with($this->current_user)
-            ->andReturn($can_update_mapped_field);
-        $this->mapped_field->shouldReceive('getLabel')
-            ->andReturn('Status');
-        $this->mapped_field->shouldReceive('getId')
-            ->andReturn($field_id);
+            ->willReturn($can_update_mapped_field);
+        $this->mapped_field->method('getLabel')
+            ->willReturn('Status');
+        $this->mapped_field->method('getId')
+            ->willReturn($field_id);
 
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->withArgs(
-                function (TaskboardTracker $arg) use ($milestone_tracker, $tracker) {
+        $this->mapped_field_retriever->method('getField')
+            ->with(self::callback(
+                function (TaskboardTracker $arg) use ($milestone_tracker, $tracker): bool {
                     return $arg->getMilestoneTrackerId() === $milestone_tracker->getId()
                         && $arg->getTracker() === $tracker;
                 }
-            )
-            ->andReturn($this->mapped_field);
+            ))
+            ->willReturn($this->mapped_field);
     }
 
     private function update(int $column_id): void
@@ -343,17 +342,17 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function artifactsAreValid(): void
     {
-        $this->add_validator->shouldReceive('validateArtifacts')
-            ->with($this->swimlane_artifact, $this->artifact_to_add, $this->current_user)
-            ->once();
+        $this->add_validator->expects(self::once())
+            ->method('validateArtifacts')
+            ->with($this->swimlane_artifact, $this->artifact_to_add, $this->current_user);
     }
 
     private function mockColumn(int $id): Cardwall_Column
     {
         $done_column = new Cardwall_Column($id, 'Done', 'acid-green');
-        $this->column_factory->shouldReceive('getColumnById')
+        $this->column_factory->method('getColumnById')
             ->with($id)
-            ->andReturn($done_column);
+            ->willReturn($done_column);
         return $done_column;
     }
 }

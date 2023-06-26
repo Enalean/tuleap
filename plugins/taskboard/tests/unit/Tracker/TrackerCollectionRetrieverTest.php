@@ -24,36 +24,34 @@ namespace Tuleap\Taskboard\Tracker;
 
 use Cardwall_OnTop_Config;
 use Cardwall_OnTop_ConfigFactory;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_Milestone;
 use Tracker;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var TrackerCollectionRetriever */
-    private $retriever;
-    /** @var Cardwall_OnTop_ConfigFactory|M\LegacyMockInterface|M\MockInterface */
-    private $config_factory;
+    private TrackerCollectionRetriever $retriever;
+    private Cardwall_OnTop_ConfigFactory&MockObject $config_factory;
 
     protected function setUp(): void
     {
-        $this->config_factory = M::mock(Cardwall_OnTop_ConfigFactory::class);
+        $this->config_factory = $this->createMock(Cardwall_OnTop_ConfigFactory::class);
         $this->retriever      = new TrackerCollectionRetriever($this->config_factory);
     }
 
     public function testGetTrackersForMilestoneReturnsEmptyCollectionWhenNoConfig(): void
     {
-        $planning          = M::mock(Planning::class);
-        $milestone_tracker = M::mock(Tracker::class);
+        $planning          = $this->createMock(Planning::class);
+        $milestone_tracker = TrackerTestBuilder::aTracker()->build();
         $milestone         = $this->mockMilestone($planning, $milestone_tracker);
-        $this->config_factory->shouldReceive('getOnTopConfigByPlanning')
+        $this->config_factory
+            ->expects(self::once())
+            ->method('getOnTopConfigByPlanning')
             ->with($planning)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $result      = $this->retriever->getTrackersForMilestone($milestone);
         $tracker_ids = $result->map(
@@ -61,18 +59,19 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $tracker->getTrackerId();
             }
         );
-        $this->assertSame(0, count($tracker_ids));
+        self::assertCount(0, $tracker_ids);
     }
 
     public function testGetTrackersForMilestoneReturnsEmptyCollectionWhenNoTrackers(): void
     {
-        $planning          = M::mock(Planning::class);
-        $milestone_tracker = M::mock(Tracker::class);
+        $planning          = $this->createMock(Planning::class);
+        $milestone_tracker = $this->buildTracker(1254);
         $milestone         = $this->mockMilestone($planning, $milestone_tracker);
         $empty_config      = $this->mockConfig($planning);
-        $empty_config->shouldReceive('getTrackers')
-            ->once()
-            ->andReturn([]);
+        $empty_config
+            ->expects(self::once())
+            ->method('getTrackers')
+            ->willReturn([]);
 
         $result      = $this->retriever->getTrackersForMilestone($milestone);
         $tracker_ids = $result->map(
@@ -80,20 +79,21 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $tracker->getTrackerId();
             }
         );
-        $this->assertSame(0, count($tracker_ids));
+        self::assertSame(0, count($tracker_ids));
     }
 
     public function testGetTrackersForMilestoneReturnsTrackerCollection(): void
     {
-        $planning          = M::mock(Planning::class);
-        $milestone_tracker = M::mock(Tracker::class);
+        $planning          = $this->createMock(Planning::class);
+        $milestone_tracker = $this->buildTracker(1254);
         $milestone         = $this->mockMilestone($planning, $milestone_tracker);
-        $first_tracker     = $this->mockTracker('39');
-        $second_tracker    = $this->mockTracker('98');
+        $first_tracker     = $this->buildTracker(39);
+        $second_tracker    = $this->buildTracker(98);
         $config            = $this->mockConfig($planning);
-        $config->shouldReceive('getTrackers')
-            ->once()
-            ->andReturn([$first_tracker, $second_tracker]);
+        $config
+            ->expects(self::once())
+            ->method('getTrackers')
+            ->willReturn([$first_tracker, $second_tracker]);
 
         $result      = $this->retriever->getTrackersForMilestone($milestone);
         $tracker_ids = $result->map(
@@ -101,46 +101,34 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $tracker->getTrackerId();
             }
         );
-        $this->assertEquals(['39', '98'], $tracker_ids);
+        self::assertEquals(['39', '98'], $tracker_ids);
     }
 
-    /**
-     * @return Cardwall_OnTop_Config|M\LegacyMockInterface|M\MockInterface
-     */
-    private function mockConfig(Planning $planning)
+    private function mockConfig(Planning $planning): Cardwall_OnTop_Config&MockObject
     {
-        $config = M::mock(Cardwall_OnTop_Config::class);
-        $this->config_factory->shouldReceive('getOnTopConfigByPlanning')
+        $config = $this->createMock(Cardwall_OnTop_Config::class);
+        $this->config_factory
+            ->expects(self::once())
+            ->method('getOnTopConfigByPlanning')
             ->with($planning)
-            ->once()
-            ->andReturn($config);
+            ->willReturn($config);
+
         return $config;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Planning_Milestone
-     */
-    private function mockMilestone(Planning $planning, Tracker $milestone_tracker)
+    private function mockMilestone(Planning $planning, Tracker $milestone_tracker): MockObject&Planning_Milestone
     {
-        $milestone = M::mock(Planning_Milestone::class);
+        $milestone = $this->createMock(Planning_Milestone::class);
         $milestone
-            ->shouldReceive('getPlanning')
-            ->andReturn($planning);
-        $milestone->shouldReceive('getArtifact')
-            ->andReturn(
-                M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getTracker' => $milestone_tracker])
-                    ->getMock()
-            );
+            ->method('getPlanning')
+            ->willReturn($planning);
+        $milestone->method('getArtifact')
+            ->willReturn(ArtifactTestBuilder::anArtifact(1)->inTracker($milestone_tracker)->build());
         return $milestone;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Tracker
-     */
-    private function mockTracker(string $tracker_id)
+    private function buildTracker(int $tracker_id): Tracker
     {
-        $tracker = M::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
-        return $tracker;
+        return TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
     }
 }

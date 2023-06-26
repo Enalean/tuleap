@@ -45,9 +45,7 @@ final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowWhenIdsAndComparedToIdAreInTheValidatorsIndex(): void
     {
-        $order_representation              = new OrderRepresentation();
-        $order_representation->ids         = [115, 116];
-        $order_representation->compared_to = 118;
+        $order_representation = OrderRepresentation::build([115, 116], 'whatever', 118);
 
         $this->order_validator->validate($order_representation);
         $this->expectNotToPerformAssertions();
@@ -55,9 +53,7 @@ final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenIdsAreNotPartOfTheValidatorsIndex(): void
     {
-        $order_representation              = new OrderRepresentation();
-        $order_representation->ids         = [115, 235];
-        $order_representation->compared_to = 118;
+        $order_representation = OrderRepresentation::build([115, 235], 'whatever', 118);
 
         $this->expectException(OrderIdOutOfBoundException::class);
         $this->order_validator->validate($order_representation);
@@ -65,9 +61,7 @@ final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenComparedToIdIsNotPartOfTheValidatorsIndex(): void
     {
-        $order_representation              = new OrderRepresentation();
-        $order_representation->ids         = [115, 116];
-        $order_representation->compared_to = 235;
+        $order_representation = OrderRepresentation::build([115, 116], 'whatever', 235);
 
         $this->expectException(OrderIdOutOfBoundException::class);
         $this->order_validator->validate($order_representation);
@@ -75,9 +69,7 @@ final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenIdsAreDuplicated(): void
     {
-        $order_representation              = new OrderRepresentation();
-        $order_representation->ids         = [115, 116, 115, 117];
-        $order_representation->compared_to = 118;
+        $order_representation = OrderRepresentation::build([115, 116, 115, 117], 'whatever', 118);
 
         $this->expectException(IdsFromBodyAreNotUniqueException::class);
         $this->order_validator->validate($order_representation);

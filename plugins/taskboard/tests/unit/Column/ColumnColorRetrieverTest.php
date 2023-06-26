@@ -22,18 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\Column;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetHeaderColorNameOrRGBReturnsRGBColor(): void
     {
         $row   = ['bg_red' => 255, 'bg_green' => 128, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        $this->assertSame("rgb(255, 128, 0)", $color);
+        self::assertSame("rgb(255, 128, 0)", $color);
     }
 
     public function testGetHeaderColorNameOrRGBReturnsTLPColorName(): void
@@ -41,7 +37,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => 'fiesta-red'];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        $this->assertSame('fiesta-red', $color);
+        self::assertSame('fiesta-red', $color);
     }
 
     public function testGetHeaderColorNameOrRGBReturnsTLPColorEvenWhenRGBIsNotNull(): void
@@ -49,7 +45,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => 0, 'bg_blue' => 0, 'tlp_color_name' => 'fiesta-red'];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        $this->assertSame('fiesta-red', $color);
+        self::assertSame('fiesta-red', $color);
     }
 
     public function testGetHeaderColorNameOrRGBReturnsDefaultColorWhenOneColorIsNull(): void
@@ -57,7 +53,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => null, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        $this->assertSame(\Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR, $color);
+        self::assertSame(\Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR, $color);
     }
 
     public function testGetHeaderColorNameOrHexReturnsHexColor(): void
@@ -65,7 +61,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => 128, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrHex($row);
 
-        $this->assertSame('#FF8000', $color);
+        self::assertSame('#FF8000', $color);
     }
 
     public function testGetHeaderColorNameOrHexReturnsTLPColorName(): void
@@ -73,7 +69,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => 'fiesta-red'];
         $color = ColumnColorRetriever::getHeaderColorNameOrHex($row);
 
-        $this->assertSame('fiesta-red', $color);
+        self::assertSame('fiesta-red', $color);
     }
 
     public function testGetHeaderColorNameOrHexReturnsTLPColorEvenWhenHexIsNotNull(): void
@@ -81,7 +77,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => 0, 'bg_blue' => 0, 'tlp_color_name' => 'fiesta-red'];
         $color = ColumnColorRetriever::getHeaderColorNameOrHex($row);
 
-        $this->assertSame('fiesta-red', $color);
+        self::assertSame('fiesta-red', $color);
     }
 
     public function testGetHeaderColorNameOrHexReturnsEmptyStringWhenOneColorIsNull(): void
@@ -89,6 +85,6 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => null, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrHex($row);
 
-        $this->assertSame('', $color);
+        self::assertSame('', $color);
     }
 }

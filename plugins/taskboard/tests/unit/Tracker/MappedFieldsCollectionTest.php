@@ -22,30 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsTheMappedFieldForTracker(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
 
         $collection = new MappedFieldsCollection();
-        $tracker    = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
+        $tracker    = TrackerTestBuilder::aTracker()->withId(12)->build();
         $collection->put($tracker, $field);
 
-        $this->assertSame($field, $collection->get($tracker));
+        self::assertSame($field, $collection->get($tracker));
     }
 
     public function testItThrowExceptionIfNoMappedFieldForTracker(): void
     {
         $collection      = new MappedFieldsCollection();
-        $tracker         = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
-        $another_tracker = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 42])->getMock();
-        $collection->put($tracker, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
+        $tracker         = TrackerTestBuilder::aTracker()->withId(12)->build();
+        $another_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
+        $collection->put($tracker, $this->createMock(\Tracker_FormElement_Field_Selectbox::class));
 
         $this->expectException(\OutOfBoundsException::class);
 
@@ -55,11 +52,11 @@ class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDeterminesIfKeyIsPartOfCollection(): void
     {
         $collection      = new MappedFieldsCollection();
-        $tracker         = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
-        $another_tracker = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 42])->getMock();
-        $collection->put($tracker, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
+        $tracker         = TrackerTestBuilder::aTracker()->withId(12)->build();
+        $another_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
+        $collection->put($tracker, $this->createMock(\Tracker_FormElement_Field_Selectbox::class));
 
-        $this->assertTrue($collection->hasKey($tracker));
-        $this->assertFalse($collection->hasKey($another_tracker));
+        self::assertTrue($collection->hasKey($tracker));
+        self::assertFalse($collection->hasKey($another_tracker));
     }
 }

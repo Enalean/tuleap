@@ -22,19 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDefaultTemplateOrXMLTemplateShouldForceTaskboardUsage(): void
     {
-        $dao = \Mockery::mock(TaskboardUsageDao::class)
-                       ->shouldReceive('create')
-                       ->with(1002, 'taskboard')
-                       ->once()
-                       ->getMock();
+        $dao = $this->createMock(TaskboardUsageDao::class);
+        $dao->expects(self::once())->method('create')->with(1002, 'taskboard');
 
         $duplicator = new TaskboardUsageDuplicator($dao);
         $duplicator->duplicateUsage(1002, 100);
@@ -42,11 +35,8 @@ class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRegularTemplateShouldDuplicateItsTaskboardUsage(): void
     {
-        $dao = \Mockery::mock(TaskboardUsageDao::class)
-                       ->shouldReceive('duplicate')
-                       ->with(1002, 101)
-                       ->once()
-                       ->getMock();
+        $dao = $this->createMock(TaskboardUsageDao::class);
+        $dao->expects(self::once())->method('duplicate')->with(1002, 101);
 
         $duplicator = new TaskboardUsageDuplicator($dao);
         $duplicator->duplicateUsage(1002, 101);

@@ -22,31 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var MappedFieldRetriever
-     */
-    private $mapped_field_retriever;
-    /**
-     * @var \Cardwall_FieldProviders_SemanticStatusFieldRetriever|M\LegacyMockInterface|M\MockInterface
-     */
-    private $status_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|FreestyleMappingFactory */
-    private $freestyle_mapping_factory;
+    private MappedFieldRetriever $mapped_field_retriever;
+    private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
+    private MockObject&FreestyleMappingFactory $freestyle_mapping_factory;
 
     protected function setUp(): void
     {
-        $this->status_retriever          = M::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $this->freestyle_mapping_factory = M::mock(FreestyleMappingFactory::class);
+        $this->status_retriever          = $this->createMock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $this->freestyle_mapping_factory = $this->createMock(FreestyleMappingFactory::class);
         $this->mapped_field_retriever    = new MappedFieldRetriever(
             $this->status_retriever,
             $this->freestyle_mapping_factory
@@ -55,33 +45,33 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsFreestyleMappedField(): void
     {
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
-        $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->freestyle_mapping_factory->shouldReceive('getMappedField')
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
+        $field             = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->freestyle_mapping_factory->expects(self::once())
+            ->method('getMappedField')
             ->with($taskboard_tracker)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $result = $this->mapped_field_retriever->getField($taskboard_tracker);
-        $this->assertSame($field, $result);
+        self::assertSame($field, $result);
     }
 
     public function testReturnsStatusSemanticWhenNoMapping(): void
     {
-        $tracker           = M::mock(Tracker::class);
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->freestyle_mapping_factory->shouldReceive('getMappedField')
+        $tracker           = TrackerTestBuilder::aTracker()->build();
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $field             = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->freestyle_mapping_factory->expects(self::once())
+            ->method('getMappedField')
             ->with($taskboard_tracker)
-            ->once()
-            ->andReturnNull();
-        $this->status_retriever->shouldReceive('getField')
+            ->willReturn(null);
+        $this->status_retriever->expects(self::once())
+            ->method('getField')
             ->with($tracker)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $result = $this->mapped_field_retriever->getField($taskboard_tracker);
 
-        $this->assertSame($field, $result);
+        self::assertSame($field, $result);
     }
 }

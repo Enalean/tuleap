@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class TaskboardUsageTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TaskboardUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @testWith [false, true, true]
      *           ["cardwall", true, false]
      *           ["taskboard", false, true]
      *           ["anything", false, false]
      */
-    public function testIsAllowed($board_type, bool $expected_is_cardwall_allowed, bool $expected_is_taskboard_allowed)
+    public function testIsAllowed(string|false $board_type, bool $expected_is_cardwall_allowed, bool $expected_is_taskboard_allowed): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $dao = \Mockery::mock(TaskboardUsageDao::class);
-        $dao->shouldReceive('searchBoardTypeByProjectId')->andReturn($board_type);
+        $dao = $this->createMock(TaskboardUsageDao::class);
+        $dao->method('searchBoardTypeByProjectId')->willReturn($board_type);
 
         $usage = new TaskboardUsage($dao);
 
-        $this->assertEquals($expected_is_cardwall_allowed, $usage->isCardwallAllowed($project));
-        $this->assertEquals($expected_is_taskboard_allowed, $usage->isTaskboardAllowed($project));
+        self::assertEquals($expected_is_cardwall_allowed, $usage->isCardwallAllowed($project));
+        self::assertEquals($expected_is_taskboard_allowed, $usage->isTaskboardAllowed($project));
     }
 }

@@ -22,17 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Swimlane;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SwimlaneChildrenRetriever
-     */
-    private $retriever;
+    private SwimlaneChildrenRetriever $retriever;
 
     protected function setUp(): void
     {
@@ -41,17 +36,17 @@ final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetSwimlaneArtifactIdsReturnsLinkedArtifactIds(): void
     {
-        $first_linked_artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getId' => 123])->getMock();
-        $second_linked_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getId' => 456])->getMock();
-        $swimlane_artifact      = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $swimlane_artifact->shouldReceive('getLinkedArtifacts')
-            ->once()
-            ->andReturn([$first_linked_artifact, $second_linked_artifact]);
+        $first_linked_artifact  = ArtifactTestBuilder::anArtifact(123)->build();
+        $second_linked_artifact = ArtifactTestBuilder::anArtifact(456)->build();
+        $swimlane_artifact      = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $swimlane_artifact->expects(self::once())
+            ->method('getLinkedArtifacts')
+            ->willReturn([$first_linked_artifact, $second_linked_artifact]);
 
-        $current_user = M::mock(\PFUser::class);
+        $current_user = UserTestBuilder::aUser()->build();
         $result       = $this->retriever->getSwimlaneArtifactIds($swimlane_artifact, $current_user);
-        $this->assertSame(2, count($result));
-        $this->assertSame(123, $result[0]);
-        $this->assertSame(456, $result[1]);
+        self::assertSame(2, count($result));
+        self::assertSame(123, $result[0]);
+        self::assertSame(456, $result[1]);
     }
 }
