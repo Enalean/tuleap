@@ -22,19 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 
 final class HistoryEnforcementSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testItProvidesDefaultWhenNotSet(): void
     {
         $settings = (new HistoryEnforcementSettingsBuilder())->build();
 
-        $this->assertEquals(false, $settings->isChangelogProposedAfterDragAndDrop());
+        self::assertEquals(false, $settings->isChangelogProposedAfterDragAndDrop());
     }
 
     public function testItProvidesOptionState(): void
@@ -43,6 +41,6 @@ final class HistoryEnforcementSettingsBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $settings = (new HistoryEnforcementSettingsBuilder())->build();
 
-        $this->assertEquals(true, $settings->isChangelogProposedAfterDragAndDrop());
+        self::assertEquals(true, $settings->isChangelogProposedAfterDragAndDrop());
     }
 }

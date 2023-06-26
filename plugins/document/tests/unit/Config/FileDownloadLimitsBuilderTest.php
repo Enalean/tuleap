@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 
-class FileDownloadLimitsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileDownloadLimitsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testItProvidesDefaultWhenNotSet(): void
     {
         $limits = (new FileDownloadLimitsBuilder())->build();
 
-        $this->assertEquals(50, $limits->getWarningThreshold());
-        $this->assertEquals(2000, $limits->getMaxArchiveSize());
+        self::assertEquals(50, $limits->getWarningThreshold());
+        self::assertEquals(2000, $limits->getMaxArchiveSize());
     }
 
     public function testItProvidesDefaultWhenInvalidValue(): void
@@ -45,8 +43,8 @@ class FileDownloadLimitsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $limits = (new FileDownloadLimitsBuilder())->build();
 
-        $this->assertEquals(50, $limits->getWarningThreshold());
-        $this->assertEquals(2000, $limits->getMaxArchiveSize());
+        self::assertEquals(50, $limits->getWarningThreshold());
+        self::assertEquals(2000, $limits->getMaxArchiveSize());
     }
 
     public function testItProvidesLimits(): void
@@ -56,7 +54,7 @@ class FileDownloadLimitsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $limits = (new FileDownloadLimitsBuilder())->build();
 
-        $this->assertEquals(12, $limits->getWarningThreshold());
-        $this->assertEquals(200, $limits->getMaxArchiveSize());
+        self::assertEquals(12, $limits->getWarningThreshold());
+        self::assertEquals(200, $limits->getMaxArchiveSize());
     }
 }

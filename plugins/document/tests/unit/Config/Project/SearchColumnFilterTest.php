@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class SearchColumnFilterTest extends TestCase
 {
-    private Docman_MetadataFactory|MockObject $metadata_factory;
+    private Docman_MetadataFactory&MockObject $metadata_factory;
     private SearchColumnFilter $search_column_filter;
 
     protected function setUp(): void

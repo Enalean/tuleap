@@ -22,47 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $token;
-    /**
-     * @var ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $config_dao;
-    /**
-     * @var HistoryEnforcementAdminSaveController
-     */
-    private $controller;
+    private CSRFSynchronizerToken&MockObject $token;
+    private ConfigDao&MockObject $config_dao;
+    private HistoryEnforcementAdminSaveController $controller;
 
     protected function setUp(): void
     {
-        $this->token      = Mockery::mock(CSRFSynchronizerToken::class);
-        $this->config_dao = Mockery::mock(ConfigDao::class);
+        $this->token      = $this->createMock(CSRFSynchronizerToken::class);
+        $this->config_dao = $this->createMock(ConfigDao::class);
 
         $this->controller = new HistoryEnforcementAdminSaveController($this->token, $this->config_dao);
     }
 
     public function testItThrowExceptionForNonSiteAdminUser(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -75,21 +62,19 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
 
     public function testItSavesTheSettings(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('is-changelog-proposed-after-dnd', 1)
+            ->withParam('is-changelog-proposed-after-dnd', "1")
             ->build();
 
-        $this->token->shouldReceive('check')->once();
+        $this->token->expects(self::once())->method('check');
 
         $this->config_dao
-            ->shouldReceive('saveBool')
-            ->with(HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND, true)
-            ->once()
-            ->andReturnTrue();
+            ->expects(self::once())
+            ->method('saveBool')
+            ->with(HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND, true);
 
         $inspector = new LayoutInspector();
 
@@ -103,7 +88,7 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
             self::assertEquals(new LayoutInspectorRedirection('/admin/document/history-enforcement'), $ex);
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => 'info',

@@ -22,18 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\DownloadFolderAsZip;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ZipStream\ZipStream;
 
 final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ErrorsListingBuilder
-     */
-    private $builder;
+    private ErrorsListingBuilder $builder;
 
     protected function setUp(): void
     {
@@ -42,18 +35,18 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingWhenNoErrorsHaveBeenRegistered(): void
     {
-        $zip = M::mock(ZipStream::class);
-        $zip->shouldNotReceive('addFile');
+        $zip = $this->createMock(ZipStream::class);
+        $zip->expects(self::never())->method('addFile');
 
         $this->builder->addErrorsFileIfAnyToArchive($zip);
     }
 
     public function testItAddsAnErrorsFileAtTheRootOfTheArchive(): void
     {
-        $zip = M::mock(ZipStream::class);
-        $zip->shouldReceive('addFile')
-            ->once()
-            ->with('TULEAP_ERRORS.txt', M::type('string'));
+        $zip = $this->createMock(ZipStream::class);
+        $zip->expects(self::once())
+            ->method('addFile')
+            ->with('TULEAP_ERRORS.txt', self::isType('string'));
         $this->builder->addBadFilePath('/my folder/my file.jpg');
 
         $this->builder->addErrorsFileIfAnyToArchive($zip);
@@ -61,16 +54,17 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItWritesPathsOfBadFilesInTheErrorsFile(): void
     {
-        $zip = M::mock(ZipStream::class);
-        $zip->shouldReceive('addFile')
-            ->once()
-            ->with(M::type('string'), M::capture($file_contents));
+        $zip = $this->createMock(ZipStream::class);
+        $zip->expects(self::once())
+            ->method('addFile')
+            ->will(self::returnCallback(function (string $filename, string $contents): void {
+                self::assertStringContainsString('/my folder/my file.jpg', $contents);
+                self::assertStringContainsString('embedded file.html', $contents);
+            }));
+
         $this->builder->addBadFilePath('/my folder/my file.jpg');
         $this->builder->addBadFilePath('embedded file.html');
 
         $this->builder->addErrorsFileIfAnyToArchive($zip);
-
-        $this->assertStringContainsString('/my folder/my file.jpg', $file_contents);
-        $this->assertStringContainsString('embedded file.html', $file_contents);
     }
 }

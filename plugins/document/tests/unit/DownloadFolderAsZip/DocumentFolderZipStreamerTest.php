@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Document\DownloadFolderAsZip;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -35,26 +34,18 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DocumentFolderZipStreamerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DocumentFolderZipStreamer
-     */
-    private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|DocumentTreeProjectExtractor
-     */
-    private $project_extractor;
+    private DocumentFolderZipStreamer $controller;
+    private MockObject&DocumentTreeProjectExtractor $project_extractor;
 
     protected function setUp(): void
     {
-        $this->project_extractor = M::mock(DocumentTreeProjectExtractor::class);
-        $user_manager            = M::mock(\UserManager::class);
-        $user_manager->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->withId(110)->build());
-        $logging_helper          = M::mock(ZipStreamerLoggingHelper::class);
-        $notification_sender     = M::mock(ZipStreamMailNotificationSender::class);
-        $size_is_allowed_checker = M::mock(FolderSizeIsAllowedChecker::class);
-        $download_limits_builder = M::mock(FileDownloadLimitsBuilder::class);
+        $this->project_extractor = $this->createMock(DocumentTreeProjectExtractor::class);
+        $user_manager            = $this->createMock(\UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->withId(110)->build());
+        $logging_helper          = $this->createMock(ZipStreamerLoggingHelper::class);
+        $notification_sender     = $this->createMock(ZipStreamMailNotificationSender::class);
+        $size_is_allowed_checker = $this->createMock(FolderSizeIsAllowedChecker::class);
+        $download_limits_builder = $this->createMock(FileDownloadLimitsBuilder::class);
         $this->controller        = new DocumentFolderZipStreamer(
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             $this->project_extractor,
@@ -63,13 +54,13 @@ final class DocumentFolderZipStreamerTest extends \Tuleap\Test\PHPUnit\TestCase
             $notification_sender,
             $size_is_allowed_checker,
             $download_limits_builder,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
     public function testItThrowsNotFoundWhenNoFolderID(): void
     {
-        $this->project_extractor->shouldReceive('getProject')->andReturn(new \Project(['group_id' => 101]));
+        $this->project_extractor->method('getProject')->willReturn(new \Project(['group_id' => 101]));
 
         $this->expectException(NotFoundException::class);
         $this->controller->handle(new NullServerRequest());
