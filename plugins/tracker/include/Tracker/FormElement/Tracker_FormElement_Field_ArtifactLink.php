@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -54,9 +53,6 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 #[ConfigKeyCategory('Tracker')]
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    #[FeatureFlagConfigKey("Feature flag to hide by default reverse links in artifact view (legacy behaviour)")]
-    public const HIDE_REVERSE_LINKS_KEY = 'hide_reverse_links_by_default';
-
     public const TYPE                    = 'art_link';
     public const CREATE_NEW_PARENT_VALUE = -1;
     public const NEW_VALUES_KEY          = 'new_values';
@@ -472,12 +468,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
-            if (ForgeConfig::getFeatureFlag(self::HIDE_REVERSE_LINKS_KEY)) {
-                $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse" data-test="display-reverse-links">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
-                $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section" style="display: none">';
-            } else {
-                $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section">';
-            }
+            $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section">';
         } else {
             $html .= '<div class="artifact-link-value">';
         }
