@@ -56,12 +56,15 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Action\AreTherePermissionsToMigrateVerifier;
 use Tuleap\Tracker\Action\AreUserGroupFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
+use Tuleap\Tracker\Action\CanPermissionsBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanUserGroupValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
 use Tuleap\Tracker\Action\FieldCanBeEasilyMigratedVerifier;
+use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
@@ -115,6 +118,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
@@ -150,6 +154,7 @@ use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -1209,7 +1214,10 @@ class ArtifactsResource extends AuthenticatedResource
             new CanUserFieldValuesBeFullyMovedVerifier($this->user_manager),
             new IsUserGroupListFieldVerifier(),
             new AreUserGroupFieldsCompatibleVerifier(),
-            new CanUserGroupValuesBeFullyMovedVerifier()
+            new CanUserGroupValuesBeFullyMovedVerifier(),
+            new IsPermissionsOnArtifactFieldVerifier(),
+            new AreTherePermissionsToMigrateVerifier(),
+            new CanPermissionsBeFullyMovedVerifier(),
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);
@@ -1400,9 +1408,9 @@ class ArtifactsResource extends AuthenticatedResource
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
         );
 
-        $xml_import_builder  = new Tracker_Artifact_XMLImportBuilder();
-        $user_finder         = new XMLImportHelper($this->user_manager);
-        $field_value_matcher = new FieldValueMatcher($user_finder);
+        $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
+        $user_finder        = new XMLImportHelper($this->user_manager);
+        $XML_updater        = new MoveChangesetXMLUpdater();
 
         return new MegaMoverArtifactByDuckTyping(
             new ArtifactsDeletionManager(
@@ -1412,12 +1420,16 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
             new MoveChangesetXMLDuckTypingUpdater(
-                new MoveChangesetXMLUpdater(),
+                $XML_updater,
                 new BindValueForDuckTypingUpdater(
                     new FieldValueMatcher($user_finder),
-                    new MoveChangesetXMLUpdater(),
+                    $XML_updater,
                     new XML_SimpleXMLCDATAFactory()
-                )
+                ),
+                new PermissionsByDuckTypingUpdater(
+                    new PermissionDuckTypingMatcher(),
+                    $XML_updater
+                ),
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

@@ -41,6 +41,10 @@
       <value format="label">semi-crispy</value>
       <value format="label">Project member</value>
     </field_change>
+    <field_change field_name="permissions" type="permissions_on_artifact" use_perm="1">
+      <ugroup ugroup_name="ugroup_project_members_name_key"/>
+      <ugroup ugroup_name="crusty"/>
+    </field_change>
   </changeset>
   <changeset id="CHANGESET_5">
     <submitted_by format="ldap">102</submitted_by>

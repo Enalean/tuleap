@@ -57,6 +57,9 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly VerifyIsUserGroupListField $verify_is_user_group_list_field,
         private readonly VerifyUserGroupFieldsAreCompatible $verify_user_group_fields_are_compatible,
         private readonly VerifyUserGroupValuesCanBeFullyMoved $verify_user_group_field_values_can_be_fully_moved,
+        private readonly VerifyIsPermissionsOnArtifactField $verify_is_permissions_on_artifact_field,
+        private readonly VerifyThereArePermissionsToMigrate $verify_are_permissions_to_migrate,
+        private readonly VerifyPermissionsCanBeFullyMoved $verify_permissions_can_be_fully_moved,
     ) {
     }
 
@@ -102,6 +105,16 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
                 $this->collectUserGroupBoundedFields($source_field, $target_field, $artifact);
+                continue;
+            }
+
+            if (
+                $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($source_field)
+                && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($target_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
+                assert($target_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
+                $this->collectPermissionsOnArtifactFields($source_field, $target_field, $artifact);
                 continue;
             }
 
@@ -158,6 +171,24 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         }
 
         if (! $this->verify_user_group_field_values_can_be_fully_moved->canAllUserGroupFieldValuesBeMoved($source_field, $target_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+            return;
+        }
+
+        $this->addFieldToMigrateableList($source_field, $target_field);
+    }
+
+    private function collectPermissionsOnArtifactFields(
+        \Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
+        \Tracker_FormElement_Field_PermissionsOnArtifact $target_field,
+        Artifact $artifact,
+    ): void {
+        if (! $this->verify_are_permissions_to_migrate->areTherePermissionsToMigrate($source_field, $artifact)) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        if (! $this->verify_permissions_can_be_fully_moved->canAllPermissionsBeFullyMoved($source_field, $target_field, $artifact)) {
             $this->addFieldToPartiallyMigratedList($source_field, $target_field);
             return;
         }

@@ -58,6 +58,11 @@ class MoveChangesetXMLUpdater
         }
     }
 
+    public function deleteValueInFieldChangeAtIndex(SimpleXMLElement $changeset_xml, int $field_change_index, int $value_index): void
+    {
+        unset($changeset_xml->field_change[$field_change_index]->value[$value_index]);
+    }
+
     private function deleteEmptyCommentNodes(SimpleXMLElement $comments_xml): void
     {
         $last_index = $comments_xml->comment === null ? -1 : count($comments_xml->comment) - 1;
