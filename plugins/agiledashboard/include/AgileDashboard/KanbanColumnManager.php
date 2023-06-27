@@ -17,12 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Kanban\KanbanColumnDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 
 class AgileDashboard_KanbanColumnManager
 {
-    /** @var AgileDashboard_KanbanColumnDao */
+    /** @var KanbanColumnDao */
     private $column_dao;
 
     /** @var BindStaticValueDao */
@@ -32,7 +33,7 @@ class AgileDashboard_KanbanColumnManager
     private $kanban_actions_checker;
 
     public function __construct(
-        AgileDashboard_KanbanColumnDao $column_dao,
+        KanbanColumnDao $column_dao,
         BindStaticValueDao $formelement_field_list_bind_static_value_dao,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
@@ -80,27 +81,27 @@ class AgileDashboard_KanbanColumnManager
         $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
         $semantic = $this->kanban_actions_checker->getSemanticStatus($tracker);
 
-        $this->column_dao->startTransaction();
-
-        if (
-            ! $semantic->removeOpenValue($column->getId())
-            || ! $this->hideColumnFromTrackerFieldStaticValues($column, $semantic)
-            || ! $this->column_dao->deleteColumn($column->getKanbanId(), $column->getId())
-        ) {
-            $this->column_dao->rollBack();
-            return;
-        }
-
-        $this->column_dao->commit();
+        $this->column_dao->deleteColumn(
+            $column->getKanbanId(),
+            $column->getId(),
+            function () use ($semantic, $column) {
+                return $semantic->removeOpenValue($column->getId())
+                    && $this->hideColumnFromTrackerFieldStaticValues($column, $semantic);
+            },
+        );
 
         return true;
     }
 
-    public function updateWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit)
-    {
+    public function updateWipLimit(
+        PFUser $user,
+        AgileDashboard_Kanban $kanban,
+        AgileDashboard_KanbanColumn $column,
+        int $wip_limit,
+    ): void {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
 
-        return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
+        $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
     public function updateLabel(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $label)

@@ -105,6 +105,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
+use Tuleap\Kanban\KanbanColumnDao;
 use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
@@ -1479,7 +1480,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getDashboardKanbanColumnManager()
     {
         return new AgileDashboard_KanbanColumnManager(
-            new AgileDashboard_KanbanColumnDao(),
+            new KanbanColumnDao(),
             new BindStaticValueDao(),
             new AgileDashboard_KanbanActionsChecker(
                 $this->getTrackerFactory(),
@@ -1503,7 +1504,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getKanbanColumnFactory()
     {
         return new AgileDashboard_KanbanColumnFactory(
-            new AgileDashboard_KanbanColumnDao(),
+            new KanbanColumnDao(),
             new AgileDashboard_KanbanUserPreferences()
         );
     }

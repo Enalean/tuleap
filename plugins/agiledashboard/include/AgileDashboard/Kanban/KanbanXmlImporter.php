@@ -118,7 +118,7 @@ class KanbanXmlImporter
                     $user,
                     $kanban,
                     $column,
-                    (string) $columns_attrs['wip']
+                    (int) $columns_attrs['wip']
                 );
             }
         }
