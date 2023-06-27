@@ -22,7 +22,6 @@ namespace Tuleap\Webhook;
 
 use Http\Client\Exception\HttpException;
 use Http\Mock\Client;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,37 +31,35 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testWebhooksAreEmitted(): void
     {
-        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
-        $stream_factory  = \Mockery::mock(StreamFactoryInterface::class);
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
+        $stream_factory  = $this->createMock(StreamFactoryInterface::class);
         $http_client     = new Client();
-        $status_logger   = \Mockery::mock(StatusLogger::class);
+        $status_logger   = $this->createMock(StatusLogger::class);
 
         $webhook_emitter = new Emitter($request_factory, $stream_factory, $http_client, $status_logger);
 
-        $webhook_1 = \Mockery::mock(Webhook::class);
-        $webhook_1->shouldReceive('getUrl');
-        $webhook_2 = \Mockery::mock(Webhook::class);
-        $webhook_2->shouldReceive('getUrl');
-        $payload = \Mockery::mock(Payload::class);
-        $payload->shouldReceive('getPayload');
+        $webhook_1 = $this->createMock(Webhook::class);
+        $webhook_1->method('getUrl');
+        $webhook_2 = $this->createMock(Webhook::class);
+        $webhook_2->method('getUrl');
+        $payload = $this->createMock(Payload::class);
+        $payload->method('getPayload');
 
-        $http_client->addException(\Mockery::mock(HttpException::class));
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getStatusCode');
-        $http_response->shouldReceive('getReasonPhrase');
+        $http_client->addException($this->createMock(HttpException::class));
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getStatusCode');
+        $http_response->method('getReasonPhrase');
         $http_client->addResponse($http_response);
 
-        $request = \Mockery::mock(RequestInterface::class);
-        $request->shouldReceive('withHeader')->andReturnSelf();
-        $request->shouldReceive('withBody')->andReturnSelf();
-        $request_factory->shouldReceive('createRequest')->twice()
-            ->andReturns($request);
-        $stream_factory->shouldReceive('createStream')->andReturn(\Mockery::mock(StreamInterface::class));
-        $status_logger->shouldReceive('log')->twice();
+        $request = $this->createMock(RequestInterface::class);
+        $request->method('withHeader')->willReturnSelf();
+        $request->method('withBody')->willReturnSelf();
+        $request_factory->expects(self::exactly(2))->method('createRequest')
+            ->willReturn($request);
+        $stream_factory->method('createStream')->willReturn($this->createMock(StreamInterface::class));
+        $status_logger->expects(self::exactly(2))->method('log');
 
         $webhook_emitter->emit($payload, $webhook_1, $webhook_2);
     }

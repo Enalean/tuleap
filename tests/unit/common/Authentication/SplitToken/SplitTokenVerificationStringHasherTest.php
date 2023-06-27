@@ -20,35 +20,32 @@
 
 namespace Tuleap\Authentication\SplitToken;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
-class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testVerificationStringCanBeHashed()
+    public function testVerificationStringCanBeHashed(): void
     {
-        $access_key_verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $access_key_verification_string->shouldReceive('getString')
-            ->andReturns(new ConcealedString('random_string'));
+        $access_key_verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $access_key_verification_string->method('getString')
+            ->willReturn(new ConcealedString('random_string'));
 
         $hasher = new SplitTokenVerificationStringHasher();
 
         $hashed_verification_string = $hasher->computeHash($access_key_verification_string);
 
-        $this->assertNotEmpty($hashed_verification_string);
+        self::assertNotEmpty($hashed_verification_string);
     }
 
-    public function testVerificationStringCanBeVerified()
+    public function testVerificationStringCanBeVerified(): void
     {
-        $access_key_verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $access_key_verification_string->shouldReceive('getString')
-            ->andReturns(new ConcealedString('random_string'));
+        $access_key_verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $access_key_verification_string->method('getString')
+            ->willReturn(new ConcealedString('random_string'));
         $precomputed_hash_value = '528b36022f3bc7b1de66f30bbd011bb84fce3067c5eb593400d1b39055c32891';
 
         $hasher = new SplitTokenVerificationStringHasher();
 
-        $this->assertTrue($hasher->verifyHash($access_key_verification_string, $precomputed_hash_value));
+        self::assertTrue($hasher->verifyHash($access_key_verification_string, $precomputed_hash_value));
     }
 }

@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\SplitToken;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
 final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const TEST_PREFIX = 'foo.prefix-';
 
     public function testIdentifierPrefixIsPresent(): void
     {
-        $this->assertStringStartsWith(self::TEST_PREFIX, $this->buildIdentifier()->getString());
+        self::assertStringStartsWith(self::TEST_PREFIX, $this->buildIdentifier()->getString());
     }
 
     public function testBuiltIdentifierIsInTheBase64CharsetSoItCanBeSafelyUsedInHTTPHeadersAndURLs(): void
     {
-        $this->assertMatchesRegularExpression('/(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+/', $this->buildIdentifier()->getString());
+        self::assertMatchesRegularExpression('/(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+/', $this->buildIdentifier()->getString());
     }
 
     private function buildIdentifier(): ConcealedString
     {
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $verification_string->shouldReceive('getString')->andReturns(new ConcealedString('random_string'));
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $verification_string->method('getString')->willReturn(new ConcealedString('random_string'));
         $access_key = new SplitToken(1, $verification_string);
 
         $serializer = new PrefixedSplitTokenSerializer($this->getPrefix());
@@ -62,8 +59,8 @@ final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $access_key = $serializer->getSplitToken(new ConcealedString($identifier));
 
-        $this->assertSame($expected_id, $access_key->getID());
-        $this->assertSame($hex_verification_string, bin2hex((string) $access_key->getVerificationString()->getString()));
+        self::assertSame($expected_id, $access_key->getID());
+        self::assertSame($hex_verification_string, bin2hex((string) $access_key->getVerificationString()->getString()));
     }
 
     /**

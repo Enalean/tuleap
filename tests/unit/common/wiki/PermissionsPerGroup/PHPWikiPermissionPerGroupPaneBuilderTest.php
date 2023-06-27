@@ -20,64 +20,65 @@
 
 namespace Tuleap\PHPWiki\PermissionsPerGroup;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
+use Service;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private PHPWikiPermissionPerGroupPaneBuilder $builder;
-    private $wiki_permissions_manager;
-    private $ugroup_manager;
+    private MockObject&\Wiki_PermissionsManager $wiki_permissions_manager;
+    private MockObject&\UGroupManager $ugroup_manager;
     private PermissionPerGroupUGroupFormatter $formatter;
-    private $project;
+    private MockObject&\TemplateRenderer $renderer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->wiki_permissions_manager = \Mockery::spy(\Wiki_PermissionsManager::class);
-        $this->ugroup_manager           = \Mockery::spy(\UGroupManager::class);
+        $this->wiki_permissions_manager = $this->createMock(\Wiki_PermissionsManager::class);
+        $this->ugroup_manager           = $this->createMock(\UGroupManager::class);
         $this->formatter                = new PermissionPerGroupUGroupFormatter($this->ugroup_manager);
 
-        $renderer         = \Mockery::spy(\TemplateRenderer::class);
-        $template_factory = \Mockery::spy(\TemplateRendererFactory::class)->shouldReceive('getRenderer')->andReturns($renderer)->getMock();
+        $this->renderer   = $this->createMock(\TemplateRenderer::class);
+        $template_factory = $this->createMock(\TemplateRendererFactory::class);
+        $template_factory->method('getRenderer')->willReturn($this->renderer);
 
         $this->builder = new PHPWikiPermissionPerGroupPaneBuilder(
             $this->wiki_permissions_manager,
             $this->formatter,
-            \Mockery::spy(\UGroupManager::class),
+            $this->ugroup_manager,
             $template_factory
         );
-
-        $this->project = \Mockery::spy(\Project::class, ['getID' => false, 'getUserName' => false, 'isPublic' => false]);
     }
 
     public function testItDoesNotBuildPaneIfServiceNotUsed(): void
     {
-        $this->project->shouldReceive('usesWiki')->andReturns(false);
+        $project = ProjectTestBuilder::aProject()->withId(101)->withAccessPublic()->withoutServices()->build();
 
         $selected_ugroup_id = null;
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->never();
-        $this->wiki_permissions_manager->shouldReceive('getWikiAdminsGroups')->never();
-        $this->wiki_permissions_manager->shouldReceive('getWikiServicePermissions')->never();
+        $this->ugroup_manager->expects(self::never())->method('getUGroup');
+        $this->wiki_permissions_manager->expects(self::never())->method('getWikiAdminsGroups');
+        $this->wiki_permissions_manager->expects(self::never())->method('getWikiServicePermissions');
 
-        $this->builder->getPaneContent($this->project, $selected_ugroup_id);
+        $this->builder->getPaneContent($project, $selected_ugroup_id);
     }
 
     public function testItExportsServicePermissions(): void
     {
-        $this->project->shouldReceive('usesWiki')->andReturns(true);
-        $this->wiki_permissions_manager->shouldReceive('getWikiServicePermissions')->once()->with($this->project)->andReturns([ProjectUGroup::REGISTERED]);
+        $project = ProjectTestBuilder::aProject()->withId(101)->withAccessPublic()->withUsedService(Service::WIKI)->build();
+
+        $this->wiki_permissions_manager->expects(self::once())->method('getWikiServicePermissions')->with($project)->willReturn([ProjectUGroup::REGISTERED]);
 
         $selected_ugroup_id = null;
+        $this->ugroup_manager->method('getUGroup')->willReturn(null);
+        $this->wiki_permissions_manager->expects(self::once())->method('getWikiAdminsGroups')->willReturn([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN]);
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->times(3);
-        $this->wiki_permissions_manager->shouldReceive('getWikiAdminsGroups')->once()->andReturns([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN]);
+        $this->renderer->method('renderToString');
 
-        $this->builder->getPaneContent($this->project, $selected_ugroup_id);
+        $this->builder->getPaneContent($project, $selected_ugroup_id);
     }
 }

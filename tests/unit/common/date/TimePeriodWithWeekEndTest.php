@@ -25,27 +25,13 @@
 namespace Tuleap\Date;
 
 use DateTime;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TimePeriodWithWeekEnd;
 
 class TimePeriodWithWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TimePeriodWithWeekEnd
-     */
-    private $time_period;
-
-    /**
-     * @var int
-     */
-    private $day_timestamp;
-
-    /**
-     * @var int
-     */
-    private $following_day_timestamp;
+    private TimePeriodWithWeekEnd $time_period;
+    private int $day_timestamp;
+    private int $following_day_timestamp;
 
     protected function setUp(): void
     {
@@ -58,49 +44,49 @@ class TimePeriodWithWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->following_day_timestamp = $following_day->getTimestamp();
     }
 
-    public function testItProvidesAListOfTheDayOffsetsInTheTimePeriod()
+    public function testItProvidesAListOfTheDayOffsetsInTheTimePeriod(): void
     {
-        $this->assertSame([0, 1, 2, 3], $this->time_period->getDayOffsets());
+        self::assertSame([0, 1, 2, 3], $this->time_period->getDayOffsets());
     }
 
-    public function testItProvidesTheEndDate()
+    public function testItProvidesTheEndDate(): void
     {
-        $this->assertSame('Sat 07', date('D d', $this->time_period->getEndDate()));
+        self::assertSame('Sat 07', date('D d', $this->time_period->getEndDate()));
     }
 
-    public function testItProcessesNegativeDuration()
+    public function testItProcessesNegativeDuration(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, -2);
-        $this->assertSame($this->day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->day_timestamp, $time_period->getEndDate());
     }
 
-    public function testItProcessesNullDuration()
+    public function testItProcessesNullDuration(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, 0);
-        $this->assertSame($this->day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->day_timestamp, $time_period->getEndDate());
     }
 
-    public function testItProcessesPositiveDuration()
+    public function testItProcessesPositiveDuration(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, 1);
-        $this->assertSame($this->following_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_day_timestamp, $time_period->getEndDate());
     }
 
-    public function testItProcessesFloatDuration()
+    public function testItProcessesFloatDuration(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, 0.2);
-        $this->assertSame($this->following_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_day_timestamp, $time_period->getEndDate());
     }
 
-    public function testItProcessesFloatDurationAsStringValue()
+    public function testItProcessesFloatDurationAsStringValue(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, "0.2");
-        $this->assertSame($this->following_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_day_timestamp, $time_period->getEndDate());
     }
 
-    public function testItProcessesDurationAsStringValue()
+    public function testItProcessesDurationAsStringValue(): void
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, "1");
-        $this->assertSame($this->following_day_timestamp, $time_period->getEndDate());
+        self::assertSame($this->following_day_timestamp, $time_period->getEndDate());
     }
 }

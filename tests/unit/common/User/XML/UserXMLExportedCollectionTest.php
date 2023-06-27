@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\XML;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
 use UserXMLExportedCollection;
@@ -32,7 +31,6 @@ use XML_SimpleXMLCDATAFactory;
 
 final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private UserXMLExportedCollection $collection;
@@ -50,7 +48,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 'user_id'     => 101,
                 'user_name'   => 'kshen',
                 'realname'    => 'Kool Shen',
-                'email'       => 'kshen@hotmail.fr',
+                'email'       => 'kshen@example.com',
                 'ldap_id'     => 'cb9867',
                 'language_id' => 'en',
             ]
@@ -61,7 +59,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 'user_id'     => 102,
                 'user_name'   => 'jstar',
                 'realname'    => 'Joeystarr <script>',
-                'email'       => 'jstar@caramail.com',
+                'email'       => 'jstar@example.com',
                 'language_id' => 'en',
             ]
         );
@@ -81,12 +79,12 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_content = $this->collection->toXML();
         $xml_object  = simplexml_load_string($xml_content);
 
-        $this->assertNotNull($xml_object->user);
-        $this->assertEquals(101, (int) $xml_object->user[0]->id);
-        $this->assertEquals('kshen', (string) $xml_object->user[0]->username);
-        $this->assertEquals('Kool Shen', (string) $xml_object->user[0]->realname);
-        $this->assertEquals('kshen@hotmail.fr', (string) $xml_object->user[0]->email);
-        $this->assertEquals('cb9867', (string) $xml_object->user[0]->ldapid);
+        self::assertNotNull($xml_object->user);
+        self::assertEquals(101, (int) $xml_object->user[0]->id);
+        self::assertEquals('kshen', (string) $xml_object->user[0]->username);
+        self::assertEquals('Kool Shen', (string) $xml_object->user[0]->realname);
+        self::assertEquals('kshen@example.com', (string) $xml_object->user[0]->email);
+        self::assertEquals('cb9867', (string) $xml_object->user[0]->ldapid);
     }
 
     public function testItExportsMoreThanOneUser(): void
@@ -97,7 +95,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_content = $this->collection->toXML();
         $xml_object  = simplexml_load_string($xml_content);
 
-        $this->assertCount(2, $xml_object->user);
+        self::assertCount(2, $xml_object->user);
     }
 
     public function testItDoesNotExportLdapIdIfNoLdap(): void
@@ -107,7 +105,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_content = $this->collection->toXML();
         $xml_object  = simplexml_load_string($xml_content);
 
-        $this->assertEquals('', (string) $xml_object->user[0]->ldapid);
+        self::assertEquals('', (string) $xml_object->user[0]->ldapid);
     }
 
     public function testItDoesNotExportNone(): void
@@ -117,6 +115,6 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_content = $this->collection->toXML();
         $xml_object  = simplexml_load_string($xml_content);
 
-        $this->assertCount(0, $xml_object->user);
+        self::assertCount(0, $xml_object->user);
     }
 }

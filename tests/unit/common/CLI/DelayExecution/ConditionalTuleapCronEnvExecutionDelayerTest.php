@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
-use Mockery;
-
 final class ConditionalTuleapCronEnvExecutionDelayerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     protected function tearDown(): void
     {
         putenv(ConditionalTuleapCronEnvExecutionDelayer::DELAY_ENV_VAR_NAME);
@@ -37,18 +33,18 @@ final class ConditionalTuleapCronEnvExecutionDelayerTest extends \Tuleap\Test\PH
     {
         putenv(sprintf('%s=1', ConditionalTuleapCronEnvExecutionDelayer::DELAY_ENV_VAR_NAME));
 
-        $delayer = Mockery::mock(ExecutionDelayer::class);
+        $delayer = $this->createMock(ExecutionDelayer::class);
 
-        $delayer->shouldReceive('delay')->once();
+        $delayer->expects(self::once())->method('delay');
 
         (new ConditionalTuleapCronEnvExecutionDelayer($delayer))->delay();
     }
 
     public function testExecutionIsNotDelayedWhenTuleapCronEnvVariableIsNotPresent(): void
     {
-        $delayer = Mockery::mock(ExecutionDelayer::class);
+        $delayer = $this->createMock(ExecutionDelayer::class);
 
-        $delayer->shouldNotReceive('delay');
+        $delayer->expects(self::never())->method('delay');
 
         (new ConditionalTuleapCronEnvExecutionDelayer($delayer))->delay();
     }

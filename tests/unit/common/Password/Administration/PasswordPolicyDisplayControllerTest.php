@@ -20,8 +20,7 @@
 
 namespace Tuleap\Password\Administration;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Password\Configuration\PasswordConfiguration;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -29,29 +28,20 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    /**
-     * @var PasswordPolicyDisplayController
-     */
-    private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|AdminPageRenderer
-     */
-    private $admin_renderer;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|PasswordConfigurationRetriever
-     */
-    private $configuration_retriever;
+    private PasswordPolicyDisplayController $controller;
+    private MockObject&AdminPageRenderer $admin_renderer;
+    private MockObject&PasswordConfigurationRetriever $configuration_retriever;
 
     protected function setUp(): void
     {
-        $this->admin_renderer          = M::mock(AdminPageRenderer::class);
-        $this->configuration_retriever = M::mock(PasswordConfigurationRetriever::class);
+        $this->admin_renderer          = $this->createMock(AdminPageRenderer::class);
+        $this->configuration_retriever = $this->createMock(PasswordConfigurationRetriever::class);
         $this->controller              = new PasswordPolicyDisplayController(
             $this->admin_renderer,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
@@ -68,14 +58,13 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testProcessRendersThePage(): void
     {
-        $site_admin = M::mock(\PFUser::class)->shouldReceive('isSuperUser')
-            ->andReturnTrue()
-            ->getMock();
-        $this->admin_renderer->shouldReceive('header')->once();
-        $this->admin_renderer->shouldReceive('footer')->once();
-        $this->configuration_retriever->shouldReceive('getPasswordConfiguration')
-            ->once()
-            ->andReturn(new PasswordConfiguration(true));
+        $site_admin = UserTestBuilder::aUser()->withSiteAdministrator()->build();
+        $this->admin_renderer->expects(self::once())->method('header');
+        $this->admin_renderer->expects(self::once())->method('footer');
+        $this->configuration_retriever
+            ->expects(self::once())
+            ->method('getPasswordConfiguration')
+            ->willReturn(new PasswordConfiguration(true));
         ob_start();
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($site_admin)->build(),
@@ -83,7 +72,8 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Password policy', $output);
-        $this->assertStringContainsString('name="block-breached-password"', $output);
+
+        self::assertStringContainsString('Password policy', $output);
+        self::assertStringContainsString('name="block-breached-password"', $output);
     }
 }

@@ -25,37 +25,34 @@ namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 use Tuleap\Config\ConfigDao;
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 
 final class ProjectVisibilityConfigManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testDefaultProjectVisibilityUpdate(): void
     {
-        $config_dao     = Mockery::mock(ConfigDao::class);
+        $config_dao     = $this->createMock(ConfigDao::class);
         $config_manager = new ProjectVisibilityConfigManager($config_dao);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $config_dao->shouldReceive('save')->once();
+        $config_dao->expects(self::once())->method('save');
 
-        $this->assertTrue($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
+        self::assertTrue($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
     }
 
     public function testDefaultProjectVisibilityUpdateWithIncorrectProjectVisibility(): void
     {
-        $config_dao     = Mockery::mock(ConfigDao::class);
+        $config_dao     = $this->createMock(ConfigDao::class);
         $config_manager = new ProjectVisibilityConfigManager($config_dao);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $config_dao->shouldNotReceive('save');
+        $config_dao->expects(self::never())->method('save');
 
-        $this->assertFalse($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
+        self::assertFalse($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
     }
 }

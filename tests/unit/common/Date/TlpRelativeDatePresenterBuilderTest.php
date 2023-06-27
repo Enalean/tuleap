@@ -23,14 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Date;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\GlobalLanguageMock;
 
 class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     protected function setUp(): void
@@ -56,15 +53,7 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $builder = new TlpRelativeDatePresenterBuilder();
 
-        $user = Mockery::mock(PFUser::class)
-            ->shouldReceive(
-                [
-                    'getPreference' => $preference_value,
-                    'getLocale'     => 'fr_FR',
-                ]
-            )
-            ->getMock();
-
+        $user = $this->buildUserMock($preference_value);
 
         $presenter = $builder->getTlpRelativeDatePresenterInBlockContext(
             (new DateTimeImmutable())->setTimestamp(1234567890),
@@ -91,15 +80,7 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $builder = new TlpRelativeDatePresenterBuilder();
 
-        $user = Mockery::mock(PFUser::class)
-            ->shouldReceive(
-                [
-                    'getPreference' => $preference_value,
-                    'getLocale'     => 'fr_FR',
-                ]
-            )
-            ->getMock();
-
+        $user = $this->buildUserMock($preference_value);
 
         $presenter = $builder->getTlpRelativeDatePresenterInInlineContext(
             (new DateTimeImmutable())->setTimestamp(1234567890),
@@ -126,15 +107,7 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $builder = new TlpRelativeDatePresenterBuilder();
 
-        $user = Mockery::mock(PFUser::class)
-            ->shouldReceive(
-                [
-                    'getPreference' => $preference_value,
-                    'getLocale'     => 'fr_FR',
-                ]
-            )
-            ->getMock();
-
+        $user = $this->buildUserMock($preference_value);
 
         $presenter = $builder->getTlpRelativeDatePresenterInInlineContextWithoutTime(
             (new DateTimeImmutable())->setTimestamp(1234567890),
@@ -146,5 +119,14 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($expected_placement, $presenter->placement);
         self::assertEquals($expected_preference, $presenter->preference);
         self::assertEquals('fr_FR', $presenter->locale);
+    }
+
+    private function buildUserMock(string $preference_value): PFUser&\PHPUnit\Framework\MockObject\MockObject
+    {
+        $user = $this->createMock(PFUser::class);
+        $user->method('getPreference')->willReturn($preference_value);
+        $user->method('getLocale')->willReturn('fr_FR');
+
+        return $user;
     }
 }
