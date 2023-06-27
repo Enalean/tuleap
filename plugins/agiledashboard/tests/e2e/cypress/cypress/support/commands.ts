@@ -52,7 +52,9 @@ Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label)
     cy.get("[data-test=lazybox]").click();
     // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
     return cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body).find("[data-test=lazybox-search-field]").type(query);
+        cy.wrap(body)
+            .find("[data-test=lazybox-search-field]", { includeShadowDom: true })
+            .type(query);
         // Lazybox waits a delay before loading items
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
