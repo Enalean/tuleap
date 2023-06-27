@@ -61,7 +61,7 @@ const button_id = computed((): string => `document-folder-dropdown-menu-new-item
 const button = ref<HTMLElement | null>(null);
 const menu = ref<NewItemMenuOptions | null>(null);
 const dropdown = ref<Dropdown | null>(null);
-const is_dropdown_open = ref(false);
+const is_dropdown_open = ref<boolean | null>(null);
 
 onMounted(() => {
     if (!button.value) {
@@ -92,6 +92,6 @@ function onDropdownOpen(): void {
 }
 
 function onDropdownClose(): void {
-    is_dropdown_open.value = false;
+    is_dropdown_open.value = null;
 }
 </script>
