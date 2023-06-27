@@ -36,6 +36,11 @@ reason = "Windows only."
 id = "RUSTSEC-2020-0168"
 reason = "Only used when targetting macOS."
 
+# word-wrap
+[[IgnoredVulns]]
+id = "GHSA-j8xg-fqg3-53r7" # CVE-2023-26115
+reason = "ReDoS. No direct impact in our situation."
+
 ### TO BE FIXED
 
 [[IgnoredVulns]]
