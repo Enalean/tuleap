@@ -43,6 +43,7 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Kanban\KanbanDao;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -271,7 +272,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function getKanbanManager()
     {
         return new AgileDashboard_KanbanManager(
-            new AgileDashboard_KanbanDao(),
+            new KanbanDao(),
             $this->getTrackerFactory()
         );
     }
@@ -302,7 +303,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new AgileDashboard_KanbanFactory(
             $this->getTrackerFactory(),
-            new AgileDashboard_KanbanDao()
+            new KanbanDao()
         );
     }
 

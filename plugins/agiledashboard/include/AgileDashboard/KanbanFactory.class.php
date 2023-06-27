@@ -19,24 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Kanban\KanbanDao;
+
 class AgileDashboard_KanbanFactory
 {
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var AgileDashboard_KanbanDao */
-    private $dao;
-
-    public function __construct(TrackerFactory $tracker_factory, AgileDashboard_KanbanDao $dao)
+    public function __construct(private readonly TrackerFactory $tracker_factory, private readonly KanbanDao $dao)
     {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
     }
 
     /**
      * @return AgileDashboard_Kanban[]
      */
-    public function getListOfKanbansForProject(PFUser $user, $project_id)
+    public function getListOfKanbansForProject(PFUser $user, $project_id): array
     {
         $rows    = $this->dao->getKanbansForProject($project_id);
         $kanbans = [];
@@ -53,12 +47,10 @@ class AgileDashboard_KanbanFactory
     /**
      * @throws AgileDashboard_KanbanCannotAccessException
      * @throws AgileDashboard_KanbanNotFoundException
-     *
-     * @return AgileDashboard_Kanban
      */
-    public function getKanban(PFUser $user, $kanban_id)
+    public function getKanban(PFUser $user, $kanban_id): AgileDashboard_Kanban
     {
-        $row = $this->dao->getKanbanById($kanban_id)->getRow();
+        $row = $this->dao->getKanbanById($kanban_id);
 
         if (! $row) {
             throw new AgileDashboard_KanbanNotFoundException();
@@ -71,9 +63,9 @@ class AgileDashboard_KanbanFactory
         return $this->instantiateFromRow($row);
     }
 
-    public function getKanbanForXmlImport(int $kanban_id)
+    public function getKanbanForXmlImport(int $kanban_id): AgileDashboard_Kanban
     {
-        $row = $this->dao->getKanbanById($kanban_id)->getRow();
+        $row = $this->dao->getKanbanById($kanban_id);
 
         if (! $row) {
             throw new AgileDashboard_KanbanNotFoundException();
@@ -90,16 +82,13 @@ class AgileDashboard_KanbanFactory
         $kanban_tracker_ids = [];
 
         foreach ($rows as $kanban_data) {
-            $kanban_tracker_ids[] = (int) $kanban_data['tracker_id'];
+            $kanban_tracker_ids[] = $kanban_data['tracker_id'];
         }
 
         return $kanban_tracker_ids;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getKanbanIdByTrackerId($tracker_id)
+    public function getKanbanIdByTrackerId($tracker_id): ?int
     {
         $kanban = $this->getKanbanByTrackerId($tracker_id);
         if ($kanban === null) {
@@ -110,8 +99,8 @@ class AgileDashboard_KanbanFactory
 
     public function getKanbanByTrackerId(int $tracker_id): ?AgileDashboard_Kanban
     {
-        $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
-        if ($row === false) {
+        $row = $this->dao->getKanbanByTrackerId($tracker_id);
+        if ($row === null) {
             return null;
         }
         return $this->instantiateFromRow($row);
@@ -126,7 +115,7 @@ class AgileDashboard_KanbanFactory
         );
     }
 
-    private function isUserAllowedToAccessKanban(PFUser $user, $tracker_id)
+    private function isUserAllowedToAccessKanban(PFUser $user, $tracker_id): bool
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {

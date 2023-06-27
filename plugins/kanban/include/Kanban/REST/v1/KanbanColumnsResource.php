@@ -30,7 +30,7 @@ use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
-use AgileDashboard_KanbanDao;
+use Tuleap\Kanban\KanbanDao;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
@@ -94,7 +94,7 @@ class KanbanColumnsResource
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
-            new AgileDashboard_KanbanDao()
+            new KanbanDao()
         );
 
         $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();

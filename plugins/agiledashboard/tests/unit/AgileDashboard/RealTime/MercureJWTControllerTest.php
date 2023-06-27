@@ -78,7 +78,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testNoError(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn(1);
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\AgileDashboard_Kanban::class));
         $request =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
@@ -89,7 +89,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testNoGenerator(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn(1);
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\AgileDashboard_Kanban::class));
         $request                    =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );

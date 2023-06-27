@@ -18,6 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Kanban\KanbanDao;
+
 class AgileDashboard_KanbanManager
 {
     /**
@@ -26,34 +29,34 @@ class AgileDashboard_KanbanManager
     private $tracker_factory;
 
     /**
-     * @var AgileDashboard_KanbanDao
+     * @var KanbanDao
      */
     private $dao;
 
     public function __construct(
-        AgileDashboard_KanbanDao $dao,
+        KanbanDao $dao,
         TrackerFactory $tracker_factory,
     ) {
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;
     }
 
-    public function doesKanbanExistForTracker(Tracker $tracker)
+    public function doesKanbanExistForTracker(Tracker $tracker): bool
     {
-        return $this->dao->getKanbanByTrackerId($tracker->getId())->count() > 0;
+        return $this->dao->getKanbanByTrackerId($tracker->getId()) !== null;
     }
 
-    public function createKanban($kanban_name, $tracker_id)
+    public function createKanban($kanban_name, $tracker_id): int
     {
         return $this->dao->create($kanban_name, $tracker_id);
     }
 
-    public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping)
+    public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping): void
     {
         $this->dao->duplicateKanbans($tracker_mapping, $field_mapping, $report_mapping);
     }
 
-    public function getTrackersWithKanbanUsage($project_id, PFUser $user)
+    public function getTrackersWithKanbanUsage($project_id, PFUser $user): array
     {
         $trackers     = [];
         $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
@@ -79,10 +82,10 @@ class AgileDashboard_KanbanManager
     /**
      * @return Tracker[]
      */
-    public function getTrackersUsedAsKanban(Project $project)
+    public function getTrackersUsedAsKanban(Project $project): array
     {
         $trackers = [];
-        foreach ($this->dao->getKanbansForProject($project->getId()) as $row) {
+        foreach ($this->dao->getKanbansForProject((int) $project->getId()) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
             if ($tracker) {
                 $trackers[] = $tracker;
