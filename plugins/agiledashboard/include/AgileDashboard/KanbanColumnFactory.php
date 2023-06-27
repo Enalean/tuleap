@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Kanban\KanbanColumnDao;
+
 class AgileDashboard_KanbanColumnFactory
 {
     /**
@@ -32,7 +34,7 @@ class AgileDashboard_KanbanColumnFactory
     private $column_dao;
 
     public function __construct(
-        AgileDashboard_KanbanColumnDao $column_dao,
+        KanbanColumnDao $column_dao,
         AgileDashboard_KanbanUserPreferences $user_preferences,
     ) {
         $this->column_dao       = $column_dao;
@@ -107,15 +109,9 @@ class AgileDashboard_KanbanColumnFactory
         return null;
     }
 
-    private function getWIPLimitForColumn(AgileDashboard_Kanban $kanban, $column_id)
+    private function getWIPLimitForColumn(AgileDashboard_Kanban $kanban, int $column_id): ?int
     {
-        $row = $this->column_dao->getColumnWipLimit($kanban->getId(), $column_id)->getRow();
-
-        if (! $row) {
-            return null;
-        }
-
-        return $row['wip_limit'];
+        return $this->column_dao->getColumnWipLimit($kanban->getId(), $column_id);
     }
 
     private function isColumnRemovable(AgileDashboard_Kanban $kanban, Tracker_FormElement_Field_List_Bind_StaticValue $value)

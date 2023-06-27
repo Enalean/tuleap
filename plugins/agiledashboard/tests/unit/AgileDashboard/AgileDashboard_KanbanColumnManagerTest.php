@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Kanban\KanbanColumnDao;
 
 class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -48,7 +49,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $column;
     /**
-     * @var AgileDashboard_KanbanColumnDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var KanbanColumnDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $column_dao;
     /**
@@ -75,7 +76,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->user->shouldReceive('getUserName')->andReturn('user name');
         $this->column = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2, true);
 
-        $this->column_dao             = \Mockery::spy(\AgileDashboard_KanbanColumnDao::class);
+        $this->column_dao             = \Mockery::spy(\Tuleap\Kanban\KanbanColumnDao::class);
         $this->kanban_actions_checker = \Mockery::spy(\AgileDashboard_KanbanActionsChecker::class);
 
         $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");

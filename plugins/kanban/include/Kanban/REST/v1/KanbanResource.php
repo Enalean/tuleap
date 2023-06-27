@@ -22,7 +22,7 @@ namespace Tuleap\Kanban\REST\v1;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanColumnDao;
+use Tuleap\Kanban\KanbanColumnDao;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
 use Tuleap\Kanban\KanbanDao;
@@ -235,7 +235,7 @@ final class KanbanResource extends AuthenticatedResource
 
         $this->user_preferences      = new AgileDashboard_KanbanUserPreferences();
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
-            new AgileDashboard_KanbanColumnDao(),
+            new KanbanColumnDao(),
             $this->user_preferences
         );
 
@@ -270,7 +270,7 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
-            new AgileDashboard_KanbanColumnDao(),
+            new KanbanColumnDao(),
             new BindStaticValueDao(),
             $this->kanban_actions_checker
         );

@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Kanban\KanbanColumnDao;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Widget\WidgetFactory;
 
@@ -63,7 +64,7 @@ final class KanbanPresenter
         $kanban_representation_builder = new \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder(
             $user_preferences,
             new AgileDashboard_KanbanColumnFactory(
-                new AgileDashboard_KanbanColumnDao(),
+                new KanbanColumnDao(),
                 $user_preferences
             ),
             new AgileDashboard_KanbanActionsChecker(

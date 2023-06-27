@@ -36,7 +36,7 @@ use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanColumnDao;
+use Tuleap\Kanban\KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanColumnNotFoundException;
 use AgileDashboard_UserNotAdminException;
@@ -97,7 +97,7 @@ class KanbanColumnsResource
             new KanbanDao()
         );
 
-        $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();
+        $kanban_column_dao           = new KanbanColumnDao();
         $permissions_manager         = new AgileDashboard_PermissionsManager();
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
             $kanban_column_dao,
@@ -172,8 +172,13 @@ class KanbanColumnsResource
         $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
 
         try {
-            if (isset($updated_column_properties->wip_limit) && ! $this->kanban_column_manager->updateWipLimit($current_user, $kanban, $column, $updated_column_properties->wip_limit)) {
-                throw new RestException(500);
+            if (isset($updated_column_properties->wip_limit)) {
+                $this->kanban_column_manager->updateWipLimit(
+                    $current_user,
+                    $kanban,
+                    $column,
+                    $updated_column_properties->wip_limit,
+                );
             }
 
             if (isset($updated_column_properties->label) && ! $this->kanban_column_manager->updateLabel($current_user, $kanban, $column, $updated_column_properties->label)) {
