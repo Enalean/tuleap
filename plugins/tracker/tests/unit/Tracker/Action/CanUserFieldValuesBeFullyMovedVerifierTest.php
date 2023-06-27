@@ -34,6 +34,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
     private Stub & \Tracker_FormElement_Field_List $target_field;
     private Stub & Artifact $artifact;
     private Stub & Tracker_Artifact_ChangesetValue_List $changeset_value;
+    private \PFUser $user;
 
     protected function setUp(): void
     {

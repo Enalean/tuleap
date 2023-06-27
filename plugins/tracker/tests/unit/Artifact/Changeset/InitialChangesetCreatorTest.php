@@ -44,31 +44,12 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactChangesetSaver
-     */
-    private $changeset_saver;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
-    /**
-     * @var array
-     */
-    private $fields_data = [];
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $factory;
-    /**
-     * @var InitialChangesetValueSaver
-     */
-    private $creator;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow
-     */
-    private $workflow;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactChangesetSaver $changeset_saver;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox $field;
+    private array $fields_data = [];
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory $factory;
+    private InitialChangesetValueSaver $creator;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow $workflow;
     private SaveArtifactStub $artifact_saver;
 
     protected function setUp(): void
@@ -247,6 +228,31 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->shouldReceive('userCanSubmit')->andReturns(false);
         $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
         $this->workflow->shouldReceive('bypassPermissions')->with($this->field)->andReturns(true);
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+
+        $this->fields_data[123] = 'value';
+
+        $this->field->shouldReceive('saveNewChangeset')->with(
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            'value',
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any()
+        )->once();
+
+        $this->create();
+    }
+
+    public function testItBypassPermissionsWhenWorkflowIsDisabled(): void
+    {
+        $this->workflow->shouldReceive('isDisabled')->andReturnTrue();
+        $this->setFields([$this->field]);
+
+        $this->field->shouldReceive('userCanSubmit')->andReturns(true);
+        $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
         $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
 
         $this->fields_data[123] = 'value';

@@ -80,16 +80,21 @@ final class InitialChangesetCreator implements CreateInitialChangeset
         }
 
         $this->initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState($artifact);
-        $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
+        if ($artifact->getTracker()->getWorkflow()->isDisabled() === false) {
+            $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
 
-        if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter, $workflow)) {
-            $this->logger->debug(
-                sprintf(
-                    'Creation of the first changeset of artifact #%d failed: workflow/global rules rejected it',
-                    $artifact->getId()
-                )
-            );
-            return null;
+
+            if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter, $workflow)) {
+                $this->logger->debug(
+                    sprintf(
+                        'Creation of the first changeset of artifact #%d failed: workflow/global rules rejected it',
+                        $artifact->getId()
+                    )
+                );
+                return null;
+            }
+        } else {
+            $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
         }
 
         try {
