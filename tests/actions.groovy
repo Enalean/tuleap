@@ -6,7 +6,7 @@ def runInsideNixDockerEnv(String command, String container_run_args = '', String
     image
         .inside(container_run_args + ' -v $HOME/nix-content:/nix -v /etc/passwd:/etc/passwd:ro') {
             sh """
-            nix-shell --pure -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
+            nix-shell -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
             """
         }
 }

@@ -71,7 +71,7 @@ pipeline {
             steps {
                 dir ('sources') {
                     withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-                        script { actions.actions.runInsideNixDockerEnv(
+                        script { actions.runInsideNixDockerEnv(
                             'HOME=/home_build/ pnpm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}" && HOME=/home_build/ pnpm publish --access public --filter "@tuleap/*" --no-git-checks'
                         ) }
                     }

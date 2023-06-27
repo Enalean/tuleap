@@ -39,7 +39,7 @@ $tlp-fontawesome-icons: (
     backlog: "\f018",
     remove-from-backlog: "\f019",
     taskboard: "\f020",
-    kanban: "\f021",
+    kanban-boards: "\f021",
     esc-key: "\f022",
     enter-key: "\f023",
     hierarchy-plus: "\f024",
@@ -56,6 +56,9 @@ $tlp-fontawesome-icons: (
     project-boxes: "\f035",
     level-down: "\f036",
     new-bug: "\f037",
+    small-cards: "\f038",
+    big-cards: "\f039",
+    tracker: "\f040",
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
