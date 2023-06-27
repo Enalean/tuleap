@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTime;
+namespace Tuleap\Kanban\RealTime;
 
-class KanbanArtifactMessagePresenterMercure
+final class KanbanArtifactUpdatedMessageRepresentation
 {
-    public static function present(string $cmd, array $data): string
+    public function __construct(public readonly int $artifact_id)
     {
-        $serialise = [
-            'cmd' => $cmd,
-            'data' => $data,
-        ];
-        return json_encode($serialise);
     }
 }

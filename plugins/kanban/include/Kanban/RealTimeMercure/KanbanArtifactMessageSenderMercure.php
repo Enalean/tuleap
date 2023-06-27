@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTime;
+
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 
@@ -32,21 +32,11 @@ class KanbanArtifactMessageSenderMercure
     public const EVENT_NAME_ARTIFACT_MOVED   = 'kanban_item:move';
 
     public const KANBAN_TOPIC = 'Kanban/';
-    /**
-     * @var KanbanArtifactMessageBuilderMercure
-     */
-    private $kanban_artifact_message_builder;
-    /**
-     * @var RealTimeMercureArtifactMessageSender
-     */
-    private $artifact_message_sender;
 
     public function __construct(
-        RealTimeMercureArtifactMessageSender $artifact_message_sender,
-        KanbanArtifactMessageBuilderMercure $kanban_artifact_message_builder,
+        private readonly RealTimeMercureArtifactMessageSender $artifact_message_sender,
+        private readonly KanbanArtifactMessageBuilderMercure $kanban_artifact_message_builder,
     ) {
-        $this->artifact_message_sender         = $artifact_message_sender;
-        $this->kanban_artifact_message_builder = $kanban_artifact_message_builder;
     }
 
     public function sendMessageArtifactCreated(Artifact $artifact, int $kanban_id): void

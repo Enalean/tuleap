@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTimeMercure;
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSenderMercure;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;

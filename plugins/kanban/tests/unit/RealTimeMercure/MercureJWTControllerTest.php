@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\RealTime;
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanFactory;

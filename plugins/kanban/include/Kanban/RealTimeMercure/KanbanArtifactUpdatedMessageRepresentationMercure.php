@@ -17,15 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTimeMercure;
 
-class KanbanArtifactUpdatedMessageRepresentationMercure
+namespace Tuleap\Kanban\RealTimeMercure;
+
+final class KanbanArtifactUpdatedMessageRepresentationMercure
 {
-    public int $artifact_id;
-
-    public function __construct(int $artifact_id)
+    public function __construct(public readonly int $artifact_id)
     {
-        $this->artifact_id = intval($artifact_id);
     }
 }

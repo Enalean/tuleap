@@ -61,7 +61,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
 use TransitionFactory;
-use Tuleap\Kanban\Realtime\KanbanStructureRealTimeMercure;
+use Tuleap\Kanban\RealTimeMercure\KanbanStructureRealTimeMercure;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
