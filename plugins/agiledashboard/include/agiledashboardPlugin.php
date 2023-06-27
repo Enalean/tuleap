@@ -105,6 +105,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
+use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -1100,7 +1101,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getKanbanManager()
     {
         return new AgileDashboard_KanbanManager(
-            new AgileDashboard_KanbanDao(),
+            new KanbanDao(),
             $this->getTrackerFactory()
         );
     }
@@ -1122,7 +1123,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         return new AgileDashboard_KanbanFactory(
             TrackerFactory::instance(),
-            new AgileDashboard_KanbanDao()
+            new KanbanDao()
         );
     }
 
@@ -1791,9 +1792,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    private function getKanbanDao(): AgileDashboard_KanbanDao
+    private function getKanbanDao(): KanbanDao
     {
-        return new AgileDashboard_KanbanDao();
+        return new KanbanDao();
     }
 
     private function getMilestoneDao(): AgileDashboard_Milestone_MilestoneDao

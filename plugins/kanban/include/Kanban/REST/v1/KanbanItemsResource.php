@@ -21,7 +21,7 @@ namespace Tuleap\Kanban\REST\v1;
 
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanDao;
+use Tuleap\Kanban\KanbanDao;
 use AgileDashboard_KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
@@ -114,7 +114,7 @@ final class KanbanItemsResource extends AuthenticatedResource
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
-            new AgileDashboard_KanbanDao()
+            new KanbanDao()
         );
 
         $kanban_item_dao                   = new KanbanItemDao();

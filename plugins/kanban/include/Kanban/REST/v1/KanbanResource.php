@@ -25,7 +25,7 @@ use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanColumnDao;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
-use AgileDashboard_KanbanDao;
+use Tuleap\Kanban\KanbanDao;
 use AgileDashboard_KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
@@ -158,7 +158,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var KanbanItemDao */
     private $kanban_item_dao;
 
-    /** @var AgileDashboard_KanbanDao */
+    /** @var KanbanDao */
     private $kanban_dao;
 
     /** @var TrackerFactory */
@@ -227,7 +227,7 @@ final class KanbanResource extends AuthenticatedResource
         $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
         $this->tracker_factory     = TrackerFactory::instance();
 
-        $this->kanban_dao     = new AgileDashboard_KanbanDao();
+        $this->kanban_dao     = new KanbanDao();
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
             $this->kanban_dao
@@ -1243,7 +1243,7 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->checkUserCanUpdateKanban($user, $kanban);
-        $this->kanban_dao->delete($id);
+        $this->kanban_dao->delete((int) $id);
 
         $visited_dao = new RecentlyVisitedKanbanDao();
         $visited_dao->deleteVisitByKanbanId((int) $id);

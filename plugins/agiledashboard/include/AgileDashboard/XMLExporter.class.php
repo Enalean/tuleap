@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
+use Tuleap\Kanban\KanbanDao;
 
 class AgileDashboard_XMLExporter
 {
@@ -68,7 +69,7 @@ class AgileDashboard_XMLExporter
                 new AgileDashboard_ConfigurationDao(),
                 new AgileDashboard_KanbanFactory(
                     $tracker_factory,
-                    new AgileDashboard_KanbanDao()
+                    new KanbanDao()
                 )
             ),
             new ExplicitBacklogXMLExporter(

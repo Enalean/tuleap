@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST;
 
-use AgileDashboard_KanbanDao;
+use Tuleap\Kanban\KanbanDao;
 use AgileDashboard_KanbanManager;
 use Exception;
 use REST_TestDataBuilder;
@@ -38,7 +38,7 @@ class DataBuilder extends REST_TestDataBuilder
         parent::__construct();
         $this->instanciateFactories();
 
-        $kanban_dao           = new AgileDashboard_KanbanDao();
+        $kanban_dao           = new KanbanDao();
         $this->kanban_manager = new AgileDashboard_KanbanManager(
             $kanban_dao,
             $this->tracker_factory
