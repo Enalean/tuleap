@@ -20,16 +20,12 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
-use REST_TestDataBuilder;
 use RestBase;
 
 class TestBase extends RestBase
 {
     private const EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME   = 'story';
     private const EXPLICIT_BACKLOG_RELEASE_TRACKER_SHORTNAME = 'rel';
-
-    protected $kanban_artifact_ids = [];
-    protected $tracker_report_id   = null;
 
     protected $explicit_backlog_project_id;
     protected $explicit_backlog_story_tracker_id;
@@ -41,10 +37,6 @@ class TestBase extends RestBase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->getKanbanArtifactIds();
-
-        $this->tracker_report_id = $this->getTrackerReportId();
 
         $this->explicit_backlog_project_id         = $this->getProjectId(DataBuilder::EXPLICIT_BACKLOG_PROJECT_SHORTNAME);
         $this->explicit_backlog_story_tracker_id   = $this->tracker_ids[$this->explicit_backlog_project_id][self::EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME];
@@ -59,35 +51,5 @@ class TestBase extends RestBase
             $this->explicit_backlog_release_tracker_id,
             $this->explicit_backlog_artifact_release_ids
         );
-    }
-
-    private function getKanbanArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->kanban_tracker_id,
-            $this->kanban_artifact_ids
-        );
-    }
-
-    private function getTrackerReportId()
-    {
-        if ($this->tracker_report_id !== null) {
-            return $this->tracker_report_id;
-        }
-
-        $offset = 0;
-        $limit  = 1;
-        $query  = http_build_query(
-            ['limit' => $limit, 'offset' => $offset]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('GET', "trackers/$this->kanban_tracker_id/tracker_reports?$query")
-        );
-
-        $reports = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        return $reports[0]['id'];
     }
 }
