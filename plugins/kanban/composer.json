@@ -8,7 +8,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Kanban\\": ["tests/unit/", "tests/rest"]
+      "Tuleap\\Kanban\\": ["tests/unit/", "tests/rest/", "tests/integration/"]
     }
   },
   "tuleap": {

@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-namespace integration\Kanban\RecentlyVisited;
+namespace Tuleap\Kanban\RecentlyVisited;
 
-use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -51,7 +50,7 @@ final class RecentlyVisitedKanbanDaoTest extends TestCase
 
         $dao->deleteOldVisits();
 
-        self::assertCount(30, $dao->searchVisitByUserId(102, 30));
-        self::assertCount(30, $dao->searchVisitByUserId(103, 30));
+        self::assertCount(30, $dao->searchVisitByUserId(102, 100));
+        self::assertCount(30, $dao->searchVisitByUserId(103, 100));
     }
 }

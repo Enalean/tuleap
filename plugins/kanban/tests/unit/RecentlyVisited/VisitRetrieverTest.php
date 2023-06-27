@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban\RecentlyVisited;
+namespace Tuleap\Kanban\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -48,7 +48,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SECOND_TRACKER_COLOR          = 'red-wine';
 
     /**
-     * @var RecentlyVisitedKanbanDao&MockObject
+     * @var \Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao&MockObject
      */
     private $dao;
     /**
@@ -65,14 +65,14 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user = UserTestBuilder::buildWithId(self::USER_ID);
 
-        $this->dao             = $this->createMock(RecentlyVisitedKanbanDao::class);
+        $this->dao             = $this->createMock(\Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao::class);
         $this->kanban_factory  = $this->createMock(\AgileDashboard_KanbanFactory::class);
         $this->tracker_factory = $this->createMock(\TrackerFactory::class);
     }
 
     private function getVisitHistory(HistoryEntryCollection $collection): void
     {
-        $visit_retriever = new VisitRetriever($this->dao, $this->kanban_factory, $this->tracker_factory);
+        $visit_retriever = new \Tuleap\Kanban\RecentlyVisited\VisitRetriever($this->dao, $this->kanban_factory, $this->tracker_factory);
 
         $visit_retriever->getVisitHistory($collection, self::MAX_LENGTH);
     }
@@ -171,7 +171,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertCount(2, $collection->getEntries());
         foreach ($collection->getEntries() as $entry) {
-            self::assertSame(VisitRetriever::TYPE, $entry->getType());
+            self::assertSame(\Tuleap\Kanban\RecentlyVisited\VisitRetriever::TYPE, $entry->getType());
             self::assertNull($entry->getXref());
             self::assertNull($entry->getSmallIcon());
             self::assertNull($entry->getNormalIcon());
