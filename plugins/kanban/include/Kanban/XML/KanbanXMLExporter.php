@@ -47,8 +47,7 @@ class KanbanXMLExporter
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
-        $kanban_title = $this->configuration_dao->getKanbanTitle($project->getID());
-        if (! $kanban_title) {
+        if (! $this->configuration_dao->isKanbanActivated($project->getID())) {
             return;
         }
 
@@ -56,7 +55,6 @@ class KanbanXMLExporter
         if ($kanban_list_node === null) {
             throw new \Exception("Unable to create kanban_list node");
         }
-        $kanban_list_node->addAttribute("title", $kanban_title['kanban_title']);
 
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project->getID());
         foreach ($kanban_tracker_ids as $tracker_id) {

@@ -95,9 +95,6 @@ final class KanbanXmlImporter
 
     private function activateKanban(SimpleXMLElement $xml, Project $project): void
     {
-        $kanban_attrs = $xml->agiledashboard->kanban_list->attributes();
-        $kanban_name  = $kanban_attrs['title'];
-
         $is_scrum_activated  = count($xml->agiledashboard->plannings->children()) > 0;
         $is_kanban_activated = 1;
         $this->agile_dashboard_configuration_manager->updateConfiguration(
@@ -105,7 +102,6 @@ final class KanbanXmlImporter
             $is_scrum_activated,
             $is_kanban_activated,
             $this->agile_dashboard_configuration_manager->getScrumTitle($project->getID()),
-            $kanban_name
         );
     }
 }

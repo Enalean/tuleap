@@ -216,7 +216,6 @@ class AdminController extends BaseController
         return new AdminKanbanPresenter(
             $project_id,
             $this->config_manager->kanbanIsActivatedForProject($project_id),
-            $this->config_manager->getKanbanTitle($project_id),
             $has_kanban,
             $this->isScrumAccessible(),
         );

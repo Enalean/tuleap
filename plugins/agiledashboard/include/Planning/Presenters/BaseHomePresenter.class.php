@@ -87,9 +87,8 @@ class Planning_Presenter_BaseHomePresenter
 
     public function create_kanban_url()
     {
-        $params                       = $this->getBaseParameters();
-        $params['activate-kanban']    = 1;
-        $params['kanban-title-admin'] = 'Kanban';
+        $params                    = $this->getBaseParameters();
+        $params['activate-kanban'] = 1;
 
         return '?' . http_build_query($params);
     }

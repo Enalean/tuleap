@@ -352,12 +352,6 @@ msgstr "Le Kanban requis n'a pas pu être trouvé."
 msgid "Kanban successfully activated."
 msgstr "Kanban activé avec succès."
 
-msgid "Kanban title is empty."
-msgstr "Le titre Kanban est vide."
-
-msgid "Kanban title successfully modified."
-msgstr "Le titre Kanban modifié avec succès."
-
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
@@ -658,13 +652,6 @@ msgstr ""
 
 msgid "This tracker is not a planning tracker"
 msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
-
-msgid ""
-"This will be used to identify the Kanban section from the Agile Dashboard "
-"homepage."
-msgstr ""
-"Titre affiché sur la page d'accueil du service AgileDashboard pour la partie "
-"Kanban."
 
 msgid ""
 "This will be used to identify the Scrum section from the Agile Dashboard "

@@ -40,15 +40,11 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var AgileDashboard_KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $kanban_factory;
-
-    /**
-     * @var AgileDashboard_ConfigurationDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $configuration_dao;
+    private AgileDashboard_ConfigurationDao & \PHPUnit\Framework\MockObject\MockObject $configuration_dao;
 
     protected function setUp(): void
     {
-        $this->configuration_dao = Mockery::mock(AgileDashboard_ConfigurationDao::class);
+        $this->configuration_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
         $this->kanban_factory    = Mockery::mock(AgileDashboard_KanbanFactory::class);
 
         $this->kanban_export = new KanbanXMLExporter($this->configuration_dao, $this->kanban_factory);
@@ -59,7 +55,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive(('getID'))->andReturn(10);
 
-        $this->configuration_dao->shouldReceive('getKanbanTitle');
+        $this->configuration_dao->method('isKanbanActivated')->willReturn(false);
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
                  <kanban_list />';
@@ -71,10 +67,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsKanban(): void
     {
-        $kanban_title = 'My kanban is awesome';
-        $this->configuration_dao->shouldReceive('getKanbanTitle')->andReturn(
-            ['kanban_title' => $kanban_title]
-        );
+        $this->configuration_dao->method('isKanbanActivated')->willReturn(true);
 
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive(('getID'))->andReturn(10);
@@ -92,10 +85,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_element = new \SimpleXMLElement($xml_data);
         $this->kanban_export->export($xml_element, $project);
 
-        $kanban_list_node       = KanbanXMLExporter::NODE_KANBAN_LST;
-        $kanban_list_attributes = $xml_element->$kanban_list_node->attributes();
-
-        $this->assertEquals($kanban_title, (string) $kanban_list_attributes->title);
+        $kanban_list_node = KanbanXMLExporter::NODE_KANBAN_LST;
 
         $kanban1_attributes = $xml_element->$kanban_list_node->kanban[0]->attributes();
         $this->assertEquals('T1', (string) $kanban1_attributes->tracker_id);
