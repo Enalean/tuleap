@@ -31,7 +31,7 @@ use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class ShowKanbanController extends BaseController

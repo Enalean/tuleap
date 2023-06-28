@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban\RecentlyVisited;
+namespace Tuleap\Kanban\RecentlyVisited;
 
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryEntryCollection;

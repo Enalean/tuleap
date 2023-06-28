@@ -32,7 +32,6 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
-use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -45,6 +44,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
