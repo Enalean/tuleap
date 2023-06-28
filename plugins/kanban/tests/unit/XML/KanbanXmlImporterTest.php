@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\XML;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use SimpleXMLElement;
-
-require_once __DIR__ . '/../../bootstrap.php';
 
 class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {

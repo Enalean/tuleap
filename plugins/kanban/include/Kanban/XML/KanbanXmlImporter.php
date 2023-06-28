@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\XML;
 
 use AgileDashboard_ConfigurationManager;
 use AgileDashboard_KanbanColumnFactory;
@@ -32,47 +32,16 @@ use SimpleXMLElement;
 use TrackerXmlFieldsMapping;
 use Tuleap\XML\MappingsRegistry;
 
-class KanbanXmlImporter
+final class KanbanXmlImporter
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var AgileDashboard_KanbanManager
-     */
-    private $kanban_manager;
-    /**
-     * @var AgileDashboard_ConfigurationManager
-     */
-    private $agile_dashboard_configuration_manager;
-    /**
-     * @var AgileDashboard_KanbanColumnManager
-     */
-    private $dashboard_kanban_column_manager;
-    /**
-     * @var AgileDashboard_KanbanFactory
-     */
-    private $dashboard_kanban_factory;
-    /**
-     * @var AgileDashboard_KanbanColumnFactory
-     */
-    private $dashboard_kanban_column_factory;
-
     public function __construct(
-        LoggerInterface $logger,
-        AgileDashboard_KanbanManager $kanban_manager,
-        AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
-        AgileDashboard_KanbanColumnManager $dashboard_kanban_column_manager,
-        AgileDashboard_KanbanFactory $dashboard_kanban_factory,
-        AgileDashboard_KanbanColumnFactory $dashboard_kanban_column_factory,
+        private readonly LoggerInterface $logger,
+        private readonly AgileDashboard_KanbanManager $kanban_manager,
+        private readonly AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
+        private readonly AgileDashboard_KanbanColumnManager $dashboard_kanban_column_manager,
+        private readonly AgileDashboard_KanbanFactory $dashboard_kanban_factory,
+        private readonly AgileDashboard_KanbanColumnFactory $dashboard_kanban_column_factory,
     ) {
-        $this->logger                                = $logger;
-        $this->kanban_manager                        = $kanban_manager;
-        $this->agile_dashboard_configuration_manager = $agile_dashboard_configuration_manager;
-        $this->dashboard_kanban_column_manager       = $dashboard_kanban_column_manager;
-        $this->dashboard_kanban_factory              = $dashboard_kanban_factory;
-        $this->dashboard_kanban_column_factory       = $dashboard_kanban_column_factory;
     }
 
     public function import(
@@ -82,7 +51,7 @@ class KanbanXmlImporter
         TrackerXmlFieldsMapping $field_mapping,
         PFUser $user,
         MappingsRegistry $mappings_registry,
-    ) {
+    ): void {
         if (! $xml->agiledashboard->kanban_list) {
             $this->logger->info("0 Kanban found");
 
@@ -124,7 +93,7 @@ class KanbanXmlImporter
         }
     }
 
-    private function activateKanban(SimpleXMLElement $xml, Project $project)
+    private function activateKanban(SimpleXMLElement $xml, Project $project): void
     {
         $kanban_attrs = $xml->agiledashboard->kanban_list->attributes();
         $kanban_name  = $kanban_attrs['title'];

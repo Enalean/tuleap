@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\XML;
 
 use AgileDashboard_ConfigurationDao;
 use AgileDashboard_Kanban;

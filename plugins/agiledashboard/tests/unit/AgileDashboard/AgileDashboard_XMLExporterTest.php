@@ -19,7 +19,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
+use Tuleap\Kanban\XML\KanbanXMLExporter;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase

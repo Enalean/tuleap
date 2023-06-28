@@ -52,7 +52,7 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
-use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
+use Tuleap\Kanban\XML\KanbanXmlImporter;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageSenderMercure;

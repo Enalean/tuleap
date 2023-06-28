@@ -24,7 +24,7 @@ use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
 use HTTPRequest;
 use TrackerFactory;
-use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
+use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class ProjectKanban extends Kanban

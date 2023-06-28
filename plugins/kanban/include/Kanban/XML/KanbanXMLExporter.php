@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\XML;
 
 use AgileDashboard_ConfigurationDao;
 use AgileDashboard_KanbanFactory;
@@ -33,25 +33,13 @@ class KanbanXMLExporter
     public const NODE_KANBAN_LST = "kanban_list";
     public const NODE_KANBAN     = "kanban";
 
-    /**
-     * @var AgileDashboard_ConfigurationDao
-     */
-    private $configuration_dao;
-
     public const TRACKER_ID_PREFIX = 'T';
     public const KANBAN_ID_PREFIX  = 'K';
 
-    /**
-     * @var \AgileDashboard_KanbanFactory
-     */
-    private $kanban_factory;
-
     public function __construct(
-        AgileDashboard_ConfigurationDao $configuration_dao,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly AgileDashboard_ConfigurationDao $configuration_dao,
+        private readonly AgileDashboard_KanbanFactory $kanban_factory,
     ) {
-        $this->configuration_dao = $configuration_dao;
-        $this->kanban_factory    = $kanban_factory;
     }
 
     /**
@@ -65,6 +53,9 @@ class KanbanXMLExporter
         }
 
         $kanban_list_node = $xml_element->addChild(self::NODE_KANBAN_LST);
+        if ($kanban_list_node === null) {
+            throw new \Exception("Unable to create kanban_list node");
+        }
         $kanban_list_node->addAttribute("title", $kanban_title['kanban_title']);
 
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project->getID());
@@ -76,6 +67,9 @@ class KanbanXMLExporter
             }
 
             $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
+            if ($kanban_node === null) {
+                throw new \Exception("Unable to create kanban node");
+            }
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());
             $kanban_node->addAttribute('ID', $this->getFormattedKanbanId($kanban->getId()));
