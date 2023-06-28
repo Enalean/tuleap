@@ -26,9 +26,6 @@ import { sprintf } from "sprintf-js";
 import {
     getCreateNewArtifactButtonInLinkLabel,
     getCreateNewArtifactButtonInLinkWithNameLabel,
-    getLinkFieldCanHaveOnlyOneParent,
-    getLinkFieldNoteStartText,
-    getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
     getLinkSelectorSearchPlaceholderText,
@@ -189,25 +186,6 @@ export const current_link_type_descriptor = {
     },
 };
 
-export const getLinkFieldCanOnlyHaveOneParentNote = (
-    current_artifact_option: Option<ArtifactCrossReference>
-): UpdateFunction<LinkField> => {
-    const default_html = html`<p class="link-field-artifact-can-have-only-one-parent-note">
-        ${getLinkFieldNoteText()}
-    </p>`;
-    return current_artifact_option.mapOr((current_artifact_reference) => {
-        const { ref: artifact_reference, color } = current_artifact_reference;
-        const badge_classes = [`tlp-swatch-${color}`, "cross-ref-badge"];
-        return html`<p class="link-field-artifact-can-have-only-one-parent-note">
-            ${getLinkFieldNoteStartText()}<span
-                data-test="artifact-cross-ref-badge"
-                class="${badge_classes}"
-                >${artifact_reference}</span
-            >${getLinkFieldCanHaveOnlyOneParent()}
-        </p>`;
-    }, default_html);
-};
-
 export const onCancel = (host: InternalLinkField): void => {
     host.is_artifact_creator_shown = false;
 };
@@ -341,7 +319,6 @@ export const LinkField = define<InternalLinkField>({
     new_artifact_title: "",
     content: (host) => html`<div class="tracker-form-element" data-test="artifact-link-field">
         <label class="tlp-label">${host.field_presenter.label}</label>
-        ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
         <div class="link-field-rows-wrapper">
             ${host.linked_artifact_presenters.map((link) => getLinkedArtifactTemplate(host, link))}
             ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}

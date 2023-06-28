@@ -18,7 +18,6 @@
  */
 
 import type { GroupCollection } from "@tuleap/lazybox";
-import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement, LinkField } from "./LinkField";
@@ -26,7 +25,6 @@ import {
     current_link_type_descriptor,
     dropdown_section_descriptor,
     getEmptyStateIfNeeded,
-    getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
     observeArtifactCreator,
     onArtifactCreated,
@@ -36,7 +34,6 @@ import {
     setLinkedArtifacts,
     setNewLinks,
 } from "./LinkField";
-import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { NewLink } from "../../../../domain/fields/link-field/NewLink";
@@ -132,32 +129,6 @@ describe("LinkField", () => {
                 new_links = [NewLinkStub.withDefaults()];
                 renderField();
                 expect(target.querySelector("[data-test=link-table-empty-state]")).toBeNull();
-            });
-        });
-
-        describe("getLinkFieldCanOnlyHaveOneParentNote", () => {
-            it("When the modal is open in creation mode, Then it defaults to a generic note", () => {
-                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(current_artifact_reference);
-                const host = getHost();
-                renderNote(host, target);
-
-                expect(target.textContent?.trim()).toBe(
-                    "Note: an artifact can only have one parent."
-                );
-            });
-
-            it("When the modal is open in edition mode, Then the note displays the artifact reference in a badge", () => {
-                current_artifact_reference = Option.fromValue(
-                    ArtifactCrossReferenceStub.withRefAndColor("story #123", "red-wine")
-                );
-
-                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(current_artifact_reference);
-                const host = getHost();
-                renderNote(host, target);
-
-                const badge = selectOrThrow(target, "[data-test=artifact-cross-ref-badge]");
-                expect(badge.textContent?.trim()).toBe("story #123");
-                expect(badge.classList).toContain("tlp-swatch-red-wine");
             });
         });
     });

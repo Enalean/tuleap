@@ -26,9 +26,16 @@ import type {
     AllowedLinkTypesPresenterContainer,
     CollectionOfAllowedLinksTypesPresenters,
 } from "./CollectionOfAllowedLinksTypesPresenters";
-import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettext-catalog";
+import {
+    getDefaultLinkTypeLabel,
+    getLinkFieldCanHaveOnlyOneParentWithCrossRef,
+    getLinkFieldCanHaveOnlyOneParent,
+    getNewArtifactLabel,
+    getLinkFieldTypeAlreadySet,
+} from "../../../../gettext-catalog";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { LinkTypeProxy } from "./LinkTypeProxy";
+import { sprintf } from "sprintf-js";
 
 export type LinkTypeSelectorElement = {
     readonly value: LinkType;
@@ -53,9 +60,27 @@ const getOption = (
         host.value.direction === link_type.direction;
     const is_disabled =
         LinkType.isReverseChild(link_type) && host.available_types.is_parent_type_disabled;
-    return html`<option value="${value}" selected="${is_selected}" disabled="${is_disabled}">
-        ${link_type.label}
-    </option>`;
+    const current_artifact_reference_text = host.current_artifact_reference.mapOr((reference) => {
+        return sprintf(getLinkFieldCanHaveOnlyOneParentWithCrossRef(), {
+            artifact: reference.ref,
+        });
+    }, getLinkFieldCanHaveOnlyOneParent());
+
+    if (is_disabled) {
+        const link_already_set = is_selected
+            ? link_type.label
+            : sprintf(getLinkFieldTypeAlreadySet(), { type: link_type.label });
+        return html`<option
+            value="${value}"
+            selected="${is_selected}"
+            disabled="${is_disabled}"
+            title="${current_artifact_reference_text}"
+        >
+            ${link_already_set}
+        </option>`;
+    }
+
+    return html`<option value="${value}" selected="${is_selected}">${link_type.label}</option>`;
 };
 
 const getOptions = (

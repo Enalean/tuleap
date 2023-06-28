@@ -90,7 +90,7 @@ describe("LinkTypeSelectorElement", () => {
         expect(options_with_label.every((option) => !option.disabled)).toBe(true);
     });
 
-    it(`disables the reverse _is_child option if marked to be disabled`, () => {
+    it(`disables the reverse _is_child option and display the reason if marked to be disabled`, () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 true,
@@ -98,10 +98,15 @@ describe("LinkTypeSelectorElement", () => {
             );
         const select = render();
 
-        const child_of_is_disabled = Array.from(select.options).some(
-            (option) => option.label === "is Child of" && option.disabled
+        const child_of_is_disabled = Array.from(select.options).find(
+            (option) => option.value === "_is_child reverse"
         );
-        expect(child_of_is_disabled).toBe(true);
+
+        if (!child_of_is_disabled) {
+            throw new Error("child_of_disabled should not be undefined");
+        }
+        expect(child_of_is_disabled.disabled).toBe(true);
+        expect(child_of_is_disabled.title).not.toHaveLength(0);
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {
