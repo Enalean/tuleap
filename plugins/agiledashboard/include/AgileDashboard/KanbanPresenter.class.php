@@ -20,6 +20,8 @@
 
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\KanbanUserPreferences;
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -52,7 +54,7 @@ final class KanbanPresenter
     public bool $mercure_enabled;
 
     public function __construct(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         bool $user_is_kanban_admin,
         string $language,
@@ -60,7 +62,7 @@ final class KanbanPresenter
         int $dashboard_widget_id,
         int $selected_tracker_report_id,
     ) {
-        $user_preferences              = new AgileDashboard_KanbanUserPreferences();
+        $user_preferences              = new KanbanUserPreferences();
         $kanban_representation_builder = new \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder(
             $user_preferences,
             new AgileDashboard_KanbanColumnFactory(

@@ -18,11 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban;
 
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use Feedback;
@@ -31,64 +28,29 @@ use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
-class ShowKanbanController extends BaseController
+final class ShowKanbanController extends BaseController
 {
-    /**
-     * @var AgileDashboard_KanbanFactory
-     */
-    private $kanban_factory;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var AgileDashboard_PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $agile_dashboard_crumb_builder;
-    /**
-     * @var BreadCrumbBuilder
-     */
-    private $kanban_crumb_builder;
-    /**
-     * @var RecentlyVisitedKanbanDao
-     */
-    private $recently_visited_dao;
+    private Project $project;
 
     public function __construct(
         Codendi_Request $request,
-        AgileDashboard_KanbanFactory $kanban_factory,
-        TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager,
-        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
-        BreadCrumbBuilder $kanban_crumb_builder,
-        RecentlyVisitedKanbanDao $recently_visited_dao,
+        private readonly KanbanFactory $kanban_factory,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly AgileDashboard_PermissionsManager $permissions_manager,
+        private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        private readonly BreadCrumbBuilder $kanban_crumb_builder,
+        private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project                       = $this->request->getProject();
-        $this->kanban_factory                = $kanban_factory;
-        $this->tracker_factory               = $tracker_factory;
-        $this->permissions_manager           = $permissions_manager;
-        $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
-        $this->kanban_crumb_builder          = $kanban_crumb_builder;
-        $this->recently_visited_dao          = $recently_visited_dao;
+        $this->project = $this->request->getProject();
     }
 
-    /**
-     * @return BreadCrumbCollection
-     */
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): BreadCrumbCollection
     {
         $kanban_id = (int) $this->request->get('id');
         $user      = $this->request->getCurrentUser();
@@ -103,24 +65,24 @@ class ShowKanbanController extends BaseController
 
         try {
             $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban_id));
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             // ignore, it will be catch in showKanban
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             // ignore, it will be catch in showKanban
         }
 
         return $breadcrumbs;
     }
 
-    public function showKanban()
+    public function showKanban(): string
     {
-        $kanban_id = $this->request->get('id');
+        $kanban_id = (int) $this->request->get('id');
         $user      = $this->request->getCurrentUser();
 
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
             if (! $user->isAnonymous()) {
-                $this->recently_visited_dao->save((int) $user->getId(), (int) $kanban_id, (int) $_SERVER['REQUEST_TIME']);
+                $this->recently_visited_dao->save((int) $user->getId(), $kanban_id, $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp());
             }
 
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
@@ -148,16 +110,18 @@ class ShowKanbanController extends BaseController
                     $filter_tracker_report_id,
                 )
             );
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-agiledashboard', 'Kanban not found.')
             );
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'error_perm_denied')
             );
         }
+
+        return '';
     }
 }

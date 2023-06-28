@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST\v1\TrackerReport;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use DateTime;
 use PFUser;
 use Tracker_Report;
@@ -42,7 +42,7 @@ final class FilteredDiagramRepresentationBuilder
      * @throws TooManyPointsException
      */
     public function build(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         DateTime $start_date,
         DateTime $end_date,
@@ -65,7 +65,7 @@ final class FilteredDiagramRepresentationBuilder
      * @return DiagramColumnRepresentation[]
      */
     private function getFilteredColumnsRepresentation(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         array $dates,
         Tracker_Report $report,

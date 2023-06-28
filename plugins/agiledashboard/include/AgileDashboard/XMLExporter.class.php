@@ -21,6 +21,8 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\Kanban\KanbanDao;
@@ -67,7 +69,7 @@ class AgileDashboard_XMLExporter
             new PlanningXMLExporter(new PlanningPermissionsManager()),
             new KanbanXMLExporter(
                 new AgileDashboard_ConfigurationDao(),
-                new AgileDashboard_KanbanFactory(
+                new KanbanFactory(
                     $tracker_factory,
                     new KanbanDao()
                 )
@@ -81,7 +83,7 @@ class AgileDashboard_XMLExporter
 
     /**
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
-     * @throws AgileDashboard_SemanticStatusNotFoundException
+     * @throws SemanticStatusNotFoundException
      * @throws XML_ParseException
      */
     public function export(Project $project, SimpleXMLElement $xml_element, array $plannings): void
@@ -98,7 +100,7 @@ class AgileDashboard_XMLExporter
 
     /**
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
-     * @throws AgileDashboard_SemanticStatusNotFoundException
+     * @throws SemanticStatusNotFoundException
      * @throws XML_ParseException
      */
     public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings)

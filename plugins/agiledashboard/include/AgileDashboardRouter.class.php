@@ -32,7 +32,10 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
-use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanNotFoundException;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
@@ -106,7 +109,7 @@ class AgileDashboardRouter
     /** @var AgileDashboard_ConfigurationManager */
     private $config_manager;
 
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var PlanningPermissionsManager */
@@ -193,7 +196,7 @@ class AgileDashboardRouter
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
@@ -353,7 +356,7 @@ class AgileDashboardRouter
                 break;
             case 'showKanban':
                 $header_options  = [
-                    'body_class'                 => ['agiledashboard_kanban', 'reduce-help-button', 'agiledashboard-body'],
+                    'body_class'                 => ['Tuleap\Kanban\Kanban', 'reduce-help-button', 'agiledashboard-body'],
                     Layout::INCLUDE_FAT_COMBINED => false,
                 ];
                 $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
@@ -664,8 +667,8 @@ class AgileDashboardRouter
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
             $title  = $kanban->getName();
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanNotFoundException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
         }
 
         return $title;

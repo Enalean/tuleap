@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Kanban\XML;
 
 use AgileDashboard_ConfigurationDao;
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanFactory;
 use Mockery;
 
 final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -37,7 +37,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $kanban_export;
     /**
-     * @var AgileDashboard_KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $kanban_factory;
     private AgileDashboard_ConfigurationDao & \PHPUnit\Framework\MockObject\MockObject $configuration_dao;
@@ -45,7 +45,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->configuration_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
-        $this->kanban_factory    = Mockery::mock(AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory    = Mockery::mock(KanbanFactory::class);
 
         $this->kanban_export = new KanbanXMLExporter($this->configuration_dao, $this->kanban_factory);
     }
@@ -72,8 +72,8 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive(('getID'))->andReturn(10);
 
-        $kanban1 = new AgileDashboard_Kanban(10, 1, 'Alice task');
-        $kanban2 = new AgileDashboard_Kanban(20, 2, 'Bob task');
+        $kanban1 = new Kanban(10, 1, 'Alice task');
+        $kanban2 = new Kanban(20, 2, 'Bob task');
 
         $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->withArgs([$project->getID()])->andReturn([1, 2]);
 

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+use Tuleap\Kanban\Kanban;
 
 class AgileDashboard_KanbanActionsChecker
 {
@@ -52,7 +53,7 @@ class AgileDashboard_KanbanActionsChecker
      * @throws Kanban_SemanticStatusNotDefinedException
      * @throws Kanban_TrackerNotDefinedException
      */
-    public function checkUserCanAddArtifact(PFUser $user, AgileDashboard_Kanban $kanban): void
+    public function checkUserCanAddArtifact(PFUser $user, Kanban $kanban): void
     {
         $tracker         = $this->getTrackerForKanban($kanban);
         $semantic_status = $this->getSemanticStatus($tracker);
@@ -71,7 +72,7 @@ class AgileDashboard_KanbanActionsChecker
      * @throws Kanban_TrackerNotDefinedException
      * @throws Kanban_UserCantAddInPlaceException
      */
-    public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban): void
+    public function checkUserCanAddInPlace(PFUser $user, Kanban $kanban): void
     {
         $tracker        = $this->getTrackerForKanban($kanban);
         $semantic_title = $this->getSemanticTitle($tracker);
@@ -85,7 +86,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function checkUserCanAddColumns(PFUser $user, AgileDashboard_Kanban $kanban)
+    public function checkUserCanAddColumns(PFUser $user, Kanban $kanban)
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -101,7 +102,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function checkUserCanReorderColumns(PFUser $user, AgileDashboard_Kanban $kanban)
+    public function checkUserCanReorderColumns(PFUser $user, Kanban $kanban)
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -117,7 +118,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function checkUserCanAdministrate(PFUser $user, AgileDashboard_Kanban $kanban)
+    public function checkUserCanAdministrate(PFUser $user, Kanban $kanban)
     {
         $tracker = $this->getTrackerForKanban($kanban);
 
@@ -126,7 +127,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function checkUserCanDeleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    public function checkUserCanDeleteColumn(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column)
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -146,7 +147,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function checkUserCanEditColumnLabel(PFUser $user, AgileDashboard_Kanban $kanban)
+    public function checkUserCanEditColumnLabel(PFUser $user, Kanban $kanban)
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -162,7 +163,7 @@ class AgileDashboard_KanbanActionsChecker
         }
     }
 
-    public function getTrackerForKanban(AgileDashboard_Kanban $kanban)
+    public function getTrackerForKanban(Kanban $kanban)
     {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 

@@ -19,6 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanFactory;
 
 class AgileDashboard_FirstKanbanCreator
 {
@@ -48,7 +50,7 @@ class AgileDashboard_FirstKanbanCreator
     private $tracker_report_updater;
 
     /**
-     * @var AgileDashboard_KanbanFactory
+     * @var KanbanFactory
      */
     private $kanban_factory;
 
@@ -62,7 +64,7 @@ class AgileDashboard_FirstKanbanCreator
         AgileDashboard_KanbanManager $kanban_manager,
         TrackerFactory $tracker_factory,
         TrackerXmlImport $xml_import,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         TrackerReportUpdater $tracker_report_updater,
         Tracker_ReportFactory $report_factory,
     ) {
@@ -152,7 +154,7 @@ class AgileDashboard_FirstKanbanCreator
         return $is_tracker_already_created;
     }
 
-    private function addAssignedToMeReport(Tracker $tracker, AgileDashboard_Kanban $kanban)
+    private function addAssignedToMeReport(Tracker $tracker, Kanban $kanban)
     {
         $reports = $this->report_factory->getReportsByTrackerId(
             $tracker->getId(),

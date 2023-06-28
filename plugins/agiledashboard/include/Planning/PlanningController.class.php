@@ -41,6 +41,7 @@ use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActio
 use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
 use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -94,7 +95,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private string $plugin_path;
     private AgileDashboard_KanbanManager $kanban_manager;
     private AgileDashboard_ConfigurationManager $config_manager;
-    private AgileDashboard_KanbanFactory $kanban_factory;
+    private KanbanFactory $kanban_factory;
     private PlanningPermissionsManager $planning_permissions_manager;
     private ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker;
     private ScrumPlanningFilter $scrum_planning_filter;
@@ -121,7 +122,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $plugin_path,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $scrum_planning_filter,

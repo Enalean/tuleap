@@ -21,7 +21,7 @@
 declare(strict_types=1);
 namespace Tuleap\Kanban\RealTimeMercure;
 
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -32,7 +32,7 @@ final class RealTimeArtifactMessageControllerMercure
     public const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
 
     public function __construct(
-        private readonly AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly KanbanFactory $kanban_factory,
         private readonly KanbanArtifactMessageSenderMercure $kanban_artifact_message_sender,
     ) {
     }

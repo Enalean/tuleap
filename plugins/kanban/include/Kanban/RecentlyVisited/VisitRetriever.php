@@ -31,7 +31,7 @@ final class VisitRetriever
 
     public function __construct(
         private RecentlyVisitedKanbanDao $dao,
-        private \AgileDashboard_KanbanFactory $kanban_factory,
+        private \Tuleap\Kanban\KanbanFactory $kanban_factory,
         private \TrackerFactory $tracker_factory,
     ) {
     }
@@ -59,7 +59,7 @@ final class VisitRetriever
     ): void {
         try {
             $kanban = $this->kanban_factory->getKanban($collection->getUser(), $kanban_id);
-        } catch (\AgileDashboard_KanbanCannotAccessException | \AgileDashboard_KanbanNotFoundException) {
+        } catch (\Tuleap\Kanban\KanbanCannotAccessException | \Tuleap\Kanban\KanbanNotFoundException) {
             return;
         }
 

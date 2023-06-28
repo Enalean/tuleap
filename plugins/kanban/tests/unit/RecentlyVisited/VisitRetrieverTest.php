@@ -52,7 +52,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
     /**
-     * @var \AgileDashboard_KanbanFactory&MockObject
+     * @var \Tuleap\Kanban\KanbanFactory&MockObject
      */
     private $kanban_factory;
     /**
@@ -66,7 +66,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = UserTestBuilder::buildWithId(self::USER_ID);
 
         $this->dao             = $this->createMock(\Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao::class);
-        $this->kanban_factory  = $this->createMock(\AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory  = $this->createMock(\Tuleap\Kanban\KanbanFactory::class);
         $this->tracker_factory = $this->createMock(\TrackerFactory::class);
     }
 
@@ -96,7 +96,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP]]);
         $this->kanban_factory->method('getKanban')
             ->with($this->user, self::FIRST_KANBAN_ID)
-            ->willThrowException(new \AgileDashboard_KanbanNotFoundException());
+            ->willThrowException(new \Tuleap\Kanban\KanbanNotFoundException());
 
         $collection = new HistoryEntryCollection($this->user);
         $this->getVisitHistory($collection);
@@ -111,7 +111,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP]]);
         $this->kanban_factory->method('getKanban')
             ->with($this->user, self::FIRST_KANBAN_ID)
-            ->willThrowException(new \AgileDashboard_KanbanCannotAccessException());
+            ->willThrowException(new \Tuleap\Kanban\KanbanCannotAccessException());
 
         $collection = new HistoryEntryCollection($this->user);
         $this->getVisitHistory($collection);
@@ -121,7 +121,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresKanbanOfUnknownTracker(): void
     {
-        $kanban = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
+        $kanban = new \Tuleap\Kanban\Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
 
         $this->dao->method('searchVisitByUserId')
             ->with(self::USER_ID, self::MAX_LENGTH)
@@ -141,8 +141,8 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildEntries(): void
     {
-        $kanban_1 = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
-        $kanban_2 = new \AgileDashboard_Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, self::SECOND_KANBAN_NAME);
+        $kanban_1 = new \Tuleap\Kanban\Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
+        $kanban_2 = new \Tuleap\Kanban\Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, self::SECOND_KANBAN_NAME);
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 

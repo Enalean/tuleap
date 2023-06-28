@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Kanban;
 
-use AgileDashboard_KanbanNotFoundException;
+use Tuleap\Kanban\KanbanNotFoundException;
 use EventManager;
 use TrackerFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
@@ -36,19 +36,19 @@ class BreadCrumbBuilder
      */
     private $tracker_factory;
     /**
-     * @var \AgileDashboard_KanbanFactory
+     * @var \Tuleap\Kanban\KanbanFactory
      */
     private $kanban_factory;
 
-    public function __construct(TrackerFactory $tracker_factory, \AgileDashboard_KanbanFactory $kanban_factory)
+    public function __construct(TrackerFactory $tracker_factory, \Tuleap\Kanban\KanbanFactory $kanban_factory)
     {
         $this->tracker_factory = $tracker_factory;
         $this->kanban_factory  = $kanban_factory;
     }
 
     /**
-     * @throws \AgileDashboard_KanbanCannotAccessException
-     * @throws \AgileDashboard_KanbanNotFoundException
+     * @throws \Tuleap\Kanban\KanbanCannotAccessException
+     * @throws \Tuleap\Kanban\KanbanNotFoundException
      */
     public function build(\PFUser $current_user, int $kanban_id): BreadCrumb
     {
@@ -58,7 +58,7 @@ class BreadCrumbBuilder
             $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($tracker, $current_user));
             return $tracker_crumb->getCrumb(self::CRUMB_IDENTIFIER);
         }
-        throw new AgileDashboard_KanbanNotFoundException();
+        throw new KanbanNotFoundException();
     }
 
     public function addKanbanCrumb(TrackerCrumbInContext $tracker_crumb)
@@ -82,8 +82,8 @@ class BreadCrumbBuilder
                         )
                     )
                 );
-            } catch (\AgileDashboard_KanbanCannotAccessException $e) {
-            } catch (\AgileDashboard_KanbanNotFoundException $e) {
+            } catch (\Tuleap\Kanban\KanbanCannotAccessException $e) {
+            } catch (\Tuleap\Kanban\KanbanNotFoundException $e) {
             }
         }
     }

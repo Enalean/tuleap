@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Kanban\KanbanFactory;
 
 final class AgileDashboardControllerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -54,7 +55,7 @@ final class AgileDashboardControllerTest extends \Tuleap\Test\PHPUnit\TestCase /
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var EventManager */
@@ -81,7 +82,7 @@ final class AgileDashboardControllerTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->kanban_manager             = Mockery::spy(AgileDashboard_KanbanManager::class);
         $this->config_manager             = Mockery::spy(AgileDashboard_ConfigurationManager::class);
         $this->tracker_factory            = Mockery::spy(TrackerFactory::class);
-        $this->kanban_factory             = Mockery::spy(AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory             = Mockery::spy(KanbanFactory::class);
         $this->event_manager              = Mockery::spy(EventManager::class);
         $this->service_crumb_builder      = Mockery::spy(AgileDashboardCrumbBuilder::class);
         $this->admin_crumb_builder        = Mockery::spy(AdministrationCrumbBuilder::class);

@@ -23,7 +23,7 @@ namespace Tuleap\Kanban\XML;
 use AgileDashboard_ConfigurationManager;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use AgileDashboard_KanbanManager;
 use Psr\Log\LoggerInterface;
 use PFUser;
@@ -39,7 +39,7 @@ final class KanbanXmlImporter
         private readonly AgileDashboard_KanbanManager $kanban_manager,
         private readonly AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
         private readonly AgileDashboard_KanbanColumnManager $dashboard_kanban_column_manager,
-        private readonly AgileDashboard_KanbanFactory $dashboard_kanban_factory,
+        private readonly KanbanFactory $dashboard_kanban_factory,
         private readonly AgileDashboard_KanbanColumnFactory $dashboard_kanban_column_factory,
     ) {
     }

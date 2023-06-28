@@ -52,6 +52,8 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
+use Tuleap\Kanban\KanbanUserPreferences;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\Widget\MyKanban;
 use Tuleap\Kanban\Widget\ProjectKanban;
 use Tuleap\Kanban\Widget\WidgetKanbanConfigDAO;
@@ -1120,11 +1122,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @return AgileDashboard_KanbanFactory
+     * @return KanbanFactory
      */
     private function getKanbanFactory()
     {
-        return new AgileDashboard_KanbanFactory(
+        return new KanbanFactory(
             TrackerFactory::instance(),
             new KanbanDao()
         );
@@ -1507,7 +1509,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         return new AgileDashboard_KanbanColumnFactory(
             new KanbanColumnDao(),
-            new AgileDashboard_KanbanUserPreferences()
+            new KanbanUserPreferences()
         );
     }
 

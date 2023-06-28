@@ -19,7 +19,7 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_SemanticStatusNotFoundException;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\Http\HttpClientFactory;
@@ -31,14 +31,14 @@ use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
 use Tuleap\Kanban\KanbanDao;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\KanbanNotFoundException;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use Tuleap\Kanban\KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
-use AgileDashboard_KanbanColumnNotFoundException;
+use Tuleap\Kanban\KanbanColumnNotFoundException;
 use AgileDashboard_UserNotAdminException;
 use AgileDashboard_KanbanColumnNotRemovableException;
 use AgileDashboardStatisticsAggregator;
@@ -46,7 +46,7 @@ use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 use PFUser;
-use AgileDashboard_KanbanUserPreferences;
+use Tuleap\Kanban\KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -61,7 +61,7 @@ class KanbanColumnsResource
     public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var AgileDashboard_KanbanColumnFactory */
@@ -92,7 +92,7 @@ class KanbanColumnsResource
     {
         $this->tracker_factory = TrackerFactory::instance();
 
-        $this->kanban_factory = new AgileDashboard_KanbanFactory(
+        $this->kanban_factory = new KanbanFactory(
             $this->tracker_factory,
             new KanbanDao()
         );
@@ -101,7 +101,7 @@ class KanbanColumnsResource
         $permissions_manager         = new AgileDashboard_PermissionsManager();
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
             $kanban_column_dao,
-            new AgileDashboard_KanbanUserPreferences()
+            new KanbanUserPreferences()
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
@@ -184,11 +184,11 @@ class KanbanColumnsResource
             if (isset($updated_column_properties->label) && ! $this->kanban_column_manager->updateLabel($current_user, $kanban, $column, $updated_column_properties->label)) {
                 throw new RestException(500);
             }
-        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
+        } catch (KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
+        } catch (SemanticStatusNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
         $this->statistics_aggregator->addWIPModificationHit(
@@ -250,9 +250,9 @@ class KanbanColumnsResource
 
         try {
             $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
-        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
+        } catch (KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
+        } catch (SemanticStatusNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
 
@@ -294,13 +294,13 @@ class KanbanColumnsResource
         }
     }
 
-    private function getKanban(PFUser $user, int $id): AgileDashboard_Kanban
+    private function getKanban(PFUser $user, int $id): Kanban
     {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 
@@ -312,12 +312,12 @@ class KanbanColumnsResource
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban): int
+    private function getProjectIdForKanban(Kanban $kanban): int
     {
         return (int) $this->getKanbanProject($kanban)->getGroupId();
     }
 
-    private function getKanbanProject(AgileDashboard_Kanban $kanban): \Project
+    private function getKanbanProject(Kanban $kanban): \Project
     {
         $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($kanban_tracker === null) {

@@ -31,7 +31,7 @@ class KanbanStructureRealTimeMercure
     ) {
     }
 
-    public function sendStructureUpdate(\AgileDashboard_Kanban $kanban): void
+    public function sendStructureUpdate(\Tuleap\Kanban\Kanban $kanban): void
     {
         $message = new MercureMessageDataPresenter(KanbanArtifactMessageSenderMercure::topicHelper($kanban->getId()), 'kanban_structure_update');
         $this->mercure_client->sendMessage($message);

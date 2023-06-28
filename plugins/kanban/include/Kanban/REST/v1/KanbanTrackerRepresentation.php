@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use TrackerFactory;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
@@ -46,7 +46,7 @@ final class KanbanTrackerRepresentation
         $this->uri = CompleteTrackerRepresentation::ROUTE . '/' . $id;
     }
 
-    public static function fromKanban(TrackerFactory $tracker_factory, AgileDashboard_Kanban $kanban): self
+    public static function fromKanban(TrackerFactory $tracker_factory, Kanban $kanban): self
     {
         $tracker = self::getTracker($tracker_factory, $kanban);
         return new self(
@@ -57,7 +57,7 @@ final class KanbanTrackerRepresentation
         );
     }
 
-    private static function getTracker(TrackerFactory $tracker_factory, AgileDashboard_Kanban $kanban): \Tracker
+    private static function getTracker(TrackerFactory $tracker_factory, Kanban $kanban): \Tracker
     {
         $tracker_id = $kanban->getTrackerId();
         $tracker    = $tracker_factory->getTrackerById($tracker_id);

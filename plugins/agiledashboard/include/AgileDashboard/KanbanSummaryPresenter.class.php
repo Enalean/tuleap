@@ -18,18 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanItemDao;
 
 class AgileDashboard_Presenter_KanbanSummaryPresenter
 {
-    /** @var AgileDashboard_Kanban */
+    /** @var Kanban */
     private $kanban;
 
     /** @var KanbanItemDao */
     private $kanban_item_dao;
 
     public function __construct(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         KanbanItemDao $kanban_item_dao,
     ) {
         $this->kanban          = $kanban;

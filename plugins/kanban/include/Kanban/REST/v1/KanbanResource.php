@@ -19,18 +19,18 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use AgileDashboard_KanbanActionsChecker;
-use AgileDashboard_KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanColumnDao;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
 use Tuleap\Kanban\KanbanDao;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
-use AgileDashboard_KanbanNotFoundException;
-use AgileDashboard_KanbanUserPreferences;
+use Tuleap\Kanban\KanbanNotFoundException;
+use Tuleap\Kanban\KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_UserNotAdminException;
 use AgileDashboardStatisticsAggregator;
@@ -149,7 +149,7 @@ final class KanbanResource extends AuthenticatedResource
     public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var ResourcesPatcher */
@@ -176,7 +176,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var AgileDashboard_PermissionsManager */
     private $permissions_manager;
 
-    /** @var AgileDashboard_KanbanUserPreferences */
+    /** @var KanbanUserPreferences */
     private $user_preferences;
 
     /** @var AgileDashboardStatisticsAggregator */
@@ -228,12 +228,12 @@ final class KanbanResource extends AuthenticatedResource
         $this->tracker_factory     = TrackerFactory::instance();
 
         $this->kanban_dao     = new KanbanDao();
-        $this->kanban_factory = new AgileDashboard_KanbanFactory(
+        $this->kanban_factory = new KanbanFactory(
             $this->tracker_factory,
             $this->kanban_dao
         );
 
-        $this->user_preferences      = new AgileDashboard_KanbanUserPreferences();
+        $this->user_preferences      = new KanbanUserPreferences();
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
             new KanbanColumnDao(),
             $this->user_preferences
@@ -620,14 +620,14 @@ final class KanbanResource extends AuthenticatedResource
         return $tracker_report_id;
     }
 
-    private function checkUserCanUpdateKanban(PFUser $user, AgileDashboard_Kanban $kanban): void
+    private function checkUserCanUpdateKanban(PFUser $user, Kanban $kanban): void
     {
         if (! $this->isUserAdmin($user, $kanban)) {
             throw new RestException(403);
         }
     }
 
-    private function isUserAdmin(PFUser $user, AgileDashboard_Kanban $kanban): bool
+    private function isUserAdmin(PFUser $user, Kanban $kanban): bool
     {
         $tracker = $this->getTrackerForKanban($kanban);
 
@@ -665,9 +665,9 @@ final class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 
@@ -716,7 +716,7 @@ final class KanbanResource extends AuthenticatedResource
         }
     }
 
-    private function getStatusField(AgileDashboard_Kanban $kanban, PFUser $user): Tracker_FormElement_Field_List
+    private function getStatusField(Kanban $kanban, PFUser $user): Tracker_FormElement_Field_List
     {
         $tracker      = $this->getTrackerForKanban($kanban);
         $status_field = $tracker->getStatusField();
@@ -733,7 +733,7 @@ final class KanbanResource extends AuthenticatedResource
     }
 
     private function moveArtifactsInBacklog(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         KanbanAddRepresentation $add,
     ): void {
@@ -741,7 +741,7 @@ final class KanbanResource extends AuthenticatedResource
     }
 
     private function moveArtifactsInArchive(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         KanbanAddRepresentation $add,
     ): void {
@@ -773,7 +773,7 @@ final class KanbanResource extends AuthenticatedResource
     }
 
     private function moveArtifactsInColumn(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         KanbanAddRepresentation $add,
         int $column_id,
@@ -795,7 +795,7 @@ final class KanbanResource extends AuthenticatedResource
     }
 
     private function validateIdsInAddAreInKanbanTracker(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         KanbanAddRepresentation $add,
     ): bool {
         $all_kanban_item_ids = [];
@@ -933,9 +933,9 @@ final class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 
@@ -1090,7 +1090,7 @@ final class KanbanResource extends AuthenticatedResource
         return $items_representation;
     }
 
-    private function columnIsInTracker(AgileDashboard_Kanban $kanban, PFUser $user, int $column_id): bool
+    private function columnIsInTracker(Kanban $kanban, PFUser $user, int $column_id): bool
     {
         $status_field = $this->getStatusField($kanban, $user);
 
@@ -1127,9 +1127,9 @@ final class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 
@@ -1548,7 +1548,7 @@ final class KanbanResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function checkColumnIdsExist(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids): void
+    private function checkColumnIdsExist(PFUser $user, Kanban $kanban, array $column_ids): void
     {
         foreach ($column_ids as $column_id) {
             if (! $this->columnIsInTracker($kanban, $user, $column_id)) {
@@ -1557,13 +1557,13 @@ final class KanbanResource extends AuthenticatedResource
         }
     }
 
-    private function getKanban(PFUser $user, int $id): AgileDashboard_Kanban
+    private function getKanban(PFUser $user, int $id): Kanban
     {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 
@@ -1575,7 +1575,7 @@ final class KanbanResource extends AuthenticatedResource
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getTrackerForKanban(AgileDashboard_Kanban $kanban): Tracker
+    private function getTrackerForKanban(Kanban $kanban): Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if (! $tracker) {
@@ -1585,19 +1585,19 @@ final class KanbanResource extends AuthenticatedResource
         return $tracker;
     }
 
-    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban): int
+    private function getProjectIdForKanban(Kanban $kanban): int
     {
         return (int) $this->getKanbanProject($kanban)->getGroupId();
     }
 
-    private function getReport(PFUser $user, AgileDashboard_Kanban $kanban, int $tracker_report_id): Tracker_Report
+    private function getReport(PFUser $user, Kanban $kanban, int $tracker_report_id): Tracker_Report
     {
         $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
 
         if ($report === null) {
             throw new RestException(404, "The report was not found");
         }
-        if ($report->getTracker()->getId() !== (int) $kanban->getTrackerId()) {
+        if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
             throw new RestException(400, "The provided report does not belong to the kanban tracker");
         }
         if (! $report->isPublic()) {
@@ -1671,7 +1671,7 @@ final class KanbanResource extends AuthenticatedResource
         }
     }
 
-    private function getKanbanProject(AgileDashboard_Kanban $kanban): \Project
+    private function getKanbanProject(Kanban $kanban): \Project
     {
         $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($kanban_tracker === null) {

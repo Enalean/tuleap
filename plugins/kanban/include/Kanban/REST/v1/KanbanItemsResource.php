@@ -19,13 +19,13 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanCannotAccessException;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanDao;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
-use AgileDashboard_KanbanNotFoundException;
+use Tuleap\Kanban\KanbanNotFoundException;
 use AgileDashboardStatisticsAggregator;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -83,7 +83,7 @@ use UserManager;
 
 final class KanbanItemsResource extends AuthenticatedResource
 {
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var TrackerFactory */
@@ -112,7 +112,7 @@ final class KanbanItemsResource extends AuthenticatedResource
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
 
-        $this->kanban_factory = new AgileDashboard_KanbanFactory(
+        $this->kanban_factory = new KanbanFactory(
             $this->tracker_factory,
             new KanbanDao()
         );
@@ -399,13 +399,13 @@ final class KanbanItemsResource extends AuthenticatedResource
         $fields_data[] = $representation;
     }
 
-    private function getKanban(PFUser $user, int $id): AgileDashboard_Kanban
+    private function getKanban(PFUser $user, int $id): Kanban
     {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             throw new RestException(404);
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             throw new RestException(403);
         }
 

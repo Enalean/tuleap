@@ -19,35 +19,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_Kanban
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+class Kanban
 {
-    /** @var int|string */
-    private $id;
-
-    /** @var int */
-    private $tracker_id;
-
-    /** @var string */
-    private $name;
-
-    public function __construct($id, $tracker_id, $name)
-    {
-        $this->id         = $id;
-        $this->tracker_id = $tracker_id;
-        $this->name       = $name;
+    public function __construct(
+        private readonly int $id,
+        private readonly int $tracker_id,
+        private readonly string $name,
+    ) {
     }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
-    public function getTrackerId()
+    public function getTrackerId(): int
     {
         return $this->tracker_id;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

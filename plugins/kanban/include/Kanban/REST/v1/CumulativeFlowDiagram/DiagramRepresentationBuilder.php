@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use DateTime;
 use PFUser;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
@@ -37,7 +37,7 @@ final class DiagramRepresentationBuilder
      * @throws TooManyPointsException
      */
     public function build(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         DateTime $start_date,
         DateTime $end_date,
@@ -54,7 +54,7 @@ final class DiagramRepresentationBuilder
      * @return DiagramColumnRepresentation[]
      */
     private function getColumnsRepresentation(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         array $dates,
     ): array {
