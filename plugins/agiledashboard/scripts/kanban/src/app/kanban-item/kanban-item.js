@@ -2,7 +2,7 @@ import angular from "angular";
 import "angular-gettext";
 import ngSanitize from "angular-sanitize";
 
-import card_fields from "@tuleap/plugin-agiledashboard-card-fields";
+import card_fields from "@tuleap/plugin-cardwall-card-fields";
 
 import KanbanItemDirective from "./kanban-item-directive.js";
 import TimeInfoComponent from "./time-info/time-info-component.js";

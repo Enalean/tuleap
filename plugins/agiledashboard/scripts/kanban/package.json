@@ -10,7 +10,7 @@
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/html-escaper": "workspace:*",
-    "@tuleap/plugin-agiledashboard-card-fields": "workspace:*",
+    "@tuleap/plugin-cardwall-card-fields": "workspace:*",
     "@tuleap/plugin-agiledashboard-shared": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/project-background": "workspace:*",

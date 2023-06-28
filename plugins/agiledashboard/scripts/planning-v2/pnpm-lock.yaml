@@ -4,9 +4,6 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
-  '@tuleap/plugin-agiledashboard-card-fields':
-    specifier: workspace:*
-    version: link:../lib/card-fields
   '@tuleap/plugin-agiledashboard-scrum-header':
     specifier: workspace:*
     version: link:../lib/scrum-header
@@ -16,6 +13,9 @@ dependencies:
   '@tuleap/plugin-agiledashboard-shared':
     specifier: workspace:*
     version: link:../lib/shared
+  '@tuleap/plugin-cardwall-card-fields':
+    specifier: workspace:*
+    version: link:../../../cardwall/scripts/lib/card-fields
   '@tuleap/plugin-tracker-artifact-modal':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/artifact-modal

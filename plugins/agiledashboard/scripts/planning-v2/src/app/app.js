@@ -29,7 +29,7 @@ import "moment/locale/fr.js";
 import "angular-gettext";
 import translations from "../../po/fr_FR.po";
 
-import card_fields from "@tuleap/plugin-agiledashboard-card-fields";
+import card_fields from "@tuleap/plugin-cardwall-card-fields";
 
 import MainController from "./main-controller.js";
 import PlanningConfig from "./app-config.js";

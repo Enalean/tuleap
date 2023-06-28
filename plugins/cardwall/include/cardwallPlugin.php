@@ -317,7 +317,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function getCSSURL()
     {
-        return $this->getAssets()->getFileURL('flamingparrot-theme.css');
+        return $this->getCssAssets()->getFileURL('flamingparrot-theme.css');
     }
 
     private function canIncludeStylesheets()
@@ -340,7 +340,11 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $assets = new IncludeAssets(__DIR__ . '/../../tracker/frontend-assets', '/assets/trackers');
                 $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'modal-v2.js'));
             }
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'cardwall.js'));
+            $cardwall_assets = new IncludeAssets(
+                __DIR__ . '/../scripts/legacy/frontend-assets/',
+                '/assets/cardwall/legacy/'
+            );
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($cardwall_assets, 'cardwall.js'));
         }
 
         if (HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
@@ -348,7 +352,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    private function getAssets(): IncludeAssets
+    private function getCssAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets/',
