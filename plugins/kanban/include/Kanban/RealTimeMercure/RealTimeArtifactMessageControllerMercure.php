@@ -18,36 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\RealTime;
+declare(strict_types=1);
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use AgileDashboard_KanbanFactory;
-use PFUser;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class RealTimeArtifactMessageController
+final class RealTimeArtifactMessageControllerMercure
 {
     public const EVENT_NAME_ARTIFACT_CREATED   = 'created';
     public const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
     public const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
-    /**
-     * @var AgileDashboard_KanbanFactory
-     */
-    private $kanban_factory;
-    /**
-     * @var KanbanArtifactMessageSender
-     */
-    private $kanban_artifact_message_sender;
 
     public function __construct(
-        AgileDashboard_KanbanFactory $kanban_factory,
-        KanbanArtifactMessageSender $kanban_artifact_message_sender,
+        private readonly AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly KanbanArtifactMessageSenderMercure $kanban_artifact_message_sender,
     ) {
-        $this->kanban_factory                 = $kanban_factory;
-        $this->kanban_artifact_message_sender = $kanban_artifact_message_sender;
     }
 
-    public function sendMessageForKanban(PFUser $user, Artifact $artifact, $event_name_artifact)
+    public function sendMessageForKanban(Artifact $artifact, string $event_name_artifact): void
     {
         $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
 
@@ -58,29 +48,27 @@ class RealTimeArtifactMessageController
         switch ($event_name_artifact) {
             case self::EVENT_NAME_ARTIFACT_CREATED:
                 $this->kanban_artifact_message_sender->sendMessageArtifactCreated(
-                    $user,
                     $artifact,
                     $kanban_id
                 );
                 break;
             case self::EVENT_NAME_ARTIFACT_UPDATED:
                 $this->kanban_artifact_message_sender->sendMessageArtifactUpdated(
-                    $user,
                     $artifact,
                     $kanban_id
                 );
 
                 $this->kanban_artifact_message_sender->sendMessageArtifactMoved(
-                    $user,
                     $artifact,
-                    $kanban_id
+                    $kanban_id,
+                    Tracker_Semantic_Status::load($artifact->getTracker())
                 );
                 break;
             case self::EVENT_NAME_ARTIFACT_REORDERED:
                 $this->kanban_artifact_message_sender->sendMessageArtifactReordered(
-                    $user,
                     $artifact,
-                    $kanban_id
+                    $kanban_id,
+                    Tracker_Semantic_Status::load($artifact->getTracker())
                 );
                 break;
         }

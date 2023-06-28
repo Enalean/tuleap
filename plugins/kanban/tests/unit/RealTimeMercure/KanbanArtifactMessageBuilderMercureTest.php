@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban\RealTimeMercure;
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tracker_Artifact_ChangesetFactory;
 use Tuleap\Test\PHPUnit\TestCase;

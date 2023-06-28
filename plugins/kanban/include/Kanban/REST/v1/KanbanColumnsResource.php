@@ -24,7 +24,7 @@ use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Kanban\Realtime\KanbanStructureRealTimeMercure;
+use Tuleap\Kanban\RealTimeMercure\KanbanStructureRealTimeMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;

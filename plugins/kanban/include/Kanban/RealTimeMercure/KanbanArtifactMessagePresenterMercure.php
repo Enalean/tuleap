@@ -17,24 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tuleap\Kanban\Realtime;
+namespace Tuleap\Kanban\RealTimeMercure;
 
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSenderMercure;
-use Tuleap\RealTimeMercure\Client;
-use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
-
-class KanbanStructureRealTimeMercure
+final class KanbanArtifactMessagePresenterMercure
 {
-    public function __construct(
-        private Client $mercure_client,
-    ) {
-    }
-
-    public function sendStructureUpdate(\AgileDashboard_Kanban $kanban): void
+    public static function present(string $cmd, array $data): string
     {
-        $message = new MercureMessageDataPresenter(KanbanArtifactMessageSenderMercure::topicHelper($kanban->getId()), 'kanban_structure_update');
-        $this->mercure_client->sendMessage($message);
+        $serialise = [
+            'cmd' => $cmd,
+            'data' => $data,
+        ];
+        return json_encode($serialise);
     }
 }

@@ -19,12 +19,13 @@
  */
 
 declare(strict_types=1);
-namespace Tuleap\AgileDashboard\Kanban\RealTimeMercure;
 
-class KanbanArtifactMovedMessageRepresentationMercure
+namespace Tuleap\Kanban\RealTimeMercure;
+
+final class KanbanArtifactMovedMessageRepresentationMercure
 {
     /**
-     * @var array of all items ids in the destination column.
+     * @param array $ordered_destination_column_items_ids all items ids in the destination column.
      *
      * There may be kanban items that the current user cannot see (because
      * of permissions). Let's call this hidden item H.
@@ -37,17 +38,12 @@ class KanbanArtifactMovedMessageRepresentationMercure
      * kanban app places items that it knows about and ignores those the
      * user can't see.
      */
-    public array $ordered_destination_column_items_ids;
-    public int $artifact_id;
-    public int|string $in_column;
-    public int|string $from_column;
-
-    public function __construct(array $ordered_destination_column_items_ids, int $artifact_id, int|string $in_column, int|string $from_column)
-    {
-        $this->ordered_destination_column_items_ids = $ordered_destination_column_items_ids;
-        $this->artifact_id                          = $artifact_id;
-        $this->in_column                            = $in_column;
-        $this->from_column                          = $from_column;
+    public function __construct(
+        public readonly array $ordered_destination_column_items_ids,
+        public readonly int $artifact_id,
+        public readonly int|string $in_column,
+        public readonly int|string $from_column,
+    ) {
     }
 
     public function toArray(): array

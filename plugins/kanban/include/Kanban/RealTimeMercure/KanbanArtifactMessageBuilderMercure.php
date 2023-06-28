@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban\RealTime;
+declare(strict_types=1);
+
+namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tuleap\Kanban\KanbanItemDao;
 use Tracker_Artifact_ChangesetFactory;
@@ -27,7 +29,7 @@ use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 
-class KanbanArtifactMessageBuilder
+class KanbanArtifactMessageBuilderMercure
 {
     public function __construct(
         private readonly KanbanItemDao $kanban_item_dao,
@@ -35,12 +37,9 @@ class KanbanArtifactMessageBuilder
     ) {
     }
 
-    /**
-     * @return KanbanArtifactUpdatedMessageRepresentation
-     */
-    public function buildArtifactUpdated(Artifact $artifact)
+    public function buildArtifactUpdated(Artifact $artifact): KanbanArtifactUpdatedMessageRepresentationMercure
     {
-        return new KanbanArtifactUpdatedMessageRepresentation(
+        return new KanbanArtifactUpdatedMessageRepresentationMercure(
             $artifact->getId()
         );
     }
@@ -48,10 +47,9 @@ class KanbanArtifactMessageBuilder
     /**
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactMoved(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
+    public function buildArtifactMoved(Artifact $artifact, Tracker_Semantic_Status $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
     {
-        $tracker_semantic = Tracker_Semantic_Status::load($artifact->getTracker());
-        $status_field     = $tracker_semantic->getField();
+        $status_field = $tracker_semantic->getField();
 
         if ($status_field === null) {
             return null;
@@ -91,7 +89,7 @@ class KanbanArtifactMessageBuilder
         $in_column   = $this->getKanbanColumn($values, $current_status, $is_none_current_status, $is_open_current_status);
         $from_column = $this->getKanbanColumn($values, $previous_status, $is_none_previous_status, $is_open_previous_status);
 
-        return new KanbanArtifactMovedMessageRepresentation(
+        return new KanbanArtifactMovedMessageRepresentationMercure(
             $this->getItemsIdsInColumn($artifact, $values, $in_column, $current_status),
             $artifact->getId(),
             $in_column,
@@ -102,10 +100,9 @@ class KanbanArtifactMessageBuilder
     /**
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactReordered(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
+    public function buildArtifactReordered(Artifact $artifact, Tracker_Semantic_Status $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
     {
-        $tracker_semantic = Tracker_Semantic_Status::load($artifact->getTracker());
-        $status_field     = $tracker_semantic->getField();
+        $status_field = $tracker_semantic->getField();
 
         if ($status_field === null) {
             return null;
@@ -124,7 +121,7 @@ class KanbanArtifactMessageBuilder
         $is_open_current_status = $tracker_semantic->isOpenValue($current_status);
         $in_column              = $this->getKanbanColumn($values, $current_status, $is_none_current_status, $is_open_current_status);
 
-        return new KanbanArtifactMovedMessageRepresentation(
+        return new KanbanArtifactMovedMessageRepresentationMercure(
             $this->getItemsIdsInColumn($artifact, $values, $in_column, $current_status),
             $artifact->getId(),
             $in_column,
@@ -135,7 +132,7 @@ class KanbanArtifactMessageBuilder
     /**
      * @return int|string
      */
-    private function getKanbanColumn(array $values, $status, $is_none_status, $is_open_status)
+    private function getKanbanColumn(array $values, ?string $status, bool $is_none_status, bool $is_open_status)
     {
         if ($is_none_status) {
             $column = ColumnIdentifier::BACKLOG_COLUMN;
@@ -151,7 +148,7 @@ class KanbanArtifactMessageBuilder
     /**
      * @return int
      */
-    private function getColumnId(array $values, $status)
+    private function getColumnId(array $values, ?string $status)
     {
         $column_id = 0;
 
@@ -167,7 +164,7 @@ class KanbanArtifactMessageBuilder
     /**
      * @return array
      */
-    private function getItemsIdsInColumn(Artifact $artifact, array $values, $in_column, $status)
+    private function getItemsIdsInColumn(Artifact $artifact, array $values, string|int $in_column, ?string $status)
     {
         $column_item_ids = [];
 
