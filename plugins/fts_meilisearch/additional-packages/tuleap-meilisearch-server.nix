@@ -50,6 +50,8 @@ in pkgs.stdenvNoCC.mkDerivation {
   srcs = [
     "${tuleapMeilisearchBin}/bin/tuleap-meilisearch"
     ./tuleap-meilisearch-server/tuleap-meilisearch.service
+    ./tuleap-meilisearch-server/tuleap-meilisearch-config-change.service
+    ./tuleap-meilisearch-server/tuleap-meilisearch-config-change.path
   ];
 
   nativeBuildInputs = [ pkgs.rpm ];
