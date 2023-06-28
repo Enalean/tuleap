@@ -40,52 +40,22 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 
-class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ROADMAP_ID           = 42;
     private const PROJECT_ID           = 101;
     private const ITERATION_TRACKER_ID = 111;
 
-    /**
-     * @var IterationsRetriever
-     */
-    private $retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RoadmapWidgetDao
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\URLVerification
-     */
-    private $url_verification;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    private $tracker_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker
-     */
-    private $tracker;
+    private IterationsRetriever $retriever;
+    private \PHPUnit\Framework\MockObject\MockObject&RoadmapWidgetDao $dao;
+    private \PHPUnit\Framework\MockObject\MockObject $project_manager;
+    private \PHPUnit\Framework\MockObject\MockObject&\UserManager $user_manager;
+    private \PHPUnit\Framework\MockObject\MockObject&\URLVerification $url_verification;
+    private \PHPUnit\Framework\MockObject\MockObject&TrackerFactory $tracker_factory;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory $artifact_factory;
+    private \PFUser $user;
+    private \PHPUnit\Framework\MockObject\MockObject&Tracker $tracker;
 
     protected function setUp(): void
     {

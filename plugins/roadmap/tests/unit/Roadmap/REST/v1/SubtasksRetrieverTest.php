@@ -40,18 +40,9 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const EXPECTED_SUBTASK_ID          = 1002;
     private const OUT_OF_DATE_SUBTASK_ID       = 1003;
 
-    /**
-     * @var SubtasksRetriever
-     */
-    private $retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \PFUser
-     */
-    private $user;
+    private SubtasksRetriever $retriever;
+    private \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory $artifact_factory;
+    private \PFUser $user;
 
     protected function setUp(): void
     {

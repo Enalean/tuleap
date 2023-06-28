@@ -60,12 +60,12 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \PFUser $user;
     private \Project $project;
-    private RoadmapWidgetDao|MockObject $dao;
-    private \URLVerification|MockObject $url_verification;
-    private SemanticTimeframeBuilder|MockObject $semantic_timeframe_builder;
-    private \Tracker_ArtifactFactory|MockObject $artifact_factory;
-    private RoadmapTasksOutOfDateFilter|MockObject $tasks_filter;
-    private SemanticProgressBuilder|MockObject $progress_builder;
+    private RoadmapWidgetDao&MockObject $dao;
+    private \URLVerification&MockObject $url_verification;
+    private SemanticTimeframeBuilder&MockObject $semantic_timeframe_builder;
+    private \Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private RoadmapTasksOutOfDateFilter&MockObject $tasks_filter;
+    private SemanticProgressBuilder&MockObject $progress_builder;
 
     protected function setUp(): void
     {
@@ -563,7 +563,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => false]);
+        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
@@ -1172,7 +1172,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function mockDate(MockObject $date_field, array $values): void
+    private function mockDate(MockObject&\Tracker_FormElement_Field_Date $date_field, array $values): void
     {
         $date_field
             ->method('getLastChangesetValue')
@@ -1181,7 +1181,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockEffort(MockObject $effort_field, array $values): void
+    private function mockEffort(MockObject&\Tracker_FormElement_Field_Numeric $effort_field, array $values): void
     {
         $effort_field
             ->method('getLastChangesetValue')

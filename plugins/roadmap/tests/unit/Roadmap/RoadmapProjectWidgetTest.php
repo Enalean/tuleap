@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenter;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
@@ -33,14 +34,9 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const WIDGET_CONTENT_ID = 13;
 
-    /**
-     * @var RoadmapProjectWidget
-     */
-    private $widget;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|RoadmapWidgetPresenterBuilder
-     */
-    private $presenter_builder;
+    private RoadmapProjectWidget $widget;
+    private RoadmapWidgetPresenterBuilder&MockObject $presenter_builder;
+    private RoadmapWidgetDao&MockObject $dao;
 
     protected function setUp(): void
     {
