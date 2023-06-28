@@ -49,7 +49,10 @@ import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
 import "./creation/ArtifactCreatorElement";
 import type { ArtifactCreatorController } from "../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type {
+    LinkedArtifact,
+    LinkedArtifactIdentifier,
+} from "../../../../domain/fields/link-field/LinkedArtifact";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 
 export interface LinkField {
@@ -73,6 +76,7 @@ type InternalLinkField = LinkField & {
     is_loading_links: boolean;
     linked_artifacts: ReadonlyArray<LinkedArtifact>;
     linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter>;
+    parent_artifacts: ReadonlyArray<LinkedArtifactIdentifier>;
     new_artifact_title: string;
 };
 export type HostElement = InternalLinkField & HTMLElement;
@@ -134,9 +138,16 @@ export const setLinkedArtifacts = (
         return [];
     }
 
-    host.linked_artifact_presenters = new_value.map((artifact) =>
+    const parents = new_value.filter((link) => host.parent_artifacts.includes(link.identifier));
+    const not_parents = new_value.filter(
+        (link) => !host.parent_artifacts.includes(link.identifier)
+    );
+    const sorted_links = [...parents, ...not_parents];
+
+    host.linked_artifact_presenters = sorted_links.map((artifact) =>
         LinkedArtifactPresenter.fromLinkedArtifact(
             artifact,
+            parents.includes(artifact),
             host.controller.isMarkedForRemoval(artifact)
         )
     );
@@ -286,6 +297,9 @@ export const LinkField = define<InternalLinkField>({
                     controller.getAllowedLinkTypes()
                 );
             controller.getLinkedArtifacts(getSubmitDisabledForLinksReason()).then((artifacts) => {
+                host.parent_artifacts = artifacts
+                    .filter((link) => LinkType.isReverseChild(link.link_type))
+                    .map((link) => link.identifier);
                 host.linked_artifacts = artifacts;
                 host.is_loading_links = false;
             });
@@ -308,6 +322,7 @@ export const LinkField = define<InternalLinkField>({
     allowed_link_types: { set: setAllowedTypes },
     linked_artifacts: { set: setLinkedArtifacts },
     linked_artifact_presenters: { set: (host, new_value) => new_value ?? [] },
+    parent_artifacts: { set: (host, new_value) => new_value ?? [] },
     is_loading_links: true,
     new_links_presenter: { set: setNewLinks },
     current_link_type: current_link_type_descriptor,

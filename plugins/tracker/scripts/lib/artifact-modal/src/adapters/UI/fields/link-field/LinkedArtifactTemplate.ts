@@ -36,6 +36,7 @@ const getStatusBadgeClassesWithRemoval = (artifact: LinkedArtifactPresenter): Ma
 
 const getArtifactRowClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => ({
     "link-field-row": true,
+    "link-field-parent-row": artifact.is_parent,
     "link-field-row-muted": artifact.status !== null && !artifact.is_open,
 });
 

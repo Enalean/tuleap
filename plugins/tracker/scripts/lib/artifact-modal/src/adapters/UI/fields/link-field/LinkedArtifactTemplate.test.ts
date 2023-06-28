@@ -37,7 +37,10 @@ import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkM
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type {
+    LinkedArtifact,
+    LinkedArtifactIdentifier,
+} from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
@@ -79,8 +82,8 @@ describe(`LinkedArtifactTemplate`, () => {
         updateFunction(host, target);
     };
 
-    it.each([
-        [
+    function* generateLinkedArtifactPresenters(): Generator<[string, LinkedArtifactPresenter]> {
+        yield [
             "open artifact, not marked for removal",
             LinkedArtifactPresenter.fromLinkedArtifact(
                 LinkedArtifactStub.withDefaults({
@@ -92,10 +95,11 @@ describe(`LinkedArtifactTemplate`, () => {
                     is_open: true,
                     link_type: LinkTypeStub.buildChildLinkType(),
                 }),
+                true,
                 false
             ),
-        ],
-        [
+        ];
+        yield [
             "closed artifact, marked for removal",
             LinkedArtifactPresenter.fromLinkedArtifact(
                 LinkedArtifactStub.withDefaults({
@@ -107,57 +111,57 @@ describe(`LinkedArtifactTemplate`, () => {
                     is_open: false,
                     link_type: LinkTypeStub.buildUntyped(),
                 }),
+                false,
                 true
             ),
-        ],
-    ])(`will render a linked artifact`, (_type_of_presenter, presenter) => {
-        render(presenter);
+        ];
+        yield [
+            "a parent artifact",
+            LinkedArtifactPresenter.fromLinkedArtifact(
+                LinkedArtifactStub.withIdAndType(815, LinkTypeStub.buildChildLinkType()),
+                true,
+                false
+            ),
+        ];
+    }
 
-        const row = selectOrThrow(target, "[data-test=artifact-row]");
-        const link = selectOrThrow(target, "[data-test=artifact-link]", HTMLAnchorElement);
-        const xref = selectOrThrow(target, "[data-test=artifact-xref]");
-        const title = selectOrThrow(target, "[data-test=artifact-title]");
-        const status = selectOrThrow(target, "[data-test=artifact-status]");
+    it.each([...generateLinkedArtifactPresenters()])(
+        `will render a linked artifact`,
+        (_type_of_presenter, presenter) => {
+            render(presenter);
 
-        expect(link.href).toBe(presenter.uri);
-        expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
-        expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
-        expect(title.textContent?.trim()).toBe(presenter.title);
-        expect(status.textContent?.trim()).toBe(presenter.status?.value);
+            const row = selectOrThrow(target, "[data-test=artifact-row]");
+            const link = selectOrThrow(target, "[data-test=artifact-link]", HTMLAnchorElement);
+            const xref = selectOrThrow(target, "[data-test=artifact-xref]");
+            const title = selectOrThrow(target, "[data-test=artifact-title]");
+            const status = selectOrThrow(target, "[data-test=artifact-status]");
 
-        expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
-        expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
-        expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
-    });
+            expect(link.href).toBe(presenter.uri);
+            expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
+            expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
+            expect(title.textContent?.trim()).toBe(presenter.title);
+            expect(status.textContent?.trim()).toBe(presenter.status?.value);
 
-    it(`will render a linked artifact with no color`, () => {
+            expect(row.classList.contains("link-field-parent-row")).toBe(presenter.is_parent);
+            expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
+            expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
+            expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
+        }
+    );
+
+    it(`will render a linked artifact with no status color`, () => {
         const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
             LinkedArtifactStub.withDefaults({
-                identifier: LinkedArtifactIdentifierStub.withId(123),
-                title: "A parent",
-                xref: ArtifactCrossReferenceStub.withRefAndColor("art #123", "red-wine"),
-                uri: "/url/to/artifact/123",
                 status: { value: "Open", color: null },
-                is_open: true,
-                link_type: LinkTypeStub.buildChildLinkType(),
             }),
+            false,
             false
         );
         render(presenter);
 
-        const row = selectOrThrow(target, "[data-test=artifact-row]");
-        const link = selectOrThrow(target, "[data-test=artifact-link]", HTMLAnchorElement);
-        const xref = selectOrThrow(target, "[data-test=artifact-xref]");
-        const title = selectOrThrow(target, "[data-test=artifact-title]");
         const status = selectOrThrow(target, "[data-test=artifact-status]");
 
-        expect(link.href).toBe(presenter.uri);
-        expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
-        expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
-        expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
-
-        expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
@@ -199,10 +203,12 @@ describe(`LinkedArtifactTemplate`, () => {
 
             const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
             const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
+            const parent_artifacts: ReadonlyArray<LinkedArtifactIdentifier> = [];
             const host = {
                 current_artifact_reference,
                 linked_artifacts,
                 linked_artifact_presenters,
+                parent_artifacts,
                 allowed_link_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
                 controller,
             } as HostElement;
@@ -225,6 +231,7 @@ describe(`LinkedArtifactTemplate`, () => {
             ): void => {
                 const linked_artifact_presenter = LinkedArtifactPresenter.fromLinkedArtifact(
                     linked_artifact,
+                    false,
                     is_marked_for_removal
                 );
                 const update = getActionButton(host, linked_artifact_presenter);
@@ -284,6 +291,7 @@ describe(`LinkedArtifactTemplate`, () => {
             const render = (host: HostElement, linked_artifact: LinkedArtifact): void => {
                 const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
                     linked_artifact,
+                    false,
                     false
                 );
                 const update = getTypeTemplate(host, presenter);

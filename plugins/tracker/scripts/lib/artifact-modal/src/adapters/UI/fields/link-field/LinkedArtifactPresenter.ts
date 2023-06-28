@@ -20,15 +20,18 @@
 import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 
 export interface LinkedArtifactPresenter extends LinkedArtifact {
+    readonly is_parent: boolean;
     readonly is_marked_for_removal: boolean;
 }
 
 export const LinkedArtifactPresenter = {
     fromLinkedArtifact: (
         artifact: LinkedArtifact,
+        is_parent: boolean,
         is_marked_for_removal: boolean
     ): LinkedArtifactPresenter => ({
         ...artifact,
+        is_parent,
         is_marked_for_removal,
     }),
 };

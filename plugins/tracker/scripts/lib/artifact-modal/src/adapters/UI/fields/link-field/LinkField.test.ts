@@ -54,6 +54,8 @@ import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactL
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field/LinkedArtifact";
+import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 
 describe("LinkField", () => {
     let doc: Document;
@@ -98,7 +100,7 @@ describe("LinkField", () => {
 
             const renderField = (): void => {
                 const presenters: ReadonlyArray<LinkedArtifactPresenter> = linked_artifacts.map(
-                    (artifact) => LinkedArtifactPresenter.fromLinkedArtifact(artifact, false)
+                    (artifact) => LinkedArtifactPresenter.fromLinkedArtifact(artifact, false, false)
                 );
                 const host = {
                     linked_artifact_presenters: presenters,
@@ -118,6 +120,7 @@ describe("LinkField", () => {
                 linked_artifacts = [
                     LinkedArtifactPresenter.fromLinkedArtifact(
                         LinkedArtifactStub.withDefaults(),
+                        false,
                         false
                     ),
                 ];
@@ -245,9 +248,10 @@ describe("LinkField", () => {
         });
 
         describe("link setters", () => {
-            let has_parent_link: boolean;
+            let has_parent_link: boolean, parent_artifacts: ReadonlyArray<LinkedArtifactIdentifier>;
             beforeEach(() => {
                 has_parent_link = false;
+                parent_artifacts = [];
             });
 
             const getHost = (): HostElement => {
@@ -259,6 +263,7 @@ describe("LinkField", () => {
                         isMarkedForRemoval: (link) => (link ? false : false),
                     },
                     linked_artifact_presenters,
+                    parent_artifacts,
                 } as HostElement;
             };
 
@@ -272,6 +277,35 @@ describe("LinkField", () => {
                     const host = getHost();
                     setLinkedArtifacts(host, [LinkedArtifactStub.withDefaults()]);
                     expect(host.linked_artifact_presenters).toHaveLength(1);
+                });
+
+                it(`should sort the parent links at the beginning of the list of linked artifacts
+                    and mark the presenters with "is_parent"`, () => {
+                    const first_parent_id = LinkedArtifactIdentifierStub.withId(89),
+                        second_parent_id = LinkedArtifactIdentifierStub.withId(27),
+                        first_other_id = LinkedArtifactIdentifierStub.withId(73),
+                        second_other_id = LinkedArtifactIdentifierStub.withId(46);
+                    parent_artifacts = [first_parent_id, second_parent_id];
+                    const linked_artifacts = [
+                        LinkedArtifactStub.withDefaults({ identifier: first_other_id }),
+                        LinkedArtifactStub.withDefaults({ identifier: first_parent_id }),
+                        LinkedArtifactStub.withDefaults({ identifier: second_other_id }),
+                        LinkedArtifactStub.withDefaults({ identifier: second_parent_id }),
+                    ];
+                    const host = getHost();
+                    setLinkedArtifacts(host, linked_artifacts);
+
+                    expect(host.linked_artifact_presenters).toHaveLength(4);
+                    const [first_link, second_link, third_link, fourth_link] =
+                        host.linked_artifact_presenters;
+                    expect(first_link.identifier).toBe(first_parent_id);
+                    expect(first_link.is_parent).toBe(true);
+                    expect(second_link.identifier).toBe(second_parent_id);
+                    expect(second_link.is_parent).toBe(true);
+                    expect(third_link.identifier).toBe(first_other_id);
+                    expect(third_link.is_parent).toBe(false);
+                    expect(fourth_link.identifier).toBe(second_other_id);
+                    expect(fourth_link.is_parent).toBe(false);
                 });
 
                 it("should refresh allowed types when linked artifacts have been retrieved", () => {
