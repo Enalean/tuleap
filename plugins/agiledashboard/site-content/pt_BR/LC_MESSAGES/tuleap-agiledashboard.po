@@ -314,12 +314,6 @@ msgstr ""
 msgid "Kanban successfully activated."
 msgstr ""
 
-msgid "Kanban title is empty."
-msgstr ""
-
-msgid "Kanban title successfully modified."
-msgstr ""
-
 msgid "Make sure to check their configuration."
 msgstr ""
 
@@ -574,11 +568,6 @@ msgid ""
 msgstr ""
 
 msgid "This tracker is not a planning tracker"
-msgstr ""
-
-msgid ""
-"This will be used to identify the Kanban section from the Agile Dashboard "
-"homepage."
 msgstr ""
 
 msgid ""

@@ -19,29 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 
 class AgileDashboard_ConfigurationManager
 {
-    public const DEFAULT_SCRUM_TITLE  = 'Scrum';
-    public const DEFAULT_KANBAN_TITLE = 'Kanban';
-
-    /**
-     * @var AgileDashboard_ConfigurationDao
-     */
-    private $dao;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
+    public const DEFAULT_SCRUM_TITLE = 'Scrum';
 
     public function __construct(
-        AgileDashboard_ConfigurationDao $dao,
-        Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
+        private readonly AgileDashboard_ConfigurationDao $dao,
+        private readonly Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
-        $this->dao              = $dao;
-        $this->event_dispatcher = $event_dispatcher;
     }
 
     public function kanbanIsActivatedForProject($project_id)
@@ -80,30 +67,17 @@ class AgileDashboard_ConfigurationManager
         return self::DEFAULT_SCRUM_TITLE;
     }
 
-    public function getKanbanTitle($project_id)
-    {
-        $row = $this->dao->getKanbanTitle($project_id);
-
-        if ($row) {
-            return $row['kanban_title'];
-        }
-
-        return self::DEFAULT_KANBAN_TITLE;
-    }
-
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,
         $kanban_is_activated,
         $scrum_title,
-        $kanban_title,
-    ) {
+    ): void {
         $this->dao->updateConfiguration(
             $project_id,
             $scrum_is_activated,
             $kanban_is_activated,
             $scrum_title,
-            $kanban_title
         );
     }
 

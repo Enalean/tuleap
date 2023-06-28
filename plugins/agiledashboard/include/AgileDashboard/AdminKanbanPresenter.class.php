@@ -26,9 +26,6 @@ class AdminKanbanPresenter
     /** @var bool */
     public $kanban_activated;
 
-    /** @var string */
-    public $kanban_title;
-
     /** @var bool */
     public $has_kanban;
 
@@ -41,13 +38,11 @@ class AdminKanbanPresenter
     public function __construct(
         $group_id,
         $kanban_activated,
-        $kanban_title,
         $has_kanban,
         bool $is_scrum_accessible,
     ) {
         $this->group_id            = $group_id;
         $this->kanban_activated    = $kanban_activated;
-        $this->kanban_title        = $kanban_title;
         $this->has_kanban          = $has_kanban;
         $this->is_scrum_accessible = $is_scrum_accessible;
     }
@@ -65,16 +60,6 @@ class AdminKanbanPresenter
     public function activate_kanban_label()
     {
         return dgettext('tuleap-agiledashboard', 'Activate Kanban');
-    }
-
-    public function title_label()
-    {
-        return dgettext('tuleap-agiledashboard', 'Title');
-    }
-
-    public function title_label_help()
-    {
-        return dgettext('tuleap-agiledashboard', 'This will be used to identify the Kanban section from the Agile Dashboard homepage.');
     }
 
     public function kanban_activated_label()

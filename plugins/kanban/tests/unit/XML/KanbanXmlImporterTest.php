@@ -154,7 +154,6 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 0,
                 1,
                 Mockery::any(),
-                Mockery::any(),
             )->once();
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
@@ -205,7 +204,6 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 1,
                 Mockery::any(),
-                Mockery::any(),
             )->once();
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
@@ -249,7 +247,6 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 0,
                 1,
                 Mockery::any(),
-                Mockery::any(),
             )->once();
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
 
@@ -291,7 +288,6 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 101,
                 0,
                 1,
-                Mockery::any(),
                 Mockery::any(),
             )->once();
         $this->kanban_manager->shouldReceive('createKanban')->times(2)->andReturn(9, 10);

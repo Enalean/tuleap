@@ -42,9 +42,6 @@
                         <input type="checkbox" name="activate-kanban" value="1" {{# kanban_activated }} checked {{/ kanban_activated }} data-test="admin-kanban-activate-checkbox">
                         {{ activate_kanban_label }}
                     </label>
-                    <label for="kanban-title-admin">{{ title_label }}</label>
-                    <input id="kanban-title-admin" name="kanban-title-admin" type="text" required value="{{ kanban_title }}" placeholder="{{ title_label }}">
-                    <p class="help-block"><i class="fa fa-info-circle"></i> {{ title_label_help }}</p>
                     {{{ token }}}
                     <button type="submit" class="btn btn-primary" id="ad-service-submit" data-test="ad-service-submit">{{ config_submit_label }}</button>
                 </div>

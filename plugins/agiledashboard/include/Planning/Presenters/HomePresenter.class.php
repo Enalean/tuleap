@@ -52,9 +52,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     /** @var string */
     public $scrum_title;
 
-    /** @var string */
-    public $kanban_title;
-
     public function __construct(
         $milestone_access_presenters,
         $group_id,
@@ -67,7 +64,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $scrum_activated,
         $scrum_is_configured,
         $scrum_title,
-        $kanban_title,
         $is_user_admin,
         $is_mono_milestone_enabled,
         bool $is_planning_management_delegated,
@@ -83,7 +79,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $this->scrum_activated                 = $scrum_activated;
         $this->scrum_is_configured             = $scrum_is_configured;
         $this->scrum_title                     = $scrum_title;
-        $this->kanban_title                    = $kanban_title;
         $this->is_mono_milestone_enabled       = $is_mono_milestone_enabled;
     }
 

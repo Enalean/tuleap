@@ -50,11 +50,6 @@ class AgileDashboardKanbanConfigurationUpdater
 
     public function updateConfiguration()
     {
-        if (! $this->request->exist('kanban-title-admin')) {
-            $this->response->missingKanbanTitle();
-            return;
-        }
-
         $kanban_is_activated = $this->getActivatedKanban();
 
         $this->config_manager->updateConfiguration(
@@ -62,7 +57,6 @@ class AgileDashboardKanbanConfigurationUpdater
             $this->config_manager->scrumIsActivatedForProject($this->request->getProject()),
             $kanban_is_activated,
             $this->config_manager->getScrumTitle($this->project_id),
-            $this->getKanbanTitle()
         );
 
         if ($kanban_is_activated) {
@@ -82,22 +76,5 @@ class AgileDashboardKanbanConfigurationUpdater
         }
 
         return $kanban_is_activated;
-    }
-
-    private function getKanbanTitle()
-    {
-        $old_kanban_title = $this->config_manager->getKanbanTitle($this->project_id);
-        $kanban_title     = trim($this->request->get('kanban-title-admin'));
-
-        if ($kanban_title !== $old_kanban_title) {
-            $this->response->kanbanTitleChanged();
-        }
-
-        if ($kanban_title == '') {
-            $this->response->emptyKanbanTitle();
-            $kanban_title = $old_kanban_title;
-        }
-
-        return $kanban_title;
     }
 }
