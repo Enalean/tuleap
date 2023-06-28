@@ -50,23 +50,11 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * @var Tracker_FormElement_Field_List_Value[]
      */
     protected $field_values = null;
-
-    /** @var Tracker_RulesManager */
     private $global_rules_manager;
-
-    /** @var Tracker_Workflow_Trigger_RulesManager */
-    private $trigger_rules_manager;
-
-    /** @var WorkflowBackendLogger */
-    private $logger;
-
-    private $disabled = false;
-
-    /**
-     * @var BeforeEvent
-     */
-    private $before_event;
-
+    private Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager;
+    private WorkflowBackendLogger $logger;
+    private bool $disabled             = false;
+    private ?BeforeEvent $before_event = null;
     /**
      * @var bool
      */
@@ -322,8 +310,8 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Execute actions after transition happens (if there is one)
      *
-     * @param array                      $fields_data        Request field data (array[field_id] => data)
-     * @param Tracker_Artifact_Changeset $new_changeset      The changeset that has just been created
+     * @param array $fields_data Request field data (array[field_id] => data)
+     * @param Tracker_Artifact_Changeset $new_changeset The changeset that has just been created
      * @param ?Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
      *
      * @return void
@@ -416,15 +404,17 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $this->disabled = true;
     }
 
-   /**
-    * Indicates if permissions on a field can be bypassed
-    *
-    * @param Tracker_FormElement_Field $field
-    *
-    * @return bool true if the permissions on the field can be bypassed, false otherwise
-    */
-    public function bypassPermissions($field)
+    public function isDisabled(): bool
     {
+        return $this->disabled;
+    }
+
+    public function bypassPermissions(Tracker_FormElement_Field $field): bool
+    {
+        if ($this->disabled === true) {
+            return true;
+        }
+
         $transitions = $this->getTransitions();
         foreach ($transitions as $transition) {
             if ($transition->bypassPermissions($field)) {

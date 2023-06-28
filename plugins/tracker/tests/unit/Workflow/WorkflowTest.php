@@ -29,26 +29,25 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $transition_factory_test;
-    private $transition_factory_instance;
-    private $transition_null_to_open;
-    private $transition_open_to_close;
-    private $open_value_id  = 801;
-    private $close_value_id = 802;
-    private $trigger_rules_manager;
-    private $status_field;
-    private $current_user;
-    private $workflow;
-    private $unused_workflow;
-    private $unused_legacy_workflow;
-    private $artifact;
-    private $event_manager;
+    private TransitionFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface $transition_factory_instance;
+    private \Mockery\LegacyMockInterface|Transition|\Mockery\MockInterface $transition_null_to_open;
+    private \Mockery\LegacyMockInterface|Transition|\Mockery\MockInterface $transition_open_to_close;
+    private int $open_value_id  = 801;
+    private int $close_value_id = 802;
+    private \Mockery\LegacyMockInterface|Tracker_Workflow_Trigger_RulesManager|\Mockery\MockInterface $trigger_rules_manager;
+    private Tracker_FormElement_Field_Selectbox $status_field;
+    private PFUser $current_user;
+    private Workflow|\Mockery\LegacyMockInterface|\Mockery\MockInterface $workflow;
+    private Workflow|\Mockery\LegacyMockInterface|\Mockery\MockInterface $unused_workflow;
+    private Workflow|\Mockery\LegacyMockInterface|\Mockery\MockInterface $unused_legacy_workflow;
+    private \Tuleap\Tracker\Artifact\Artifact|\Mockery\MockInterface|\Mockery\LegacyMockInterface $artifact;
+    private EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface $event_manager;
 
 
     protected function setUp(): void
     {
         $this->transition_factory_instance = \Mockery::spy(TransitionFactory::class);
-        $this->transition_factory_test     = new class ($this->transition_factory_instance) extends TransitionFactory
-        {
+        $this->transition_factory_test     = new class ($this->transition_factory_instance) extends TransitionFactory {
             public function __construct($transition_factory_instance)
             {
                 parent::$_instance = $transition_factory_instance;
@@ -60,15 +59,14 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
             }
         };
 
-        $this->status_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $this->status_field->shouldReceive('getId')->andReturns(103);
+        $this->status_field = \Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder::aListField(103)->build();
 
         $open_value  = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $close_value = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
 
         $open_value->shouldReceive('getId')->andReturns($this->open_value_id);
         $close_value->shouldReceive('getId')->andReturns($this->close_value_id);
-        $this->current_user = \Mockery::spy(\PFUser::class);
+        $this->current_user = \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build();
 
         $this->transition_null_to_open  = \Mockery::spy(\Transition::class);
         $this->transition_open_to_close = \Mockery::spy(\Transition::class);
@@ -259,7 +257,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $logger                = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
 
         $workflow = \Mockery::mock(\Workflow::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $workflow->__construct($global_rules_manager, $trigger_rules_manager, $logger, 1, 2, 103, 1, $transitions);
+        $workflow->__construct($global_rules_manager, $trigger_rules_manager, $logger, 1, 2, 103, 1, false, false, $transitions);
 
         $pm = \Mockery::spy(\PermissionsManager::class);
         $pm->shouldReceive('getAuthorizedUgroups')->andReturns($ugroups_transition);
@@ -492,6 +490,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $retriever = Mockery::mock(TransitionRetriever::class);
         $retriever->shouldReceive('retrieveTransition')->andReturn($transition);
 
+
         $workflow->shouldReceive('getTransitionRetriever')->andReturn($retriever);
 
         $transition->shouldReceive('validate')->once()->andReturns(false);
@@ -607,5 +606,46 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $workflow->disable();
 
         $workflow->checkGlobalRules($fields_data);
+    }
+
+    public function testPermissionsAreByPassedWhenWorkflowIsDisabled(): void
+    {
+        $rules_manager = $this->createStub(\Tracker_RulesManager::class);
+        $workflow      = new Workflow(
+            $rules_manager,
+            $this->trigger_rules_manager,
+            new WorkflowBackendLogger($this->createStub(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+            1,
+            123,
+            42,
+            true,
+            false,
+            false,
+            []
+        );
+
+        $workflow->disable();
+
+        self::assertTrue($workflow->bypassPermissions($this->status_field));
+    }
+
+    public function testPermissionsAreByPassedWhenTransitionIsMarkedAsByPassed(): void
+    {
+        $this->workflow->shouldReceive('getTransitions')->andReturns([
+            $this->transition_null_to_open,
+        ]);
+        $this->transition_null_to_open->shouldReceive("bypassPermissions")->andReturnTrue();
+
+        self::assertTrue($this->workflow->bypassPermissions($this->status_field));
+    }
+
+    public function testPermissionsMustBeApplied(): void
+    {
+        $this->workflow->shouldReceive('getTransitions')->andReturns([
+            $this->transition_null_to_open,
+        ]);
+        $this->transition_null_to_open->shouldReceive("bypassPermissions")->andReturnFalse();
+
+        self::assertFalse($this->workflow->bypassPermissions($this->status_field));
     }
 }
