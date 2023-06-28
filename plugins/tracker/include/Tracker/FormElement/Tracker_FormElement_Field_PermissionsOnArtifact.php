@@ -555,7 +555,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return ProjectUGroup[]
      */
-    private function getAllUserGroups()
+    public function getAllUserGroups()
     {
         $user_groups     = [];
         $permission_type = self::PERMISSION_TYPE;

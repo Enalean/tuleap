@@ -22,26 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\User\UserGroup\NameTranslator;
 
-final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupValuesCanBeFullyMoved
+final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBeFullyMoved
 {
-    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact): bool
-    {
+    public function canAllPermissionsBeFullyMoved(
+        Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
+        Tracker_FormElement_Field_PermissionsOnArtifact $target_field,
+        Artifact $artifact,
+    ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
-        if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
+        if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_PermissionsOnArtifact) {
             return false;
         }
 
-        $list_field_values          = array_values($last_changeset_value->getListValues());
-        $destinations_values_labels = array_map(static fn($value) => $value->getLabel(), $target_field->getAllValues());
+        $selected_user_groups    = $last_changeset_value->getUgroupNamesFromPerms();
+        $destination_user_groups = array_map(static fn($user_group) => $user_group->getName(), $target_field->getAllUserGroups());
 
-        foreach ($list_field_values as $value) {
-            assert($value instanceof \Tracker_FormElement_Field_List_Bind_UgroupsValue);
-            $user_group_name = NameTranslator::getUserGroupDisplayName($value->getUGroupName());
-
-            if (! in_array($user_group_name, $destinations_values_labels, true)) {
+        foreach ($selected_user_groups as $selected_user_group) {
+            if (! in_array($selected_user_group, $destination_user_groups, true)) {
                 return false;
             }
         }

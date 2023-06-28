@@ -33,6 +33,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
     public function __construct(
         private readonly MoveChangesetXMLUpdater $move_changeset_XML_updater,
         private readonly UpdateBindValueByDuckTyping $duck_typing_updater,
+        private readonly UpdatePermissionsByDuckTyping $permissions_by_duck_typing,
     ) {
     }
 
@@ -144,6 +145,10 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
 
             if ($source_field instanceof \Tracker_FormElement_Field_List && $target_field instanceof \Tracker_FormElement_Field_List) {
                 $this->duck_typing_updater->updateValueForDuckTypingMove($changeset_xml, $source_field, $target_field, $index);
+            }
+
+            if ($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact && $target_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact) {
+                $this->permissions_by_duck_typing->updatePermissionsForDuckTypingMove($changeset_xml, $target_field, $index);
             }
 
             $this->move_changeset_XML_updater->useTargetTrackerFieldName($changeset_xml, $target_field, $index);
