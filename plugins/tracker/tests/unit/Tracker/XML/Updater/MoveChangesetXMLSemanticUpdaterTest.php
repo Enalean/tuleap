@@ -41,7 +41,8 @@ use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingUserValue;
+use Tuleap\Tracker\Test\Stub\RetrieveMatchingUserValueStub;
 use Tuleap\Tracker\Test\Stub\UpdateBindValueForSemanticStub;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
@@ -54,7 +55,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
     private PFUser $submitter;
     private Tracker&Mockery\MockInterface $tracker;
     private EventManager&Mockery\MockInterface $event_manager;
-    private FieldValueMatcher&Mockery\MockInterface $value_matcher;
+    private RetrieveMatchingUserValue $value_matcher;
     private MoveTitleSemanticChecker&Mockery\MockInterface $title_semantic_checker;
     private MoveDescriptionSemanticChecker&Mockery\MockInterface $description_semantic_checker;
     private MoveStatusSemanticChecker&Mockery\MockInterface $status_semantic_checker;
@@ -72,7 +73,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->submitter                       = UserTestBuilder::anActiveUser()->withId(101)->build();
         $this->tracker                         = Mockery::mock(Tracker::class);
         $this->event_manager                   = Mockery::mock(EventManager::class);
-        $this->value_matcher                   = Mockery::mock(FieldValueMatcher::class);
+        $this->value_matcher                   = RetrieveMatchingUserValueStub::withMatchingUser();
         $this->title_semantic_checker          = Mockery::mock(MoveTitleSemanticChecker::class);
         $this->description_semantic_checker    = Mockery::mock(MoveDescriptionSemanticChecker::class);
         $this->status_semantic_checker         = Mockery::mock(MoveStatusSemanticChecker::class);
@@ -355,16 +356,6 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
             ->with($this->tracker, $target_tracker)
             ->andReturns(false);
 
-        $this->value_matcher
-            ->shouldReceive('getMatchingValueByDuckTyping')
-            ->with($source_status_field, $target_status_field, 101)
-            ->andReturn(201);
-
-        $this->value_matcher
-            ->shouldReceive('getMatchingValueByDuckTyping')
-            ->with($source_status_field, $target_status_field, 105)
-            ->andReturn(205);
-
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
@@ -464,18 +455,6 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
             ->shouldReceive('areSemanticsAligned')
             ->with($this->tracker, $target_tracker)
             ->andReturns(true);
-
-        $this->value_matcher
-            ->shouldReceive('isSourceUserValueMatchingATargetUserValue')
-            ->andReturn(true);
-
-        $this->value_matcher
-            ->shouldReceive('isSourceUserValueMatchingATargetUserValue')
-            ->andReturn(false);
-
-        $this->value_matcher
-            ->shouldReceive('isSourceUserValueMatchingATargetUserValue')
-            ->andReturn(true);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;

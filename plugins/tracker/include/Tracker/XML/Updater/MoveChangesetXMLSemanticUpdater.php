@@ -34,7 +34,7 @@ use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingUserValue;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class MoveChangesetXMLSemanticUpdater
@@ -47,7 +47,7 @@ final class MoveChangesetXMLSemanticUpdater
         private readonly MoveContributorSemanticChecker $contributor_semantic_checker,
         private readonly \EventManager $event_manager,
         private readonly UpdateBindValueForSemantic $update_bind_value,
-        private readonly FieldValueMatcher $field_value_matcher,
+        private readonly RetrieveMatchingUserValue $field_value_matcher,
     ) {
     }
 
