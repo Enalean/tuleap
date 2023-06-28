@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid "Add Kanban to dashboard"
+msgstr "Ajouter Kanban au tableau de bord"
+
+msgid "Add to dashboard"
+msgstr "Ajouter au tableau de bord"
+
+msgid "Add to my dashboard"
+msgstr "Ajouter à mon tableau de bord"
+
+msgid "Add to project dashboard"
+msgstr "Ajouter au tableau de bord du projet"
+
+msgid "Agile dashboard"
+msgstr "Tableau de bord agile"
+
+msgid ""
+"Displays a board to see the tasks to do, in progress, done etc. Please go on "
+"a kanban to add it."
+msgstr ""
+"Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
+"Veuillez aller sur un kanban pour l’ajouter."
+
+msgid "Kanban not found."
+msgstr "Le Kanban requis n'a pas pu être trouvé."
+
+msgid "There is no content you can see"
+msgstr "Il n’y a aucun élément visible"

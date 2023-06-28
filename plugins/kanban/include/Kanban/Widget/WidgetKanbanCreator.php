@@ -18,43 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use Codendi_Request;
 
 class WidgetKanbanCreator
 {
-    /**
-     * @var WidgetKanbanDao
-     */
-    private $widget_kanban_dao;
-
-    public function __construct(WidgetKanbanDao $widget_kanban_dao)
+    public function __construct(private readonly WidgetKanbanDao $widget_kanban_dao)
     {
-        $this->widget_kanban_dao = $widget_kanban_dao;
     }
 
-    /**
-     * @param $owner_id
-     * @param $owner_type
-     */
-    public function create(Codendi_Request $request, $owner_id, $owner_type)
+    public function create(Codendi_Request $request, int $owner_id, string $owner_type): int
     {
         $kanban            = $request->get('kanban');
-        $kanban_id         = $kanban['id'];
-        $kanban_title      = $kanban['title'];
+        $kanban_id         = (int) $kanban['id'];
+        $kanban_title      = (string) $kanban['title'];
         $tracker_report_id = (int) $request->get('tracker_report_id');
 
         return $this->createKanbanWidget($owner_id, $owner_type, $kanban_id, $kanban_title, $tracker_report_id);
     }
 
     public function createKanbanWidget(
-        $owner_id,
-        $owner_type,
-        $kanban_id,
-        $kanban_title,
-        $tracker_report_id,
-    ) {
+        int $owner_id,
+        string $owner_type,
+        int $kanban_id,
+        string $kanban_title,
+        int $tracker_report_id,
+    ): int {
         return $this->widget_kanban_dao->createKanbanWidget(
             $owner_id,
             $owner_type,

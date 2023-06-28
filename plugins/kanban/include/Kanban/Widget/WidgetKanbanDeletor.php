@@ -18,33 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
-use KanbanPresenter;
-
-class WidgetKanbanPresenter
+final class WidgetKanbanDeletor
 {
-    /**
-     * @var KanbanPresenter|null
-     */
-    public $kanban_presenter;
-    public $is_empty;
-    public $error_message;
-    /**
-     * @var string
-     */
-    public $empty_state;
+    public function __construct(private readonly WidgetKanbanDao $widget_kanban_dao)
+    {
+    }
 
-    public function __construct(
-        $is_empty,
-        $error_message,
-        ?KanbanPresenter $kanban_presenter = null,
-    ) {
-        $this->kanban_presenter = $kanban_presenter;
-        $this->is_empty         = $is_empty;
-        $this->error_message    = $error_message;
-        $this->there_is_error   = ! empty($this->error_message);
-
-        $this->empty_state = dgettext('tuleap-agiledashboard', "There is no content you can see");
+    public function delete(int $id, int $owner_id, string $owner_type): void
+    {
+        $this->widget_kanban_dao->deleteKanbanWidget($id, $owner_id, $owner_type);
     }
 }

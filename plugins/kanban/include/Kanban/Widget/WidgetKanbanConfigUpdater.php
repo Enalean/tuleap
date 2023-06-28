@@ -18,29 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use Tracker_Report;
 
 class WidgetKanbanConfigUpdater
 {
-    /**
-     * @var WidgetKanbanConfigDAO
-     */
-    private $config_dao;
-
-    public function __construct(
-        WidgetKanbanConfigDAO $config_dao,
-    ) {
-        $this->config_dao = $config_dao;
+    public function __construct(private readonly WidgetKanbanConfigDAO $config_dao)
+    {
     }
 
     public function updateConfiguration(
-        $widget_id,
-        $tracker_report_id,
-    ) {
+        int $widget_id,
+        int $tracker_report_id,
+    ): void {
         if (! $tracker_report_id) {
-            return $this->config_dao->deleteConfigForWidgetId($widget_id);
+            $this->config_dao->deleteConfigForWidgetId($widget_id);
         }
 
         $this->config_dao->createNewConfigForWidgetId(
@@ -49,8 +42,8 @@ class WidgetKanbanConfigUpdater
         );
     }
 
-    public function deleteConfigurationForWidgetMatchingReportId(Tracker_Report $report)
+    public function deleteConfigurationForWidgetMatchingReportId(Tracker_Report $report): void
     {
-        $this->config_dao->deleteConfigurationForWidgetMatchingReportId($report->getId());
+        $this->config_dao->deleteConfigurationForWidgetMatchingReportId((int) $report->getId());
     }
 }

@@ -64,9 +64,11 @@
     </element>
     <optional>
       <element name="kanban_list">
-        <attribute name="title">
-          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-        </attribute>
+        <optional>
+          <attribute name="title">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </optional>
         <zeroOrMore>
           <element name="kanban">
             <attribute name="ID">

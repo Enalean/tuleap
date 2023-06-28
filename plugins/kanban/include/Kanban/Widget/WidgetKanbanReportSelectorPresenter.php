@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
-class WidgetKanbanRetriever
+final class WidgetKanbanReportSelectorPresenter
 {
-    /**
-     * @var WidgetKanbanDao
-     */
-    private $widget_kanban_dao;
-
-    public function __construct(WidgetKanbanDao $widget_kanban_dao)
+    public function __construct(public readonly array $widget_tracker_reports)
     {
-        $this->widget_kanban_dao = $widget_kanban_dao;
-    }
-
-    public function searchWidgetById($id, $owner_id, $owner_type)
-    {
-        return $this->widget_kanban_dao->searchWidgetById($id, $owner_id, $owner_type);
     }
 }

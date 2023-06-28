@@ -52,6 +52,16 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
+use Tuleap\Kanban\Widget\MyKanban;
+use Tuleap\Kanban\Widget\ProjectKanban;
+use Tuleap\Kanban\Widget\WidgetKanbanConfigDAO;
+use Tuleap\Kanban\Widget\WidgetKanbanConfigRetriever;
+use Tuleap\Kanban\Widget\WidgetKanbanConfigUpdater;
+use Tuleap\Kanban\Widget\WidgetKanbanCreator;
+use Tuleap\Kanban\Widget\WidgetKanbanDao;
+use Tuleap\Kanban\Widget\WidgetKanbanDeletor;
+use Tuleap\Kanban\Widget\WidgetKanbanRetriever;
+use Tuleap\Kanban\Widget\WidgetKanbanXMLImporter;
 use Tuleap\Kanban\XML\KanbanXmlImporter;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
@@ -78,15 +88,6 @@ use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\Tracker\TrackerHierarchyUpdateChecker;
 use Tuleap\AgileDashboard\Tracker\TrackersCannotBeLinkedWithHierarchyException;
-use Tuleap\AgileDashboard\Widget\MyKanban;
-use Tuleap\AgileDashboard\Widget\ProjectKanban;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigRetriever;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigUpdater;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
-use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionFactory;
@@ -209,6 +210,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindTextDomain('tuleap-agiledashboard', AGILEDASHBOARD_BASE_DIR . '/../site-content');
+        bindTextDomain('tuleap-kanban', __DIR__ . '/../../kanban/site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -736,7 +738,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function configureAtXMLImport(\Tuleap\Widget\Event\ConfigureAtXMLImport $event)
     {
         if ($event->getWidget()->getId() === ProjectKanban::NAME) {
-            $xml_import = new \Tuleap\AgileDashboard\Widget\WidgetKanbanXMLImporter();
+            $xml_import = new WidgetKanbanXMLImporter();
             $xml_import->configureWidget($event);
         }
     }

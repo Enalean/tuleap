@@ -69,20 +69,8 @@ msgstr "Activer Scrum"
 msgid "Activate count elements mode for burnup chart"
 msgstr "Activer le mode comptage d'éléments pour le burnup"
 
-msgid "Add Kanban to dashboard"
-msgstr "Ajouter Kanban au tableau de bord"
-
 msgid "Add a kanban"
 msgstr "Ajouter un kanban"
-
-msgid "Add to dashboard"
-msgstr "Ajouter au tableau de bord"
-
-msgid "Add to my dashboard"
-msgstr "Ajouter à mon tableau de bord"
-
-msgid "Add to project dashboard"
-msgstr "Ajouter au tableau de bord du projet"
 
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
@@ -95,9 +83,6 @@ msgstr "Administration du dashboard agile"
 
 msgid "Agile Dashboard administration"
 msgstr "Administration de l'Agile Dashboard"
-
-msgid "Agile dashboard"
-msgstr "Tableau de bord agile"
 
 msgid "AgileDashboard service"
 msgstr "Le service Dashboard agile"
@@ -221,13 +206,6 @@ msgstr ""
 "du backlog d'un programme."
 
 msgid ""
-"Displays a board to see the tasks to do, in progress, done etc. Please go on "
-"a kanban to add it."
-msgstr ""
-"Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
-"Veuillez aller sur un kanban pour l’ajouter."
-
-msgid ""
 "Do you really want to force burnup cache regeneration? The burnup will be "
 "unavailable for a few minutes if you do."
 msgstr ""
@@ -273,9 +251,6 @@ msgstr "Exporter la configuration"
 
 msgid "Field used by semantic"
 msgstr "Champ utilisé par la sémantique"
-
-msgid "Filter:"
-msgstr "Filtre :"
 
 msgid "Force cache regeneration"
 msgstr "Reconstruire le cache"
@@ -400,9 +375,6 @@ msgstr "Aucun tracker n'a été sélectionné."
 
 msgid "No tracker is available."
 msgstr "Aucun tracker n'est disponible."
-
-msgid "None"
-msgstr "Aucun"
 
 msgid ""
 "Note:<br>Importing a template will create new trackers. The import will not "
@@ -603,9 +575,6 @@ msgstr "L'outil de suivi %s n'a pas été trouvé"
 
 msgid "There are no milestones for this period"
 msgstr "Il n'y a aucun jalon pour cette période"
-
-msgid "There is no content you can see"
-msgstr "Il n’y a aucun élément visible"
 
 msgid "There is no item yet"
 msgstr "Il n’y a aucun élément pour l'instant"

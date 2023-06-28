@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use AgileDashboard_Kanban;
 use CSRFSynchronizerToken;
@@ -32,24 +32,13 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 
 class WidgetAddToDashboardDropdownRepresentationBuilder
 {
-    /**
-     * @var UserDashboardRetriever
-     */
-    private $user_dashboard_retriever;
-    /**
-     * @var ProjectDashboardRetriever
-     */
-    private $project_dashboard_retriever;
-
     public function __construct(
-        UserDashboardRetriever $user_dashboard_retriever,
-        ProjectDashboardRetriever $project_dashboard_retriever,
+        private readonly UserDashboardRetriever $user_dashboard_retriever,
+        private readonly ProjectDashboardRetriever $project_dashboard_retriever,
     ) {
-        $this->user_dashboard_retriever    = $user_dashboard_retriever;
-        $this->project_dashboard_retriever = $project_dashboard_retriever;
     }
 
-    public function build(AgileDashboard_Kanban $kanban, PFUser $user, Project $project)
+    public function build(AgileDashboard_Kanban $kanban, PFUser $user, Project $project): WidgetAddToDashboardDropdownRepresentation
     {
         $my_dashboards_presenters      = $this->getAvailableDashboardsForUser($user);
         $project_dashboards_presenters = $this->getAvailableDashboardsForProject($project);
@@ -64,7 +53,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         );
     }
 
-    private function getAddToMyDashboardURL(AgileDashboard_Kanban $kanban)
+    private function getAddToMyDashboardURL(AgileDashboard_Kanban $kanban): string
     {
         $csrf = new CSRFSynchronizerToken('/my/');
         return $this->getAddToDashboardURL(
@@ -75,7 +64,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         );
     }
 
-    private function getAddToProjectDashboardURL(AgileDashboard_Kanban $kanban, Project $project)
+    private function getAddToProjectDashboardURL(AgileDashboard_Kanban $kanban, Project $project): string
     {
         $csrf = new CSRFSynchronizerToken('/project/');
         return $this->getAddToDashboardURL(
@@ -83,15 +72,15 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
             $kanban,
             ProjectKanban::NAME,
             ProjectDashboardController::DASHBOARD_TYPE
-        ) . '&group_id=' . urlencode($project->getID());
+        ) . '&group_id=' . urlencode((string) $project->getID());
     }
 
     private function getAddToDashboardURL(
         CSRFSynchronizerToken $csrf,
         AgileDashboard_Kanban $kanban,
-        $widget_id,
-        $type,
-    ) {
+        string $widget_id,
+        string $type,
+    ): string {
         return '/widgets/?' . http_build_query(
             [
                 'dashboard-type'      => $type,
@@ -106,7 +95,10 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         );
     }
 
-    private function getAvailableDashboardsForUser(PFUser $user)
+    /**
+     * @return DashboardRepresentation[]
+     */
+    private function getAvailableDashboardsForUser(PFUser $user): array
     {
         $user_dashboards_representation = [];
         $user_dashboards                = $this->user_dashboard_retriever->getAllUserDashboards($user);
@@ -117,7 +109,10 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         return $user_dashboards_representation;
     }
 
-    private function getAvailableDashboardsForProject(Project $project)
+    /**
+     * @return DashboardRepresentation[]
+     */
+    private function getAvailableDashboardsForProject(Project $project): array
     {
         $project_dashboards_representation = [];
         $project_dashboards                = $this->project_dashboard_retriever->getAllProjectDashboards($project);

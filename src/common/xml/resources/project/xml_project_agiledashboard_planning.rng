@@ -64,9 +64,11 @@
     </element>
     <optional>
       <element name="kanban_list">
-        <attribute name="title">
-          <data type="string"/>
-        </attribute>
+        <optional>
+          <attribute name="title">
+            <data type="string"/>
+          </attribute>
+        </optional>
         <zeroOrMore>
           <element name="kanban">
             <attribute name="ID">
