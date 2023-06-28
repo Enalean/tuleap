@@ -24,13 +24,34 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, useStore } from "vuex";
 import FolderContainer from "./FolderContainer.vue";
 import { useRoute } from "vue-router";
+import { watch } from "vue";
+import { useState } from "vuex-composition-helpers";
 
 export default {
     name: "ChildFolder",
     components: { FolderContainer },
+    setup() {
+        const route = useRoute();
+        const store = useStore();
+        const { current_folder } = useState(["current_folder"]);
+        watch(
+            () => route.path,
+            () => {
+                if (route.name === "preview") {
+                    store.dispatch("toggleQuickLook", parseInt(route.params.preview_item_id, 10));
+                    return;
+                }
+
+                store.dispatch("removeQuickLook");
+                if (current_folder && current_folder.id !== route.params.item_id) {
+                    store.dispatch("loadFolder", parseInt(route.params.item_id, 10));
+                }
+            }
+        );
+    },
     computed: {
         ...mapState(["current_folder", "currently_previewed_item"]),
     },

@@ -108,4 +108,24 @@ describe("ChildFolder", () => {
         expect(toggle_quick_look).toHaveBeenCalledWith(expect.anything(), 20);
         expect(load_folder).not.toHaveBeenCalled();
     });
+
+    it(`Given route is updated to "folder" and given folder has changed (=> redirection into a folder)
+        Then the folder is loaded`, async () => {
+        state.current_folder = { id: 10, title: "current folder" };
+        await router.push({
+            name: "preview",
+            params: {
+                preview_item_id: 10,
+            },
+        });
+        factory();
+        await router.push({
+            name: "folder",
+            params: {
+                item_id: 20,
+            },
+        });
+        expect(remove_quick_look).toHaveBeenCalled();
+        expect(load_folder).toHaveBeenCalledWith(expect.anything(), 20);
+    });
 });
