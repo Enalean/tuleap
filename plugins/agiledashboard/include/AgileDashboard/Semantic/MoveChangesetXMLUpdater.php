@@ -26,33 +26,15 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
 
 class MoveChangesetXMLUpdater
 {
-    /**
-     * @var AgileDashboard_Semantic_InitialEffortFactory
-     */
-    private $initial_effort_factory;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-
-    /**
-     * @var FieldValueMatcher
-     */
-    private $field_value_matcher;
-
     public function __construct(
-        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        Tracker_FormElementFactory $tracker_form_element_factory,
-        FieldValueMatcher $field_value_matcher,
+        private readonly AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        private readonly Tracker_FormElementFactory $tracker_form_element_factory,
+        private readonly RetrieveMatchingValueByDuckTyping $field_value_matcher,
     ) {
-        $this->initial_effort_factory       = $initial_effort_factory;
-        $this->tracker_form_element_factory = $tracker_form_element_factory;
-        $this->field_value_matcher          = $field_value_matcher;
     }
 
     /**
@@ -70,6 +52,7 @@ class MoveChangesetXMLUpdater
         $field_change                = $changeset_xml->field_change[$index];
 
         if (
+            $source_initial_effort_field &&
             $target_initial_effort_field &&
             $this->isFieldChangeCorrespondingToTitleSemanticField($field_change, $source_initial_effort_field)
         ) {
@@ -122,12 +105,15 @@ class MoveChangesetXMLUpdater
         Tracker_FormElement_Field $source_initial_effort_field,
         Tracker_FormElement_Field $target_initial_effort_field,
         FeedbackFieldCollectorInterface $feedback_field_collector,
-    ) {
+    ): void {
         $xml_value = (int) $field_change->value;
 
         if ($xml_value === 0) {
             return;
         }
+
+        assert($source_initial_effort_field instanceof \Tracker_FormElement_Field_List);
+        assert($target_initial_effort_field instanceof \Tracker_FormElement_Field_List);
 
         $value = $this->field_value_matcher->getMatchingValueByDuckTyping(
             $source_initial_effort_field,

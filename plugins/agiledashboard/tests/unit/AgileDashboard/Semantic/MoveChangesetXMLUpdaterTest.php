@@ -30,50 +30,25 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 
-class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var MoveChangesetXMLUpdater
-     */
-    private $updater;
-    /**
-     * @var Tracker_FormElementFactory&Mockery\MockInterface
-     */
-    private $form_element_factory;
-    /**
-     * @var FieldValueMatcher&Mockery\MockInterface
-     */
-    private $field_value_matcher;
+    private MoveChangesetXMLUpdater $updater;
+    private Tracker_FormElementFactory&Mockery\MockInterface $form_element_factory;
+    private RetrieveMatchingValueByDuckTyping $field_value_matcher;
     private NoFeedbackFieldCollector $collector;
     private SimpleXMLElement $changeset_xml;
-    /**
-     * @var Tracker&Mockery\MockInterface
-     */
-    private $source_tracker;
-    /**
-     * @var Tracker&Mockery\MockInterface
-     */
-    private $target_tracker;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $source_initial_effort_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $target_initial_effort_field;
-    /**
-     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
-     */
-    private $source_initial_effort_semantic;
-    /**
-     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
-     */
-    private $target_initial_effort_semantic;
+    private Tracker $source_tracker;
+    private Tracker $target_tracker;
+    private Tracker_FormElement_Field&Mockery\MockInterface $source_initial_effort_field;
+    private Tracker_FormElement_Field&Mockery\MockInterface $target_initial_effort_field;
+    private AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface $source_initial_effort_semantic;
+    private AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface $target_initial_effort_semantic;
 
     public function setUp(): void
     {
@@ -81,7 +56,7 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $initial_effort_factory     = Mockery::mock(AgileDashboard_Semantic_InitialEffortFactory::class);
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->field_value_matcher  = Mockery::mock(FieldValueMatcher::class);
+        $this->field_value_matcher  = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([]);
         $this->updater              = new MoveChangesetXMLUpdater(
             $initial_effort_factory,
             $this->form_element_factory,
@@ -105,8 +80,8 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             . '    </field_change>'
             . '  </changeset>');
 
-        $this->source_tracker                 = Mockery::mock(Tracker::class);
-        $this->target_tracker                 = Mockery::mock(Tracker::class);
+        $this->source_tracker                 = TrackerTestBuilder::aTracker()->build();
+        $this->target_tracker                 = TrackerTestBuilder::aTracker()->build();
         $this->source_initial_effort_field    = Mockery::mock(Tracker_FormElement_Field::class);
         $this->target_initial_effort_field    = Mockery::mock(Tracker_FormElement_Field::class);
         $this->source_initial_effort_semantic = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
@@ -125,8 +100,6 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('int');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('int');
 
-        $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
-
         $index = 1;
         $this->updater->parseFieldChangeNodesAtGivenIndex(
             $this->source_tracker,
@@ -139,14 +112,12 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $this->changeset_xml->field_change[$index]['field_name'], 'effort_v2');
     }
 
-    public function testItDoesNotUpdateTheFieldChangeAtGivenIndexIfItDoesNotCorrespondToInitialEffortField()
+    public function testItDoesNotUpdateTheFieldChangeAtGivenIndexIfItDoesNotCorrespondToInitialEffortField(): void
     {
         $this->source_initial_effort_semantic->shouldReceive('getField')->andReturn($this->source_initial_effort_field);
         $this->target_initial_effort_semantic->shouldReceive('getField')->andReturn($this->target_initial_effort_field);
         $this->form_element_factory->shouldReceive('getType')->with($this->source_initial_effort_field)->andReturn('int');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_initial_effort_field)->andReturn('int');
-
-        $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
 
         $index = 2;
         $this->updater->parseFieldChangeNodesAtGivenIndex(
@@ -171,7 +142,7 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $this->changeset_xml->field_change[$index]['field_name'], 'summary');
     }
 
-    public function testItUpdatesTheFieldChangeWithMatchingValueAtGivenIndexIfItCorrespondsToInitialEffortFieldList()
+    public function testItUpdatesTheFieldChangeWithMatchingValueAtGivenIndexIfItCorrespondsToInitialEffortFieldList(): void
     {
         $changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '  <changeset>'
@@ -198,8 +169,7 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive('getType')->with($source_initial_effort_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($target_initial_effort_field)->andReturn('sb');
 
-        $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->once()->andReturn(201);
-
+        $target_initial_effort_field->shouldReceive('getDefaultValue')->andReturn(201);
         $index = 1;
         $this->updater->parseFieldChangeNodesAtGivenIndex(
             $this->source_tracker,
@@ -213,7 +183,7 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((int) $changeset_xml->field_change[$index]->value, 201);
     }
 
-    public function testItDoesNotAddNoneValueIfSourceInitialEffortListFieldDoesNotHaveValue()
+    public function testItDoesNotAddNoneValueIfSourceInitialEffortListFieldDoesNotHaveValue(): void
     {
         $changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '  <changeset>'
@@ -233,8 +203,6 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->target_initial_effort_semantic->shouldReceive('getField')->andReturn($target_initial_effort_field);
         $this->form_element_factory->shouldReceive('getType')->with($source_initial_effort_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($target_initial_effort_field)->andReturn('sb');
-
-        $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
 
         $index = 0;
         $this->updater->parseFieldChangeNodesAtGivenIndex(
