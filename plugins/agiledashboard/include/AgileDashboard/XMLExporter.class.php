@@ -21,7 +21,7 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
-use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
+use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\Kanban\KanbanDao;
 
