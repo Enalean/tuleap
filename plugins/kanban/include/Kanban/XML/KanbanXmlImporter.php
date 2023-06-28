@@ -20,7 +20,6 @@
 
 namespace Tuleap\Kanban\XML;
 
-use AgileDashboard_ConfigurationManager;
 use Tuleap\Kanban\KanbanColumnFactory;
 use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanFactory;
@@ -30,6 +29,7 @@ use PFUser;
 use Project;
 use SimpleXMLElement;
 use TrackerXmlFieldsMapping;
+use Tuleap\Kanban\Legacy\LegacyKanbanActivator;
 use Tuleap\XML\MappingsRegistry;
 
 final class KanbanXmlImporter
@@ -37,7 +37,7 @@ final class KanbanXmlImporter
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly KanbanManager $kanban_manager,
-        private readonly AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
+        private readonly LegacyKanbanActivator $kanban_activator,
         private readonly KanbanColumnManager $dashboard_kanban_column_manager,
         private readonly KanbanFactory $dashboard_kanban_factory,
         private readonly KanbanColumnFactory $dashboard_kanban_column_factory,
@@ -58,7 +58,7 @@ final class KanbanXmlImporter
             return;
         }
 
-        $this->activateKanban($xml, $project);
+        $this->kanban_activator->activateKanban((int) $project->getID());
 
         foreach ($xml->agiledashboard->kanban_list->kanban as $xml_configuration) {
             $attrs = $xml_configuration->attributes();
@@ -91,17 +91,5 @@ final class KanbanXmlImporter
                 );
             }
         }
-    }
-
-    private function activateKanban(SimpleXMLElement $xml, Project $project): void
-    {
-        $is_scrum_activated  = count($xml->agiledashboard->plannings->children()) > 0;
-        $is_kanban_activated = 1;
-        $this->agile_dashboard_configuration_manager->updateConfiguration(
-            $project->getID(),
-            $is_scrum_activated,
-            $is_kanban_activated,
-            $this->agile_dashboard_configuration_manager->getScrumTitle($project->getID()),
-        );
     }
 }

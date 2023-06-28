@@ -23,67 +23,55 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\XML;
 
-use AgileDashboard_ConfigurationDao;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanFactory;
-use Mockery;
+use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var KanbanXMLExporter
-     */
-    private $kanban_export;
-    /**
-     * @var KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $kanban_factory;
-    private AgileDashboard_ConfigurationDao & \PHPUnit\Framework\MockObject\MockObject $configuration_dao;
-
-    protected function setUp(): void
-    {
-        $this->configuration_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
-        $this->kanban_factory    = Mockery::mock(KanbanFactory::class);
-
-        $this->kanban_export = new KanbanXMLExporter($this->configuration_dao, $this->kanban_factory);
-    }
-
     public function testItExportsNothingIfNoKanban(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive(('getID'))->andReturn(10);
-
-        $this->configuration_dao->method('isKanbanActivated')->willReturn(false);
+        $project = ProjectTestBuilder::aProject()->build();
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
                  <kanban_list />';
         $xml_element = new \SimpleXMLElement($xml_data);
-        $this->kanban_export->export($xml_element, $project);
 
-        $this->assertEquals(new \SimpleXMLElement($xml_data), $xml_element);
+        $kanban_export = new KanbanXMLExporter(
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            $this->createMock(KanbanFactory::class),
+        );
+        $kanban_export->export($xml_element, $project);
+
+        self::assertEquals(new \SimpleXMLElement($xml_data), $xml_element);
     }
 
     public function testItExportsKanban(): void
     {
-        $this->configuration_dao->method('isKanbanActivated')->willReturn(true);
-
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive(('getID'))->andReturn(10);
+        $project = ProjectTestBuilder::aProject()->build();
 
         $kanban1 = new Kanban(10, 1, 'Alice task');
         $kanban2 = new Kanban(20, 2, 'Bob task');
 
-        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->withArgs([$project->getID()])->andReturn([1, 2]);
-
-        $this->kanban_factory->shouldReceive('getKanbanByTrackerId')->withArgs([1])->andReturn($kanban1);
-        $this->kanban_factory->shouldReceive('getKanbanByTrackerId')->withArgs([2])->andReturn($kanban2);
+        $kanban_factory = $this->createMock(KanbanFactory::class);
+        $kanban_factory->method('getKanbanTrackerIds')->willReturn([1, 2]);
+        $kanban_factory->method('getKanbanByTrackerId')->willReturnCallback(
+            static fn(int $tracker_id): ?Kanban => match ($tracker_id) {
+                1 => $kanban1,
+                2 => $kanban2,
+            }
+        );
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
                  <kanban_list />';
         $xml_element = new \SimpleXMLElement($xml_data);
-        $this->kanban_export->export($xml_element, $project);
+
+        $kanban_export = new KanbanXMLExporter(
+            LegacyKanbanRetrieverStub::withActivatedKanban(),
+            $kanban_factory,
+        );
+        $kanban_export->export($xml_element, $project);
 
         $kanban_list_node = KanbanXMLExporter::NODE_KANBAN_LST;
 

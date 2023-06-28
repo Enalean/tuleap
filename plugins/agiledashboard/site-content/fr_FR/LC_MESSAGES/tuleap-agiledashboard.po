@@ -295,9 +295,6 @@ msgstr "Administration Kanban du dashboard agile"
 msgid "Kanban board"
 msgstr "Tableau du Kanban"
 
-msgid "Kanban cards"
-msgstr "Carte de Kanban"
-
 msgid "Kanban name:"
 msgstr "Nom du Kanban :"
 

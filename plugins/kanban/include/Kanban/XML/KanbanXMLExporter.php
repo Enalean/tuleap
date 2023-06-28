@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\XML;
 
-use AgileDashboard_ConfigurationDao;
 use Tuleap\Kanban\KanbanFactory;
 use Project;
 use SimpleXMLElement;
+use Tuleap\Kanban\Legacy\LegacyKanbanRetriever;
 
 class KanbanXMLExporter
 {
@@ -37,7 +37,7 @@ class KanbanXMLExporter
     public const KANBAN_ID_PREFIX  = 'K';
 
     public function __construct(
-        private readonly AgileDashboard_ConfigurationDao $configuration_dao,
+        private readonly LegacyKanbanRetriever $configuration_dao,
         private readonly KanbanFactory $kanban_factory,
     ) {
     }
@@ -47,7 +47,7 @@ class KanbanXMLExporter
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
-        if (! $this->configuration_dao->isKanbanActivated($project->getID())) {
+        if (! $this->configuration_dao->isKanbanActivated((int) $project->getID())) {
             return;
         }
 

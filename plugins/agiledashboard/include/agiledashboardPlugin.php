@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
@@ -53,35 +52,8 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
-use Tuleap\Kanban\BreadCrumbBuilder;
-use Tuleap\Kanban\KanbanStatisticsAggregator;
-use Tuleap\Kanban\KanbanPermissionsManager;
-use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\KanbanColumnManager;
-use Tuleap\Kanban\KanbanColumnFactory;
-use Tuleap\Kanban\KanbanActionsChecker;
-use Tuleap\Kanban\KanbanUserPreferences;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\Widget\MyKanban;
-use Tuleap\Kanban\Widget\ProjectKanban;
-use Tuleap\Kanban\Widget\WidgetKanbanConfigDAO;
-use Tuleap\Kanban\Widget\WidgetKanbanConfigRetriever;
-use Tuleap\Kanban\Widget\WidgetKanbanConfigUpdater;
-use Tuleap\Kanban\Widget\WidgetKanbanCreator;
-use Tuleap\Kanban\Widget\WidgetKanbanDao;
-use Tuleap\Kanban\Widget\WidgetKanbanDeletor;
-use Tuleap\Kanban\Widget\WidgetKanbanRetriever;
-use Tuleap\Kanban\Widget\WidgetKanbanXMLImporter;
-use Tuleap\Kanban\XML\KanbanXmlImporter;
-use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
-use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
-use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageSenderMercure;
-use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
-use Tuleap\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -89,9 +61,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
-use Tuleap\Kanban\RealTimeMercure\MercureJWTController;
-use Tuleap\Kanban\RealTime\RealTimeArtifactMessageController;
-use Tuleap\Kanban\RealTimeMercure\RealTimeArtifactMessageControllerMercure;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
@@ -111,14 +80,8 @@ use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
-use Tuleap\Kanban\KanbanColumnDao;
-use Tuleap\Kanban\KanbanDao;
-use Tuleap\Kanban\KanbanItemDao;
-use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
-use Tuleap\Kanban\RecentlyVisited\VisitRetriever;
+use Tuleap\Kanban\Legacy\BreadCrumbForKanbanEvent;
+use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -134,9 +97,6 @@ use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
-use Tuleap\RealTime\NodeJSClient;
-use Tuleap\RealTimeMercure\ClientBuilder;
-use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
@@ -144,7 +104,6 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
-use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
@@ -153,22 +112,15 @@ use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
-use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
-use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
-use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
-use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
-use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
@@ -179,7 +131,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
@@ -190,9 +141,6 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
-use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
-use Tuleap\User\History\HistoryEntryCollection;
-use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -225,7 +173,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindTextDomain('tuleap-agiledashboard', AGILEDASHBOARD_BASE_DIR . '/../site-content');
-        bindTextDomain('tuleap-kanban', __DIR__ . '/../../kanban/site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -234,10 +181,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('cssfile', 'cssfile');
             $this->addHook('javascript_file');
-            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-            $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
@@ -260,26 +203,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
-            $this->addHook(HistoryEntryCollection::NAME);
-            $this->addHook(Event::USER_HISTORY_CLEAR);
             $this->addHook(ArtifactCreated::NAME);
-            $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(ArtifactUpdated::NAME);
-            $this->addHook(TrackerReportDeleted::NAME);
-            $this->addHook(TrackerReportSetToPrivate::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
             $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
             $this->addHook('codendi_daily_start');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
-            $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(ArtifactDeleted::NAME);
             $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-            $this->addHook(TrackerCrumbInContext::NAME);
             $this->addHook(SwitchToLinksCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(ProjectStatusUpdate::NAME);
@@ -302,7 +238,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
-            $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
@@ -311,28 +246,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
 
         return parent::getHooksAndCallbacks();
-    }
-
-    public function getHistoryEntryCollection(HistoryEntryCollection $collection): void
-    {
-        $visit_retriever = new VisitRetriever(
-            new RecentlyVisitedKanbanDao(),
-            $this->getKanbanFactory(),
-            TrackerFactory::instance()
-        );
-        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
-    }
-
-    /**
-     * @see Event::USER_HISTORY_CLEAR
-     */
-    public function userHistoryClear(array $params): void
-    {
-        $user = $params['user'];
-        assert($user instanceof PFUser);
-
-        $visit_cleaner = new RecentlyVisitedKanbanDao();
-        $visit_cleaner->deleteVisitByUserId((int) $user->getId());
     }
 
     public function tracker_formelement_get_classnames($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -345,7 +258,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
      */
     public function getDependencies()
     {
-        return ['tracker', 'cardwall'];
+        return ['kanban', 'tracker', 'cardwall'];
     }
 
     public function getServiceShortname()
@@ -444,6 +357,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         return new AgileDashboard_ConfigurationManager(
             new AgileDashboard_ConfigurationDao(),
+            new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             EventManager::instance()
         );
     }
@@ -589,27 +503,43 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceForKanbanEvent(ServiceForKanbanEvent $event): void
+    {
+        $service = $event->project->getService($this->getServiceShortname());
+        if ($service) {
+            $event->service = \Tuleap\Option\Option::fromValue($service);
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function breadCrumbForKanbanEvent(BreadCrumbForKanbanEvent $event): void
+    {
+        $agile_dashboard_crumb_builder = new AgileDashboardCrumbBuilder($this->getPluginPath());
+        $event->breadcrumbs->addBreadCrumb(
+            $agile_dashboard_crumb_builder->build($event->user, $event->project),
+        );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function generalSettingsEvent(GeneralSettingsEvent $event): void
     {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
-            $this->getKanbanFactory(),
             $this->getTrackerFactory()
         );
 
-        $event->cannot_configure_instantiate_for_new_projects = $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($event->tracker);
+        $event->cannot_configure_instantiate_for_new_projects = $hierarchyChecker->isPartOfScrumHierarchy($event->tracker);
     }
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hierarchyChecker           = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
-            $this->getKanbanFactory(),
             $this->getTrackerFactory()
         );
         $params['tracker_ids_list'] = array_merge(
             $params['tracker_ids_list'],
-            $hierarchyChecker->getADTrackerIdsByProjectId($params['project_id'])
+            $hierarchyChecker->getADTrackerIdsByProjectId((int) $params['project_id'])
         );
     }
 
@@ -620,12 +550,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $event->project_id,
             $event->tracker_mapping,
             $event->ugroups_mapping,
-        );
-
-        $this->getKanbanManager()->duplicateKanbans(
-            $event->tracker_mapping,
-            $event->field_mapping,
-            $event->report_mapping,
         );
     }
 
@@ -659,9 +583,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         $is_used_in_planning = PlanningFactory::build()->isTrackerIdUsedInAPlanning($tracker_id);
         $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
-        $is_used_in_kanban   = $this->getKanbanManager()->doesKanbanExistForTracker($tracker);
 
-        if ($is_used_in_planning || $is_used_in_backlog || $is_used_in_kanban) {
+        if ($is_used_in_planning || $is_used_in_backlog) {
             $result['can_be_deleted'] = false;
             $result['message']        = 'Agile Dashboard';
             $params['result']         = $result;
@@ -671,87 +594,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
-    }
-
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $event)
-    {
-        if ($event->getName() !== MyKanban::NAME && $event->getName() !== ProjectKanban::NAME) {
-            return;
-        }
-
-        $widget_kanban_dao        = new WidgetKanbanDao();
-        $widget_kanban_config_dao = new WidgetKanbanConfigDAO();
-        $widget_kanban_creator    = new WidgetKanbanCreator(
-            $widget_kanban_dao
-        );
-        $widget_kanban_retriever  = new WidgetKanbanRetriever(
-            $widget_kanban_dao
-        );
-        $widget_kanban_deletor    = new WidgetKanbanDeletor(
-            $widget_kanban_dao
-        );
-
-        $widget_config_retriever = new WidgetKanbanConfigRetriever(
-            $widget_kanban_config_dao
-        );
-
-        $permission_manager = new KanbanPermissionsManager();
-        $kanban_factory     = $this->getKanbanFactory();
-
-        $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
-            $widget_kanban_config_dao
-        );
-
-        switch ($event->getName()) {
-            case MyKanban::NAME:
-                $event->setWidget(
-                    new MyKanban(
-                        $widget_kanban_creator,
-                        $widget_kanban_retriever,
-                        $widget_kanban_deletor,
-                        $kanban_factory,
-                        TrackerFactory::instance(),
-                        $permission_manager,
-                        $widget_config_retriever,
-                        $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance()
-                    )
-                );
-                break;
-            case ProjectKanban::NAME:
-                $event->setWidget(
-                    new ProjectKanban(
-                        $widget_kanban_creator,
-                        $widget_kanban_retriever,
-                        $widget_kanban_deletor,
-                        $kanban_factory,
-                        TrackerFactory::instance(),
-                        $permission_manager,
-                        $widget_config_retriever,
-                        $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance()
-                    )
-                );
-                break;
-        }
-    }
-
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
-    {
-        $event->addWidget(MyKanban::NAME);
-    }
-
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
-    {
-        $event->addWidget(ProjectKanban::NAME);
-    }
-
-    public function configureAtXMLImport(\Tuleap\Widget\Event\ConfigureAtXMLImport $event)
-    {
-        if ($event->getWidget()->getId() === ProjectKanban::NAME) {
-            $xml_import = new WidgetKanbanXMLImporter();
-            $xml_import->configureWidget($event);
-        }
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
@@ -957,17 +799,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     #[ListeningToEventClass]
     public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
-        $dao                  = new AgileDashboard_Dao();
-        $statistic_aggregator = new KanbanStatisticsAggregator(EventManager::instance());
+        $dao = new AgileDashboard_Dao();
         $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
-        foreach ($statistic_aggregator->getStatisticsLabels() as $statistic_key => $statistic_name) {
-            $statistic_data = $statistic_aggregator->getStatistics(
-                $statistic_key,
-                $event->start_date,
-                $event->end_date,
-            );
-            $event->csv_exporter->buildDatas($statistic_data, $statistic_name);
-        }
     }
 
     /**
@@ -1103,23 +936,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    /**
-     * @return TrackerFactory
-     */
-    private function getTrackerFactory()
+    private function getTrackerFactory(): TrackerFactory
     {
         return TrackerFactory::instance();
-    }
-
-    /**
-     * @return KanbanManager
-     */
-    private function getKanbanManager()
-    {
-        return new KanbanManager(
-            new KanbanDao(),
-            $this->getTrackerFactory()
-        );
     }
 
     private function getCurrentUser(): PFUser
@@ -1130,17 +949,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getPlanningPermissionsManager()
     {
         return new PlanningPermissionsManager();
-    }
-
-    /**
-     * @return KanbanFactory
-     */
-    private function getKanbanFactory()
-    {
-        return new KanbanFactory(
-            TrackerFactory::instance(),
-            new KanbanDao()
-        );
     }
 
     /**
@@ -1212,85 +1020,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    /**
-     * @return KanbanArtifactMessageSender
-     */
-    private function getKanbanArtifactMessageSender()
-    {
-        $kanban_item_dao                   = new KanbanItemDao();
-        $permissions_serializer            = new Tracker_Permission_PermissionsSerializer(
-            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
-        );
-        $node_js_client                    = new NodeJSClient(
-            HttpClientFactory::createClientForInternalTuleapUse(),
-            HTTPFactoryBuilder::requestFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            BackendLogger::getDefaultLogger()
-        );
-        $realtime_artifact_message_builder = new KanbanArtifactMessageBuilder(
-            $kanban_item_dao,
-            Tracker_Artifact_ChangesetFactoryBuilder::build()
-        );
-        $backend_logger                    = BackendLogger::getDefaultLogger('realtime_syslog');
-        $realtime_artifact_message_sender  = new RealTimeArtifactMessageSender($node_js_client, $permissions_serializer);
-
-        return new KanbanArtifactMessageSender(
-            $realtime_artifact_message_sender,
-            $realtime_artifact_message_builder,
-            $backend_logger
-        );
-    }
-
-    public function getKanbanArtifactMessageSenderMercure(): KanbanArtifactMessageSenderMercure
-    {
-        $kanba_item_dao                           = new KanbanItemDao();
-        $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
-        $realtime_artifact_message_builder_kanban = new KanbanArtifactMessageBuilderMercure(
-            $kanba_item_dao,
-            Tracker_Artifact_ChangesetFactoryBuilder::build()
-        );
-
-        $realtime_artifact_message_sender_mercure = new RealTimeMercureArtifactMessageSender($mercure_client);
-        return new KanbanArtifactMessageSenderMercure(
-            $realtime_artifact_message_sender_mercure,
-            $realtime_artifact_message_builder_kanban
-        );
-    }
-
-    /**
-     * @return RealTimeArtifactMessageController
-     */
-    public function getRealtimeMessageController()
-    {
-        return new RealTimeArtifactMessageController(
-            $this->getKanbanFactory(),
-            $this->getKanbanArtifactMessageSender()
-        );
-    }
-
-    public function getRealtimeMessageControllerMercure(): RealTimeArtifactMessageControllerMercure
-    {
-        return new RealTimeArtifactMessageControllerMercure(
-            $this->getKanbanFactory(),
-            $this->getKanbanArtifactMessageSenderMercure()
-        );
-    }
-
     public function trackerArtifactCreated(ArtifactCreated $event)
     {
         $artifact = $event->getArtifact();
-        $this->getRealtimeMessageController()->sendMessageForKanban(
-            $this->getCurrentUser(),
-            $artifact,
-            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
-        );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-            $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                $artifact,
-                RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED
-            );
-        }
-        $cleaner = new DirectArtifactLinkCleaner(
+        $cleaner  = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao()
@@ -1302,73 +1035,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function trackerArtifactUpdated(ArtifactUpdated $event)
     {
         $artifact = $event->getArtifact();
-        $this->getRealtimeMessageController()->sendMessageForKanban(
-            $this->getCurrentUser(),
-            $artifact,
-            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
-        );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                    $artifact,
-                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_UPDATED
-                );
-        }
-        $cleaner = new DirectArtifactLinkCleaner(
+        $cleaner  = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao()
         );
 
         $cleaner->cleanDirectlyMadeArtifactLinks($artifact, $event->getUser());
-    }
-
-    public function trackerArtifactsReordered(ArtifactsReordered $event)
-    {
-        $artifacts_ids = $event->getArtifactsIds();
-        $artifacts     = $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifacts_ids);
-        foreach ($artifacts as $artifact) {
-            $this->getRealtimeMessageController()->sendMessageForKanban(
-                $this->getCurrentUser(),
-                $artifact,
-                RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
-            );
-        }
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-            foreach ($artifacts as $artifact) {
-                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                    $artifact,
-                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_REORDERED
-                );
-            }
-        }
-    }
-
-    public function trackerReportDeleted(TrackerReportDeleted $event)
-    {
-        $report  = $event->getReport();
-        $updater = new TrackerReportUpdater(new TrackerReportDao());
-
-        $updater->deleteAllForReport($report);
-
-        $this->deleteReportConfigForKanbanWidget(
-            $event->getReport()
-        );
-    }
-
-    public function trackerReportSetToPrivate(TrackerReportSetToPrivate $event)
-    {
-        $this->deleteReportConfigForKanbanWidget(
-            $event->getReport()
-        );
-    }
-
-    private function deleteReportConfigForKanbanWidget(Tracker_Report $report)
-    {
-        $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
-            new WidgetKanbanConfigDAO()
-        );
-
-        $widget_kanban_config_updater->deleteConfigurationForWidgetMatchingReportId($report);
     }
 
     public function codendi_daily_start($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1379,7 +1052,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
-        (new RecentlyVisitedKanbanDao())->deleteOldVisits();
     }
 
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1470,68 +1142,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if ($field::class === Tuleap\AgileDashboard\FormElement\Burnup::class) {
             $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($field->getTracker()));
         }
-    }
-
-    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
-    {
-        $xml             = $event->getXmlElement();
-        $tracker_mapping = $event->getCreatedTrackersMapping();
-        $value_mapping   = $event->getXmlFieldValuesMapping();
-        $logger          = $event->getLogger();
-        $project         = $event->getProject();
-        $user            = UserManager::instance()->getCurrentUser();
-
-        $kanban = new KanbanXmlImporter(
-            new WrapperLogger($logger, "kanban"),
-            $this->getKanbanManager(),
-            $this->getConfigurationManager(),
-            $this->getDashboardKanbanColumnManager(),
-            $this->getKanbanFactory(),
-            $this->getKanbanColumnFactory()
-        );
-        $kanban->import($xml, $tracker_mapping, $project, $value_mapping, $user, $event->getMappingsRegistery());
-    }
-
-    private function getDashboardKanbanColumnManager()
-    {
-        return new KanbanColumnManager(
-            new KanbanColumnDao(),
-            new BindStaticValueDao(),
-            new KanbanActionsChecker(
-                $this->getTrackerFactory(),
-                new KanbanPermissionsManager(),
-                $this->getFormElementFactory(),
-                \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
-            )
-        );
-    }
-
-    /**
-     * @return Tracker_FormElementFactory
-     */
-    private function getFormElementFactory()
-    {
-        return Tracker_FormElementFactory::instance();
-    }
-
-    /**
-     * @return KanbanColumnFactory
-     */
-    private function getKanbanColumnFactory()
-    {
-        return new KanbanColumnFactory(
-            new KanbanColumnDao(),
-            new KanbanUserPreferences()
-        );
-    }
-
-    private function isInOverviewTab()
-    {
-        $request = HTTPRequest::instance();
-
-        return $this->isAnAgiledashboardRequest()
-            && $request->get('action') === DetailsPaneInfo::ACTION
-            && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
@@ -1640,47 +1250,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
-            $r->post('/mercure_realtime_token/{kanban_id:\d+}', $this->getRouteHandler('routeGetJWT'));
         });
-        $event->getRouteCollector()->get('/kanban/{id:[0-9]+}', $this->getRouteHandler('routeShowKanban'));
-    }
-
-    public function routeShowKanban(): \Tuleap\Request\DispatchableWithRequest
-    {
-        $tracker_factory = TrackerFactory::instance();
-
-        return new \Tuleap\Kanban\ShowKanbanController(
-            $this->getKanbanFactory(),
-            $tracker_factory,
-            new KanbanPermissionsManager(),
-            new AgileDashboardCrumbBuilder($this->getPluginPath()),
-            new BreadCrumbBuilder($tracker_factory, $this->getKanbanFactory()),
-            new RecentlyVisitedKanbanDao(),
-            new \Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider(
-                $this->getKanbanFactory(),
-                $tracker_factory,
-                new TrackerNewDropdownLinkPresenterBuilder(),
-                new KanbanActionsChecker(
-                    $tracker_factory,
-                    new KanbanPermissionsManager(),
-                    Tracker_FormElementFactory::instance(),
-                    \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
-                )
-            )
-        );
-    }
-
-    public function routeGetJWT(): MercureJWTController
-    {
-        return new MercureJWTController(
-            $this->getKanbanFactory(),
-            $this->getLogger(),
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            UserManager::instance(),
-            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH),
-            new SapiEmitter()
-        );
     }
 
     public function routeLegacyController(?ProvideCurrentUser $current_user_provider = null): AgileDashboardLegacyController
@@ -1712,11 +1282,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 $this->getMilestoneFactory()
             )
         );
-    }
-
-    public function trackerCrumbInContext(TrackerCrumbInContext $crumb)
-    {
-        (new \Tuleap\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 
     public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
@@ -1823,21 +1388,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
     {
         $collector->addStatistics(
-            dgettext('tuleap-agiledashboard', 'Kanban cards'),
-            $this->getKanbanDao()->countKanbanCards(),
-            $this->getKanbanDao()->countKanbanCardsAfter($collector->getTimestamp())
-        );
-
-        $collector->addStatistics(
             dgettext('tuleap-agiledashboard', 'Milestones'),
             $this->getMilestoneDao()->countMilestones(),
             $this->getMilestoneDao()->countMilestonesAfter($collector->getTimestamp())
         );
-    }
-
-    private function getKanbanDao(): KanbanDao
-    {
-        return new KanbanDao();
     }
 
     private function getMilestoneDao(): AgileDashboard_Milestone_MilestoneDao
@@ -2111,16 +1665,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    public function defaultTemplatesXMLFileCollection(DefaultTemplatesXMLFileCollection $collection): void
-    {
-        $this->addKanbanTemplates($collection);
-    }
-
-    private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
-    {
-        $collection->add(__DIR__ . '/../../kanban/resources/templates/Tracker_activity.xml');
-    }
-
     private function getExplicitBacklogConfigurationUpdater(): ConfigurationUpdater
     {
         return new ConfigurationUpdater(
@@ -2225,5 +1769,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function collectMovableExternalFieldEvent(CollectMovableExternalFieldEvent $event): void
     {
         AgileDashboardMovableFieldsCollector::collectMovableFields($event);
+    }
+
+    private function getFormElementFactory(): Tracker_FormElementFactory
+    {
+        return Tracker_FormElementFactory::instance();
     }
 }

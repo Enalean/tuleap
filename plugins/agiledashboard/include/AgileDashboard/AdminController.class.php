@@ -54,6 +54,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
+use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -187,18 +188,18 @@ class AdminController extends BaseController
         );
     }
 
-    public function adminKanban()
+    public function adminKanban(): string
     {
         return $this->renderToString(
             'admin-kanban',
             $this->getAdminKanbanPresenter(
                 $this->getCurrentUser(),
-                $this->group_id
+                (int) $this->group_id
             )
         );
     }
 
-    public function adminCharts()
+    public function adminCharts(): string
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
         return $this->renderToString(
@@ -209,7 +210,7 @@ class AdminController extends BaseController
         );
     }
 
-    private function getAdminKanbanPresenter(PFUser $user, $project_id)
+    private function getAdminKanbanPresenter(PFUser $user, int $project_id): AdminKanbanPresenter
     {
         $has_kanban = count($this->kanban_factory->getListOfKanbansForProject($user, $project_id)) > 0;
 
@@ -241,9 +242,13 @@ class AdminController extends BaseController
         );
 
         if ($this->request->exist('activate-kanban')) {
+            $legacy_kanban_configuration_dao = new LegacyConfigurationDao();
+
             $updater = new KanbanConfigurationUpdater(
                 $this->request,
-                $this->config_manager,
+                $legacy_kanban_configuration_dao,
+                $legacy_kanban_configuration_dao,
+                $legacy_kanban_configuration_dao,
                 $response,
                 new FirstKanbanCreator(
                     $this->request->getProject(),

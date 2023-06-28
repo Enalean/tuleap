@@ -48,11 +48,17 @@ msgstr ""
 "Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
 "Veuillez aller sur un kanban pour l’ajouter."
 
+msgid "Filter:"
+msgstr "Filtre :"
+
 msgid "General settings"
 msgstr "Options générales"
 
 msgid "Kanban"
 msgstr "Kanban"
+
+msgid "Kanban cards"
+msgstr "Cartes de Kanban"
 
 msgid "Kanban is currently active."
 msgstr "Kanban est actuellement actif."
@@ -62,6 +68,9 @@ msgstr "Kanban n'est actuellement pas actif."
 
 msgid "Kanban not found."
 msgstr "Le Kanban requis n'a pas pu être trouvé."
+
+msgid "None"
+msgstr "Aucun"
 
 msgid "Save"
 msgstr "Sauvegarder"

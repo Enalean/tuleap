@@ -27,18 +27,14 @@ class AgileDashboard_ConfigurationManager
 
     public function __construct(
         private readonly AgileDashboard_ConfigurationDao $dao,
+        private readonly \Tuleap\Kanban\Legacy\LegacyKanbanRetriever $kanban_configuration_dao,
         private readonly Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
-    public function kanbanIsActivatedForProject($project_id)
+    public function kanbanIsActivatedForProject(int $project_id): bool
     {
-        $row = $this->dao->isKanbanActivated($project_id)->getRow();
-        if ($row) {
-            return $row['kanban'];
-        }
-
-        return false;
+        return $this->kanban_configuration_dao->isKanbanActivated($project_id);
     }
 
     public function scrumIsActivatedForProject(Project $project): bool
@@ -70,13 +66,11 @@ class AgileDashboard_ConfigurationManager
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,
-        $kanban_is_activated,
         $scrum_title,
     ): void {
         $this->dao->updateConfiguration(
             $project_id,
             $scrum_is_activated,
-            $kanban_is_activated,
             $scrum_title,
         );
     }

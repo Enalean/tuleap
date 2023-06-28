@@ -22,9 +22,11 @@ namespace Tuleap\Kanban;
 
 use HTTPRequest;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use TrackerFactory;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\Kanban\Legacy\BreadCrumbForKanbanEvent;
+use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Layout\BaseLayout;
@@ -41,7 +43,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
         private readonly KanbanPermissionsManager $permissions_manager,
-        private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        private readonly EventDispatcherInterface $dispatcher,
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
         private readonly NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
@@ -51,9 +53,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
     public function getBreadcrumbs(\PFUser $user, Project $project, Kanban $kanban): BreadCrumbCollection
     {
         $breadcrumbs = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb(
-            $this->agile_dashboard_crumb_builder->build($user, $project)
-        );
+        $this->dispatcher->dispatch(new BreadCrumbForKanbanEvent($user, $project, $breadcrumbs));
 
         $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban));
 
@@ -134,11 +134,14 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
 
     private function getService(Project $project): \Service
     {
-        $service = $project->getService(\AgileDashboardPlugin::PLUGIN_SHORTNAME);
-        if (! $service) {
+        $tracker_service = $project->getService(\trackerPlugin::SERVICE_SHORTNAME);
+        if (! $tracker_service) {
             throw new NotFoundException();
         }
 
-        return $service;
+        return $this->dispatcher
+            ->dispatch(new ServiceForKanbanEvent($project))
+            ->service
+            ->unwrapOr($tracker_service);
     }
 }
