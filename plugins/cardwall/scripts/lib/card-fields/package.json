@@ -1,17 +1,17 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-agiledashboard-card-fields",
+  "name": "@tuleap/plugin-cardwall-card-fields",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/plugin-agiledashboard-card-fields.js",
-  "main": "dist/plugin-agiledashboard-card-fields.umd.cjs",
+  "module": "dist/plugin-cardwall-card-fields.js",
+  "main": "dist/plugin-cardwall-card-fields.umd.cjs",
   "style": "dist/style.css",
   "exports": {
     ".": {
-      "import": "./dist/plugin-agiledashboard-card-fields.js",
-      "require": "./dist/plugin-agiledashboard-card-fields.umd.cjs",
+      "import": "./dist/plugin-cardwall-card-fields.js",
+      "require": "./dist/plugin-cardwall-card-fields.umd.cjs",
       "style": "./dist/style.css"
     }
   },

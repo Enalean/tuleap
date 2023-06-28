@@ -16,12 +16,12 @@ dependencies:
   '@tuleap/html-escaper':
     specifier: workspace:*
     version: link:../../../../lib/frontend/html-escaper
-  '@tuleap/plugin-agiledashboard-card-fields':
-    specifier: workspace:*
-    version: link:../lib/card-fields
   '@tuleap/plugin-agiledashboard-shared':
     specifier: workspace:*
     version: link:../lib/shared
+  '@tuleap/plugin-cardwall-card-fields':
+    specifier: workspace:*
+    version: link:../../../cardwall/scripts/lib/card-fields
   '@tuleap/plugin-tracker-artifact-modal':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/artifact-modal

@@ -1,0 +1,16 @@
+{
+    "author": "Enalean Team",
+    "name": "@tuleap/plugin-cardwall-legacy",
+    "homepage": "https://tuleap.org",
+    "license": "GPL-2.0-or-later",
+    "private": true,
+    "dependencies": {
+    },
+    "devDependencies": {
+        "@tuleap/build-system-configurator": "workspace:*"
+    },
+    "scripts": {
+        "build": "webpack --config webpack.prod.js",
+        "watch": "webpack --config webpack.dev.js --watch"
+    }
+}

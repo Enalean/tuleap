@@ -70,8 +70,8 @@ final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $field3->shouldReceive('fetchCardValue')->andReturns('<span>Decorator</span>');
 
         $field1->shouldReceive('getName')->andReturns(Tracker::REMAINING_EFFORT_FIELD_NAME);
-        $field2->shouldReceive('getName')->andReturns(Tracker::ASSIGNED_TO_FIELD_NAME);
-        $field3->shouldReceive('getName')->andReturns(Tracker::IMPEDIMENT_FIELD_NAME);
+        $field2->shouldReceive('getName')->andReturns('assigned_to');
+        $field3->shouldReceive('getName')->andReturns('impediment');
 
         $card_presenter = \Mockery::spy(\Cardwall_CardPresenter::class);
         $card_presenter->shouldReceive('getTitle')->andReturns($artifact_title);
