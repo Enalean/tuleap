@@ -20,11 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\WebAuthn\Controllers;
+namespace Tuleap\WebAuthn\Source;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Tuleap\TimezoneRetriever;
-use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 
 final class AuthenticatorPresenter
 {

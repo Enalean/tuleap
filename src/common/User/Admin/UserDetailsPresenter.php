@@ -23,6 +23,7 @@ namespace Tuleap\User\Admin;
 use DateTimeImmutable;
 use ForgeConfig;
 use PFUser;
+use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 use User_UserStatusManager;
 
 class UserDetailsPresenter
@@ -79,6 +80,9 @@ class UserDetailsPresenter
      */
     public $avatar_url;
 
+    /**
+     * @param AuthenticatorPresenter[] $authenticators
+     */
     public function __construct(
         PFUser $user,
         array $projects,
@@ -92,6 +96,8 @@ class UserDetailsPresenter
         int $nb_project_user_is_member_of_that_dont_accept_restricted,
         array $unix_status,
         bool $user_has_rest_read_only_administration_delegation,
+        public readonly bool $webauthn_enabled,
+        public readonly array $authenticators,
     ) {
         $this->id    = $user->getId();
         $this->name  = $user->getRealName();

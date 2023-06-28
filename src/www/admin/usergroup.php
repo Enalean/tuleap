@@ -327,6 +327,12 @@ EventManager::instance()->processEvent(
     ]
 );
 
+$get_authenticators_event = EventManager::instance()->dispatch(
+    new \Tuleap\User\Admin\GetUserAuthenticatorsEvent($user)
+);
+$webauthn_enabled         = $get_authenticators_event->answered;
+$authenticators           = $get_authenticators_event->authenticators;
+
 $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
 $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
 $password_strategy                = new PasswordStrategy($password_configuration);
@@ -386,6 +392,8 @@ $siteadmin->renderAPresenter(
         $details_formatter->getStatus($user),
         $restricted_projects_user_counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user),
         $details_formatter->getUnixStatus($user),
-        $user_has_rest_read_only_administration_delegation
+        $user_has_rest_read_only_administration_delegation,
+        $webauthn_enabled,
+        $authenticators
     )
 );

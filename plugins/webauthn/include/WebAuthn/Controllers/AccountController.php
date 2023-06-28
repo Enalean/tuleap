@@ -35,6 +35,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
+use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 

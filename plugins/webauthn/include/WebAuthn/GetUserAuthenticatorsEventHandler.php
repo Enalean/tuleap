@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,27 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\WebAuthn\Controllers;
+namespace Tuleap\WebAuthn;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Admin\GetUserAuthenticatorsEvent;
 use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
+use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 
-final class AccountPresenter
+final class GetUserAuthenticatorsEventHandler
 {
-    public readonly bool $need_more_authenticators;
-    public readonly bool $has_authenticator;
-
-    /**
-     * @param AuthenticatorPresenter[] $authenticators
-     */
     public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly array $authenticators,
-        public readonly CSRFSynchronizerTokenPresenter $csrf_token_add,
-        public readonly CSRFSynchronizerTokenPresenter $csrf_token_del,
+        private readonly GetAllCredentialSourceByUserId $source_dao,
     ) {
-        $this->has_authenticator        = ! empty($this->authenticators);
-        $this->need_more_authenticators = count($this->authenticators) < 2;
+    }
+
+    public function handle(GetUserAuthenticatorsEvent $event): void
+    {
+        $event->authenticators = array_map(
+            static fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $event->user),
+            $this->source_dao->getAllByUserId((int) $event->user->getId())
+        );
+        $event->answered       = true;
     }
 }

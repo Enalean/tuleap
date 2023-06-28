@@ -58,6 +58,13 @@ final class WebAuthnPlugin extends Plugin
         return new \Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
     }
 
+    private function getGetUserAuthenticatorsEventHandler(): \Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler
+    {
+        return new \Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler(
+            $this->getWebAuthnCredentialSourceDao()
+        );
+    }
+
     public function getAccountSettings(): Tuleap\Request\DispatchableWithRequest
     {
         return new Tuleap\WebAuthn\Controllers\AccountController(
@@ -87,5 +94,11 @@ final class WebAuthnPlugin extends Plugin
                 $collection->getCurrentHref()
             )
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserAuthenticatorsEvent(\Tuleap\User\Admin\GetUserAuthenticatorsEvent $event): void
+    {
+        $this->getGetUserAuthenticatorsEventHandler()->handle($event);
     }
 }

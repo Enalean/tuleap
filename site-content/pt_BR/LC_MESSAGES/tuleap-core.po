@@ -4529,6 +4529,9 @@ msgstr "Nós enviamos um link de confirmação para <strong>%s</strong>,"
 msgid "We need at least one email to send an invitation"
 msgstr "É necessário pelo menos um email para o envio de um convite"
 
+msgid "WebAuthn"
+msgstr ""
+
 msgid "Webhooks"
 msgstr "Webhooks"
 
