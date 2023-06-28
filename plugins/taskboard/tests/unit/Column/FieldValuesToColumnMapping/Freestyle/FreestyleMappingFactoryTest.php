@@ -22,134 +22,128 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var FreestyleMappingFactory */
-    private $freestyle_mapping_factory;
-    /** @var M\LegacyMockInterface|M\MockInterface|FreestyleMappingDao */
-    private $dao;
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_FormElementFactory */
-    private $form_element_factory;
+    private FreestyleMappingFactory $freestyle_mapping_factory;
+    private MockObject&FreestyleMappingDao $dao;
+    private MockObject&Tracker_FormElementFactory $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->dao                       = M::mock(FreestyleMappingDao::class);
-        $this->form_element_factory      = M::mock(Tracker_FormElementFactory::class);
+        $this->dao                       = $this->createMock(FreestyleMappingDao::class);
+        $this->form_element_factory      = $this->createMock(Tracker_FormElementFactory::class);
         $this->freestyle_mapping_factory = new FreestyleMappingFactory($this->dao, $this->form_element_factory);
     }
 
     public function testGetMappedFieldReturnsNullWhenNoMapping(): void
     {
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
-        $this->dao->shouldReceive('searchMappedField')
-            ->once()
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
+        $this->dao->expects(self::once())
+            ->method('searchMappedField')
             ->with($taskboard_tracker)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetMappedFieldReturnsNullWhenFieldIsNotSelectbox(): void
     {
-        $tracker           = M::mock(Tracker::class);
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $this->dao->shouldReceive('searchMappedField')
-            ->once()
+        $tracker           = TrackerTestBuilder::aTracker()->build();
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $this->dao->expects(self::once())
+            ->method('searchMappedField')
             ->with($taskboard_tracker)
-            ->andReturn(123);
-        $field = M::mock(\Tracker_FormElement_Field_OpenList::class);
-        $this->form_element_factory->shouldReceive('getUsedListFieldById')
+            ->willReturn(123);
+        $field = $this->createMock(\Tracker_FormElement_Field_OpenList::class);
+        $this->form_element_factory->expects(self::once())
+            ->method('getUsedListFieldById')
             ->with($tracker, 123)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetMappedFieldReturnsMappedSelectbox(): void
     {
-        $tracker           = M::mock(Tracker::class);
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $this->dao->shouldReceive('searchMappedField')
-            ->once()
+        $tracker           = TrackerTestBuilder::aTracker()->build();
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $this->dao->expects(self::once())
+            ->method('searchMappedField')
             ->with($taskboard_tracker)
-            ->andReturn(123);
-        $field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->form_element_factory->shouldReceive('getUsedListFieldById')
+            ->willReturn(123);
+        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->form_element_factory->expects(self::once())
+            ->method('getUsedListFieldById')
             ->with($tracker, 123)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        $this->assertNotNull($result);
-        $this->assertSame($field, $result);
+        self::assertNotNull($result);
+        self::assertSame($field, $result);
     }
 
     public function testGetMappedFieldReturnsMappedMultiSelectbox(): void
     {
-        $tracker           = M::mock(Tracker::class);
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $this->dao->shouldReceive('searchMappedField')
-            ->once()
+        $tracker           = TrackerTestBuilder::aTracker()->build();
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $this->dao->expects(self::once())
+            ->method('searchMappedField')
             ->with($taskboard_tracker)
-            ->andReturn(123);
-        $field = M::mock(\Tracker_FormElement_Field_MultiSelectbox::class);
-        $this->form_element_factory->shouldReceive('getUsedListFieldById')
+            ->willReturn(123);
+        $field = $this->createMock(\Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->form_element_factory->expects(self::once())
+            ->method('getUsedListFieldById')
             ->with($tracker, 123)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        $this->assertNotNull($result);
-        $this->assertSame($field, $result);
+        self::assertNotNull($result);
+        self::assertSame($field, $result);
     }
 
     public function testDoesFreestyleMappingExistDelegatesToDAO(): void
     {
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
-        $this->dao->shouldReceive('doesFreestyleMappingExist')
-            ->once()
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
+        $this->dao->expects(self::once())
+            ->method('doesFreestyleMappingExist')
             ->with($taskboard_tracker)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->assertTrue($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker));
+        self::assertTrue($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker));
     }
 
     public function testGetValuesMappedToColumnReturnsEmpty(): void
     {
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
         $todo_column       = new \Cardwall_Column(12, 'Todo', 'acid-green');
-        $this->dao->shouldReceive('searchMappedFieldValuesForColumn')
+        $this->dao->expects(self::once())
+            ->method('searchMappedFieldValuesForColumn')
             ->with($taskboard_tracker, $todo_column)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $result = $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $todo_column);
-        $this->assertSame(0, count($result->getValueIds()));
+        self::assertSame(0, count($result->getValueIds()));
     }
 
     public function testGetValuesMappedToColumnReturnsValues(): void
     {
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
         $todo_column       = new \Cardwall_Column(12, 'Todo', 'acid-green');
-        $this->dao->shouldReceive('searchMappedFieldValuesForColumn')
+        $this->dao->expects(self::once())
+            ->method('searchMappedFieldValuesForColumn')
             ->with($taskboard_tracker, $todo_column)
-            ->once()
-            ->andReturn([['value_id' => 123], ['value_id' => 127]]);
+            ->willReturn([['value_id' => 123], ['value_id' => 127]]);
 
         $result        = $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $todo_column);
         $mapped_values = $result->getValueIds();
-        $this->assertSame(2, count($mapped_values));
-        $this->assertSame([123, 127], $mapped_values);
+        self::assertSame(2, count($mapped_values));
+        self::assertSame([123, 127], $mapped_values);
     }
 }

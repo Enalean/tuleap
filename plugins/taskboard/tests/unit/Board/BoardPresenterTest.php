@@ -22,69 +22,66 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Board;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Taskboard\Column\ColumnPresenter;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
 use Tuleap\Taskboard\Tracker\AssignedToFieldPresenter;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TitleFieldPresenter;
 use Tuleap\Taskboard\Tracker\TrackerPresenter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \AgileDashboard_MilestonePresenter|M\LegacyMockInterface|M\MockInterface */
-    private $milestone_presenter;
-    /** @var M\LegacyMockInterface|M\MockInterface|\Project */
-    private $project;
-    /** @var M\LegacyMockInterface|M\MockInterface|\Planning_Milestone */
-    private $milestone;
+    private \AgileDashboard_MilestonePresenter&MockObject $milestone_presenter;
+    private \Project $project;
+    private \Planning_Milestone&MockObject $milestone;
 
     protected function setUp(): void
     {
-        $this->milestone_presenter = M::mock(\AgileDashboard_MilestonePresenter::class);
-        $this->project             = M::mock(\Project::class);
-        $this->project->shouldReceive(['getID' => 101]);
-        $this->milestone = M::mock(\Planning_Milestone::class);
-        $this->milestone->shouldReceive(['getProject' => $this->project, 'getPlanningId' => 76, 'getArtifactId' => 89]);
+        $this->milestone_presenter = $this->createMock(\AgileDashboard_MilestonePresenter::class);
+        $this->project             = ProjectTestBuilder::aProject()->withId(101)->build();
+
+        $this->milestone = $this->createMock(\Planning_Milestone::class);
+        $this->milestone->method('getProject')->willReturn($this->project);
+        $this->milestone->method('getPlanningId')->willReturn(76);
+        $this->milestone->method('getArtifactId')->willReturn(89);
     }
 
     public function testConstructSetsUserIsAdminFlag(): void
     {
-        $user = M::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')
+        $user = $this->createMock(\PFUser::class);
+        $user->expects(self::once())
+            ->method('isAdmin')
             ->with(101)
-            ->once()
-            ->andReturnTrue();
-        $user->shouldReceive('getPreference')
-            ->andReturn('');
+            ->willReturn(true);
+        $user->method('getPreference')
+            ->willReturn('');
 
         $presenter = new BoardPresenter($this->milestone_presenter, $user, $this->milestone, [], [], true, false);
 
-        $this->assertTrue($presenter->user_is_admin);
+        self::assertTrue($presenter->user_is_admin);
     }
 
     public function testConstructSetsTheHiddenItemsDisplayedFlag(): void
     {
         $user = $this->mockNonAdminUser();
-        $user->shouldReceive('getPreference')
+        $user->expects(self::once())
+            ->method('getPreference')
             ->with('plugin_taskboard_hide_closed_items_89')
-            ->once()
-            ->andReturn('1');
+            ->willReturn('1');
 
         $presenter = new BoardPresenter($this->milestone_presenter, $user, $this->milestone, [], [], true, false);
 
-        $this->assertFalse($presenter->are_closed_items_displayed);
+        self::assertFalse($presenter->are_closed_items_displayed);
     }
 
     public function testConstructJSONEncodesColumnPresenters(): void
     {
         $user = $this->mockNonAdminUser();
-        $user->shouldReceive('getPreference')
-            ->andReturn('');
+        $user->method('getPreference')
+            ->willReturn('');
 
         $todo_column     = new \Cardwall_Column(8, 'To do', 'graffiti-yellow');
         $tracker_mapping = new TrackerMappingPresenter(21, 123, [1456, 1789]);
@@ -92,24 +89,28 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $presenter = new BoardPresenter($this->milestone_presenter, $user, $this->milestone, $columns, [], true, false);
 
-        $this->assertNotNull($presenter->json_encoded_columns);
+        self::assertNotNull($presenter->json_encoded_columns);
     }
 
     public function testConstructJSONEncodesTrackerStructurePresenters(): void
     {
         $user = $this->mockNonAdminUser();
-        $user->shouldReceive('getPreference')
-            ->andReturn('');
+        $user->method('getPreference')
+            ->willReturn('');
 
-        $tracker = M::mock(Tracker::class);
-        $tracker->shouldReceive(['getId' => '96']);
-        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $title_field       = new TitleFieldPresenter(
-            M::mock(\Tracker_FormElement_Field_Text::class)->shouldReceive(['getId' => 123])->getMock()
-        );
-        $assign_to_field   = new AssignedToFieldPresenter(
-            M::mock(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive(['getId' => 124, 'isMultiple' => false])->getMock()
-        );
+        $tracker           = TrackerTestBuilder::aTracker()->withId(96)->build();
+        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+
+        $text_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $text_field->method('getId')->willReturn(123);
+
+        $title_field = new TitleFieldPresenter($text_field);
+
+        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field->method('getId')->willReturn(124);
+        $selectbox_field->method('isMultiple')->willReturn(false);
+
+        $assign_to_field = new AssignedToFieldPresenter($selectbox_field);
 
         $trackers = [new TrackerPresenter($taskboard_tracker, true, $title_field, null, $assign_to_field)];
 
@@ -123,7 +124,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             json_encode([
                 [
                     'id' => 96,
@@ -143,16 +144,14 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\PFUser
-     */
-    private function mockNonAdminUser()
+    private function mockNonAdminUser(): MockObject&\PFUser
     {
-        $user = M::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')
+        $user = $this->createMock(\PFUser::class);
+        $user->expects(self::once())
+            ->method('isAdmin')
             ->with(101)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
+
         return $user;
     }
 }

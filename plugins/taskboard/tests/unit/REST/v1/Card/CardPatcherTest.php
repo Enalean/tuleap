@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1\Card;
 
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Float;
@@ -33,57 +32,34 @@ use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface & ArtifactUpdater
-     */
-    private $updater;
-    /**
-     * @var CardPatcher
-     */
-    private $patcher;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var CardPatchRepresentation
-     */
-    private $payload;
+    private MockObject&Tracker_FormElementFactory $factory;
+    private MockObject&ArtifactUpdater $updater;
+    private CardPatcher $patcher;
+    private PFUser $user;
+    private Artifact $artifact;
+    private Tracker $tracker;
+    private CardPatchRepresentation $payload;
 
     protected function setUp(): void
     {
-        $this->user     = Mockery::mock(PFUser::class);
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->tracker  = Mockery::mock(Tracker::class);
+        $this->user     = UserTestBuilder::aUser()->build();
+        $this->tracker  = TrackerTestBuilder::aTracker()->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->payload = CardPatchRepresentation::build(3.14);
 
-        $this->payload                   = new CardPatchRepresentation();
-        $this->payload->remaining_effort = 3.14;
-
-        $this->factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->updater = Mockery::mock(ArtifactUpdater::class);
+        $this->factory = $this->createMock(Tracker_FormElementFactory::class);
+        $this->updater = $this->createMock(ArtifactUpdater::class);
 
         $this->patcher = new CardPatcher($this->factory, $this->updater);
     }
@@ -91,10 +67,10 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfNoField(): void
     {
         $this->factory
-            ->shouldReceive('getNumericFieldByNameForUser')
+            ->expects(self::once())
+            ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->expectException(RestException::class);
 
@@ -103,16 +79,16 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesExceptionIfFieldIsNotUpdatable(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Float::class);
-        $field->shouldReceive('userCanUpdate')
+        $field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field->method('userCanUpdate')
               ->with($this->user)
-              ->andReturn(false);
+              ->willReturn(false);
 
         $this->factory
-            ->shouldReceive('getNumericFieldByNameForUser')
+            ->expects(self::once())
+            ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $this->expectException(RestException::class);
 
@@ -121,72 +97,74 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesTheArtifactWithFormattedValueForFloatField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(Tracker_FormElement_Field_Float::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 
-        $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
+        self::assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }
 
     public function testItUpdatesTheArtifactWithFormattedValueForIntegerField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 
-        $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
+        self::assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }
 
     public function testItUpdatesTheArtifactWithFormattedValueForComputedField(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Computed::class);
+        $field = $this->createMock(Tracker_FormElement_Field_Computed::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withManualValue(3.14)->build();
 
-        $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
+        self::assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }
 
     public function testItDoesNotRaisesExceptionIfThereIsNoChange(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
-        $field->shouldReceive('userCanUpdate')
+        $field->method('userCanUpdate')
               ->with($this->user)
-              ->andReturn(true);
-        $field->shouldReceive('getId')
-              ->andReturn("1001");
+              ->willReturn(true);
+        $field->method('getId')
+              ->willReturn("1001");
 
         $this->factory
-            ->shouldReceive('getNumericFieldByNameForUser')
+            ->expects(self::once())
+            ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $this->updater
-            ->shouldReceive('update')
-            ->andThrow(Mockery::mock(Tracker_NoChangeException::class));
+            ->method('update')
+            ->willThrowException($this->createMock(Tracker_NoChangeException::class));
 
         $this->patcher->patchCard($this->artifact, $this->user, $this->payload);
     }
 
-    private function assertUpdateIsCalledWithExpectedValue(Tracker_FormElement_Field_Numeric $field, ArtifactValuesRepresentation $expected_value): void
-    {
-        $field->shouldReceive('userCanUpdate')
+    private function assertUpdateIsCalledWithExpectedValue(
+        MockObject&Tracker_FormElement_Field_Numeric $field,
+        ArtifactValuesRepresentation $expected_value,
+    ): void {
+        $field->method('userCanUpdate')
               ->with($this->user)
-              ->andReturn(true);
-        $field->shouldReceive('getId')
-              ->andReturn("1001");
+              ->willReturn(true);
+        $field->method('getId')
+              ->willReturn("1001");
 
         $this->factory
-            ->shouldReceive('getNumericFieldByNameForUser')
+            ->expects(self::once())
+            ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
-            ->once()
-            ->andReturn($field);
+            ->willReturn($field);
 
         $this->updater
-            ->shouldReceive('update')
-            ->with($this->user, $this->artifact, [$expected_value])
-            ->once();
+            ->expects(self::once())
+            ->method('update')
+            ->with($this->user, $this->artifact, [$expected_value]);
 
         $this->patcher->patchCard($this->artifact, $this->user, $this->payload);
     }

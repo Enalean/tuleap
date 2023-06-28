@@ -31,4 +31,14 @@ class CardPatchRepresentation
      * @var float {@required true}
      */
     public $remaining_effort;
+
+    private function __construct(float $remaining_effort)
+    {
+        $this->remaining_effort = $remaining_effort;
+    }
+
+    public static function build(float $remaining_effort): self
+    {
+        return new self($remaining_effort);
+    }
 }

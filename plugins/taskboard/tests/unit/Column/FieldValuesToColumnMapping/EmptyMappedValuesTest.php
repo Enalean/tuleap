@@ -22,14 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var EmptyMappedValues */
-    private $empty_mapped_values;
+    private EmptyMappedValues $empty_mapped_values;
 
     protected function setUp(): void
     {
@@ -38,12 +33,12 @@ final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetValueIdsReturnsEmptyArray(): void
     {
-        $this->assertSame(0, count($this->empty_mapped_values->getValueIds()));
+        self::assertSame(0, count($this->empty_mapped_values->getValueIds()));
     }
 
     public function testIsEmptyReturnsTrue(): void
     {
-        $this->assertTrue($this->empty_mapped_values->isEmpty());
+        self::assertTrue($this->empty_mapped_values->isEmpty());
     }
 
     public function testGetFirstValueThrowsRuntimeException(): void
@@ -55,6 +50,6 @@ final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveValueDoesNothing(): void
     {
         $this->empty_mapped_values->removeValue(12);
-        $this->assertEquals(new EmptyMappedValues(), $this->empty_mapped_values);
+        self::assertEquals(new EmptyMappedValues(), $this->empty_mapped_values);
     }
 }

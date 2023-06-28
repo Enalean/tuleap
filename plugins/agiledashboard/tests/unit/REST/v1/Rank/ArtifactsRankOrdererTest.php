@@ -64,10 +64,7 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReorderThrowsWhenSameIdIsPassedInOrderAndComparedTo(): void
     {
-        $order              = new OrderRepresentation();
-        $order->ids         = [123];
-        $order->direction   = OrderRepresentation::BEFORE;
-        $order->compared_to = 123;
+        $order = OrderRepresentation::build([123], OrderRepresentation::BEFORE, 123);
 
         $this->priority_manager->shouldReceive('moveListOfArtifactsBefore')
             ->with([123], 123, $this->context_id, 101)
@@ -81,10 +78,7 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReorderBeforeAnArtifact(): void
     {
-        $order              = new OrderRepresentation();
-        $order->ids         = [123, 789];
-        $order->direction   = OrderRepresentation::BEFORE;
-        $order->compared_to = 456;
+        $order = OrderRepresentation::build([123, 789], OrderRepresentation::BEFORE, 456);
 
         $this->priority_manager->shouldReceive('moveListOfArtifactsBefore')
             ->with([123, 789], 456, $this->context_id, 101)
@@ -102,10 +96,7 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReorderAfterAnArtifact(): void
     {
-        $order              = new OrderRepresentation();
-        $order->ids         = [123, 789];
-        $order->direction   = OrderRepresentation::AFTER;
-        $order->compared_to = 456;
+        $order = OrderRepresentation::build([123, 789], OrderRepresentation::AFTER, 456);
 
         $this->priority_manager->shouldReceive('moveListOfArtifactsAfter')
             ->with([123, 789], 456, $this->context_id, 101)

@@ -22,14 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class MappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var MappedValues */
-    private $mapped_values;
+    private MappedValues $mapped_values;
 
     protected function setUp(): void
     {
@@ -38,16 +33,16 @@ final class MappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFirstValue(): void
     {
-        $this->assertSame(123, $this->mapped_values->getFirstValue());
+        self::assertSame(123, $this->mapped_values->getFirstValue());
     }
 
     public function testGetValueIds(): void
     {
-        $this->assertSame([123, 456], $this->mapped_values->getValueIds());
+        self::assertSame([123, 456], $this->mapped_values->getValueIds());
     }
 
     public function testIsEmpty(): void
     {
-        $this->assertFalse($this->mapped_values->isEmpty());
+        self::assertFalse($this->mapped_values->isEmpty());
     }
 }

@@ -22,19 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testMapReturnsArrayOfResultsOfClosure(): void
     {
-        $milestone_tracker        = M::mock(Tracker::class);
-        $first_tracker            = $this->mockTracker(1);
-        $second_tracker           = $this->mockTracker(2);
+        $milestone_tracker        = TrackerTestBuilder::aTracker()->withId(3)->build();
+        $first_tracker            = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $second_tracker           = TrackerTestBuilder::aTracker()->withId(2)->build();
         $first_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $first_tracker);
         $second_taskboard_tracker = new TaskboardTracker($milestone_tracker, $second_tracker);
         $collection               = new TrackerCollection([$first_taskboard_tracker, $second_taskboard_tracker]);
@@ -43,15 +39,6 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             return $taskboard_tracker->getTrackerId();
         });
 
-        $this->assertEquals([1, 2], $tracker_ids);
-    }
-
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Tracker
-     */
-    private function mockTracker(int $id)
-    {
-        return M::mock(Tracker::class)->shouldReceive(['getId' => $id])
-            ->getMock();
+        self::assertEqualsCanonicalizing([1, 2], $tracker_ids);
     }
 }

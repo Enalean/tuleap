@@ -22,36 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1\Cell;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var AddValidator */
-    private $validator;
-    /** @var M\LegacyMockInterface|M\MockInterface|PFUser */
-    private $current_user;
-    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
-    private $swimlane_artifact;
+    private AddValidator $validator;
+    private PFUser $current_user;
+    private Artifact $swimlane_artifact;
 
     protected function setUp(): void
     {
-        $this->swimlane_artifact = $this->mockArtifact(21);
-        $this->current_user      = M::mock(PFUser::class);
+        $this->swimlane_artifact = ArtifactTestBuilder::anArtifact(21)->build();
+        $this->current_user      = UserTestBuilder::aUser()->build();
         $this->validator         = new AddValidator();
     }
 
     public function testValidateThrowsWhenArtifactToAddIsNotSoloItemAndHasNoParent(): void
     {
         $artifact_to_add = $this->mockArtifact(456);
-        $artifact_to_add->shouldReceive('getParent')
-            ->once()
-            ->andReturnNull();
+        $artifact_to_add->expects(self::once())
+            ->method('getParent')
+            ->willReturn(null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -61,10 +57,11 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testValidateThrowsWhenArtifactToAddIsNeitherSoloItemNorChildOfSwimlane(): void
     {
         $artifact_to_add = $this->mockArtifact(456);
-        $other_parent    = $this->mockArtifact(42);
-        $artifact_to_add->shouldReceive('getParent')
-            ->once()
-            ->andReturn($other_parent);
+        $other_parent    = ArtifactTestBuilder::anArtifact(42)->build();
+        $artifact_to_add
+            ->expects(self::once())
+            ->method('getParent')
+            ->willReturn($other_parent);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -89,25 +86,19 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateArtifacts($this->swimlane_artifact, $artifact_to_add, $this->current_user);
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Artifact
-     */
-    private function mockArtifact(int $id)
+    private function mockArtifact(int $id): MockObject&Artifact
     {
-        $artifact = M::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($id);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn($id);
         return $artifact;
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Artifact
-     */
-    private function mockArtifactWithParent(int $id)
+    private function mockArtifactWithParent(int $id): MockObject&Artifact
     {
         $artifact = $this->mockArtifact($id);
-        $artifact->shouldReceive('getParent')
-            ->once()
-            ->andReturn($this->swimlane_artifact);
+        $artifact->expects(self::once())
+            ->method('getParent')
+            ->willReturn($this->swimlane_artifact);
         return $artifact;
     }
 }

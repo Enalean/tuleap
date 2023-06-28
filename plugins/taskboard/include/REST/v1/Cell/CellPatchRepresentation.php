@@ -51,4 +51,15 @@ final class CellPatchRepresentation
             );
         }
     }
+
+    private function __construct(?int $add, ?OrderRepresentation $order_representation)
+    {
+        $this->add   = $add;
+        $this->order = $order_representation;
+    }
+
+    public static function build(?int $add, ?OrderRepresentation $order_representation): self
+    {
+        return new self($add, $order_representation);
+    }
 }

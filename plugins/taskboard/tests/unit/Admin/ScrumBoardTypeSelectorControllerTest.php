@@ -22,36 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TaskboardUsageDao | m\MockInterface
-     */
-    private $dao;
-
-    /**
-     * @var \Project | m\MockInterface
-     */
-    private $project;
+    private TaskboardUsageDao&MockObject $dao;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->project = m::mock(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn(150);
+        $this->project = ProjectTestBuilder::aProject()->withId(150)->build();
 
-        $this->dao = m::mock(TaskboardUsageDao::class);
+        $this->dao = $this->createMock(TaskboardUsageDao::class);
     }
 
     private function getController(): ScrumBoardTypeSelectorController
     {
-        $renderer = m::mock(\TemplateRenderer::class);
-        $renderer->shouldReceive('renderToString');
+        $renderer = $this->createMock(\TemplateRenderer::class);
+        $renderer->method('renderToString');
 
         return new ScrumBoardTypeSelectorController(
             $this->project,
@@ -64,11 +54,10 @@ class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockDefaultBoardType("cardwall");
 
-        $request = m::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('scrum-board-type')->andReturn(false)->once();
+        $request = new \HTTPRequest();
 
-        $this->dao->shouldReceive('deleteBoardTypeByProjectId')->never();
-        $this->dao->shouldReceive('updateBoardTypeByProjectId')->never();
+        $this->dao->expects(self::never())->method('deleteBoardTypeByProjectId');
+        $this->dao->expects(self::never())->method('updateBoardTypeByProjectId');
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -77,10 +66,10 @@ class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockDefaultBoardType("cardwall");
 
-        $request = m::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('scrum-board-type')->andReturn('both')->once();
+        $request = new \HTTPRequest();
+        $request->set('scrum-board-type', 'both');
 
-        $this->dao->shouldReceive('deleteBoardTypeByProjectId')->with(150)->once();
+        $this->dao->expects(self::once())->method('deleteBoardTypeByProjectId')->with(150);
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -89,10 +78,10 @@ class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockDefaultBoardType("cardwall");
 
-        $request = m::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('scrum-board-type')->andReturn('taskboard')->once();
+        $request = new \HTTPRequest();
+        $request->set('scrum-board-type', 'taskboard');
 
-        $this->dao->shouldReceive('updateBoardTypeByProjectId')->with(150, 'taskboard')->once();
+        $this->dao->expects(self::once())->method('updateBoardTypeByProjectId')->with(150, 'taskboard');
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -101,10 +90,10 @@ class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockDefaultBoardType(false);
 
-        $request = m::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('scrum-board-type')->andReturn('taskboard')->once();
+        $request = new \HTTPRequest();
+        $request->set('scrum-board-type', 'taskboard');
 
-        $this->dao->shouldReceive('create')->with(150, 'taskboard')->once();
+        $this->dao->expects(self::once())->method('create')->with(150, 'taskboard');
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -113,19 +102,16 @@ class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockDefaultBoardType('cardwall');
 
-        $request = m::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('scrum-board-type')->andReturn('cardwall')->once();
+        $request = new \HTTPRequest();
+        $request->set('scrum-board-type', 'cardwall');
 
-        $this->dao->shouldReceive('create')->with(150, 'taskboard')->never();
+        $this->dao->expects(self::never())->method('create')->with(150, 'taskboard');
 
         $this->getController()->onSubmitCallback($request);
     }
 
-    /**
-     * @param $default_board string | false
-     */
-    private function mockDefaultBoardType($default_board): void
+    private function mockDefaultBoardType(string|false $default_board): void
     {
-        $this->dao->shouldReceive('searchBoardTypeByProjectId')->with(150)->andReturn($default_board);
+        $this->dao->method('searchBoardTypeByProjectId')->with(150)->willReturn($default_board);
     }
 }

@@ -22,23 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
 
 final class ColumnPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testConstructAssignsTLPColor(): void
     {
         $mappings  = [new TrackerMappingPresenter(13, 123, [1024])];
         $column    = new \Cardwall_Column(97, 'On Going', 'teddy-brown');
         $presenter = new ColumnPresenter($column, false, $mappings);
-        $this->assertSame(97, $presenter->id);
-        $this->assertSame('On Going', $presenter->label);
-        $this->assertSame('teddy-brown', $presenter->color);
-        $this->assertFalse($presenter->is_collapsed);
-        $this->assertSame($mappings, $presenter->mappings);
+        self::assertSame(97, $presenter->id);
+        self::assertSame('On Going', $presenter->label);
+        self::assertSame('teddy-brown', $presenter->color);
+        self::assertFalse($presenter->is_collapsed);
+        self::assertSame($mappings, $presenter->mappings);
     }
 
     public function testConstructAssignsHexColor(): void
@@ -46,6 +43,6 @@ final class ColumnPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mappings  = [new TrackerMappingPresenter(13, 123, [1024])];
         $column    = new \Cardwall_Column(97, 'On Going', 'rgb(164,91,68)');
         $presenter = new ColumnPresenter($column, false, $mappings);
-        $this->assertSame('#A45B44', $presenter->color);
+        self::assertSame('#A45B44', $presenter->color);
     }
 }
