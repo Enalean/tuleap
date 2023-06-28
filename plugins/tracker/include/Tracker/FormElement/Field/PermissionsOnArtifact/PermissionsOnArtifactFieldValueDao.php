@@ -22,68 +22,67 @@
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Tuleap\Tracker\FormElement\Field\FieldValueDao;
+use Tracker_Artifact_Changeset_ValueDao;
+use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\FormElement\Field\DeleteFieldValue;
+use Tuleap\Tracker\FormElement\Field\SearchFieldValue;
 
-class PermissionsOnArtifactFieldValueDao extends FieldValueDao
+class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements SearchFieldValue, DeleteFieldValue
 {
-    public function __construct()
+    public function __construct(private readonly Tracker_Artifact_Changeset_ValueDao $changeset_value_dao)
     {
         parent::__construct();
-        $this->table_name = 'tracker_changeset_value_permissionsonartifact';
     }
 
-    /**
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
-     */
-    public function searchById($changeset_value_id)
+    public function searchById($changeset_value_id): ?array
     {
-        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        $sql                = "SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
+        $sql = "SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
                 FROM tracker_changeset_value_permissionsonartifact
                 JOIN ugroup ON (ugroup.ugroup_id = tracker_changeset_value_permissionsonartifact.ugroup_id)
-                WHERE changeset_value_id = $changeset_value_id ";
-        return $this->retrieve($sql);
+                WHERE changeset_value_id = ? ";
+        return $this->getDB()->run($sql, $changeset_value_id);
     }
 
-    public function create($changeset_value_id, $use_perm, $value_ids)
+    public function create(int $changeset_value_id, bool $use_perm, array|string $value_ids)
     {
-        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        $use_perm           = $this->da->escapeInt($use_perm);
-        $values             = [];
+        $values = [];
         if (! is_array($value_ids)) {
             $value_ids = [$value_ids];
         }
         foreach ($value_ids as $v) {
-            $values[] = "($changeset_value_id, $use_perm, $v)";
+            $values[] = ["changeset_value_id" => $changeset_value_id, "use_perm" => $use_perm, "ugroup_id" => $v];
         }
         if ($values) {
-            $values = implode(',', $values);
-            $sql    = "INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id)
-                    VALUES $values";
-            return $this->update($sql);
+            return $this->getDB()->insertMany("tracker_changeset_value_permissionsonartifact", $values) !== null;
         }
         return true;
     }
 
-    public function createNoneValue($tracker_id, $field_id)
+    public function createNoneValue(int $tracker_id, int $field_id): bool
     {
-        $tracker_id          = $this->da->escapeInt($tracker_id);
-        $changeset_value_ids = $this->createNoneChangesetValue((int) $tracker_id, $field_id);
-        if ($changeset_value_ids === false) {
+        $changeset_value_ids = $this->changeset_value_dao->createFromLastChangesetByTrackerId($tracker_id, $field_id);
+        if (empty($changeset_value_ids)) {
             return false;
         }
-        $sql = " INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id) VALUES (" . implode(', 1, 1), ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", 1, 1) ";
-        $this->update($sql);
+
+        $values = [];
+        foreach ($changeset_value_ids as $v) {
+            $values[] = ["changeset_value_id" => $v, "use_perm" => 1, "ugroup_id" => 1];
+        }
+        return $this->getDB()->insertMany("tracker_changeset_value_permissionsonartifact", $values) !== null;
     }
 
-    public function keep($from, $to)
+    public function keep(int $from, int $to): bool
     {
-        $from = $this->da->escapeInt($from);
-        $to   = $this->da->escapeInt($to);
-        $sql  = "INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id)
-                SELECT $to, use_perm, ugroup_id
-                FROM $this->table_name
-                WHERE changeset_value_id = $from";
-        return $this->update($sql);
+        $sql = "INSERT INTO tracker_changeset_value_permissionsonartifact (changeset_value_id, use_perm, ugroup_id)
+                SELECT ?, use_perm, ugroup_id
+                FROM tracker_changeset_value_permissionsonartifact
+                WHERE changeset_value_id = ?";
+        return $this->getDB()->run($sql, $to, $from) !== null;
+    }
+
+    public function delete(int $changeset_value_id): void
+    {
+        $this->getDB()->delete('tracker_changeset_value_permissionsonartifact', ['changeset_value_id' => $changeset_value_id]);
     }
 }
