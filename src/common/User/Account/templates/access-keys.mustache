@@ -109,12 +109,14 @@
         </button>
     </div>
 
-    <form action="/account/access_key/create" method="post">
+    <form action="/account/access_key/create" method="post" id="access-key-form">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
 
         <div class="tlp-modal-body">
+            <div class="tlp-alert-danger user-preferences-hidden" id="access-key-error"></div>
+
             <p>
                 {{# gettext }}A personal access key will be automatically generated at the form submission. The description is not required but it can help you to manage your access keys.{{/ gettext }}
             </p>

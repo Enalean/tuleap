@@ -52,6 +52,8 @@
         {{> user-account-tabs }}
 
         <div class="user-preferences-section">
+            <div class="tlp-alert-danger user-preferences-hidden" id="keys-tokens-alert-danger"></div>
+
             {{# ssh_keys_presenter }}
                 {{> ssh-keys }}
             {{/ ssh_keys_presenter }}

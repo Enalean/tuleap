@@ -18,7 +18,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-msgid "Confirm my identity"
+msgid "OK"
 msgstr ""
 
 msgid "Passkey authentication"

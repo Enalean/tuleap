@@ -26,9 +26,11 @@ namespace Tuleap\User\SSHKey;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\DisplayKeysTokensController;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use UserManager;
 
 final class SSHKeyCreateController implements DispatchableWithRequest
@@ -42,8 +44,11 @@ final class SSHKeyCreateController implements DispatchableWithRequest
      */
     private $csrf_token;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, UserManager $user_manager)
-    {
+    public function __construct(
+        CSRFSynchronizerToken $csrf_token,
+        UserManager $user_manager,
+        private readonly WebAuthnAuthentication $web_authn_authentication,
+    ) {
         $this->user_manager = $user_manager;
         $this->csrf_token   = $csrf_token;
     }
@@ -59,6 +64,15 @@ final class SSHKeyCreateController implements DispatchableWithRequest
         }
 
         $this->csrf_token->check(DisplayKeysTokensController::URL);
+
+        $result = $this->web_authn_authentication->checkKeyResult(
+            $user,
+            $request->get('webauthn_result') ?: ''
+        );
+        if (Result::isErr($result)) {
+            $layout->addFeedback(\Feedback::ERROR, (string) $result->error);
+            $layout->redirect(DisplayKeysTokensController::URL);
+        }
 
         $this->user_manager->addSSHKeys($user, $request->get('ssh-key'));
 

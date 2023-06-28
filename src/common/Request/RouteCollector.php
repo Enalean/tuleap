@@ -242,6 +242,7 @@ use Tuleap\User\SessionManager;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationChallengeController;
@@ -495,7 +496,36 @@ class RouteCollector
 
     public static function postAccountSSHKeyCreate(): DispatchableWithRequest
     {
-        return new SSHKeyCreateController(DisplayKeysTokensController::getCSRFToken(), \UserManager::instance());
+        $source_dao                    = new WebAuthnCredentialSourceDao();
+        $attestation_statement_manager = new AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+
+        return new SSHKeyCreateController(
+            DisplayKeysTokensController::getCSRFToken(),
+            \UserManager::instance(),
+            new WebAuthnAuthentication(
+                $source_dao,
+                new WebAuthnChallengeDao(),
+                new PublicKeyCredentialRpEntity(
+                    \ForgeConfig::get(ConfigurationVariables::NAME),
+                    ServerHostname::rawHostname()
+                ),
+                new PublicKeyCredentialLoader(
+                    new AttestationObjectLoader($attestation_statement_manager)
+                ),
+                new AuthenticatorAssertionResponseValidator(
+                    $source_dao,
+                    null,
+                    new ExtensionOutputCheckerHandler(),
+                    Manager::create()
+                        ->add(
+                            Ed25519::create(),
+                            RS256::create(),
+                            ES256::create()
+                        )
+                ),
+            ),
+        );
     }
 
     public static function postAccountSSHKeyDelete(): DispatchableWithRequest
@@ -505,7 +535,35 @@ class RouteCollector
 
     public static function postAccountAccessKeyCreate(): DispatchableWithRequest
     {
-        return new AccessKeyCreationController(DisplayKeysTokensController::getCSRFToken());
+        $source_dao                    = new WebAuthnCredentialSourceDao();
+        $attestation_statement_manager = new AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+
+        return new AccessKeyCreationController(
+            DisplayKeysTokensController::getCSRFToken(),
+            new WebAuthnAuthentication(
+                $source_dao,
+                new WebAuthnChallengeDao(),
+                new PublicKeyCredentialRpEntity(
+                    \ForgeConfig::get(ConfigurationVariables::NAME),
+                    ServerHostname::rawHostname()
+                ),
+                new PublicKeyCredentialLoader(
+                    new AttestationObjectLoader($attestation_statement_manager)
+                ),
+                new AuthenticatorAssertionResponseValidator(
+                    $source_dao,
+                    null,
+                    new ExtensionOutputCheckerHandler(),
+                    Manager::create()
+                        ->add(
+                            Ed25519::create(),
+                            RS256::create(),
+                            ES256::create()
+                        )
+                ),
+            ),
+        );
     }
 
     public static function postAccountAccessKeyRevoke(): DispatchableWithRequest
