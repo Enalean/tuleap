@@ -18,10 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Kanban\Kanban;
-use Tuleap\Kanban\KanbanColumnDao;
+declare(strict_types=1);
 
-class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Kanban;
+
+use Mockery;
+use PFUser;
+
+final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -46,7 +50,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $user;
     /**
-     * @var AgileDashboard_KanbanColumn
+     * @var KanbanColumn
      */
     private $column;
     /**
@@ -54,7 +58,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $column_dao;
     /**
-     * @var AgileDashboard_KanbanActionsChecker|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var KanbanActionsChecker|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $kanban_actions_checker;
     /**
@@ -62,7 +66,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $kanban;
     /**
-     * @var AgileDashboard_KanbanColumnManager
+     * @var KanbanColumnManager
      */
     private $kanban_column_manager;
 
@@ -75,13 +79,13 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getUserName')->andReturn('user name');
-        $this->column = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2, true);
+        $this->column = new KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, 2, true);
 
         $this->column_dao             = \Mockery::spy(\Tuleap\Kanban\KanbanColumnDao::class);
-        $this->kanban_actions_checker = \Mockery::spy(\AgileDashboard_KanbanActionsChecker::class);
+        $this->kanban_actions_checker = \Mockery::spy(\Tuleap\Kanban\KanbanActionsChecker::class);
 
         $this->kanban                = new Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
-        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
+        $this->kanban_column_manager = new KanbanColumnManager(
             $this->column_dao,
             \Mockery::spy(
                 \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
@@ -99,10 +103,10 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItThrowsAnExceptionIfUserNotAdmin(): void
     {
-        $this->kanban_actions_checker->shouldReceive('checkUserCanAdministrate')->with($this->user, $this->kanban)->andThrows(new AgileDashboard_UserNotAdminException($this->user));
+        $this->kanban_actions_checker->shouldReceive('checkUserCanAdministrate')->with($this->user, $this->kanban)->andThrows(new KanbanUserNotAdminException($this->user));
 
         $this->column_dao->shouldReceive('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit)->never();
-        $this->expectException(\AgileDashboard_UserNotAdminException::class);
+        $this->expectException(\Tuleap\Kanban\KanbanUserNotAdminException::class);
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);
     }

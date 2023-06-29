@@ -19,85 +19,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanColumn
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+class KanbanColumn
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $kanban_id;
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var bool
-     */
-    private $is_open;
-
-    /**
-     * @var string
-     */
-    private $color;
-
-    /**
-     * @var int
-     */
-    private $limit;
-
-     /**
-      * @var bool
-      */
-    private $is_removable;
-
-    public function __construct($id, $kanban_id, $label, $is_open, $color, $limit, $is_removable)
-    {
-        $this->id           = $id;
-        $this->kanban_id    = $kanban_id;
-        $this->label        = $label;
-        $this->is_open      = $is_open;
-        $this->color        = $color;
-        $this->limit        = $limit;
-        $this->is_removable = $is_removable;
+    public function __construct(
+        private readonly int $id,
+        private readonly int $kanban_id,
+        private readonly string $label,
+        private readonly bool $is_open,
+        private readonly ?int $limit,
+        private readonly bool $is_removable,
+    ) {
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getKanbanId()
+    public function getKanbanId(): int
     {
         return $this->kanban_id;
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
 
-    public function isOpen()
+    public function isOpen(): bool
     {
         return $this->is_open;
     }
 
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    public function getLimit()
+    public function getLimit(): ?int
     {
         return $this->limit;
     }
 
-    public function isRemovable()
+    public function isRemovable(): bool
     {
         return $this->is_removable;
     }

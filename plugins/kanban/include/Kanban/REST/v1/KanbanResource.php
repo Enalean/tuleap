@@ -20,11 +20,11 @@
 namespace Tuleap\Kanban\REST\v1;
 
 use Tuleap\Kanban\Kanban;
-use AgileDashboard_KanbanActionsChecker;
+use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanColumnDao;
-use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanColumnManager;
+use Tuleap\Kanban\KanbanColumnFactory;
+use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
@@ -32,18 +32,18 @@ use AgileDashboard_KanbanItemManager;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
-use AgileDashboard_UserNotAdminException;
+use Tuleap\Kanban\KanbanUserNotAdminException;
 use AgileDashboardStatisticsAggregator;
 use BackendLogger;
 use DateTime;
 use DateTimeImmutable;
 use EventManager;
 use Exception;
-use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
-use Kanban_SemanticStatusBasedOnASharedFieldException;
-use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
-use Kanban_SemanticStatusNotBoundToStaticValuesException;
-use Kanban_SemanticStatusNotDefinedException;
+use Tuleap\Kanban\KanbanSemanticStatusAllColumnIdsNotProvidedException;
+use Tuleap\Kanban\KanbanSemanticStatusBasedOnASharedFieldException;
+use Tuleap\Kanban\KanbanSemanticStatusColumnIdsNotInOpenSemanticException;
+use Tuleap\Kanban\KanbanSemanticStatusNotBoundToStaticValuesException;
+use Tuleap\Kanban\KanbanSemanticStatusNotDefinedException;
 use Luracast\Restler\RestException;
 use PFUser;
 use ReferenceManager;
@@ -125,6 +125,7 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
@@ -167,7 +168,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var AgileDashboard_KanbanColumnFactory */
+    /** @var KanbanColumnFactory */
     private $kanban_column_factory;
 
     /** @var Tracker_FormElementFactory */
@@ -181,13 +182,13 @@ final class KanbanResource extends AuthenticatedResource
 
     /** @var AgileDashboardStatisticsAggregator */
     private $statistics_aggregator;
-    /** @var AgileDashboard_KanbanColumnManager */
+    /** @var KanbanColumnManager */
     private $kanban_column_manager;
 
     /** @var AgileDashboard_KanbanItemManager */
     private $kanban_item_manager;
 
-    /** @var AgileDashboard_KanbanActionsChecker */
+    /** @var KanbanActionsChecker */
     private $kanban_actions_checker;
 
     /** @var NodeJSClient */
@@ -234,7 +235,7 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->user_preferences      = new KanbanUserPreferences();
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
+        $this->kanban_column_factory = new KanbanColumnFactory(
             new KanbanColumnDao(),
             $this->user_preferences
         );
@@ -257,10 +258,11 @@ final class KanbanResource extends AuthenticatedResource
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new AgileDashboard_PermissionsManager();
 
-        $this->kanban_actions_checker = new AgileDashboard_KanbanActionsChecker(
+        $this->kanban_actions_checker = new KanbanActionsChecker(
             $this->tracker_factory,
             $this->permissions_manager,
-            $this->form_element_factory
+            $this->form_element_factory,
+            SubmissionPermissionVerifier::instance(),
         );
 
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(
@@ -269,7 +271,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->kanban_actions_checker
         );
 
-        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
+        $this->kanban_column_manager = new KanbanColumnManager(
             new KanbanColumnDao(),
             new BindStaticValueDao(),
             $this->kanban_actions_checker
@@ -1322,13 +1324,13 @@ final class KanbanResource extends AuthenticatedResource
             if ($new_column_id === null) {
                 throw new RestException(500, 'An error occurred while creating the column');
             }
-        } catch (AgileDashboard_UserNotAdminException $exception) {
+        } catch (KanbanUserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotDefinedException | SemanticStatusNotDefinedException $exception) {
+        } catch (KanbanSemanticStatusNotDefinedException | SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
+        } catch (KanbanSemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
+        } catch (KanbanSemanticStatusBasedOnASharedFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -1410,17 +1412,17 @@ final class KanbanResource extends AuthenticatedResource
 
         try {
             $this->kanban_column_manager->reorderColumns($user, $kanban, $column_ids);
-        } catch (AgileDashboard_UserNotAdminException $exception) {
+        } catch (KanbanUserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (KanbanSemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
+        } catch (KanbanSemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
+        } catch (KanbanSemanticStatusBasedOnASharedFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatusAllColumnIdsNotProvidedException $exception) {
+        } catch (KanbanSemanticStatusAllColumnIdsNotProvidedException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatusColumnIdsNotInOpenSemanticException $exception) {
+        } catch (KanbanSemanticStatusColumnIdsNotInOpenSemanticException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -1664,7 +1666,7 @@ final class KanbanResource extends AuthenticatedResource
         try {
             $this->kanban_actions_checker->checkUserCanAdministrate($current_user, $kanban);
             $this->tracker_report_updater->save($kanban, $tracker_report_ids);
-        } catch (AgileDashboard_UserNotAdminException $exception) {
+        } catch (KanbanUserNotAdminException $exception) {
             throw new RestException(403, "You can't administrate this Kanban");
         } catch (Exception $exception) {
             throw new RestException(500, "An error occured while saving reports for Kanban");

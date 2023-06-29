@@ -20,7 +20,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
+use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;

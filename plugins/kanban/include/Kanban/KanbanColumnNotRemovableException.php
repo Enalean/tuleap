@@ -16,7 +16,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_KanbanColumnNotRemovableException extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+final class KanbanColumnNotRemovableException extends \Exception
 {
     public function __construct()
     {

@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use AgileDashboard_KanbanActionsChecker;
-use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_PermissionsManager;
 use EventManager;
 use ForgeConfig;
@@ -41,6 +39,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -79,14 +78,15 @@ final class KanbanPresenter
         $user_preferences              = new KanbanUserPreferences();
         $kanban_representation_builder = new \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder(
             $user_preferences,
-            new AgileDashboard_KanbanColumnFactory(
+            new KanbanColumnFactory(
                 new KanbanColumnDao(),
                 $user_preferences
             ),
-            new AgileDashboard_KanbanActionsChecker(
+            new KanbanActionsChecker(
                 TrackerFactory::instance(),
                 new AgileDashboard_PermissionsManager(),
-                Tracker_FormElementFactory::instance()
+                Tracker_FormElementFactory::instance(),
+                SubmissionPermissionVerifier::instance(),
             )
         );
 

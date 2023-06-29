@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\NewDropdown;
 
-use AgileDashboard_KanbanActionsChecker;
+use Mockery;
+use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanNotFoundException;
-use Mockery;
-use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+use Tuleap\Kanban\KanbanUserCantAddArtifactException;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -46,7 +46,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
      */
     private $presenter_builder;
     /**
-     * @var AgileDashboard_KanbanActionsChecker|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var KanbanActionsChecker|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $kanban_actions_checker;
     /**
@@ -63,7 +63,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
         $this->kanban_factory         = Mockery::mock(\Tuleap\Kanban\KanbanFactory::class);
         $this->tracker_factory        = Mockery::mock(\TrackerFactory::class);
         $this->presenter_builder      = new TrackerNewDropdownLinkPresenterBuilder();
-        $this->kanban_actions_checker = Mockery::mock(AgileDashboard_KanbanActionsChecker::class);
+        $this->kanban_actions_checker = Mockery::mock(KanbanActionsChecker::class);
 
         $this->provider = new NewDropdownCurrentContextSectionForKanbanProvider(
             $this->kanban_factory,
@@ -117,7 +117,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
             ->shouldReceive('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
             ->once()
-            ->andThrow(\Kanban_SemanticStatusNotDefinedException::class);
+            ->andThrow(\Tuleap\Kanban\KanbanSemanticStatusNotDefinedException::class);
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -140,7 +140,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
             ->shouldReceive('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
             ->once()
-            ->andThrow(\Kanban_TrackerNotDefinedException::class);
+            ->andThrow(\Tuleap\Kanban\KanbanTrackerNotDefinedException::class);
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)

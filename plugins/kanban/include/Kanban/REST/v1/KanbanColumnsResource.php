@@ -35,19 +35,20 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\Kanban;
-use AgileDashboard_KanbanColumnFactory;
+use Tuleap\Kanban\KanbanColumnFactory;
 use Tuleap\Kanban\KanbanColumnDao;
-use AgileDashboard_KanbanColumnManager;
+use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanColumnNotFoundException;
-use AgileDashboard_UserNotAdminException;
-use AgileDashboard_KanbanColumnNotRemovableException;
+use Tuleap\Kanban\KanbanUserNotAdminException;
+use Tuleap\Kanban\KanbanColumnNotRemovableException;
 use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use UserManager;
 use PFUser;
 use Tuleap\Kanban\KanbanUserPreferences;
-use AgileDashboard_KanbanActionsChecker;
+use Tuleap\Kanban\KanbanActionsChecker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\RealTime\NodeJSClient;
@@ -64,10 +65,10 @@ class KanbanColumnsResource
     /** @var KanbanFactory */
     private $kanban_factory;
 
-    /** @var AgileDashboard_KanbanColumnFactory */
+    /** @var KanbanColumnFactory */
     private $kanban_column_factory;
 
-    /** @var AgileDashboard_KanbanColumnManager */
+    /** @var KanbanColumnManager */
     private $kanban_column_manager;
 
     /** @var AgileDashboardStatisticsAggregator */
@@ -99,17 +100,18 @@ class KanbanColumnsResource
 
         $kanban_column_dao           = new KanbanColumnDao();
         $permissions_manager         = new AgileDashboard_PermissionsManager();
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
+        $this->kanban_column_factory = new KanbanColumnFactory(
             $kanban_column_dao,
             new KanbanUserPreferences()
         );
-        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
+        $this->kanban_column_manager = new KanbanColumnManager(
             $kanban_column_dao,
             new BindStaticValueDao(),
-            new AgileDashboard_KanbanActionsChecker(
+            new KanbanActionsChecker(
                 $this->tracker_factory,
                 $permissions_manager,
-                Tracker_FormElementFactory::instance()
+                Tracker_FormElementFactory::instance(),
+                SubmissionPermissionVerifier::instance(),
             )
         );
 
@@ -186,7 +188,7 @@ class KanbanColumnsResource
             }
         } catch (KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (AgileDashboard_UserNotAdminException $exception) {
+        } catch (KanbanUserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
         } catch (SemanticStatusNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
@@ -257,18 +259,16 @@ class KanbanColumnsResource
         }
 
         try {
-            if (! $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column)) {
-                throw new RestException(500);
-            }
-        } catch (AgileDashboard_KanbanColumnNotRemovableException $exception) {
+            $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column);
+        } catch (KanbanColumnNotRemovableException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (\Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
+        } catch (\Tuleap\Kanban\KanbanSemanticStatusBasedOnASharedFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (\Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
+        } catch (\Tuleap\Kanban\KanbanSemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (\Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (\Tuleap\Kanban\KanbanSemanticStatusNotDefinedException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (\Kanban_TrackerNotDefinedException $exception) {
+        } catch (\Tuleap\Kanban\KanbanTrackerNotDefinedException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 

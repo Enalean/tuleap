@@ -16,10 +16,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Kanban_SemanticStatusNotBoundToStaticValuesException extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+final class KanbanSemanticStatusNotDefinedException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("The list field defined as semantic status is not bound to static values");
+        parent::__construct("Semantic status is not defined for the tracker used by kanban");
     }
 }

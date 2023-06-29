@@ -20,19 +20,19 @@
 namespace Tuleap\Kanban\REST\v1;
 
 use Tuleap\Kanban\Kanban;
-use AgileDashboard_KanbanActionsChecker;
-use AgileDashboard_KanbanColumnFactory;
+use Tuleap\Kanban\KanbanActionsChecker;
+use Tuleap\Kanban\KanbanColumnFactory;
 use Tuleap\Kanban\KanbanUserPreferences;
 use Exception;
 use PFUser;
-use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+use Tuleap\Kanban\KanbanUserCantAddArtifactException;
 
 final class KanbanRepresentationBuilder
 {
     public function __construct(
         private readonly KanbanUserPreferences $user_preferences,
-        private readonly AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        private readonly AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
+        private readonly KanbanColumnFactory $kanban_column_factory,
+        private readonly KanbanActionsChecker $kanban_actions_checker,
     ) {
     }
 
@@ -43,9 +43,9 @@ final class KanbanRepresentationBuilder
             $user_can_add_artifact = true;
         } catch (KanbanUserCantAddArtifactException $exception) {
             $user_can_add_artifact = false;
-        } catch (\Kanban_SemanticStatusNotDefinedException $e) {
+        } catch (\Tuleap\Kanban\KanbanSemanticStatusNotDefinedException $e) {
             $user_can_add_artifact = false;
-        } catch (\Kanban_TrackerNotDefinedException $e) {
+        } catch (\Tuleap\Kanban\KanbanTrackerNotDefinedException $e) {
             $user_can_add_artifact = false;
         }
 

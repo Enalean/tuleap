@@ -2000,7 +2000,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @param PFUser $user The user to test (current user if not defined)
      *
-     * @deprecated see TrackerArtifactSubmissionPermission::userCanSubmitArtifact
+     * @deprecated see VerifySubmissionPermissions::canUserSubmitArtifact
      */
     public function userCanSubmitArtifact($user = false): bool
     {
