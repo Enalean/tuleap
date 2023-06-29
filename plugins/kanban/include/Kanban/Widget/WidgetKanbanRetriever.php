@@ -17,28 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\AgileDashboard\Widget;
 
-class WidgetKanbanDeletor
+namespace Tuleap\Kanban\Widget;
+
+class WidgetKanbanRetriever
 {
-    /**
-     * @var WidgetKanbanDao
-     */
-    private $widget_kanban_dao;
-
-    public function __construct(WidgetKanbanDao $widget_kanban_dao)
+    public function __construct(private readonly WidgetKanbanDao $widget_kanban_dao)
     {
-        $this->widget_kanban_dao = $widget_kanban_dao;
     }
 
     /**
-     * @param $id
-     * @param $owner_id
-     * @param $owner_type
-     * @throws \Exception
+     * @return array{id: int, owner_id: int, owner_type: string, title: string, kanban_id: int}|null
      */
-    public function delete($id, $owner_id, $owner_type)
+    public function searchWidgetById(int $id, int $owner_id, string $owner_type): ?array
     {
-        $this->widget_kanban_dao->deleteKanbanWidget($id, $owner_id, $owner_type);
+        return $this->widget_kanban_dao->searchWidgetById($id, $owner_id, $owner_type);
     }
 }

@@ -55,19 +55,7 @@ msgstr ""
 msgid "Activate count elements mode for burnup chart"
 msgstr ""
 
-msgid "Add Kanban to dashboard"
-msgstr ""
-
 msgid "Add a kanban"
-msgstr ""
-
-msgid "Add to dashboard"
-msgstr ""
-
-msgid "Add to my dashboard"
-msgstr ""
-
-msgid "Add to project dashboard"
 msgstr ""
 
 msgid "Add to top backlog"
@@ -80,9 +68,6 @@ msgid "Agile Dashboard Administration"
 msgstr ""
 
 msgid "Agile Dashboard administration"
-msgstr ""
-
-msgid "Agile dashboard"
 msgstr ""
 
 msgid "AgileDashboard service"
@@ -193,11 +178,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Displays a board to see the tasks to do, in progress, done etc. Please go on "
-"a kanban to add it."
-msgstr ""
-
-msgid ""
 "Do you really want to force burnup cache regeneration? The burnup will be "
 "unavailable for a few minutes if you do."
 msgstr ""
@@ -237,9 +217,6 @@ msgid "Export the configuration"
 msgstr ""
 
 msgid "Field used by semantic"
-msgstr ""
-
-msgid "Filter:"
 msgstr ""
 
 msgid "Force cache regeneration"
@@ -354,9 +331,6 @@ msgstr ""
 
 msgid "No tracker is available."
 msgstr ""
-
-msgid "None"
-msgstr "Nenhum"
 
 msgid ""
 "Note:<br>Importing a template will create new trackers. The import will not "
@@ -528,9 +502,6 @@ msgid "The tracker %s is not found"
 msgstr ""
 
 msgid "There are no milestones for this period"
-msgstr ""
-
-msgid "There is no content you can see"
 msgstr ""
 
 msgid "There is no item yet"

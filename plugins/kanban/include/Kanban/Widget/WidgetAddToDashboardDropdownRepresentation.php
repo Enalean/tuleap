@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use PFUser;
 use Project;
@@ -26,49 +26,39 @@ use Tuleap\Dashboard\DashboardRepresentation;
 
 class WidgetAddToDashboardDropdownRepresentation
 {
-    public $is_admin;
-    public $my_dashboard_url;
-    public $project_dashboard_url;
-    public $project_dashboard;
-    public $my_dashboard;
-    public $dashboard;
-    public $cancel_label;
-
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    public bool $is_admin;
+    public string $project_dashboard;
+    public string $my_dashboard;
+    public string $dashboard;
 
     /**
      * @var DashboardRepresentation[]
      */
-    public $user_dashboards;
-    /**
-     * @var DashboardRepresentation[]
-     */
-    public $project_dashboards;
+    public array $project_dashboards = [];
 
+    /**
+     * @param DashboardRepresentation[] $user_dashboards
+     * @param DashboardRepresentation[] $project_dashboards_representation
+     */
     public function __construct(
         PFUser $user,
         Project $project,
-        $my_dashboard_url,
-        $project_dashboard_url,
-        array $user_dashboards_representation,
+        public readonly string $my_dashboard_url,
+        public string $project_dashboard_url,
+        public readonly array $user_dashboards,
         array $project_dashboards_representation,
     ) {
-        $this->is_admin = $user->isAdmin($project->getID());
+        $this->is_admin = $user->isAdmin((int) $project->getID());
 
         if ($this->is_admin) {
-            $this->project_dashboard_url = $project_dashboard_url;
-            $this->project_dashboards    = $project_dashboards_representation;
+            $this->project_dashboards = $project_dashboards_representation;
 
-            $this->project_dashboard = dgettext('tuleap-agiledashboard', 'Add to project dashboard');
+            $this->project_dashboard = dgettext('tuleap-kanban', 'Add to project dashboard');
+        } else {
+            $this->project_dashboard_url = '';
         }
 
-        $this->my_dashboard_url = $my_dashboard_url;
-        $this->user_dashboards  = $user_dashboards_representation;
-
-        $this->my_dashboard = dgettext('tuleap-agiledashboard', 'Add to my dashboard');
-        $this->dashboard    = dgettext('tuleap-agiledashboard', 'Add to dashboard');
+        $this->my_dashboard = dgettext('tuleap-kanban', 'Add to my dashboard');
+        $this->dashboard    = dgettext('tuleap-kanban', 'Add to dashboard');
     }
 }

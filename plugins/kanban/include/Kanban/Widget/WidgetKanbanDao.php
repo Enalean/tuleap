@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use Exception;
 use Tuleap\DB\DataAccessObject;
 
-class WidgetKanbanDao extends DataAccessObject
+final class WidgetKanbanDao extends DataAccessObject
 {
-    public function createKanbanWidget($owner_id, $owner_type, $kanban_id, $kanban_title, $tracker_report_id)
-    {
+    public function createKanbanWidget(
+        int $owner_id,
+        string $owner_type,
+        int $kanban_id,
+        string $kanban_title,
+        int $tracker_report_id,
+    ): int {
         // The creation of a kanban widget can happen in two contexts: requested by a user and during a project creation
         // The former might leads to a nested transaction issue if the whole is running with PDO instead of deprecated
         // mysql_* API
@@ -56,17 +61,17 @@ class WidgetKanbanDao extends DataAccessObject
         return $widget_id;
     }
 
-    private function create($owner_id, $owner_type, $kanban_id, $kanban_title)
+    private function create(int $owner_id, string $owner_type, int $kanban_id, string $kanban_title): int
     {
         $sql = "INSERT INTO plugin_agiledashboard_kanban_widget(owner_id, owner_type, title, kanban_id)
                 VALUES (?, ?, ?, ?)";
 
         $this->getDB()->run($sql, $owner_id, $owner_type, $kanban_title, $kanban_id);
 
-        return $this->getDB()->lastInsertId();
+        return (int) $this->getDB()->lastInsertId();
     }
 
-    private function createConfigForWidgetId($widget_id, $tracker_report_id)
+    private function createConfigForWidgetId(int $widget_id, int $tracker_report_id): void
     {
         $sql = "
             REPLACE INTO plugin_agiledashboard_kanban_widget_config(widget_id, tracker_report_id)
@@ -76,7 +81,10 @@ class WidgetKanbanDao extends DataAccessObject
         $this->getDB()->run($sql, $widget_id, $tracker_report_id);
     }
 
-    public function searchWidgetById($id, $owner_id, $owner_type)
+    /**
+     * @return array{id: int, owner_id: int, owner_type: string, title: string, kanban_id: int}|null
+     */
+    public function searchWidgetById(int $id, int $owner_id, string $owner_type): ?array
     {
         $sql = "SELECT *
                 FROM plugin_agiledashboard_kanban_widget
@@ -84,10 +92,10 @@ class WidgetKanbanDao extends DataAccessObject
                   AND owner_type = ?
                   AND id = ?";
 
-        return $this->getDB()->run($sql, $owner_id, $owner_type, $id);
+        return $this->getDB()->row($sql, $owner_id, $owner_type, $id);
     }
 
-    public function deleteKanbanWidget($id, $owner_id, $owner_type)
+    public function deleteKanbanWidget(int $id, int $owner_id, string $owner_type): void
     {
         $sql = 'DELETE plugin_agiledashboard_kanban_widget, plugin_agiledashboard_kanban_widget_config
                 FROM plugin_agiledashboard_kanban_widget

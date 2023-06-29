@@ -20,7 +20,7 @@
 
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
+use Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;

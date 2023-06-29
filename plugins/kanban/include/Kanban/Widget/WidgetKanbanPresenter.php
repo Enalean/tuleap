@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,25 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
-class WidgetKanbanConfigRetriever
+use KanbanPresenter;
+
+final class WidgetKanbanPresenter
 {
-    /**
-     * @var WidgetKanbanConfigDAO
-     */
-    private $config_dao;
+    public string $empty_state;
+    public bool $there_is_error;
 
-    public function __construct(WidgetKanbanConfigDAO $config_dao)
-    {
-        $this->config_dao = $config_dao;
-    }
+    public function __construct(
+        public readonly bool $is_empty,
+        public readonly string $error_message,
+        public readonly ?KanbanPresenter $kanban_presenter = null,
+    ) {
+        $this->there_is_error = ! empty($this->error_message);
 
-    /**
-     * @param int $widget_id
-     */
-    public function getWidgetReportId($widget_id)
-    {
-        return $this->config_dao->searchKanbanTrackerReportId($widget_id);
+        $this->empty_state = dgettext('tuleap-kanban', "There is no content you can see");
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
@@ -44,7 +44,7 @@ class ProjectKanban extends Kanban
     ) {
         parent::__construct(
             self::NAME,
-            HTTPRequest::instance()->get('group_id'),
+            (int) HTTPRequest::instance()->get('group_id'),
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
             $widget_kanban_creator,
             $widget_kanban_retriever,
@@ -64,6 +64,9 @@ class ProjectKanban extends Kanban
         $widget->addAttribute('name', $this->id);
 
         $preference = $widget->addChild('preference');
+        if ($preference === null) {
+            throw new \Exception("Unable to add preference node");
+        }
         $preference->addAttribute('name', 'kanban');
 
         $cdata_factory = new \XML_SimpleXMLCDATAFactory();
@@ -75,6 +78,9 @@ class ProjectKanban extends Kanban
         );
 
         $reference = $preference->addChild('reference');
+        if ($reference === null) {
+            throw new \Exception("Unable to add reference node");
+        }
         $reference->addAttribute('name', 'id');
         $reference->addAttribute('REF', KanbanXMLExporter::KANBAN_ID_PREFIX . $this->kanban_id);
 

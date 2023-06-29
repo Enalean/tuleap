@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
@@ -43,7 +43,7 @@ class MyKanban extends Kanban
     ) {
         parent::__construct(
             self::NAME,
-            UserManager::instance()->getCurrentUser()->getId(),
+            (int) UserManager::instance()->getCurrentUser()->getId(),
             UserDashboardController::LEGACY_DASHBOARD_TYPE,
             $widget_kanban_creator,
             $widget_kanban_retriever,

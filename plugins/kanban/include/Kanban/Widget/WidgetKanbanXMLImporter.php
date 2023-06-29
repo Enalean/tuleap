@@ -19,17 +19,17 @@
  *
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 
-class WidgetKanbanXMLImporter
+final class WidgetKanbanXMLImporter
 {
     /**
      * @throws \RuntimeException
      */
-    public function configureWidget(ConfigureAtXMLImport $event)
+    public function configureWidget(ConfigureAtXMLImport $event): void
     {
         $content_id = $event->getWidget()->create($this->getRequest($event));
         $event->setContentId($content_id);
@@ -38,9 +38,8 @@ class WidgetKanbanXMLImporter
 
     /**
      * @throws \RuntimeException
-     * @return \Codendi_Request
      */
-    private function getRequest(ConfigureAtXMLImport $event)
+    private function getRequest(ConfigureAtXMLImport $event): \Codendi_Request
     {
         return new \Codendi_Request(
             $this->getParametersFromXML($event->getXML(), $event->getMappingsRegistry())
@@ -51,7 +50,7 @@ class WidgetKanbanXMLImporter
      * @throws \RuntimeException
      * @return string[][]
      */
-    private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry)
+    private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
         $params = [
             'kanban' => [
@@ -71,13 +70,14 @@ class WidgetKanbanXMLImporter
     }
 
     /**
-     * @param string $preference_name
-     * @param array $params
-     *
      * @throws \RuntimeException
      */
-    private function setNameReferenceParameters(\SimpleXMLElement $preference, MappingsRegistry $mapping_registry, $preference_name, array &$params)
-    {
+    private function setNameReferenceParameters(
+        \SimpleXMLElement $preference,
+        MappingsRegistry $mapping_registry,
+        string $preference_name,
+        array &$params,
+    ): void {
         foreach ($preference->reference as $reference) {
             $key    = trim((string) $reference['name']);
             $ref    = trim((string) $reference['REF']);

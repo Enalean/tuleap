@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +22,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Widget;
+namespace Tuleap\Kanban\Widget;
 
-class WidgetKanbanReportSelectorPresenter
+class WidgetKanbanConfigRetriever
 {
-    /**
-     * @var array
-     */
-    public $widget_tracker_reports;
-
-    public function __construct(array $widget_tracker_reports)
+    public function __construct(private readonly WidgetKanbanConfigDAO $config_dao)
     {
-        $this->widget_tracker_reports = $widget_tracker_reports;
+    }
+
+    public function getWidgetReportId(int $widget_id): ?int
+    {
+        return $this->config_dao->searchKanbanTrackerReportId($widget_id);
     }
 }

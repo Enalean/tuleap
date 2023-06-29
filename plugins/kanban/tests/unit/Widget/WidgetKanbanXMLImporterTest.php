@@ -19,9 +19,7 @@
  *
  */
 
-namespace Tuleap\AgileDashboard\Widget;
-
-require_once __DIR__ . '/../../bootstrap.php';
+namespace Tuleap\Kanban\Widget;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
