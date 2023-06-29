@@ -78,7 +78,7 @@ export class Modal {
     private backdrop_element: HTMLDivElement | null = null;
     private readonly shown_event: CustomEvent<{ target: Element }>;
     private readonly hidden_event: CustomEvent<{ target: Element }>;
-    private readonly eventHandler: ModalEventHandler;
+    private readonly event_handler: EventListenerObject;
     private previous_active_element: HTMLElement | null = null;
 
     constructor(doc: Document, element: Element, options: ModalOptions = { keyboard: true }) {
@@ -101,7 +101,7 @@ export class Modal {
         this.hidden_event = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {
             detail: { target: this.element },
         });
-        this.eventHandler = new ModalEventHandler(this);
+        this.event_handler = ModalEventHandler(this);
         this.listenCloseEvents();
     }
 
@@ -184,17 +184,17 @@ export class Modal {
 
     listenCloseEvents(): void {
         this.close_elements.forEach((close_element) => {
-            close_element.addEventListener("click", this.eventHandler);
+            close_element.addEventListener("click", this.event_handler);
         });
 
         if (this.options.keyboard) {
-            this.doc.addEventListener("keyup", this.eventHandler);
+            this.doc.addEventListener("keyup", this.event_handler);
         }
     }
 
     destroy(): void {
         this.close_elements.forEach((close_element) => {
-            close_element.removeEventListener("click", this.eventHandler);
+            close_element.removeEventListener("click", this.event_handler);
         });
 
         if (this.backdrop_element) {
@@ -202,7 +202,7 @@ export class Modal {
         }
 
         if (this.options.keyboard) {
-            this.doc.removeEventListener("keyup", this.eventHandler);
+            this.doc.removeEventListener("keyup", this.event_handler);
         }
     }
 
@@ -247,26 +247,8 @@ export class Modal {
     }
 }
 
-class ModalEventHandler implements EventListenerObject {
-    private readonly modal: Modal;
-
-    constructor(modal: Modal) {
-        this.modal = modal;
-    }
-
-    handleEvent(event: Event): void {
-        if (event.type === "click") {
-            this.closeElementCallback();
-        } else if (event.type === "keyup" && event instanceof KeyboardEvent) {
-            this.keyupCallback(event);
-        }
-    }
-
-    closeElementCallback(): void {
-        this.modal.hide();
-    }
-
-    keyupCallback(event: KeyboardEvent): void {
+function ModalEventHandler(modal: Modal): EventListenerObject {
+    const handleKeyUp = (event: KeyboardEvent): void => {
         if (event.key !== "Escape") {
             return;
         }
@@ -280,8 +262,20 @@ class ModalEventHandler implements EventListenerObject {
             return;
         }
 
-        if (this.modal.is_shown) {
-            this.modal.hide();
+        if (modal.is_shown) {
+            modal.hide();
         }
-    }
+    };
+
+    return {
+        handleEvent(event): void {
+            if (event.type === "click") {
+                modal.hide();
+                return;
+            }
+            if (event.type === "keyup" && event instanceof KeyboardEvent) {
+                handleKeyUp(event);
+            }
+        },
+    };
 }
