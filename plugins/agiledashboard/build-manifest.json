@@ -14,10 +14,6 @@
         "planning-v2": {
             "src": "scripts/planning-v2/src/app",
             "po": "scripts/planning-v2/po"
-        },
-        "kanban": {
-            "src": "scripts/kanban/src/app",
-            "po": "scripts/kanban/po"
         }
     },
     "gettext-vue": {
