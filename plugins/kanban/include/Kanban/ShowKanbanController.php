@@ -23,7 +23,6 @@ namespace Tuleap\Kanban;
 use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use Feedback;
-use KanbanPresenter;
 use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;

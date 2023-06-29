@@ -41,6 +41,7 @@ use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActio
 use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
 use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Kanban\Home\KanbanSummaryPresenter;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -226,7 +227,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $planning_administration_delegation->isPlanningAdministrationDelegated();
     }
 
-    private function getKanbanSummaryPresenters()
+    /**
+     * @return KanbanSummaryPresenter[]
+     */
+    private function getKanbanSummaryPresenters(): array
     {
         $kanban_presenters = [];
 
@@ -238,7 +242,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
 
         foreach ($list_of_kanban as $kanban_for_project) {
-            $kanban_presenters[] = new AgileDashboard_Presenter_KanbanSummaryPresenter(
+            $kanban_presenters[] = new KanbanSummaryPresenter(
                 $kanban_for_project,
                 new KanbanItemDao()
             );
