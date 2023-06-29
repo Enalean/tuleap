@@ -65,16 +65,20 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestCase
         self::assertNull($this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time));
     }
 
-    public function testCanUpdateExpirationTimeOfAToken(): void
+    public function testCanUpdateExpirationTimeOfTokens(): void
     {
-        $key_id = $this->dao->create(102, 11, 'verification_string', 10, 1);
-        self::assertEquals(10, $this->getExpirationDateOfAToken($key_id));
+        $key_id_1 = $this->dao->create(102, 11, 'verification_string', 10, 1);
+        $key_id_2 = $this->dao->create(103, 11, 'verification_string', 10, 1);
+        self::assertEquals(10, $this->getExpirationDateOfAToken($key_id_1));
+        self::assertEquals(10, $this->getExpirationDateOfAToken($key_id_2));
 
-        $this->dao->updateTokenExpirationDate($key_id, 1, 20);
-        self::assertEquals(20, $this->getExpirationDateOfAToken($key_id));
+        $this->dao->updateTokensExpirationDate(11, 1, 1, 20);
+        self::assertEquals(20, $this->getExpirationDateOfAToken($key_id_1));
+        self::assertEquals(20, $this->getExpirationDateOfAToken($key_id_2));
 
-        $this->dao->updateTokenExpirationDate($key_id, 15, 10);
-        self::assertFalse($this->getExpirationDateOfAToken($key_id));
+        $this->dao->updateTokensExpirationDate(11, 1, 15, 10);
+        self::assertFalse($this->getExpirationDateOfAToken($key_id_1));
+        self::assertFalse($this->getExpirationDateOfAToken($key_id_2));
     }
 
     private function getExpirationDateOfAToken(int $key_id): int|false
