@@ -9,11 +9,6 @@ function LabelsController($element, SharedPropertiesService) {
     self.$onInit = initLabels;
 
     function initLabels() {
-        if (self.pullRequestId && self.projectId) {
-            createLabelsBox(self.pullRequestId, self.projectId, 0);
-            return;
-        }
-
         SharedPropertiesService.whenReady().then(function () {
             const pull_request = SharedPropertiesService.getPullRequest();
 

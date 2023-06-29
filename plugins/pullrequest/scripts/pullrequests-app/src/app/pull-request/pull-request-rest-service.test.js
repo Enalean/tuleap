@@ -42,7 +42,7 @@ describe("PullRequestRestService -", function () {
             PullRequestRestService = _PullRequestRestService_;
         });
 
-        jest.spyOn(ErrorModalService, "showError").mockImplementation(() => {});
+        jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -79,7 +79,7 @@ describe("PullRequestRestService -", function () {
             var promise = wrapPromise(PullRequestRestService.getPullRequest(pull_request_id));
             $httpBackend.flush();
 
-            await expect(promise).resolves.toEqual(pull_request);
+            await expect(promise).resolves.toStrictEqual(pull_request);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async function () {
@@ -95,7 +95,7 @@ describe("PullRequestRestService -", function () {
             await expect(promise).rejects.toMatchObject({
                 status: 403,
             });
-            expect(ErrorModalService.showError).toHaveBeenCalledWith(
+            expect(ErrorModalService.showErrorResponseMessage).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
                     statusText: "",

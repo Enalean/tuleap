@@ -9,12 +9,11 @@ function ErrorModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
-        showError,
+        showErrorResponseMessage,
+        showErrorMessage,
     });
 
-    function showError(response) {
-        const message = getMessageFromResponse(response);
-
+    function showErrorMessage(message) {
         TlpModalService.open({
             templateUrl: "error-modal.tpl.html",
             controller,
@@ -25,6 +24,10 @@ function ErrorModalService(TlpModalService) {
             },
             resolve: { message },
         });
+    }
+
+    function showErrorResponseMessage(response) {
+        showErrorMessage(getMessageFromResponse(response));
     }
 
     function getMessageFromResponse(response) {

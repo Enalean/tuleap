@@ -1,6 +1,8 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { buildVueOverviewURL } from "../../helpers/vue-overview-url-builder";
 
+import "./PullRequestLabelsList";
+
 export default PullRequestSummaryController;
 
 PullRequestSummaryController.$inject = [
@@ -8,13 +10,15 @@ PullRequestSummaryController.$inject = [
     "PullRequestService",
     "UserRestService",
     "SharedPropertiesService",
+    "ErrorModalService",
 ];
 
 function PullRequestSummaryController(
     $state,
     PullRequestService,
     UserRestService,
-    SharedPropertiesService
+    SharedPropertiesService,
+    ErrorModalService
 ) {
     const self = this;
 
@@ -30,6 +34,9 @@ function PullRequestSummaryController(
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
         ),
+        onFetchErrorCallback: (event) => {
+            ErrorModalService.showErrorMessage(event.detail.fault);
+        },
     });
 
     function init() {
