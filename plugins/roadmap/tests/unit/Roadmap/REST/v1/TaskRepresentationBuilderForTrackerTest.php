@@ -33,24 +33,12 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SemanticProgressBuilder
-     */
-    private $progress_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|IRetrieveDependencies
-     */
-    private $dependencies_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeImpliedFromAnotherTracker
-     */
-    private $timeframe_calculator;
+    private \PFUser $user;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticProgressBuilder $progress_builder;
+    private \PHPUnit\Framework\MockObject\MockObject&IRetrieveDependencies $dependencies_retriever;
+    private \PHPUnit\Framework\MockObject\MockObject&TimeframeImpliedFromAnotherTracker $timeframe_calculator;
     private \Tracker $tracker;
 
     protected function setUp(): void

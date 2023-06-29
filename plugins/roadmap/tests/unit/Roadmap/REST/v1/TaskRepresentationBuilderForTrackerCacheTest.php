@@ -33,28 +33,13 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var TaskRepresentationBuilderForTrackerCache
-     */
-    private $cache;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|IRetrieveDependencies
-     */
-    private $dependencies_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SemanticProgressBuilder
-     */
-    private $progress_builder;
-    /**
-     * @var \PFUser
-     */
-    private $user;
+    private TaskRepresentationBuilderForTrackerCache $cache;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private \PHPUnit\Framework\MockObject\MockObject&IRetrieveDependencies $dependencies_retriever;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticProgressBuilder $progress_builder;
+    private \PFUser $user;
 
     protected function setUp(): void
     {

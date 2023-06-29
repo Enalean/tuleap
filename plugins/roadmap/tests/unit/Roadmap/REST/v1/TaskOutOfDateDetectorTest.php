@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
@@ -37,39 +38,15 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class TaskOutOfDateDetectorTest extends TestCase
+final class TaskOutOfDateDetectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TaskOutOfDateDetector
-     */
-    private $detector;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Semantic_Status
-     */
-    private $semantic_status;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_List
-     */
-    private $status_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimeframeWithEndDate
-     */
-    private $timeframe_calculator;
-
+    private TaskOutOfDateDetector $detector;
+    private MockObject&\Tracker_Semantic_Status $semantic_status;
+    private Artifact $artifact;
+    private \Tracker_FormElement_Field_List&MockObject $status_field;
+    private LoggerInterface&MockObject $logger;
+    private \PFUser $user;
+    private MockObject&TimeframeWithEndDate $timeframe_calculator;
     private TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection;
 
     private const TODO_VALUE_ID     = 128;
@@ -80,30 +57,29 @@ class TaskOutOfDateDetectorTest extends TestCase
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(150)->build();
 
-        $this->status_field = \Mockery::mock(\Tracker_FormElement_Field_List::class, ['getId' => 365]);
-        $this->logger       = \Mockery::mock(LoggerInterface::class);
-        $this->user         = \Mockery::mock(\PFUser::class);
+        $this->status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->logger       = $this->createMock(LoggerInterface::class);
+        $this->user         = UserTestBuilder::aUser()->build();
 
-        $this->semantic_status = \Mockery::mock(
-            \Tracker_Semantic_Status::class,
-            ['getOpenValues' => [self::TODO_VALUE_ID, self::ON_GOING_VALUE_ID]]
-        );
+        $this->status_field->method('getId')->willReturn(365);
 
-        $this->timeframe_calculator = \Mockery::mock(TimeframeWithEndDate::class);
-        $semantic_timeframe         = \Mockery::mock(
-            SemanticTimeframe::class,
-            ['getTimeframeCalculator' => $this->timeframe_calculator]
-        );
+        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->semantic_status->method('getOpenValues')->willReturn([self::TODO_VALUE_ID, self::ON_GOING_VALUE_ID]);
 
-        $semantic_status_retriever = \Mockery::mock(SemanticStatusRetriever::class);
-        $semantic_status_retriever->shouldReceive('retrieveSemantic')
+        $this->timeframe_calculator = $this->createMock(TimeframeWithEndDate::class);
+        $semantic_timeframe         = $this->createMock(SemanticTimeframe::class);
+
+        $semantic_timeframe->method('getTimeframeCalculator')->willReturn($this->timeframe_calculator);
+
+        $semantic_status_retriever = $this->createMock(SemanticStatusRetriever::class);
+        $semantic_status_retriever->method('retrieveSemantic')
             ->with($this->artifact->getTracker())
-            ->andReturn($this->semantic_status);
+            ->willReturn($this->semantic_status);
 
-        $semantic_timeframe_builder = \Mockery::mock(SemanticTimeframeBuilder::class);
-        $semantic_timeframe_builder->shouldReceive('getSemantic')
+        $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
+        $semantic_timeframe_builder->method('getSemantic')
             ->with($this->artifact->getTracker())
-            ->andReturn($semantic_timeframe);
+            ->willReturn($semantic_timeframe);
 
         $this->detector = new TaskOutOfDateDetector(
             $semantic_status_retriever,
@@ -116,7 +92,7 @@ class TaskOutOfDateDetectorTest extends TestCase
 
     public function testItReturnsFalseWhenTrackerHasNoStatusSemanticDefined(): void
     {
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn(null);
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn(null);
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
@@ -130,8 +106,8 @@ class TaskOutOfDateDetectorTest extends TestCase
 
     public function testItReturnsFalseForOpenTasks(): void
     {
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(true);
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(true);
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
@@ -146,16 +122,16 @@ class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsFalseForTasksClosedEarlierThanOneYearAgoWithNoEndDate(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
-            ->andReturn(
+            ->willReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
 
@@ -183,13 +159,13 @@ class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksClosedLaterThanOneYearAgo(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         $this->artifact->setChangesets(
             [
@@ -215,16 +191,16 @@ class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsFalseForTasksReOpenAndReClosedEarlierThanOneYearAgo(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
-            ->andReturn(
+            ->willReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
 
@@ -256,16 +232,16 @@ class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksWithoutStatus(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
-            ->andReturn(
+            ->willReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
 
@@ -291,7 +267,7 @@ class TaskOutOfDateDetectorTest extends TestCase
 
         $this->artifact->setChangesets([$changeset]);
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->expects(self::once())->method('error');
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
@@ -305,16 +281,16 @@ class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksWithUnreadableStatus(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
-            ->andReturn(
+            ->willReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
 
@@ -357,20 +333,20 @@ class TaskOutOfDateDetectorTest extends TestCase
             )
         );
 
-        $this->logger->shouldReceive('info')->once();
+        $this->logger->expects(self::once())->method('info');
         $this->trackers_with_unreadable_status_collection->informLoggerIfWeHaveTrackersWithUnreadableStatus();
     }
 
     public function testItReturnsTrueForClosedArtifactWhenChangesetCantBeFound(): void
     {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         $this->artifact->setChangesets(
             [
@@ -380,7 +356,7 @@ class TaskOutOfDateDetectorTest extends TestCase
             ]
         );
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->expects(self::once())->method('error');
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
@@ -397,25 +373,25 @@ class TaskOutOfDateDetectorTest extends TestCase
      *           ["2023-01-15", false]
      */
     public function testItReturnsTrueForArtifactsThatAreClosedWhoseEndDateIsLaterThanOneYearAgo(
-        $end_string_date,
-        $expected_out_of_date,
+        string $end_string_date,
+        bool $expected_out_of_date,
     ): void {
         $this->status_field
-            ->shouldReceive('userCanRead')
+            ->expects(self::once())
+            ->method('userCanRead')
             ->with($this->user)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
         $now_string_date = "2021-04-14";
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
-            ->andReturn(
+            ->willReturn(
                 $this->getTimePeriodWithoutWeekend("2020-01-01", $end_string_date)
             );
 
-        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
-        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         $this->artifact->setChangesets(
             [
