@@ -24,83 +24,80 @@ namespace Tuleap\LDAP;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
 final class ProjectGroupManagerRestrictedUserFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testNoFilteringIsDoneWhenRestrictedUsersAreNotAllowedAtSiteLevel(): void
     {
-        $filter = new ProjectGroupManagerRestrictedUserFilter(Mockery::mock(UserManager::class));
+        $filter = new ProjectGroupManagerRestrictedUserFilter($this->createMock(UserManager::class));
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $set_for_diff = new LDAPSetOfUserIDsForDiff([], [], []);
 
-        $this->assertSame($set_for_diff, $filter->filter(Mockery::mock(Project::class), $set_for_diff));
+        self::assertSame($set_for_diff, $filter->filter($this->createMock(Project::class), $set_for_diff));
     }
 
     public function testNoFilteringIsDoneWhenProjectAllowsRestrictedUsers(): void
     {
-        $filter = new ProjectGroupManagerRestrictedUserFilter(Mockery::mock(UserManager::class));
+        $filter = new ProjectGroupManagerRestrictedUserFilter($this->createMock(UserManager::class));
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC_UNRESTRICTED);
+        $project = $this->createMock(Project::class);
+        $project->method('getAccess')->willReturn(Project::ACCESS_PUBLIC_UNRESTRICTED);
 
         $set_for_diff = new LDAPSetOfUserIDsForDiff([], [], []);
-        $this->assertSame($set_for_diff, $filter->filter($project, $set_for_diff));
+        self::assertSame($set_for_diff, $filter->filter($project, $set_for_diff));
     }
 
     public function testRestrictedUsersAreFilteredOutTheProjectWhenRestrictedUsersAreNotAllowed(): void
     {
-        $user_manager = Mockery::mock(UserManager::class);
+        $user_manager = $this->createMock(UserManager::class);
         $filter       = new ProjectGroupManagerRestrictedUserFilter($user_manager);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
-        $project->shouldReceive('isSuperPublic')->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('getAccess')->willReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+        $project->method('isSuperPublic')->willReturn(false);
 
         $set_for_diff = new LDAPSetOfUserIDsForDiff([102, 107], [103, 105], [104, 106]);
 
-        $user_manager->shouldReceive('getUserById')->with(102)->andReturn(
-            $this->getProjectMember(102, true)
-        );
-        $user_manager->shouldReceive('getUserById')->with(107)->andReturn(
-            $this->getProjectMember(107, false)
-        );
         $member_103 = $this->getProjectMember(103, true);
-        $user_manager->shouldReceive('getUserById')->with(103)->andReturn($member_103);
         $member_104 = $this->getProjectMember(104, true);
-        $user_manager->shouldReceive('getUserById')->with(104)->andReturn($member_104);
         $member_105 = $this->getProjectMember(105, false);
-        $user_manager->shouldReceive('getUserById')->with(105)->andReturn($member_105);
         $member_106 = $this->getProjectMember(106, false);
-        $user_manager->shouldReceive('getUserById')->with(106)->andReturn($member_106);
 
-        $project->shouldReceive('getMembers')->andReturn(
+        $user_manager->method('getUserById')->willReturnMap([
+            [102, $this->getProjectMember(102, true)],
+            [107, $this->getProjectMember(107, false)],
+            [103, $member_103],
+            [104, $member_104],
+            [105, $member_105],
+            [106, $member_106],
+        ]);
+
+        $project->method('getMembers')->willReturn(
             [$member_103, $member_104, $member_105, $member_106]
         );
 
         $filtered_set = $filter->filter($project, $set_for_diff);
-        $this->assertEqualsCanonicalizing([107], $filtered_set->getUserIDsToAdd());
-        $this->assertEqualsCanonicalizing([103, 105, 104], $filtered_set->getUserIDsToRemove());
-        $this->assertEqualsCanonicalizing([106], $filtered_set->getUserIDsNotImpacted());
+        self::assertEqualsCanonicalizing([107], $filtered_set->getUserIDsToAdd());
+        self::assertEqualsCanonicalizing([103, 105, 104], $filtered_set->getUserIDsToRemove());
+        self::assertEqualsCanonicalizing([106], $filtered_set->getUserIDsNotImpacted());
     }
 
-    private function getProjectMember(int $id, bool $is_restricted): PFUser
+    private function getProjectMember(int $id, bool $is_restricted): MockObject&PFUser
     {
-        $member = Mockery::mock(PFUser::class);
-        $member->shouldReceive('getId')->andReturn($id);
-        $member->shouldReceive('isRestricted')->andReturn($is_restricted);
+        $member = $this->createMock(PFUser::class);
+        $member->method('getId')->willReturn($id);
+        $member->method('isRestricted')->willReturn($is_restricted);
 
         return $member;
     }

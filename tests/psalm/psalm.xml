@@ -46,7 +46,6 @@
             <directory name="plugins/docman/tests/unit/"/>
             <directory name="plugins/git/tests/unit/"/>
             <directory name="plugins/hudson/tests/unit/"/>
-            <directory name="plugins/ldap/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
             <directory name="plugins/pluginsadministration/tests/unit/"/>
             <directory name="plugins/projectmilestones/tests/unit/"/>

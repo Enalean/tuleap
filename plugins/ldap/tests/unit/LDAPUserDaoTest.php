@@ -28,67 +28,60 @@ namespace Tuleap\LDAP;
 
 use DataAccessResult;
 use LDAP_UserDao;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class LDAPUserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LDAPUserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \LDAP_UserDao|\Mockery\Mock
-     */
-    private $dao;
+    private MockObject&\LDAP_UserDao $dao;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->dao = Mockery::mock(LDAP_UserDao::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->dao = $this->getMockBuilder(LDAP_UserDao::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['retrieve'])
+            ->getMock();
     }
 
     public function testUserNameIsAvailable(): void
     {
-        $darUser = Mockery::mock(DataAccessResult::class);
-        $darUser->shouldReceive('rowCount')->andReturns(0);
-        $darGroup = Mockery::mock(DataAccessResult::class);
-        $darGroup->shouldReceive('rowCount')->andReturns(0);
+        $darUser = $this->createMock(DataAccessResult::class);
+        $darUser->method('rowCount')->willReturn(0);
+        $darGroup = $this->createMock(DataAccessResult::class);
+        $darGroup->method('rowCount')->willReturn(0);
 
-        $this->dao->da = Mockery::mock(LegacyDataAccessInterface::class);
-        $this->dao->da->shouldReceive('quoteSmart')->times(2);
-        $this->dao->shouldReceive('retrieve')->andReturns($darUser, $darGroup);
+        $this->dao->da = $this->createMock(LegacyDataAccessInterface::class);
+        $this->dao->da->expects(self::exactly(2))->method('quoteSmart');
+        $this->dao->method('retrieve')->willReturn($darUser, $darGroup);
 
-        $this->assertTrue($this->dao->userNameIsAvailable('coincoin'));
+        self::assertTrue($this->dao->userNameIsAvailable('coincoin'));
     }
 
     public function testUserNameIsAlreadyUser(): void
     {
-        $darUser = Mockery::mock(DataAccessResult::class);
-        $darUser->shouldReceive('rowCount')->andReturns(1);
+        $darUser = $this->createMock(DataAccessResult::class);
+        $darUser->method('rowCount')->willReturn(1);
 
-        $this->dao->da = Mockery::mock(LegacyDataAccessInterface::class);
-        $this->dao->da->shouldReceive('quoteSmart')->once();
-        $this->dao->shouldReceive('retrieve')->once()->andReturns($darUser);
+        $this->dao->da = $this->createMock(LegacyDataAccessInterface::class);
+        $this->dao->da->expects(self::once())->method('quoteSmart');
+        $this->dao->expects(self::once())->method('retrieve')->willReturn($darUser);
 
-        $this->assertFalse($this->dao->userNameIsAvailable('coincoin'));
+        self::assertFalse($this->dao->userNameIsAvailable('coincoin'));
     }
 
     public function testUserNameIsAlreadyGroup(): void
     {
-        $darUser = Mockery::mock(DataAccessResult::class);
-        $darUser->shouldReceive('rowCount')->andReturns(0);
-        $darGroup = Mockery::mock(DataAccessResult::class);
-        $darGroup->shouldReceive('rowCount')->andReturns(1);
+        $darUser = $this->createMock(DataAccessResult::class);
+        $darUser->method('rowCount')->willReturn(0);
+        $darGroup = $this->createMock(DataAccessResult::class);
+        $darGroup->method('rowCount')->willReturn(1);
 
-        $this->dao->da = Mockery::mock(LegacyDataAccessInterface::class);
-        $this->dao->da->shouldReceive('quoteSmart')->times(2);
-        $this->dao->shouldReceive('retrieve')->andReturns($darUser, $darGroup);
+        $this->dao->da = $this->createMock(LegacyDataAccessInterface::class);
+        $this->dao->da->expects(self::exactly(2))->method('quoteSmart');
+        $this->dao->method('retrieve')->willReturn($darUser, $darGroup);
 
-        $this->assertFalse($this->dao->userNameIsAvailable('coincoin'));
+        self::assertFalse($this->dao->userNameIsAvailable('coincoin'));
     }
 }

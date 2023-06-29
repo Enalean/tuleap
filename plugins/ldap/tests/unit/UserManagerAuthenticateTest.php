@@ -27,10 +27,12 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use ForgeConfig;
+use LDAP_AuthenticationFailedException;
+use LDAP_UserNotFoundException;
 use LDAPResultIterator;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -40,13 +42,12 @@ use UserManager;
 
 final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    private $username = 'toto';
-    private $password;
-    private $ldap_params = [
+    private string $username = 'toto';
+    private ConcealedString $password;
+    private array $ldap_params = [
         'dn'          => 'dc=tuleap,dc=local',
         'mail'        => 'mail',
         'cn'          => 'cn',
@@ -55,30 +56,13 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         'search_user' => '(|(uid=%words%)(cn=%words%)(mail=%words%))',
     ];
 
-    private $empty_ldap_result_iterator;
-    private $john_mc_lane_result_iterator;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var Mockery\Mock
-     */
-    private $ldap;
-
-    /**
-     * @var \LDAP_UserSync|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $user_sync;
-
-    /**
-     * @var \LDAP_UserManager|Mockery\Mock
-     */
-    private $ldap_user_manager;
-
-    private Mockery\LegacyMockInterface|Mockery\MockInterface|UserNameNormalizer $username_normalizer;
+    private LDAPResultIterator $empty_ldap_result_iterator;
+    private LDAPResultIterator $john_mc_lane_result_iterator;
+    private MockObject&UserManager $user_manager;
+    private MockObject&\LDAP $ldap;
+    private \LDAP_UserSync&MockObject $user_sync;
+    private \LDAP_UserManager&MockObject $ldap_user_manager;
+    private MockObject&UserNameNormalizer $username_normalizer;
 
     protected function setUp(): void
     {
@@ -99,18 +83,16 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->ldap_params
         );
 
-        $this->username_normalizer = Mockery::mock(UserNameNormalizer::class);
+        $this->username_normalizer = $this->createMock(UserNameNormalizer::class);
 
-        $this->ldap = \Mockery::mock(
-            \LDAP::class,
-            [$this->ldap_params, Mockery::mock(\Psr\Log\LoggerInterface::class)]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->ldap = $this->getMockBuilder(\LDAP::class)
+            ->onlyMethods(['searchLogin', 'authenticate'])
+            ->setConstructorArgs([$this->ldap_params, new NullLogger()])
+            ->getMock();
 
-        $this->user_sync         = \Mockery::spy(\LDAP_UserSync::class);
-        $this->user_manager      = \Mockery::spy(UserManager::class);
-        $password_verifier       = new PasswordVerifier(
+        $this->user_sync    = $this->createMock(\LDAP_UserSync::class);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $password_verifier  = new PasswordVerifier(
             new class implements \PasswordHandler {
                 public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
                 {
@@ -133,52 +115,51 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             }
         );
-        $this->ldap_user_manager = \Mockery::mock(
-            \LDAP_UserManager::class,
-            [$this->ldap, $this->user_sync, $this->username_normalizer, $password_verifier]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
 
-        $this->ldap_user_manager->shouldReceive('getUserManager')->andReturns($this->user_manager);
+        $this->ldap_user_manager = $this->getMockBuilder(\LDAP_UserManager::class)
+            ->onlyMethods(['synchronizeUser', 'getUserManager', 'createAccountFromLdap'])
+            ->setConstructorArgs([$this->ldap, $this->user_sync, $this->username_normalizer, $password_verifier])
+            ->getMock();
+
+        $this->ldap_user_manager->method('getUserManager')->willReturn($this->user_manager);
 
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItDelegatesAuthenticateToLDAP(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->ldap->shouldReceive('authenticate')->with($this->username, $this->password)->once()->andReturnTrue();
+        $this->ldap->expects(self::once())->method('authenticate')->with($this->username, $this->password)->willReturn(true);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItRaisesAnExceptionIfAuthenticationFailed(): void
     {
-        $this->expectException('LDAP_AuthenticationFailedException');
+        $this->expectException(LDAP_AuthenticationFailedException::class);
 
-        $this->ldap->shouldReceive('authenticate')->andReturns(false);
+        $this->ldap->method('authenticate')->willReturn(false);
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItFetchLDAPUserInfoBasedOnLogin(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
 
-        $this->ldap->shouldReceive('searchLogin')
-            ->with($this->username, \Mockery::any())
-            ->once()
-            ->andReturns($this->john_mc_lane_result_iterator);
+        $this->ldap->expects(self::once())
+            ->method('searchLogin')
+            ->with($this->username, self::anything())
+            ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -186,16 +167,17 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItFetchesLDAPUserInfoWithExtendedAttributesDefinedInUserSync(): void
     {
         $attributes = ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'];
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns($attributes);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
+        $this->user_sync->method('getSyncAttributes')->willReturn($attributes);
+        $this->ldap->method('authenticate')->willReturn(true);
 
-        $this->ldap->shouldReceive('searchLogin')
-            ->with(\Mockery::any(), $attributes)
-            ->once()
-            ->andReturns($this->john_mc_lane_result_iterator);
+        $this->ldap
+            ->expects(self::once())
+            ->method('searchLogin')
+            ->with(self::anything(), $attributes)
+            ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -203,56 +185,57 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItFetchesStandardLDAPInfosEvenWhenNotSpecifiedInSyncAttributes(): void
     {
         $attributes = ['employeeType'];
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns($attributes);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
+        $this->user_sync->method('getSyncAttributes')->willReturn($attributes);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('authenticate')->willReturn(true);
 
-        $this->ldap->shouldReceive('searchLogin')
-            ->with(\Mockery::any(), ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'])
-            ->once()
-            ->andReturns($this->john_mc_lane_result_iterator);
+        $this->ldap->expects(self::once())
+            ->method('searchLogin')
+            ->with(self::anything(), ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'])
+            ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItTriesToFindTheTuleapUserBasedOnLdapId(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserByLdapId')
             ->with('ed1234')
-            ->once()
-            ->andReturn(Mockery::mock(PFUser::class));
+            ->willReturn($this->createMock(PFUser::class));
 
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItRaisesAnExceptionWhenLDAPUserIsNotFound(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->empty_ldap_result_iterator);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->empty_ldap_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->never();
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->never();
+        $this->user_manager->expects(self::never())->method('getUserByLdapId');
+        $this->ldap_user_manager->expects(self::never())->method('synchronizeUser');
 
-        $this->expectException('LDAP_UserNotFoundException');
+        $this->expectException(LDAP_UserNotFoundException::class);
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItRaisesAnExceptionWhenSeveralLDAPUsersAreFound(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->buildLDAPIterator(
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->buildLDAPIterator(
             [
                 [
                     'cn'   => 'John Mac Lane',
@@ -272,19 +255,19 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->ldap_params
         ));
 
-        $this->expectException('LDAP_UserNotFoundException');
+        $this->expectException(LDAP_UserNotFoundException::class);
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
     public function testItCreatesUserAccountWhenUserDoesntExist(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
-        $this->user_manager->shouldReceive('getUserByLdapId')->andReturns(null);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
+        $this->user_manager->method('getUserByLdapId')->willReturn(null);
 
-        $this->ldap_user_manager->shouldReceive('createAccountFromLdap')->with(\Mockery::any())->once();
+        $this->ldap_user_manager->expects(self::once())->method('createAccountFromLdap')->with(self::anything());
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -292,31 +275,33 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsUserOnAccountCreation(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
-        $this->user_manager->shouldReceive('getUserByLdapId')->andReturns(null);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
+        $this->user_manager->method('getUserByLdapId')->willReturn(null);
 
-        $this->ldap_user_manager->shouldReceive('createAccountFromLdap')->andReturns($expected_user);
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')
-            ->with($expected_user, Mockery::any(), $this->password)
-            ->once();
+        $this->ldap_user_manager->method('createAccountFromLdap')->willReturn($expected_user);
+        $this->ldap_user_manager
+            ->expects(self::once())
+            ->method('synchronizeUser')
+            ->with($expected_user, self::anything(), $this->password);
 
         $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
-        $this->assertSame($expected_user, $user);
+        self::assertSame($expected_user, $user);
     }
 
     public function testItUpdateUserAccountsIfAlreadyExists(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
-        $this->user_manager->shouldReceive('getUserByLdapId')->andReturns($expected_user);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
+        $this->user_manager->method('getUserByLdapId')->willReturn($expected_user);
 
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')
-            ->with($expected_user, Mockery::any(), $this->password)
-            ->once();
+        $this->ldap_user_manager
+            ->expects(self::once())
+            ->method('synchronizeUser')
+            ->with($expected_user, self::anything(), $this->password);
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -324,15 +309,15 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsUserOnAccountUpdate(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
-        $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
-        $this->user_manager->shouldReceive('getUserByLdapId')->andReturns($expected_user);
+        $this->user_sync->method('getSyncAttributes')->willReturn([]);
+        $this->ldap->method('authenticate')->willReturn(true);
+        $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
+        $this->user_manager->method('getUserByLdapId')->willReturn($expected_user);
 
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->andReturns(true);
+        $this->ldap_user_manager->method('synchronizeUser');
 
         $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
-        $this->assertSame($expected_user, $user);
+        self::assertSame($expected_user, $user);
     }
 
     private function buildUser(): PFUser

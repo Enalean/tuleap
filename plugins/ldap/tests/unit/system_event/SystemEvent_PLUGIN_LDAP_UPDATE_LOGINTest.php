@@ -23,116 +23,99 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP\SystemEvent;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN;
 use Tuleap\GlobalSVNPollution;
-
-require_once __DIR__ . '/../bootstrap.php';
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $um;
-    /**
-     * @var \BackendSVN|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backend;
-    /**
-     * @var \LDAP_ProjectManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $ldap_project_manager;
-
-    private $system_event;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $prj1;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $prj2;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $prj3;
+    private \UserManager&MockObject $um;
+    private \BackendSVN&MockObject $backend;
+    private \LDAP_ProjectManager&MockObject $ldap_project_manager;
+    private SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN $system_event;
+    private \ProjectManager&MockObject $project_manager;
+    private \Project $prj1;
+    private \Project $prj2;
+    private \Project $prj3;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->um                   = \Mockery::spy(\UserManager::class);
-        $this->project_manager      = \Mockery::spy(\ProjectManager::class);
-        $this->backend              = \Mockery::spy(\BackendSVN::class);
-        $this->ldap_project_manager = \Mockery::spy(\LDAP_ProjectManager::class);
+        $this->um                   = $this->createMock(\UserManager::class);
+        $this->project_manager      = $this->createMock(\ProjectManager::class);
+        $this->backend              = $this->createMock(\BackendSVN::class);
+        $this->ldap_project_manager = $this->createMock(\LDAP_ProjectManager::class);
         $this->system_event         = new SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN(
-            null,
-            null,
-            null,
+            1,
+            '',
+            '',
             '101::102',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
+            1,
+            "NONE",
+            '',
+            '',
+            '',
+            '',
         );
 
         $this->system_event->injectDependencies($this->um, $this->backend, $this->project_manager, $this->ldap_project_manager);
 
-        $user1 = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getAllProjects')->andReturns([201, 202]);
-        $user1->shouldReceive('isActive')->andReturns(true);
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getAllProjects')->andReturns([202, 203]);
-        $user2->shouldReceive('isActive')->andReturns(true);
-        $this->um->shouldReceive('getUserById')->with('101')->andReturns($user1);
-        $this->um->shouldReceive('getUserById')->with('102')->andReturns($user2);
+        $user1 = $this->createMock(\PFUser::class);
+        $user1->method('getAllProjects')->willReturn([201, 202]);
+        $user1->method('isActive')->willReturn(true);
+        $user2 = $this->createMock(\PFUser::class);
+        $user2->method('getAllProjects')->willReturn([202, 203]);
+        $user2->method('isActive')->willReturn(true);
 
-        $this->prj1 = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(201)->getMock();
-        $this->prj2 = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(202)->getMock();
-        $this->prj3 = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(203)->getMock();
-        $this->project_manager->shouldReceive('getProject')->with(201)->andReturns($this->prj1);
-        $this->project_manager->shouldReceive('getProject')->with(202)->andReturns($this->prj2);
-        $this->project_manager->shouldReceive('getProject')->with(203)->andReturns($this->prj3);
+        $this->um->method('getUserById')->willReturnMap([
+            ['101', $user1],
+            ['102', $user2],
+        ]);
+
+        $this->prj1 = ProjectTestBuilder::aProject()->withId(201)->build();
+        $this->prj2 = ProjectTestBuilder::aProject()->withId(202)->build();
+        $this->prj3 = ProjectTestBuilder::aProject()->withId(203)->build();
+
+        $this->project_manager->method('getProject')->willReturnMap([
+            [201, $this->prj1],
+            [202, $this->prj2],
+            [203, $this->prj3],
+        ]);
     }
 
     public function testUpdateShouldUpdateAllProjects(): void
     {
-        $this->backend->shouldReceive('updateProjectSVNAccessFile')->times(3);
-        $this->backend->shouldReceive('updateProjectSVNAccessFile')->with($this->prj1)->ordered();
-        $this->backend->shouldReceive('updateProjectSVNAccessFile')->with($this->prj2)->ordered();
-        $this->backend->shouldReceive('updateProjectSVNAccessFile')->with($this->prj3)->ordered();
+        $this->backend->expects(self::exactly(3))->method('updateProjectSVNAccessFile')->willReturnOnConsecutiveCalls(
+            $this->prj1,
+            $this->prj2,
+            $this->prj3,
+        );
 
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->andReturns(true);
+        $this->ldap_project_manager->method('hasSVNLDAPAuth')->willReturn(true);
 
         $this->system_event->process();
     }
 
     public function testItSkipsProjectsThatAreNotManagedByLdap(): void
     {
-        $this->backend->shouldReceive('updateProjectSVNAccessFile')->never();
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->andReturns(false);
+        $this->backend->expects(self::never())->method('updateProjectSVNAccessFile');
+        $this->ldap_project_manager->method('hasSVNLDAPAuth')->willReturn(false);
         $this->system_event->process();
     }
 
     public function testItSkipsProjectsBasedOnProjectId(): void
     {
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->times(3);
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->with(201)->ordered();
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->with(202)->ordered();
-        $this->ldap_project_manager->shouldReceive('hasSVNLDAPAuth')->with(203)->ordered();
+        $this->ldap_project_manager->method('hasSVNLDAPAuth')->willReturnMap([
+            [201, false],
+            [202, false],
+            [203, false],
+        ]);
+
+        $this->backend->expects(self::never())->method('updateProjectSVNAccessFile');
 
         $this->system_event->process();
     }

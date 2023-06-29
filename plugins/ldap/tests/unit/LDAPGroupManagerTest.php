@@ -28,136 +28,148 @@ use LDAP_ProjectGroupDao;
 use LDAP_UserManager;
 use LDAPResult;
 use LDAPResultIterator;
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private function getLdapResult($method, $result): LDAPResultIterator
+    private function getLdapResult(string $method, string|array $result): MockObject&LDAPResultIterator
     {
-        $ldapRes = \Mockery::spy(\LDAPResult::class);
-        $ldapRes->shouldReceive($method)->andReturns($result);
-        $ldapResIter = \Mockery::spy(\LDAPResultIterator::class);
-        $ldapResIter->shouldReceive('count')->andReturns(1);
-        $ldapResIter->shouldReceive('current')->andReturns($ldapRes);
+        $ldapRes = $this->createMock(\LDAPResult::class);
+        $ldapRes->method($method)->willReturn($result);
+        $ldapResIter = $this->createMock(\LDAPResultIterator::class);
+        $ldapResIter->method('count')->willReturn(1);
+        $ldapResIter->method('current')->willReturn($ldapRes);
+
         return $ldapResIter;
     }
 
     public function testDoesBuildANotificationOnUpdate(): void
     {
         $ldapResIter = $this->getLdapResult('getGroupMembers', [
-            'eduid=edA,ou=people,dc=codendi,dc=com',
-            'eduid=edE,ou=people,dc=codendi,dc=com',
+            'eduid=edA,ou=people,dc=example,dc=com',
+            'eduid=edE,ou=people,dc=example,dc=com',
         ]);
 
-        $ldap = \Mockery::mock(
-            \LDAP::class,
-            [
+        $ldap = $this->getMockBuilder(\LDAP::class)
+            ->onlyMethods([
+                'searchGroupMembers',
+                'getLdapParam',
+            ])
+            ->setConstructorArgs([
                 ['server' => 'server'],
-                Mockery::mock(\Psr\Log\LoggerInterface::class),
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+                new NullLogger(),
+            ])->getMock();
 
-        $ldap->shouldReceive('searchGroupMembers')->andReturns($ldapResIter);
-        $ldap->shouldReceive('getLdapParam')->with('grp_dn')->andReturns('ou=groups,dc=codendi,dc=com');
+        $ldap->method('searchGroupMembers')->willReturn($ldapResIter);
+        $ldap->method('getLdapParam')->with('grp_dn')->willReturn('ou=groups,dc=example,dc=com');
 
-        $ldap_user_manager = \Mockery::spy(LDAP_UserManager::class);
-        $ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturn([101, 102]);
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn("J. Doe");
-        $user->shouldReceive('getUserName')->andReturn("jdoe");
-        $ldap_user_manager->shouldReceive('getUserFromLdap')->andReturn();
+        $ldap_user_manager = $this->createMock(LDAP_UserManager::class);
+        $ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([101, 102]);
 
-        $notm = \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class);
-        $notm->shouldReceive('sendNotifications')->once();
+        $user = UserTestBuilder::aUser()->withRealName("J. Doe")->withUserName("jdoe")->build();
+        $ldap_user_manager->method('getUserFromLdap')->willReturn($user);
 
-        $prjm = \Mockery::spy(\ProjectManager::class);
-        $prjm->shouldReceive('getProject')->andReturn(\Mockery::spy(\Project::class));
+        $notm = $this->createMock(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class);
+        $notm->expects(self::once())->method('sendNotifications');
 
-        $grpManager = Mockery::mock(
-            LDAP_GroupManager::class,
-            [
+        $prjm = $this->createMock(\ProjectManager::class);
+        $prjm->method('getProject')->willReturn($this->createMock(\Project::class));
+
+        $grpManager = $this->getMockBuilder(LDAP_GroupManager::class)
+            ->onlyMethods([
+                'addUserToGroup',
+                'getDbGroupMembersIds',
+                'getLdapGroupMembersIds',
+                'getDao',
+            ])
+            ->setConstructorArgs([
                 $ldap,
                 $ldap_user_manager,
                 $prjm,
                 $notm,
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            ])->getMockForAbstractClass();
 
-        $grpManager->setGroupDn('cn=whatever,ou=groups,dc=codendi,dc=com');
+        $grpManager->setGroupDn('cn=whatever,ou=groups,dc=example,dc=com');
         $grpManager->setId(42);
 
-        $grpManager->shouldReceive('addUserToGroup');
-        $grpManager->shouldReceive('getDbGroupMembersIds')->andReturn([]);
-        $grpManager->shouldReceive('getLdapGroupMembersIds')->andReturn([101, 102]);
-        $dao = Mockery::mock(LDAP_ProjectGroupDao::class)->shouldReceive('searchByGroupId')->andReturn([])->getMock();
-        $dao->shouldReceive('unlinkGroupLdap');
-        $dao->shouldReceive('linkGroupLdap');
-        $grpManager->shouldReceive('getDao')->andReturn($dao);
+        $grpManager->method('addUserToGroup');
+        $grpManager->method('getDbGroupMembersIds')->willReturn([]);
+        $grpManager->method('getLdapGroupMembersIds')->willReturn([101, 102]);
+        $dao = $this->createMock(LDAP_ProjectGroupDao::class);
+        $dao->method('searchByGroupId')->willReturn([]);
+        $dao->method('unlinkGroupLdap');
+        $dao->method('linkGroupLdap');
+        $grpManager->method('getDao')->willReturn($dao);
 
         $toAdd = $grpManager->getUsersToBeAdded(LDAP_GroupManager::BIND_OPTION);
-        $this->assertCount(2, $toAdd);
+        self::assertCount(2, $toAdd);
         $grpManager->bindWithLdap();
     }
 
-    public function testLdapGroupContainsOtherLdapGroupsWillSearchEachUserOnce()
+    public function testLdapGroupContainsOtherLdapGroupsWillSearchEachUserOnce(): void
     {
         // Search for umbrella group
-        $ldapResIterABCDEF = $this->getLdapResult('getGroupMembers', ['cn=ABC,ou=groups,dc=codendi,dc=com', 'cn=DEF,ou=groups,dc=codendi,dc=com']);
+        $ldapResIterABCDEF = $this->getLdapResult('getGroupMembers', ['cn=ABC,ou=groups,dc=example,dc=com', 'cn=DEF,ou=groups,dc=example,dc=com']);
         // Search for first sub-group
         $ldapResIterABC = $this->getLdapResult('getGroupMembers', [
-            'eduid=edA,ou=people,dc=codendi,dc=com',
-            'eduid=edE,ou=people,dc=codendi,dc=com',
+            'eduid=edA,ou=people,dc=example,dc=com',
+            'eduid=edE,ou=people,dc=example,dc=com',
         ]);
         // Search for second sub-group
-        $ldapResIterDEF = $this->getLdapResult('getGroupMembers', ['eduid=edE,ou=people,dc=codendi,dc=com']);
+        $ldapResIterDEF = $this->getLdapResult('getGroupMembers', ['eduid=edE,ou=people,dc=example,dc=com']);
         // Search for first user
         $ldapResIterUserA = $this->getLdapResult('getEdUid', 'edA');
         // Search for second user
         $ldapResIterUserE = $this->getLdapResult('getEdUid', 'edE');
 
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('searchGroupMembers')->once()->andReturns($ldapResIterABCDEF);
-        $ldap->shouldReceive('searchGroupMembers')->once()->andReturns($ldapResIterABC);
-        $ldap->shouldReceive('searchGroupMembers')->once()->andReturns($ldapResIterDEF);
+        $ldap = $this->getMockBuilder(\LDAP::class)
+            ->onlyMethods([
+                'searchGroupMembers',
+                'getLdapParam',
+                'searchDn',
+            ])
+            ->setConstructorArgs([
+                ['server' => 'server'],
+                new NullLogger(),
+            ])->getMock();
 
-        $ldap->shouldReceive('getLdapParam')->with('grp_dn')->andReturns('ou=groups,dc=codendi,dc=com');
-        $ldap->shouldReceive('getLdapParam')->with('eduid')->andReturns('eduid');
-        $ldap->shouldReceive('getLdapParam')->with('cn')->andReturns('cn');
-        $ldap->shouldReceive('getLdapParam')->with('uid')->andReturns('uid');
-        $ldap->shouldReceive('getLdapParam')->with('mail')->andReturns('mail');
+        $ldap->method('searchGroupMembers')->willReturnOnConsecutiveCalls(
+            $ldapResIterABCDEF,
+            $ldapResIterABC,
+            $ldapResIterDEF,
+        );
 
-        $ldap->shouldReceive('searchDn')->once()->andReturns($ldapResIterUserA);
-        $ldap->shouldReceive('searchDn')->once()->andReturns($ldapResIterUserE);
+        $ldap->method('getLdapParam')->willReturnMap([
+            ['grp_dn', 'ou=groups,dc=example,dc=com'],
+            ['eduid', 'eduid'],
+            ['cn', 'cn'],
+            ['uid', 'uid'],
+            ['mail', 'mail'],
+        ]);
 
-        $prjm = \Mockery::spy(\ProjectManager::class);
-        $prjm->shouldReceive('getProject')->andReturn(\Mockery::spy(\Project::class));
+        $ldap->method('searchDn')->willReturnOnConsecutiveCalls($ldapResIterUserA, $ldapResIterUserE);
 
-        $ldap_user_manager = \Mockery::spy(\LDAP_UserManager::class);
-        $grpManager        = Mockery::mock(
-            LDAP_GroupManager::class,
-            [
+        $prjm = $this->createMock(\ProjectManager::class);
+        $prjm->method('getProject')->willReturn($this->createMock(\Project::class));
+
+        $ldap_user_manager = $this->createMock(\LDAP_UserManager::class);
+
+        $grpManager = $this->getMockBuilder(LDAP_GroupManager::class)
+            ->setConstructorArgs([
                 $ldap,
                 $ldap_user_manager,
                 $prjm,
-                \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class),
-            ]
-        )->makePartial();
+                $this->createMock(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class),
+            ])->getMockForAbstractClass();
 
-        $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=codendi,dc=com');
+        $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=example,dc=com');
 
-        $this->assertCount(2, $members);
-        $this->assertInstanceOf(LDAPResult::class, $members['edA']);
-        $this->assertSame('edA', $members['edA']->getEdUid());
-        $this->assertInstanceOf(LDAPResult::class, $members['edE']);
-        $this->assertSame('edE', $members['edE']->getEdUid());
+        self::assertCount(2, $members);
+        self::assertInstanceOf(LDAPResult::class, $members['edA']);
+        self::assertSame('edA', $members['edA']->getEdUid());
+        self::assertInstanceOf(LDAPResult::class, $members['edE']);
+        self::assertSame('edE', $members['edE']->getEdUid());
     }
 }

@@ -22,44 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-require_once __DIR__ . '/bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 
 final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var GroupAutocompleteController
-     */
-    private $group_autocomplete;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BaseLayout
-     */
-    private $layout;
-    /**
-     * @var \LDAP|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $ldap;
-    /**
-     * @var \HttpRequest|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $request;
+    private GroupAutocompleteController $group_autocomplete;
+    private MockObject&BaseLayout $layout;
+    private \LDAP&MockObject $ldap;
+    private \HTTPRequest&MockObject $request;
 
     protected function setUp(): void
     {
-        $this->request = \Mockery::mock(\HTTPRequest::class);
-        $this->ldap    = \Mockery::mock(\LDAP::class);
-        $this->layout  = \Mockery::mock(BaseLayout::class);
+        $this->request = $this->createMock(\HTTPRequest::class);
+        $this->ldap    = $this->createMock(\LDAP::class);
+        $this->layout  = $this->createMock(BaseLayout::class);
 
         $this->group_autocomplete = new GroupAutocompleteController($this->ldap);
     }
 
     public function testItReturnsAndEmptyObjectWhenLdapGroupNameIsNotFound(): void
     {
-        $this->request->shouldReceive('valid')->andReturnFalse();
+        $this->request->method('valid')->willReturn(false);
 
         $output = [
             'results'    => [],
@@ -67,23 +51,23 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 'more' => false,
             ],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
+        $this->layout->expects(self::atLeast(1))->method('sendJSON')->with($output);
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
     }
 
     public function testItReturnsAndEmptyObjectWhenRequestDoesNotMatchLdapGroupName(): void
     {
-        $this->request->shouldReceive('valid')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('ldap_group_name')->andReturn('gn');
-        $this->ldap->shouldReceive('searchGroupAsYouType')->andReturnFalse();
+        $this->request->method('valid')->willReturn(true);
+        $this->request->method('get')->with('ldap_group_name')->willReturn('gn');
+        $this->ldap->method('searchGroupAsYouType')->willReturn(false);
         $output = [
             'results'    => [],
             'pagination' => [
                 'more' => false,
             ],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
+        $this->layout->expects(self::atLeast(1))->method('sendJSON')->with($output);
 
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
@@ -91,21 +75,22 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItAutoCompletesGroups(): void
     {
-        $this->request->shouldReceive('valid')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('ldap_group_name')->andReturn('gn');
+        $this->request->method('valid')->willReturn(true);
+        $this->request->method('get')->with('ldap_group_name')->willReturn('gn');
 
-        $ldap_iterator = \Mockery::spy(\LDAPResultIterator::class);
-        $ldap_iterator->shouldReceive('count')->andReturns(1);
-        $ldap_iterator->shouldReceive('valid')->andReturns(true, false);
+        $ldap_iterator = $this->createMock(\LDAPResultIterator::class);
+        $ldap_iterator->method('count')->willReturn(1);
+        $ldap_iterator->method('valid')->willReturn(true, false);
 
-        $res = \Mockery::spy(\LDAPResult::class);
-        $res->shouldReceive('getGroupCommonName')->andReturns('mis_1234');
-        $res->shouldReceive('getGroupDisplayName')->andReturns('test_group_dn');
+        $res = $this->createMock(\LDAPResult::class);
+        $res->method('getGroupCommonName')->willReturn('mis_1234');
+        $res->method('getGroupDisplayName')->willReturn('test_group_dn');
 
-        $ldap_iterator->shouldReceive('current')->andReturns($res);
+        $ldap_iterator->method('current')->willReturn($res);
+        $ldap_iterator->method('next');
 
-        $this->ldap->shouldReceive('searchGroupAsYouType')->andReturn($ldap_iterator);
-        $this->ldap->shouldReceive('getErrno')->andReturns(\LDAP::ERR_SUCCESS);
+        $this->ldap->method('searchGroupAsYouType')->willReturn($ldap_iterator);
+        $this->ldap->method('getErrno')->willReturn(\LDAP::ERR_SUCCESS);
 
         $output = [
             'results'    =>
@@ -117,7 +102,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 ],
             'pagination' => ['more' => false],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
+        $this->layout->expects(self::atLeast(1))->method('sendJSON')->with($output);
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
     }

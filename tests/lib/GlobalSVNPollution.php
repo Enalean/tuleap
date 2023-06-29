@@ -23,19 +23,13 @@ namespace Tuleap;
 
 trait GlobalSVNPollution
 {
-    /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
+    private bool $globals_svnaccess_set_initially;
+    private bool $globals_svngroups_set_initially;
 
     /**
      * @before
      */
-    protected function saveGlobalValues()
+    protected function saveGlobalValues(): void
     {
         $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
         $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
@@ -44,7 +38,7 @@ trait GlobalSVNPollution
     /**
      * @after
      */
-    protected function restoreGlobalValues()
+    protected function restoreGlobalValues(): void
     {
         if (! $this->globals_svnaccess_set_initially) {
             unset($GLOBALS['SVNACCESS']);

@@ -26,43 +26,43 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SystemEvent;
-
-require_once __DIR__ . '/bootstrap.php';
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform(): void
     {
         // Parameters
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(105);
+        $user     = UserTestBuilder::aUser()->withId(105)->build();
         $ldap_uid = 'johndoe';
 
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = $this->getMockBuilder(\LDAP_UserManager::class)
+            ->onlyMethods(['getDao'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $dao = \Mockery::spy(\LDAP_UserDao::class);
-        $dao->shouldReceive('updateLdapUid')->with(105, $ldap_uid)->once()->andReturns(true);
-        $lum->shouldReceive('getDao')->andReturns($dao);
+        $dao = $this->createMock(\LDAP_UserDao::class);
+        $dao->expects(self::once())->method('updateLdapUid')->with(105, $ldap_uid)->willReturn(true);
+        $lum->method('getDao')->willReturn($dao);
 
-        $this->assertTrue($lum->updateLdapUid($user, $ldap_uid));
-        $this->assertEquals($lum->getUsersToRename(), [$user]);
+        self::assertTrue($lum->updateLdapUid($user, $ldap_uid));
+        self::assertEquals($lum->getUsersToRename(), [$user]);
     }
 
     public function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember(): void
     {
         // Parameters
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(105);
+        $user = UserTestBuilder::aUser()->withId(105)->build();
 
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = $this->getMockBuilder(\LDAP_UserManager::class)
+            ->onlyMethods(['getSystemEventManager'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $sem = \Mockery::spy(\SystemEventManager::class);
-        $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '105', SystemEvent::PRIORITY_MEDIUM)->once();
-        $lum->shouldReceive('getSystemEventManager')->andReturns($sem);
+        $sem = $this->createMock(\SystemEventManager::class);
+        $sem->expects(self::once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '105', SystemEvent::PRIORITY_MEDIUM);
+        $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->addUserToRename($user);
 
@@ -71,19 +71,18 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testTriggerRenameOfUsersWithSeveralUsers(): void
     {
-        // Parameters
-        $user1 = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(101);
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(102);
-        $user3 = \Mockery::spy(\PFUser::class);
-        $user3->shouldReceive('getId')->andReturns(103);
+        $user1 = UserTestBuilder::aUser()->withId(101)->build();
+        $user2 = UserTestBuilder::aUser()->withId(102)->build();
+        $user3 = UserTestBuilder::aUser()->withId(103)->build();
 
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = $this->getMockBuilder(\LDAP_UserManager::class)
+            ->onlyMethods(['getSystemEventManager'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $sem = \Mockery::spy(\SystemEventManager::class);
-        $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM)->once();
-        $lum->shouldReceive('getSystemEventManager')->andReturns($sem);
+        $sem = $this->createMock(\SystemEventManager::class);
+        $sem->expects(self::once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM);
+        $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->addUserToRename($user1);
         $lum->addUserToRename($user2);
@@ -94,11 +93,14 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testTriggerRenameOfUsersWithoutUser(): void
     {
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = $this->getMockBuilder(\LDAP_UserManager::class)
+            ->onlyMethods(['getSystemEventManager'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $sem = \Mockery::spy(\SystemEventManager::class);
-        $sem->shouldReceive('createEvent')->never();
-        $lum->shouldReceive('getSystemEventManager')->andReturns($sem);
+        $sem = $this->createMock(\SystemEventManager::class);
+        $sem->expects(self::never())->method('createEvent');
+        $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->triggerRenameOfUsers();
     }
