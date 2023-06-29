@@ -19,7 +19,6 @@
 
 import { datePicker } from "tlp";
 import { createPopover } from "@tuleap/tlp-popovers";
-import { createModal } from "@tuleap/tlp-modal";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
@@ -35,6 +34,7 @@ import {
 } from "./select2";
 import { initMultipleListPickers, initSingleListPickers } from "./list-picker.js";
 import { initMultipleLazybox, initSingleLazybox } from "./lazybox.js";
+import { initModals } from "./modal.js";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -75,6 +75,7 @@ import { initMultipleLazybox, initSingleLazybox } from "./lazybox.js";
                 filterInlineTable(filter);
             });
 
+            initModals(example);
             initSingleSelect2(example);
             initMultiSelect2(example);
             initAppendSelect2(example);
@@ -92,14 +93,6 @@ import { initMultipleLazybox, initSingleLazybox } from "./lazybox.js";
                     "click",
                     (event) => event.preventDefault() && event.stopPropagation()
                 );
-            });
-
-            var modal_buttons = example.querySelectorAll("[data-target^=modal-]");
-            [].forEach.call(modal_buttons, function (button) {
-                var modal = createModal(document.getElementById(button.dataset.target), {});
-                button.addEventListener("click", function () {
-                    modal.toggle();
-                });
             });
 
             var popover_triggers = document.querySelectorAll(".popover-example");

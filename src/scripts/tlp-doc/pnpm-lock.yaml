@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table

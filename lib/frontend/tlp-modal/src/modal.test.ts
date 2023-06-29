@@ -17,23 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Modal } from "./modal";
 import {
-    createModal,
-    EVENT_TLP_MODAL_SHOWN,
-    EVENT_TLP_MODAL_HIDDEN,
     BACKDROP_ID,
     BACKDROP_SHOWN_CLASS_NAME,
+    createModal,
+    EVENT_TLP_MODAL_HIDDEN,
+    EVENT_TLP_MODAL_SHOWN,
+    EVENT_TLP_MODAL_WILL_HIDE,
     MODAL_SHOWN_CLASS_NAME,
 } from "./modal";
+import { selectOrThrow } from "@tuleap/dom";
 
 describe(`Modal`, () => {
-    let modal_element: HTMLElement;
-    let doc: Document;
-
+    let modal_element: HTMLElement, doc: Document;
     beforeEach(() => {
-        doc = createLocalDocument();
+        doc = document.implementation.createHTMLDocument();
         modal_element = doc.createElement("div");
         doc.body.append(modal_element);
     });
@@ -72,11 +72,7 @@ describe(`Modal`, () => {
 
         it(`will create and show a backdrop element`, () => {
             modal.show();
-            const backdrop = doc.querySelector("div#" + BACKDROP_ID);
-            expect(backdrop).not.toBeNull();
-            if (backdrop === null) {
-                throw new Error("backdrop should exist in the document");
-            }
+            const backdrop = selectOrThrow(doc, `#${BACKDROP_ID}`);
             expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(true);
         });
     });
@@ -100,10 +96,7 @@ describe(`Modal`, () => {
 
             it(`will remove the "backdrop shown" CSS class from the backdrop element`, () => {
                 modal.show();
-                const backdrop = doc.querySelector("#" + BACKDROP_ID);
-                if (backdrop === null) {
-                    throw new Error("backdrop should exist in the document");
-                }
+                const backdrop = selectOrThrow(doc, `#${BACKDROP_ID}`);
                 modal.hide();
                 expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(false);
             });
@@ -301,47 +294,71 @@ describe(`Modal`, () => {
         });
     });
 
-    it(`when I click on the backdrop element, it will hide the modal`, () => {
-        const modal = createModal(doc, modal_element);
-        modal.show();
-        const backdrop = doc.querySelector("#tlp-modal-backdrop");
-        if (backdrop === null || !(backdrop instanceof HTMLElement)) {
-            throw new Error("backdrop should exist in the document");
-        }
-
-        backdrop.dispatchEvent(new MouseEvent("click"));
-        expectTheModalToBeHidden(modal_element);
-
-        modal.destroy();
-    });
-
-    it(`when I click on the backdrop element, it will NOT hide the modal if dismiss_on_backdrop_click is false`, () => {
-        const modal = createModal(doc, modal_element, {
-            dismiss_on_backdrop_click: false,
+    describe(`Closing the modal with clicks`, () => {
+        let modal: Modal, dismiss_on_backdrop_click: boolean, closing_element: HTMLElement;
+        beforeEach(() => {
+            dismiss_on_backdrop_click = true;
+            closing_element = doc.createElement("span");
+            closing_element.dataset.dismiss = "modal";
+            modal_element.append(closing_element);
         });
-        modal.show();
-        const backdrop = doc.querySelector("#tlp-modal-backdrop");
-        if (backdrop === null || !(backdrop instanceof HTMLElement)) {
-            throw new Error("backdrop should exist in the document");
-        }
+        afterEach(() => {
+            modal.destroy();
+        });
 
-        backdrop.dispatchEvent(new MouseEvent("click"));
-        expectTheModalToBeShown(modal_element);
+        const showModal = (): void => {
+            modal = createModal(doc, modal_element, { dismiss_on_backdrop_click });
+            modal.show();
+        };
 
-        modal.destroy();
-    });
+        it(`when I click on the backdrop element, it will hide the modal`, () => {
+            showModal();
+            selectOrThrow(doc, `#${BACKDROP_ID}`).dispatchEvent(new Event("click"));
+            expectTheModalToBeHidden(modal_element);
+        });
 
-    it(`when I click on a [data-dismiss=modal] element, it will hide the modal`, () => {
-        const closing_element = doc.createElement("span");
-        closing_element.dataset.dismiss = "modal";
-        modal_element.append(closing_element);
-        const modal = createModal(doc, modal_element);
-        modal.show();
+        it(`when I click on the backdrop element,
+            it will dispatch the "will hide" event on the modal
+            and if it is prevented, the modal will NOT be hidden`, () => {
+            showModal();
+            let event_dispatched = false;
+            modal.addEventListener(EVENT_TLP_MODAL_WILL_HIDE, (event) => {
+                event_dispatched = true;
+                event.preventDefault();
+            });
+            selectOrThrow(doc, `#${BACKDROP_ID}`).dispatchEvent(new Event("click"));
 
-        closing_element.dispatchEvent(new MouseEvent("click"));
-        expectTheModalToBeHidden(modal_element);
+            expect(event_dispatched).toBe(true);
+            expectTheModalToBeShown(modal_element);
+        });
 
-        modal.destroy();
+        it(`when I click on the backdrop element, it will NOT hide the modal if dismiss_on_backdrop_click is false`, () => {
+            dismiss_on_backdrop_click = false;
+            showModal();
+            selectOrThrow(doc, `#${BACKDROP_ID}`).dispatchEvent(new Event("click"));
+            expectTheModalToBeShown(modal_element);
+        });
+
+        it(`when I click on a [data-dismiss=modal] element, it will hide the modal`, () => {
+            showModal();
+            closing_element.dispatchEvent(new Event("click"));
+            expectTheModalToBeHidden(modal_element);
+        });
+
+        it(`when I click on a [data-dismiss=modal] element,
+            it will dispatch the "will hide" event on the modal
+            and if it is prevented, the modal will NOT be hidden`, () => {
+            showModal();
+            let event_dispatched = false;
+            modal.addEventListener(EVENT_TLP_MODAL_WILL_HIDE, (event) => {
+                event_dispatched = true;
+                event.preventDefault();
+            });
+            closing_element.dispatchEvent(new Event("click"));
+
+            expect(event_dispatched).toBe(true);
+            expectTheModalToBeShown(modal_element);
+        });
     });
 
     describe(`removeEventListener`, () => {
@@ -388,6 +405,20 @@ describe(`Modal`, () => {
             expectTheModalToBeHidden(modal_element);
         });
 
+        it(`and I hit the Escape key,
+            it will dispatch the "will hide" event on the modal
+            and if it is prevented, the modal will NOT be hidden`, () => {
+            let event_dispatched = false;
+            modal.addEventListener(EVENT_TLP_MODAL_WILL_HIDE, (event) => {
+                event_dispatched = true;
+                event.preventDefault();
+            });
+            simulateEscapeKey(doc.body);
+
+            expect(event_dispatched).toBe(true);
+            expectTheModalToBeShown(modal_element);
+        });
+
         it(`when it is destroyed, the modal will remove its keyup listener`, () => {
             const removeEventListener = vi.spyOn(doc, "removeEventListener");
             modal.destroy();
@@ -422,10 +453,6 @@ describe(`Modal`, () => {
         });
     });
 });
-
-function createLocalDocument(): Document {
-    return document.implementation.createHTMLDocument();
-}
 
 function expectTheModalToBeShown(modal_element: HTMLElement): void {
     expect(modal_element.classList.contains(MODAL_SHOWN_CLASS_NAME)).toBe(true);

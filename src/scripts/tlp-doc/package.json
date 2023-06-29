@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:*",
     "@tuleap/lazybox": "workspace:*",
     "@tuleap/list-picker": "workspace:*",

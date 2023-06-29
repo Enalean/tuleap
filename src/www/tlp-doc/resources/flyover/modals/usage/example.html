@@ -1,7 +1,8 @@
-<p><button id="button-modal-simple-content" type="button" data-target="modal-simple-content" class="tlp-button-primary">Open simple modal</button></p>
-<p><button id="button-modal-big-actions" type="button" data-target="modal-big-actions" class="tlp-button-primary">Open modal with big action buttons</button></p>
-<p><button id="button-modal-big-content" type="button" data-target="modal-big-content" class="tlp-button-primary">Open modal with big content</button></p>
-<p><button id="button-modal-focus" type="button" data-target="modal-focus" class="tlp-button-primary">Open modal with data-modal-focus attribute</button></p>
+<p><button type="button" data-modal-button data-target-modal-id="modal-simple-content" class="tlp-button-primary">Open simple modal</button></p>
+<p><button type="button" data-modal-button data-target-modal-id="modal-big-actions" class="tlp-button-primary">Open modal with big action buttons</button></p>
+<p><button type="button" data-modal-button data-target-modal-id="modal-big-content" class="tlp-button-primary">Open modal with big content</button></p>
+<p><button type="button" data-modal-button data-target-modal-id="modal-focus" class="tlp-button-primary">Open modal with data-modal-focus attribute</button></p>
+<p><button type="button" class="tlp-button-primary" id="modal-button-events">Open modal with events</button></p>
 
 <div id="modal-simple-content" class="tlp-modal" role="dialog" aria-labelledby="modal-simple-content-label">
       <div class="tlp-modal-header">
@@ -63,7 +64,7 @@
       </div>
 </div>
 
-<div id="modal-focus" class="tlp-modal" role="dialog" aria-labelledby="modal-simple-content-label">
+<div id="modal-focus" class="tlp-modal" role="dialog" aria-labelledby="modal-focus-label">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="modal-focus-label">Modal title</h1>
         <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
@@ -88,19 +89,45 @@
     </div>
 </div>
 
+<div id="events-modal" class="tlp-modal" role="dialog" aria-labelledby="events-modal-label">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="events-modal-label">Events modal</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-alert-info">This modal will ask you to confirm before closing it, so that you do not lose ongoing work.</div>
+        <div class="tlp-property"><p class="tlp-text-info">Events are logged in the developer console.</p></div>
+        <div class="tlp-form-element">
+            <label for="events-modal-input" class="tlp-label">Title</label>
+            <input type="text" id="events-modal-input" class="tlp-input">
+        </div>
+        <div class="tlp-form-element">
+            <label for="events-modal-text" class="tlp-label">Description</label>
+            <textarea name="" id="events-modal-text" class="tlp-textarea" rows="4"></textarea>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">Cancel</button>
+        <button type="button" id="events-modal-submit" class="tlp-button-primary tlp-modal-action">Action</button>
+    </div>
+</div>
+
 <script>
-    var modal_element        = document.getElementById('modal-simple-content');
-    var modal_simple_content = tlp.createModal(modal_element);
+import { createModal } from "@tuleap/tlp-modal";
+const modal_element        = document.getElementById("modal-simple-content");
+const modal = createModal(modal_element);
 
-    modal_simple_content.addEventListener('tlp-modal-shown', callback);
-    modal_simple_content.addEventListener('tlp-modal-hidden', callback);
-    modal_simple_content.removeEventListener('tlp-modal-hidden', callback);
+modal.addEventListener("tlp-modal-shown", callback);
+modal.addEventListener("tlp-modal-hidden", callback);
+modal.removeEventListener("tlp-modal-hidden", callback);
 
-    function callback(event) {
-        // Do something...
-    }
+function callback(event) {
+    // Do something...
+}
 
-    document.getElementById('button-modal-simple-content').addEventListener('click', function () {
-        modal_simple_content.toggle();
-    });
+document.getElementById("button-modal-simple-content").addEventListener("click", () => {
+    modal.show();
+});
 </script>
