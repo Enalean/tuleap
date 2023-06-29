@@ -57,11 +57,14 @@ export const getLinkFieldFetchErrorMessage = (): string =>
 export const getLinkedParentFeedback = (): string =>
     gettextCatalog.getString("The artifact will be linked to %s");
 export const getLinkFieldTableEmptyStateText = (): string => gettextCatalog.getString("No links");
-export const getLinkFieldNoteText = (): string =>
-    gettextCatalog.getString("Note: an artifact can only have one parent.");
-export const getLinkFieldNoteStartText = (): string => gettextCatalog.getString(`Note:`);
 export const getLinkFieldCanHaveOnlyOneParent = (): string =>
-    gettextCatalog.getString(`can only have one parent.`);
+    gettextCatalog.getString("An artifact can only have one parent.");
+export const getLinkFieldCanHaveOnlyOneParentWithCrossRef = (): string =>
+    gettextCatalog.getString(`%(artifact)s can only have one parent.`);
+
+export const getLinkFieldTypeAlreadySet = (): string => {
+    return gettextCatalog.getString("%(type)s (already set)");
+};
 export const getMarkForRemovalLabel = (): string => gettextCatalog.getString("Mark for removal");
 export const getUnlinkLabel = (): string => gettextCatalog.getString("Unlink");
 export const getRestoreLabel = (): string => gettextCatalog.getString("Restore");

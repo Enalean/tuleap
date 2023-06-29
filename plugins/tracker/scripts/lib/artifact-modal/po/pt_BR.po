@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%(artifact)s can only have one parent."
+msgstr ""
+
+msgid "%(type)s (already set)"
+msgstr ""
+
 msgid "(already linked)"
 msgstr ""
 
@@ -16,6 +22,9 @@ msgid "...to get"
 msgstr "...para obter"
 
 msgid "Add another file"
+msgstr ""
+
+msgid "An artifact can only have one parent."
 msgstr ""
 
 msgid "An error occurred while saving the artifact."
@@ -150,12 +159,6 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
-msgid "Note:"
-msgstr ""
-
-msgid "Note: an artifact can only have one parent."
-msgstr ""
-
 msgid "Only comments are displayed"
 msgstr ""
 
@@ -266,9 +269,6 @@ msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 
 msgid "You can drag 'n drop or paste image directly in the editor."
 msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
-
-msgid "can only have one parent."
-msgstr ""
 
 msgid "is Child of"
 msgstr ""
