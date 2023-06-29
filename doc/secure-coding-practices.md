@@ -155,3 +155,24 @@ Secrets stored in the database are expected to be:
 
 * use an encrypted channel like TLS (e.g. HTTPS) when transmitting or receiving credentials
 * secrets should preferably be sent in the request body instead of the URL parameters as it is less likely to be logged
+
+## Cryptographic failures
+
+### When?
+
+Issue can be encountered when doing cryptographic operations such as encrypting, signing or hashing data.
+
+### What is this?
+
+See [OWASP Top 10 2021 - Cryptographic failures](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/).
+
+### Mitigations
+
+* For encrypting data see the previous section "Handling secrets"
+* The [`Tuleap\Cryptography`](../src/common/Cryptography/) namespace offers hard to misuse interfaces for some symmetric
+ and asymmetric cryptography operations
+* If your need is not covered by the existing solutions please reach out to a team member experienced in applied
+  cryptography. The following APIs can be used to design a solution solving your problem:
+  - [`hash()`](https://www.php.net/manual/en/function.hash.php) with SHA-256, SHA-384, SHA-512, SHA-512/256
+  - [`hash_hmac()`](https://www.php.net/manual/en/function.hash-hmac.php) with SHA-256, SHA-384, SHA-512, SHA-512/256
+  - [`sodium_*`](https://www.php.net/manual/en/book.sodium.php) functions
