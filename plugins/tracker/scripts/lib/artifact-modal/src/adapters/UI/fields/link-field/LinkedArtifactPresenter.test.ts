@@ -19,9 +19,9 @@
 
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
-import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 
 const ARTIFACT_ID = 43;
 const TITLE = "divinity";
@@ -32,12 +32,8 @@ const COLOR = "graffiti-yellow";
 const CROSS_REFERENCE = `${TRACKER_SHORTNAME} #${ARTIFACT_ID}`;
 
 describe(`LinkedArtifactPresenter`, () => {
-    it(`builds from a LinkedArtifact and adds marked for removal property`, () => {
-        const link_type: LinkType = {
-            shortname: "_is_child",
-            direction: "forward",
-            label: "Parent",
-        };
+    it(`builds from a LinkedArtifact and adds parent and marked for removal property`, () => {
+        const link_type = LinkTypeStub.buildForwardCustom();
         const linked_artifact = LinkedArtifactStub.withDefaults({
             identifier: LinkedArtifactIdentifierStub.withId(ARTIFACT_ID),
             title: TITLE,
@@ -48,7 +44,7 @@ describe(`LinkedArtifactPresenter`, () => {
             link_type,
         });
 
-        const presenter = LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, true);
+        const presenter = LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false, true);
 
         expect(presenter.identifier.id).toBe(ARTIFACT_ID);
         expect(presenter.title).toBe(TITLE);
@@ -58,6 +54,7 @@ describe(`LinkedArtifactPresenter`, () => {
         expect(presenter.xref.ref).toBe(CROSS_REFERENCE);
         expect(presenter.xref.color).toBe(COLOR);
         expect(presenter.link_type).toStrictEqual(link_type);
+        expect(presenter.is_parent).toBe(false);
         expect(presenter.is_marked_for_removal).toBe(true);
     });
 });

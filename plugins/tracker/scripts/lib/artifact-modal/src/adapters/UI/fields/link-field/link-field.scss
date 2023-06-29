@@ -47,6 +47,10 @@ $link-type-width: 150px;
     }
 }
 
+.link-field-parent-row + .link-field-row:not(.link-field-parent-row) {
+    border-top-width: 3px;
+}
+
 .link-field-add-link-section {
     display: flex;
     margin: 0 0 var(--tlp-medium-spacing);
