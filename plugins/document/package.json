@@ -52,7 +52,7 @@
     "@vue/test-utils": "^2.2.10",
     "moment-timezone-data-webpack-plugin": "^1.5.1",
     "neverthrow": "6.0.0",
-    "vue-loader": "^17.0.1",
+    "vue-loader": "^17.2.2",
     "vuex-class": "^0.3.2"
   },
   "scripts": {

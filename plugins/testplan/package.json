@@ -32,7 +32,7 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@vue/test-utils": "^2.3",
-    "vue-loader": "^17.0.0"
+    "vue-loader": "^17.2.2"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
