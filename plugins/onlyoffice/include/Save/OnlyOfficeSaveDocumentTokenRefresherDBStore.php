@@ -54,8 +54,9 @@ final class OnlyOfficeSaveDocumentTokenRefresherDBStore implements OnlyOfficeSav
             return Result::err(Fault::fromMessage(sprintf('No valid save token found with ID #%d (possibly already expired)', $split_token->getID())));
         }
 
-        $this->dao->updateTokenExpirationDate(
-            $save_token_data->token_id,
+        $this->dao->updateTokensExpirationDate(
+            $save_token_data->document_id,
+            $save_token_data->server_id,
             $now->getTimestamp(),
             $now->add($this->expiration_delay)->getTimestamp()
         );
