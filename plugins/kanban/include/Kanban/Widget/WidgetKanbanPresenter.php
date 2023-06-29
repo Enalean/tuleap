@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\Widget;
 
-use KanbanPresenter;
+use Tuleap\Kanban\KanbanPresenter;
 
 final class WidgetKanbanPresenter
 {

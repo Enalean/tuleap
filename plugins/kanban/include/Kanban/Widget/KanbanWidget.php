@@ -26,7 +26,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
 use Codendi_Request;
-use KanbanPresenter;
+use Tuleap\Kanban\KanbanPresenter;
 use Project;
 use TemplateRendererFactory;
 use Tracker_Report;

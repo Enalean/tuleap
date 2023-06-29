@@ -18,19 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_PermissionsManager;
+use EventManager;
+use ForgeConfig;
+use PFUser;
+use ProjectManager;
+use Tracker_FormElementFactory;
+use Tracker_ReportFactory;
+use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\Kanban\KanbanUserPreferences;
-use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Kanban\KanbanColumnDao;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 final class KanbanPresenter
 {
@@ -39,7 +53,7 @@ final class KanbanPresenter
     public string $kanban_representation;
     /** @var string json of Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
     public string $dashboard_dropdown_representation;
-    public bool $user_is_kanban_admin;
+    public int $user_is_kanban_admin;
     public int $project_id;
     public int $user_id;
     public string $view_mode;
@@ -112,15 +126,15 @@ final class KanbanPresenter
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
         $this->project_id                        = $project_id;
-        $this->user_id                           = $user->getId();
+        $this->user_id                           = (int) $user->getId();
         $this->view_mode                         = (string) $user->getPreference(
             'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
         );
         $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
                 'group_id' => $this->project_id,
-                'action'   => 'showKanban',
-                'id'       => $kanban->getId(),
+                'action' => 'showKanban',
+                'id' => $kanban->getId(),
             ]
         );
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);

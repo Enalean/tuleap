@@ -18,55 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Kanban\Home;
+
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanItemDao;
 
-class AgileDashboard_Presenter_KanbanSummaryPresenter
+final class KanbanSummaryPresenter
 {
-    /** @var Kanban */
-    private $kanban;
-
-    /** @var KanbanItemDao */
-    private $kanban_item_dao;
+    public int $count_open_kanban_items;
+    public int $count_closed_kanban_items;
 
     public function __construct(
-        Kanban $kanban,
+        private readonly Kanban $kanban,
         KanbanItemDao $kanban_item_dao,
     ) {
-        $this->kanban          = $kanban;
-        $this->kanban_item_dao = $kanban_item_dao;
+        $this->count_open_kanban_items = count($kanban_item_dao->getOpenItemIds(
+            $this->kanban->getTrackerId()
+        ));
+
+        $this->count_closed_kanban_items = count($kanban_item_dao->getKanbanArchiveItemIds(
+            $this->kanban->getTrackerId()
+        ));
     }
 
-    public function name()
+    public function name(): string
     {
         return $this->kanban->getName();
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->kanban->getId();
     }
 
-    public function count_open_kanban_items()
-    {
-        return count($this->kanban_item_dao->getOpenItemIds(
-            $this->kanban->getTrackerId()
-        ));
-    }
-
-    public function count_closed_kanban_items()
-    {
-        return count($this->kanban_item_dao->getKanbanArchiveItemIds(
-            $this->kanban->getTrackerId()
-        ));
-    }
-
-    public function open()
+    public function open(): string
     {
         return dgettext('tuleap-agiledashboard', 'open');
     }
 
-    public function closed()
+    public function closed(): string
     {
         return dgettext('tuleap-agiledashboard', 'closed');
     }
