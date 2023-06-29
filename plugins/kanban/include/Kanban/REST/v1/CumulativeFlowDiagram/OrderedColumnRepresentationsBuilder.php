@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use DateInterval;
 use DateTime;
@@ -64,7 +64,7 @@ final class OrderedColumnRepresentationsBuilder
      * @return DiagramColumnRepresentation[]
      */
     public function build(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         PFUser $user,
         array $dates,
         array $items_in_columns,

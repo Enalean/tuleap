@@ -18,18 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class AgileDashboard_KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Kanban;
+
+use Mockery;
+use PFUser;
+
+//phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
+final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var PFUser */
     private $user;
 
-    /** @var AgileDashboard_KanbanUserPreferences */
+    /** @var KanbanUserPreferences */
     private $user_preferences;
 
-    /** @var AgileDashboard_Kanban */
+    /** @var Kanban */
     private $kanban;
 
     private $column_id = 10;
@@ -38,8 +43,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->user = Mockery::spy(\PFUser::class);
 
-        $this->user_preferences = new AgileDashboard_KanbanUserPreferences();
-        $this->kanban           = new AgileDashboard_Kanban(1, 1, 'My first kanban');
+        $this->user_preferences = new KanbanUserPreferences();
+        $this->kanban           = new Kanban(1, 1, 'My first kanban');
     }
 
     public function testDefaultBehavior(): void
@@ -51,7 +56,7 @@ class AgileDashboard_KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItOpensTheBacklog(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
@@ -65,35 +70,35 @@ class AgileDashboard_KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItOpensTheArchive(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
     public function testItOpensTheColumn(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
     public function testItClosesTheBacklog(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
     public function testItClosesTheArchive(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
     public function testItClosesTheColumn(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }

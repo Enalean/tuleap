@@ -103,7 +103,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
@@ -126,7 +126,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(null);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
@@ -149,7 +149,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
@@ -172,7 +172,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(false);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
@@ -195,7 +195,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);

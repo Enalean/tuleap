@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use Tracker_ReportFactory;
 
 class TrackerReportBuilder
@@ -30,7 +30,7 @@ class TrackerReportBuilder
      */
     private $tracker_report_factory;
     /**
-     * @var AgileDashboard_Kanban
+     * @var Kanban
      */
     private $kanban;
 
@@ -39,7 +39,7 @@ class TrackerReportBuilder
 
     public function __construct(
         Tracker_ReportFactory $tracker_report_factory,
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         TrackerReportDao $tracker_report_dao,
     ) {
         $this->tracker_report_factory = $tracker_report_factory;

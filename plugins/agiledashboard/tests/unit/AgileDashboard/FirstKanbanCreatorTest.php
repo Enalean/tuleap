@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_FirstKanbanCreator;
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanFactory;
 use AgileDashboard_KanbanManager;
 use Mockery;
 use PFUser;
@@ -53,7 +53,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $kanban_manager;
     /**
-     * @var Mockery\MockInterface|AgileDashboard_KanbanFactory
+     * @var Mockery\MockInterface|KanbanFactory
      */
     private $kanban_factory;
     /**
@@ -80,7 +80,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_factory = Mockery::mock(TrackerFactory::class);
         $this->kanban_manager  = Mockery::mock(AgileDashboard_KanbanManager::class);
-        $this->kanban_factory  = Mockery::mock(AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory  = Mockery::mock(KanbanFactory::class);
         $this->xml_import      = Mockery::mock(TrackerXmlImport::class);
         $this->xml_import->shouldReceive('getTrackerItemNameFromXMLFile')->andReturn('tracker_item_name');
         $this->report_updater = Mockery::mock(TrackerReportUpdater::class);
@@ -104,7 +104,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('tracker_name');
         $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(AgileDashboard_Kanban::class);
+        $kanban = Mockery::mock(Kanban::class);
         $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
 
         $this->kanban_manager->shouldReceive('createKanban')->once();
@@ -124,7 +124,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('tracker_name');
         $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(AgileDashboard_Kanban::class);
+        $kanban = Mockery::mock(Kanban::class);
         $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
         $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
         $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
@@ -146,7 +146,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('tracker_name');
         $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(AgileDashboard_Kanban::class);
+        $kanban = Mockery::mock(Kanban::class);
         $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
         $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
         $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
@@ -168,7 +168,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('tracker_name');
         $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(AgileDashboard_Kanban::class);
+        $kanban = Mockery::mock(Kanban::class);
         $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
         $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
         $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
@@ -192,7 +192,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('tracker_name');
         $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(AgileDashboard_Kanban::class);
+        $kanban = Mockery::mock(Kanban::class);
         $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
         $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
         $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(

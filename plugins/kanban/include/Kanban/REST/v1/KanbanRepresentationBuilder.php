@@ -19,10 +19,10 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanUserPreferences;
+use Tuleap\Kanban\KanbanUserPreferences;
 use Exception;
 use PFUser;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
@@ -30,13 +30,13 @@ use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 final class KanbanRepresentationBuilder
 {
     public function __construct(
-        private readonly AgileDashboard_KanbanUserPreferences $user_preferences,
+        private readonly KanbanUserPreferences $user_preferences,
         private readonly AgileDashboard_KanbanColumnFactory $kanban_column_factory,
         private readonly AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
     }
 
-    public function build(AgileDashboard_Kanban $kanban, PFUser $user): KanbanRepresentation
+    public function build(Kanban $kanban, PFUser $user): KanbanRepresentation
     {
         try {
             $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);

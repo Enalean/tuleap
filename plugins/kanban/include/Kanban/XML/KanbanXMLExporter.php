@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Kanban\XML;
 
 use AgileDashboard_ConfigurationDao;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use Project;
 use SimpleXMLElement;
 
@@ -38,12 +38,12 @@ class KanbanXMLExporter
 
     public function __construct(
         private readonly AgileDashboard_ConfigurationDao $configuration_dao,
-        private readonly AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly KanbanFactory $kanban_factory,
     ) {
     }
 
     /**
-     * @throws \AgileDashboard_SemanticStatusNotFoundException
+     * @throws \Tuleap\Kanban\SemanticStatusNotFoundException
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
@@ -56,7 +56,7 @@ class KanbanXMLExporter
             throw new \Exception("Unable to create kanban_list node");
         }
 
-        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project->getID());
+        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds((int) $project->getID());
         foreach ($kanban_tracker_ids as $tracker_id) {
             $kanban = $this->kanban_factory->getKanbanByTrackerId($tracker_id);
 

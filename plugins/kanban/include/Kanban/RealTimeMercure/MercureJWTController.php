@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\RealTimeMercure;
 
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanFactory;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,7 +38,7 @@ use Tuleap\User\ProvideCurrentUser;
 final class MercureJWTController extends DispatchablePSR15Compatible
 {
     public function __construct(
-        private AgileDashboard_KanbanFactory $kanban_factory,
+        private KanbanFactory $kanban_factory,
         private LoggerInterface $logger,
         private ResponseFactoryInterface $response_factory,
         private StreamFactoryInterface $stream_factory,
@@ -58,7 +58,7 @@ final class MercureJWTController extends DispatchablePSR15Compatible
         $id = (int) $request->getAttribute("kanban_id");
         try {
             $this->kanban_factory->getKanban($this->user_provider->getCurrentUser(), $id);
-        } catch (AgileDashboard_KanbanCannotAccessException | \AgileDashboard_KanbanNotFoundException $e) {
+        } catch (KanbanCannotAccessException | \Tuleap\Kanban\KanbanNotFoundException $e) {
             $this->logger->info('Kanban error in generating the token in Kanban JWT Request', ['exception' => $e]);
             return $this->response_factory->createResponse(404);
         }

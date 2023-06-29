@@ -285,9 +285,6 @@ msgstr ""
 msgid "Kanban name:"
 msgstr ""
 
-msgid "Kanban not found."
-msgstr ""
-
 msgid "Kanban successfully activated."
 msgstr ""
 

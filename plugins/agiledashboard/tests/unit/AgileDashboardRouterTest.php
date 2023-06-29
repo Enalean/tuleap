@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -72,7 +73,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
                 Mockery::mock(AgileDashboard_KanbanManager::class),
                 Mockery::mock(AgileDashboard_ConfigurationManager::class),
-                Mockery::mock(AgileDashboard_KanbanFactory::class),
+                Mockery::mock(KanbanFactory::class),
                 Mockery::mock(PlanningPermissionsManager::class),
                 Mockery::mock(Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(Tuleap\AgileDashboard\Planning\ScrumPlanningFilter::class),

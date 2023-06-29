@@ -20,14 +20,14 @@
 
 namespace Tuleap\Kanban\Widget;
 
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use AgileDashboard_PermissionsManager;
 use HTTPRequest;
 use TrackerFactory;
 use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
-class ProjectKanban extends Kanban
+class ProjectKanban extends KanbanWidget
 {
     public const NAME = 'plugin_agiledashboard_projects_kanban';
 
@@ -35,7 +35,7 @@ class ProjectKanban extends Kanban
         WidgetKanbanCreator $widget_kanban_creator,
         WidgetKanbanRetriever $widget_kanban_retriever,
         WidgetKanbanDeletor $widget_kanban_deletor,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,

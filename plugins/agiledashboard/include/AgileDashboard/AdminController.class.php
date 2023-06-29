@@ -25,7 +25,7 @@ use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
 use AgileDashboard_FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use AgileDashboard_KanbanManager;
 use AgileDashboardConfigurationResponse;
 use AgileDashboardKanbanConfigurationUpdater;
@@ -72,7 +72,7 @@ use XMLImportHelper;
 
 class AdminController extends BaseController
 {
-    /** @var AgileDashboard_KanbanFactory */
+    /** @var KanbanFactory */
     private $kanban_factory;
 
     /** @var PlanningFactory */
@@ -117,7 +117,7 @@ class AdminController extends BaseController
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         AgileDashboard_KanbanManager $kanban_manager,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory,
         EventManager $event_manager,

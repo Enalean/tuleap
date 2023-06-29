@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_ConfigurationManager;
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use AgileDashboard_KanbanManager;
 use AgileDashboard_XMLFullStructureExporter;
 use Codendi_Request;
@@ -140,7 +140,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $plugin_path,
             Mockery::mock(AgileDashboard_KanbanManager::class),
             Mockery::mock(AgileDashboard_ConfigurationManager::class),
-            Mockery::mock(AgileDashboard_KanbanFactory::class),
+            Mockery::mock(KanbanFactory::class),
             Mockery::mock(PlanningPermissionsManager::class),
             $this->scrum_mono_milestone_checker,
             Mockery::mock(ScrumPlanningFilter::class),

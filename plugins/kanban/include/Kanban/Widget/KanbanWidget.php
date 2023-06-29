@@ -20,10 +20,10 @@
 
 namespace Tuleap\Kanban\Widget;
 
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\KanbanNotFoundException;
 use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use KanbanPresenter;
@@ -41,7 +41,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
-abstract class Kanban extends Widget
+abstract class KanbanWidget extends Widget
 {
     protected ?int $kanban_id       = null;
     protected ?string $kanban_title = null;
@@ -55,7 +55,7 @@ abstract class Kanban extends Widget
         private readonly WidgetKanbanCreator $widget_kanban_creator,
         private readonly WidgetKanbanRetriever $widget_kanban_retriever,
         private readonly WidgetKanbanDeletor $widget_kanban_deletor,
-        private readonly AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
         private readonly AgileDashboard_PermissionsManager $permissions_manager,
         private readonly WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
@@ -122,7 +122,7 @@ abstract class Kanban extends Widget
             $this->tracker_report_id = $this->widget_kanban_config_retriever->getWidgetReportId($id);
             $kanban                  = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
             $this->kanban_title      = $kanban->getName();
-        } catch (AgileDashboard_KanbanCannotAccessException $e) {
+        } catch (KanbanCannotAccessException $e) {
         }
     }
 
@@ -130,7 +130,7 @@ abstract class Kanban extends Widget
     {
         $is_empty = true;
         try {
-            $kanban  = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
+            $kanban  = $this->kanban_factory->getKanban($this->getCurrentUser(), (int) $this->kanban_id);
             $tracker = $this->tracker_factory->getTrackerByid($kanban->getTrackerId());
             if ($tracker === null) {
                 throw new \RuntimeException('Tracker does not exist');
@@ -157,12 +157,12 @@ abstract class Kanban extends Widget
                 '',
                 $kanban_presenter
             );
-        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (KanbanNotFoundException $exception) {
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,
                 dgettext('tuleap-kanban', 'Kanban not found.')
             );
-        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+        } catch (KanbanCannotAccessException $exception) {
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,
                 $GLOBALS['Language']->getText('global', 'error_perm_denied')
@@ -233,7 +233,7 @@ abstract class Kanban extends Widget
     {
         $tracker_reports_builder = new TrackerReportBuilder(
             $this->tracker_report_factory,
-            $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id),
+            $this->kanban_factory->getKanban($this->getCurrentUser(), (int) $this->kanban_id),
             new TrackerReportDao()
         );
 
@@ -290,7 +290,7 @@ abstract class Kanban extends Widget
 
         $old_kanban = $this->kanban_factory->getKanban(
             $this->getCurrentUser(),
-            $this->kanban_id
+            (int) $this->kanban_id
         );
 
         $new_tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
@@ -333,7 +333,7 @@ abstract class Kanban extends Widget
         );
     }
 
-    private function getKanbanTrackerShortname(AgileDashboard_Kanban $kanban): string
+    private function getKanbanTrackerShortname(Kanban $kanban): string
     {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($tracker === null) {

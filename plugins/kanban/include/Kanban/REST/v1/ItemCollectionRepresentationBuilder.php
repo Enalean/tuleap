@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanItemDao;
 use Tracker_ArtifactFactory;
 use PFUser;
@@ -38,7 +38,7 @@ final class ItemCollectionRepresentationBuilder
     public function build(
         ColumnIdentifier $column_identifier,
         PFUser $user,
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         int $limit,
         int $offset,
     ): ItemCollectionRepresentation {

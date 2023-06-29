@@ -62,7 +62,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $mappings_registry;
     /**
-     * @var \AgileDashboard_KanbanFactory
+     * @var \Tuleap\Kanban\KanbanFactory
      */
     private $kanban_factory;
 
@@ -74,7 +74,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->agile_dashboard_configuration_manager = \Mockery::spy(\AgileDashboard_ConfigurationManager::class);
         $this->kanban_column_manager                 = \Mockery::spy(\AgileDashboard_KanbanColumnManager::class);
         $this->kanban_manager                        = \Mockery::spy(\AgileDashboard_KanbanManager::class);
-        $this->kanban_factory                        = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory                        = \Mockery::spy(\Tuleap\Kanban\KanbanFactory::class);
         $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry();
 
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
@@ -158,7 +158,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\Tuleap\Kanban\Kanban::class));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
@@ -208,7 +208,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\Tuleap\Kanban\Kanban::class));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
@@ -293,7 +293,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_manager->shouldReceive('createKanban')->times(2)->andReturn(9, 10);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\Tuleap\Kanban\Kanban::class));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
@@ -330,7 +330,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </project>'
         );
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(new \AgileDashboard_Kanban(11221, -1, ''));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(new \Tuleap\Kanban\Kanban(11221, -1, ''));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));

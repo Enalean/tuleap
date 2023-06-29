@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanColumnDao;
 
 class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -57,7 +58,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $kanban_actions_checker;
     /**
-     * @var AgileDashboard_Kanban
+     * @var Kanban
      */
     private $kanban;
     /**
@@ -79,7 +80,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->column_dao             = \Mockery::spy(\Tuleap\Kanban\KanbanColumnDao::class);
         $this->kanban_actions_checker = \Mockery::spy(\AgileDashboard_KanbanActionsChecker::class);
 
-        $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
+        $this->kanban                = new Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $this->column_dao,
             \Mockery::spy(

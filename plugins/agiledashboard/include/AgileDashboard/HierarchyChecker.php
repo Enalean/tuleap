@@ -18,6 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Kanban\KanbanFactory;
+
 class AgileDashboard_HierarchyChecker
 {
     /**
@@ -26,7 +29,7 @@ class AgileDashboard_HierarchyChecker
     private $planning_factory;
 
     /**
-     * @var AgileDashboard_KanbanFactory
+     * @var KanbanFactory
      */
     private $kanban_factory;
 
@@ -37,7 +40,7 @@ class AgileDashboard_HierarchyChecker
 
     public function __construct(
         PlanningFactory $planning_factory,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
     ) {
         $this->planning_factory = $planning_factory;
@@ -74,9 +77,12 @@ class AgileDashboard_HierarchyChecker
         return array_unique(array_merge($planning_tracker_ids, $backlog_tracker_ids));
     }
 
-    private function getKanbanTrackerIds(Project $project)
+    /**
+     * @return int[]
+     */
+    private function getKanbanTrackerIds(Project $project): array
     {
-        return $this->kanban_factory->getKanbanTrackerIds($project->getID());
+        return $this->kanban_factory->getKanbanTrackerIds((int) $project->getID());
     }
 
     private function checkHierarchyContainsGivenTrackerIds(Tracker_Hierarchy $hierarchy, array $tracker_ids)

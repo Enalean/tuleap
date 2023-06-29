@@ -39,7 +39,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $kanban = new \AgileDashboard_Kanban(
+        $kanban = new \Tuleap\Kanban\Kanban(
             20001,
             101,
             'Kanban name'

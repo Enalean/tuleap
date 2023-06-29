@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanColumnDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
@@ -45,7 +46,7 @@ class AgileDashboard_KanbanColumnManager
     /**
      * @throws SemanticStatusNotDefinedException
      */
-    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, string $label): ?int
+    public function createColumn(PFUser $user, Kanban $kanban, string $label): ?int
     {
         $this->kanban_actions_checker->checkUserCanAddColumns($user, $kanban);
 
@@ -55,7 +56,7 @@ class AgileDashboard_KanbanColumnManager
         return $semantic->addOpenValue($label);
     }
 
-    public function reorderColumns(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids)
+    public function reorderColumns(PFUser $user, Kanban $kanban, array $column_ids)
     {
         $this->kanban_actions_checker->checkUserCanReorderColumns($user, $kanban);
 
@@ -74,7 +75,7 @@ class AgileDashboard_KanbanColumnManager
      * @throws Kanban_SemanticStatusNotDefinedException
      * @throws Kanban_TrackerNotDefinedException
      */
-    public function deleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    public function deleteColumn(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column)
     {
         $this->kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);
 
@@ -95,7 +96,7 @@ class AgileDashboard_KanbanColumnManager
 
     public function updateWipLimit(
         PFUser $user,
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         AgileDashboard_KanbanColumn $column,
         int $wip_limit,
     ): void {
@@ -104,7 +105,7 @@ class AgileDashboard_KanbanColumnManager
         $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
-    public function updateLabel(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $label)
+    public function updateLabel(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column, $label)
     {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
         $this->kanban_actions_checker->checkUserCanEditColumnLabel($user, $kanban);

@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Kanban;
 
 use AgileDashboard_KanbanActionsChecker;
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanNotFoundException;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanNotFoundException;
 use Mockery;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -34,7 +34,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \AgileDashboard_KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \Tuleap\Kanban\KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $kanban_factory;
     /**
@@ -60,7 +60,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     protected function setUp(): void
     {
-        $this->kanban_factory         = Mockery::mock(\AgileDashboard_KanbanFactory::class);
+        $this->kanban_factory         = Mockery::mock(\Tuleap\Kanban\KanbanFactory::class);
         $this->tracker_factory        = Mockery::mock(\TrackerFactory::class);
         $this->presenter_builder      = new TrackerNewDropdownLinkPresenterBuilder();
         $this->kanban_actions_checker = Mockery::mock(AgileDashboard_KanbanActionsChecker::class);
@@ -81,7 +81,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
             ->shouldReceive('getKanban')
             ->with($this->user, 101)
             ->once()
-            ->andThrow(AgileDashboard_KanbanNotFoundException::class);
+            ->andThrow(KanbanNotFoundException::class);
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -94,7 +94,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
             ->shouldReceive('getKanban')
             ->with($this->user, 101)
             ->once()
-            ->andThrow(AgileDashboard_KanbanCannotAccessException::class);
+            ->andThrow(KanbanCannotAccessException::class);
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -103,7 +103,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoSemantic(): void
     {
-        $kanban = Mockery::mock(\AgileDashboard_Kanban::class)
+        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
             ->shouldReceive(['getTrackerId' => 42])
             ->getMock();
 
@@ -126,7 +126,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoTracker(): void
     {
-        $kanban = Mockery::mock(\AgileDashboard_Kanban::class)
+        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
             ->shouldReceive(['getTrackerId' => 42])
             ->getMock();
 
@@ -149,7 +149,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoPerm(): void
     {
-        $kanban = Mockery::mock(\AgileDashboard_Kanban::class)
+        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
             ->shouldReceive(['getTrackerId' => 42])
             ->getMock();
 
@@ -172,7 +172,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     public function testItReturnsNullIfKanbanDoesNotHaveTracker(): void
     {
-        $kanban = Mockery::mock(\AgileDashboard_Kanban::class)
+        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
             ->shouldReceive(['getTrackerId' => 42])
             ->getMock();
 
@@ -199,7 +199,7 @@ class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test
 
     public function testItReturnsASection(): void
     {
-        $kanban = Mockery::mock(\AgileDashboard_Kanban::class)
+        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
             ->shouldReceive(['getTrackerId' => 42])
             ->getMock();
 

@@ -19,7 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanUserPreferences
+namespace Tuleap\Kanban;
+
+use PFUser;
+
+final class KanbanUserPreferences
 {
     public const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
     public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
@@ -28,56 +32,56 @@ class AgileDashboard_KanbanUserPreferences
     public const EXPAND   = "0";
     public const COLLAPSE = "1";
 
-    public function isColumnOpen(AgileDashboard_Kanban $kanban, $column_id, PFUser $user)
+    public function isColumnOpen(Kanban $kanban, int $column_id, PFUser $user): bool
     {
         return ! $user->getPreference($this->getCollapseColumnPreferenceName($kanban, $column_id));
     }
 
-    public function openColumn(AgileDashboard_Kanban $kanban, $column_id, PFUser $user)
+    public function openColumn(Kanban $kanban, int $column_id, PFUser $user): void
     {
         $user->setPreference($this->getCollapseColumnPreferenceName($kanban, $column_id), self::EXPAND);
     }
 
-    public function closeColumn(AgileDashboard_Kanban $kanban, $column_id, PFUser $user)
+    public function closeColumn(Kanban $kanban, int $column_id, PFUser $user): void
     {
         $user->setPreference($this->getCollapseColumnPreferenceName($kanban, $column_id), self::COLLAPSE);
     }
 
-    public function isArchiveOpen(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function isArchiveOpen(Kanban $kanban, PFUser $user): bool
     {
         $user_preference = $user->getPreference(self::COLLAPSE_ARCHIVE_PREFERENCE_PREFIX . $kanban->getId());
 
         return $user_preference === self::EXPAND;
     }
 
-    public function openArchive(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function openArchive(Kanban $kanban, PFUser $user): void
     {
         $user->setPreference(self::COLLAPSE_ARCHIVE_PREFERENCE_PREFIX . $kanban->getId(), self::EXPAND);
     }
 
-    public function closeArchive(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function closeArchive(Kanban $kanban, PFUser $user): void
     {
         $user->setPreference(self::COLLAPSE_ARCHIVE_PREFERENCE_PREFIX . $kanban->getId(), self::COLLAPSE);
     }
 
-    public function isBacklogOpen(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function isBacklogOpen(Kanban $kanban, PFUser $user): bool
     {
         $user_preference = $user->getPreference(self::COLLAPSE_BACKLOG_PREFERENCE_PREFIX . $kanban->getId());
 
         return $user_preference === false || $user_preference === self::EXPAND;
     }
 
-    public function openBacklog(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function openBacklog(Kanban $kanban, PFUser $user): void
     {
         $user->setPreference(self::COLLAPSE_BACKLOG_PREFERENCE_PREFIX . $kanban->getId(), self::EXPAND);
     }
 
-    public function closeBacklog(AgileDashboard_Kanban $kanban, PFUser $user)
+    public function closeBacklog(Kanban $kanban, PFUser $user): void
     {
         $user->setPreference(self::COLLAPSE_BACKLOG_PREFERENCE_PREFIX . $kanban->getId(), self::COLLAPSE);
     }
 
-    private function getCollapseColumnPreferenceName(AgileDashboard_Kanban $kanban, $column_id)
+    private function getCollapseColumnPreferenceName(Kanban $kanban, int $column_id): string
     {
         return self::COLLAPSE_COLUMN_PREFERENCE_PREFIX . $kanban->getId() . '_' . $column_id;
     }

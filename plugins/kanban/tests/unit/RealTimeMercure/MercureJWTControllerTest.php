@@ -20,9 +20,9 @@
 declare(strict_types=1);
 namespace Tuleap\Kanban\RealTimeMercure;
 
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
+use Tuleap\Kanban\KanbanCannotAccessException;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\KanbanNotFoundException;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -48,7 +48,7 @@ final class MercureJWTControllerTest extends TestCase
     private EmitterInterface $emitter;
     private TestLogger $test_logger;
     private MercureJWTController $mercure_jwt_controller;
-    private AgileDashboard_KanbanFactory $agile_dashboard_kanban_factory;
+    private KanbanFactory $agile_dashboard_kanban_factory;
     private ProvideCurrentUserStub $user_manager;
 
     protected function setup(): void
@@ -62,7 +62,7 @@ final class MercureJWTControllerTest extends TestCase
         $jwt_configuration                    = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
         $mercure_jwt_generator                = new MercureJWTGeneratorImpl($jwt_configuration);
         $this->emitter                        = new NoopSapiEmitter();
-        $this->agile_dashboard_kanban_factory = $this->createStub(\AgileDashboard_KanbanFactory::class);
+        $this->agile_dashboard_kanban_factory = $this->createStub(\Tuleap\Kanban\KanbanFactory::class);
         $this->test_logger                    = new TestLogger();
         $this->mercure_jwt_controller         =  new MercureJWTController(
             $this->agile_dashboard_kanban_factory,
@@ -78,7 +78,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testNoError(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\AgileDashboard_Kanban::class));
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
         $request =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
@@ -89,7 +89,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testNoGenerator(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\AgileDashboard_Kanban::class));
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
         $request                    =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
@@ -110,7 +110,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testKanbanNotFoundException(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willThrowException(new AgileDashboard_KanbanNotFoundException());
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willThrowException(new KanbanNotFoundException());
         $request  =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
@@ -121,7 +121,7 @@ final class MercureJWTControllerTest extends TestCase
 
     public function testKanbanCannotAccessException(): void
     {
-        $this->agile_dashboard_kanban_factory->method('getKanban')->willThrowException(new AgileDashboard_KanbanCannotAccessException());
+        $this->agile_dashboard_kanban_factory->method('getKanban')->willThrowException(new KanbanCannotAccessException());
         $request  =  (new NullServerRequest())->withUri(
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );

@@ -19,10 +19,10 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanUserPreferences;
+use Tuleap\Kanban\KanbanUserPreferences;
 use Exception;
 use PFUser;
 use TrackerFactory;
@@ -126,9 +126,9 @@ final class KanbanRepresentation
     }
 
     public static function build(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
-        AgileDashboard_KanbanUserPreferences $user_preferences,
+        KanbanUserPreferences $user_preferences,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
         bool $user_can_add_columns,
         bool $user_can_reorder_columns,
@@ -166,7 +166,7 @@ final class KanbanRepresentation
      * @return KanbanColumnRepresentation[]
      */
     private static function getColumns(
-        AgileDashboard_Kanban $kanban,
+        Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
         bool $user_can_add_in_place,

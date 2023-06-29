@@ -39,7 +39,7 @@ final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
         $tracker->shouldReceive('getItemName')->andReturn('bug');
         $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
 
-        $kanban = \Mockery::mock(\AgileDashboard_Kanban::class);
+        $kanban = \Mockery::mock(\Tuleap\Kanban\Kanban::class);
         $kanban->shouldReceive('getTrackerId')->andReturn(789);
 
         $representation = KanbanTrackerRepresentation::fromKanban($tracker_factory, $kanban);
@@ -52,7 +52,7 @@ final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $tracker_factory = \Mockery::mock(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
-        $kanban = \Mockery::mock(\AgileDashboard_Kanban::class);
+        $kanban = \Mockery::mock(\Tuleap\Kanban\Kanban::class);
         $kanban->shouldReceive('getId')->andReturn(999);
         $kanban->shouldReceive('getTrackerId')->andReturn(404);
 

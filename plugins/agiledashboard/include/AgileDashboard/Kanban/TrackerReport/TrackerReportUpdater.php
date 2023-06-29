@@ -24,7 +24,7 @@
 
 namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
 
-use AgileDashboard_Kanban;
+use Tuleap\Kanban\Kanban;
 use Tracker_Report;
 
 class TrackerReportUpdater
@@ -39,7 +39,7 @@ class TrackerReportUpdater
         $this->dao = $dao;
     }
 
-    public function save(AgileDashboard_Kanban $kanban, array $tracker_report_ids)
+    public function save(Kanban $kanban, array $tracker_report_ids)
     {
         $this->dao->save($kanban->getId(), $tracker_report_ids);
     }

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\RealTime;
 
-use AgileDashboard_KanbanFactory;
+use Tuleap\Kanban\KanbanFactory;
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -31,7 +31,7 @@ final class RealTimeArtifactMessageController
     public const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
 
     public function __construct(
-        private readonly AgileDashboard_KanbanFactory $kanban_factory,
+        private readonly KanbanFactory $kanban_factory,
         private readonly KanbanArtifactMessageSender $kanban_artifact_message_sender,
     ) {
     }

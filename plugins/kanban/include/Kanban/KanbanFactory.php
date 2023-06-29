@@ -19,18 +19,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Kanban\KanbanDao;
+declare(strict_types=1);
 
-class AgileDashboard_KanbanFactory
+namespace Tuleap\Kanban;
+
+use PFUser;
+use TrackerFactory;
+
+class KanbanFactory
 {
     public function __construct(private readonly TrackerFactory $tracker_factory, private readonly KanbanDao $dao)
     {
     }
 
     /**
-     * @return AgileDashboard_Kanban[]
+     * @return Kanban[]
      */
-    public function getListOfKanbansForProject(PFUser $user, $project_id): array
+    public function getListOfKanbansForProject(PFUser $user, int $project_id): array
     {
         $rows    = $this->dao->getKanbansForProject($project_id);
         $kanbans = [];
@@ -45,30 +50,30 @@ class AgileDashboard_KanbanFactory
     }
 
     /**
-     * @throws AgileDashboard_KanbanCannotAccessException
-     * @throws AgileDashboard_KanbanNotFoundException
+     * @throws KanbanCannotAccessException
+     * @throws KanbanNotFoundException
      */
-    public function getKanban(PFUser $user, $kanban_id): AgileDashboard_Kanban
+    public function getKanban(PFUser $user, int $kanban_id): Kanban
     {
         $row = $this->dao->getKanbanById($kanban_id);
 
         if (! $row) {
-            throw new AgileDashboard_KanbanNotFoundException();
+            throw new KanbanNotFoundException();
         }
 
         if (! $this->isUserAllowedToAccessKanban($user, $row['tracker_id'])) {
-            throw new AgileDashboard_KanbanCannotAccessException();
+            throw new KanbanCannotAccessException();
         }
 
         return $this->instantiateFromRow($row);
     }
 
-    public function getKanbanForXmlImport(int $kanban_id): AgileDashboard_Kanban
+    public function getKanbanForXmlImport(int $kanban_id): Kanban
     {
         $row = $this->dao->getKanbanById($kanban_id);
 
         if (! $row) {
-            throw new AgileDashboard_KanbanNotFoundException();
+            throw new KanbanNotFoundException();
         }
         return $this->instantiateFromRow($row);
     }
@@ -76,7 +81,7 @@ class AgileDashboard_KanbanFactory
     /**
      * @return int[]
      */
-    public function getKanbanTrackerIds($project_id): array
+    public function getKanbanTrackerIds(int $project_id): array
     {
         $rows               = $this->dao->getKanbansForProject($project_id);
         $kanban_tracker_ids = [];
@@ -88,7 +93,7 @@ class AgileDashboard_KanbanFactory
         return $kanban_tracker_ids;
     }
 
-    public function getKanbanIdByTrackerId($tracker_id): ?int
+    public function getKanbanIdByTrackerId(int $tracker_id): ?int
     {
         $kanban = $this->getKanbanByTrackerId($tracker_id);
         if ($kanban === null) {
@@ -97,7 +102,7 @@ class AgileDashboard_KanbanFactory
         return $kanban->getId();
     }
 
-    public function getKanbanByTrackerId(int $tracker_id): ?AgileDashboard_Kanban
+    public function getKanbanByTrackerId(int $tracker_id): ?Kanban
     {
         $row = $this->dao->getKanbanByTrackerId($tracker_id);
         if ($row === null) {
@@ -106,20 +111,23 @@ class AgileDashboard_KanbanFactory
         return $this->instantiateFromRow($row);
     }
 
-    private function instantiateFromRow(array $kanban_data): AgileDashboard_Kanban
+    /**
+     * @param array{id: int, tracker_id: int, name: string, ...} $kanban_data
+     */
+    private function instantiateFromRow(array $kanban_data): Kanban
     {
-        return new AgileDashboard_Kanban(
+        return new Kanban(
             $kanban_data['id'],
             $kanban_data['tracker_id'],
             $kanban_data['name']
         );
     }
 
-    private function isUserAllowedToAccessKanban(PFUser $user, $tracker_id): bool
+    private function isUserAllowedToAccessKanban(PFUser $user, int $tracker_id): bool
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
-            throw new AgileDashboard_KanbanNotFoundException();
+            throw new KanbanNotFoundException();
         }
 
         return $tracker->userCanView($user);
