@@ -29,6 +29,7 @@ use HTTPRequest;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
+use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -110,8 +111,8 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
     {
         if (KanbanURL::isKanbanURL($request)) {
             $kanban_assets = new IncludeAssets(
-                __DIR__ . '/../../scripts/kanban/frontend-assets',
-                '/assets/agiledashboard/kanban'
+                __DIR__ . '/../../../kanban/scripts/kanban/frontend-assets',
+                '/assets/kanban/kanban'
             );
             $provider      = new KanbanJavascriptDependenciesProvider($kanban_assets);
             foreach ($provider->getDependencies() as $dependency) {

@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-agiledashboard-kanban",
+  "name": "@tuleap/plugin-kanban",
   "homepage": "https://www.tuleap.org",
   "license": "MIT",
   "private": true,
@@ -11,7 +11,6 @@
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/plugin-cardwall-card-fields": "workspace:*",
-    "@tuleap/plugin-agiledashboard-shared": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",

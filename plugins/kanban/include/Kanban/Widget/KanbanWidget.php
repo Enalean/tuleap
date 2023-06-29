@@ -34,7 +34,7 @@ use Tracker_ReportFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -207,7 +207,7 @@ abstract class KanbanWidget extends Widget
 
     private function getIncludeAssets(): IncludeAssets
     {
-        return new IncludeAssets(__DIR__ . '/../../../../agiledashboard/scripts/kanban/frontend-assets', '/assets/agiledashboard/kanban');
+        return new IncludeAssets(__DIR__ . '/../../../scripts/kanban/frontend-assets', '/assets/kanban/kanban');
     }
 
     public function getJavascriptDependencies(): array

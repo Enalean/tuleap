@@ -1,0 +1,9 @@
+{
+    "name": "kanban",
+    "gettext-angularjs": {
+        "kanban": {
+            "src": "scripts/kanban/src/app",
+            "po": "scripts/kanban/po"
+        }
+    }
+}

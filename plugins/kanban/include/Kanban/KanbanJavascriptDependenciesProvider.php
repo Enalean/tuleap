@@ -18,20 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard;
+namespace Tuleap\Kanban;
 
 use Tuleap\Layout\IncludeAssets;
 
-final class KanbanJavascriptDependenciesProvider implements JavascriptDependenciesProvider
+final class KanbanJavascriptDependenciesProvider
 {
-    /**
-     * @var IncludeAssets
-     */
-    private $agiledashboard_include_assets;
-
-    public function __construct(IncludeAssets $agiledashboard_include_assets)
+    public function __construct(private readonly IncludeAssets $kanban_include_assets)
     {
-        $this->agiledashboard_include_assets = $agiledashboard_include_assets;
     }
 
     public function getDependencies(): array
@@ -39,7 +33,7 @@ final class KanbanJavascriptDependenciesProvider implements JavascriptDependenci
         $core_include_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return [
             ['file' => $core_include_assets->getFileURL('ckeditor.js')],
-            ['file' => $this->agiledashboard_include_assets->getFileURL('kanban.js')],
+            ['file' => $this->kanban_include_assets->getFileURL('kanban.js')],
         ];
     }
 }
