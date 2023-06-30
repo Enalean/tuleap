@@ -21,7 +21,7 @@
 namespace Tuleap\Kanban\REST\v1\CumulativeFlowDiagram;
 
 use Tuleap\Kanban\Kanban;
-use AgileDashboard_KanbanColumnFactory;
+use Tuleap\Kanban\KanbanColumnFactory;
 use DateInterval;
 use DateTime;
 use PFUser;
@@ -34,7 +34,7 @@ final class OrderedColumnRepresentationsBuilder
     public const MAX_POSSIBLE_POINTS  = 90;
 
     public function __construct(
-        private readonly AgileDashboard_KanbanColumnFactory $kanban_column_factory,
+        private readonly KanbanColumnFactory $kanban_column_factory,
         private readonly Tracker_ArtifactFactory $artifact_factory,
     ) {
     }

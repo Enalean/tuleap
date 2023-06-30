@@ -31,7 +31,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
-use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
+use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanFactory;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU GeLneral Public License as published by
@@ -16,10 +16,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard;
+declare(strict_types=1);
 
-use Exception;
-
-class KanbanUserCantAddArtifactException extends Exception
+namespace Tuleap\Kanban;
+final class KanbanSemanticStatusBasedOnASharedFieldException extends \Exception
 {
+    public function __construct()
+    {
+        parent::__construct("The list field defined as semantic status is based on a shared field");
+    }
 }

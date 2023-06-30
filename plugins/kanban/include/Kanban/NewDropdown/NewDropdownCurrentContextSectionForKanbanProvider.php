@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban\NewDropdown;
 
-use AgileDashboard_KanbanActionsChecker;
+use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanNotFoundException;
-use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+use Tuleap\Kanban\KanbanUserCantAddArtifactException;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -44,7 +44,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
      */
     private $tracker_factory;
     /**
-     * @var AgileDashboard_KanbanActionsChecker
+     * @var KanbanActionsChecker
      */
     private $kanban_actions_checker;
 
@@ -52,7 +52,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
         \Tuleap\Kanban\KanbanFactory $kanban_factory,
         \TrackerFactory $tracker_factory,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
+        KanbanActionsChecker $kanban_actions_checker,
     ) {
         $this->presenter_builder      = $presenter_builder;
         $this->kanban_factory         = $kanban_factory;
@@ -80,8 +80,8 @@ class NewDropdownCurrentContextSectionForKanbanProvider
         } catch (
             KanbanNotFoundException
             | KanbanCannotAccessException
-            | \Kanban_SemanticStatusNotDefinedException
-            | \Kanban_TrackerNotDefinedException
+            | \Tuleap\Kanban\KanbanSemanticStatusNotDefinedException
+            | \Tuleap\Kanban\KanbanTrackerNotDefinedException
             | KanbanUserCantAddArtifactException $exception
         ) {
             return null;

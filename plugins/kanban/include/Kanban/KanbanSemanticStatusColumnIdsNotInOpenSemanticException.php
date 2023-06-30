@@ -16,10 +16,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Kanban_SemanticStatusAllColumnIdsNotProvidedException extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+final class KanbanSemanticStatusColumnIdsNotInOpenSemanticException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("All columns ids are not provided");
+        parent::__construct("Some columns ids are not in the open semantic");
     }
 }

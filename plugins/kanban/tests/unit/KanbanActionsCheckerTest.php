@@ -18,9 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+declare(strict_types=1);
 
-final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Kanban;
+
+use Mockery;
+use PFUser;
+use Tracker;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_Integer;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_String;
+use Tracker_FormElement_Field_Text;
+use Tracker_Semantic_Status;
+use Tracker_Semantic_Title;
+use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+
+final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -100,7 +114,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->field_int->shouldReceive('isRequired')->andReturns(false);
         $this->field_list->shouldReceive('isRequired')->andReturns(true);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
         $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
@@ -110,9 +123,14 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
-        $this->expectException(\Kanban_UserCantAddInPlaceException::class);
+        $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
 
-        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            $agiledasboard_permission_manager,
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
         $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
@@ -123,7 +141,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->field_int->shouldReceive('isRequired')->andReturns(false);
         $this->field_list->shouldReceive('isRequired')->andReturns(false);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
         $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
@@ -133,9 +150,14 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
-        $this->expectException(\Kanban_SemanticTitleNotDefinedException::class);
+        $this->expectException(\Tuleap\Kanban\KanbanSemanticTitleNotDefinedException::class);
 
-        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            $agiledasboard_permission_manager,
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
         $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
@@ -146,7 +168,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->field_int->shouldReceive('isRequired')->andReturns(false);
         $this->field_list->shouldReceive('isRequired')->andReturns(true);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
         $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
@@ -156,9 +177,14 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
-        $this->expectException(\Kanban_UserCantAddInPlaceException::class);
+        $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
 
-        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            $agiledasboard_permission_manager,
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
         $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
@@ -169,7 +195,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->field_int->shouldReceive('isRequired')->andReturns(false);
         $this->field_list->shouldReceive('isRequired')->andReturns(false);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(false);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
         $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
@@ -181,7 +206,12 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
-        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            $agiledasboard_permission_manager,
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withoutSubmitPermission(),
+        );
         $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
@@ -192,7 +222,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $this->field_int->shouldReceive('isRequired')->andReturns(false);
         $this->field_list->shouldReceive('isRequired')->andReturns(false);
 
-        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
         $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
         $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
         $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
@@ -204,7 +233,12 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
-        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            $agiledasboard_permission_manager,
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
         $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 }

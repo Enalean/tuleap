@@ -18,49 +18,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
-use Tuleap\Kanban\Kanban;
+declare(strict_types=1);
 
-class AgileDashboard_KanbanActionsChecker
+namespace Tuleap\Kanban;
+
+use AgileDashboard_PermissionsManager;
+use PFUser;
+use Tracker;
+use Tracker_FormElementFactory;
+use Tracker_Semantic_Status;
+use Tracker_Semantic_Title;
+use TrackerFactory;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+
+class KanbanActionsChecker
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var AgileDashboard_PermissionsManager
-     */
-    private $permissions_manager;
-
-    /**
-     * @var Tracker_Factory
-     */
-    private $tracker_factory;
-
     public function __construct(
-        TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager,
-        Tracker_FormElementFactory $form_element_factory,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly AgileDashboard_PermissionsManager $permissions_manager,
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly VerifySubmissionPermissions $verify_submission_permissions,
     ) {
-        $this->form_element_factory = $form_element_factory;
-        $this->permissions_manager  = $permissions_manager;
-        $this->tracker_factory      = $tracker_factory;
     }
 
     /**
      * @throws KanbanUserCantAddArtifactException
-     * @throws Kanban_SemanticStatusNotDefinedException
-     * @throws Kanban_TrackerNotDefinedException
+     * @throws KanbanSemanticStatusNotDefinedException
+     * @throws KanbanTrackerNotDefinedException
      */
     public function checkUserCanAddArtifact(PFUser $user, Kanban $kanban): void
     {
         $tracker         = $this->getTrackerForKanban($kanban);
-        $semantic_status = $this->getSemanticStatus($tracker);
+        $semantic_status = $this->getSemanticStatus($tracker)->getField();
 
         if (
-            ! $tracker->userCanSubmitArtifact($user) ||
-            ! $semantic_status->getField()->userCanSubmit($user)
+            ! $this->verify_submission_permissions->canUserSubmitArtifact($user, $tracker) ||
+            ! $semantic_status ||
+            ! $semantic_status->userCanSubmit($user)
         ) {
             throw new KanbanUserCantAddArtifactException();
         }
@@ -68,9 +62,9 @@ class AgileDashboard_KanbanActionsChecker
 
     /**
      * @throws KanbanUserCantAddArtifactException
-     * @throws Kanban_SemanticTitleNotDefinedException
-     * @throws Kanban_TrackerNotDefinedException
-     * @throws Kanban_UserCantAddInPlaceException
+     * @throws KanbanSemanticTitleNotDefinedException
+     * @throws KanbanTrackerNotDefinedException
+     * @throws KanbanUserCantAddInPlaceException
      */
     public function checkUserCanAddInPlace(PFUser $user, Kanban $kanban): void
     {
@@ -82,11 +76,11 @@ class AgileDashboard_KanbanActionsChecker
         if (
             ! $this->trackerHasOnlyTitleRequired($tracker, $semantic_title)
         ) {
-            throw new Kanban_UserCantAddInPlaceException();
+            throw new KanbanUserCantAddInPlaceException();
         }
     }
 
-    public function checkUserCanAddColumns(PFUser $user, Kanban $kanban)
+    public function checkUserCanAddColumns(PFUser $user, Kanban $kanban): void
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -94,15 +88,15 @@ class AgileDashboard_KanbanActionsChecker
         $semantic_status = $this->getSemanticStatus($tracker);
 
         if (! $semantic_status->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+            throw new KanbanSemanticStatusNotBoundToStaticValuesException();
         }
 
         if ($semantic_status->isBasedOnASharedField()) {
-            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+            throw new KanbanSemanticStatusBasedOnASharedFieldException();
         }
     }
 
-    public function checkUserCanReorderColumns(PFUser $user, Kanban $kanban)
+    public function checkUserCanReorderColumns(PFUser $user, Kanban $kanban): void
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -110,44 +104,44 @@ class AgileDashboard_KanbanActionsChecker
         $semantic_status = $this->getSemanticStatus($tracker);
 
         if (! $semantic_status->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+            throw new KanbanSemanticStatusNotBoundToStaticValuesException();
         }
 
         if ($semantic_status->isBasedOnASharedField()) {
-            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+            throw new KanbanSemanticStatusBasedOnASharedFieldException();
         }
     }
 
-    public function checkUserCanAdministrate(PFUser $user, Kanban $kanban)
+    public function checkUserCanAdministrate(PFUser $user, Kanban $kanban): void
     {
         $tracker = $this->getTrackerForKanban($kanban);
 
         if (! $this->permissions_manager->userCanAdministrate($user, $tracker->getProject()->getId())) {
-            throw new AgileDashboard_UserNotAdminException($user);
+            throw new KanbanUserNotAdminException($user);
         }
     }
 
-    public function checkUserCanDeleteColumn(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    public function checkUserCanDeleteColumn(PFUser $user, Kanban $kanban, KanbanColumn $column): void
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
         if (! $column->isRemovable()) {
-            throw new AgileDashboard_KanbanColumnNotRemovableException();
+            throw new KanbanColumnNotRemovableException();
         }
 
         $tracker         = $this->getTrackerForKanban($kanban);
         $semantic_status = $this->getSemanticStatus($tracker);
 
         if (! $semantic_status->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+            throw new KanbanSemanticStatusNotBoundToStaticValuesException();
         }
 
         if ($semantic_status->isBasedOnASharedField()) {
-            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+            throw new KanbanSemanticStatusBasedOnASharedFieldException();
         }
     }
 
-    public function checkUserCanEditColumnLabel(PFUser $user, Kanban $kanban)
+    public function checkUserCanEditColumnLabel(PFUser $user, Kanban $kanban): void
     {
         $this->checkUserCanAdministrate($user, $kanban);
 
@@ -155,48 +149,48 @@ class AgileDashboard_KanbanActionsChecker
         $semantic_status = $this->getSemanticStatus($tracker);
 
         if (! $semantic_status->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+            throw new KanbanSemanticStatusNotBoundToStaticValuesException();
         }
 
         if ($semantic_status->isBasedOnASharedField()) {
-            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+            throw new KanbanSemanticStatusBasedOnASharedFieldException();
         }
     }
 
-    public function getTrackerForKanban(Kanban $kanban)
+    public function getTrackerForKanban(Kanban $kanban): Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
         if (! $tracker) {
-            throw new Kanban_TrackerNotDefinedException();
+            throw new KanbanTrackerNotDefinedException();
         }
 
         return $tracker;
     }
 
-    public function getSemanticStatus(Tracker $tracker)
+    public function getSemanticStatus(Tracker $tracker): Tracker_Semantic_Status
     {
         $semantic = Tracker_Semantic_Status::load($tracker);
 
         if (! $semantic->getFieldId()) {
-            throw new Kanban_SemanticStatusNotDefinedException();
+            throw new KanbanSemanticStatusNotDefinedException();
         }
 
         return $semantic;
     }
 
-    private function getSemanticTitle(Tracker $tracker)
+    private function getSemanticTitle(Tracker $tracker): Tracker_Semantic_Title
     {
         $semantic = Tracker_Semantic_Title::load($tracker);
 
         if (! $semantic->getFieldId()) {
-            throw new Kanban_SemanticTitleNotDefinedException();
+            throw new KanbanSemanticTitleNotDefinedException();
         }
 
         return $semantic;
     }
 
-    private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title)
+    private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title): bool
     {
         $used_fields = $this->form_element_factory->getUsedFields($tracker);
 

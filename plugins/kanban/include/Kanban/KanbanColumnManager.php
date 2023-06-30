@@ -17,30 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Kanban\Kanban;
-use Tuleap\Kanban\KanbanColumnDao;
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+use PFUser;
+use Tracker_Semantic_Status;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 
-class AgileDashboard_KanbanColumnManager
+class KanbanColumnManager
 {
-    /** @var KanbanColumnDao */
-    private $column_dao;
-
-    /** @var BindStaticValueDao */
-    private $formelement_field_list_bind_static_value_dao;
-
-    /** @var AgileDashboard_KanbanActionsChecker */
-    private $kanban_actions_checker;
-
     public function __construct(
-        KanbanColumnDao $column_dao,
-        BindStaticValueDao $formelement_field_list_bind_static_value_dao,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
+        private readonly KanbanColumnDao $column_dao,
+        private readonly BindStaticValueDao $formelement_field_list_bind_static_value_dao,
+        private readonly KanbanActionsChecker $kanban_actions_checker,
     ) {
-        $this->column_dao                                   = $column_dao;
-        $this->formelement_field_list_bind_static_value_dao = $formelement_field_list_bind_static_value_dao;
-        $this->kanban_actions_checker                       = $kanban_actions_checker;
     }
 
     /**
@@ -56,7 +48,7 @@ class AgileDashboard_KanbanColumnManager
         return $semantic->addOpenValue($label);
     }
 
-    public function reorderColumns(PFUser $user, Kanban $kanban, array $column_ids)
+    public function reorderColumns(PFUser $user, Kanban $kanban, array $column_ids): void
     {
         $this->kanban_actions_checker->checkUserCanReorderColumns($user, $kanban);
 
@@ -65,17 +57,17 @@ class AgileDashboard_KanbanColumnManager
 
         $this->checkAllColumnsAreProvided($semantic, $column_ids);
 
-        return $semantic->getField()?->getBind()->getValueDao()->reorder($column_ids);
+        $semantic->getField()?->getBind()->getValueDao()->reorder($column_ids);
     }
 
     /**
-     * @throws AgileDashboard_KanbanColumnNotRemovableException
-     * @throws Kanban_SemanticStatusBasedOnASharedFieldException
-     * @throws Kanban_SemanticStatusNotBoundToStaticValuesException
-     * @throws Kanban_SemanticStatusNotDefinedException
-     * @throws Kanban_TrackerNotDefinedException
+     * @throws KanbanColumnNotRemovableException
+     * @throws KanbanSemanticStatusBasedOnASharedFieldException
+     * @throws KanbanSemanticStatusNotBoundToStaticValuesException
+     * @throws KanbanSemanticStatusNotDefinedException
+     * @throws KanbanTrackerNotDefinedException
      */
-    public function deleteColumn(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    public function deleteColumn(PFUser $user, Kanban $kanban, KanbanColumn $column): void
     {
         $this->kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);
 
@@ -87,17 +79,15 @@ class AgileDashboard_KanbanColumnManager
             $column->getId(),
             function () use ($semantic, $column) {
                 return $semantic->removeOpenValue($column->getId())
-                    && $this->hideColumnFromTrackerFieldStaticValues($column, $semantic);
+                    && $this->hideColumnFromTrackerFieldStaticValues($column);
             },
         );
-
-        return true;
     }
 
     public function updateWipLimit(
         PFUser $user,
         Kanban $kanban,
-        AgileDashboard_KanbanColumn $column,
+        KanbanColumn $column,
         int $wip_limit,
     ): void {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
@@ -105,7 +95,7 @@ class AgileDashboard_KanbanColumnManager
         $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
-    public function updateLabel(PFUser $user, Kanban $kanban, AgileDashboard_KanbanColumn $column, $label)
+    public function updateLabel(PFUser $user, Kanban $kanban, KanbanColumn $column, string $label): bool
     {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
         $this->kanban_actions_checker->checkUserCanEditColumnLabel($user, $kanban);
@@ -113,23 +103,23 @@ class AgileDashboard_KanbanColumnManager
         return $this->formelement_field_list_bind_static_value_dao->updateLabel($column->getId(), $label);
     }
 
-    private function hideColumnFromTrackerFieldStaticValues(AgileDashboard_KanbanColumn $column, Tracker_Semantic_Status $semantic)
+    private function hideColumnFromTrackerFieldStaticValues(KanbanColumn $column): bool
     {
         return $this->formelement_field_list_bind_static_value_dao->hideValue($column->getId());
     }
 
-    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids)
+    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids): void
     {
         $all_open_values     = $semantic->getOpenValues();
         $values_not_provided = array_diff($all_open_values, $column_ids);
         $values_not_open     = array_diff($column_ids, $all_open_values);
 
         if (! empty($values_not_provided)) {
-            throw new Kanban_SemanticStatusAllColumnIdsNotProvidedException();
+            throw new KanbanSemanticStatusAllColumnIdsNotProvidedException();
         }
 
         if (! empty($values_not_open)) {
-            throw new Kanban_SemanticStatusColumnIdsNotInOpenSemanticException();
+            throw new KanbanSemanticStatusColumnIdsNotInOpenSemanticException();
         }
     }
 }

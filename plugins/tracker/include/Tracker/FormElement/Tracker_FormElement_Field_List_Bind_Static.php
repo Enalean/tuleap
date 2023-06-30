@@ -622,14 +622,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $html;
     }
 
-    /**
-     * Say if a value can be hidden without checking the semantic status
-     *
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
-     *
-     * @return bool true if the value can be hidden
-     */
-    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Bind_StaticValue $value)
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Value $value): bool
     {
         return $this->getValueDao()->canValueBeHiddenWithoutCheckingSemanticStatus($this->field, $value->getId());
     }

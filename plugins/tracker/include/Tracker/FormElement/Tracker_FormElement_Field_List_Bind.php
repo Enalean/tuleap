@@ -428,6 +428,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      */
     abstract public function fetchAdminEditForm();
 
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Value $value): bool
+    {
+        return false;
+    }
+
     /**
      * Process the request
      *
