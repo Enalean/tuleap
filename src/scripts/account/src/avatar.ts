@@ -15,27 +15,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export {};
+import { loadAvatarReset } from "./avatar/reset";
+import { loadAvatarPreview } from "./avatar/preview";
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 
+const AVATAR_BUTTON_ID = "account-information-avatar-button";
 document.addEventListener("DOMContentLoaded", () => {
-    handleSessionSwitch();
+    openTargetModalIdOnClick(document, AVATAR_BUTTON_ID);
+    loadAvatarReset();
+    loadAvatarPreview();
 });
-
-function handleSessionSwitch(): void {
-    const button = document.getElementById("account-remember-me");
-
-    if (!(button instanceof HTMLInputElement)) {
-        throw Error("#account-remember-me not found or is not an input");
-    }
-
-    button.addEventListener("click", () => {
-        const form = button.form;
-        if (form === null) {
-            return;
-        }
-        form.submit();
-    });
-}

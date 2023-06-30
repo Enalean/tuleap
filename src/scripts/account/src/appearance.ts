@@ -23,9 +23,11 @@ import { sanitize } from "dompurify";
 import mustache from "mustache";
 import $ from "jquery";
 
-initThemeColorSelector();
-initAccessibilitySelector();
-initSelectBoxesPreviews();
+document.addEventListener("DOMContentLoaded", () => {
+    initThemeColorSelector();
+    initAccessibilitySelector();
+    initSelectBoxesPreviews();
+});
 
 function initThemeColorSelector(): void {
     const selector = document.getElementById("user-preferences-color-selector");

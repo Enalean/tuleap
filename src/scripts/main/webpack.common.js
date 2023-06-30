@@ -132,12 +132,6 @@ const webpack_config_for_rich_text_editor = {
 const webpack_config_for_burning_parrot_code = {
     entry: {
         "access-denied-error": "./src/BurningParrot/src/access-denied-error.ts",
-        "account/appearance": "./src/account/appearance.ts",
-        "account/avatar": "./src/account/avatar.ts",
-        "account/check-pw": "./src/account/check-pw.ts",
-        "account/keys-tokens": "./src/account/keys-tokens.ts",
-        "account/security": "./src/account/security.ts",
-        "account/timezone": "./src/account/timezone.ts",
         "burning-parrot": "./src/BurningParrot/src/index.ts",
         "dashboards/dashboard": "./src/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./src/dashboards/widgets/contact-modal.ts",
@@ -315,7 +309,6 @@ const theme_entry_points = {
     "common-theme/style": "./node_modules/@tuleap/common-theme/css/style.scss",
     "common-theme/print": "./node_modules/@tuleap/common-theme/css/print.scss",
     "common-theme/project-sidebar": "./node_modules/@tuleap/common-theme/css/project-sidebar.scss",
-    "account-style": "./node_modules/@tuleap/burningparrot-theme/css/account/account.scss",
     "dashboards-style": "./node_modules/@tuleap/burningparrot-theme/css/dashboards/dashboards.scss",
     "account-registration-style":
         "./node_modules/@tuleap/burningparrot-theme/css/account-registration/account-registration.scss",

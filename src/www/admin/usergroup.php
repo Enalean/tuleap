@@ -57,8 +57,8 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 );
 $GLOBALS['HTML']->addJavascriptAsset(
     new JavascriptAsset(
-        $include_assets,
-        'account/check-pw.js'
+        new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/account/frontend-assets', '/assets/core/account'),
+        'check-pw.js'
     )
 );
 

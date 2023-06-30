@@ -80,8 +80,8 @@ final class DisplayResetPasswordController implements DispatchableWithBurningPar
 
                                 $layout->addJavascriptAsset(
                                     new JavascriptAsset(
-                                        $this->core_assets,
-                                        'account/check-pw.js'
+                                        new IncludeAssets(__DIR__ . '/../../../../scripts/account/frontend-assets', '/assets/core/account'),
+                                        'check-pw.js'
                                     )
                                 );
                                 $layout->addJavascriptAsset(

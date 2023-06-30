@@ -26,6 +26,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -79,8 +80,8 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                $this->core_assets,
-                'account/check-pw.js'
+                new IncludeAssets(__DIR__ . '/../../../../scripts/account/frontend-assets', '/assets/core/account'),
+                'check-pw.js'
             )
         );
 
