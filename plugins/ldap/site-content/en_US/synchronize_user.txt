@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Allow site to gather more information from the LDAP Directory in order to
  * update user account.
@@ -14,13 +14,13 @@
  */
 
 /*
- * In order to activate your own synchronization implementation, 
+ * In order to activate your own synchronization implementation,
  * just uncomment the line below.
  */
 //$syncClass = 'LDAPPluginCustomUserSync';
 
 /*
- * Example of implementation: we want to restrict people based on some 
+ * Example of implementation: we want to restrict people based on some
  * attribute:
  */
 class LDAPPluginCustomUserSync extends LDAP_UserSync {
@@ -28,15 +28,17 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
     /**
      * Return the sync attributes
      *
-     *@return Array
-     */ 
+     * @param LDAP $ldap
+     *
+     * @return Array
+     */
     public function getSyncAttributes($ldap) {
         $this->attributes = array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid', 'st-entrystatus');
         return $this->attributes;
     }
-    
+
     /**
-     * Do all the synchronization between an ldap result and a Codendi user.
+     * Do all the synchronization between an ldap result and a Tuleap user.
      *
      * This method returns if it modified the user or not. This is usefull during
      * batch process in order to limit computing.
@@ -44,10 +46,10 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
      * So employeetype: GOLD == GoLd == gold. So we highly advise to 'strtolower'
      * all your tests.
      *
-     * @param PFUser       $user Codendi user
+     * @param PFUser       $user Tuleap user
      * @param LDAPResult $lr   Ldap result
      *
-     * @return Boolean True if the method modified the user object
+     * @return bool True if the method modified the user object
      */
     public function sync(PFUser $user, LDAPResult $lr) {
         $modified = parent::sync($user, $lr);

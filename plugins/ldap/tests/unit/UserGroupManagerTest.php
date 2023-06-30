@@ -22,72 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use LDAP_UserGroupManager;
 use LDAP_GroupManager;
-
-require_once __DIR__ . '/bootstrap.php';
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 
 final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var LDAP_UserGroupManager
-     */
-    private $manager;
-
-    /**
-     * @var \LDAP_UserManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $ldap_user_manager;
-
-    /**
-     * @var \LDAP_UserGroupDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $ldap_user_dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Project
-     */
-    private $project;
-
-    private $bind_option;
-
-    /**
-     * @var string
-     */
-    private $preserve_option;
+    private LDAP_UserGroupManager $manager;
+    private \LDAP_UserManager&MockObject $ldap_user_manager;
+    private \LDAP_UserGroupDao&MockObject $ldap_user_dao;
+    private \ProjectManager&MockObject $project_manager;
+    private \Project&MockObject $project;
+    private string $bind_option;
+    private string $preserve_option;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $ldap                    = \Mockery::spy(\LDAP::class);
-        $this->ldap_user_manager = \Mockery::spy(\LDAP_UserManager::class);
-        $this->ldap_user_dao     = \Mockery::spy(\LDAP_UserGroupDao::class);
-        $this->project_manager   = \Mockery::spy(\ProjectManager::class);
-        $logger                  = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $ldap                    = $this->createMock(\LDAP::class);
+        $this->ldap_user_manager = $this->createMock(\LDAP_UserManager::class);
+        $this->ldap_user_dao     = $this->createMock(\LDAP_UserGroupDao::class);
+        $this->project_manager   = $this->createMock(\ProjectManager::class);
+
+        $ldap->method('searchGroupMembers')->willReturn(false);
 
         $this->manager = new LDAP_UserGroupManager(
             $ldap,
             $this->ldap_user_manager,
             $this->ldap_user_dao,
             $this->project_manager,
-            $logger,
+            new NullLogger(),
             new \Tuleap\LDAP\GroupSyncSilentNotificationsManager()
         );
 
         $this->manager->setProjectId(101);
         $this->manager->setGroupDn('whatever');
 
-        $this->project = \Mockery::spy(\Project::class);
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($this->project);
+        $this->project = $this->createMock(\Project::class);
+        $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
 
         $this->bind_option     = LDAP_GroupManager::BIND_OPTION;
         $this->preserve_option = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
@@ -95,97 +69,97 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRemovesNonProjectMembersFromUserToAddInPrivateProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
+        $this->ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([
             101 => 101,
             102 => 102,
         ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
+        $this->ldap_user_dao->method('getMembersId')->willReturn(['101' => '101']);
 
-        $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns([101]);
+        $this->project->method('isPublic')->willReturn(false);
+        $this->project->method('getMembersId')->willReturn([101]);
 
         $users_to_be_added = $this->manager->getUsersToBeAdded($this->bind_option);
 
-        $this->assertEmpty($users_to_be_added);
+        self::assertEmpty($users_to_be_added);
     }
 
     public function testItDoesNotRemoveNonProjectMembersFromUserToAddInPublicProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
+        $this->ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([
             101 => 101,
             102 => 102,
         ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
+        $this->ldap_user_dao->method('getMembersId')->willReturn(['101' => '101']);
 
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('getMembersId')->andReturns([101]);
+        $this->project->method('isPublic')->willReturn(true);
+        $this->project->method('getMembersId')->willReturn([101]);
 
         $users_to_be_added = $this->manager->getUsersToBeAdded($this->bind_option);
         $expected_result   = [102 => 102];
 
-        $this->assertEquals($expected_result, $users_to_be_added);
+        self::assertEquals($expected_result, $users_to_be_added);
     }
 
     public function testItAddsNonProjectMembersIntoUserToRemoveInPrivateProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
+        $this->ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([
             101 => 101,
             102 => 102,
         ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
+        $this->ldap_user_dao->method('getMembersId')->willReturn([
             '101' => '101',
             '102' => '102',
         ]);
 
-        $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns([101]);
+        $this->project->method('isPublic')->willReturn(false);
+        $this->project->method('getMembersId')->willReturn([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->bind_option);
         $expected_result     = [102 => 102];
 
-        $this->assertEquals($expected_result, $users_to_be_removed);
+        self::assertEquals($expected_result, $users_to_be_removed);
     }
 
     public function testItDoesNotAddNonProjectMembersIntoUserToRemoveInPublicProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
+        $this->ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([
             101 => 101,
             102 => 102,
         ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
+        $this->ldap_user_dao->method('getMembersId')->willReturn([
             '101' => '101',
         ]);
 
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('getMembersId')->andReturns([101]);
+        $this->project->method('isPublic')->willReturn(true);
+        $this->project->method('getMembersId')->willReturn([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->bind_option);
 
-        $this->assertEmpty($users_to_be_removed);
+        self::assertEmpty($users_to_be_removed);
     }
 
     public function testItAddsNonProjectMembersIntoUserToRemoveInPrivateProjectEvenWithPreserveMembers(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
+        $this->ldap_user_manager->method('getUserIdsForLdapUser')->willReturn([
             101 => 101,
             102 => 102,
         ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
+        $this->ldap_user_dao->method('getMembersId')->willReturn([
             '101' => '101',
             '102' => '102',
         ]);
 
-        $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns([101]);
+        $this->project->method('isPublic')->willReturn(false);
+        $this->project->method('getMembersId')->willReturn([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->preserve_option);
         $expected_result     = [102 => 102];
 
-        $this->assertEquals($expected_result, $users_to_be_removed);
+        self::assertEquals($expected_result, $users_to_be_removed);
     }
 }

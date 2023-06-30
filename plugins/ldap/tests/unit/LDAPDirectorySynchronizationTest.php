@@ -28,16 +28,14 @@ namespace Tuleap\LDAP;
 
 use ForgeConfig;
 use LDAP;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
-class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
@@ -51,63 +49,74 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNoDBUpdateIfLdapSearchFalse(): void
     {
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(0);
-        $ldap->shouldReceive('search')->andReturns(false, false, true);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(0);
+        $ldap->method('search')->willReturn(false, false, true);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $sync = \Mockery::mock(
-            \LDAP_DirectorySynchronization::class,
-            [$ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class)]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->never();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::never())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->never();
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::never())->method('sync');
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
         $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
 
     public function testNoDBUpdateIfLdapSearchErrno(): void
     {
-        $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->expects(self::never())->method('valid');
+        $lri->expects(self::never())->method('current');
+        $lri->method('count');
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(15);
+        $ldap->expects(self::exactly(3))->method('search')->willReturn($lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('valid')->never();
-        $lri->shouldReceive('current')->never();
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(15);
-        $ldap->shouldReceive('search')->times(3)->andReturns($lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->never();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::never())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->never();
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::never())->method('sync');
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
         $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
@@ -116,134 +125,161 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('codendi_log', '/tmp');
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('valid')->andReturns(false);
-        $lri->shouldReceive('count')->andReturns(0);
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
-        $ldap->shouldReceive('search')->times(3)->andReturns($lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->method('valid')->willReturn(false);
+        $lri->method('count')->willReturn(0);
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
+        $ldap->expects(self::exactly(3))->method('search')->willReturn($lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $sync = \Mockery::mock(
-            \LDAP_DirectorySynchronization::class,
-            [$ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class)]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapSyncNotificationManager',
+                'getCleanUpManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = Mockery::mock(UserManager::class);
-        $um->shouldReceive('updateDb')
+        $um = $this->createMock(UserManager::class);
+        $um->expects(self::once())
+            ->method('updateDb')
             ->with(
-                Mockery::on(function (PFUser $user) {
+                self::callback(function (PFUser $user): bool {
                     return $user->getStatus() === 'S' &&
                     $user->getUnixStatus() === 'D';
                 })
-            )
-            ->once();
+            );
 
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $syncNotifManager = \Mockery::spy(\LDAP_SyncNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncNotificationManager')->andReturns($syncNotifManager);
+        $syncNotifManager = $this->createMock(\LDAP_SyncNotificationManager::class);
+        $syncNotifManager->method('processNotification');
+        $sync->method('getLdapSyncNotificationManager')->willReturn($syncNotifManager);
 
-        $clm = \Mockery::spy(\LDAP_CleanUpManager::class);
-        $clm->shouldReceive('addUserDeletionForecastDate')->once();
-        $sync->shouldReceive('getCleanUpManager')->andReturns($clm);
+        $clm = $this->createMock(\LDAP_CleanUpManager::class);
+        $clm->expects(self::once())->method('addUserDeletionForecastDate');
+        $sync->method('getCleanUpManager')->willReturn($clm);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->never();
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::never())->method('sync');
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
         $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
 
     public function testUserLdapUidUpdateIfLdapDoesntMatch(): void
     {
-        $row  = ['user_id'  => '4321',
+        $row = [
+            'user_id'  => '4321',
             'ldap_id'  => 'ed1234',
             'ldap_uid' => 'oula la',
         ];
-        $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $res = \Mockery::spy(\LDAPResult::class);
-        $res->shouldReceive('getLogin')->andReturns('mis_1234');
+        $res = $this->createMock(\LDAPResult::class);
+        $res->method('getLogin')->willReturn('mis_1234');
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('count')->andReturns(1);
-        $lri->shouldReceive('valid')->andReturns(true, false);
-        $lri->shouldReceive('current')->andReturns($res);
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->method('count')->willReturn(1);
+        $lri->method('valid')->willReturn(true, false);
+        $lri->method('current')->willReturn($res);
 
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
-        $ldap->shouldReceive('search')->once()->andReturns($lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
+        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->never();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapSyncNotificationManager',
+                'getCleanUpManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->with(Mockery::type(PFUser::class), 'mis_1234')->once();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::never())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $syncNotifManager = \Mockery::spy(\LDAP_SyncNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncNotificationManager')->andReturns($syncNotifManager);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::once())->method('updateLdapUid')->with(self::isInstanceOf(PFUser::class), 'mis_1234');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncNotifManager = $this->createMock(\LDAP_SyncNotificationManager::class);
+        $sync->method('getLdapSyncNotificationManager')->willReturn($syncNotifManager);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->once()->andReturns(false);
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
+
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
         $sync->ldapSync($row, 1);
     }
 
     public function testUserUpdateIfUserTellsSo(): void
     {
-        $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $res = $this->createMock(\LDAPResult::class);
+        $res->method('getLogin')->willReturn('mis_1234');
 
-        $res = \Mockery::spy(\LDAPResult::class);
-        $res->shouldReceive('getLogin')->andReturns('mis_1234');
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->method('count')->willReturn(1);
+        $lri->method('valid')->willReturn(true, false);
+        $lri->method('current')->willReturn($res);
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('count')->andReturns(1);
-        $lri->shouldReceive('valid')->andReturns(true, false);
-        $lri->shouldReceive('current')->andReturns($res);
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
+        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
-        $ldap->shouldReceive('search')->once()->andReturns($lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapSyncNotificationManager',
+                'getCleanUpManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->once();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::once())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $syncNotifManager = \Mockery::spy(\LDAP_SyncNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncNotificationManager')->andReturns($syncNotifManager);
+        $syncNotifManager = $this->createMock(\LDAP_SyncNotificationManager::class);
+        $sync->method('getLdapSyncNotificationManager')->willReturn($syncNotifManager);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->once()->andReturns(true);
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::once())->method('sync')->willReturn(true);
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
-        $row = ['user_id'  => '4321',
+        $row = [
+            'user_id'  => '4321',
             'ldap_id'  => 'ed1234',
             'ldap_uid' => 'mis_1234',
         ];
@@ -252,38 +288,48 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserNoUpdateIfNothingChangedInLdap(): void
     {
-        $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $res = $this->createMock(\LDAPResult::class);
+        $res->method('getLogin')->willReturn('mis_1234');
 
-        $res = \Mockery::spy(\LDAPResult::class);
-        $res->shouldReceive('getLogin')->andReturns('mis_1234');
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->method('count')->willReturn(1);
+        $lri->method('valid')->willReturn(true, false);
+        $lri->method('current')->willReturn($res);
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('count')->andReturns(1);
-        $lri->shouldReceive('valid')->andReturns(true, false);
-        $lri->shouldReceive('current')->andReturns($res);
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
+        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
-        $ldap->shouldReceive('search')->once()->andReturns($lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapSyncNotificationManager',
+                'getCleanUpManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->never();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::never())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->once()->andReturns(false);
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $row = ['user_id'  => '4321',
+        $row = [
+            'user_id'  => '4321',
             'ldap_id'  => 'ed1234',
             'ldap_uid' => 'mis_1234',
         ];
@@ -292,43 +338,53 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserInSecondBranch(): void
     {
-        $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $res = $this->createMock(\LDAPResult::class);
+        $res->method('getLogin')->willReturn('mis_1234');
 
-        $res = \Mockery::spy(\LDAPResult::class);
-        $res->shouldReceive('getLogin')->andReturns('mis_1234');
+        $lri = $this->createMock(\LDAPResultIterator::class);
+        $lri->method('count')->willReturn(1);
+        $lri->method('valid')->willReturn(true, false);
+        $lri->method('current')->willReturn($res);
 
-        $lri = \Mockery::spy(\LDAPResultIterator::class);
-        $lri->shouldReceive('count')->andReturns(1);
-        $lri->shouldReceive('valid')->andReturns(true, false);
-        $lri->shouldReceive('current')->andReturns($res);
+        $empty_lri = $this->createMock(\LDAPResultIterator::class);
+        $empty_lri->method('count')->willReturn(0);
 
-        $empty_lri = \Mockery::spy(\LDAPResultIterator::class);
-        $empty_lri->shouldReceive('count')->andReturns(0);
+        $ldap = $this->createMock(\LDAP::class);
+        $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
+        $param1 = 'ou=People,dc=example,dc=com ';
+        $param2 = ' ou=Intranet,dc=example,dc=com ';
+        $ldap->method('search')->willReturn($empty_lri, $lri, $empty_lri);
+        $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
-        $ldap = \Mockery::mock(\LDAP::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
-        $param1 = 'ou=People,dc=st,dc=com ';
-        $param2 = ' ou=Intranet,dc=st,dc=com ';
-        $ldap->shouldReceive('search')->andReturns($empty_lri, $lri, $empty_lri);
-        $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
+            ->setConstructorArgs([$ldap, new NullLogger()])
+            ->onlyMethods([
+                'getUserManager',
+                'getLdapUserManager',
+                'getLdapSyncReminderNotificationManager',
+                'getLdapSyncNotificationManager',
+                'getCleanUpManager',
+                'getLdapUserSync',
+            ])->getMock();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('updateDb')->never();
-        $sync->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->expects(self::never())->method('updateDb');
+        $sync->method('getUserManager')->willReturn($um);
 
-        $lum = \Mockery::spy(\LDAP_UserManager::class);
-        $lum->shouldReceive('updateLdapUid')->never();
-        $sync->shouldReceive('getLdapUserManager')->andReturns($lum);
+        $lum = $this->createMock(\LDAP_UserManager::class);
+        $lum->expects(self::never())->method('updateLdapUid');
+        $sync->method('getLdapUserManager')->willReturn($lum);
 
-        $lus = \Mockery::spy(\LDAP_UserSync::class);
-        $lus->shouldReceive('sync')->once()->andReturns(false);
-        $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
+        $lus = $this->createMock(\LDAP_UserSync::class);
+        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->method('getSyncAttributes')->willReturn([]);
+        $sync->method('getLdapUserSync')->willReturn($lus);
 
-        $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
-        $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
+        $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
+        $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
-        $row = ['user_id'  => '4321',
+        $row = [
+            'user_id'  => '4321',
             'ldap_id'  => 'ed1234',
             'ldap_uid' => 'mis_1234',
         ];
