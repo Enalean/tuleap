@@ -12,6 +12,7 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/webauthn": "workspace:*",
     "neverthrow": "^6.0.0"

@@ -23,28 +23,30 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Source;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use Tuleap\TimezoneRetriever;
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 
 final class AuthenticatorPresenter
 {
     public readonly string $id;
     public readonly string $name;
-    public readonly string $created_at;
-    public readonly string $last_use;
+    public readonly TlpRelativeDatePresenter $created_at;
+    public readonly TlpRelativeDatePresenter $last_use;
 
     public function __construct(
         WebAuthnCredentialSource $source,
-        \PFUser $user,
+        \PFUser $current_user,
     ) {
-        $timezone = new \DateTimeZone(TimezoneRetriever::getUserTimezone($user));
-
         $this->id         = Base64UrlSafe::encode($source->getSource()->getPublicKeyCredentialId());
         $this->name       = $source->getName();
-        $this->created_at = $source->getCreatedAt()
-            ->setTimezone($timezone)
-            ->format($GLOBALS['Language']->getText('system', 'datefmt'));
-        $this->last_use   = $source->getLastUse()
-            ->setTimezone($timezone)
-            ->format($GLOBALS['Language']->getText('system', 'datefmt'));
+        $builder          = new TlpRelativeDatePresenterBuilder();
+        $this->created_at = $builder->getTlpRelativeDatePresenterInBlockContext(
+            $source->getCreatedAt(),
+            $current_user
+        );
+        $this->last_use   = $builder->getTlpRelativeDatePresenterInBlockContext(
+            $source->getLastUse(),
+            $current_user
+        );
     }
 }

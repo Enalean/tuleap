@@ -59,8 +59,16 @@
                                 <tbody>
                                 <tr>
                                     <td>{{ name }}</td>
-                                    <td>{{ created_at }}</td>
-                                    <td>{{ last_use }}</td>
+                                    <td>
+                                        {{# created_at }}
+                                            {{> tlp_relative_date }}
+                                        {{/ created_at }}
+                                    </td>
+                                    <td>
+                                        {{# last_use }}
+                                            {{> tlp_relative_date }}
+                                        {{/ last_use }}
+                                    </td>
                                     <td class="tlp-table-cell-actions">
                                         <button type="button"
                                                 class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"

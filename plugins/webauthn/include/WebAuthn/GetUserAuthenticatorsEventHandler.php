@@ -37,7 +37,7 @@ final class GetUserAuthenticatorsEventHandler
     public function handle(GetUserAuthenticatorsEvent $event): void
     {
         $event->authenticators = array_map(
-            static fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $event->user),
+            static fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $event->current_user),
             $this->source_dao->getAllByUserId((int) $event->user->getId())
         );
         $event->answered       = true;

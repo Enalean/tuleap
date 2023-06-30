@@ -25,6 +25,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { register } from "./register";
 import { authenticate } from "@tuleap/webauthn";
 import { deleteKey } from "./delete";
+import "@tuleap/tlp-relative-date";
 
 const HIDDEN = "user-preferences-hidden";
 

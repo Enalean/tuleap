@@ -22,6 +22,9 @@ dependencies:
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/webauthn':
     specifier: workspace:*
     version: link:../../../../lib/frontend/webauthn

@@ -328,7 +328,7 @@ EventManager::instance()->processEvent(
 );
 
 $get_authenticators_event = EventManager::instance()->dispatch(
-    new \Tuleap\User\Admin\GetUserAuthenticatorsEvent($user)
+    new \Tuleap\User\Admin\GetUserAuthenticatorsEvent($user, $um->getCurrentUser())
 );
 $webauthn_enabled         = $get_authenticators_event->answered;
 $authenticators           = $get_authenticators_event->authenticators;
