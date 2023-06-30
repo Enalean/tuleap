@@ -300,5 +300,45 @@
                 </section>
             </div>
         </section>
+
+        {{# webauthn_enabled }}
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-key" aria-hidden="true"></i>
+                            {{# gettext }}WebAuthn{{/ gettext }}
+                        </h1>
+                    </div>
+                    <div class="tlp-pane-section">
+                        <table class="tlp-table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Created at</th>
+                                <th>Last use</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{# authenticators }}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ created_at }}</td>
+                                    <td>{{ last_use }}</td>
+                                </tr>
+                            {{/ authenticators }}
+                            {{^ authenticators }}
+                                <tr>
+                                    <td colspan="3" class="tlp-table-cell-empty">
+                                        {{# dgettext }} tuleap-webauthn | There is no registered passkeys {{/ dgettext }}
+                                    </td>
+                                </tr>
+                            {{/ authenticators }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        {{/ webauthn_enabled }}
     </div>
 </div>

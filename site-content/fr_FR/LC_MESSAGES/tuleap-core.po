@@ -4602,6 +4602,9 @@ msgstr ""
 msgid "We need at least one email to send an invitation"
 msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
 
+msgid "WebAuthn"
+msgstr "WebAuthn"
+
 msgid "Webhooks"
 msgstr "Webhooks"
 
