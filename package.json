@@ -80,7 +80,7 @@
     "vite-plugin-externals": "^0.5.1",
     "vitest": "^0.29.3",
     "vue-eslint-parser": "^9.0.3",
-    "vue-loader": "^15.10.0",
+    "vue-loader": "^15.10.1",
     "vue-template-compiler": "^2.7.8",
     "vue-tsc": "^1.0.24",
     "webpack": "^5.76.1",

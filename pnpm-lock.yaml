@@ -227,8 +227,8 @@ devDependencies:
     specifier: ^9.0.3
     version: 9.0.3(eslint@8.12.0)
   vue-loader:
-    specifier: ^15.10.0
-    version: 15.10.0(@vue/compiler-sfc@3.2.26)(css-loader@6.7.1)(vue-template-compiler@2.7.8)(webpack@5.76.1)
+    specifier: ^15.10.1
+    version: 15.10.1(@vue/compiler-sfc@3.2.26)(css-loader@6.7.1)(vue-template-compiler@2.7.8)(webpack@5.76.1)
   vue-template-compiler:
     specifier: ^2.7.8
     version: 2.7.8
@@ -9969,8 +9969,8 @@ packages:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
 
-  /vue-loader@15.10.0(@vue/compiler-sfc@3.2.26)(css-loader@6.7.1)(vue-template-compiler@2.7.8)(webpack@5.76.1):
-    resolution: {integrity: sha512-VU6tuO8eKajrFeBzMssFUP9SvakEeeSi1BxdTH5o3+1yUyrldp8IERkSdXlMI2t4kxF2sqYUDsQY+WJBxzBmZg==}
+  /vue-loader@15.10.1(@vue/compiler-sfc@3.2.26)(css-loader@6.7.1)(vue-template-compiler@2.7.8)(webpack@5.76.1):
+    resolution: {integrity: sha512-SaPHK1A01VrNthlix6h1hq4uJu7S/z0kdLUb6klubo738NeQoLbS6V9/d8Pv19tU0XdQKju3D1HSKuI8wJ5wMA==}
     peerDependencies:
       '@vue/compiler-sfc': ^3.0.8
       cache-loader: '*'
