@@ -64,7 +64,7 @@ export default [
                                 return 'tlp-relative-date' === tag;
                             },
                             compatConfig: {
-                                MODE: 2,
+                                MODE: 3,
                             },
                         },
                     },
