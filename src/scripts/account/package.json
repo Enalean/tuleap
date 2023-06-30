@@ -7,7 +7,9 @@
   "type": "module",
   "dependencies": {
     "@tuleap/copy-to-clipboard": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/fault": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/dompurify": "^2.4.0",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",

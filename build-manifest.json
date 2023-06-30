@@ -17,6 +17,10 @@
             "src": "src/scripts/main/src/BurningParrot/src/",
             "po": "src/scripts/main/src/BurningParrot/po"
         },
+        "account": {
+            "src": "src/scripts/account/src",
+            "po": "src/scripts/account/po"
+        },
         "global-shortcuts": {
             "src": "src/scripts/main/src/global-shortcuts/src",
             "po": "src/scripts/main/src/global-shortcuts/po"

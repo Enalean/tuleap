@@ -17,6 +17,7 @@
   "dependencies": {
     "@simplewebauthn/browser": "^7.2.0",
     "@simplewebauthn/typescript-types": "^7.0.0",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",

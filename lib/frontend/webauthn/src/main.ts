@@ -28,8 +28,12 @@ import type { Fault } from "@tuleap/fault";
 import { AUTHENTICATION_MODAL_TAG, AuthenticationModal } from "./AuthenticationModal";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 
 export { authenticate, getAuthenticationResult, AUTHENTICATION_MODAL_TAG };
+
+const isUserHasNoRegisteredPasskey = (fault: Fault): boolean =>
+    "isUserHasNoRegisteredPasskey" in fault && fault.isUserHasNoRegisteredPasskey() === true;
 
 /**
  * Open an authentication modal before opening target modal
@@ -48,7 +52,7 @@ export function openTargetModalIdAfterAuthentication(
             const gettext_provider = initGettextSync(
                 "tuleap-webauthn",
                 { fr_FR, pt_BR },
-                doc.body.dataset.userLocale ?? "en_US"
+                doc.body.dataset.userLocale ?? en_US_LOCALE
             );
 
             const target_modal = getTargetModal(doc, button);
@@ -70,10 +74,9 @@ export function openTargetModalIdAfterAuthentication(
         .orElse((fault) => {
             button.disabled = false;
 
-            if ("isForbidden" in fault && fault.isForbidden() === true) {
+            if (isUserHasNoRegisteredPasskey(fault)) {
                 return okAsync(openTargetModalIdOnClick(doc, button_id));
             }
-
             return errAsync(fault);
         });
 }

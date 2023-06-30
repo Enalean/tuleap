@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { Fault } from "@tuleap/fault";
 import { post, postJSON, uri } from "@tuleap/fetch-result";
 import type {
@@ -24,6 +25,8 @@ import type {
 } from "@simplewebauthn/typescript-types";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
+import { UserHasNoRegisteredPasskeyFault } from "./faults/UserHasNoRegisteredPasskeyFault";
+import { CouldNotCheckRegisteredPasskeysFault } from "./faults/CouldNotCheckRegisteredPasskeysFault";
 
 export function authenticate(): ResultAsync<null, Fault> {
     if (!browserSupportsWebAuthn()) {
@@ -77,12 +80,19 @@ export function getAuthenticationResult(): ResultAsync<AuthenticationResponseJSO
 
 export function canUserDoWebAuthn(): ResultAsync<null, Fault> {
     if (!browserSupportsWebAuthn()) {
-        // Should not happens has minimum Tuleap support of browsers is above minimum WebAuthn support
+        // Should not happen as minimum Tuleap support of browsers is above minimum WebAuthn support
         return errAsync(Fault.fromMessage("Your browser does not support WebAuthn"));
     }
 
     return postJSON<PublicKeyCredentialRequestOptionsJSON>(
         uri`/webauthn/authentication-challenge`,
         {}
-    ).map(() => null);
+    )
+        .map(() => null)
+        .mapErr((fault) => {
+            if ("isForbidden" in fault && fault.isForbidden()) {
+                return UserHasNoRegisteredPasskeyFault(fault);
+            }
+            return CouldNotCheckRegisteredPasskeysFault(fault);
+        });
 }

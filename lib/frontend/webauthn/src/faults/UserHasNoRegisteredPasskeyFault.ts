@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,18 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { AuthenticationResponseJSON } from "@simplewebauthn/typescript-types";
 
-export function authenticationResponseJSONStub(): AuthenticationResponseJSON {
-    return {
-        id: "id",
-        rawId: "rawId",
-        response: {
-            clientDataJSON: "clientDataJSON",
-            authenticatorData: "authenticatorData",
-            signature: "signature",
-        },
-        clientExtensionResults: {},
-        type: "public-key",
-    };
-}
+import type { Fault } from "@tuleap/fault";
+
+export const UserHasNoRegisteredPasskeyFault = (previous: Fault): Fault => ({
+    ...previous,
+    isUserHasNoRegisteredPasskey: () => true,
+});
