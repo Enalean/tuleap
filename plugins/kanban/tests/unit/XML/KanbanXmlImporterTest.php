@@ -42,7 +42,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
     /**
-     * @var \AgileDashboard_KanbanManager
+     * @var \Tuleap\Kanban\KanbanManager
      */
     private $kanban_manager;
     /**
@@ -73,7 +73,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dashboard_kanban_column_factory       = \Mockery::spy(\Tuleap\Kanban\KanbanColumnFactory::class);
         $this->agile_dashboard_configuration_manager = \Mockery::spy(\AgileDashboard_ConfigurationManager::class);
         $this->kanban_column_manager                 = \Mockery::spy(\Tuleap\Kanban\KanbanColumnManager::class);
-        $this->kanban_manager                        = \Mockery::spy(\AgileDashboard_KanbanManager::class);
+        $this->kanban_manager                        = \Mockery::spy(\Tuleap\Kanban\KanbanManager::class);
         $this->kanban_factory                        = \Mockery::spy(\Tuleap\Kanban\KanbanFactory::class);
         $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry();
 

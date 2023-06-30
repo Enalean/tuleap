@@ -21,7 +21,7 @@
 namespace Tuleap\Kanban\REST;
 
 use Tuleap\Kanban\KanbanDao;
-use AgileDashboard_KanbanManager;
+use Tuleap\Kanban\KanbanManager;
 use Exception;
 use REST_TestDataBuilder;
 
@@ -31,7 +31,7 @@ class DataBuilder extends REST_TestDataBuilder
     public const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
     public const KANBAN_CUMULATIVE_FLOW_ID                = 2;
 
-    private AgileDashboard_KanbanManager $kanban_manager;
+    private KanbanManager $kanban_manager;
 
     public function __construct()
     {
@@ -39,7 +39,7 @@ class DataBuilder extends REST_TestDataBuilder
         $this->instanciateFactories();
 
         $kanban_dao           = new KanbanDao();
-        $this->kanban_manager = new AgileDashboard_KanbanManager(
+        $this->kanban_manager = new KanbanManager(
             $kanban_dao,
             $this->tracker_factory
         );

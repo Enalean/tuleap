@@ -28,7 +28,7 @@ use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
-use AgileDashboard_KanbanItemManager;
+use Tuleap\Kanban\KanbanItemManager;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
@@ -92,10 +92,10 @@ use Tracker_ReportFactory;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
 use Tuleap\Kanban\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
@@ -185,7 +185,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var KanbanColumnManager */
     private $kanban_column_manager;
 
-    /** @var AgileDashboard_KanbanItemManager */
+    /** @var KanbanItemManager */
     private $kanban_item_manager;
 
     /** @var KanbanActionsChecker */
@@ -225,7 +225,7 @@ final class KanbanResource extends AuthenticatedResource
     public function __construct()
     {
         $this->kanban_item_dao     = new KanbanItemDao();
-        $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
+        $this->kanban_item_manager = new KanbanItemManager($this->kanban_item_dao);
         $this->tracker_factory     = TrackerFactory::instance();
 
         $this->kanban_dao     = new KanbanDao();

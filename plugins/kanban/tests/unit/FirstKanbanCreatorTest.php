@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard;
+namespace unit;
 
-use AgileDashboard_FirstKanbanCreator;
-use Tuleap\Kanban\Kanban;
-use Tuleap\Kanban\KanbanFactory;
-use AgileDashboard_KanbanManager;
 use Mockery;
 use PFUser;
 use Project;
@@ -34,9 +30,13 @@ use Tracker_Report;
 use Tracker_ReportFactory;
 use TrackerFactory;
 use TrackerXmlImport;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Kanban\FirstKanbanCreator;
+use Tuleap\Kanban\Kanban;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\KanbanManager;
 
 final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,7 +49,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
     /**
-     * @var Mockery\MockInterface|AgileDashboard_KanbanManager
+     * @var Mockery\MockInterface|KanbanManager
      */
     private $kanban_manager;
     /**
@@ -69,7 +69,7 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $report_factory;
     /**
-     * @var Mockery\MockInterface|AgileDashboard_FirstKanbanCreator
+     * @var Mockery\MockInterface|FirstKanbanCreator
      */
     private $kanban_creator;
 
@@ -79,13 +79,13 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getID')->andReturn(123);
 
         $this->tracker_factory = Mockery::mock(TrackerFactory::class);
-        $this->kanban_manager  = Mockery::mock(AgileDashboard_KanbanManager::class);
+        $this->kanban_manager  = Mockery::mock(KanbanManager::class);
         $this->kanban_factory  = Mockery::mock(KanbanFactory::class);
         $this->xml_import      = Mockery::mock(TrackerXmlImport::class);
         $this->xml_import->shouldReceive('getTrackerItemNameFromXMLFile')->andReturn('tracker_item_name');
         $this->report_updater = Mockery::mock(TrackerReportUpdater::class);
         $this->report_factory = Mockery::mock(Tracker_ReportFactory::class);
-        $this->kanban_creator = new AgileDashboard_FirstKanbanCreator(
+        $this->kanban_creator = new FirstKanbanCreator(
             $project,
             $this->kanban_manager,
             $this->tracker_factory,

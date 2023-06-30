@@ -18,32 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban;
 
-use Tuleap\Kanban\KanbanNotFoundException;
 use EventManager;
 use TrackerFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerCrumbLinkInContext;
 
-class BreadCrumbBuilder
+final class BreadCrumbBuilder
 {
     private const CRUMB_IDENTIFIER = 'kanban';
 
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var \Tuleap\Kanban\KanbanFactory
-     */
-    private $kanban_factory;
-
-    public function __construct(TrackerFactory $tracker_factory, \Tuleap\Kanban\KanbanFactory $kanban_factory)
-    {
-        $this->tracker_factory = $tracker_factory;
-        $this->kanban_factory  = $kanban_factory;
+    public function __construct(
+        private readonly TrackerFactory $tracker_factory,
+        private readonly \Tuleap\Kanban\KanbanFactory $kanban_factory,
+    ) {
     }
 
     /**
@@ -61,7 +51,7 @@ class BreadCrumbBuilder
         throw new KanbanNotFoundException();
     }
 
-    public function addKanbanCrumb(TrackerCrumbInContext $tracker_crumb)
+    public function addKanbanCrumb(TrackerCrumbInContext $tracker_crumb): void
     {
         $tracker   = $tracker_crumb->getTracker();
         $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($tracker_crumb->getTracker()->getId());
@@ -72,7 +62,7 @@ class BreadCrumbBuilder
                     self::CRUMB_IDENTIFIER,
                     new TrackerCrumbLinkInContext(
                         $kanban->getName(),
-                        sprintf(dgettext('tuleap-agiledashboard', '%s Kanban'), $kanban->getName()),
+                        sprintf(dgettext('tuleap-kanban', '%s Kanban'), $kanban->getName()),
                         AGILEDASHBOARD_BASE_URL . '?' . http_build_query(
                             [
                                 'group_id' => $tracker->getProject()->getID(),

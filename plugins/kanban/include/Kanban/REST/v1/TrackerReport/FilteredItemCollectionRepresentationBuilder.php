@@ -24,8 +24,8 @@ namespace Tuleap\Kanban\REST\v1\TrackerReport;
 
 use PFUser;
 use Tracker_Report;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
+use Tuleap\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\Kanban\REST\v1\ItemCollectionRepresentation;
 use Tuleap\Kanban\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Kanban\REST\v1\KanbanItemRepresentation;

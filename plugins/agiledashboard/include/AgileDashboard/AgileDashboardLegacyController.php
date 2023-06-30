@@ -26,7 +26,7 @@ namespace Tuleap\AgileDashboard;
 use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
-use Tuleap\AgileDashboard\Kanban\KanbanURL;
+use Tuleap\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;

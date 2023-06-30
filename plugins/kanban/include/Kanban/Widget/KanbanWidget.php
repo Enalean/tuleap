@@ -32,8 +32,8 @@ use TemplateRendererFactory;
 use Tracker_Report;
 use Tracker_ReportFactory;
 use TrackerFactory;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\TrackerReport\TrackerReportBuilder;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -238,7 +238,7 @@ abstract class KanbanWidget extends Widget
         );
 
         $widget_tracker_reports = $tracker_reports_builder->build(
-            $this->tracker_report_id
+            (int) $this->tracker_report_id
         );
 
         return $this->renderer->renderToString(
@@ -268,7 +268,7 @@ abstract class KanbanWidget extends Widget
     private function isCurrentReportSelectable(Tracker_Report $report): bool
     {
         $tracker_report_dao = new TrackerReportDao();
-        $selectable_reports = $tracker_report_dao->searchReportIdsForKanban($this->kanban_id);
+        $selectable_reports = $tracker_report_dao->searchReportIdsForKanban((int) $this->kanban_id);
 
         return in_array($report->getId(), $selectable_reports);
     }

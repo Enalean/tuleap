@@ -26,7 +26,7 @@ use DateInterval;
 use DateTime;
 use PFUser;
 use Tracker_ArtifactFactory;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\ColumnIdentifier;
 
 final class OrderedColumnRepresentationsBuilder
 {

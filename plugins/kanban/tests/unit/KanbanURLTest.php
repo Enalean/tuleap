@@ -20,24 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Kanban;
+namespace Tuleap\Kanban;
 
-use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 
 final class KanbanURLTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testIsKanbanURL(): void
     {
-        $kanban_request = Mockery::mock(HTTPRequest::class);
-        $kanban_request->shouldReceive('get')->with('action')->andReturn('showKanban');
-        $random_request = Mockery::mock(HTTPRequest::class);
-        $random_request->shouldReceive('get')->with('action')->andReturn(false);
-
-        $this->assertTrue(KanbanURL::isKanbanURL($kanban_request));
-        $this->assertFalse(KanbanURL::isKanbanURL($random_request));
+        self::assertTrue(KanbanURL::isKanbanURL(HTTPRequestBuilder::get()->withParam('action', 'showKanban')->build()));
+        self::assertFalse(KanbanURL::isKanbanURL(HTTPRequestBuilder::get()->build()));
     }
 }

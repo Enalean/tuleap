@@ -18,34 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban;
+declare(strict_types=1);
 
-class ColumnIdentifier
+namespace Tuleap\Kanban;
+
+final class ColumnIdentifier
 {
     public const BACKLOG_COLUMN = 'backlog';
     public const ARCHIVE_COLUMN = 'archive';
 
-    private $column_id;
-
-    public function __construct($column_id)
+    public function __construct(private readonly string|int $column_id)
     {
-        $this->column_id = $column_id;
     }
 
-    public function isBacklog()
+    public function isBacklog(): bool
     {
         return $this->column_id === self::BACKLOG_COLUMN;
     }
 
-    public function isArchive()
+    public function isArchive(): bool
     {
         return $this->column_id === self::ARCHIVE_COLUMN;
     }
 
-    /**
-     * @return String
-     */
-    public function getColumnId()
+    public function getColumnId(): string|int
     {
         return $this->column_id;
     }

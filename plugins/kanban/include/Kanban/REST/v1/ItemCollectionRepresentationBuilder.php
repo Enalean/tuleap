@@ -24,7 +24,7 @@ use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanItemDao;
 use Tracker_ArtifactFactory;
 use PFUser;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\ColumnIdentifier;
 
 final class ItemCollectionRepresentationBuilder
 {

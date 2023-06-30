@@ -169,7 +169,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($patch_response->getStatusCode(), 403);
+        $this->assertEquals(403, $patch_response->getStatusCode());
     }
 
     public function testGETBacklog(): void
@@ -216,7 +216,7 @@ final class KanbanTest extends TestBase
                 'compared_to' => $this->kanban_artifact_ids[2],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -245,7 +245,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testGETItems(): void
@@ -294,7 +294,7 @@ final class KanbanTest extends TestBase
                 'compared_to' => $this->kanban_artifact_ids[4],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -323,7 +323,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     private function getIdsOrderedByPriority($uri)
@@ -383,7 +383,7 @@ final class KanbanTest extends TestBase
                 'compared_to' => $this->kanban_artifact_ids[6],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -412,7 +412,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -427,7 +427,7 @@ final class KanbanTest extends TestBase
                 'ids' => [$this->kanban_artifact_ids[6]],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -456,7 +456,7 @@ final class KanbanTest extends TestBase
                 'compared_to' => $this->kanban_artifact_ids[4],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -485,7 +485,7 @@ final class KanbanTest extends TestBase
                 'compared_to' => $this->kanban_artifact_ids[5],
             ],
         ]))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             [
@@ -507,12 +507,12 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
 
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals(201, $response->getStatusCode());
 
         $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
         $kanban       = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals($kanban['columns'][3]['label'], 'objective');
+        $this->assertEquals('objective', $kanban['columns'][3]['label']);
 
         return $kanban['columns'][3]['id'];
     }
@@ -528,7 +528,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -545,7 +545,7 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
         $kanban       = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -573,7 +573,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -585,7 +585,7 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('DELETE', $url));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -600,7 +600,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -636,11 +636,11 @@ final class KanbanTest extends TestBase
             ],
         ]))));
 
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals(201, $response->getStatusCode());
 
         $item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($item['label'], "New item in backlog");
-        $this->assertEquals($item['in_column'], 'backlog');
+        $this->assertEquals("New item in backlog", $item['label']);
+        $this->assertEquals('backlog', $item['in_column']);
     }
 
     /**
@@ -660,7 +660,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
         /**
@@ -678,11 +678,11 @@ final class KanbanTest extends TestBase
             ],
         ]))));
 
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals(201, $response->getStatusCode());
 
         $item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($item['label'], "New item in column");
-        $this->assertEquals($item['in_column'], REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
+        $this->assertEquals("New item in column", $item['label']);
+        $this->assertEquals(REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID, $item['in_column']);
     }
 
     public function testGETKanbanItem(): void
@@ -704,11 +704,11 @@ final class KanbanTest extends TestBase
 
     private function assertGETKanbanItems(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($item['label'], 'Do something');
-        $this->assertEquals($item['in_column'], 'backlog');
+        $this->assertEquals('Do something', $item['label']);
+        $this->assertEquals('backlog', $item['in_column']);
     }
 
     /**
@@ -726,7 +726,7 @@ final class KanbanTest extends TestBase
             ],
         ]))));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -756,7 +756,7 @@ final class KanbanTest extends TestBase
             "tracker_report_ids" => [$this->tracker_report_id],
         ]))));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testPUTTrackerReportsWithReadOnlyAdmin(): void
@@ -770,7 +770,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), (403));
+        $this->assertEquals((403), $response->getStatusCode());
     }
 
     public function testPUTTrackerReportsWithEmptyArray()
@@ -781,7 +781,7 @@ final class KanbanTest extends TestBase
             "tracker_report_ids" => [],
         ]))));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -804,7 +804,7 @@ final class KanbanTest extends TestBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('DELETE', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -817,7 +817,7 @@ final class KanbanTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -827,7 +827,7 @@ final class KanbanTest extends TestBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
 
-        $this->assertEquals($response->getStatusCode(), 404);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testGETCumulativeFlowInvalidDate()
@@ -842,7 +842,7 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testGETCumulativeFlowTooMuchPointsRequested()
@@ -857,7 +857,7 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testGETCumulativeFlow(): void
@@ -896,7 +896,7 @@ final class KanbanTest extends TestBase
     private function assertGETCumulativeFlow(\Psr\Http\Message\ResponseInterface $response): void
     {
         $item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
         $columns = $item['columns'];
         $this->assertEquals(5, count($columns));
 

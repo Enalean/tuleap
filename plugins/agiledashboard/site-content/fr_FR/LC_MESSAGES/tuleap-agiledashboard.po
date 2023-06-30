@@ -28,10 +28,6 @@ msgid "%1$s backlog"
 msgstr "Backlog de %1$s"
 
 #, php-format
-msgid "%s Kanban"
-msgstr "Kanban %s"
-
-#, php-format
 msgid "%s top backlog"
 msgstr "%s planification générale"
 
@@ -47,21 +43,11 @@ msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
 msgstr "<p>Ce tracker n'a pas de champ <em>effort estimé</em>.</p>"
 
 msgid ""
-"A first Kanban will be created during the activation. This operation can "
-"take a few seconds."
-msgstr ""
-"Une première instance de Kanban sera créée lors de l'activation. Ceci peut "
-"prendre quelques secondes."
-
-msgid ""
 "A first scrum configuration will be used during the activation. This "
 "operation can take a few seconds."
 msgstr ""
 "Une configuration scrum initiale sera utilisée lors de l'activation. Ceci "
 "peut prendre quelques secondes."
-
-msgid "Activate Kanban"
-msgstr "Activer Kanban"
 
 msgid "Activate Scrum"
 msgstr "Activer Scrum"
@@ -311,12 +297,6 @@ msgstr "Tableau du Kanban"
 
 msgid "Kanban cards"
 msgstr "Carte de Kanban"
-
-msgid "Kanban is currently active."
-msgstr "Kanban est actuellement actif."
-
-msgid "Kanban is not currently active."
-msgstr "Kanban n'est actuellement pas actif."
 
 msgid "Kanban name:"
 msgstr "Nom du Kanban :"
@@ -676,26 +656,8 @@ msgstr "Mettre à jour la sémantique"
 msgid "View Planning"
 msgstr "Vue du Planning"
 
-#, php-format
-msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
-msgstr ""
-"Une <a href=\"%1$s\">première instance de kanban</a> a été créée pour vous."
-
 msgid "We created an initial scrum configuration for you. Enjoy!"
 msgstr "La configuration initiale de scrum a été effectuée pour vous."
-
-#, php-format
-msgid ""
-"We tried to create a first kanban for you but an existing tracker (%1$s) "
-"prevented it."
-msgstr ""
-"Un outil de suivi existant (%1$s) a empêché la création d'une première "
-"instance de kanban."
-
-msgid ""
-"We tried to create a first kanban for you but an internal error prevented it."
-msgstr ""
-"Une erreur interne a empêché la création d'une première instance de kanban."
 
 #, php-format
 msgid ""

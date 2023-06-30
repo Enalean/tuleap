@@ -18,37 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardKanbanConfigurationUpdater
+namespace Tuleap\Kanban;
+
+use AgileDashboard_ConfigurationManager;
+use AgileDashboardConfigurationResponse;
+use Codendi_Request;
+
+final class KanbanConfigurationUpdater
 {
-    /** @var int */
-    private $project_id;
-
-    /** @var Codendi_Request */
-    private $request;
-
-    /** @var AgileDashboard_ConfigurationManager */
-    private $config_manager;
-
-    /** @var AgileDashboardConfigurationResponse */
-    private $response;
-
-    /** @var AgileDashboard_FirstKanbanCreator */
-    private $first_kanban_creator;
+    private int $project_id;
 
     public function __construct(
-        Codendi_Request $request,
-        AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboardConfigurationResponse $response,
-        AgileDashboard_FirstKanbanCreator $first_kanban_creator,
+        private readonly Codendi_Request $request,
+        private readonly AgileDashboard_ConfigurationManager $config_manager,
+        private readonly AgileDashboardConfigurationResponse $response,
+        private readonly FirstKanbanCreator $first_kanban_creator,
     ) {
-        $this->request              = $request;
-        $this->project_id           = (int) $this->request->get('group_id');
-        $this->config_manager       = $config_manager;
-        $this->response             = $response;
-        $this->first_kanban_creator = $first_kanban_creator;
+        $this->project_id = (int) $this->request->get('group_id');
     }
 
-    public function updateConfiguration()
+    public function updateConfiguration(): void
     {
         $kanban_is_activated = $this->getActivatedKanban();
 
@@ -66,13 +55,13 @@ class AgileDashboardKanbanConfigurationUpdater
         $this->response->kanbanConfigurationUpdated();
     }
 
-    private function getActivatedKanban()
+    private function getActivatedKanban(): bool
     {
         $kanban_was_activated = $this->config_manager->kanbanIsActivatedForProject($this->project_id);
-        $kanban_is_activated  = $this->request->get('activate-kanban');
+        $kanban_is_activated  = (bool) $this->request->get('activate-kanban');
 
         if ($kanban_is_activated && ! $kanban_was_activated) {
-             $this->response->kanbanActivated();
+            $this->response->kanbanActivated();
         }
 
         return $kanban_is_activated;

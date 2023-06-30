@@ -30,7 +30,8 @@ use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
-use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
+use Tuleap\Kanban\BreadCrumbBuilder;
+use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanNotFoundException;
@@ -103,7 +104,7 @@ class AgileDashboardRouter
      */
     private $xml_exporter;
 
-    /** @var AgileDashboard_KanbanManager */
+    /** @var KanbanManager */
     private $kanban_manager;
 
     /** @var AgileDashboard_ConfigurationManager */
@@ -194,7 +195,7 @@ class AgileDashboardRouter
         Planning_MilestoneControllerFactory $milestone_controller_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        AgileDashboard_KanbanManager $kanban_manager,
+        KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
         KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,

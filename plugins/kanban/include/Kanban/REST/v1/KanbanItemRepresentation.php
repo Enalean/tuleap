@@ -59,7 +59,7 @@ final class KanbanItemRepresentation
     public $timeinfo;
 
     /**
-     * @var mixed string || int
+     * @var mixed string | int
      */
     public $in_column;
 

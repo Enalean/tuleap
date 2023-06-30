@@ -20,11 +20,11 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
-use AgileDashboard_KanbanItemManager;
+use Tuleap\Kanban\KanbanItemManager;
 use Cardwall_Semantic_CardFields;
 use EventManager;
 use PFUser;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -34,7 +34,7 @@ use UserManager;
 final class ItemRepresentationBuilder
 {
     public function __construct(
-        private readonly AgileDashboard_KanbanItemManager $kanban_item_manager,
+        private readonly KanbanItemManager $kanban_item_manager,
         private readonly TimeInfoFactory $time_info_factory,
         private readonly UserManager $user_manager,
         private readonly EventManager $event_manager,
@@ -45,15 +45,15 @@ final class ItemRepresentationBuilder
     public function buildItemRepresentation(Artifact $artifact): KanbanItemRepresentation
     {
         $item_in_backlog = $this->kanban_item_manager->isKanbanItemInBacklog($artifact);
-        $in_column       = ($item_in_backlog) ? ColumnIdentifier::BACKLOG_COLUMN : null;
+        $in_column       = ($item_in_backlog) ? ColumnIdentifier::BACKLOG_COLUMN : 0;
 
         if (! $in_column) {
             $item_in_archive = $this->kanban_item_manager->isKanbanItemInArchive($artifact);
-            $in_column       = ($item_in_archive) ? ColumnIdentifier::ARCHIVE_COLUMN : null;
+            $in_column       = ($item_in_archive) ? ColumnIdentifier::ARCHIVE_COLUMN : 0;
         }
 
         if (! $in_column) {
-            $in_column = $this->kanban_item_manager->getColumnIdOfKanbanItem($artifact);
+            $in_column = $this->kanban_item_manager->getColumnIdOfKanbanItem($artifact) ?: 0;
         }
 
         $item_representation = $this->buildItem(
