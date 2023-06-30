@@ -33,7 +33,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
@@ -127,10 +127,10 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $jira_exporter = Mockery::mock(JiraXmlExporter::class);
+        $jira_exporter = Mockery::mock(JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::class);
         $creator->shouldReceive('getJiraExporter')->andReturn($jira_exporter);
 
-        $jira_exporter->shouldReceive('exportJiraToXml')->once()->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+        $jira_exporter->shouldReceive('exportIssuesToXml')->once()->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
         $jira_exporter->shouldReceive('getProjectSimpleXmlElement')->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
         $this->tracker_xml_import->shouldReceive('import')->once()->andReturn([1]);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));

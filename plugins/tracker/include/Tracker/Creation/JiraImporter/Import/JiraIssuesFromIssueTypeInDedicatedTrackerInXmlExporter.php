@@ -88,26 +88,26 @@ use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class JiraXmlExporter
+class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private JiraClient $wrapper,
-        private ErrorCollector $error_collector,
-        private JiraFieldRetriever $jira_field_retriever,
-        private JiraToTuleapFieldTypeMapper $field_type_mapper,
-        private JiraUserRetriever $jira_user_retriever,
-        private XmlReportExporter $report_exporter,
-        private ArtifactsXMLExporter $artifacts_xml_exporter,
-        private SemanticsXMLExporter $semantics_xml_exporter,
-        private AlwaysThereFieldsExporter $always_there_fields_exporter,
-        private StoryPointFieldExporter $story_point_field_exporter,
-        private XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
-        private XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
-        private XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
-        private XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
-        private XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
-        private EventDispatcherInterface $event_manager,
+        private readonly LoggerInterface $logger,
+        private readonly JiraClient $wrapper,
+        private readonly ErrorCollector $error_collector,
+        private readonly JiraFieldRetriever $jira_field_retriever,
+        private readonly JiraToTuleapFieldTypeMapper $field_type_mapper,
+        private readonly JiraUserRetriever $jira_user_retriever,
+        private readonly XmlReportExporter $report_exporter,
+        private readonly ArtifactsXMLExporter $artifacts_xml_exporter,
+        private readonly SemanticsXMLExporter $semantics_xml_exporter,
+        private readonly AlwaysThereFieldsExporter $always_there_fields_exporter,
+        private readonly StoryPointFieldExporter $story_point_field_exporter,
+        private readonly XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
+        private readonly XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
+        private readonly XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
+        private readonly XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
+        private readonly XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
+        private readonly EventDispatcherInterface $event_manager,
     ) {
     }
 
@@ -270,7 +270,7 @@ class JiraXmlExporter
     /**
      * @throws JiraConnectionException
      */
-    public function exportJiraToXml(
+    public function exportIssuesToXml(
         PlatformConfiguration $jira_platform_configuration,
         XMLTracker $xml_tracker,
         string $jira_base_url,
@@ -279,7 +279,7 @@ class JiraXmlExporter
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
     ): \SimpleXMLElement {
-        $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
+        $this->logger->debug("Start export Jira issues " . $issue_type->getName() . " to XML: " . $issue_type->getId());
 
         $jira_field_mapping_collection = new FieldMappingCollection();
         $status_values_collection      = new StatusValuesCollection(
@@ -294,6 +294,7 @@ class JiraXmlExporter
             $field_id_generator,
         );
 
+        $this->logger->debug("Export Always there fields");
         $xml_tracker = $this->always_there_fields_exporter->exportFields(
             $xml_tracker,
             $status_values_collection,
@@ -355,6 +356,7 @@ class JiraXmlExporter
             $issue_type->getId(),
         );
 
+        $this->logger->debug("Ask external plugin for other artifacts' data");
         $this->event_manager->dispatch(
             new JiraImporterExternalPluginsEvent(
                 $node_tracker,
@@ -380,10 +382,11 @@ class JiraXmlExporter
     {
         $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
         $trackers_xml = $xml->addChild('trackers');
+        assert($trackers_xml instanceof \SimpleXMLElement);
         $node_tracker = $xml_tracker->export($trackers_xml);
 
         $dom_tracker = dom_import_simplexml($node_tracker);
-        if (! $dom_tracker) {
+        if (! ($dom_tracker instanceof \DOMElement)) {
             throw new \RuntimeException('Impossible to create DOMElement from tracker');
         }
         $permissions_tags = $dom_tracker->getElementsByTagName('permissions');
@@ -399,11 +402,15 @@ class JiraXmlExporter
     private function getNodeToInsert(\SimpleXMLElement $xml_tracker, string $path, \DOMElement $dom_tracker): \DOMNode
     {
         $requested_node = $xml_tracker->xpath($path);
+        if (! is_array($requested_node)) {
+            throw new \LogicException('Request node in path ' . $path . ' not found in tracker XML');
+        }
+
         if (count($requested_node) !== 1) {
             throw new \LogicException('there should be only one ' . $path . ' in tracker XML');
         }
         $dom_node = dom_import_simplexml($requested_node[0]);
-        if (! $dom_node) {
+        if (! ($dom_node instanceof \DOMElement)) {
             throw new \RuntimeException('Impossible to convert ' . $path . ' node to DOM');
         }
         if (! $dom_tracker->ownerDocument) {
@@ -424,11 +431,11 @@ class JiraXmlExporter
     public function appendTrackerXML(\SimpleXMLElement $all_trackers_node, \SimpleXMLElement $one_tracker_node): void
     {
         $dom_trackers = dom_import_simplexml($all_trackers_node);
-        if (! $dom_trackers) {
+        if (! ($dom_trackers instanceof \DOMElement)) {
             throw new \Exception('Cannot get DOM from trackers XML');
         }
         $dom_tracker = dom_import_simplexml($one_tracker_node);
-        if (! $dom_tracker) {
+        if (! ($dom_tracker instanceof \DOMElement)) {
             throw new \Exception('Cannot get DOM from tracker XML');
         }
         if (! $dom_trackers->ownerDocument) {

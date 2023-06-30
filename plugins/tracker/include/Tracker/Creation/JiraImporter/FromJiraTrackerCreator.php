@@ -38,7 +38,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
@@ -150,7 +150,7 @@ class FromJiraTrackerCreator
             ->withColor(TrackerColor::fromName($color));
 
         $jira_exporter = $this->getJiraExporter($jira_client, $this->logger);
-        $tracker_xml   = $jira_exporter->exportJiraToXml(
+        $tracker_xml   = $jira_exporter->exportIssuesToXml(
             $platform_configuration_collection,
             $tracker_for_export,
             $jira_credentials->getJiraUrl(),
@@ -207,9 +207,9 @@ class FromJiraTrackerCreator
      * @throws \RuntimeException
      * @throws \JsonException
      */
-    protected function getJiraExporter(JiraClient $client, LoggerInterface $logger): JiraXmlExporter
+    protected function getJiraExporter(JiraClient $client, LoggerInterface $logger): JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
     {
-        return JiraXmlExporter::build(
+        return JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::build(
             $client,
             $this->logger,
             $this->jira_user_on_tuleap_cache,

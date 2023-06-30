@@ -89,7 +89,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
-final class JiraXmlExporterTest extends TestCase
+final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -255,7 +255,7 @@ final class JiraXmlExporterTest extends TestCase
             $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($jira_client, $logger);
         }
 
-        $exporter = new JiraXmlExporter(
+        $exporter = new JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter(
             $logger,
             $jira_client,
             $error_collector,
@@ -370,7 +370,7 @@ final class JiraXmlExporterTest extends TestCase
             ->withDescription('Bug')
             ->withColor(TrackerColor::default());
 
-        $tracker_xml = $exporter->exportJiraToXml(
+        $tracker_xml = $exporter->exportIssuesToXml(
             $platform_configuration_collection,
             $tracker_for_export,
             'https://jira.example.com',
