@@ -60,6 +60,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly VerifyIsPermissionsOnArtifactField $verify_is_permissions_on_artifact_field,
         private readonly VerifyThereArePermissionsToMigrate $verify_are_permissions_to_migrate,
         private readonly VerifyPermissionsCanBeFullyMoved $verify_permissions_can_be_fully_moved,
+        private readonly VerifyIsOpenListField $verify_is_open_list_field,
+        private readonly VerifyOpenListFieldsAreCompatible $verify_open_list_fields_are_compatible,
     ) {
     }
 
@@ -75,6 +77,16 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             if ($this->verify_field_can_be_easily_migrated->canFieldBeEasilyMigrated($target_field, $source_field)) {
                 $this->addFieldToMigrateableList($source_field, $target_field);
 
+                continue;
+            }
+
+            if (
+                $this->verify_is_open_list_field->isAnOpenListField($source_field)
+                && $this->verify_is_open_list_field->isAnOpenListField($target_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
+                assert($target_field instanceof \Tracker_FormElement_Field_OpenList);
+                $this->collectOpenListFields($source_field, $target_field);
                 continue;
             }
 
@@ -194,6 +206,18 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         }
 
         $this->addFieldToMigrateableList($source_field, $target_field);
+    }
+
+    private function collectOpenListFields(
+        \Tracker_FormElement_Field_OpenList $source_field,
+        \Tracker_FormElement_Field_OpenList $destination_field,
+    ): void {
+        if (! $this->verify_open_list_fields_are_compatible->areOpenListFieldsCompatible($source_field, $destination_field)) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
     private function addFieldToMigrateableList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $target_field): void

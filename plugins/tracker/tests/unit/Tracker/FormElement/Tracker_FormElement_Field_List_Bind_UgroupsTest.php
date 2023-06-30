@@ -272,8 +272,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         ];
         $bind   = $this->buildBindUgroups($values);
         $this->field->shouldReceive('getId')->andReturn(10);
-        $this->value_dao->shouldReceive('create')->andReturn('new id');
+        $this->value_dao->shouldReceive('create')->andReturn(11);
         $bind->saveObject();
-        $this->assertEquals('new id', $this->integrators_ugroup_value->getId());
+        $this->assertEquals(11, $this->integrators_ugroup_value->getId());
     }
 }

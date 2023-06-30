@@ -22,101 +22,123 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
-class BindUgroupsValueDao extends DataAccessObject
+class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsValuesById, SearchUserGroupsValuesByFieldIdAndUserGroupId
 {
-    public function __construct()
+    /**
+     * @psalm-return array{id: int, field_id: int, ugroup_id: int, is_hidden: int} | null
+     */
+    public function searchById(int $id): ?array
     {
-        parent::__construct();
-        $this->table_name = 'tracker_field_list_bind_ugroups_value';
+        $sql = "
+            SELECT *
+            FROM tracker_field_list_bind_ugroups_value
+            WHERE id = ?
+        ";
+
+        return $this->getDB()->row($sql, $id);
     }
 
-    public function searchById($id)
+    /**
+     * @psalm-return array{id: int, field_id: int, ugroup_id: int, is_hidden: int}[]
+     */
+    public function searchByFieldId(int $field_id): array
     {
-        $id  = $this->da->escapeInt($id);
-        $sql = "SELECT *
-                FROM $this->table_name
-                WHERE id = $id";
-        return $this->retrieve($sql);
+        $sql = "
+            SELECT *
+            FROM tracker_field_list_bind_ugroups_value
+            WHERE field_id = ?
+            ORDER BY id
+        ";
+
+        return $this->getDB()->safeQuery($sql, [$field_id]);
     }
 
-    public function searchByFieldId($field_id)
+    /**
+     * @psalm-return array{id: int, field_id: int, ugroup_id: int, is_hidden: int} | null
+     */
+    public function searchByFieldIdAndGroupId(int $field_id, int $ugroup_id): ?array
     {
-        $field_id = $this->da->escapeInt($field_id);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id
-                ORDER BY id";
-        return $this->retrieve($sql);
+        $sql = "
+            SELECT *
+            FROM tracker_field_list_bind_ugroups_value
+            WHERE field_id = ? AND ugroup_id = ?
+            ORDER BY id
+        ";
+
+        return $this->getDB()->row($sql, $field_id, $ugroup_id);
     }
 
-    public function duplicate($from_value_id, $to_field_id)
+    public function duplicate(int $from_value_id, int $to_field_id): int
     {
-        $from_value_id = $this->da->escapeInt($from_value_id);
-        $to_field_id   = $this->da->escapeInt($to_field_id);
-        $sql           = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
-                SELECT $to_field_id, u1.ugroup_id, v.is_hidden
-                FROM ugroup u1
-                    INNER JOIN tracker t ON (
-                        t.group_id = u1.group_id AND u1.ugroup_id > 100
-                        OR
-                        u1.ugroup_id <= 100
-                    )
-                    INNER JOIN tracker_field AS f ON (t.id = f.tracker_id)
-                    INNER JOIN ugroup u2 ON (u1.name = u2.name)
-                    INNER JOIN $this->table_name v ON (v.ugroup_id = u2.ugroup_id)
-                    WHERE f.id = $to_field_id
-                      AND v.id = $from_value_id";
+        $sql = "
+            REPLACE INTO tracker_field_list_bind_ugroups_value (field_id, ugroup_id, is_hidden)
+            SELECT ?, u1.ugroup_id, v.is_hidden
+            FROM ugroup u1
+            INNER JOIN tracker t ON (
+                t.group_id = u1.group_id AND u1.ugroup_id > 100
+                OR
+                u1.ugroup_id <= 100
+            )
+            INNER JOIN tracker_field AS f ON (t.id = f.tracker_id)
+            INNER JOIN ugroup u2 ON (u1.name = u2.name)
+            INNER JOIN tracker_field_list_bind_ugroups_value v ON (v.ugroup_id = u2.ugroup_id)
+            WHERE f.id = ?
+              AND v.id = ?
+          ";
 
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->safeQuery($sql, [$to_field_id, $to_field_id, $from_value_id]);
+        return (int) $this->getDB()->lastInsertId();
     }
 
-    public function create($field_id, $ugroup_id, $is_hidden)
+    public function create(int $field_id, int $ugroup_id, bool $is_hidden): int
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $is_hidden = $is_hidden ? 1 : 0;
-
-        $sql = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
-                VALUES ($field_id, $ugroup_id, $is_hidden)";
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId(
+            "tracker_field_list_bind_ugroups_value",
+            [
+                'field_id' => $field_id,
+                'ugroup_id' => $ugroup_id,
+                'is_hidden' => $is_hidden,
+            ]
+        );
     }
 
-    public function hide($id)
+    public function hide(int $id): void
     {
-        return $this->toggleHidden($id, 1);
+        $this->toggleHidden($id, true);
     }
 
-    public function show($id)
+    public function show(int $id): void
     {
-        return $this->toggleHidden($id, 0);
+        $this->toggleHidden($id, false);
     }
 
-    private function toggleHidden($id, $is_hidden)
+    private function toggleHidden(int $id, bool $is_hidden): void
     {
-        $id        = $this->da->escapeInt($id);
-        $is_hidden = $is_hidden ? 1 : 0;
-
-        $sql = "UPDATE $this->table_name
-                SET is_hidden = $is_hidden
-                WHERE id = $id";
-        return $this->update($sql);
+        $this->getDB()->update(
+            'tracker_field_list_bind_ugroups_value',
+            ['is_hidden' => $is_hidden],
+            ['id' => $id]
+        );
     }
 
-    public function searchChangesetValues($changeset_id, $field_id)
+    /**
+     * @psalm-return array{id: int, ugroup_id: int, field_id: int}
+     */
+    public function searchChangesetValues(int $changeset_id, int $field_id): array
     {
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $sql          = "SELECT f.id, f.ugroup_id, f.is_hidden
-                FROM tracker_field_list_bind_ugroups_value AS f
-                     INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id AND f.field_id = $field_id)
-                     INNER JOIN tracker_changeset_value AS c
-                     ON ( l.changeset_value_id = c.id
-                      AND c.changeset_id = $changeset_id
-                      AND c.field_id = $field_id
-                     )
-                ORDER BY f.id";
-        return $this->retrieve($sql);
+        $sql = "
+            SELECT f.id, f.ugroup_id, f.is_hidden
+            FROM tracker_field_list_bind_ugroups_value AS f
+            INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id AND f.field_id = $field_id)
+            INNER JOIN tracker_changeset_value AS c
+            ON (
+                l.changeset_value_id = c.id
+                AND c.changeset_id = ?
+                AND c.field_id = ?
+            )
+            ORDER BY f.id";
+        return $this->getDB()->run($sql, [$changeset_id, $field_id]);
     }
 }

@@ -102,10 +102,9 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
             102 => 190,
         ]);
 
-        $cdata_factory = $this->createStub(XML_SimpleXMLCDATAFactory::class);
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
         $updater       = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), $cdata_factory);
 
-        $cdata_factory->expects(self::once())->method("insertWithAttributes")->willReturn($changeset_xml);
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         $this->addToAssertionCount(1);
     }

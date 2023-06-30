@@ -26,8 +26,12 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\FieldMapping;
+use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
+use Tuleap\Tracker\Action\OpenListFieldVerifier;
+use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
@@ -35,9 +39,12 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByFieldIdAndUserGroupIdStub;
+use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByIdStub;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
@@ -52,13 +59,15 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
     private MoveChangesetXMLDuckTypingUpdater $updater;
     private \PFUser $current_user;
     private \PFUser $artifact_submitter;
-    private \Tracker $tracker;
+    private \Tracker $source_tracker;
+    private \Tracker $destination_tracker;
 
     protected function setUp(): void
     {
         $this->current_user       = UserTestBuilder::anActiveUser()->withId(self::CURRENT_USER_ID)->build();
         $this->artifact_submitter = UserTestBuilder::anActiveUser()->withId(self::SUBMITTER_USER_ID)->build();
         $XML_updater              = new MoveChangesetXMLUpdater();
+        $cdata_factory            = new XML_SimpleXMLCDATAFactory();
         $bind_value_updater       = new BindValueForDuckTypingUpdater(
             new FieldValueMatcher(
                 new XMLImportHelper(
@@ -66,21 +75,42 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 )
             ),
             $XML_updater,
-            new XML_SimpleXMLCDATAFactory()
+            $cdata_factory
         );
         $permissions_updater      = new PermissionsByDuckTypingUpdater(
             new PermissionDuckTypingMatcher(),
             $XML_updater
         );
-        $this->tracker            = TrackerTestBuilder::aTracker()
+        $this->source_tracker     = TrackerTestBuilder::aTracker()
             ->withName("Bugs")
             ->withProject(ProjectTestBuilder::aProject()->withPublicName("Guinea Pig")->build())
             ->build();
 
+        $this->destination_tracker = TrackerTestBuilder::aTracker()
+            ->withName("Bugs")
+            ->withProject(ProjectTestBuilder::aProject()->withPublicName("Hamsters")->build())
+            ->build();
+
+        $user_groups_bind_values = [
+            ['id' => 18, 'field_id' => 452, 'ugroup_id' => 101, 'is_hidden' => 0],
+            ['id' => 19, 'field_id' => 452, 'ugroup_id' => 102, 'is_hidden' => 0],
+        ];
+
         $this->updater = new MoveChangesetXMLDuckTypingUpdater(
             $XML_updater,
             $bind_value_updater,
-            $permissions_updater
+            $permissions_updater,
+            new OpenListUserGroupsByDuckTypingUpdater(
+                SearchUserGroupsValuesByIdStub::withValues($user_groups_bind_values),
+                SearchUserGroupsValuesByFieldIdAndUserGroupIdStub::withValues($user_groups_bind_values),
+                UGroupRetrieverStub::buildWithUserGroups(),
+                UGroupRetrieverStub::buildWithUserGroups(),
+                $XML_updater,
+                $cdata_factory,
+            ),
+            new OpenListFieldVerifier(),
+            new UserGroupOpenListFieldVerifier(),
+            new IsPermissionsOnArtifactFieldVerifier(),
         );
     }
 
@@ -173,6 +203,13 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $source_permissions_field->method("getName")->willReturn("permissions");
 
+        $source_open_list_static_field     = TrackerFormElementOpenListBuilder::aBind()->withId(10)->withName("open_static")->buildStaticBind()->getField();
+        $source_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(11)->withName("open_users")->buildUserBind()->getField();
+        $source_open_list_user_group_field = TrackerFormElementOpenListBuilder::aBind()->withId(12)->withTracker($this->source_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
+
+        $destination_open_list_static_field     = TrackerFormElementOpenListBuilder::aBind()->withId(30)->withName("open_static")->buildStaticBind()->getField();
+        $destination_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(31)->withName("open_users")->buildUserBind()->getField();
+        $destination_open_list_user_group_field = TrackerFormElementOpenListBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
 
         $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
         $destination_severity_field             = $destination_severity_field_bind->getField();
@@ -200,6 +237,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 $source_close_date_field,
                 $source_initial_effort_field,
                 $source_remaining_effort_field,
+                $source_open_list_static_field,
+                $source_open_list_user_field,
+                $source_open_list_user_group_field,
             ],
             [
                 $source_not_existing_field,
@@ -222,6 +262,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 FieldMapping::fromFields($source_assigned_to_field, $destination_assigned_to_field),
                 FieldMapping::fromFields($source_cc_field, $destination_cc_field),
                 FieldMapping::fromFields($source_permissions_field, $destination_permissions_field),
+                FieldMapping::fromFields($source_open_list_static_field, $destination_open_list_static_field),
+                FieldMapping::fromFields($source_open_list_user_field, $destination_open_list_user_field),
+                FieldMapping::fromFields($source_open_list_user_group_field, $destination_open_list_user_group_field),
             ]
         );
 
@@ -234,10 +277,10 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             self::ARTIFACT_SUBMISSION_TIMESTAMP,
             self::ARTIFACT_MOVE_TIMESTAMP,
             $fields,
-            $this->tracker,
+            $this->source_tracker,
         );
 
-        $this->assertCount(11, $artifact_xml->changeset->field_change);
+        $this->assertCount(14, $artifact_xml->changeset->field_change);
         $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
         $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
         $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
@@ -249,6 +292,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->assertSame($destination_assigned_to_field->getName(), (string) $artifact_xml->changeset->field_change[8]->attributes()->field_name);
         $this->assertSame($destination_cc_field->getName(), (string) $artifact_xml->changeset->field_change[9]->attributes()->field_name);
         $this->assertSame($destination_permissions_field->getName(), (string) $artifact_xml->changeset->field_change[10]->attributes()->field_name);
+        $this->assertSame($destination_open_list_user_group_field->getName(), (string) $artifact_xml->changeset->field_change[11]->attributes()->field_name);
+        $this->assertSame($destination_open_list_static_field->getName(), (string) $artifact_xml->changeset->field_change[12]->attributes()->field_name);
+        $this->assertSame($destination_open_list_user_field->getName(), (string) $artifact_xml->changeset->field_change[13]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement

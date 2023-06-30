@@ -799,7 +799,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getBindValueById($bindvalue_id)
     {
-        $row = $this->value_dao->searchById($bindvalue_id)->getRow();
+        $row = $this->value_dao->searchById($bindvalue_id);
+
+        if (! $row) {
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => ""]), true);
+        }
 
         return $this->getValueFromRow($row);
     }
