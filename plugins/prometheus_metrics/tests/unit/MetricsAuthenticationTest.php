@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
-use Mockery;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -35,20 +35,9 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
  */
 final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var MetricsAuthentication
-     */
-    private $metrics_authentication;
-    /**
-     * @var RequestHandlerInterface
-     */
-    private $request_handler;
-    /**
-     * @var string
-     */
-    private $config_dir_root;
+    private MetricsAuthentication $metrics_authentication;
+    private RequestHandlerInterface $request_handler;
+    private string $config_dir_root;
 
     public function setUp(): void
     {
@@ -69,7 +58,7 @@ final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->request_handler
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testExecutionIsInterruptedWhenSecretFileIsNotPresent(): void
@@ -94,11 +83,11 @@ final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNoBasicAuthorizationHeaderNotSet(): void
     {
         file_put_contents($this->config_dir_root . '/metrics_secret.key', str_repeat('A', 16));
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn('');
+        $server_request = $this->createMock(ServerRequestInterface::class);
+        $server_request->method('getHeaderLine')->with('Authorization')->willReturn('');
         $response = $this->metrics_authentication->process($server_request, $this->request_handler);
 
-        $this->assertEquals(401, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
     }
 
     public function testAuthenticationRejectedWithIncorrectCredential(): void
@@ -110,15 +99,15 @@ final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->request_handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
     }
 
-    private function getServerRequestWithBasicAuthorizationHeader(string $username, string $password): ServerRequestInterface
+    private function getServerRequestWithBasicAuthorizationHeader(string $username, string $password): MockObject&ServerRequestInterface
     {
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getHeaderLine')
+        $server_request = $this->createMock(ServerRequestInterface::class);
+        $server_request->method('getHeaderLine')
             ->with('Authorization')
-            ->andReturn('Basic ' . base64_encode($username . ':' . $password));
+            ->willReturn('Basic ' . base64_encode($username . ':' . $password));
         return $server_request;
     }
 }

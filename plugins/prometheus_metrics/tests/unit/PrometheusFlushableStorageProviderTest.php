@@ -34,7 +34,7 @@ final class PrometheusFlushableStorageProviderTest extends \Tuleap\Test\PHPUnit\
 
         ForgeConfig::set('redis_server', '');
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             NullStore::class,
             $provider->getFlushableStorage()
         );
