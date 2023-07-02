@@ -33,17 +33,30 @@ use PFUser;
 use Project_AccessProjectNotFoundException;
 use Planning;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
 final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private ProjectAccessChecker&\PHPUnit\Framework\MockObject\MockObject $project_access_checker;
+    private PFUser $user;
+    private \PHPUnit\Framework\MockObject\MockObject&HTTPRequest $http;
+    private ProjectManager&\PHPUnit\Framework\MockObject\MockObject $project_manager;
+    private ProjectMilestonesDao&\PHPUnit\Framework\MockObject\MockObject $project_milestones_dao;
+    private CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject $csrf_token;
+    private TemplateRenderer&\PHPUnit\Framework\MockObject\MockObject $template_rendered;
+    private Planning&\PHPUnit\Framework\MockObject\MockObject $root_planning;
+    private ProjectMilestonesPresenterBuilder&\PHPUnit\Framework\MockObject\MockObject $presenter_builder;
+    private Project $project;
+    private ProjectMilestonesWidgetRetriever $retriever;
+
     public function setUp(): void
     {
         parent::setUp();
 
         $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
 
-        $this->user = $this->createMock(PFUser::class);
+        $this->user = UserTestBuilder::aUser()->build();
 
         $this->http = $this->createMock(HTTPRequest::class);
         $this->http->method('getCurrentUser')->willReturn($this->user);
@@ -55,10 +68,11 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->root_planning          = $this->createMock(Planning::class);
         $this->presenter_builder      = $this->createMock(ProjectMilestonesPresenterBuilder::class);
 
-        $this->project = $this->createMock(Project::class);
-        $this->project->method('getUnixName')->willReturn('MyProject');
-        $this->project->method('getPublicName')->willReturn('MyProject');
-        $this->project->method('getID')->willReturn(101);
+        $this->project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUnixName('MyProject')
+            ->withPublicName('MyProject')
+            ->build();
 
         $this->retriever = new ProjectMilestonesWidgetRetriever(
             $this->project_access_checker,
@@ -74,14 +88,14 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
         $title = $this->retriever->getTitle($this->project, $this->user);
 
-        $this->assertStringContainsString('MyProject Milestones', $title);
+        self::assertStringContainsString('MyProject Milestones', $title);
     }
 
     public function testGetGenericTitleWhenNoProject(): void
     {
         $title = $this->retriever->getTitle(null, $this->user);
 
-        $this->assertStringContainsString('Project Milestones', $title);
+        self::assertStringContainsString('Project Milestones', $title);
     }
 
     public function testGetGenericTitleWhenUserCanNotAccesProject(): void
@@ -89,7 +103,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
         $title = $this->retriever->getTitle($this->project, $this->user);
 
-        $this->assertStringContainsString('Project Milestones', $title);
+        self::assertStringContainsString('Project Milestones', $title);
     }
 
     public function testGetRendererContentWhenThereIsProject(): void
@@ -103,7 +117,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(ProjectMilestonesException::buildProjectDontExist());
         $content = $this->retriever->getContent(null, null);
-        $this->assertStringContainsString("Project does not exist.", $content);
+        self::assertStringContainsString("Project does not exist.", $content);
     }
 
     public function testGetExceptionContentWhenThereIsNoProject(): void
@@ -112,7 +126,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $tracker->method('getId')->willReturn(110);
         $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(new TimeframeBrokenConfigurationException($tracker));
         $content = $this->retriever->getContent(null, null);
-        $this->assertStringContainsString("Invalid Timeframe Semantic configuration.", $content);
+        self::assertStringContainsString("Invalid Timeframe Semantic configuration.", $content);
     }
 
     public function testGetProjectMilestonesPreferencesWhenUserCanSeeProject(): void
@@ -138,7 +152,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->project_milestones_dao->expects(self::never())->method('create');
 
-        $this->assertNull($this->retriever->create($this->http));
+        self::assertNull($this->retriever->create($this->http));
     }
 
     public function testCreatingProjectMilestoneLikeXMLImportDoes(): void
@@ -150,7 +164,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->project_milestones_dao->method('create')->with(101)->willReturn("455");
 
-        $this->assertEquals(455, $this->retriever->create($request));
+        self::assertEquals(455, $this->retriever->create($request));
     }
 
     public function testUpdatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void

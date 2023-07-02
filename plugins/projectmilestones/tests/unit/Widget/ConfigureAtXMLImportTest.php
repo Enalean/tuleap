@@ -33,8 +33,8 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesntCreateTheWidgetThatIsNotProjectMilestone(): void
     {
         $widget = new class extends \Widget {
-            public $param;
-            public $project;
+            public string $param;
+            public \Project $project;
 
             public function __construct()
             {
@@ -63,8 +63,8 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesTheWidget(): void
     {
         $widget = new class extends \Widget {
-            public $param;
-            public $project;
+            public string $param;
+            public \Project $project;
 
             public function __construct()
             {
@@ -87,7 +87,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->assertSame(ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF, $widget->param);
-        $this->assertEquals(ProjectTestBuilder::aProject()->build(), $widget->project);
+        self::assertSame(ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF, $widget->param);
+        self::assertEquals(ProjectTestBuilder::aProject()->build(), $widget->project);
     }
 }
