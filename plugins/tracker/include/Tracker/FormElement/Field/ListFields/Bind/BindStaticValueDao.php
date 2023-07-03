@@ -222,7 +222,8 @@ class BindStaticValueDao extends DataAccessObject
         $field_id = $this->da->escapeInt($field_id);
 
         if (! isset($this->cache_cannot_be_hidden_values[$field_id][$value_id])) {
-            $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+            $value_id = $this->da->escapeInt($value_id);
+            $sql      = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
                     FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_workflow AS w ON (
                             v.field_id = w.field_id
@@ -301,7 +302,6 @@ class BindStaticValueDao extends DataAccessObject
     public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id): bool
     {
         $field_id = $this->da->escapeInt($field->getId());
-        $value_id = $this->da->escapeInt($value_id);
 
         if (! isset($this->cache_used_values_in_artifacts[$field_id])) {
             $sql = "SELECT DISTINCT IF (v.original_value_id, v.original_value_id, v.id) AS id
