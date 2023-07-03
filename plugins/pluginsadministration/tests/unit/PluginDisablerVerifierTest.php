@@ -20,28 +20,22 @@
 
 namespace Tuleap\PluginsAdministration;
 
-require_once __DIR__ . '/bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider providerOptionUntouchablePlugins
      */
-    public function testPluginsAdministrationIsAlwaysUntouchable($plugins_that_can_not_be_disabled)
+    public function testPluginsAdministrationIsAlwaysUntouchable(string|false $plugins_that_can_not_be_disabled): void
     {
-        $plugin_administration = \Mockery::mock(\PluginsAdministrationPlugin::class);
-        $plugin_administration->shouldReceive('getName')->andReturns('pluginsadministration');
+        $plugin_administration = $this->createMock(\PluginsAdministrationPlugin::class);
+        $plugin_administration->method('getName')->willReturn('pluginsadministration');
 
         $plugin_disabler_verifier = new PluginDisablerVerifier($plugin_administration, $plugins_that_can_not_be_disabled);
 
-        $this->assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_administration));
+        self::assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_administration));
     }
 
-    public static function providerOptionUntouchablePlugins()
+    public static function providerOptionUntouchablePlugins(): iterable
     {
         return [
             [false],
@@ -53,22 +47,22 @@ class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public function testPluginsCanBeMarkedAsUntouchableWithTheOptionString()
+    public function testPluginsCanBeMarkedAsUntouchableWithTheOptionString(): void
     {
-        $plugin_administration = \Mockery::mock(\PluginsAdministrationPlugin::class);
-        $plugin_administration->shouldReceive('getName');
+        $plugin_administration = $this->createMock(\PluginsAdministrationPlugin::class);
+        $plugin_administration->method('getName');
 
         $plugin_disabler_verifier = new PluginDisablerVerifier($plugin_administration, 'pluginsa, pluginsb');
 
-        $plugin_a = \Mockery::mock(\PluginsAdministrationPlugin::class);
-        $plugin_a->shouldReceive('getName')->andReturn('pluginsa');
-        $plugin_b = \Mockery::mock(\PluginsAdministrationPlugin::class);
-        $plugin_b->shouldReceive('getName')->andReturn('pluginsb');
-        $plugin_c = \Mockery::mock(\PluginsAdministrationPlugin::class);
-        $plugin_c->shouldReceive('getName')->andReturn('pluginsc');
+        $plugin_a = $this->createMock(\PluginsAdministrationPlugin::class);
+        $plugin_a->method('getName')->willReturn('pluginsa');
+        $plugin_b = $this->createMock(\PluginsAdministrationPlugin::class);
+        $plugin_b->method('getName')->willReturn('pluginsb');
+        $plugin_c = $this->createMock(\PluginsAdministrationPlugin::class);
+        $plugin_c->method('getName')->willReturn('pluginsc');
 
-        $this->assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_a));
-        $this->assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_b));
-        $this->assertTrue($plugin_disabler_verifier->canPluginBeDisabled($plugin_c));
+        self::assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_a));
+        self::assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_b));
+        self::assertTrue($plugin_disabler_verifier->canPluginBeDisabled($plugin_c));
     }
 }

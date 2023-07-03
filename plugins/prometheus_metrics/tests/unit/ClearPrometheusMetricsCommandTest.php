@@ -21,23 +21,20 @@
 namespace Tuleap\PrometheusMetrics;
 
 use Enalean\Prometheus\Storage\FlushableStorage;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Console\Tester\CommandTester;
 
 final class ClearPrometheusMetricsCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCommandFlushesTheStorage(): void
     {
-        $storage = \Mockery::mock(FlushableStorage::class);
+        $storage = $this->createMock(FlushableStorage::class);
         $command = new ClearPrometheusMetricsCommand($storage);
 
-        $storage->shouldReceive('flush')->once();
+        $storage->expects(self::once())->method('flush');
 
         $command_tester = new CommandTester($command);
         $command_tester->execute([]);
 
-        $this->assertEquals(0, $command_tester->getStatusCode());
+        self::assertEquals(0, $command_tester->getStatusCode());
     }
 }

@@ -24,8 +24,6 @@ namespace Tuleap\PrometheusMetrics;
 
 use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
@@ -38,14 +36,12 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testMetricsAreRendered(): void
     {
-        $dao               = Mockery::mock(MetricsCollectorDao::class);
-        $nb_user_builder   = Mockery::mock(NbUsersByStatusBuilder::class);
-        $event_manager     = Mockery::mock(EventManager::class);
-        $redis_client      = Mockery::mock(Redis::class);
+        $dao               = $this->createMock(MetricsCollectorDao::class);
+        $nb_user_builder   = $this->createMock(NbUsersByStatusBuilder::class);
+        $event_manager     = $this->createMock(EventManager::class);
+        $redis_client      = $this->getMockBuilder(Redis::class)->onlyMethods(['lLen'])->setConstructorArgs([])->getMock();
         $version_presenter = VersionPresenter::fromFlavorFinder(
             new class implements FlavorFinder {
                 public function isEnterprise(): bool
@@ -57,26 +53,26 @@ final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $controller        = new MetricsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            Mockery::mock(EmitterInterface::class),
+            $this->createMock(EmitterInterface::class),
             $dao,
             $nb_user_builder,
             $event_manager,
             $version_presenter,
             $redis_client,
-            Mockery::mock(FlushableStorage::class)
+            $this->createMock(FlushableStorage::class)
         );
 
-        $dao->shouldReceive('getProjectsByStatus')->andReturn([]);
-        $dao->shouldReceive('getNewSystemEventsCount')->andReturn([]);
-        $nb_user_builder->shouldReceive('getNbUsersByStatusBuilder')->andReturn(
+        $dao->method('getProjectsByStatus')->willReturn([]);
+        $dao->method('getNewSystemEventsCount')->willReturn([]);
+        $nb_user_builder->method('getNbUsersByStatusBuilder')->willReturn(
             new NbUsersByStatus(0, 0, 0, 0, 0, 0, 0)
         );
-        $event_manager->shouldReceive('processEvent');
+        $event_manager->method('processEvent');
 
-        $redis_client->shouldReceive('lLen')->with(Worker::EVENT_QUEUE_NAME)->andReturn(0);
+        $redis_client->method('lLen')->with(Worker::EVENT_QUEUE_NAME)->willReturn(0);
 
-        $response = $controller->handle(Mockery::mock(ServerRequestInterface::class));
+        $response = $controller->handle($this->createMock(ServerRequestInterface::class));
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 }
