@@ -1,0 +1,35 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/core-account",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/copy-to-clipboard": "workspace:*",
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/webauthn": "workspace:*",
+    "dompurify": "^3.0.0",
+    "mustache": "^4.2.0",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@types/dompurify": "^2.4.0",
+    "@types/jquery": "^3.5.5",
+    "@types/mustache": "^4.1.2",
+    "@types/sprintf-js": "^1.1.2",
+    "jquery": "^3.6.0",
+    "neverthrow": "^6.0.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
+  }
+}

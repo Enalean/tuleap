@@ -82,10 +82,9 @@ final class DisplayAccountInformationController implements DispatchableWithReque
 
         $account_information_collection = $this->dispatcher->dispatch(new AccountInformationCollection($user));
 
-        $account_asset = new \Tuleap\Layout\IncludeCoreAssets();
+        $account_asset = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../scripts/account/frontend-assets', '/assets/core/account');
 
-        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'account/avatar.js'));
-        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'account/timezone.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'account-information.js'));
 
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(

@@ -1,0 +1,107 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@tuleap/copy-to-clipboard':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/copy-to-clipboard
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../tlp
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-modal
+  '@tuleap/webauthn':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/webauthn
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.0
+  mustache:
+    specifier: ^4.2.0
+    version: 4.2.0
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fault
+  '@types/dompurify':
+    specifier: ^2.4.0
+    version: 2.4.0
+  '@types/jquery':
+    specifier: ^3.5.5
+    version: 3.5.5
+  '@types/mustache':
+    specifier: ^4.1.2
+    version: 4.1.2
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.2
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.0
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
+
+packages:
+
+  /@types/dompurify@2.4.0:
+    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
+    dependencies:
+      '@types/trusted-types': 2.0.3
+    dev: true
+
+  /@types/jquery@3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/mustache@4.1.2:
+    resolution: {integrity: sha512-c4OVMMcyodKQ9dpwBwh3ofK9P6U9ZktKU9S+p33UqwMNN1vlv2P0zJZUScTshnx7OEoIIRcCFNQ904sYxZz8kg==}
+    dev: true
+
+  /@types/sizzle@2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /@types/sprintf-js@1.1.2:
+    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
+    dev: true
+
+  /@types/trusted-types@2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+    dev: true
+
+  /dompurify@3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+    dev: false
+
+  /jquery@3.6.0:
+    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
+    dev: true
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: true
+
+  /sprintf-js@1.1.2:
+    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
+    dev: false

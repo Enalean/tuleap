@@ -25,13 +25,18 @@ namespace Tuleap\User\Account;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeCoreAssets;
+use Tuleap\Layout\IncludeAssets;
 
 final class UserPreferencesHeader
 {
     public function display(string $title, BaseLayout $layout, array $additional_classes = []): void
     {
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'account-style'));
+        $layout->addCssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
+                new IncludeAssets(__DIR__ . '/../../../scripts/account/frontend-assets', '/assets/core/account'),
+                'account-style'
+            )
+        );
 
         $layout->header(
             [

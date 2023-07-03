@@ -80,8 +80,8 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
-                'account/appearance.js'
+                new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../scripts/account/frontend-assets', '/assets/core/account'),
+                'appearance.js'
             )
         );
 

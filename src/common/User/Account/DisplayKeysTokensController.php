@@ -30,6 +30,7 @@ use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -88,8 +89,8 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
-                'account/keys-tokens.js'
+                new IncludeAssets(__DIR__ . '/../../../scripts/account/frontend-assets', '/assets/core/account'),
+                'keys-tokens.js'
             )
         );
 

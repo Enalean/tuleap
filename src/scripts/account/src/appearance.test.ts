@@ -20,7 +20,7 @@
 import { initSelectBoxPreview } from "./appearance";
 
 describe("appearance", () => {
-    let doc: HTMLDocument, select_box: HTMLSelectElement, svg: SVGElement;
+    let doc: Document, select_box: HTMLSelectElement, svg: SVGElement;
 
     const SELECT_BOX_ID = "source-select-box";
     const OPTION_DATA_ATTRIBUTE = "data-bound-value";
