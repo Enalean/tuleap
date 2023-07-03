@@ -88,7 +88,7 @@ class MilestoneElementMover
      * @throws \Luracast\Restler\RestException
      * @throws \Tracker_NoArtifactLinkFieldException
      * @throws \Tuleap\AgileDashboard\REST\v1\ArtifactCannotBeInBacklogOfException
-     * @throws \Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException
+     * @throws \Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException
      */
     public function moveElement(PFUser $user, array $add, Planning_Milestone $milestone): array
     {

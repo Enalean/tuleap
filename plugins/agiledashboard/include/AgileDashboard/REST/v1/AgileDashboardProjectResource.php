@@ -36,6 +36,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use URLVerification;
 
 final class AgileDashboardProjectResource extends AuthenticatedResource

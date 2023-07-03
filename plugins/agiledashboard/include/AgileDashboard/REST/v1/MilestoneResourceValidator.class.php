@@ -36,6 +36,10 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
+use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
+use Tuleap\Tracker\REST\Helpers\OrderValidator;
 
 class MilestoneResourceValidator
 {

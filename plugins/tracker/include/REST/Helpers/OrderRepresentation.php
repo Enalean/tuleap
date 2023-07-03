@@ -17,14 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\AgileDashboard\REST\v1;
+
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\REST\Helpers;
 
 use Luracast\Restler\RestException;
 
 /**
  * @psalm-immutable
  */
-class OrderRepresentation
+final class OrderRepresentation
 {
     public const AFTER  = 'after';
     public const BEFORE = 'before';
@@ -45,15 +48,36 @@ class OrderRepresentation
     public $compared_to;
 
     /**
+     * @param int[] $ids
+     */
+    private function __construct(
+        array $ids,
+        string $direction,
+        int $compared_to,
+    ) {
+        $this->ids         = $ids;
+        $this->direction   = $direction;
+        $this->compared_to = $compared_to;
+    }
+
+    public static function build(
+        array $ids,
+        string $direction,
+        int $compared_to,
+    ): self {
+        return new self($ids, $direction, $compared_to);
+    }
+
+    /**
      * @throws RestException
      */
-    public function checkFormat()
+    public function checkFormat(): void
     {
         if (! in_array($this->direction, [self::BEFORE, self::AFTER])) {
             throw new RestException(400, "invalid value specified for `direction`. Expected: before | after");
         }
 
-        $this->isArrayOfInt('ids');
+        $this->isArrayOfInt();
         if (count($this->ids) == 0) {
             throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
         }
@@ -63,33 +87,15 @@ class OrderRepresentation
         }
     }
 
-    private function isArrayOfInt($name)
+    private function isArrayOfInt(): void
     {
-        if (! is_array($this->$name)) {
-            throw new RestException(400, "invalid value specified for `$name`. Expected: array of integers");
+        if (! is_array($this->ids)) {
+            throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
         }
-        foreach ($this->$name as $id) {
+        foreach ($this->ids as $id) {
             if (! is_int($id)) {
-                throw new RestException(400, "invalid value specified for `$name`. Expected: array of integers");
+                throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
             }
         }
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    private function __construct(array $ids, string $direction, int $compared_to)
-    {
-        $this->ids         = $ids;
-        $this->direction   = $direction;
-        $this->compared_to = $compared_to;
-    }
-
-    /**
-     * @param int[] $ids
-     */
-    public static function build(array $ids, string $direction, int $compared_to): self
-    {
-        return new self($ids, $direction, $compared_to);
     }
 }

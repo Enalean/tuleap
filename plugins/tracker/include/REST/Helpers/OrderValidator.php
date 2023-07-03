@@ -19,22 +19,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\REST\Helpers;
 
 class OrderValidator
 {
-    private $index;
-
-    public function __construct(array $index)
+    public function __construct(private readonly array $index)
     {
-        $this->index = $index;
     }
 
     /**
      * @throws IdsFromBodyAreNotUniqueException
      * @throws OrderIdOutOfBoundException
      */
-    public function validate(OrderRepresentation $order)
+    public function validate(OrderRepresentation $order): void
     {
         if (! $this->areIdsUnique($order->ids)) {
             throw new IdsFromBodyAreNotUniqueException();
@@ -46,16 +45,16 @@ class OrderValidator
         }
     }
 
-    private function assertIdPartOfIndex($id)
+    private function assertIdPartOfIndex(int $id): void
     {
         if (! isset($this->index[$id])) {
             throw new OrderIdOutOfBoundException($id);
         }
     }
 
-    private function areIdsUnique(array $ids)
+    private function areIdsUnique(array $ids): bool
     {
         $ids_unique = array_unique($ids);
-        return count($ids) == count($ids_unique);
+        return count($ids) === count($ids_unique);
     }
 }

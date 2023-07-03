@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Planning_Milestone;
 use PFUser;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 
 class PatchAddContentValidator implements IValidateElementsToAdd
 {

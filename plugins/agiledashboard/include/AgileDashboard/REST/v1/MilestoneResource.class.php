@@ -55,7 +55,7 @@ use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -69,6 +69,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
+use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use URLVerification;
 use UserManager;
 
@@ -723,7 +726,7 @@ class MilestoneResource extends AuthenticatedResource
      * @url PATCH {id}/content
      *
      * @param int $id Id of the milestone
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order Order of the children {@from body}
      * @param array $add Ids to add/move to milestone content  {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
@@ -939,7 +942,7 @@ class MilestoneResource extends AuthenticatedResource
      * @url PATCH {id}/backlog
      *
      * @param int                                                $id    Id of the milestone Item
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order Order of the children {@from body}
      * @param array                                              $add    Ids to add/move to milestone backlog {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400

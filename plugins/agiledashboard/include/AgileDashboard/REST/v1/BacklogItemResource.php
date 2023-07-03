@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogItem;
@@ -36,7 +38,7 @@ use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
@@ -49,6 +51,10 @@ use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
+use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
+use Tuleap\Tracker\REST\Helpers\OrderValidator;
 use UserManager;
 
 /**
@@ -299,9 +305,9 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @url PATCH {id}/children
      *
-     * @param int                                                   $id    Id of the Backlog Item
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
-     * @param array                                                 $add   Ids to add to backlog_items content  {@from body} {@type BacklogAddRepresentation}
+     * @param int                                              $id    Id of the Backlog Item
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order Order of the children {@from body}
+     * @param array                                            $add   Ids to add to backlog_items content  {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403

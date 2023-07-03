@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_ArtifactMilestone;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 
 final class MilestoneResourceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

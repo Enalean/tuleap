@@ -53,7 +53,7 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedRemoveIdIsNotInExplicitBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\RemoveNotAvailableInClassicBacklogModeException;
-use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -64,6 +64,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use UserManager;
 
 /**
