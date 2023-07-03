@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\Kanban\KanbanStatisticsAggregator;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanURL;
 use Tuleap\Kanban\KanbanManager;
@@ -953,7 +954,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function plugin_statistics_service_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao                  = new AgileDashboard_Dao();
-        $statistic_aggregator = new AgileDashboardStatisticsAggregator();
+        $statistic_aggregator = new KanbanStatisticsAggregator(EventManager::instance());
         $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
         foreach ($statistic_aggregator->getStatisticsLabels() as $statistic_key => $statistic_name) {
             $statistic_data = $statistic_aggregator->getStatistics(
