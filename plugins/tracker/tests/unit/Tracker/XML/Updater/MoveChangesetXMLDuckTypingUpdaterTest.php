@@ -202,6 +202,8 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_cc_field                   = $source_cc_field_bind->getField();
         $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
+        $source_computed_field->method("getName")->willReturn("computed");
 
         $source_open_list_static_field     = TrackerFormElementOpenListBuilder::aBind()->withId(10)->withName("open_static")->buildStaticBind()->getField();
         $source_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(11)->withName("open_users")->buildUserBind()->getField();
@@ -227,6 +229,8 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName("crusty")->build(),
         ]);
+        $destination_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
+        $destination_computed_field->method("getName")->willReturn("computed");
 
         $fields = DuckTypedMoveFieldCollection::fromFields(
             [
@@ -240,6 +244,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 $source_open_list_static_field,
                 $source_open_list_user_field,
                 $source_open_list_user_group_field,
+                $source_computed_field,
             ],
             [
                 $source_not_existing_field,
@@ -280,7 +285,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $this->source_tracker,
         );
 
-        $this->assertCount(14, $artifact_xml->changeset->field_change);
+        $this->assertCount(15, $artifact_xml->changeset->field_change);
         $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
         $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
         $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);
@@ -295,6 +300,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->assertSame($destination_open_list_user_group_field->getName(), (string) $artifact_xml->changeset->field_change[11]->attributes()->field_name);
         $this->assertSame($destination_open_list_static_field->getName(), (string) $artifact_xml->changeset->field_change[12]->attributes()->field_name);
         $this->assertSame($destination_open_list_user_field->getName(), (string) $artifact_xml->changeset->field_change[13]->attributes()->field_name);
+        $this->assertSame($destination_computed_field->getName(), (string) $artifact_xml->changeset->field_change[14]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement

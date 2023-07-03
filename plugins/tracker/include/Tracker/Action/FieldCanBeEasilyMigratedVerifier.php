@@ -36,6 +36,7 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
         \Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
         \Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE,
+        \Tracker_FormElementFactory::FIELD_COMPUTED,
     ];
 
     public function __construct(
