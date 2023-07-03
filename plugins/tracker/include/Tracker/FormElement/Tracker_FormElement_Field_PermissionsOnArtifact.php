@@ -128,14 +128,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return '';
     }
 
-   /**
-    * Returns the PermissionsOnArtifactDao
-    *
-    * @return PermissionsOnArtifactFieldValueDao The dao
-    */
-    protected function getValueDao()
+    protected function getValueDao(): PermissionsOnArtifactFieldValueDao
     {
-        return new PermissionsOnArtifactFieldValueDao();
+        return new PermissionsOnArtifactFieldValueDao(new Tracker_Artifact_Changeset_ValueDao());
     }
 
     private function getPermissionsOnArtifactUsageRetriever()
