@@ -25,9 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
@@ -36,33 +34,23 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
-    /** @var  BaselineArtifactRepositoryAdapter */
-    private $adapter;
-
-    /** @var Tracker_ArtifactFactory|MockInterface */
-    private $artifact_factory;
-
-    /** @var Tracker_Artifact_ChangesetFactory|MockInterface */
-    private $changeset_factory;
-
-    /** @var SemanticValueAdapter|MockInterface */
-    private $semantic_value_adapter;
-
-    /** @var ArtifactLinkRepository|MockInterface */
-    private $artifact_link_adapter;
+    private BaselineArtifactRepositoryAdapter $adapter;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
+    private SemanticValueAdapter&MockObject $semantic_value_adapter;
+    private ArtifactLinkRepository&MockObject $artifact_link_adapter;
 
     /** @before */
-    public function createInstance()
+    public function createInstance(): void
     {
-        $this->artifact_factory       = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->changeset_factory      = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
-        $this->semantic_value_adapter = Mockery::mock(SemanticValueAdapter::class);
-        $this->artifact_link_adapter  = Mockery::mock(ArtifactLinkRepository::class);
+        $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->changeset_factory      = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
+        $this->semantic_value_adapter = $this->createMock(SemanticValueAdapter::class);
+        $this->artifact_link_adapter  = $this->createMock(ArtifactLinkRepository::class);
 
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager
@@ -79,104 +67,91 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    public function testFindById()
+    public function testFindById(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject($project)->build();
 
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => $project]);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getTracker')->willReturn($tracker);
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->method('getArtifactById')
             ->with(1)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getArtifact->getTracker')
-            ->andReturn(
-                TrackerTestBuilder::aTracker()
-                    ->withId(10)
-                    ->withName('Tracker name')
-                    ->build()
-            );
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
         $this->changeset_factory
-            ->shouldReceive('getLastChangeset')
+            ->method('getLastChangeset')
             ->with($artifact)
-            ->andReturn($changeset);
+            ->willReturn($changeset);
 
-        $this->semantic_value_adapter
-            ->shouldReceive(
-                [
-                    'findTitle'         => 'Custom title',
-                    'findDescription'   => 'Custom description',
-                    'findStatus'        => 'Custom status',
-                    'findInitialEffort' => 5,
-                ]
-            )
-            ->with($changeset, $this->current_tuleap_user);
+        $this->mockSemanticValueAdapter($changeset);
 
         $this->artifact_link_adapter
-            ->shouldReceive('findLinkedArtifactIds')
+            ->method('findLinkedArtifactIds')
             ->with($this->current_tuleap_user, $changeset)
-            ->andReturn([2, 3, 4]);
+            ->willReturn([2, 3, 4]);
 
         $baseline_artifact = $this->adapter->findById($this->current_user, 1);
 
-        $this->assertEquals('Custom title', $baseline_artifact->getTitle());
-        $this->assertEquals('Custom description', $baseline_artifact->getDescription());
-        $this->assertEquals('Custom status', $baseline_artifact->getStatus());
-        $this->assertEquals(5, $baseline_artifact->getInitialEffort());
-        $this->assertEquals([2, 3, 4], $baseline_artifact->getLinkedArtifactIds());
+        self::assertNotNull($baseline_artifact);
+        self::assertEquals('Custom title', $baseline_artifact->getTitle());
+        self::assertEquals('Custom description', $baseline_artifact->getDescription());
+        self::assertEquals('Custom status', $baseline_artifact->getStatus());
+        self::assertEquals(5, $baseline_artifact->getInitialEffort());
+        self::assertEquals([2, 3, 4], $baseline_artifact->getLinkedArtifactIds());
     }
 
-    public function testFindByIdAt()
+    public function testFindByIdAt(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject($project)->build();
 
-        $date     = DateTimeFactory::one();
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => $project]);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        $date = DateTimeFactory::one();
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->method('getArtifactById')
             ->with(1)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getArtifact->getTracker')
-            ->andReturn(
-                TrackerTestBuilder::aTracker()
-                    ->withId(10)
-                    ->withName('Tracker name')
-                    ->build()
-            );
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
         $this->changeset_factory
-            ->shouldReceive('getChangesetAtTimestamp')
+            ->method('getChangesetAtTimestamp')
             ->with($artifact, $date->getTimestamp())
-            ->andReturn($changeset);
+            ->willReturn($changeset);
 
-        $this->semantic_value_adapter
-            ->shouldReceive(
-                [
-                    'findTitle'         => 'Custom title',
-                    'findDescription'   => 'Custom description',
-                    'findStatus'        => 'Custom status',
-                    'findInitialEffort' => 5,
-                ]
-            )
-            ->with($changeset, $this->current_tuleap_user);
+        $this->mockSemanticValueAdapter($changeset);
 
         $this->artifact_link_adapter
-            ->shouldReceive('findLinkedArtifactIds')
+            ->method('findLinkedArtifactIds')
             ->with($this->current_tuleap_user, $changeset)
-            ->andReturn([2, 3, 4]);
+            ->willReturn([2, 3, 4]);
 
         $baseline_artifact = $this->adapter->findByIdAt($this->current_user, 1, $date);
 
-        $this->assertEquals('Custom title', $baseline_artifact->getTitle());
-        $this->assertEquals('Custom description', $baseline_artifact->getDescription());
-        $this->assertEquals('Custom status', $baseline_artifact->getStatus());
-        $this->assertEquals(5, $baseline_artifact->getInitialEffort());
-        $this->assertEquals([2, 3, 4], $baseline_artifact->getLinkedArtifactIds());
+        self::assertNotNull($baseline_artifact);
+        self::assertEquals('Custom title', $baseline_artifact->getTitle());
+        self::assertEquals('Custom description', $baseline_artifact->getDescription());
+        self::assertEquals('Custom status', $baseline_artifact->getStatus());
+        self::assertEquals(5, $baseline_artifact->getInitialEffort());
+        self::assertEquals([2, 3, 4], $baseline_artifact->getLinkedArtifactIds());
+    }
+
+    private function mockSemanticValueAdapter(Tracker_Artifact_Changeset&MockObject $changeset): void
+    {
+         $this->semantic_value_adapter->method('findTitle')->with($changeset, $this->current_tuleap_user)->willReturn('Custom title');
+         $this->semantic_value_adapter->method('findDescription')->with($changeset, $this->current_tuleap_user)->willReturn('Custom description');
+         $this->semantic_value_adapter->method('findStatus')->with($changeset, $this->current_tuleap_user)->willReturn('Custom status');
+         $this->semantic_value_adapter->method('findInitialEffort')->with($changeset, $this->current_tuleap_user)->willReturn(5);
     }
 }

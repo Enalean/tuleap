@@ -40,27 +40,28 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
     private $controller;
 
     /** @before */
-    public function getTestedComponent()
+    public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(BaselineController::class);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $artifact = BaselineArtifactFactory::one()->id(2)->build();
         $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
 
         $this->controller->post('My first baseline', 2, null);
 
-        $this->assertEquals(1, $this->baseline_repository->count());
+        self::assertEquals(1, $this->baseline_repository->count());
         $baseline = $this->baseline_repository->findAny();
-        $this->assertEquals('My first baseline', $baseline->getName());
-        $this->assertEquals($artifact, $baseline->getArtifact());
-        $this->assertEquals($this->current_user_provider->getUser()->getId(), $baseline->getAuthor()->getId());
-        $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
+        self::assertNotNull($baseline);
+        self::assertEquals('My first baseline', $baseline->getName());
+        self::assertEquals($artifact, $baseline->getArtifact());
+        self::assertEquals($this->current_user_provider->getUser()->getId(), $baseline->getAuthor()->getId());
+        self::assertEquals($this->clock->now(), $baseline->getSnapshotDate());
     }
 
-    public function testPostWithoutSnapshotDate()
+    public function testPostWithoutSnapshotDate(): void
     {
         $artifact = BaselineArtifactFactory::one()->id(2)->build();
         $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
@@ -68,10 +69,11 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $this->controller->post('My first baseline', 2, null);
 
         $baseline = $this->baseline_repository->findAny();
-        $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
+        self::assertNotNull($baseline);
+        self::assertEquals($this->clock->now(), $baseline->getSnapshotDate());
     }
 
-    public function testPostWithSnapshotDate()
+    public function testPostWithSnapshotDate(): void
     {
         $artifact = BaselineArtifactFactory::one()->id(2)->build();
         $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
@@ -83,18 +85,19 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
             BaselineController::DATE_TIME_FORMAT,
             '2019-03-21T11:47:04+02:00'
         );
-        $this->assertEquals($expected_snapshot_date, $baseline->getSnapshotDate());
+        self::assertNotNull($baseline);
+        self::assertEquals($expected_snapshot_date, $baseline->getSnapshotDate());
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $baseline = BaselineFactory::one()->id(2)->build();
         $this->baseline_repository->addBaseline($baseline);
         $this->controller->delete(2);
-        $this->assertNotContains(2, array_keys($this->baseline_repository->findAllById()));
+        self::assertNotContains(2, array_keys($this->baseline_repository->findAllById()));
     }
 
-    public function testDeleteThrowsWhenAssociatedToAComparison()
+    public function testDeleteThrowsWhenAssociatedToAComparison(): void
     {
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(409);

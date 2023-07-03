@@ -76,7 +76,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return count($this->comparisons_by_id);
     }
 
-    public function findAny(): Comparison
+    public function findAny(): ?Comparison
     {
         if (count($this->comparisons_by_id) === 0) {
             return null;

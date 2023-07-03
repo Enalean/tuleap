@@ -36,12 +36,12 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
     private $controller;
 
     /** @before */
-    public function getTestedComponent()
+    public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(ComparisonController::class);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $base_baseline        = $this->baseline_repository->add(
             BaselineFactory::one()->build(),
@@ -63,22 +63,23 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
             $compared_to_baseline->getId()
         );
 
-        $this->assertEquals(1, $this->comparison_repository->count());
+        self::assertEquals(1, $this->comparison_repository->count());
 
         $comparison = $this->comparison_repository->findAny();
-        $this->assertEquals('My first comparison', $comparison->getName());
-        $this->assertEquals('Some comment here', $comparison->getComment());
-        $this->assertEquals($base_baseline->getId(), $comparison->getBaseBaseline()->getId());
-        $this->assertEquals($compared_to_baseline->getId(), $comparison->getComparedToBaseline()->getId());
+        self::assertNotNull($comparison);
+        self::assertEquals('My first comparison', $comparison->getName());
+        self::assertEquals('Some comment here', $comparison->getComment());
+        self::assertEquals($base_baseline->getId(), $comparison->getBaseBaseline()->getId());
+        self::assertEquals($compared_to_baseline->getId(), $comparison->getComparedToBaseline()->getId());
 
-        $this->assertNotNull($representation->id);
-        $this->assertEquals('My first comparison', $representation->name);
-        $this->assertEquals('Some comment here', $representation->comment);
-        $this->assertEquals($base_baseline->getId(), $representation->base_baseline_id);
-        $this->assertEquals($compared_to_baseline->getId(), $representation->compared_to_baseline_id);
+        self::assertNotNull($representation->id);
+        self::assertEquals('My first comparison', $representation->name);
+        self::assertEquals('Some comment here', $representation->comment);
+        self::assertEquals($base_baseline->getId(), $representation->base_baseline_id);
+        self::assertEquals($compared_to_baseline->getId(), $representation->compared_to_baseline_id);
     }
 
-    public function testPostThrows404WhenBaseBaselineDoesNotExist()
+    public function testPostThrows404WhenBaseBaselineDoesNotExist(): void
     {
         $this->expectException(NotFoundRestException::class);
 
@@ -96,7 +97,7 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
         );
     }
 
-    public function testPostThrows404WhenComparedToBaselineDoesNotExist()
+    public function testPostThrows404WhenComparedToBaselineDoesNotExist(): void
     {
         $this->expectException(NotFoundRestException::class);
 
@@ -114,7 +115,7 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
         );
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $comparison = $this->comparison_repository->add(
             TransientComparisonFactory::one()
@@ -128,14 +129,14 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
 
         $representation = $this->controller->getById($comparison->getId());
 
-        $this->assertEquals($comparison->getId(), $representation->id);
-        $this->assertEquals('My first comparison', $representation->name);
-        $this->assertNull($representation->comment);
-        $this->assertEquals(1, $representation->base_baseline_id);
-        $this->assertEquals(2, $representation->compared_to_baseline_id);
+        self::assertEquals($comparison->getId(), $representation->id);
+        self::assertEquals('My first comparison', $representation->name);
+        self::assertNull($representation->comment);
+        self::assertEquals(1, $representation->base_baseline_id);
+        self::assertEquals(2, $representation->compared_to_baseline_id);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $comparison = $this->comparison_repository->add(
             TransientComparisonFactory::one()->build(),
@@ -145,6 +146,6 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
         $comparison_id = $comparison->getId();
         $this->controller->delete($comparison_id);
 
-        $this->assertNotContains($comparison_id, array_keys($this->comparison_repository->findAllById()));
+        self::assertNotContains($comparison_id, array_keys($this->comparison_repository->findAllById()));
     }
 }

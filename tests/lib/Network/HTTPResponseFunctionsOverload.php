@@ -34,7 +34,7 @@ function headers_sent(): bool
     return false;
 }
 
-function header($header, $replace = true, $http_response_code = null): void
+function header(string $header, bool $replace = true, ?int $http_response_code = null): void
 {
     HTTPHeaderStack::push(new HTTPHeader($header, $replace, $http_response_code));
 }

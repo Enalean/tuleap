@@ -23,9 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -33,43 +31,33 @@ use Tuleap\Baseline\Support\CurrentUserContext;
 
 abstract class SemanticValueAdapterTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
-    /** @var SemanticValueAdapter */
-    protected $adapter;
-
-    /** @var SemanticFieldRepository|MockInterface */
-    protected $semantic_field_repository;
+    protected SemanticValueAdapter $adapter;
+    protected SemanticFieldRepository&MockObject $semantic_field_repository;
 
     /** @before */
     protected function createInstance(): void
     {
-        $this->semantic_field_repository = Mockery::mock(SemanticFieldRepository::class);
+        $this->semantic_field_repository = $this->createMock(SemanticFieldRepository::class);
         $this->adapter                   = new SemanticValueAdapter($this->semantic_field_repository);
     }
 
-    /** @var Tracker_Artifact_Changeset|MockInterface */
-    protected $changeset;
-
-    /** @var Tracker|MockInterface */
-    protected $tracker;
+    protected Tracker_Artifact_Changeset&MockObject $changeset;
+    protected Tracker&MockObject $tracker;
 
     /** @before */
     protected function createEntities(): void
     {
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->tracker   = Mockery::mock(Tracker::class);
+        $this->changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->tracker   = $this->createMock(Tracker::class);
     }
 
-    /**
-     * @return Tracker_Artifact_ChangesetValue|MockInterface
-     */
-    protected function mockChangesetValue($value): Tracker_Artifact_ChangesetValue
+    protected function mockChangesetValue(mixed $value): Tracker_Artifact_ChangesetValue&MockObject
     {
-        return Mockery::mock(Tracker_Artifact_ChangesetValue::class)
-            ->shouldReceive('getValue')
-            ->andReturn($value)
-            ->getMock();
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
+        $changeset_value->method('getValue')->willReturn($value);
+
+        return $changeset_value;
     }
 }

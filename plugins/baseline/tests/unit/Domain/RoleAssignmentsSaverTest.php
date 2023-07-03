@@ -73,6 +73,7 @@ class RoleAssignmentsSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->build();
 
+        self::assertNotNull($role_assignments_update);
         self::assertEquals($project_identifier, $role_assignments_update->getProject());
         self::assertEquals([...$administrator_assignments, ...$readers_assignments], $role_assignments_update->getAssignments());
 

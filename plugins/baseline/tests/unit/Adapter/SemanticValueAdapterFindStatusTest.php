@@ -23,86 +23,80 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Mockery;
 use Tracker_FormElement_Field_List;
 
-class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTestCase
+final class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTestCase
 {
     public function testFindStatus(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
-            ->shouldReceive('findStatusByTracker')
+            ->method('findStatusByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $field->shouldReceive('getFirstValueFor')
+        $field->method('getFirstValueFor')
             ->with($this->changeset)
-            ->andReturn('Custom status');
+            ->willReturn('Custom status');
 
         $title = $this->adapter->findStatus($this->changeset, $this->current_tuleap_user);
 
-        $this->assertEquals('Custom status', $title);
+        self::assertEquals('Custom status', $title);
     }
 
     public function testFindStatusReturnNullWhenNotAuthorized(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(false)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->method('userCanRead')->willReturn(false);
+
         $this->semantic_field_repository
-            ->shouldReceive('findStatusByTracker')
+            ->method('findStatusByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
         $title = $this->adapter->findStatus($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindStatusReturnsNullWhenNoStatusField(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
         $this->semantic_field_repository
-            ->shouldReceive('findStatusByTracker')
+            ->method('findStatusByTracker')
             ->with($this->tracker)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findStatus($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindStatusReturnsNullWhenNoValueForGivenChangeset(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
-            ->shouldReceive('findStatusByTracker')
+            ->method('findStatusByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $field->shouldReceive('getFirstValueFor')
+        $field->method('getFirstValueFor')
             ->with($this->changeset)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findStatus($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 }

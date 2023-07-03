@@ -35,7 +35,7 @@ interface Authorizations
 
     public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool;
 
-    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison);
+    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison): bool;
 
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool;
 

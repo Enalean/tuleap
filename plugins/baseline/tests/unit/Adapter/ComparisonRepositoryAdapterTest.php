@@ -27,9 +27,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\BaselineRepository;
@@ -44,41 +41,42 @@ use UserManager;
 
 class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
     /** @var ComparisonRepositoryAdapter */
     private $repository;
 
-    /** @var EasyDB|MockInterface */
+    /** @var EasyDB&\PHPUnit\Framework\MockObject\MockObject */
     private $db;
 
-    /** @var BaselineRepository|MockInterface */
+    /** @var BaselineRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_repository;
 
-    /** @var UserManager|MockInterface */
+    /** @var UserManager&\PHPUnit\Framework\MockObject\MockObject */
     private $user_manager;
 
-    /** @var Authorizations|MockInterface */
+    /** @var Authorizations&\PHPUnit\Framework\MockObject\MockObject */
     private $authorizations;
 
-    /** @var ClockAdapter|MockInterface */
+    /** @var ClockAdapter&\PHPUnit\Framework\MockObject\MockObject */
     private $clock;
 
     /** @var DateTimeInterface */
     private $now;
 
     /** @before */
-    public function createInstance()
+    public function createInstance(): void
     {
-        $this->now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-05-17 09:33:22');
+        $now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-05-17 09:33:22');
+        self::assertInstanceOf(DateTimeImmutable::class, $now);
+        $this->now = $now;
 
-        $this->db                  = Mockery::mock(EasyDB::class);
-        $this->baseline_repository = Mockery::mock(BaselineRepository::class);
-        $this->user_manager        = Mockery::mock(UserManager::class);
-        $this->authorizations      = Mockery::mock(AuthorizationsImpl::class);
-        $this->clock               = Mockery::mock(ClockAdapter::class);
-        $this->clock->allows(['now' => $this->now]);
+        $this->db                  = $this->createMock(EasyDB::class);
+        $this->baseline_repository = $this->createMock(BaselineRepository::class);
+        $this->user_manager        = $this->createMock(UserManager::class);
+        $this->authorizations      = $this->createMock(AuthorizationsImpl::class);
+        $this->clock               = $this->createMock(ClockAdapter::class);
+        $this->clock->method('now')->willReturn($this->now);
 
         $this->repository = new ComparisonRepositoryAdapter(
             $this->db,
@@ -89,11 +87,9 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testAddReturnsComparisonBasedOnGivenTransientComparison()
+    public function testAddReturnsComparisonBasedOnGivenTransientComparison(): void
     {
-        $this->db
-            ->allows('insertReturnId')
-            ->andReturn(10);
+        $this->db->method('insertReturnId')->willReturn(10);
 
         $transient_comparison = TransientComparisonFactory::one()->build();
 
@@ -102,46 +98,43 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->current_user
         );
 
-        $this->assertEquals($transient_comparison->getName(), $comparison->getName());
-        $this->assertEquals($transient_comparison->getComment(), $comparison->getComment());
-        $this->assertEquals($transient_comparison->getBaseBaseline(), $comparison->getBaseBaseline());
-        $this->assertEquals($transient_comparison->getComparedToBaseline(), $comparison->getComparedToBaseline());
-        $this->assertEquals($this->current_user, $comparison->getAuthor());
-        $this->assertEquals($this->now, $comparison->getCreationDate());
+        self::assertEquals($transient_comparison->getName(), $comparison->getName());
+        self::assertEquals($transient_comparison->getComment(), $comparison->getComment());
+        self::assertEquals($transient_comparison->getBaseBaseline(), $comparison->getBaseBaseline());
+        self::assertEquals($transient_comparison->getComparedToBaseline(), $comparison->getComparedToBaseline());
+        self::assertEquals($this->current_user, $comparison->getAuthor());
+        self::assertEquals($this->now, $comparison->getCreationDate());
     }
 
-    public function testAddReturnsComparisonWithDatabaseId()
+    public function testAddReturnsComparisonWithDatabaseId(): void
     {
-        $this->db
-            ->allows('insertReturnId')
-            ->andReturn(10);
+        $this->db->method('insertReturnId')->willReturn(10);
 
         $comparison = $this->repository->add(
             TransientComparisonFactory::one()->build(),
             $this->current_user
         );
 
-        $this->assertEquals(10, $comparison->getId());
+        self::assertEquals(10, $comparison->getId());
     }
 
-    public function testFindById()
+    public function testFindById(): void
     {
-        $base_baseline = BaselineFactory::one()->build();
-        $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 1)
-            ->andReturn($base_baseline);
-
+        $base_baseline        = BaselineFactory::one()->build();
         $compared_to_baseline = BaselineFactory::one()->build();
+
         $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 2)
-            ->andReturn($compared_to_baseline);
+            ->method('findById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user, 1, $base_baseline],
+                [$this->current_user, 2, $compared_to_baseline],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -157,19 +150,19 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $author = UserTestBuilder::buildWithId(9);
         $this->user_manager
-            ->shouldReceive('getUserById')
+            ->method('getUserById')
             ->with(9)
-            ->andReturn($author);
+            ->willReturn($author);
 
         $creation_date = DateTimeFactory::one();
         $this->clock
-            ->shouldReceive('at')
+            ->method('at')
             ->with(1553176023)
-            ->andReturn($creation_date);
+            ->willReturn($creation_date);
 
         $this->authorizations
-            ->shouldReceive('canReadComparison')
-            ->andReturn(true);
+            ->method('canReadComparison')
+            ->willReturn(true);
 
         $comparison = $this->repository->findById($this->current_user, 1);
 
@@ -182,39 +175,38 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             UserProxy::fromUser($author),
             $creation_date
         );
-        $this->assertEquals($expected_comparison, $comparison);
+        self::assertEquals($expected_comparison, $comparison);
     }
 
-    public function testFindByIdReturnsNullWhenNotFound()
+    public function testFindByIdReturnsNullWhenNotFound(): void
     {
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn([]);
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn([]);
 
         $comparison = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($comparison);
+        self::assertNull($comparison);
     }
 
-    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline()
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline(): void
     {
-        $base_baseline = BaselineFactory::one()->build();
-        $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 1)
-            ->andReturn($base_baseline);
-
+        $base_baseline        = BaselineFactory::one()->build();
         $compared_to_baseline = BaselineFactory::one()->build();
+
         $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 2)
-            ->andReturn($compared_to_baseline);
+            ->method('findById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user, 1, $base_baseline],
+                [$this->current_user, 2, $compared_to_baseline],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -229,35 +221,35 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->user_manager
-            ->shouldReceive('getUserById')
+            ->method('getUserById')
             ->with(9)
-            ->andReturn(UserTestBuilder::aUser()->build());
+            ->willReturn(UserTestBuilder::aUser()->build());
 
         $this->clock
-            ->shouldReceive('at')
+            ->method('at')
             ->with(1553176023)
-            ->andReturn(DateTimeFactory::one());
+            ->willReturn(DateTimeFactory::one());
 
         $this->authorizations
-            ->shouldReceive('canReadComparison')
-            ->andReturn(false);
+            ->method('canReadComparison')
+            ->willReturn(false);
 
         $comparison = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($comparison);
+        self::assertNull($comparison);
     }
 
-    public function testFindByIdReturnsNullWhenBaseBaselineIsNotFound()
+    public function testFindByIdReturnsNullWhenBaseBaselineIsNotFound(): void
     {
         $this->baseline_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 1)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -273,25 +265,23 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        self::assertNull($baseline);
     }
 
-    public function testFindByIdReturnsNullWhenComparedToBaselineIsNotFound()
+    public function testFindByIdReturnsNullWhenComparedToBaselineIsNotFound(): void
     {
         $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 1)
-            ->andReturn(BaselineFactory::one()->build());
-
-        $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 2)
-            ->andReturn(null);
+            ->method('findById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user, 1, BaselineFactory::one()->build()],
+                [$this->current_user, 2, null],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -307,14 +297,14 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        self::assertNull($baseline);
     }
 
-    public function testFindByProject()
+    public function testFindByProject(): void
     {
-        $this->db->allows()
-            ->safeQuery(Mockery::type('string'), [102, 10, 3])
-            ->andReturn(
+        $this->db->method('safeQuery')
+            ->with(self::isType('string'), [102, 10, 3])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -328,27 +318,26 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $base_baseline = BaselineFactory::one()->build();
-        $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 1)
-            ->andReturn($base_baseline);
-
+        $base_baseline        = BaselineFactory::one()->build();
         $compared_to_baseline = BaselineFactory::one()->build();
+
         $this->baseline_repository
-            ->shouldReceive('findById')
-            ->with($this->current_user, 2)
-            ->andReturn($compared_to_baseline);
+            ->method('findById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user, 1, $base_baseline],
+                [$this->current_user, 2, $compared_to_baseline],
+            ]);
 
         $user = UserTestBuilder::buildWithId(22);
-        $this->user_manager->allows()
-            ->getUserById(22)
-            ->andReturn($user);
+        $this->user_manager->method('getUserById')
+            ->with(22)
+            ->willReturn($user);
 
         $creation_date = DateTimeFactory::one();
-        $this->clock->allows()
-            ->at(1553176023)
-            ->andReturn($creation_date);
+        $this->clock->method('at')
+            ->with(1553176023)
+            ->willReturn($creation_date);
 
         $project = ProjectFactory::oneWithId(102);
 
@@ -364,14 +353,14 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $creation_date
         ),
         ];
-        $this->assertEquals($expected_baselines, $baselines);
+        self::assertEquals($expected_baselines, $baselines);
     }
 
-    public function testFindByProjectIgnoresBaselinesWhereBaseBaselineIsNotFound()
+    public function testFindByProjectIgnoresBaselinesWhereBaseBaselineIsNotFound(): void
     {
-        $this->db->allows()
-            ->safeQuery(Mockery::type('string'), [102, 10, 3])
-            ->andReturn(
+        $this->db->method('safeQuery')
+            ->with(self::isType('string'), [102, 10, 3])
+            ->willReturn(
                 [
                     [
                         "id"                      => 1,
@@ -386,32 +375,31 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->baseline_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 1)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $user = UserTestBuilder::aUser()->build();
-        $this->user_manager->allows()
-            ->getUserById(22)
-            ->andReturn($user);
-
+        $this->user_manager->method('getUserById')
+            ->with(22)
+            ->willReturn($user);
 
         $project = ProjectFactory::oneWithId(102);
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 
-        $this->assertEquals([], $baselines);
+        self::assertEquals([], $baselines);
     }
 
-    public function testCountByProject()
+    public function testCountByProject(): void
     {
         $project = ProjectFactory::oneWithId(102);
-        $this->db->allows()
-            ->single(Mockery::type('string'), [102])
-            ->andReturn(233);
+        $this->db->method('single')
+            ->with(self::isType('string'), [102])
+            ->willReturn(233);
 
         $count = $this->repository->countByProject($project);
 
-        $this->assertEquals(233, $count);
+        self::assertEquals(233, $count);
     }
 }

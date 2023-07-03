@@ -23,12 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
 use Tracker;
@@ -36,39 +32,37 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
-    /** @var ArtifactLinkRepository */
-    private $repository;
-
-    /** @var PlanningFactory|MockInterface */
-    private $planning_factory;
+    private ArtifactLinkRepository $repository;
+    private PlanningFactory&MockObject $planning_factory;
 
     /** @before */
-    protected function createInstance()
+    protected function createInstance(): void
     {
-        $this->planning_factory = Mockery::mock(PlanningFactory::class);
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
         $this->repository       = new ArtifactLinkRepository($this->planning_factory);
     }
 
-    /** @var Tracker_Artifact_Changeset|MockInterface */
-    protected $changeset;
+    protected Tracker_Artifact_Changeset&MockObject $changeset;
 
     /** @before */
     protected function createEntities(): void
     {
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset->allows(['getTracker->getGroupId' => 200]);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(200);
+
+        $this->changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->changeset->method('getTracker')->willReturn($tracker);
     }
 
-    public function testFindLinkedArtifactIds()
+    public function testFindLinkedArtifactIds(): void
     {
         $this->planning_factory
-            ->shouldReceive('getPlannings')
-            ->andReturn([]);
+            ->method('getPlannings')
+            ->willReturn([]);
 
         $artifact_link = $this->mockArtifactLink(
             $this->changeset,
@@ -80,52 +74,50 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
-            ->shouldReceive('getAnArtifactLinkField')
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getAnArtifactLinkField')
             ->with($this->current_tuleap_user)
-            ->andReturn($artifact_link)
-            ->getMock();
+            ->willReturn($artifact_link);
 
         $this->changeset
-            ->shouldReceive('getArtifact')
-            ->andReturn($artifact);
+            ->method('getArtifact')
+            ->willReturn($artifact);
 
         $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
-        $this->assertEquals([1, 2, 3], $artifact_ids);
+        self::assertEquals([1, 2, 3], $artifact_ids);
     }
 
-    public function testFindLinkedArtifactIdsReturnsEmptyArrayWhenNoLinkField()
+    public function testFindLinkedArtifactIdsReturnsEmptyArrayWhenNoLinkField(): void
     {
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class, ['getAnArtifactLinkField' => null]);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getAnArtifactLinkField')->willReturn(null);
         $this->changeset
-            ->shouldReceive('getArtifact')
-            ->andReturn($artifact);
+            ->method('getArtifact')
+            ->willReturn($artifact);
 
         $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
-        $this->assertEquals([], $artifact_ids);
+        self::assertEquals([], $artifact_ids);
     }
 
-    public function testFindLinkedArtifactIdsDoesNotReturnArtifactsOfMilestoneTrackers()
+    public function testFindLinkedArtifactIdsDoesNotReturnArtifactsOfMilestoneTrackers(): void
     {
-        $tracker = Mockery::mock(Tracker::class, ['getGroupId' => 200]);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn(200);
 
         $this->changeset
-            ->shouldReceive('getTracker')
-            ->andReturn($tracker);
+            ->method('getTracker')
+            ->willReturn($tracker);
+
+        $planning = $this->createMock(Planning::class);
+        $planning->method('getPlanningTrackerId')
+            ->willReturn(10);
 
         $this->planning_factory
-            ->shouldReceive('getPlannings')
+            ->method('getPlannings')
             ->with($this->current_tuleap_user, 200)
-            ->andReturn(
-                [
-                    Mockery::mock(Planning::class)
-                        ->shouldReceive('getPlanningTrackerId')
-                        ->andReturn(10)
-                        ->getMock(),
-                ]
-            );
+            ->willReturn([$planning]);
 
         $artifact_link = $this->mockArtifactLink(
             $this->changeset,
@@ -136,52 +128,44 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
-            ->shouldReceive('getAnArtifactLinkField')
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getAnArtifactLinkField')
             ->with($this->current_tuleap_user)
-            ->andReturn($artifact_link)
-            ->getMock();
+            ->willReturn($artifact_link);
 
         $this->changeset
-            ->shouldReceive('getArtifact')
-            ->andReturn($artifact);
+            ->method('getArtifact')
+            ->willReturn($artifact);
 
         $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
-        $this->assertEquals([2], $artifact_ids);
+        self::assertEquals([2], $artifact_ids);
     }
 
-    /**
-     * @return \Tuleap\Tracker\Artifact\Artifact|MockInterface
-     */
-    private function mockArtifactWithId(int $id): \Tuleap\Tracker\Artifact\Artifact
+    private function mockArtifactWithId(int $id): \Tuleap\Tracker\Artifact\Artifact&MockObject
     {
         return $this->mockArtifactWithIdAndTrackerId($id, 10);
     }
 
-    /**
-     * @return \Tuleap\Tracker\Artifact\Artifact|MockInterface
-     */
-    private function mockArtifactWithIdAndTrackerId(int $id, int $tracker_id): \Tuleap\Tracker\Artifact\Artifact
+    private function mockArtifactWithIdAndTrackerId(int $id, int $tracker_id): \Tuleap\Tracker\Artifact\Artifact&MockObject
     {
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->allows(['getId' => $id, 'getTrackerId' => $tracker_id]);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn($id);
+        $artifact->method('getTrackerId')->willReturn($tracker_id);
+
         return $artifact;
     }
 
-    /**
-     * @return Tracker_FormElement_Field_ArtifactLink|MockInterface
-     */
     private function mockArtifactLink(
         Tracker_Artifact_Changeset $changeset,
         PFUser $user,
         array $artifacts,
-    ): Tracker_FormElement_Field_ArtifactLink {
-        $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class)
-            ->shouldReceive('getLinkedArtifacts')
+    ): Tracker_FormElement_Field_ArtifactLink&MockObject {
+        $artifact_link = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link->method('getLinkedArtifacts')
             ->with($changeset, $user)
-            ->andReturn($artifacts)
-            ->getMock();
+            ->willReturn($artifacts);
+
         return $artifact_link;
     }
 }

@@ -65,6 +65,6 @@ class ArtifactHistory
             }
             $previous_change_set = $change_set;
         }
-        return $previous_change_set->getArtifact();
+        return $previous_change_set?->getArtifact();
     }
 }

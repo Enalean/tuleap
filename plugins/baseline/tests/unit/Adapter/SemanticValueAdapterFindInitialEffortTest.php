@@ -23,86 +23,80 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Mockery;
 use Tracker_FormElement_Field;
 
-class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTestCase
+final class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTestCase
 {
     public function testFindInitialEffort(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
-            ->shouldReceive('findInitialEffortByTracker')
+            ->method('findInitialEffortByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $this->changeset->shouldReceive('getValue')
+        $this->changeset->method('getValue')
             ->with($field)
-            ->andReturn($this->mockChangesetValue(5));
+            ->willReturn($this->mockChangesetValue(5));
 
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_tuleap_user);
 
-        $this->assertEquals(5, $title);
+        self::assertEquals(5, $title);
     }
 
     public function testFindInitialEffortReturnNullWhenNotAuthorized(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(false)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('userCanRead')->willReturn(false);
+
         $this->semantic_field_repository
-            ->shouldReceive('findInitialEffortByTracker')
+            ->method('findInitialEffortByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindInitialEffortReturnsNullWhenNoInitialEffortField(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
         $this->semantic_field_repository
-            ->shouldReceive('findInitialEffortByTracker')
+            ->method('findInitialEffortByTracker')
             ->with($this->tracker)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindInitialEffortReturnsNullWhenNoValueForGivenChangeset(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('userCanRead')->willReturn(false);
 
         $this->semantic_field_repository
-            ->shouldReceive('findInitialEffortByTracker')
+            ->method('findInitialEffortByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $this->changeset->shouldReceive('getValue')
+        $this->changeset->method('getValue')
             ->with($field)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 }

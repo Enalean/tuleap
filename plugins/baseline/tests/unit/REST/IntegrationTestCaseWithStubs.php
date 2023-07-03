@@ -26,9 +26,8 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/../bootstrap.php';
 
 use DI\Container;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineRepository;
@@ -53,7 +52,6 @@ use Tuleap\Baseline\Support\CurrentUserContext;
  */
 abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
     /** @var Container */
@@ -78,7 +76,7 @@ abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCas
     protected $clock;
 
     /** @before */
-    public function createContainer()
+    public function createContainer(): void
     {
         if ($this->container === null) {
             $this->container = $this->buildContainer();
@@ -112,7 +110,7 @@ abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCas
                     CurrentUserProvider::class        => $this->current_user_provider,
                     Authorizations::class             => new FullAccessAuthorizationsStub(),
                     Clock::class                      => $this->clock,
-                    LoggerInterface::class            => Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing(),
+                    LoggerInterface::class            => new NullLogger(),
                 ]
             )
             ->build();

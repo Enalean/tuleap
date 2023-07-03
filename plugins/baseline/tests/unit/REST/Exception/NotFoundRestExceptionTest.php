@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST\Exception;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-
-class NotFoundRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotFoundRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testNotFoundRestException()
+    public function testNotFoundRestException(): void
     {
         $this->expectExceptionCode(404);
 

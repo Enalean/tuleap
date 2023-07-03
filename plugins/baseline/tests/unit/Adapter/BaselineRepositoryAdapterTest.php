@@ -26,9 +26,6 @@ namespace Tuleap\Baseline\Adapter;
 require_once __DIR__ . '/../bootstrap.php';
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
@@ -40,38 +37,37 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
-class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var BaselineRepositoryAdapter */
     private $repository;
 
-    /** @var EasyDB|MockInterface */
+    /** @var EasyDB&\PHPUnit\Framework\MockObject\MockObject */
     private $db;
 
-    /** @var UserManager|MockInterface */
+    /** @var UserManager&\PHPUnit\Framework\MockObject\MockObject */
     private $user_manager;
 
-    /** @var BaselineArtifactRepository|MockInterface */
+    /** @var BaselineArtifactRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_artifact_repository;
 
-    /** @var Authorizations|MockInterface */
+    /** @var Authorizations&\PHPUnit\Framework\MockObject\MockObject */
     private $authorizations;
 
-    /** @var ClockAdapter|MockInterface */
+    /** @var ClockAdapter&\PHPUnit\Framework\MockObject\MockObject */
     private $clock;
     private UserIdentifier $current_user;
+    private \PFUser $user;
 
     /** @before */
-    public function createInstance()
+    public function createInstance(): void
     {
-        $this->db                           = Mockery::mock(EasyDB::class);
-        $this->user_manager                 = Mockery::mock(UserManager::class);
-        $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
-        $this->authorizations               = Mockery::mock(AuthorizationsImpl::class);
-        $this->clock                        = Mockery::mock(ClockAdapter::class);
-        $this->clock->allows(['at' => DateTimeFactory::one()]);
+        $this->db                           = $this->createMock(EasyDB::class);
+        $this->user_manager                 = $this->createMock(UserManager::class);
+        $this->baseline_artifact_repository = $this->createMock(BaselineArtifactRepository::class);
+        $this->authorizations               = $this->createMock(AuthorizationsImpl::class);
+        $this->clock                        = $this->createMock(ClockAdapter::class);
+        $this->clock->method('at')->willReturn(DateTimeFactory::one());
 
         $this->repository = new BaselineRepositoryAdapter(
             $this->db,
@@ -81,32 +77,31 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->clock
         );
 
-        $user               = UserTestBuilder::aUser()->build();
-        $this->current_user = UserProxy::fromUser($user);
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with($this->current_user->getId())
-            ->andReturn($user);
+        $this->user         = UserTestBuilder::aUser()->build();
+        $this->current_user = UserProxy::fromUser($this->user);
     }
 
-    public function testFindById()
+    public function testFindById(): void
     {
         $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 10)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
         $user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(22)
-            ->andReturn($user);
+            ->method('getUserById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user->getId(), $this->user],
+                [22, $user],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"            => 1,
@@ -118,51 +113,57 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->authorizations
-            ->allows(['canReadBaseline' => true]);
+        $this->authorizations->method('canReadBaseline')->willReturn(true);
 
         $baseline = $this->repository->findById($this->current_user, 1);
+
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
 
         $expected_baseline = new Baseline(
             1,
             "Persisted baseline",
             $artifact,
-            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+            $date,
             UserProxy::fromUser($user),
         );
-        $this->assertEquals($expected_baseline, $baseline);
+
+        self::assertEquals($expected_baseline, $baseline);
     }
 
-    public function testFindByIdReturnsNullWhenNotFound()
+    public function testFindByIdReturnsNullWhenNotFound(): void
     {
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn([]);
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn([]);
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        self::assertNull($baseline);
     }
 
-    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline()
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline(): void
     {
         $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 10)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
         $user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(22)
-            ->andReturn($user);
+            ->method('getUserById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user->getId(), $this->user],
+                [22, $user],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"            => 1,
@@ -174,31 +175,33 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->authorizations
-            ->allows(['canReadBaseline' => false]);
+        $this->authorizations->method('canReadBaseline')->willReturn(false);
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        self::assertNull($baseline);
     }
 
-    public function testFindByIdReturnsNullWhenBaselineArtifactIsNotFound()
+    public function testFindByIdReturnsNullWhenBaselineArtifactIsNotFound(): void
     {
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 10)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(22)
-            ->andReturn($user);
+            ->method('getUserById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user->getId(), $this->user],
+                [22, $user],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [1])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [1])
+            ->willReturn(
                 [
                     [
                         "id"            => 1,
@@ -212,27 +215,30 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        self::assertNull($baseline);
     }
 
-    public function testFindByProject()
+    public function testFindByProject(): void
     {
         $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 10)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
         $user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(22)
-            ->andReturn($user);
+            ->method('getUserById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user->getId(), $this->user],
+                [22, $user],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [102, 10, 3])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [102, 10, 3])
+            ->willReturn(
                 [
                     [
                         "id"            => 1,
@@ -247,36 +253,42 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectFactory::oneWithId(102);
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
+
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
 
         $expected_baselines = [
             new Baseline(
                 1,
                 "Persisted baseline",
                 $artifact,
-                DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+                $date,
                 UserProxy::fromUser($user),
             ),
         ];
         $this->assertEquals($expected_baselines, $baselines);
     }
 
-    public function testFindByProjectIgnoresBaselinesWhereArtifactIsNotFound()
+    public function testFindByProjectIgnoresBaselinesWhereArtifactIsNotFound(): void
     {
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 10)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(22)
-            ->andReturn($user);
+            ->method('getUserById')
+            ->with()
+            ->willReturnMap([
+                [$this->current_user->getId(), $this->user],
+                [22, $user],
+            ]);
 
         $this->db
-            ->shouldReceive('safeQuery')
-            ->with(Mockery::type('string'), [102, 10, 3])
-            ->andReturn(
+            ->method('safeQuery')
+            ->with(self::isType('string'), [102, 10, 3])
+            ->willReturn(
                 [
                     [
                         "id"            => 1,
@@ -292,19 +304,19 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 
-        $this->assertEquals([], $baselines);
+        self::assertEquals([], $baselines);
     }
 
-    public function testCountByProject()
+    public function testCountByProject(): void
     {
         $project = ProjectFactory::oneWithId(102);
         $this->db
-            ->shouldReceive('single')
-            ->with(Mockery::type('string'), [102])
-            ->andReturn(233);
+            ->method('single')
+            ->with(self::isType('string'), [102])
+            ->willReturn(233);
 
         $count = $this->repository->countByProject($project);
 
-        $this->assertEquals(233, $count);
+        self::assertEquals(233, $count);
     }
 }
