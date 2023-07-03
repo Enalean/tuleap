@@ -47,9 +47,9 @@ use UserManager;
 final class KanbanPresenter
 {
     public string $language;
-    /** @var string json of Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder */
+    /** @var string json of \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder */
     public string $kanban_representation;
-    /** @var string json of Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
+    /** @var string json of Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
     public string $dashboard_dropdown_representation;
     public int $user_is_kanban_admin;
     public int $project_id;
@@ -57,7 +57,7 @@ final class KanbanPresenter
     public string $view_mode;
     public int $widget_id;
     /**
-     * @var string json of \Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder
+     * @var string json of \Tuleap\Kanban\TrackerReport\TrackerReportBuilder
      */
     public string $tracker_reports;
     public string $kanban_url;

@@ -303,7 +303,6 @@ final class KanbanResource extends AuthenticatedResource
             $this->kanban_item_manager,
             $this->time_info_factory,
             UserManager::instance(),
-            \EventManager::instance(),
             $color_builder
         );
 

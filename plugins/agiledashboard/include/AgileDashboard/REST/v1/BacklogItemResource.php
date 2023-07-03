@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
-use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_PriorityDao;
@@ -431,7 +430,6 @@ class BacklogItemResource extends AuthenticatedResource
         return new BacklogItemRepresentationFactory(
             $color_builder,
             $this->user_manager,
-            EventManager::instance(),
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
     }

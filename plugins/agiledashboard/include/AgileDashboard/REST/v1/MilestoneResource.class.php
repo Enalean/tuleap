@@ -1240,7 +1240,6 @@ class MilestoneResource extends AuthenticatedResource
         return new BacklogItemRepresentationFactory(
             $color_builder,
             UserManager::instance(),
-            $this->event_manager,
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
     }

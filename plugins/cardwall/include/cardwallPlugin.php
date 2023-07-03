@@ -23,7 +23,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
@@ -115,7 +114,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
                 $this->addHook(MilestoneRepresentationBuilder::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
                 $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
-                $this->addHook(BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
                 $this->addHook(AgileDashboardPlugin::AGILEDASHBOARD_EVENT_REST_RESOURCES);
                 $this->addHook(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML);
             }
@@ -443,14 +441,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo "tuleap.cardwall = tuleap.cardwall || { };" . PHP_EOL;
         echo "tuleap.cardwall.base_url = '" . CARDWALL_BASE_URL . "/';" . PHP_EOL;
         echo PHP_EOL;
-    }
-
-    /**
-     * @see BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
-     */
-    public function agiledashboard_event_get_card_fields($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $parameters['card_fields_semantic'] = Cardwall_Semantic_CardFields::load($parameters['tracker']);
     }
 
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void

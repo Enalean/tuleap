@@ -22,11 +22,8 @@ namespace Tuleap\Kanban\REST\v1;
 
 use Tuleap\Kanban\KanbanItemManager;
 use Cardwall_Semantic_CardFields;
-use EventManager;
 use PFUser;
 use Tuleap\Kanban\ColumnIdentifier;
-use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
-use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
@@ -37,7 +34,6 @@ final class ItemRepresentationBuilder
         private readonly KanbanItemManager $kanban_item_manager,
         private readonly TimeInfoFactory $time_info_factory,
         private readonly UserManager $user_manager,
-        private readonly EventManager $event_manager,
         private readonly BackgroundColorBuilder $background_color_builder,
     ) {
     }
@@ -82,16 +78,12 @@ final class ItemRepresentationBuilder
         $current_user         = $this->user_manager->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($artifact);
 
-        $card_fields      = [];
-        $background_color = new BackgroundColor('');
-        if ($card_fields_semantic) {
-            $card_fields      = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
-            $background_color = $this->background_color_builder->build(
-                $card_fields_semantic,
-                $artifact,
-                $current_user
-            );
-        }
+        $card_fields      = $this->getCardFields($card_fields_semantic, $artifact, $current_user);
+        $background_color = $this->background_color_builder->build(
+            $card_fields_semantic,
+            $artifact,
+            $current_user
+        );
 
         return KanbanItemRepresentation::build(
             $artifact,
@@ -128,18 +120,8 @@ final class ItemRepresentationBuilder
         return $card_fields;
     }
 
-    private function getCardFieldsSemantic(Artifact $artifact): ?Cardwall_Semantic_CardFields
+    private function getCardFieldsSemantic(Artifact $artifact): Cardwall_Semantic_CardFields
     {
-        $card_fields_semantic = null;
-
-        $this->event_manager->processEvent(
-            BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
-            [
-                'tracker'              => $artifact->getTracker(),
-                'card_fields_semantic' => &$card_fields_semantic,
-            ]
-        );
-
-        return $card_fields_semantic;
+        return Cardwall_Semantic_CardFields::load($artifact->getTracker());
     }
 }
