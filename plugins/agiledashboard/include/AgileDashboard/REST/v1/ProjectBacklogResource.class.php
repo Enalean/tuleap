@@ -165,7 +165,6 @@ class ProjectBacklogResource
         $item_factory  = new BacklogItemRepresentationFactory(
             $color_builder,
             $user_manager,
-            $event_manager,
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
 

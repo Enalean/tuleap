@@ -125,7 +125,6 @@ final class KanbanItemsResource extends AuthenticatedResource
             new KanbanItemManager($kanban_item_dao),
             $this->time_info_factory,
             UserManager::instance(),
-            \EventManager::instance(),
             $color_builder
         );
     }

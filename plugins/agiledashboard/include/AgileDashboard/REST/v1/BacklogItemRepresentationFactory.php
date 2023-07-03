@@ -17,54 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_IBacklogItem;
 use Cardwall_Semantic_CardFields;
-use EventManager;
 use PFUser;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
-class BacklogItemRepresentationFactory
+final class BacklogItemRepresentationFactory
 {
-    /**
-     * Get backlog item tracker card fields semantic
-     *
-     * Parameters:
-     * 'tracker'              => The Tracker of the backlog item
-     * 'card_fields_semantic' => Tracker card fields semantic
-     */
-    public const AGILEDASHBOARD_EVENT_GET_CARD_FIELDS = 'agiledashboard_event_get_card_fields';
-
-    /** @var BackgroundColorBuilder */
-    private $background_color_builder;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var EventManager */
-    private $event_manager;
-    /**
-     * @var ProjectBackgroundConfiguration
-     */
-    private $project_background_configuration;
-
     public function __construct(
-        BackgroundColorBuilder $background_color_builder,
-        UserManager $user_manager,
-        EventManager $event_manager,
-        ProjectBackgroundConfiguration $project_background_configuration,
+        private readonly BackgroundColorBuilder $background_color_builder,
+        private readonly UserManager $user_manager,
+        private readonly ProjectBackgroundConfiguration $project_background_configuration,
     ) {
-        $this->background_color_builder         = $background_color_builder;
-        $this->user_manager                     = $user_manager;
-        $this->event_manager                    = $event_manager;
-        $this->project_background_configuration = $project_background_configuration;
     }
 
-    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): BacklogItemRepresentation
     {
         $artifact             = $backlog_item->getArtifact();
         $current_user         = $this->user_manager->getCurrentUser();
@@ -87,44 +61,34 @@ class BacklogItemRepresentationFactory
         return $backlog_item_representation;
     }
 
-    /**
-     * @return array
-     */
     private function getCardFields(
         Cardwall_Semantic_CardFields $card_fields_semantic,
         Artifact $artifact,
         PFUser $current_user,
-    ) {
+    ): array {
         $card_fields = [];
 
         foreach ($card_fields_semantic->getFields() as $field) {
-            if ($field->userCanRead($current_user)) {
-                $value = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+            if (! $field->userCanRead($current_user)) {
+                continue;
+            }
 
-                if ($value) {
-                    $card_fields[] = $value;
-                }
+            $changeset = $artifact->getLastChangeset();
+            if (! $changeset) {
+                continue;
+            }
+
+            $value = $field->getFullRESTValue($current_user, $changeset);
+            if ($value) {
+                $card_fields[] = $value;
             }
         }
 
         return $card_fields;
     }
 
-    /**
-     * @return Cardwall_Semantic_CardFields
-     */
-    private function getCardFieldsSemantic(Artifact $artifact)
+    private function getCardFieldsSemantic(Artifact $artifact): Cardwall_Semantic_CardFields
     {
-        $card_fields_semantic = null;
-
-        $this->event_manager->processEvent(
-            self::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
-            [
-                'tracker'              => $artifact->getTracker(),
-                'card_fields_semantic' => &$card_fields_semantic,
-            ]
-        );
-
-        return $card_fields_semantic;
+        return Cardwall_Semantic_CardFields::load($artifact->getTracker());
     }
 }

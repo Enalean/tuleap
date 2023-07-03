@@ -17,57 +17,50 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST\v2;
 
 use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use Cardwall_Semantic_CardFields;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use UserManager;
-use EventManager;
 
-class BacklogItemRepresentationFactory
+final class BacklogItemRepresentationFactory
 {
-    /**
-     * @var ProjectBackgroundConfiguration
-     */
-    private $project_background_configuration;
-
-    public function __construct(ProjectBackgroundConfiguration $project_background_configuration)
+    public function __construct(private readonly ProjectBackgroundConfiguration $project_background_configuration)
     {
-        $this->project_background_configuration = $project_background_configuration;
     }
 
-    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): BacklogItemRepresentation
     {
         return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item), $this->project_background_configuration);
     }
 
-    private function getBacklogItemCardFields($backlog_item)
+    private function getBacklogItemCardFields(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): array
     {
         $current_user         = UserManager::instance()->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
         $card_fields          = [];
 
         foreach ($card_fields_semantic->getFields() as $field) {
-            if ($field->userCanRead($current_user)) {
-                $card_fields[] = $field->getFullRESTValue($current_user, $backlog_item->getArtifact()->getLastChangeset());
+            if (! $field->userCanRead($current_user)) {
+                continue;
             }
+
+            $changeset = $backlog_item->getArtifact()->getLastChangeset();
+            if (! $changeset) {
+                continue;
+            }
+
+            $card_fields[] = $field->getFullRESTValue($current_user, $changeset);
         }
 
         return $card_fields;
     }
 
-    private function getCardFieldsSemantic($backlog_item)
+    private function getCardFieldsSemantic(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): Cardwall_Semantic_CardFields
     {
-        $card_fields_semantic = null;
-
-        EventManager::instance()->processEvent(
-            \Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
-            [
-                'tracker'              => $backlog_item->getArtifact()->getTracker(),
-                'card_fields_semantic' => &$card_fields_semantic,
-            ]
-        );
-
-        return $card_fields_semantic;
+        return Cardwall_Semantic_CardFields::load($backlog_item->getArtifact()->getTracker());
     }
 }
