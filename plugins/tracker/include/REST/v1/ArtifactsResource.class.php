@@ -75,9 +75,12 @@ use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
+use Tuleap\Tracker\Action\OpenListFieldsCompatibilityVerifier;
+use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
 use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\AreUserFieldsCompatibleVerifier;
+use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserListFieldVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
@@ -117,6 +120,7 @@ use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -154,6 +158,7 @@ use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\OpenListUserGroupsByDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -167,6 +172,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use UGroupManager;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
@@ -1218,6 +1224,8 @@ class ArtifactsResource extends AuthenticatedResource
             new IsPermissionsOnArtifactFieldVerifier(),
             new AreTherePermissionsToMigrateVerifier(),
             new CanPermissionsBeFullyMovedVerifier(),
+            new OpenListFieldVerifier(),
+            new OpenListFieldsCompatibilityVerifier(),
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);
@@ -1411,6 +1419,7 @@ class ArtifactsResource extends AuthenticatedResource
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
         $user_finder        = new XMLImportHelper($this->user_manager);
         $XML_updater        = new MoveChangesetXMLUpdater();
+        $cdata_factory      = new XML_SimpleXMLCDATAFactory();
 
         return new MegaMoverArtifactByDuckTyping(
             new ArtifactsDeletionManager(
@@ -1424,12 +1433,23 @@ class ArtifactsResource extends AuthenticatedResource
                 new BindValueForDuckTypingUpdater(
                     new FieldValueMatcher($user_finder),
                     $XML_updater,
-                    new XML_SimpleXMLCDATAFactory()
+                    $cdata_factory
                 ),
                 new PermissionsByDuckTypingUpdater(
                     new PermissionDuckTypingMatcher(),
                     $XML_updater
                 ),
+                new OpenListUserGroupsByDuckTypingUpdater(
+                    new BindUgroupsValueDao(),
+                    new BindUgroupsValueDao(),
+                    new UGroupManager(),
+                    new UGroupManager(),
+                    $XML_updater,
+                    $cdata_factory
+                ),
+                new OpenListFieldVerifier(),
+                new UserGroupOpenListFieldVerifier(),
+                new IsPermissionsOnArtifactFieldVerifier()
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

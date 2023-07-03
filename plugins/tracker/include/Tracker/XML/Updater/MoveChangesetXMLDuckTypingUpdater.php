@@ -26,6 +26,9 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Action\VerifyIsOpenListField;
+use Tuleap\Tracker\Action\VerifyIsPermissionsOnArtifactField;
+use Tuleap\Tracker\Action\VerifyIsUserGroupOpenListField;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLDuckTyping
@@ -34,6 +37,10 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
         private readonly MoveChangesetXMLUpdater $move_changeset_XML_updater,
         private readonly UpdateBindValueByDuckTyping $duck_typing_updater,
         private readonly UpdatePermissionsByDuckTyping $permissions_by_duck_typing,
+        private readonly UpdateOpenListUserGroupsByDuckTyping $update_open_list_user_groups_by_duck_typing,
+        private readonly VerifyIsOpenListField $verify_is_open_list_field,
+        private readonly VerifyIsUserGroupOpenListField $verify_is_user_group_open_list_field,
+        private readonly VerifyIsPermissionsOnArtifactField $verify_is_permissions_on_artifact_field,
     ) {
     }
 
@@ -143,12 +150,28 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 continue;
             }
 
-            if ($source_field instanceof \Tracker_FormElement_Field_List && $target_field instanceof \Tracker_FormElement_Field_List) {
+            if (
+                ! ($this->verify_is_open_list_field->isAnOpenListField($source_field) && $this->verify_is_open_list_field->isAnOpenListField($target_field))
+                && ($source_field instanceof \Tracker_FormElement_Field_List && $target_field instanceof \Tracker_FormElement_Field_List)
+            ) {
                 $this->duck_typing_updater->updateValueForDuckTypingMove($changeset_xml, $source_field, $target_field, $index);
             }
 
-            if ($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact && $target_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact) {
+            if (
+                $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($source_field)
+                && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($target_field)
+            ) {
+                assert($target_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
                 $this->permissions_by_duck_typing->updatePermissionsForDuckTypingMove($changeset_xml, $target_field, $index);
+            }
+
+            if (
+                $this->verify_is_user_group_open_list_field->isUserGroupOpenListField($source_field)
+                && $this->verify_is_user_group_open_list_field->isUserGroupOpenListField($target_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
+                assert($target_field instanceof \Tracker_FormElement_Field_OpenList);
+                $this->update_open_list_user_groups_by_duck_typing->updateUserGroupsForDuckTypingMove($changeset_xml, $source_field, $target_field, $index);
             }
 
             $this->move_changeset_XML_updater->useTargetTrackerFieldName($changeset_xml, $target_field, $index);

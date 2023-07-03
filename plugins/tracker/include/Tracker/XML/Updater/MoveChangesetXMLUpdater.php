@@ -25,7 +25,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 
-class MoveChangesetXMLUpdater
+final class MoveChangesetXMLUpdater
 {
     public function isChangesetNodeDeletable(SimpleXMLElement $artifact_xml, $index): bool
     {
