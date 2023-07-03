@@ -123,6 +123,25 @@ final class DeleteSourceControllerTest extends TestCase
         self::assertCount(1, $this->serializer->getCapturedFeedbacks());
     }
 
+    public function testItReturns200WithSuperUser(): void
+    {
+        $user         = UserTestBuilder::buildSiteAdministrator();
+        $user_manager = ProvideCurrentUserStub::buildWithUser($user);
+        $source       = (new PasskeyStub())->getCredentialSource('106');
+
+        $response = $this->handle(
+            $user_manager,
+            WebAuthnCredentialSourceDaoStub::withoutCredentialSources()->withRealSource($source),
+            [
+                'key_id' => Base64UrlSafe::encode($source->getPublicKeyCredentialId()),
+                'csrf_token' => 'some token',
+            ]
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertCount(1, $this->serializer->getCapturedFeedbacks());
+    }
+
     private function handle(
         ProvideCurrentUser $provide_current_user,
         GetCredentialSourceById&DeleteCredentialSource $source_dao,

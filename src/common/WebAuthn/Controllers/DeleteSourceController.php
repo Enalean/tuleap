@@ -98,7 +98,7 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
         return $this->source_dao->getCredentialSourceById($key_id)
             ->mapOr(
                 function (WebAuthnCredentialSource $source) use ($current_user, $key_id) {
-                    if ($source->getSource()->getUserHandle() !== (string) $current_user->getId()) {
+                    if ($source->getSource()->getUserHandle() !== (string) $current_user->getId() && ! $current_user->isSuperUser()) {
                         return $this->response_factory->createResponse(200);
                     }
 
