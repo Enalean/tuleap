@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
@@ -373,7 +374,7 @@ class AgileDashboardRouter
                     $request,
                     $this->kanban_factory,
                     TrackerFactory::instance(),
-                    new AgileDashboard_PermissionsManager(),
+                    new KanbanPermissionsManager(),
                     $this->service_crumb_builder,
                     new BreadCrumbBuilder($tracker_factory, $this->kanban_factory),
                     new RecentlyVisitedKanbanDao()

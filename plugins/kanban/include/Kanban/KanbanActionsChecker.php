@@ -22,21 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use AgileDashboard_PermissionsManager;
 use PFUser;
 use Tracker;
-use Tracker_FormElementFactory;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
-use TrackerFactory;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 
 class KanbanActionsChecker
 {
     public function __construct(
-        private readonly TrackerFactory $tracker_factory,
-        private readonly AgileDashboard_PermissionsManager $permissions_manager,
-        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly RetrieveTracker $tracker_factory,
+        private readonly KanbanPermissionsManager $permissions_manager,
+        private readonly RetrieveUsedFields $form_element_factory,
         private readonly VerifySubmissionPermissions $verify_submission_permissions,
     ) {
     }
@@ -116,7 +115,7 @@ class KanbanActionsChecker
     {
         $tracker = $this->getTrackerForKanban($kanban);
 
-        if (! $this->permissions_manager->userCanAdministrate($user, $tracker->getProject()->getId())) {
+        if (! $this->permissions_manager->userCanAdministrate($user, $tracker->getProject())) {
             throw new KanbanUserNotAdminException($user);
         }
     }

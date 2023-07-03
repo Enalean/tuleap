@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanURL;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanColumnManager;
@@ -690,7 +691,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $widget_kanban_config_dao
         );
 
-        $permission_manager = new AgileDashboard_PermissionsManager();
+        $permission_manager = new KanbanPermissionsManager();
         $kanban_factory     = $this->getKanbanFactory();
 
         $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
@@ -1492,7 +1493,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new BindStaticValueDao(),
             new KanbanActionsChecker(
                 $this->getTrackerFactory(),
-                new AgileDashboard_PermissionsManager(),
+                new KanbanPermissionsManager(),
                 $this->getFormElementFactory(),
                 \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
             )

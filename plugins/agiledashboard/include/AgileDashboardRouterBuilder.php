@@ -43,6 +43,7 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanFactory;
@@ -231,7 +232,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $tracker_new_dropdown_link_presenter_builder,
                 new KanbanActionsChecker(
                     $tracker_factory,
-                    new AgileDashboard_PermissionsManager(),
+                    new KanbanPermissionsManager(),
                     Tracker_FormElementFactory::instance(),
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )

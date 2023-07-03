@@ -20,7 +20,6 @@
 
 namespace Tuleap\Kanban;
 
-use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use Feedback;
 use Project;
@@ -38,7 +37,7 @@ final class ShowKanbanController extends BaseController
         Codendi_Request $request,
         private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
-        private readonly AgileDashboard_PermissionsManager $permissions_manager,
+        private readonly KanbanPermissionsManager $permissions_manager,
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
@@ -90,7 +89,7 @@ final class ShowKanbanController extends BaseController
 
             $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
                 $user,
-                $tracker->getGroupId()
+                $tracker->getProject()
             );
 
             $filter_tracker_report_id = (int) $this->request->get('tracker_report_id');
