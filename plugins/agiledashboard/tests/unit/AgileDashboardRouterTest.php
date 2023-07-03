@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -71,7 +72,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 $this->milestone_controller_factory,
                 Mockery::mock(ProjectManager::class),
                 Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
-                Mockery::mock(AgileDashboard_KanbanManager::class),
+                Mockery::mock(KanbanManager::class),
                 Mockery::mock(AgileDashboard_ConfigurationManager::class),
                 Mockery::mock(KanbanFactory::class),
                 Mockery::mock(PlanningPermissionsManager::class),

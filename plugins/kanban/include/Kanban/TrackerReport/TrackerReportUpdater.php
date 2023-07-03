@@ -22,29 +22,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
+declare(strict_types=1);
+
+namespace Tuleap\Kanban\TrackerReport;
 
 use Tuleap\Kanban\Kanban;
 use Tracker_Report;
 
 class TrackerReportUpdater
 {
-    /**
-     * @var TrackerReportDao
-     */
-    private $dao;
-
-    public function __construct(TrackerReportDao $dao)
+    public function __construct(private readonly TrackerReportDao $dao)
     {
-        $this->dao = $dao;
     }
 
-    public function save(Kanban $kanban, array $tracker_report_ids)
+    public function save(Kanban $kanban, array $tracker_report_ids): void
     {
         $this->dao->save($kanban->getId(), $tracker_report_ids);
     }
 
-    public function deleteAllForReport(Tracker_Report $report)
+    public function deleteAllForReport(Tracker_Report $report): void
     {
         $this->dao->deleteAllForReport($report->getId());
     }

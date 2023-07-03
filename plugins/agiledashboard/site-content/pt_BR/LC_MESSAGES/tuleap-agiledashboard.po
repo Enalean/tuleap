@@ -20,10 +20,6 @@ msgid "%1$s backlog"
 msgstr ""
 
 #, php-format
-msgid "%s Kanban"
-msgstr ""
-
-#, php-format
 msgid "%s top backlog"
 msgstr ""
 
@@ -37,16 +33,8 @@ msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
 msgstr ""
 
 msgid ""
-"A first Kanban will be created during the activation. This operation can "
-"take a few seconds."
-msgstr ""
-
-msgid ""
 "A first scrum configuration will be used during the activation. This "
 "operation can take a few seconds."
-msgstr ""
-
-msgid "Activate Kanban"
 msgstr ""
 
 msgid "Activate Scrum"
@@ -274,12 +262,6 @@ msgid "Kanban board"
 msgstr ""
 
 msgid "Kanban cards"
-msgstr ""
-
-msgid "Kanban is currently active."
-msgstr ""
-
-msgid "Kanban is not currently active."
 msgstr ""
 
 msgid "Kanban name:"
@@ -591,21 +573,7 @@ msgstr ""
 msgid "View Planning"
 msgstr ""
 
-#, php-format
-msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
-msgstr ""
-
 msgid "We created an initial scrum configuration for you. Enjoy!"
-msgstr ""
-
-#, php-format
-msgid ""
-"We tried to create a first kanban for you but an existing tracker (%1$s) "
-"prevented it."
-msgstr ""
-
-msgid ""
-"We tried to create a first kanban for you but an internal error prevented it."
 msgstr ""
 
 #, php-format

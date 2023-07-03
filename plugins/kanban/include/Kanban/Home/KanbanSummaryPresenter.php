@@ -53,11 +53,11 @@ final class KanbanSummaryPresenter
 
     public function open(): string
     {
-        return dgettext('tuleap-agiledashboard', 'open');
+        return dgettext('tuleap-kanban', 'open');
     }
 
     public function closed(): string
     {
-        return dgettext('tuleap-agiledashboard', 'closed');
+        return dgettext('tuleap-kanban', 'closed');
     }
 }

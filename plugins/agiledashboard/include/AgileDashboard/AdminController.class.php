@@ -20,15 +20,15 @@
 
 namespace Tuleap\AgileDashboard;
 
-use AdminKanbanPresenter;
+use Tuleap\Kanban\AdminKanbanPresenter;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
-use AgileDashboard_FirstKanbanCreator;
+use Tuleap\Kanban\FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
 use Tuleap\Kanban\KanbanFactory;
-use AgileDashboard_KanbanManager;
+use Tuleap\Kanban\KanbanManager;
 use AgileDashboardConfigurationResponse;
-use AgileDashboardKanbanConfigurationUpdater;
+use Tuleap\Kanban\KanbanConfigurationUpdater;
 use AgileDashboardScrumConfigurationUpdater;
 use Codendi_Request;
 use CSRFSynchronizerToken;
@@ -54,8 +54,8 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
@@ -78,7 +78,7 @@ class AdminController extends BaseController
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var AgileDashboard_KanbanManager */
+    /** @var KanbanManager */
     private $kanban_manager;
 
     /** @var AgileDashboard_ConfigurationManager */
@@ -116,7 +116,7 @@ class AdminController extends BaseController
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
-        AgileDashboard_KanbanManager $kanban_manager,
+        KanbanManager $kanban_manager,
         KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory,
@@ -241,11 +241,11 @@ class AdminController extends BaseController
         );
 
         if ($this->request->exist('activate-kanban')) {
-            $updater = new AgileDashboardKanbanConfigurationUpdater(
+            $updater = new KanbanConfigurationUpdater(
                 $this->request,
                 $this->config_manager,
                 $response,
-                new AgileDashboard_FirstKanbanCreator(
+                new FirstKanbanCreator(
                     $this->request->getProject(),
                     $this->kanban_manager,
                     $this->tracker_factory,

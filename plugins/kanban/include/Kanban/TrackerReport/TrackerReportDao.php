@@ -22,83 +22,67 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
+declare(strict_types=1);
 
-use DataAccessObject;
-use Exception;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+namespace Tuleap\Kanban\TrackerReport;
 
-class TrackerReportDao extends DataAccessObject
+use Tuleap\DB\DataAccessObject;
+
+final class TrackerReportDao extends DataAccessObject
 {
-    public function __construct(?LegacyDataAccessInterface $da = null)
+    public function save(int $kanban_id, array $tracker_report_ids): void
     {
-        parent::__construct($da);
-
-        $this->enableExceptionsOnError();
-    }
-
-    public function save($kanban_id, array $tracker_report_ids)
-    {
-        $this->startTransaction();
-
-        try {
+        $this->getDB()->tryFlatTransaction(function () use ($kanban_id, $tracker_report_ids) {
             $this->deleteAllForKanban($kanban_id);
+
             if (count($tracker_report_ids) > 0) {
                 $this->addForKanban($kanban_id, $tracker_report_ids);
             }
-
-            $this->commit();
-        } catch (Exception $exception) {
-            $this->rollBack();
-            throw $exception;
-        }
+        });
     }
 
-    private function deleteAllForKanban($kanban_id)
+    private function deleteAllForKanban(int $kanban_id): void
     {
-        $kanban_id = $this->da->escapeInt($kanban_id);
-
         $sql = "DELETE FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE kanban_id = $kanban_id";
+                WHERE kanban_id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $kanban_id);
     }
 
-    private function addForKanban($kanban_id, array $tracker_report_ids)
+    private function addForKanban(int $kanban_id, array $tracker_report_ids): void
     {
-        $kanban_id = $this->da->escapeInt($kanban_id);
-        $values    = [];
+        $values     = [];
+        $parameters = [];
         foreach ($tracker_report_ids as $report_id) {
-            $report_id = $this->da->escapeInt($report_id);
-
-            $values[] = "($kanban_id, $report_id)";
+            $values[]     = "(?, ?)";
+            $parameters[] = $kanban_id;
+            $parameters[] = $report_id;
         }
 
         $values_statement = implode(',', $values);
 
         $sql = "REPLACE INTO plugin_agiledashboard_kanban_tracker_reports (kanban_id, report_id)
                 VALUES $values_statement";
-        return $this->update($sql);
+        $this->getDB()->run($sql, ...$parameters);
     }
 
-    public function deleteAllForReport($report_id)
+    public function deleteAllForReport(int $report_id): void
     {
-        $report_id = $this->da->escapeInt($report_id);
-
         $sql = "DELETE FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE report_id = $report_id";
+                WHERE report_id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $report_id);
     }
 
-    public function searchReportIdsForKanban($kanban_id)
+    /**
+     * @return int[]
+     */
+    public function searchReportIdsForKanban(int $kanban_id): array
     {
-        $kanban_id = $this->da->escapeInt($kanban_id);
-
         $sql = "SELECT report_id as id
                 FROM plugin_agiledashboard_kanban_tracker_reports
-                WHERE kanban_id = $kanban_id";
+                WHERE kanban_id = ?";
 
-        return $this->retrieveIds($sql);
+        return $this->getDB()->column($sql, [$kanban_id]);
     }
 }

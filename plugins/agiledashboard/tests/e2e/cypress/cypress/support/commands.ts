@@ -25,8 +25,6 @@ declare global {
         // Be consistent with Cypress declaration
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
-            dragAndDrop(source: string, destination: string, position: string): void;
-
             searchItemInLazyboxDropdown(
                 query: string,
                 dropdown_item_label: string
@@ -40,13 +38,6 @@ declare global {
 }
 
 const LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
-
-Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(source).trigger("mousedown", { which: 1 });
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
-});
 
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
     cy.get("[data-test=lazybox]").click();

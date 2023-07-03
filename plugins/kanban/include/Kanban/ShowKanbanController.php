@@ -27,7 +27,6 @@ use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
@@ -44,7 +43,7 @@ final class ShowKanbanController extends BaseController
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
     ) {
-        parent::__construct('agiledashboard', $request);
+        parent::__construct('kanban', $request);
 
         $this->project = $this->request->getProject();
     }
@@ -112,7 +111,7 @@ final class ShowKanbanController extends BaseController
         } catch (KanbanNotFoundException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'Kanban not found.')
+                dgettext('tuleap-kanban', 'Kanban not found.')
             );
         } catch (KanbanCannotAccessException $exception) {
             $GLOBALS['Response']->addFeedback(

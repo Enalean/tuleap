@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Kanban\TrackerReport;
+declare(strict_types=1);
+
+namespace Tuleap\Kanban\TrackerReport;
 
 use Tracker;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\ColumnIdentifier;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class ReportFilterFromWhereBuilder
+final class ReportFilterFromWhereBuilder
 {
     public function getFromWhere(Tracker $kanban_tracker, ColumnIdentifier $column_identifier): IProvideParametrizedFromAndWhereSQLFragments
     {

@@ -23,7 +23,7 @@ namespace Tuleap\Kanban\RealTime;
 use Tuleap\Kanban\KanbanItemDao;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\ColumnIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 

@@ -72,7 +72,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
             }
 
             return new NewDropdownLinkSectionPresenter(
-                dgettext("tuleap-agiledashboard", "Kanban"),
+                dgettext("tuleap-kanban", "Kanban"),
                 [
                     $this->presenter_builder->build($tracker),
                 ],

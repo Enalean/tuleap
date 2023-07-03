@@ -51,7 +51,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
-use Tuleap\AgileDashboard\Kanban\KanbanURL;
+use Tuleap\Kanban\KanbanURL;
+use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanColumnFactory;
 use Tuleap\Kanban\KanbanActionsChecker;
@@ -72,8 +73,8 @@ use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageSenderMercure;
 use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
@@ -1104,11 +1105,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @return AgileDashboard_KanbanManager
+     * @return KanbanManager
      */
     private function getKanbanManager()
     {
-        return new AgileDashboard_KanbanManager(
+        return new KanbanManager(
             new KanbanDao(),
             $this->getTrackerFactory()
         );
@@ -1682,7 +1683,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function trackerCrumbInContext(TrackerCrumbInContext $crumb)
     {
-        (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
+        (new \Tuleap\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 
     public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
@@ -2084,7 +2085,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
-        $collection->add(__DIR__ . '/../resources/templates/Tracker_activity.xml');
+        $collection->add(__DIR__ . '/../../kanban/resources/templates/Tracker_activity.xml');
     }
 
     private function getExplicitBacklogConfigurationUpdater(): ConfigurationUpdater

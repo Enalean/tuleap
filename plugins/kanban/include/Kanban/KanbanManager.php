@@ -19,26 +19,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Kanban\KanbanDao;
+declare(strict_types=1);
 
-class AgileDashboard_KanbanManager
+namespace Tuleap\Kanban;
+
+use PFUser;
+use Project;
+use Tracker;
+use TrackerFactory;
+
+class KanbanManager
 {
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var KanbanDao
-     */
-    private $dao;
-
     public function __construct(
-        KanbanDao $dao,
-        TrackerFactory $tracker_factory,
+        private readonly KanbanDao $dao,
+        private readonly TrackerFactory $tracker_factory,
     ) {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker): bool
@@ -46,7 +41,7 @@ class AgileDashboard_KanbanManager
         return $this->dao->getKanbanByTrackerId($tracker->getId()) !== null;
     }
 
-    public function createKanban($kanban_name, $tracker_id): int
+    public function createKanban(string $kanban_name, int $tracker_id): int
     {
         return $this->dao->create($kanban_name, $tracker_id);
     }
@@ -56,7 +51,7 @@ class AgileDashboard_KanbanManager
         $this->dao->duplicateKanbans($tracker_mapping, $field_mapping, $report_mapping);
     }
 
-    public function getTrackersWithKanbanUsage($project_id, PFUser $user): array
+    public function getTrackersWithKanbanUsage(int $project_id, PFUser $user): array
     {
         $trackers     = [];
         $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
