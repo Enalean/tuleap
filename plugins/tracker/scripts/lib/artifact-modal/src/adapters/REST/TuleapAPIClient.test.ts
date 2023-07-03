@@ -59,6 +59,7 @@ import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStu
 import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
 import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
+import { ProjectStub } from "../../../tests/stubs/ProjectStub";
 
 const ARTIFACT_ID = 90;
 const ARTIFACT_2_ID = 10;
@@ -183,11 +184,11 @@ describe(`TuleapAPIClient`, () => {
         it(`will return an array of linked artifacts`, async () => {
             const first_artifact = {
                 id: FIRST_LINKED_ARTIFACT_ID,
-                tracker: { color_name: "army-green" },
+                tracker: { color_name: "army-green", project: ProjectStub.withDefaults() },
             } as ArtifactWithStatus;
             const second_artifact = {
                 id: SECOND_LINKED_ARTIFACT_ID,
-                tracker: { color_name: "chrome-silver" },
+                tracker: { color_name: "chrome-silver", project: ProjectStub.withDefaults() },
             } as ArtifactWithStatus;
 
             const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");

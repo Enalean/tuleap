@@ -21,6 +21,7 @@ import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { Identifier } from "../../Identifier";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 import type { LinkType } from "./LinkType";
+import type { Project } from "../../Project";
 
 // I identify an artifact linked to the current artifact under edition
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
@@ -38,6 +39,7 @@ export interface LinkedArtifact {
     readonly status: Status | null;
     readonly is_open: boolean;
     readonly link_type: LinkType;
+    readonly project: Project;
 }
 
 export const LinkedArtifact = {
