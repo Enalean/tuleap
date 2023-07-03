@@ -33,7 +33,7 @@ use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanUserPreferences;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanUserNotAdminException;
-use AgileDashboardStatisticsAggregator;
+use Tuleap\Kanban\KanbanStatisticsAggregator;
 use BackendLogger;
 use DateTime;
 use DateTimeImmutable;
@@ -180,7 +180,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var KanbanUserPreferences */
     private $user_preferences;
 
-    /** @var AgileDashboardStatisticsAggregator */
+    /** @var KanbanStatisticsAggregator */
     private $statistics_aggregator;
     /** @var KanbanColumnManager */
     private $kanban_column_manager;
@@ -277,7 +277,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->kanban_actions_checker
         );
 
-        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
+        $this->statistics_aggregator = new KanbanStatisticsAggregator(EventManager::instance());
 
         $this->node_js_client            = new NodeJSClient(
             HttpClientFactory::createClientForInternalTuleapUse(),

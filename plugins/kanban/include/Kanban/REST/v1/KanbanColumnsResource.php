@@ -19,6 +19,7 @@
 
 namespace Tuleap\Kanban\REST\v1;
 
+use EventManager;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
@@ -41,7 +42,7 @@ use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanColumnNotFoundException;
 use Tuleap\Kanban\KanbanUserNotAdminException;
 use Tuleap\Kanban\KanbanColumnNotRemovableException;
-use AgileDashboardStatisticsAggregator;
+use Tuleap\Kanban\KanbanStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -71,7 +72,7 @@ class KanbanColumnsResource
     /** @var KanbanColumnManager */
     private $kanban_column_manager;
 
-    /** @var AgileDashboardStatisticsAggregator */
+    /** @var KanbanStatisticsAggregator */
     private $statistics_aggregator;
 
     /** @var TrackerFactory */
@@ -115,7 +116,7 @@ class KanbanColumnsResource
             )
         );
 
-        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
+        $this->statistics_aggregator = new KanbanStatisticsAggregator(EventManager::instance());
 
         $this->node_js_client         = new NodeJSClient(
             HttpClientFactory::createClientForInternalTuleapUse(),

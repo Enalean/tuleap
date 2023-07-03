@@ -26,7 +26,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\KanbanItemManager;
 use Tuleap\Kanban\KanbanNotFoundException;
-use AgileDashboardStatisticsAggregator;
+use Tuleap\Kanban\KanbanStatisticsAggregator;
 use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -98,7 +98,7 @@ final class KanbanItemsResource extends AuthenticatedResource
     /** @var TimeInfoFactory */
     private $time_info_factory;
 
-    /** @var AgileDashboardStatisticsAggregator */
+    /** @var KanbanStatisticsAggregator */
     private $statistics_aggregator;
 
     /**
@@ -119,7 +119,7 @@ final class KanbanItemsResource extends AuthenticatedResource
 
         $kanban_item_dao                   = new KanbanItemDao();
         $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
-        $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
+        $this->statistics_aggregator       = new KanbanStatisticsAggregator(EventManager::instance());
         $color_builder                     = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $this->item_representation_builder = new ItemRepresentationBuilder(
             new KanbanItemManager($kanban_item_dao),
@@ -259,7 +259,7 @@ final class KanbanItemsResource extends AuthenticatedResource
         }
 
         $this->statistics_aggregator->addKanbanAddInPlaceHit(
-            $tracker->getGroupId()
+            (int) $tracker->getGroupId()
         );
 
         $item_representation = $this->item_representation_builder->buildItemRepresentation($artifact);
