@@ -165,15 +165,6 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public final const TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
 
-    /**
-     * Getting informations from agile dashboard plugin about the tracker affilitaion to an agile dashboard
-     *
-     * Parameters:
-     *  'cannot_configure_instantiate_for_new_projects' Boolean
-     *  'tracker'                                       Tracker
-     */
-    public final const TRACKER_EVENT_GENERAL_SETTINGS = 'tracker_event_general_settings';
-
     public $id;
     public $group_id;
     public $name;
@@ -1404,9 +1395,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $this->displayWarningGeneralsettings();
         $this->displayAdminItemHeader($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
-        $cannot_configure_instantiate_for_new_projects = false;
-        $params                                        = ['cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker' => $this];
-        EventManager::instance()->processEvent(self::TRACKER_EVENT_GENERAL_SETTINGS, $params);
+        $general_settings = EventManager::instance()->dispatch(new \Tuleap\Tracker\Config\GeneralSettingsEvent($this));
         $this->renderer->renderToPage(
             'tracker-general-settings',
             new Tracker_GeneralSettings_Presenter(
@@ -1415,7 +1404,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new Tracker_ColorPresenterCollection($this),
                 $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus(),
-                $cannot_configure_instantiate_for_new_projects,
+                $general_settings->cannot_configure_instantiate_for_new_projects,
             )
         );
 
@@ -1604,12 +1593,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             return;
         }
 
-        $cannot_configure_instantiate_for_new_projects = false;
-        $params                                        = [
-            'cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects,
-            'tracker'                                       => $this,
-        ];
-        EventManager::instance()->processEvent(self::TRACKER_EVENT_GENERAL_SETTINGS, $params);
+        $general_settings                              = EventManager::instance()->dispatch(new \Tuleap\Tracker\Config\GeneralSettingsEvent($this));
+        $cannot_configure_instantiate_for_new_projects = $general_settings->cannot_configure_instantiate_for_new_projects;
 
         $this->name            = $validated_public_name;
         $request_tracker_color = $validated_tracker_color;
