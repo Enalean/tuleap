@@ -35,14 +35,14 @@ use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 {
     private Artifact $artifact;
-    private Stub & Tracker_FormElement_Field_List $target_list_field;
+    private Stub & Tracker_FormElement_Field_List $destination_list_field;
     private Stub & Tracker_FormElement_Field_List $source_list_field;
 
     protected function setUp(): void
     {
-        $this->source_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->target_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->artifact          = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->source_list_field      = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->destination_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->artifact               = ArtifactTestBuilder::anArtifact(1)->build();
     }
 
     public function testFieldIsPartiallyMovedWhenValueDoesNotExistsInDestinationTracker(): void
@@ -53,7 +53,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 
         $this->source_list_field->expects(self::once())->method("getLastChangesetValue")->with($this->artifact)->willReturn($last_changeset_value);
         $verifier = new CanStaticFieldValuesBeFullyMovedVerifier(RetrieveMatchingBindValueByDuckTypingStub::withoutMatchingBindValue());
-        $this->assertFalse($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->target_list_field, $this->artifact));
+        $this->assertFalse($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->destination_list_field, $this->artifact));
     }
 
     public function testFieldCanBeFullyMovedWhenValueIsFoundInDestinationTracker(): void
@@ -66,6 +66,6 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
         $bind     = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'my value', '', 1, false);
         $verifier = new CanStaticFieldValuesBeFullyMovedVerifier(RetrieveMatchingBindValueByDuckTypingStub::withMatchingBindValue($bind));
 
-        $this->assertTrue($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->target_list_field, $this->artifact));
+        $this->assertTrue($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->destination_list_field, $this->artifact));
     }
 }

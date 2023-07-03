@@ -32,7 +32,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
 
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $target_field,
+        Tracker_FormElement_Field_List $destination_field,
         int $source_value_id,
     ): ?int {
         if (! $source_value_id || $source_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
@@ -51,27 +51,27 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
         if ($source_value === null || is_array($source_value)) {
             return null;
         }
-        $target_value = $this->getMatchingBindValueByDuckTyping($source_value, $target_field);
-        return ($target_value !== null) ? $target_value->getId() : null;
+        $destination_value = $this->getMatchingBindValueByDuckTyping($source_value, $destination_field);
+        return ($destination_value !== null) ? $destination_value->getId() : null;
     }
 
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
     ): ?\Tracker_FormElement_Field_List_BindValue {
         $source_value_label = strtolower($source_value->getLabel());
-        foreach ($target_field->getBind()->getAllValues() as $target_value) {
-            if ($source_value_label === strtolower($target_value->getLabel())) {
-                return $target_value;
+        foreach ($destination_field->getBind()->getAllValues() as $destination_value) {
+            if ($source_value_label === strtolower($destination_value->getLabel())) {
+                return $destination_value;
             }
         }
         return null;
     }
 
-    public function isSourceUserValueMatchingATargetUserValue(Tracker_FormElement_Field_List $target_contributor_field, SimpleXMLElement $value): bool
+    public function isSourceUserValueMatchingADestinationUserValue(Tracker_FormElement_Field_List $destination_contributor_field, SimpleXMLElement $value): bool
     {
         $user = $this->user_finder->getUser($value);
 
-        return ! $user->isAnonymous() && $target_contributor_field->checkValueExists((string) $user->getId());
+        return ! $user->isAnonymous() && $destination_contributor_field->checkValueExists((string) $user->getId());
     }
 }

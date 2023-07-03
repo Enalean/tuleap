@@ -46,7 +46,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
     public function __construct(
         private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
-        private readonly RetrieveUsedFields $retrieve_target_tracker_used_fields,
+        private readonly RetrieveUsedFields $retrieve_destination_tracker_used_fields,
         private readonly VerifyFieldCanBeEasilyMigrated $verify_field_can_be_easily_migrated,
         private readonly VerifyIsStaticListField $verify_is_static_list_field,
         private readonly VerifyListFieldsAreCompatible $verify_list_fields_are_compatible,
@@ -63,68 +63,68 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     ) {
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $target_tracker, Artifact $artifact): DuckTypedMoveFieldCollection
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact): DuckTypedMoveFieldCollection
     {
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
-            $target_field = $this->retrieve_target_tracker_used_fields->getUsedFieldByName($target_tracker->getId(), $source_field->getName());
-            if ($target_field === null) {
+            $destination_field = $this->retrieve_destination_tracker_used_fields->getUsedFieldByName($destination_tracker->getId(), $source_field->getName());
+            if ($destination_field === null) {
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
 
-            if ($this->verify_field_can_be_easily_migrated->canFieldBeEasilyMigrated($target_field, $source_field)) {
-                $this->addFieldToMigrateableList($source_field, $target_field);
+            if ($this->verify_field_can_be_easily_migrated->canFieldBeEasilyMigrated($source_field, $destination_field)) {
+                $this->addFieldToMigrateableList($source_field, $destination_field);
 
                 continue;
             }
 
             if (
                 $this->verify_is_open_list_field->isAnOpenListField($source_field)
-                && $this->verify_is_open_list_field->isAnOpenListField($target_field)
+                && $this->verify_is_open_list_field->isAnOpenListField($destination_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
-                assert($target_field instanceof \Tracker_FormElement_Field_OpenList);
-                $this->collectOpenListFields($source_field, $target_field);
+                assert($destination_field instanceof \Tracker_FormElement_Field_OpenList);
+                $this->collectOpenListFields($source_field, $destination_field);
                 continue;
             }
 
             if (
                 $this->verify_is_static_list_field->isStaticListField($source_field)
-                && $this->verify_is_static_list_field->isStaticListField($target_field)
+                && $this->verify_is_static_list_field->isStaticListField($destination_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($target_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectStaticFields($source_field, $target_field, $artifact);
+                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                $this->collectStaticFields($source_field, $destination_field, $artifact);
                 continue;
             }
 
             if (
                 $this->verify_is_user_list_field->isUserListField($source_field)
-                && $this->verify_is_user_list_field->isUserListField($target_field)
+                && $this->verify_is_user_list_field->isUserListField($destination_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($target_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserBoundFields($source_field, $target_field, $artifact);
+                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                $this->collectUserBoundFields($source_field, $destination_field, $artifact);
                 continue;
             }
 
             if (
                 $this->verify_is_user_group_list_field->isUserGroupListField($source_field)
-                && $this->verify_is_user_group_list_field->isUserGroupListField($target_field)
+                && $this->verify_is_user_group_list_field->isUserGroupListField($destination_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($target_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserGroupBoundFields($source_field, $target_field, $artifact);
+                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                $this->collectUserGroupBoundFields($source_field, $destination_field, $artifact);
                 continue;
             }
 
             if (
                 $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($source_field)
-                && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($target_field)
+                && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($destination_field)
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
-                assert($target_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
-                $this->collectPermissionsOnArtifactFields($source_field, $target_field, $artifact);
+                assert($destination_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
+                $this->collectPermissionsOnArtifactFields($source_field, $destination_field, $artifact);
                 continue;
             }
 
@@ -136,61 +136,61 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
     private function collectStaticFields(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_static_field_values_can_be_fully_moved->canAllStaticFieldValuesBeMoved($source_field, $target_field, $artifact)) {
-            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+        if (! $this->verify_static_field_values_can_be_fully_moved->canAllStaticFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
 
-        $this->addFieldToMigrateableList($source_field, $target_field);
+        $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
     private function collectUserBoundFields(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_user_field_values_can_be_fully_moved->canAllUserFieldValuesBeMoved($source_field, $target_field, $artifact)) {
-            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+        if (! $this->verify_user_field_values_can_be_fully_moved->canAllUserFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
 
-        $this->addFieldToMigrateableList($source_field, $target_field);
+        $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
     private function collectUserGroupBoundFields(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_user_group_field_values_can_be_fully_moved->canAllUserGroupFieldValuesBeMoved($source_field, $target_field, $artifact)) {
-            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+        if (! $this->verify_user_group_field_values_can_be_fully_moved->canAllUserGroupFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
 
-        $this->addFieldToMigrateableList($source_field, $target_field);
+        $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
     private function collectPermissionsOnArtifactFields(
         \Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
-        \Tracker_FormElement_Field_PermissionsOnArtifact $target_field,
+        \Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
     ): void {
         if (! $this->verify_are_permissions_to_migrate->areTherePermissionsToMigrate($source_field, $artifact)) {
@@ -198,12 +198,12 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             return;
         }
 
-        if (! $this->verify_permissions_can_be_fully_moved->canAllPermissionsBeFullyMoved($source_field, $target_field, $artifact)) {
-            $this->addFieldToPartiallyMigratedList($source_field, $target_field);
+        if (! $this->verify_permissions_can_be_fully_moved->canAllPermissionsBeFullyMoved($source_field, $destination_field, $artifact)) {
+            $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
 
-        $this->addFieldToMigrateableList($source_field, $target_field);
+        $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
     private function collectOpenListFields(
@@ -218,16 +218,16 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
-    private function addFieldToMigrateableList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $target_field): void
+    private function addFieldToMigrateableList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $destination_field): void
     {
-        $this->fields_mapping[]     = FieldMapping::fromFields($source_field, $target_field);
+        $this->fields_mapping[]     = FieldMapping::fromFields($source_field, $destination_field);
         $this->migrateable_fields[] = $source_field;
     }
 
-    private function addFieldToPartiallyMigratedList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $target_field): void
+    private function addFieldToPartiallyMigratedList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $destination_field): void
     {
         $this->partially_migrated_fields[] = $source_field;
-        $this->fields_mapping[]            = FieldMapping::fromFields($source_field, $target_field);
+        $this->fields_mapping[]            = FieldMapping::fromFields($source_field, $destination_field);
     }
 
     private function addFieldToNotMigrateableList(\Tracker_FormElement_Field $source_field): void

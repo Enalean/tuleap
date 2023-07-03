@@ -45,7 +45,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
      */
-    private $target_field;
+    private $destination_field;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
      */
@@ -53,11 +53,11 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
      */
-    private $target_field_bind;
+    private $destination_field_bind;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
      */
-    private $target_user_field;
+    private $destination_user_field;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
@@ -73,15 +73,15 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $this->source_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->target_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->source_field_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->target_field_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->source_field           = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->destination_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->source_field_bind      = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->destination_field_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
 
         $this->source_field->shouldReceive('getBind')->andReturn($this->source_field_bind);
-        $this->target_field->shouldReceive('getBind')->andReturn($this->target_field_bind);
+        $this->destination_field->shouldReceive('getBind')->andReturn($this->destination_field_bind);
 
-        $this->target_user_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->destination_user_field = Mockery::mock(Tracker_FormElement_Field_List::class);
 
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(101);
@@ -103,23 +103,23 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $expected_bind_value_id,
     ): void {
         $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
+        $this->destination_field_bind->shouldReceive('getAllValues')->andReturn($values);
 
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
+        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->destination_field, 101);
 
         self::assertEquals($expected_bind_value_id, $matching_value);
     }
 
     public function testItReturnsNoneValueIfSourceValueIsAlsoNoneAndTargetValueNotRequired(): void
     {
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 100);
+        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->destination_field, 100);
 
         $this->assertEquals(100, $matching_value);
     }
 
     public function testItReturnsNoneValueIfSourceValueIsNotProvided(): void
     {
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 0);
+        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->destination_field, 0);
 
         $this->assertEquals(100, $matching_value);
     }
@@ -179,9 +179,9 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         array $values,
         ?int $expected_bind_value_id,
     ): void {
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
+        $this->destination_field_bind->shouldReceive('getAllValues')->andReturn($values);
 
-        $matching_value = $this->matcher->getMatchingBindValueByDuckTyping($source_value, $this->target_field);
+        $matching_value = $this->matcher->getMatchingBindValueByDuckTyping($source_value, $this->destination_field);
         self::assertEquals(
             $expected_bind_value_id,
             ($matching_value !== null) ? $matching_value->getId() : $matching_value
@@ -192,10 +192,10 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
-        $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(true);
+        $this->destination_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(true);
 
         $this->assertTrue(
-            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingADestinationUserValue($this->destination_user_field, $this->xml)
         );
     }
 
@@ -205,7 +205,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
 
         $this->assertFalse(
-            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingADestinationUserValue($this->destination_user_field, $this->xml)
         );
     }
 
@@ -213,10 +213,10 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
-        $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(false);
+        $this->destination_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(false);
 
         $this->assertFalse(
-            $this->matcher->isSourceUserValueMatchingATargetUserValue($this->target_user_field, $this->xml)
+            $this->matcher->isSourceUserValueMatchingADestinationUserValue($this->destination_user_field, $this->xml)
         );
     }
 }

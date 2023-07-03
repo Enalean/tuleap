@@ -100,9 +100,9 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItUpdatesTheTitleFieldChangeTagsInMoveAction(): void
     {
-        $source_title_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_title_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_tracker     = Mockery::mock(Tracker::class);
+        $source_title_field      = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_title_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_tracker     = Mockery::mock(Tracker::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -125,34 +125,34 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_tracker->shouldReceive('getTitleField')->andReturn($target_title_field);
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn($destination_title_field);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $target_title_field->shouldReceive('getName')->andReturn('title2');
+        $destination_title_field->shouldReceive('getName')->andReturn('title2');
         $source_title_field->shouldReceive('getName')->andReturn('summary');
         $source_title_field->shouldReceive('getId')->andReturn(1001);
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -167,7 +167,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -186,11 +186,11 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItUpdatesTheDescriptionFieldChangeTags(): void
     {
-        $source_description_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_description_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $source_description_field      = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_description_field = Mockery::mock(Tracker_FormElement_Field::class);
 
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker = Mockery::mock(Tracker::class);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -226,32 +226,32 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn($target_description_field);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn($destination_description_field);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_description_field->shouldReceive('getName')->andReturn('v2desc');
+        $destination_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -266,7 +266,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -289,11 +289,11 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItUpdatesTheStatusFieldChange(): void
     {
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker = Mockery::mock(Tracker::class);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $source_status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $target_status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $source_status_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $destination_status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -325,35 +325,35 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
             . '  </changeset>'
             . '</artifact>');
 
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn($target_status_field);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn($destination_status_field);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->tracker->shouldReceive('getStatusField')->andReturn($source_status_field);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $source_status_field->shouldReceive('getName')->andReturn('status');
-        $target_status_field->shouldReceive('getName')->andReturn('V2status');
+        $destination_status_field->shouldReceive('getName')->andReturn('V2status');
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -368,7 +368,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -388,11 +388,11 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItUpdatesTheContributorFieldChange(): void
     {
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker = Mockery::mock(Tracker::class);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $source_contributor_field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $target_contributor_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $source_contributor_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $destination_contributor_field = Mockery::mock(Tracker_FormElement_Field_List::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -425,35 +425,35 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
             . '  </changeset>'
             . '</artifact>');
 
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn($target_contributor_field);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn($destination_contributor_field);
 
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn($source_contributor_field);
 
         $source_contributor_field->shouldReceive('getName')->andReturn('assigned_to');
-        $target_contributor_field->shouldReceive('getName')->andReturn('contrib');
+        $destination_contributor_field->shouldReceive('getName')->andReturn('contrib');
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -468,7 +468,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -489,9 +489,9 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItDealsWithCommentTagsInMoveAction(): void
     {
-        $source_description_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_description_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_tracker           = Mockery::mock(Tracker::class);
+        $source_description_field      = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_description_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_tracker           = Mockery::mock(Tracker::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -535,33 +535,33 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn($target_description_field);
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn($destination_description_field);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $target_description_field->shouldReceive('getName')->andReturn('v2desc');
+        $destination_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -576,7 +576,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -591,9 +591,9 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItDoesNotRemoveFirstChangesetTagInMoveAction(): void
     {
-        $source_description_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_description_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_tracker           = Mockery::mock(Tracker::class);
+        $source_description_field      = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_description_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_tracker           = Mockery::mock(Tracker::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -636,33 +636,33 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn($target_description_field);
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn($destination_description_field);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $target_description_field->shouldReceive('getName')->andReturn('v2desc');
+        $destination_description_field->shouldReceive('getName')->andReturn('v2desc');
         $source_description_field->shouldReceive('getName')->andReturn('desc');
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -677,7 +677,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -701,7 +701,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItAsksForExternalPluginsIfThereIsAnExternalFieldSemantic(): void
     {
-        $target_tracker = Mockery::mock(Tracker::class);
+        $destination_tracker = Mockery::mock(Tracker::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -714,33 +714,33 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
             . '  </changeset>'
             . '</artifact>');
 
-        $target_tracker->shouldReceive('getId')->andReturn(201);
-        $target_tracker->shouldReceive('getTitleField')->andReturn(null);
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn(null);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -765,7 +765,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,
@@ -776,9 +776,9 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
 
     public function testItAddsALastChangesetWithACommentToSayThatThisArtifactHasBeenMoved(): void
     {
-        $source_title_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_title_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $target_tracker     = Mockery::mock(Tracker::class);
+        $source_title_field      = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_title_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $destination_tracker     = Mockery::mock(Tracker::class);
 
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
@@ -801,34 +801,34 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->tracker->shouldReceive('getStatusField')->andReturn(null);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $target_tracker->shouldReceive('getTitleField')->andReturn($target_title_field);
-        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
-        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
-        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
-        $target_tracker->shouldReceive('getId')->andReturn(201);
+        $destination_tracker->shouldReceive('getTitleField')->andReturn($destination_title_field);
+        $destination_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $destination_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $destination_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $destination_tracker->shouldReceive('getId')->andReturn(201);
 
-        $target_title_field->shouldReceive('getName')->andReturn('title2');
+        $destination_title_field->shouldReceive('getName')->andReturn('title2');
         $source_title_field->shouldReceive('getName')->andReturn('summary');
         $source_title_field->shouldReceive('getId')->andReturn(1001);
 
         $this->title_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(true);
 
         $this->description_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->status_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->contributor_semantic_checker
             ->shouldReceive('areSemanticsAligned')
-            ->with($this->tracker, $target_tracker)
+            ->with($this->tracker, $destination_tracker)
             ->andReturns(false);
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -843,7 +843,7 @@ final class MoveChangesetXMLSemanticUpdaterTest extends TestCase
         $this->updater->update(
             $this->user,
             $this->tracker,
-            $target_tracker,
+            $destination_tracker,
             $artifact_xml,
             $this->submitter,
             $time,

@@ -44,7 +44,7 @@ final class MoveDryRunStub implements MoveDryRun
         return new self();
     }
 
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user): ArtifactPatchResponseRepresentation
+    public function move(Tracker $source_tracker, Tracker $destination_tracker, Artifact $artifact, PFUser $user): ArtifactPatchResponseRepresentation
     {
         $this->call_count++;
         return ArtifactPatchResponseRepresentation::withoutDryRun();

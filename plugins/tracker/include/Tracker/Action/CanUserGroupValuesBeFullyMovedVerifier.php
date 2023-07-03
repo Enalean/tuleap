@@ -27,7 +27,7 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupValuesCanBeFullyMoved
 {
-    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact): bool
+    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact): bool
     {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
@@ -35,7 +35,7 @@ final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupVal
         }
 
         $list_field_values          = array_values($last_changeset_value->getListValues());
-        $destinations_values_labels = array_map(static fn($value) => $value->getLabel(), $target_field->getAllValues());
+        $destinations_values_labels = array_map(static fn($value) => $value->getLabel(), $destination_field->getAllValues());
 
         foreach ($list_field_values as $value) {
             assert($value instanceof \Tracker_FormElement_Field_List_Bind_UgroupsValue);

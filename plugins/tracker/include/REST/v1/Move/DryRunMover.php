@@ -46,18 +46,18 @@ final class DryRunMover implements MoveDryRun
      */
     public function move(
         Tracker $source_tracker,
-        Tracker $target_tracker,
+        Tracker $destination_tracker,
         Artifact $artifact,
         PFUser $user,
     ): ArtifactPatchResponseRepresentation {
         if (MoveArtifactCompleteFeatureFlag::isEnabled()) {
             return ArtifactPatchResponseRepresentation::fromDuckTypedCollection(
-                $this->collect_dry_run_typing_field->collect($source_tracker, $target_tracker, $artifact)
+                $this->collect_dry_run_typing_field->collect($source_tracker, $destination_tracker, $artifact)
             );
         }
 
         $this->feedback_field_collector->initAllTrackerFieldAsNotMigrated($source_tracker);
-        $this->check_move_artifact->checkMoveIsPossible($artifact, $target_tracker, $user, $this->feedback_field_collector);
+        $this->check_move_artifact->checkMoveIsPossible($artifact, $destination_tracker, $user, $this->feedback_field_collector);
 
         return ArtifactPatchResponseRepresentation::fromFeedbackFieldCollector($this->feedback_field_collector);
     }

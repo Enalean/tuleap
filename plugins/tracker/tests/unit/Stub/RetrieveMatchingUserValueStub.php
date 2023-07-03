@@ -42,7 +42,7 @@ final class RetrieveMatchingUserValueStub implements RetrieveMatchingUserValue
         return new self(false);
     }
 
-    public function isSourceUserValueMatchingATargetUserValue(Tracker_FormElement_Field_List $target_contributor_field, SimpleXMLElement $value): bool
+    public function isSourceUserValueMatchingADestinationUserValue(Tracker_FormElement_Field_List $destination_contributor_field, SimpleXMLElement $value): bool
     {
         return $this->does_user_match;
     }

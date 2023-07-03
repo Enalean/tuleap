@@ -49,18 +49,18 @@ final class FieldCanBeEasilyMigratedVerifierTest extends TestCase
      *           ["subon", "cross", false]
      *           ["cross", "cross", true]
      */
-    public function testSimpleTypesAreCompatibles(string $source_type, string $target_field, bool $are_compatible): void
+    public function testSimpleTypesAreCompatibles(string $source_type, string $destination_field, bool $are_compatible): void
     {
-        $source_type_retrieve = RetrieveFieldTypeStub::withType($source_type);
-        $target_type_retrieve = RetrieveFieldTypeStub::withType($target_field);
+        $source_type_retrieve      = RetrieveFieldTypeStub::withType($source_type);
+        $destination_type_retrieve = RetrieveFieldTypeStub::withType($destination_field);
 
-        $source_field = $this->createStub(\Tracker_FormElement_Field::class);
-        $target_field = $this->createStub(\Tracker_FormElement_Field::class);
+        $source_field      = $this->createStub(\Tracker_FormElement_Field::class);
+        $destination_field = $this->createStub(\Tracker_FormElement_Field::class);
 
         $checker = new FieldCanBeEasilyMigratedVerifier(
             $source_type_retrieve,
-            $target_type_retrieve,
+            $destination_type_retrieve,
         );
-        self::assertSame($are_compatible, $checker->canFieldBeEasilyMigrated($source_field, $target_field));
+        self::assertSame($are_compatible, $checker->canFieldBeEasilyMigrated($source_field, $destination_field));
     }
 }

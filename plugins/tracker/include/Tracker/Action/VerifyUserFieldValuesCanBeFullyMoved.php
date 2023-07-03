@@ -26,7 +26,7 @@ interface VerifyUserFieldValuesCanBeFullyMoved
 {
     public function canAllUserFieldValuesBeMoved(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): bool;
 }

@@ -29,7 +29,7 @@ final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBe
 {
     public function canAllPermissionsBeFullyMoved(
         Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
-        Tracker_FormElement_Field_PermissionsOnArtifact $target_field,
+        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
@@ -38,7 +38,7 @@ final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBe
         }
 
         $selected_user_groups    = $last_changeset_value->getUgroupNamesFromPerms();
-        $destination_user_groups = array_map(static fn($user_group) => $user_group->getName(), $target_field->getAllUserGroups());
+        $destination_user_groups = array_map(static fn($user_group) => $user_group->getName(), $destination_field->getAllUserGroups());
 
         foreach ($selected_user_groups as $selected_user_group) {
             if (! in_array($selected_user_group, $destination_user_groups, true)) {

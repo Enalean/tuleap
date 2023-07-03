@@ -28,5 +28,5 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 interface MoveArtifactByDuckTyping
 {
-    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $target_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int;
+    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $destination_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int;
 }

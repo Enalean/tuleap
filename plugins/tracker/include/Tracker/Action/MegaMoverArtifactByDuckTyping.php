@@ -47,19 +47,19 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
     ) {
     }
 
-    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $target_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int
+    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $destination_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int
     {
-        if (! $target_tracker->getProject()->isActive()) {
+        if (! $destination_tracker->getProject()->isActive()) {
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        return $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $target_tracker, $user, $field_collection) {
+        return $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $destination_tracker, $user, $field_collection) {
             $xml_artifacts = $this->getUpdatedXML($artifact, $source_tracker, $user, $field_collection);
 
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
             $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
-            if (! $this->processMove($xml_artifacts->artifact, $target_tracker, (int) $global_rank, $user)) {
+            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user)) {
                 throw new MoveArtifactNotDoneException();
             }
 

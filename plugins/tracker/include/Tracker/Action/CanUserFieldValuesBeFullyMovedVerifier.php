@@ -35,7 +35,7 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
 
     public function canAllUserFieldValuesBeMoved(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
@@ -51,7 +51,7 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
             if (! $user || $user->isAnonymous()) {
                 return false;
             }
-            if (! $target_field->checkValueExists((string) $user->getId())) {
+            if (! $destination_field->checkValueExists((string) $user->getId())) {
                 return false;
             }
         }

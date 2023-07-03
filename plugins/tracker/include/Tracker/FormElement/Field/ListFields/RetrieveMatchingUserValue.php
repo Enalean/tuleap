@@ -25,8 +25,8 @@ use Tracker_FormElement_Field_List;
 
 interface RetrieveMatchingUserValue
 {
-    public function isSourceUserValueMatchingATargetUserValue(
-        Tracker_FormElement_Field_List $target_contributor_field,
+    public function isSourceUserValueMatchingADestinationUserValue(
+        Tracker_FormElement_Field_List $destination_contributor_field,
         SimpleXMLElement $value,
     ): bool;
 }
