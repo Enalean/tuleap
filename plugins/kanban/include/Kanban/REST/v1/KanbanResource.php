@@ -31,7 +31,7 @@ use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\KanbanItemManager;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanUserPreferences;
-use AgileDashboard_PermissionsManager;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanUserNotAdminException;
 use AgileDashboardStatisticsAggregator;
 use BackendLogger;
@@ -174,7 +174,7 @@ final class KanbanResource extends AuthenticatedResource
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    /** @var AgileDashboard_PermissionsManager */
+    /** @var KanbanPermissionsManager */
     private $permissions_manager;
 
     /** @var KanbanUserPreferences */
@@ -256,7 +256,7 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
-        $this->permissions_manager  = new AgileDashboard_PermissionsManager();
+        $this->permissions_manager  = new KanbanPermissionsManager();
 
         $this->kanban_actions_checker = new KanbanActionsChecker(
             $this->tracker_factory,
@@ -635,7 +635,7 @@ final class KanbanResource extends AuthenticatedResource
 
         return $this->permissions_manager->userCanAdministrate(
             $user,
-            $tracker->getGroupId()
+            $tracker->getProject()
         );
     }
 

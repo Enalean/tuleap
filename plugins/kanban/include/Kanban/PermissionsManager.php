@@ -19,10 +19,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_PermissionsManager
+declare(strict_types=1);
+
+namespace Tuleap\Kanban;
+
+use PFUser;
+use Project;
+
+final class KanbanPermissionsManager
 {
-    public function userCanAdministrate(PFUser $user, $group_id)
+    public function userCanAdministrate(PFUser $user, Project $project): bool
     {
-        return $user->isAdmin($group_id);
+        return $user->isAdmin((int) $project->getId());
     }
 }

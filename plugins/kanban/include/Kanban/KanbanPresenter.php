@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use AgileDashboard_PermissionsManager;
 use EventManager;
 use ForgeConfig;
 use PFUser;
@@ -84,7 +83,7 @@ final class KanbanPresenter
             ),
             new KanbanActionsChecker(
                 TrackerFactory::instance(),
-                new AgileDashboard_PermissionsManager(),
+                new KanbanPermissionsManager(),
                 Tracker_FormElementFactory::instance(),
                 SubmissionPermissionVerifier::instance(),
             )

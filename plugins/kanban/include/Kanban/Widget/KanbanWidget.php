@@ -24,7 +24,7 @@ use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
-use AgileDashboard_PermissionsManager;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Codendi_Request;
 use Tuleap\Kanban\KanbanPresenter;
 use Project;
@@ -57,7 +57,7 @@ abstract class KanbanWidget extends Widget
         private readonly WidgetKanbanDeletor $widget_kanban_deletor,
         private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
-        private readonly AgileDashboard_PermissionsManager $permissions_manager,
+        private readonly KanbanPermissionsManager $permissions_manager,
         private readonly WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
         private readonly WidgetKanbanConfigUpdater $widget_kanban_config_updater,
         private readonly Tracker_ReportFactory $tracker_report_factory,
@@ -140,7 +140,7 @@ abstract class KanbanWidget extends Widget
 
             $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
                 $this->getCurrentUser(),
-                $project_id
+                $tracker->getProject()
             );
 
             $kanban_presenter        = new KanbanPresenter(

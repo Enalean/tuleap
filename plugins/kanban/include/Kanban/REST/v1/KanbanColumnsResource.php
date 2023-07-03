@@ -29,7 +29,7 @@ use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\REST\Header;
-use AgileDashboard_PermissionsManager;
+use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
@@ -99,7 +99,7 @@ class KanbanColumnsResource
         );
 
         $kanban_column_dao           = new KanbanColumnDao();
-        $permissions_manager         = new AgileDashboard_PermissionsManager();
+        $permissions_manager         = new KanbanPermissionsManager();
         $this->kanban_column_factory = new KanbanColumnFactory(
             $kanban_column_dao,
             new KanbanUserPreferences()

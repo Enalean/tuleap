@@ -22,79 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_FormElement_Field[]
-     */
-    private $used_fields;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Semantic_Title
-     */
-    private $semantic_title;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface |Tracker_FormElement_Field_List
-     */
-    private $field_list;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Integer
-     */
-    private $field_int;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Text
-     */
-    protected $field_text;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_String
-     */
-    private $field_string;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Semantic_Status
-     */
-    private $semantic_status;
+    private Tracker_FormElement_Field_String&MockObject $field_string;
+    private Tracker_FormElement_Field_Text&MockObject $field_text;
+    private Tracker_FormElement_Field_Integer&MockObject $field_int;
+    private Tracker_FormElement_Field_List&MockObject $field_list;
+    private Tracker $tracker;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(201)->getMock();
-        $this->field_text   = \Mockery::spy(\Tracker_FormElement_Field_Text::class)->shouldReceive('getId')->andReturns(20)->getMock();
-        $this->field_int    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturns(30)->getMock();
-        $this->field_list   = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(40)->getMock();
+        $this->field_string = $this->createMock(Tracker_FormElement_Field_String::class);
+        $this->field_string->method('getId')->willReturn(201);
+        $this->field_text = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $this->field_text->method('getId')->willReturn(20);
+        $this->field_int = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $this->field_int->method('getId')->willReturn(30);
+        $this->field_list = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->field_list->method('getId')->willReturn(40);
 
-        $this->used_fields = [
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        ];
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(888)->withProject($this->project)->build();
 
-        $this->user    = \Mockery::spy(\PFUser::class);
-        $this->tracker = Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(888);
-        $this->semantic_title  = \Mockery::spy(\Tracker_Semantic_Title::class);
-        $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);
+        $this->semantic_title  = $this->createMock(\Tracker_Semantic_Title::class);
+        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
         Tracker_Semantic_Status::setInstance($this->semantic_status, $this->tracker);
@@ -109,136 +76,229 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfAnotherFieldIsRequired(): void
     {
-        $this->field_string->shouldReceive('isRequired')->andReturns(true);
-        $this->field_text->shouldReceive('isRequired')->andReturns(false);
-        $this->field_int->shouldReceive('isRequired')->andReturns(false);
-        $this->field_list->shouldReceive('isRequired')->andReturns(true);
+        $this->field_string->method('isRequired')->willReturn(true);
+        $this->field_text->method('isRequired')->willReturn(false);
+        $this->field_int->method('isRequired')->willReturn(false);
+        $this->field_list->method('isRequired')->willReturn(true);
 
-        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
-        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
-        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
-        $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
-        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
-        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::buildWithDefaults();
+
+        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_status->method('getFieldId')->willReturn(202);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanSubmit')->willReturn(true);
+        $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
 
         $checker = new KanbanActionsChecker(
             $tracker_factory,
-            $agiledasboard_permission_manager,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker->checkUserCanAddInPlace($user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfNoSemanticTitle(): void
     {
-        $this->field_string->shouldReceive('isRequired')->andReturns(true);
-        $this->field_text->shouldReceive('isRequired')->andReturns(false);
-        $this->field_int->shouldReceive('isRequired')->andReturns(false);
-        $this->field_list->shouldReceive('isRequired')->andReturns(false);
+        $this->field_string->method('isRequired')->willReturn(true);
+        $this->field_text->method('isRequired')->willReturn(false);
+        $this->field_int->method('isRequired')->willReturn(false);
+        $this->field_list->method('isRequired')->willReturn(false);
 
-        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
-        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
-        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
-        $this->semantic_title->shouldReceive('getFieldId')->andReturns(null);
-        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
-        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::buildWithDefaults();
+
+        $this->semantic_title->method('getFieldId')->willReturn(null);
+        $this->semantic_status->method('getFieldId')->willReturn(202);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanSubmit')->willReturn(true);
+        $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanSemanticTitleNotDefinedException::class);
 
         $checker = new KanbanActionsChecker(
             $tracker_factory,
-            $agiledasboard_permission_manager,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker->checkUserCanAddInPlace($user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle(): void
     {
-        $this->field_string->shouldReceive('isRequired')->andReturns(false);
-        $this->field_text->shouldReceive('isRequired')->andReturns(false);
-        $this->field_int->shouldReceive('isRequired')->andReturns(false);
-        $this->field_list->shouldReceive('isRequired')->andReturns(true);
+        $this->field_string->method('isRequired')->willReturn(false);
+        $this->field_text->method('isRequired')->willReturn(false);
+        $this->field_int->method('isRequired')->willReturn(false);
+        $this->field_list->method('isRequired')->willReturn(true);
 
-        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
-        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
-        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
-        $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
-        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
-        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::buildWithDefaults();
+
+        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_status->method('getFieldId')->willReturn(202);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanSubmit')->willReturn(true);
+        $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
 
         $checker = new KanbanActionsChecker(
             $tracker_factory,
-            $agiledasboard_permission_manager,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker->checkUserCanAddInPlace($user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitArtifact(): void
     {
-        $this->field_string->shouldReceive('isRequired')->andReturns(true);
-        $this->field_text->shouldReceive('isRequired')->andReturns(false);
-        $this->field_int->shouldReceive('isRequired')->andReturns(false);
-        $this->field_list->shouldReceive('isRequired')->andReturns(false);
+        $this->field_string->method('isRequired')->willReturn(true);
+        $this->field_text->method('isRequired')->willReturn(false);
+        $this->field_int->method('isRequired')->willReturn(false);
+        $this->field_list->method('isRequired')->willReturn(false);
 
-        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
-        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
-        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
-        $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
-        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
-        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::buildWithDefaults();
+
+        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_status->method('getFieldId')->willReturn(202);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanSubmit')->willReturn(true);
+        $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
         $checker = new KanbanActionsChecker(
             $tracker_factory,
-            $agiledasboard_permission_manager,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withoutSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker->checkUserCanAddInPlace($user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitStatusField(): void
     {
-        $this->field_string->shouldReceive('isRequired')->andReturns(true);
-        $this->field_text->shouldReceive('isRequired')->andReturns(false);
-        $this->field_int->shouldReceive('isRequired')->andReturns(false);
-        $this->field_list->shouldReceive('isRequired')->andReturns(false);
+        $this->field_string->method('isRequired')->willReturn(true);
+        $this->field_text->method('isRequired')->willReturn(false);
+        $this->field_int->method('isRequired')->willReturn(false);
+        $this->field_list->method('isRequired')->willReturn(false);
 
-        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
-        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
-        $kanban                           = \Mockery::spy(\Tuleap\Kanban\Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
-        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
-        $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
-        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnFalse()->getMock();
-        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::buildWithDefaults();
+
+        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_status->method('getFieldId')->willReturn(202);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanSubmit')->willReturn(false);
+        $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
         $checker = new KanbanActionsChecker(
             $tracker_factory,
-            $agiledasboard_permission_manager,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker->checkUserCanAddInPlace($user, $kanban);
+    }
+
+    public function testUserCanAdministrate(): void
+    {
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::anActiveUser()
+            ->withMemberOf($this->tracker->getProject())
+            ->withAdministratorOf($this->tracker->getProject())
+            ->build();
+
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
+
+        $this->expectNotToPerformAssertions();
+        $checker->checkUserCanAdministrate($user, $kanban);
+    }
+
+    public function testUserCannotAdministrate(): void
+    {
+        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_text,
+            $this->field_int,
+            $this->field_list,
+        );
+
+        $kanban = new Kanban(123, $this->tracker->getId(), 'My kanban');
+        $user   = UserTestBuilder::anActiveUser()
+            ->withMemberOf($this->tracker->getProject())
+            ->build();
+
+        $checker = new KanbanActionsChecker(
+            $tracker_factory,
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
+            $form_element_factory,
+            VerifySubmissionPermissionStub::withSubmitPermission(),
+        );
+
+        $this->expectException(KanbanUserNotAdminException::class);
+        $checker->checkUserCanAdministrate($user, $kanban);
     }
 }
