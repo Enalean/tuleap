@@ -4,14 +4,14 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "module": "dist/tlp-modal.js",
   "main": "dist/tlp-modal.umd.cjs",
   "style": "dist/style.css",
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/dom": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

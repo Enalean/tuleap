@@ -2,23 +2,21 @@
     <li>When there are both cancel and primary action buttons, then the primary button is always on the right.</li>
     <li>To be able to use large buttons on the footer you should use the class
         <code class="code-inline">tlp-modal-footer-large</code>.</li>
-    <li>Buttons that have <code class="code-inline">data-dismiss="modal"</code> attribute in the modal
+    <li>Buttons that have <code class="code-inline">data-dismiss=&quot;modal&quot;</code> attribute in the modal
         will close it.</li>
-    <li>Click on the backdrop or on the escape key will also close the modal.</li>
+    <li>A click on the backdrop or hitting the <kbd>Escape</kbd> key will also close the modal.</li>
     <li>Elements that have <code class="code-inline">data-modal-focus</code> attribute in the modal will take focus when it opens.</li>
-    <li>You must explicitly call the modal in javascript: <code class="code-inline">var the_modal = tlp.createModal('element-id');</code>.
+    <li>You must explicitly call the modal in javascript: <code class="code-inline">const the_modal = createModal(&quot;element-id&quot;);</code>.
         This will return a <code class="code-inline">Modal</code> instance. You can then call
         <code class="code-inline">show()</code>,
         <code class="code-inline">hide()</code>, or
         <code class="code-inline">toggle()</code> methods on this instance.
     </li>
-    <li>On the <code class="code-inline">the_modal.show()</code> method an event <code class="code-inline">tlp-modal-shown</code> is dispatched on both the modal and Document.</li>
-    <li>On the <code class="code-inline">the_modal.hide()</code> method an event <code class="code-inline">tlp-modal-hidden</code> is dispatched on both the modal and Document.</li>
 </ul>
 
 <h4>Arguments:</h4>
 <ul>
-    <li><code>element: ELement</code></li>
+    <li><code>element: Element</code></li>
     <li><code>options: ModalOptions</code> (Optional).
         <table class="tlp-table">
             <thead>
@@ -34,7 +32,7 @@
                     <td><code>keyboard</code></td>
                     <td>boolean</td>
                     <td><code>true</code></td>
-                    <td>When <code>true</code>, enables closing the modal when pressing the <kbd>ESC</kbd> key.</td>
+                    <td>When <code>true</code>, enables closing the modal when pressing the <kbd>Escape</kbd> key.</td>
                 </tr>
                 <tr>
                     <td><code>destroy_on_hide</code></td>
@@ -52,3 +50,43 @@
         </table>
     </li>
 </ul>
+
+<h4>Events:</h4>
+<table class="tlp-table">
+    <thead>
+    <tr>
+        <th>Type</th>
+        <th>When is it dispatched?</th>
+        <th>Target</th>
+        <th>Cancelable?</th>
+        <th>Bubbles?</th>
+        <th>Effect</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><code>tlp-modal-shown</code></td>
+        <td>On <code>modal.show()</code></td>
+        <td><code>document</code> and the <code>Modal</code> instance</td>
+        <td>No</td>
+        <td>No</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td><code>tlp-modal-will-hide</code></td>
+        <td>After clicking on the backdrop, after clicking on a <code>data-dismiss=&quot;modal&quot;</code> button, after pressing the <kbd>Escape</kbd> key</td>
+        <td>the <code>Modal</code> instance</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>If you cancel it with <code>event.preventDefault()</code>, the modal will NOT be hidden.</td>
+    </tr>
+    <tr>
+        <td><code>tlp-modal-hidden</code></td>
+        <td>On <code>modal.hide()</code></td>
+        <td><code>document</code> and the <code>Modal</code> instance</td>
+        <td>No</td>
+        <td>No</td>
+        <td>None</td>
+    </tr>
+    </tbody>
+</table>

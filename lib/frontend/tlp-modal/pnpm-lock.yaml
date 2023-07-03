@@ -4,3 +4,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../build-system-configurator
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../dom

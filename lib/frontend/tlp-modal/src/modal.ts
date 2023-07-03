@@ -19,7 +19,8 @@
 
 export const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
 export const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
-type ModalEventType = "tlp-modal-shown" | "tlp-modal-hidden";
+export const EVENT_TLP_MODAL_WILL_HIDE = "tlp-modal-will-hide";
+type ModalEventType = "tlp-modal-shown" | "tlp-modal-hidden" | "tlp-modal-will-hide";
 
 export const BACKDROP_ID = "tlp-modal-backdrop";
 export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
@@ -32,7 +33,7 @@ export interface ModalOptions {
     dismiss_on_backdrop_click?: boolean;
 }
 
-export type ModalEventListener = (event: CustomEvent<{ target: HTMLElement }>) => void;
+type ModalEventListener = (event: CustomEvent<{ target: HTMLElement }>) => void;
 
 interface EventListener {
     type: ModalEventType;
@@ -170,9 +171,7 @@ export class Modal {
 
         this.backdrop_element.classList.add(BACKDROP_SHOWN_CLASS_NAME);
         if (this.options.dismiss_on_backdrop_click) {
-            this.backdrop_element.addEventListener("click", () => {
-                this.hide();
-            });
+            this.backdrop_element.addEventListener("click", this.event_handler);
         }
     }
 
@@ -248,6 +247,15 @@ export class Modal {
 }
 
 function ModalEventHandler(modal: Modal): EventListenerObject {
+    const hideModal = (): void => {
+        const event = new CustomEvent(EVENT_TLP_MODAL_WILL_HIDE, { cancelable: true });
+        modal.dispatchEvent(event);
+        if (event.defaultPrevented) {
+            return;
+        }
+        modal.hide();
+    };
+
     const handleKeyUp = (event: KeyboardEvent): void => {
         if (event.key !== "Escape") {
             return;
@@ -263,14 +271,14 @@ function ModalEventHandler(modal: Modal): EventListenerObject {
         }
 
         if (modal.is_shown) {
-            modal.hide();
+            hideModal();
         }
     };
 
     return {
         handleEvent(event): void {
             if (event.type === "click") {
-                modal.hide();
+                hideModal();
                 return;
             }
             if (event.type === "keyup" && event instanceof KeyboardEvent) {
