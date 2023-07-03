@@ -33,8 +33,9 @@ export function expectChangeEventToHaveBeenFiredOnSourceSelectBox(
     if (nb_times > 1) {
         expect(spy).toHaveBeenCalledTimes(nb_times);
     }
-
-    expect(spy).toHaveBeenCalledWith(new Event("change"));
+    const event = spy.mock.calls[0][0];
+    expect(event.type).toBe("change");
+    expect(event.bubbles).toBe(true);
 }
 
 export function expectItemToBeSelected(item: ListPickerItem): void {
