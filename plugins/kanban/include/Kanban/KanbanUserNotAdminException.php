@@ -29,7 +29,7 @@ final class KanbanUserNotAdminException extends \Exception
 {
     public function __construct(PFUser $user)
     {
-        $message = "User " . $user->getUserName() . " is not admin of the agiledashboard";
+        $message = "User " . $user->getUserName() . " is not admin of the kanban";
         parent::__construct($message);
     }
 }
