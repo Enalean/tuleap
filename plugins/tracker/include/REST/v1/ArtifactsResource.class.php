@@ -57,7 +57,6 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\AreTherePermissionsToMigrateVerifier;
-use Tuleap\Tracker\Action\AreUserGroupFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\CanPermissionsBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
@@ -68,7 +67,7 @@ use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
-use Tuleap\Tracker\Action\AreStaticListFieldsCompatibleVerifier;
+use Tuleap\Tracker\Action\AreListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
@@ -79,7 +78,6 @@ use Tuleap\Tracker\Action\OpenListFieldsCompatibilityVerifier;
 use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
 use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
-use Tuleap\Tracker\Action\AreUserFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserListFieldVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -1209,17 +1207,15 @@ class ArtifactsResource extends AuthenticatedResource
                 $this->formelement_factory,
             ),
             new StaticListFieldVerifier(),
-            new AreStaticListFieldsCompatibleVerifier(),
+            new AreListFieldsCompatibleVerifier(),
             new CanStaticFieldValuesBeFullyMovedVerifier(
                 new FieldValueMatcher(
                     new XMLImportHelper($this->user_manager)
                 )
             ),
             new UserListFieldVerifier(),
-            new AreUserFieldsCompatibleVerifier(),
             new CanUserFieldValuesBeFullyMovedVerifier($this->user_manager),
             new IsUserGroupListFieldVerifier(),
-            new AreUserGroupFieldsCompatibleVerifier(),
             new CanUserGroupValuesBeFullyMovedVerifier(),
             new IsPermissionsOnArtifactFieldVerifier(),
             new AreTherePermissionsToMigrateVerifier(),

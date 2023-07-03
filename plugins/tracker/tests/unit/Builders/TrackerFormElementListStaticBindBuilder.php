@@ -28,7 +28,7 @@ final class TrackerFormElementListStaticBindBuilder
     /**
      * @var \Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
-    private array $bind_values;
+    private array $bind_values      = [];
     private int $field_id           = 123;
     private string $name            = "A field";
     private bool $is_field_multiple = false;
