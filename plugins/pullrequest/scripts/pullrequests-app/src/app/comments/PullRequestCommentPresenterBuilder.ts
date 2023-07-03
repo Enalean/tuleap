@@ -44,10 +44,7 @@ import {
     getUserUpdatePullRequest,
     getUserReopenedPullRequest,
 } from "../gettext-catalog";
-
-export interface AngularUIRouterState {
-    readonly href: (name: string, url_parameters: Record<string, unknown>) => string;
-}
+import type { AngularUIRouterState } from "../types";
 
 export const PullRequestCommentPresenterBuilder = {
     fromFileDiffComment: (comment: CommentOnFile): PullRequestInlineCommentPresenter => ({
