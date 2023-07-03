@@ -66,9 +66,7 @@ describe("TuleapArtifactModalController", () => {
                 hide: jest.fn(),
                 addEventListener: jest.fn(),
             };
-            const modal_instance = {
-                tlp_modal: tlp_modal,
-            };
+            const modal_instance = { tlp_modal };
 
             mockCallback = jest.fn();
             $scope = $rootScope.$new();
@@ -407,6 +405,47 @@ describe("TuleapArtifactModalController", () => {
                 expect(ArtifactModalController.hidden_fieldsets).toStrictEqual([
                     { label: "fieldset01", is_hidden: true },
                 ]);
+            });
+        });
+
+        describe(`onFormChange()`, () => {
+            beforeEach(() => {
+                ArtifactModalController = $controller(BaseModalController, controller_params);
+                ArtifactModalController.$onInit();
+            });
+
+            it(`starts listening for the modal's Will Hide event
+                to prevent the modal from closing
+                and when user confirms they want the modal to close,
+                it will hide the modal and discard modifications`, () => {
+                jest.spyOn(window, "confirm").mockReturnValue(true);
+                ArtifactModalController.onFormChange();
+                const callback = tlp_modal.addEventListener.mock.calls[0][1];
+                const event = new Event("will-hide", { cancelable: true });
+                callback(event);
+
+                expect(event.defaultPrevented).toBe(true);
+                expect(tlp_modal.hide).toHaveBeenCalled();
+            });
+
+            it(`when user does not confirm they want the modal to close,
+                it will not hide the modal`, () => {
+                jest.spyOn(window, "confirm").mockReturnValue(false);
+                ArtifactModalController.onFormChange();
+                const callback = tlp_modal.addEventListener.mock.calls[0][1];
+                const event = new Event("will-hide", { cancelable: true });
+                callback(event);
+
+                expect(event.defaultPrevented).toBe(true);
+                expect(tlp_modal.hide).not.toHaveBeenCalled();
+            });
+
+            it(`when the user has changed fields more than once,
+                it does not add more listeners to the modal (one is enough)`, () => {
+                ArtifactModalController.onFormChange();
+                ArtifactModalController.onFormChange();
+
+                expect(tlp_modal.addEventListener).toHaveBeenCalledTimes(1);
             });
         });
     });

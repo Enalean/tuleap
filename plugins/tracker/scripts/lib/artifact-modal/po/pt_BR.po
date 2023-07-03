@@ -45,6 +45,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgid "Changes you made may not be saved. Close the modal?"
+msgstr ""
+
 msgid "Comment"
 msgstr "Comente"
 
