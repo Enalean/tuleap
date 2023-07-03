@@ -31,6 +31,10 @@ reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
 id = "RUSTSEC-2021-0145"
 reason = "Windows only."
 
+[[IgnoredVulns]]
+id = "GHSA-g98v-hv3f-hcfr" # Same as RUSTSEC-2021-0145
+reason = "Windows only."
+
 ## mach
 [[IgnoredVulns]]
 id = "RUSTSEC-2020-0168"
