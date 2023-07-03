@@ -63,11 +63,16 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     ) {
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact): DuckTypedMoveFieldCollection
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user): DuckTypedMoveFieldCollection
     {
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
             $destination_field = $this->retrieve_destination_tracker_used_fields->getUsedFieldByName($destination_tracker->getId(), $source_field->getName());
             if ($destination_field === null) {
+                $this->addFieldToNotMigrateableList($source_field);
+                continue;
+            }
+
+            if (! $destination_field->userCanUpdate($user)) {
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
