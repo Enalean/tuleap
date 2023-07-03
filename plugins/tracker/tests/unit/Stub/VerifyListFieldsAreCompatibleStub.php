@@ -22,27 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\Action\VerifyUserFieldsAreCompatible;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Action\VerifyListFieldsAreCompatible;
 
-final class VerifyUserFieldsAreCompatibleStub implements VerifyUserFieldsAreCompatible
+final class VerifyListFieldsAreCompatibleStub implements VerifyListFieldsAreCompatible
 {
-    private function __construct(private readonly bool $can_be_moved)
+    private function __construct(private readonly bool $are_fields_compatible)
     {
     }
 
-    public static function withMovableUserListField(): self
+    public static function withCompatibleFields(): self
     {
         return new self(true);
     }
 
-    public static function withoutMovableUserListField(): self
+    public static function withoutCompatibleFields(): self
     {
         return new self(false);
     }
 
-    public function areUserFieldsCompatible(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact,): bool
+    public function areListFieldsCompatible(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field): bool
     {
-        return $this->can_be_moved;
+        return $this->are_fields_compatible;
     }
 }

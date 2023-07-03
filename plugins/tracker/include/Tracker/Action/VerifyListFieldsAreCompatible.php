@@ -20,13 +20,10 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface VerifyUserFieldsAreCompatible
+interface VerifyListFieldsAreCompatible
 {
-    public function areUserFieldsCompatible(
+    public function areListFieldsCompatible(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
-        Artifact $artifact,
+        \Tracker_FormElement_Field_List $destination_field,
     ): bool;
 }

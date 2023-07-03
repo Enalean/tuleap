@@ -49,13 +49,11 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly RetrieveUsedFields $retrieve_target_tracker_used_fields,
         private readonly VerifyFieldCanBeEasilyMigrated $verify_field_can_be_easily_migrated,
         private readonly VerifyIsStaticListField $verify_is_static_list_field,
-        private readonly VerifyStaticListFieldsAreCompatible $verify_static_fields_are_compatible,
+        private readonly VerifyListFieldsAreCompatible $verify_list_fields_are_compatible,
         private readonly VerifyStaticFieldValuesCanBeFullyMoved $verify_static_field_values_can_be_fully_moved,
         private readonly VerifyIsUserListField $verify_is_user_list_field,
-        private readonly VerifyUserFieldsAreCompatible $verify_user_fields_are_compatible,
         private readonly VerifyUserFieldValuesCanBeFullyMoved $verify_user_field_values_can_be_fully_moved,
         private readonly VerifyIsUserGroupListField $verify_is_user_group_list_field,
-        private readonly VerifyUserGroupFieldsAreCompatible $verify_user_group_fields_are_compatible,
         private readonly VerifyUserGroupValuesCanBeFullyMoved $verify_user_group_field_values_can_be_fully_moved,
         private readonly VerifyIsPermissionsOnArtifactField $verify_is_permissions_on_artifact_field,
         private readonly VerifyThereArePermissionsToMigrate $verify_are_permissions_to_migrate,
@@ -106,7 +104,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserBoundedFields($source_field, $target_field, $artifact);
+                $this->collectUserBoundFields($source_field, $target_field, $artifact);
                 continue;
             }
 
@@ -116,7 +114,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($target_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserGroupBoundedFields($source_field, $target_field, $artifact);
+                $this->collectUserGroupBoundFields($source_field, $target_field, $artifact);
                 continue;
             }
 
@@ -141,7 +139,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_static_fields_are_compatible->areStaticFieldsCompatible($source_field, $target_field, $artifact)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -154,12 +152,12 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         $this->addFieldToMigrateableList($source_field, $target_field);
     }
 
-    private function collectUserBoundedFields(
+    private function collectUserBoundFields(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_user_fields_are_compatible->areUserFieldsCompatible($source_field, $target_field, $artifact)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
@@ -172,12 +170,12 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         $this->addFieldToMigrateableList($source_field, $target_field);
     }
 
-    private function collectUserGroupBoundedFields(
+    private function collectUserGroupBoundFields(
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $target_field,
         Artifact $artifact,
     ): void {
-        if (! $this->verify_user_group_fields_are_compatible->areUserGroupFieldsCompatible($source_field, $target_field, $artifact)) {
+        if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $target_field)) {
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
