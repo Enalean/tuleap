@@ -72,7 +72,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         parent::setUp();
         $this->http_request                                             = $this->createMock(HTTPRequest::class);
         $this->planning_milestone_factory                               = $this->createMock(Planning_MilestoneFactory::class);
-        $this->project                                                  = $this->createMock(Project::class, ['getID' => 101, 'getPublicName' => 'My Project']);
+        $this->project                                                  = $this->createMock(Project::class);
         $this->john_doe                                                 = $this->createMock(PFUser::class);
         $this->planning_virtual_top_milestone                           = $this->createMock(Planning_VirtualTopMilestone::class);
         $this->agileDashboard_milestone_backlog_item_collection         = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItemCollection::class);
@@ -146,7 +146,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals(0, $built_presenter->nb_upcoming_releases);
+        self::assertEquals(0, $built_presenter->nb_upcoming_releases);
     }
 
     public function testGetUpcomingReleasesWhenThereAreFutureMilestones(): void
@@ -181,7 +181,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals(3, $built_presenter->nb_upcoming_releases);
+        self::assertEquals(3, $built_presenter->nb_upcoming_releases);
     }
 
     public function testGetNumberBacklogItem(): void
@@ -216,7 +216,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals(5, $built_presenter->nb_backlog_items);
+        self::assertEquals(5, $built_presenter->nb_backlog_items);
     }
 
     public function testGetTrackersId(): void
@@ -256,7 +256,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
         $tracker_json    = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
 
-        $this->assertEqualsCanonicalizing($tracker_json, $built_presenter->json_trackers_agile_dashboard);
+        self::assertEqualsCanonicalizing($tracker_json, $built_presenter->json_trackers_agile_dashboard);
     }
 
     public function testGetNumberItemsOfExplicitBacklogAndNotTopBacklog(): void
@@ -299,7 +299,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals(50, $built_presenter->nb_backlog_items);
+        self::assertEquals(50, $built_presenter->nb_backlog_items);
     }
 
     public function testGetLabelOfTrackerPlanning(): void
@@ -333,7 +333,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals('Releases', $built_presenter->label_tracker_planning);
+        self::assertEquals('Releases', $built_presenter->label_tracker_planning);
     }
 
     public function testIsNotTimeframeDurationField(): void
@@ -374,8 +374,8 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertFalse($built_presenter->is_timeframe_duration);
-        $this->assertEquals($built_presenter->label_timeframe, 'end');
+        self::assertFalse($built_presenter->is_timeframe_duration);
+        self::assertEquals($built_presenter->label_timeframe, 'end');
     }
 
     public function testIsNotTimeframeEndDateField(): void
@@ -416,8 +416,8 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertTrue($built_presenter->is_timeframe_duration);
-        $this->assertEquals($built_presenter->label_timeframe, 'duration');
+        self::assertTrue($built_presenter->is_timeframe_duration);
+        self::assertEquals($built_presenter->label_timeframe, 'duration');
     }
 
     public function testThrowExceptionWhenNoTimeframeEndDateAndDurationField(): void
@@ -489,7 +489,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertFalse($built_presenter->user_can_view_sub_milestones_planning);
+        self::assertFalse($built_presenter->user_can_view_sub_milestones_planning);
     }
 
     public function testGetTheFirstSubmilestonePlanningLikeInAD(): void
@@ -524,7 +524,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertTrue($built_presenter->user_can_view_sub_milestones_planning);
+        self::assertTrue($built_presenter->user_can_view_sub_milestones_planning);
     }
 
     public function testUserCanSeeSubmilestonePlanningIfDontExist(): void
@@ -558,7 +558,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertFalse($built_presenter->user_can_view_sub_milestones_planning);
+        self::assertFalse($built_presenter->user_can_view_sub_milestones_planning);
     }
 
     public function testBurnupUseEffortMode(): void
@@ -592,7 +592,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals($built_presenter->burnup_mode, "effort");
+        self::assertEquals($built_presenter->burnup_mode, "effort");
     }
 
     public function testBurnupUseCountMode(): void
@@ -626,7 +626,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->assertEquals($built_presenter->burnup_mode, "count");
+        self::assertEquals($built_presenter->burnup_mode, "count");
     }
 
     public function testThrowExceptionWhenUserCantAccessToProject(): void
@@ -690,21 +690,22 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->agiledashboard_milestone_backlog->expects(self::once())->method('getDescendantTrackers')->willReturn([]);
     }
 
-    private function mockAgiledashboardBacklogFactory($factory): void
+    private function mockAgiledashboardBacklogFactory(\PHPUnit\Framework\MockObject\MockObject&AgileDashboard_Milestone_Backlog_BacklogFactory $factory): void
     {
         $factory->expects(self::once())->method('getSelfBacklog')
             ->with($this->planning_virtual_top_milestone)
             ->willReturn($this->agiledashboard_milestone_backlog);
     }
 
-    private function mockAgiledashboardBacklogItemFactory($agiledashboard_milestone_backlog_item_collection_factory): void
-    {
+    private function mockAgiledashboardBacklogItemFactory(
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory,
+    ): void {
         $agiledashboard_milestone_backlog_item_collection_factory->expects(self::once())->method('getUnassignedOpenCollection')
             ->with($this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false)
             ->willReturn($this->agileDashboard_milestone_backlog_item_collection);
     }
 
-    private function mockTimeframe($semantic_timeframe): void
+    private function mockTimeframe(SemanticTimeframe&\PHPUnit\Framework\MockObject\MockObject $semantic_timeframe): void
     {
         $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $duration->method('getLabel')->willReturn('duration');
