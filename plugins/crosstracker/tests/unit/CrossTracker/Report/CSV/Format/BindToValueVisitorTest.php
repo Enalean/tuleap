@@ -20,23 +20,17 @@
 
 namespace Tuleap\CrossTracker\Report\CSV\Format;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 
-class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var BindToValueVisitor */
-    private $visitor;
-    /** @var Mockery\MockInterface | \Tracker_FormElement_Field_List */
+    private BindToValueVisitor $visitor;
+    /** @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElement_Field_List */
     private $list_field;
-    /** @var Mockery\MockInterface | BindParameters */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&BindParameters */
     private $parameters;
-    /** @var Mockery\MockInterface | \Tracker_Artifact_ChangesetValue_List */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_ChangesetValue_List */
     private $changeset_value;
 
     protected function setUp(): void
@@ -44,177 +38,204 @@ class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->visitor         = new BindToValueVisitor();
-        $this->list_field      = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->parameters      = Mockery::mock(BindToValueParameters::class);
-        $this->changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class);
-        $this->parameters->shouldReceive('getChangesetValue')->andReturn($this->changeset_value);
+        $this->list_field      = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->parameters      = $this->createMock(BindToValueParameters::class);
+        $this->changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
+        $this->parameters->method('getChangesetValue')->willReturn($this->changeset_value);
     }
 
-    public function testVisitListBindStatic()
+    public function testVisitListBindStatic(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(['212']);
+        $this->changeset_value->method('getValue')->willReturn(['212']);
 
-        $static_bind_value = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $static_bind_value->shouldReceive('getLabel')->andReturn('piceworth');
+        $static_bind_value = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $static_bind_value->method('getLabel')->willReturn('piceworth');
 
-        $static_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $static_bind->shouldReceive('accept')->passthru();
-        $static_bind->shouldReceive('getValue')->with('212')->andReturn($static_bind_value);
+        $static_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Static::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
+
+        $static_bind->method('getValue')->with('212')->willReturn($static_bind_value);
 
         $result = $static_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new TextValue('piceworth'), $result);
+        self::assertEquals(new TextValue('piceworth'), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindStaticHasNoValue()
+    public function testItReturnsEmptyValueWhenListBindStaticHasNoValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn([]);
+        $this->changeset_value->method('getValue')->willReturn([]);
 
-        $static_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $static_bind->shouldReceive('accept')->passthru();
+        $static_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Static::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
 
         $result = $static_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindStaticHasNoneValue()
+    public function testItReturnsEmptyValueWhenListBindStaticHasNoneValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(
+        $this->changeset_value->method('getValue')->willReturn(
             [
                 (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 
-        $static_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $static_bind->shouldReceive('accept')->passthru();
+        $static_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Static::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
 
         $result = $static_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindStaticHasInvalidValue()
+    public function testItReturnsEmptyValueWhenListBindStaticHasInvalidValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(['356']);
+        $this->changeset_value->method('getValue')->willReturn(['356']);
 
-        $static_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $static_bind->shouldReceive('accept')->passthru();
-        $static_bind->shouldReceive('getValue')->andThrow(new \Tracker_FormElement_InvalidFieldValueException());
+        $static_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Static::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
+
+        $static_bind->method('getValue')->willThrowException(new \Tracker_FormElement_InvalidFieldValueException());
 
         $result = $static_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testVisitListBindUsers()
+    public function testVisitListBindUsers(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(['326']);
+        $this->changeset_value->method('getValue')->willReturn(['326']);
 
-        $user             = Mockery::mock(\PFUser::class);
-        $users_bind_value = Mockery::mock(\Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $users_bind_value->shouldReceive('getUser')->andReturn($user);
+        $user             = UserTestBuilder::aUser()->build();
+        $users_bind_value = $this->createMock(\Tracker_FormElement_Field_List_Bind_UsersValue::class);
+        $users_bind_value->method('getUser')->willReturn($user);
 
-        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
-        $users_bind->shouldReceive('accept')->passthru();
-        $users_bind->shouldReceive('getValue')->with('326')->andReturn($users_bind_value);
+        $users_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Users::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
+
+        $users_bind->method('getValue')->with('326')->willReturn($users_bind_value);
 
         $result = $users_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new UserValue($user), $result);
+        self::assertEquals(new UserValue($user), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindUsersHasNoValue()
+    public function testItReturnsEmptyValueWhenListBindUsersHasNoValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn([]);
+        $this->changeset_value->method('getValue')->willReturn([]);
 
-        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
-        $users_bind->shouldReceive('accept')->passthru();
+        $users_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Users::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
 
         $result = $users_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindUsersHasNoneValue()
+    public function testItReturnsEmptyValueWhenListBindUsersHasNoneValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(
+        $this->changeset_value->method('getValue')->willReturn(
             [
                 (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 
-        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
-        $users_bind->shouldReceive('accept')->passthru();
+        $users_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Users::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
 
         $result = $users_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindUsersHasInvalidValue()
+    public function testItReturnsEmptyValueWhenListBindUsersHasInvalidValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(['99']);
+        $this->changeset_value->method('getValue')->willReturn(['99']);
 
-        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
-        $users_bind->shouldReceive('accept')->passthru();
-        $users_bind->shouldReceive('getValue')->with('99')->andReturn(null);
+        $users_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Users::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
+
+        $users_bind->method('getValue')->with('99')->willReturn(null);
 
         $result = $users_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testVisitListBindUgroups()
+    public function testVisitListBindUgroups(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(['979']);
+        $this->changeset_value->method('getValue')->willReturn(['979']);
 
-        $ugroups_bind_value = Mockery::mock(\Tracker_FormElement_Field_List_Bind_UgroupsValue::class);
-        $ugroups_bind_value->shouldReceive('getLabel')->andReturn('hospitious');
+        $ugroups_bind_value = $this->createMock(\Tracker_FormElement_Field_List_Bind_UgroupsValue::class);
+        $ugroups_bind_value->method('getLabel')->willReturn('hospitious');
 
-        $ugroups_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Ugroups::class);
-        $ugroups_bind->shouldReceive('accept')->passthru();
-        $ugroups_bind->shouldReceive('getValue')->with('979')->andReturn($ugroups_bind_value);
+        $ugroups_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Ugroups::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getValue'])
+            ->getMock();
+
+        $ugroups_bind->method('getValue')->with('979')->willReturn($ugroups_bind_value);
 
         $result = $ugroups_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new TextValue('hospitious'), $result);
+        self::assertEquals(new TextValue('hospitious'), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindUgroupsHasNoValue()
+    public function testItReturnsEmptyValueWhenListBindUgroupsHasNoValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn([]);
+        $this->changeset_value->method('getValue')->willReturn([]);
 
-        $ugroups_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Ugroups::class);
-        $ugroups_bind->shouldReceive('accept')->passthru();
+        $ugroups_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Ugroups::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
 
         $result = $ugroups_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListBindUgroupsHasNoneValue()
+    public function testItReturnsEmptyValueWhenListBindUgroupsHasNoneValue(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturn(
+        $this->changeset_value->method('getValue')->willReturn(
             [
                 (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 
-        $ugroups_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Ugroups::class);
-        $ugroups_bind->shouldReceive('accept')->passthru();
+        $ugroups_bind = $this->getMockBuilder(\Tracker_FormElement_Field_List_Bind_Ugroups::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
 
         $result = $ugroups_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 
-    public function testVisitListBindNull()
+    public function testVisitListBindNull(): void
     {
         $null_bind = new \Tracker_FormElement_Field_List_Bind_Null($this->list_field);
 
         $result = $null_bind->accept($this->visitor, $this->parameters);
 
-        $this->assertEquals(new EmptyValue(), $result);
+        self::assertEquals(new EmptyValue(), $result);
     }
 }

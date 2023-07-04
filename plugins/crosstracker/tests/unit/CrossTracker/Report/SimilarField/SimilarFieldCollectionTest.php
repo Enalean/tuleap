@@ -20,13 +20,13 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItKeepsFieldsWithTheSameNameAndTypeInAtLeastTwoTrackers()
+    public function testItKeepsFieldsWithTheSameNameAndTypeInAtLeastTwoTrackers(): void
     {
         $candidates = $this->buildCandidates([
             ['name' => 'alternator', 'tracker_id' => 91, 'type' => 'string', 'bind_name' => null],
@@ -36,19 +36,19 @@ class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             ['name' => 'acroscleriasis', 'tracker_id' => 32, 'type' => 'sb', 'bind_name' => 'static'],
         ]);
         $collection = new SimilarFieldCollection(...$candidates);
-        $this->assertSame($candidates, iterator_to_array($collection));
-        $this->assertSame(['alternator', 'acroscleriasis'], $collection->getFieldNames());
-        $this->assertCount(2, $collection->getFieldIdentifiers());
+        self::assertSame($candidates, iterator_to_array($collection));
+        self::assertSame(['alternator', 'acroscleriasis'], $collection->getFieldNames());
+        self::assertCount(2, $collection->getFieldIdentifiers());
 
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getTrackerId')->andReturns(91);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(91)->build())->build();
+
         $identifier = new SimilarFieldIdentifier('alternator', null);
-        $this->assertSame($candidates[0]->getField(), $collection->getField($artifact, $identifier));
+        self::assertSame($candidates[0]->getField(), $collection->getField($artifact, $identifier));
         $not_a_candidate = new SimilarFieldIdentifier('not_candidate', null);
-        $this->assertNull($collection->getField($artifact, $not_a_candidate));
+        self::assertNull($collection->getField($artifact, $not_a_candidate));
     }
 
-    public function testItFiltersOutFieldsInOnlyOneTracker()
+    public function testItFiltersOutFieldsInOnlyOneTracker(): void
     {
         $candidates = $this->buildCandidates([
             ['name' => 'archegonium', 'tracker_id' => 87, 'type' => 'int', 'bind_name' => null],
@@ -56,10 +56,10 @@ class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $collection = new SimilarFieldCollection(...$candidates);
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 
-    public function testItFiltersOutFieldsWithTheSameNameButNotTheSameType()
+    public function testItFiltersOutFieldsWithTheSameNameButNotTheSameType(): void
     {
         $candidates = $this->buildCandidates([
             ['name' => 'floriculturally', 'tracker_id' => 89, 'type' => 'sb', 'bind_name' => 'static'],
@@ -67,10 +67,10 @@ class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $collection = new SimilarFieldCollection(...$candidates);
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 
-    public function testItFiltersOutFieldsWithTheSameNameAndTypeButNotTheSameBind()
+    public function testItFiltersOutFieldsWithTheSameNameAndTypeButNotTheSameBind(): void
     {
         $candidates = $this->buildCandidates(
             [
@@ -80,22 +80,22 @@ class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $collection = new SimilarFieldCollection(...$candidates);
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 
-    public function testItWorksWithoutCandidates()
+    public function testItWorksWithoutCandidates(): void
     {
         $collection = new SimilarFieldCollection();
-        $this->assertCount(0, $collection);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getTrackerId')->andReturns(101);
+        self::assertCount(0, $collection);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getTrackerId')->willReturn(101);
         $not_a_candidate = new SimilarFieldIdentifier('name', null);
-        $this->assertNull($collection->getField($artifact, $not_a_candidate));
-        $this->assertEmpty($collection->getFieldNames());
-        $this->assertEmpty($collection->getFieldIdentifiers());
+        self::assertNull($collection->getField($artifact, $not_a_candidate));
+        self::assertEmpty($collection->getFieldNames());
+        self::assertEmpty($collection->getFieldIdentifiers());
     }
 
-    private function buildCandidates(array $values)
+    private function buildCandidates(array $values): array
     {
         $candidates = [];
         foreach ($values as $value) {
@@ -109,14 +109,15 @@ class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         return $candidates;
     }
 
-    private function buildCandidate($name, $tracker_id, $type, $bind_name)
+    private function buildCandidate(string $name, int $tracker_id, string $type, ?string $bind_name): SimilarFieldCandidate&MockObject
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getTrackerId')->andReturns($tracker_id);
-        $candidate = \Mockery::mock(SimilarFieldCandidate::class);
-        $candidate->shouldReceive('getTypeWithBind')->andReturns($type . '/' . $bind_name . '/' . $name);
-        $candidate->shouldReceive('getIdentifierWithBindType')->andReturns($name . '/' . $bind_name);
-        $candidate->shouldReceive('getField')->andReturns($field);
+        $field = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getTrackerId')->willReturn($tracker_id);
+        $candidate = $this->createMock(SimilarFieldCandidate::class);
+        $candidate->method('getTypeWithBind')->willReturn($type . '/' . $bind_name . '/' . $name);
+        $candidate->method('getIdentifierWithBindType')->willReturn($name . '/' . $bind_name);
+        $candidate->method('getField')->willReturn($field);
+
         return $candidate;
     }
 }

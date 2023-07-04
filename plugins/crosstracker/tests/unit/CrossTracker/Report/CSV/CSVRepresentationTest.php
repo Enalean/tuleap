@@ -20,17 +20,9 @@
 
 namespace Tuleap\CrossTracker\Report\CSV;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class CSVRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CSVRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var CSVRepresentation */
-    private $representation;
+    private CSVRepresentation $representation;
 
     protected function setUp(): void
     {
@@ -38,37 +30,37 @@ class CSVRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->representation = new CSVRepresentation();
     }
 
-    public function testToStringWithComma()
+    public function testToStringWithComma(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn('comma');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->with('user_csv_separator')->willReturn('comma');
         $values = ['harrisite', 54, '03/04/2025 12:18'];
 
         $this->representation->build($values, $user);
 
-        $this->assertEquals($this->representation->__toString(), 'harrisite,54,03/04/2025 12:18');
+        self::assertEquals($this->representation->__toString(), 'harrisite,54,03/04/2025 12:18');
     }
 
-    public function testToStringWithSemicolon()
+    public function testToStringWithSemicolon(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn('semicolon');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->with('user_csv_separator')->willReturn('semicolon');
         $values = [37, 'prethrill', '19/09/2031'];
 
         $this->representation->build($values, $user);
 
-        $this->assertEquals($this->representation->__toString(), '37;prethrill;19/09/2031');
+        self::assertEquals($this->representation->__toString(), '37;prethrill;19/09/2031');
     }
 
-    public function testToStringWithTab()
+    public function testToStringWithTab(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn('tab');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->with('user_csv_separator')->willReturn('tab');
         $values = ['27/02/2018 10:10', '"Kara ""Starbuck"" Thrace"', 39.9749];
 
         $this->representation->build($values, $user);
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->representation->__toString(),
             "27/02/2018 10:10\t\"Kara \"\"Starbuck\"\" Thrace\"\t39.9749"
         );

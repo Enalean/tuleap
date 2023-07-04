@@ -20,31 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
-require_once __DIR__ . '/../../../../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 
-class ListValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ListValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var EmptyStringChecker */
-    private $empty_string_checker;
-
-    /** @var \UserManager */
-    private $user_manager;
-
-    /** @var ListValueValidator */
-    private $validator;
+    private EmptyStringChecker&MockObject $empty_string_checker;
+    private \UserManager&MockObject $user_manager;
+    private ListValueValidator $validator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->empty_string_checker = Mockery::mock(EmptyStringChecker::class);
+        $this->empty_string_checker = $this->createMock(EmptyStringChecker::class);
 
-        $this->user_manager = Mockery::mock(\UserManager::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
 
         $this->validator = new ListValueValidator(
             $this->empty_string_checker,
@@ -52,36 +43,36 @@ class ListValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testEmptyStringIsValidWhenAllowed()
+    public function testEmptyStringIsValidWhenAllowed(): void
     {
-        $this->empty_string_checker->shouldReceive('isEmptyStringAProblem')->withArgs([''])->andReturn(false);
+        $this->empty_string_checker->method('isEmptyStringAProblem')->with('')->willReturn(false);
 
         $this->expectNotToPerformAssertions();
         $this->validator->checkValueIsValid('');
     }
 
-    public function testEmptyStringIsInvalidWhenForbidden()
+    public function testEmptyStringIsInvalidWhenForbidden(): void
     {
-        $this->empty_string_checker->shouldReceive('isEmptyStringAProblem')->withArgs([''])->andReturn(true);
+        $this->empty_string_checker->method('isEmptyStringAProblem')->with('')->willReturn(true);
 
         $this->expectException(ListToEmptyStringException::class);
         $this->validator->checkValueIsValid('');
     }
 
-    public function testExistingUserIsValid()
+    public function testExistingUserIsValid(): void
     {
-        $this->empty_string_checker->shouldReceive('isEmptyStringAProblem')->withArgs(['lromo'])->andReturn(false);
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByUserName', 'lromo')->andReturn($user);
+        $this->empty_string_checker->method('isEmptyStringAProblem')->with('lromo')->willReturn(false);
+        $user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
 
         $this->expectNotToPerformAssertions();
         $this->validator->checkValueIsValid('lromo');
     }
 
-    public function testNonExistentUserIsInvalid()
+    public function testNonExistentUserIsInvalid(): void
     {
-        $this->empty_string_checker->shouldReceive('isEmptyStringAProblem')->withArgs(['cillovsky'])->andReturn(false);
-        $this->user_manager->shouldReceive('getUserByUserName', 'cillovsky')->andReturn(null);
+        $this->empty_string_checker->method('isEmptyStringAProblem')->with('cillovsky')->willReturn(false);
+        $this->user_manager->method('getUserByUserName')->willReturn(null);
 
         $this->expectException(NonExistentListValueException::class);
         $this->validator->checkValueIsValid('cillovsky');

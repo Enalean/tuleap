@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElementFactory;
@@ -31,61 +32,51 @@ use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmittedOnIsMissingInAtLeastOneTrackerException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var Tracker_Semantic_ContributorDao
+     * @var Tracker_Semantic_ContributorDao&MockObject
      */
     private $assigned_to;
     /**
      * @var Tracker[]
      */
-    private $trackers;
+    private array $trackers;
+    private PFUser $user;
     /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Tracker_FormElementFactory
+     * @var Tracker_FormElementFactory&MockObject
      */
     private $form_element_factory;
     /**
-     * @var Tracker_Semantic_TitleDao
+     * @var Tracker_Semantic_TitleDao&MockObject
      */
     private $title_dao;
     /**
-     * @var Tracker_Semantic_DescriptionDao
+     * @var Tracker_Semantic_DescriptionDao&MockObject
      */
     private $description_dao;
     /**
-     * @var Tracker_Semantic_StatusDao
+     * @var Tracker_Semantic_StatusDao&MockObject
      */
     private $status_dao;
-    /**
-     * @var MetadataUsageChecker
-     */
-    private $checker;
-    /**
-     * @var Tracker
-     */
-    private $tracker_101;
-    /**
-     * @var Tracker
-     */
-    private $tracker_102;
+    private MetadataUsageChecker $checker;
+    private Tracker $tracker_101;
+    private Tracker $tracker_102;
     /**
      * @var InvalidSearchablesCollection
      */
     private $invalid_searchable_collection;
     /**
-     * @var Tracker_FormElement_Field_SubmittedOn
+     * @var Tracker_FormElement_Field_SubmittedOn&MockObject
      */
     private $submitted_on_101;
     /**
-     * @var Tracker_FormElement_Field_SubmittedOn
+     * @var Tracker_FormElement_Field_SubmittedOn&MockObject
      */
     private $submitted_on_102;
 
@@ -93,12 +84,9 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->invalid_searchable_collection = $this->createMock(InvalidSearchablesCollection::class);
 
-        $this->tracker_101 = $this->createMock(Tracker::class);
-        $this->tracker_102 = $this->createMock(Tracker::class);
+        $this->tracker_101 = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $this->tracker_102 = TrackerTestBuilder::aTracker()->withId(102)->build();
         $this->trackers    = [$this->tracker_101, $this->tracker_102];
-
-        $this->tracker_101->method('getId')->willReturn(101);
-        $this->tracker_102->method('getId')->willReturn(102);
 
         $this->submitted_on_101 = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
         $this->submitted_on_102 = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
@@ -109,7 +97,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->status_dao           = $this->createMock(Tracker_Semantic_StatusDao::class);
         $this->assigned_to          = $this->createMock(Tracker_Semantic_ContributorDao::class);
 
-        $this->user = $this->createMock(PFUser::class);
+        $this->user = UserTestBuilder::aUser()->build();
 
         $this->checker = new MetadataUsageChecker(
             $this->form_element_factory,
@@ -120,7 +108,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItShouldRaiseAnErrorIfThereIsNoSubmittedOnFieldOnAtLeastOneTracker()
+    public function testItShouldRaiseAnErrorIfThereIsNoSubmittedOnFieldOnAtLeastOneTracker(): void
     {
         $this->submitted_on_101->method('userCanRead')->willReturn(true);
         $fields_map = [
@@ -141,7 +129,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
     }
 
-    public function testItShouldRaiseAnErrorIfThereIsNoReadableSubmittedOnField()
+    public function testItShouldRaiseAnErrorIfThereIsNoReadableSubmittedOnField(): void
     {
         $this->submitted_on_101->method('userCanRead')->willReturn(false);
         $this->submitted_on_102->method('userCanRead')->willReturn(true);
@@ -163,8 +151,10 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
     }
 
-    public function testItShouldNotRaiseAnErrorIfAllSubmittedOnFieldsAreReadable()
+    public function testItShouldNotRaiseAnErrorIfAllSubmittedOnFieldsAreReadable(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $this->submitted_on_101->method('userCanRead')->willReturn(true);
         $this->submitted_on_102->method('userCanRead')->willReturn(true);
         $fields_map = [
@@ -181,7 +171,5 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
-
-        $this->addToAssertionCount(1);
     }
 }

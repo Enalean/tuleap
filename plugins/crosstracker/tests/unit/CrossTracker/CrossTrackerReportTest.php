@@ -20,26 +20,21 @@
 
 namespace Tuleap\CrossTracker;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testTrackersAreMarkedAsInvalidWhenInNotActiveProjects()
+    public function testTrackersAreMarkedAsInvalidWhenInNotActiveProjects(): void
     {
-        $tracker_in_active_project = \Mockery::mock(\Tracker::class);
-        $active_project            = \Mockery::mock(\Project::class);
-        $active_project->shouldReceive('isActive')->andReturns(true);
-        $tracker_in_active_project->shouldReceive('getProject')->andReturns($active_project);
+        $active_project            = ProjectTestBuilder::aProject()->withStatusActive()->build();
+        $tracker_in_active_project = TrackerTestBuilder::aTracker()->withProject($active_project)->build();
 
-        $tracker_in_suspended_project = \Mockery::mock(\Tracker::class);
-        $suspended_project            = \Mockery::mock(\Project::class);
-        $suspended_project->shouldReceive('isActive')->andReturns(false);
-        $tracker_in_suspended_project->shouldReceive('getProject')->andReturns($suspended_project);
+        $suspended_project            = ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        $tracker_in_suspended_project = TrackerTestBuilder::aTracker()->withProject($suspended_project)->build();
 
-        $tracker_without_known_project = \Mockery::mock(\Tracker::class);
-        $tracker_without_known_project->shouldReceive('getProject')->andReturns(null);
+        $tracker_without_known_project = $this->createMock(\Tracker::class);
+        $tracker_without_known_project->method('getProject')->willReturn(null);
 
         $report = new CrossTrackerReport(
             1,
@@ -47,16 +42,17 @@ class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
             [$tracker_in_active_project, $tracker_in_suspended_project, $tracker_without_known_project]
         );
 
-        $this->assertSame([$tracker_in_active_project], $report->getTrackers());
-        $this->assertSame([$tracker_in_suspended_project, $tracker_without_known_project], $report->getInvalidTrackers());
+        self::assertSame([$tracker_in_active_project], $report->getTrackers());
+        self::assertSame([$tracker_in_suspended_project, $tracker_without_known_project], $report->getInvalidTrackers());
     }
 
-    public function testDetermineInvalidTrackersIsComputedOnlyOnce()
+    public function testDetermineInvalidTrackersIsComputedOnlyOnce(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $project = \Mockery::mock(\Project::class);
-        $tracker->shouldReceive('getProject')->andReturns($project);
-        $project->shouldReceive('isActive')->once()->andReturns(true);
+        $project = $this->createMock(\Project::class);
+        $project->expects(self::once())->method('isActive')->willReturn(true);
+        $project->method('getID')->willReturn(101);
+
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
 
         $report = new CrossTrackerReport(1, '', [$tracker]);
 
@@ -66,14 +62,14 @@ class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
         $report->getInvalidTrackers();
     }
 
-    public function testReportWithoutTrackers()
+    public function testReportWithoutTrackers(): void
     {
         $report = new CrossTrackerReport(1, '', []);
-        $this->assertSame([], $report->getTrackerIds());
-        $this->assertSame([], $report->getTrackers());
-        $this->assertSame([], $report->getInvalidTrackers());
-        $this->assertSame([], $report->getProjects());
-        $this->assertSame([], $report->getColumnFields());
-        $this->assertSame([], $report->getSearchFields());
+        self::assertSame([], $report->getTrackerIds());
+        self::assertSame([], $report->getTrackers());
+        self::assertSame([], $report->getInvalidTrackers());
+        self::assertSame([], $report->getProjects());
+        self::assertSame([], $report->getColumnFields());
+        self::assertSame([], $report->getSearchFields());
     }
 }

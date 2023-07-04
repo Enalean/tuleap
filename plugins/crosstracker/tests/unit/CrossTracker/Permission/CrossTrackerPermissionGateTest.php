@@ -20,115 +20,146 @@
 
 namespace Tuleap\CrossTracker\Permission;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItDoesNotBlockLegitimateUser()
+    public function testItDoesNotBlockLegitimateUser(): void
     {
         $this->expectNotToPerformAssertions();
 
-        $user    = \Mockery::spy(\PFUser::class);
-        $tracker = \Mockery::spy(\Tracker::class);
-        $project = \Mockery::spy(\Project::class);
-        $tracker->shouldReceive('userCanView')->andReturn(true);
-        $column_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $column_field->shouldReceive('userCanRead')->andReturn(true);
-        $search_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $search_field->shouldReceive('userCanRead')->andReturn(true);
-        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn([$project]);
-        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
-        $report->shouldReceive('getColumnFields')->andReturn([$column_field]);
-        $report->shouldReceive('getSearchFields')->andReturn([$search_field]);
+        $user    = UserTestBuilder::aUser()->build();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $url_verification = \Mockery::spy(\URLVerification::class);
-        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('userCanView')->willReturn(true);
+        $column_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $column_field->method('userCanRead')->willReturn(true);
+        $search_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $search_field->method('userCanRead')->willReturn(true);
+        $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report->method('getProjects')->willReturn([$project]);
+        $report->method('getTrackers')->willReturn([$tracker]);
+        $report->method('getColumnFields')->willReturn([$column_field]);
+        $report->method('getSearchFields')->willReturn([$search_field]);
+
+        $url_verification = $this->createMock(\URLVerification::class);
+        $url_verification->method('userCanAccessProject')->willReturn(true);
+
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToProjects()
+    public function testItBlocksUserThatCannotAccessToProjects(): void
     {
-        $user     = \Mockery::spy(\PFUser::class);
-        $project1 = \Mockery::spy(\Project::class);
-        $project2 = \Mockery::spy(\Project::class);
-        $report   = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn([$project1, $project2]);
-        $url_verification = \Mockery::spy(\URLVerification::class);
-        $url_verification->shouldReceive('userCanAccessProject')->with($user, $project1)->andReturn(true);
-        $url_verification->shouldReceive('userCanAccessProject')->with($user, $project2)->andThrow(
-            \Project_AccessPrivateException::class
+        $user     = UserTestBuilder::aUser()->build();
+        $project1 = ProjectTestBuilder::aProject()->build();
+        $project2 = ProjectTestBuilder::aProject()->build();
+
+        $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report->method('getProjects')->willReturn([$project1, $project2]);
+
+        $url_verification = $this->createMock(\URLVerification::class);
+        $url_verification->method('userCanAccessProject')->willReturnCallback(
+            function (\PFUser $user_param, \Project $project_param) use ($user, $project1, $project2): bool {
+                if ($user_param === $user && $project_param === $project1) {
+                    return true;
+                } elseif ($user_param === $user && $project_param === $project2) {
+                    throw new \Project_AccessPrivateException();
+                }
+
+                return false;
+            }
         );
 
         $permission_gate = new CrossTrackerPermissionGate($url_verification);
+
         $this->expectException(\Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedProjectException::class);
+
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToTrackers()
+    public function testItBlocksUserThatCannotAccessToTrackers(): void
     {
-        $user     = \Mockery::spy(\PFUser::class);
-        $tracker1 = \Mockery::spy(\Tracker::class);
-        $tracker1->shouldReceive('userCanView')->andReturn(true);
-        $tracker2 = \Mockery::spy(\Tracker::class);
-        $tracker2->shouldReceive('userCanView')->andReturn(false);
-        $project = \Mockery::spy(\Project::class);
-        $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn([$project]);
-        $report->shouldReceive('getTrackers')->andReturn([$tracker1, $tracker2]);
+        $user = UserTestBuilder::aUser()->build();
 
-        $url_verification = \Mockery::spy(\URLVerification::class);
-        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $tracker1 = $this->createMock(\Tracker::class);
+        $tracker1->method('userCanView')->willReturn(true);
+        $tracker2 = $this->createMock(\Tracker::class);
+        $tracker2->method('userCanView')->willReturn(false);
+
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report->method('getProjects')->willReturn([$project]);
+        $report->method('getTrackers')->willReturn([$tracker1, $tracker2]);
+
+        $url_verification = $this->createMock(\URLVerification::class);
+        $url_verification->method('userCanAccessProject')->willReturn(true);
+
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+
         $this->expectException(\Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedTrackerException::class);
+
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToColumnFields()
+    public function testItBlocksUserThatCannotAccessToColumnFields(): void
     {
-        $user    = \Mockery::spy(\PFUser::class);
-        $tracker = \Mockery::spy(\Tracker::class);
-        $project = \Mockery::spy(\Project::class);
-        $tracker->shouldReceive('userCanView')->andReturn(true);
-        $column_field1 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $column_field1->shouldReceive('userCanRead')->andReturn(true);
-        $column_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $column_field2->shouldReceive('userCanRead')->andReturn(false);
-        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn([$project]);
-        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
-        $report->shouldReceive('getColumnFields')->andReturn([$column_field1, $column_field2]);
+        $user    = UserTestBuilder::aUser()->build();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $url_verification = \Mockery::spy(\URLVerification::class);
-        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('userCanView')->willReturn(true);
+
+        $column_field1 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $column_field1->method('userCanRead')->willReturn(true);
+        $column_field2 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $column_field2->method('userCanRead')->willReturn(false);
+        $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report->method('getProjects')->willReturn([$project]);
+        $report->method('getTrackers')->willReturn([$tracker]);
+        $report->method('getColumnFields')->willReturn([$column_field1, $column_field2]);
+
+        $url_verification = $this->createMock(\URLVerification::class);
+        $url_verification->method('userCanAccessProject')->willReturn(true);
+
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+
         $this->expectException(\Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedColumnFieldException::class);
+
         $permission_gate->check($user, $report);
     }
 
-    public function testItBlocksUserThatCannotAccessToSearchFields()
+    public function testItBlocksUserThatCannotAccessToSearchFields(): void
     {
-        $user    = \Mockery::spy(\PFUser::class);
-        $tracker = \Mockery::spy(\Tracker::class);
-        $project = \Mockery::spy(\Project::class);
-        $tracker->shouldReceive('userCanView')->andReturn(true);
-        $column_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $column_field->shouldReceive('userCanRead')->andReturn(true);
-        $search_field1 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $search_field1->shouldReceive('userCanRead')->andReturn(true);
-        $search_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $search_field2->shouldReceive('userCanRead')->andReturn(false);
-        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn([$project]);
-        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
-        $report->shouldReceive('getColumnFields')->andReturn([$column_field]);
-        $report->shouldReceive('getSearchFields')->andReturn([$search_field1, $search_field2]);
+        $user    = UserTestBuilder::aUser()->build();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $url_verification = \Mockery::spy(\URLVerification::class);
-        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('userCanView')->willReturn(true);
+
+        $column_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $column_field->method('userCanRead')->willReturn(true);
+        $search_field1 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $search_field1->method('userCanRead')->willReturn(true);
+        $search_field2 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $search_field2->method('userCanRead')->willReturn(false);
+        $report = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report->method('getProjects')->willReturn([$project]);
+        $report->method('getTrackers')->willReturn([$tracker]);
+        $report->method('getColumnFields')->willReturn([$column_field]);
+        $report->method('getSearchFields')->willReturn([$search_field1, $search_field2]);
+
+        $url_verification = $this->createMock(\URLVerification::class);
+        $url_verification->method('userCanAccessProject')->willReturn(true);
+
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+
         $this->expectException(\Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedSearchFieldException::class);
+
         $permission_gate->check($user, $report);
     }
 }

@@ -22,15 +22,15 @@ namespace Tuleap\CrossTracker\Report\Query;
 
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 
-class ParametrizedFromTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParametrizedFromTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testArrayUniqueOfArrayOfParametrizedFromObjectsExcludSameObjects()
+    public function testArrayUniqueOfArrayOfParametrizedFromObjectsExcludSameObjects(): void
     {
         $o1 = new ParametrizedFrom('some sql', [1, 2]);
         $o2 = new ParametrizedFrom('another sql', [1, 2]);
         $o3 = new ParametrizedFrom('some sql', [1, 2]);
         $o4 = new ParametrizedFrom('some sql', [1, 2, 3]);
 
-        $this->assertEquals([$o1, $o2, $o4], array_values(array_unique([$o1, $o2, $o3, $o4])));
+        self::assertEquals([$o1, $o2, $o4], array_values(array_unique([$o1, $o2, $o3, $o4])));
     }
 }

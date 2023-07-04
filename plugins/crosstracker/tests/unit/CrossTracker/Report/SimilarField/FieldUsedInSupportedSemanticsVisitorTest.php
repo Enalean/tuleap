@@ -20,30 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class FieldUsedInSupportedSemanticsVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldUsedInSupportedSemanticsVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var FieldUsedInSupportedSemanticsVisitor */
-    private $visitor;
-    /** @var \Tracker_Semantic_Title | Mockery\MockInterface */
+    private FieldUsedInSupportedSemanticsVisitor $visitor;
+    /** @var \Tracker_Semantic_Title&\PHPUnit\Framework\MockObject\MockObject */
     private $title_semantic;
-    /** @var \Tracker_Semantic_Description | Mockery\MockInterface */
+    /** @var \Tracker_Semantic_Description&\PHPUnit\Framework\MockObject\MockObject */
     private $description_semantic;
-    /** @var \Tracker_Semantic_Status | Mockery\MockInterface */
+    /** @var \Tracker_Semantic_Status&\PHPUnit\Framework\MockObject\MockObject */
     private $status_semantic;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->title_semantic       = Mockery::mock(\Tracker_Semantic_Title::class);
-        $this->description_semantic = Mockery::mock(\Tracker_Semantic_Description::class);
-        $this->status_semantic      = Mockery::mock(\Tracker_Semantic_Status::class);
+        $this->title_semantic       = $this->createMock(\Tracker_Semantic_Title::class);
+        $this->description_semantic = $this->createMock(\Tracker_Semantic_Description::class);
+        $this->status_semantic      = $this->createMock(\Tracker_Semantic_Status::class);
         $this->visitor              = new FieldUsedInSupportedSemanticsVisitor(
             $this->title_semantic,
             $this->description_semantic,
@@ -51,64 +43,64 @@ class FieldUsedInSupportedSemanticsVisitorTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public function testVisitString()
+    public function testVisitString(): void
     {
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $this->title_semantic->shouldReceive('isUsedInSemantics')->with($string_field)->andReturns(true);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $this->title_semantic->method('isUsedInSemantics')->with($string_field)->willReturn(true);
 
         $this->assertTrue($this->visitor->visitString($string_field));
     }
 
-    public function testItReturnsTrueWhenTextFieldIsUsedInTitle()
+    public function testItReturnsTrueWhenTextFieldIsUsedInTitle(): void
     {
-        $text_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->title_semantic->shouldReceive('isUsedInSemantics')->with($text_field)->andReturns(true);
+        $text_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $this->title_semantic->method('isUsedInSemantics')->with($text_field)->willReturn(true);
 
         $this->assertTrue($this->visitor->visitText($text_field));
     }
 
-    public function testItReturnsTrueWhenTextFieldIsUsedInDescription()
+    public function testItReturnsTrueWhenTextFieldIsUsedInDescription(): void
     {
-        $text_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->title_semantic->shouldReceive('isUsedInSemantics')->with($text_field)->andReturns(false);
-        $this->description_semantic->shouldReceive('isUsedInSemantics')->with($text_field)->andReturns(true);
+        $text_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $this->title_semantic->method('isUsedInSemantics')->with($text_field)->willReturn(false);
+        $this->description_semantic->method('isUsedInSemantics')->with($text_field)->willReturn(true);
 
         $this->assertTrue($this->visitor->visitText($text_field));
     }
 
-    public function testVisitSelectbox()
+    public function testVisitSelectbox(): void
     {
-        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->status_semantic->shouldReceive('isUsedInSemantics')->with($selectbox_field)->andReturns(true);
+        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->status_semantic->method('isUsedInSemantics')->with($selectbox_field)->willReturn(true);
 
         $this->assertTrue($this->visitor->visitSelectbox($selectbox_field));
     }
 
-    public function testVisitRadiobutton()
+    public function testVisitRadiobutton(): void
     {
-        $radio_button = Mockery::mock(\Tracker_FormElement_Field_Radiobutton::class);
-        $this->status_semantic->shouldReceive('isUsedInSemantics')->with($radio_button)->andReturns(true);
+        $radio_button = $this->createMock(\Tracker_FormElement_Field_Radiobutton::class);
+        $this->status_semantic->method('isUsedInSemantics')->with($radio_button)->willReturn(true);
 
         $this->assertTrue($this->visitor->visitSelectbox($radio_button));
     }
 
-    public function testVisitDate()
+    public function testVisitDate(): void
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
         $this->assertFalse($this->visitor->visitDate($date_field));
     }
 
-    public function testVisitInteger()
+    public function testVisitInteger(): void
     {
-        $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
 
         $this->assertFalse($this->visitor->visitInteger($integer_field));
     }
 
-    public function testVisitFloat()
+    public function testVisitFloat(): void
     {
-        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
+        $float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
 
         $this->assertFalse($this->visitor->visitFloat($float_field));
     }
