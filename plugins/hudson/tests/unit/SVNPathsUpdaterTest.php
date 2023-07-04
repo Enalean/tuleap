@@ -18,15 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-require_once __DIR__ . '/bootstrap.php';
-
-class SVNPathsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class SVNPathsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function itAddsSlashesAtTheBeginingOfEachPathIfNecessary()
+    public function testTtAddsSlashesAtTheBeginingOfEachPathIfNecessary(): void
     {
         $updater = new SVNPathsUpdater();
 
@@ -41,10 +36,10 @@ EOS;
 /folder02/folder03/
 EOS;
 
-        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
+        self::assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function testItAddsSlashesAtTheEndOfEachPathIfNecessary()
+    public function testItAddsSlashesAtTheEndOfEachPathIfNecessary(): void
     {
         $updater = new SVNPathsUpdater();
 
@@ -59,40 +54,40 @@ EOS;
 /folder02/folder03/
 EOS;
 
-        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
+        self::assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function testItRemovesTrailingSpaces()
+    public function testItRemovesTrailingSpaces(): void
     {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = <<<EOS
-/folder01/ 
+/folder01/
 EOS;
         $expected_content  = <<<EOS
 /folder01/
 EOS;
 
-        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
+        self::assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function testItDoesNotTranformEmptyContent()
+    public function testItDoesNotTranformEmptyContent(): void
     {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = '';
         $expected_content  = '';
 
-        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
+        self::assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function testItTranformsSpacesOnlyContentAsEmptyContent()
+    public function testItTranformsSpacesOnlyContentAsEmptyContent(): void
     {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = '            ';
         $expected_content  = '';
 
-        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
+        self::assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 }

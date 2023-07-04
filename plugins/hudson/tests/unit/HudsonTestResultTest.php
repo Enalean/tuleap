@@ -24,49 +24,49 @@ namespace Tuleap\Hudson;
 use Http\Mock\Client;
 use HudsonJobURLMalformedException;
 use HudsonTestResult;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class HudsonTestResultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    public function testMalformedURL()
+    public function testMalformedURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonTestResult("toto", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingSchemeURL()
+    public function testMissingSchemeURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonTestResult("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingHostURL()
+    public function testMissingHostURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonTestResult("http://", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testSimpleJobTestResult()
+    public function testSimpleJobTestResult(): void
     {
         $test_result_file = __DIR__ . '/resources/testReport.xml';
         $xmldom           = simplexml_load_string(file_get_contents($test_result_file), \SimpleXMLElement::class, LIBXML_NONET);
 
-        $test_result = Mockery::spy(HudsonTestResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $test_result->shouldReceive('_getXMLObject')->andReturn($xmldom);
-        $test_result->__construct("http://myCIserver/jobs/myCIjob/lastBuild/testReport/", new Client(), HTTPFactoryBuilder::requestFactory());
+        $test_result = new HudsonTestResult(
+            "http://myCIserver/jobs/myCIjob/lastBuild/testReport/",
+            new Client(),
+            HTTPFactoryBuilder::requestFactory(),
+            $xmldom,
+        );
 
-        $this->assertEquals($test_result->getFailCount(), 5);
-        $this->assertEquals($test_result->getPassCount(), 416);
-        $this->assertEquals($test_result->getSkipCount(), 3);
-        $this->assertEquals($test_result->getTotalCount(), 424);
+        self::assertEquals(5, $test_result->getFailCount());
+        self::assertEquals(416, $test_result->getPassCount());
+        self::assertEquals(3, $test_result->getSkipCount());
+        self::assertEquals(424, $test_result->getTotalCount());
     }
 }

@@ -20,26 +20,20 @@
 
 namespace Tuleap\Hudson;
 
-require_once __DIR__ . '/bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class HudsonJobLazyExceptionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HudsonJobLazyExceptionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testHudsonJobIsRetrievedWhenNoErrorExists()
+    public function testHudsonJobIsRetrievedWhenNoErrorExists(): void
     {
-        $hudson_job = \Mockery::mock(\HudsonJob::class);
+        $hudson_job = $this->createMock(\HudsonJob::class);
 
         $hudson_job_lazy_exception = new HudsonJobLazyExceptionHandler($hudson_job, null);
 
-        $this->assertSame($hudson_job_lazy_exception->getHudsonJob(), $hudson_job);
+        self::assertSame($hudson_job_lazy_exception->getHudsonJob(), $hudson_job);
     }
 
-    public function testExceptionIsThrownWhenErrorExist()
+    public function testExceptionIsThrownWhenErrorExist(): void
     {
-        $exception = \Mockery::mock(\Exception::class);
+        $exception = $this->createMock(\Exception::class);
 
         $hudson_job_lazy_exception = new HudsonJobLazyExceptionHandler(null, $exception);
 
@@ -48,7 +42,7 @@ class HudsonJobLazyExceptionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hudson_job_lazy_exception->getHudsonJob();
     }
 
-    public function testRuntimeExceptionIsThrownWhenObjectIsIncorrectlyInitializedByDeveloper()
+    public function testRuntimeExceptionIsThrownWhenObjectIsIncorrectlyInitializedByDeveloper(): void
     {
         $hudson_job_lazy_exception = new HudsonJobLazyExceptionHandler(null, null);
 

@@ -20,42 +20,30 @@
 
 namespace Tuleap\Hudson;
 
-require_once __DIR__ . '/bootstrap.php';
-
 use Http\Mock\Client;
 use HudsonJobURLFileException;
 use HudsonJobURLFileNotFoundException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\GlobalLanguageMock;
 
-class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    protected function setUp(): void
-    {
-        $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-    }
+    use GlobalLanguageMock;
 
     public function testExceptionIsRaisedWhenThePageCannotBeFound(): void
     {
-        $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job->shouldReceive('getName');
-        $minimal_job->shouldReceive('getJobUrl');
+        $minimal_job = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job->method('getName');
+        $minimal_job->method('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
-        $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
+        $request_factory->method('createRequest')->willReturn($this->createMock(RequestInterface::class));
 
         $http_client = new Client();
-        $response    = \Mockery::mock(ResponseInterface::class);
-        $response->shouldReceive('getStatusCode')->andReturns(404);
+        $response    = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn(404);
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
@@ -65,19 +53,19 @@ class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $job_builder->getHudsonJob($minimal_job);
     }
 
-    public function testExceptionIsRaisedWhenInvalidXMLDataIsRetrieved()
+    public function testExceptionIsRaisedWhenInvalidXMLDataIsRetrieved(): void
     {
-        $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job->shouldReceive('getName');
-        $minimal_job->shouldReceive('getJobUrl');
+        $minimal_job = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job->method('getName');
+        $minimal_job->method('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
-        $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
+        $request_factory->method('createRequest')->willReturn($this->createMock(RequestInterface::class));
 
         $http_client = new Client();
-        $response    = \Mockery::mock(ResponseInterface::class);
-        $response->shouldReceive('getBody')->andReturns('Not valid XML');
-        $response->shouldReceive('getStatusCode')->andReturns(200);
+        $response    = $this->createMock(ResponseInterface::class);
+        $response->method('getBody')->willReturn('Not valid XML');
+        $response->method('getStatusCode')->willReturn(200);
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
@@ -87,53 +75,53 @@ class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $job_builder->getHudsonJob($minimal_job);
     }
 
-    public function testHudsonJobIsRetrieved()
+    public function testHudsonJobIsRetrieved(): void
     {
-        $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job->shouldReceive('getName');
-        $minimal_job->shouldReceive('getJobUrl');
+        $minimal_job = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job->method('getName');
+        $minimal_job->method('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
-        $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
+        $request_factory->method('createRequest')->willReturn($this->createMock(RequestInterface::class));
 
         $http_client = new Client();
-        $response    = \Mockery::mock(ResponseInterface::class);
-        $response->shouldReceive('getBody')->andReturns('<_/>');
-        $response->shouldReceive('getStatusCode')->andReturns(200);
+        $response    = $this->createMock(ResponseInterface::class);
+        $response->method('getBody')->willReturn('<_/>');
+        $response->method('getStatusCode')->willReturn(200);
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
         $job         = $job_builder->getHudsonJob($minimal_job);
 
-        $this->assertInstanceOf(\HudsonJob::class, $job);
-        $this->assertCount(1, $http_client->getRequests());
+        self::assertInstanceOf(\HudsonJob::class, $job);
+        self::assertCount(1, $http_client->getRequests());
     }
 
-    public function testBatchRetrievalTriesToRetrieveAllJobs()
+    public function testBatchRetrievalTriesToRetrieveAllJobs(): void
     {
-        $minimal_job0 = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job0->shouldReceive('getName');
-        $minimal_job0->shouldReceive('getJobUrl');
-        $minimal_job1 = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job1->shouldReceive('getName');
-        $minimal_job1->shouldReceive('getJobUrl');
-        $minimal_job2 = \Mockery::mock(MinimalHudsonJob::class);
-        $minimal_job2->shouldReceive('getName');
-        $minimal_job2->shouldReceive('getJobUrl');
+        $minimal_job0 = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job0->method('getName');
+        $minimal_job0->method('getJobUrl');
+        $minimal_job1 = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job1->method('getName');
+        $minimal_job1->method('getJobUrl');
+        $minimal_job2 = $this->createMock(MinimalHudsonJob::class);
+        $minimal_job2->method('getName');
+        $minimal_job2->method('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
-        $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
+        $request_factory = $this->createMock(RequestFactoryInterface::class);
+        $request_factory->method('createRequest')->willReturn($this->createMock(RequestInterface::class));
 
         $http_client = new Client();
-        $response    = \Mockery::mock(ResponseInterface::class);
-        $response->shouldReceive('getBody')->andReturns('<_/>');
-        $response->shouldReceive('getStatusCode')->andReturns(200);
+        $response    = $this->createMock(ResponseInterface::class);
+        $response->method('getBody')->willReturn('<_/>');
+        $response->method('getStatusCode')->willReturn(200);
         $http_client->setDefaultResponse($response);
 
         $job_builder         = new HudsonJobBuilder($request_factory, $http_client);
         $jobs_with_exception = $job_builder->getHudsonJobsWithException([$minimal_job0, $minimal_job1, $minimal_job2]);
 
-        $this->assertCount(3, $jobs_with_exception);
-        $this->assertCount(3, $http_client->getRequests());
+        self::assertCount(3, $jobs_with_exception);
+        self::assertCount(3, $http_client->getRequests());
     }
 }
