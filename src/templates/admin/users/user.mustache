@@ -323,8 +323,16 @@
                             {{# authenticators }}
                                 <tr>
                                     <td>{{ name }}</td>
-                                    <td>{{ created_at }}</td>
-                                    <td>{{ last_use }}</td>
+                                    <td>
+                                        {{# created_at }}
+                                            {{> tlp_relative_date }}
+                                        {{/ created_at }}
+                                    </td>
+                                    <td>
+                                        {{# last_use }}
+                                            {{> tlp_relative_date }}
+                                        {{/ last_use }}
+                                    </td>
                                 </tr>
                             {{/ authenticators }}
                             {{^ authenticators }}

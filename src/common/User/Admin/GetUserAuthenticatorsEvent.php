@@ -35,6 +35,7 @@ final class GetUserAuthenticatorsEvent implements Dispatchable
 
     public function __construct(
         public readonly \PFUser $user,
+        public readonly \PFUser $current_user,
     ) {
     }
 }
