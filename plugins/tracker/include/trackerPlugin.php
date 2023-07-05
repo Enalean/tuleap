@@ -89,6 +89,7 @@ use Tuleap\Search\IndexAllPendingItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
@@ -335,7 +336,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
-        $this->addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(GetUriFromCrossReference::NAME);
@@ -1295,18 +1295,19 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $dao = $this->getArtifactDao();
 
-        $start_date = strtotime($params['start_date']);
-        $end_date   = strtotime($params['end_date']);
+        $start_date = strtotime($event->start_date);
+        $end_date   = strtotime($event->end_date);
 
         $number_of_open_artifacts_between_two_dates   = $dao->searchSubmittedArtifactBetweenTwoDates($start_date, $end_date);
         $number_of_closed_artifacts_between_two_dates = $dao->searchClosedArtifactBetweenTwoDates($start_date, $end_date);
 
-        $params['csv_exporter']->buildDatas($number_of_open_artifacts_between_two_dates, "Trackers v5 - Opened Artifacts");
-        $params['csv_exporter']->buildDatas($number_of_closed_artifacts_between_two_dates, "Trackers v5 - Closed Artifacts");
+        $event->csv_exporter->buildDatas($number_of_open_artifacts_between_two_dates, "Trackers v5 - Opened Artifacts");
+        $event->csv_exporter->buildDatas($number_of_closed_artifacts_between_two_dates, "Trackers v5 - Closed Artifacts");
     }
 
     /**
