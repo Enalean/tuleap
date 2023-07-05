@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\REST\v1;
 
+use Tuleap\DB\DBFactory;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
@@ -56,8 +57,6 @@ use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryChange;
-use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
@@ -82,7 +81,6 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -111,7 +109,6 @@ use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\REST\Helpers\OrderValidator;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
-use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -124,7 +121,6 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -152,77 +148,34 @@ final class KanbanResource extends AuthenticatedResource
     public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
-    /** @var KanbanFactory */
-    private $kanban_factory;
-
-    /** @var ResourcesPatcher */
-    private $resources_patcher;
-
-    /** @var KanbanItemDao */
-    private $kanban_item_dao;
-
-    /** @var KanbanDao */
-    private $kanban_dao;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var KanbanColumnFactory */
-    private $kanban_column_factory;
-
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    /** @var KanbanPermissionsManager */
-    private $permissions_manager;
-
-    /** @var KanbanUserPreferences */
-    private $user_preferences;
-
-    /** @var KanbanStatisticsAggregator */
-    private $statistics_aggregator;
-    /** @var KanbanColumnManager */
-    private $kanban_column_manager;
-
-    /** @var KanbanItemManager */
-    private $kanban_item_manager;
-
-    /** @var KanbanActionsChecker */
-    private $kanban_actions_checker;
-
-    /** @var NodeJSClient */
-    private $node_js_client;
-
-    /** @var Tracker_Permission_PermissionsSerializer */
-    private $permissions_serializer;
-
-    /** @var QueryParameterParser */
-    private $query_parser;
-    /** @var ItemCollectionRepresentationBuilder */
-    private $item_collection_builder;
-    /** @var FilteredItemCollectionRepresentationBuilder */
-    private $filtered_item_collection_builder;
-    /** @var TimeInfoFactory */
-    private $time_info_factory;
-    /** @var Tracker_ReportFactory */
-    private $report_factory;
-    /** @var DiagramRepresentationBuilder */
-    private $diagram_builder;
-    /** @var FilteredDiagramRepresentationBuilder */
-    private $filtered_diagram_builder;
-    /** @var ItemRepresentationBuilder */
-    private $item_representation_builder;
-    /**
-     * @var TrackerReportUpdater
-     */
-    private $tracker_report_updater;
+    private KanbanFactory $kanban_factory;
+    private KanbanItemDao $kanban_item_dao;
+    private KanbanDao $kanban_dao;
+    private TrackerFactory $tracker_factory;
+    private Tracker_ArtifactFactory $artifact_factory;
+    private KanbanColumnFactory $kanban_column_factory;
+    private Tracker_FormElementFactory $form_element_factory;
+    private KanbanPermissionsManager $permissions_manager;
+    private KanbanUserPreferences $user_preferences;
+    private KanbanStatisticsAggregator $statistics_aggregator;
+    private KanbanColumnManager $kanban_column_manager;
+    private KanbanItemManager $kanban_item_manager;
+    private KanbanActionsChecker $kanban_actions_checker;
+    private NodeJSClient $node_js_client;
+    private Tracker_Permission_PermissionsSerializer $permissions_serializer;
+    private QueryParameterParser $query_parser;
+    private ItemCollectionRepresentationBuilder $item_collection_builder;
+    private FilteredItemCollectionRepresentationBuilder $filtered_item_collection_builder;
+    private TimeInfoFactory $time_info_factory;
+    private Tracker_ReportFactory $report_factory;
+    private DiagramRepresentationBuilder $diagram_builder;
+    private FilteredDiagramRepresentationBuilder $filtered_diagram_builder;
+    private ItemRepresentationBuilder $item_representation_builder;
+    private TrackerReportUpdater $tracker_report_updater;
     private Client $mercure_client;
-
     private KanbanStructureRealTimeMercure $structure_realtime_kanban;
     private KanbanRepresentationBuilder $kanban_representation_builder;
+    private \Tuleap\DB\DBConnection $db_connection;
 
     public function __construct()
     {
@@ -243,19 +196,8 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
-        $priority_manager       = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
-            $this->artifact_factory
-        );
 
-        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
-        $this->resources_patcher = new ResourcesPatcher(
-            $artifactlink_updater,
-            $this->artifact_factory,
-            $priority_manager
-        );
+        $this->db_connection = DBFactory::getMainTuleapDBConnection();
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new KanbanPermissionsManager();
@@ -680,15 +622,13 @@ final class KanbanResource extends AuthenticatedResource
         if ($add) {
             $add->checkFormat();
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
-            $this->resources_patcher->startTransaction();
 
             try {
-                $this->moveArtifactsInBacklog($kanban, $current_user, $add);
-                $this->resources_patcher->commit();
+                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add) {
+                    $this->moveArtifactsInBacklog($kanban, $current_user, $add);
+                });
             } catch (Tracker_NoChangeException $exception) {
-                $this->resources_patcher->rollback();
             } catch (Exception $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(500, $exception->getMessage());
             }
         }
@@ -948,15 +888,13 @@ final class KanbanResource extends AuthenticatedResource
         if ($add) {
             $add->checkFormat();
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
-            $this->resources_patcher->startTransaction();
 
             try {
-                $this->moveArtifactsInArchive($kanban, $current_user, $add);
-                $this->resources_patcher->commit();
+                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add) {
+                    $this->moveArtifactsInArchive($kanban, $current_user, $add);
+                });
             } catch (Tracker_NoChangeException $exception) {
-                $this->resources_patcher->rollback();
             } catch (Exception $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(500, $exception->getMessage());
             }
         }
@@ -1146,24 +1084,19 @@ final class KanbanResource extends AuthenticatedResource
         if ($add) {
             $add->checkFormat();
             $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
-            $this->resources_patcher->startTransaction();
 
             try {
-                $this->moveArtifactsInColumn($kanban, $current_user, $add, $column_id);
-                $this->resources_patcher->commit();
+                $this->db_connection->getDB()->tryFlatTransaction(function () use ($kanban, $current_user, $add, $column_id) {
+                    $this->moveArtifactsInColumn($kanban, $current_user, $add, $column_id);
+                });
             } catch (Tracker_NoChangeException $exception) {
-                $this->resources_patcher->rollback();
             } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(400, $exception->getMessage());
             } catch (FieldValidationException $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(400, $exception->getMessage());
             } catch (Tracker_Workflow_Transition_InvalidConditionForTransitionException $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(400, $exception->getMessage());
             } catch (Exception $exception) {
-                $this->resources_patcher->rollback();
                 throw new RestException(500, $exception->getMessage());
             }
         }
