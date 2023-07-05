@@ -19,25 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/bootstrap.php';
+use Tuleap\Test\PHPUnit\TestCase;
 
-use PHPUnit\Framework\TestCase;
-
-class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
+final class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
-    protected function setUp(): void
-    {
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-    }
-
-    public function testBuildingJobWithMalformedURL()
+    public function testBuildingJobWithMalformedURL(): void
     {
         $job_factory = new MinimalHudsonJobFactory();
 
@@ -46,7 +34,7 @@ class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
         $job_factory->getMinimalHudsonJob('toto', '');
     }
 
-    public function testBuildingJobWithMissingSchemeURL()
+    public function testBuildingJobWithMissingSchemeURL(): void
     {
         $job_factory = new MinimalHudsonJobFactory();
 
@@ -55,7 +43,7 @@ class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
         $job_factory->getMinimalHudsonJob('example.com/hudson/jobs/Tuleap', '');
     }
 
-    public function testBuildingJobWithMissingHostURL()
+    public function testBuildingJobWithMissingHostURL(): void
     {
         $job_factory = new MinimalHudsonJobFactory();
 

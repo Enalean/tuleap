@@ -46,6 +46,7 @@ class HudsonBuild
         string $hudson_build_url,
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
+        ?SimpleXMLElement $dom_build = null,
     ) {
         $parsed_url = parse_url($hudson_build_url);
 
@@ -57,7 +58,11 @@ class HudsonBuild
         $this->http_client      = $http_client;
         $this->request_factory  = $request_factory;
 
-        $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
+        if ($dom_build !== null) {
+            $this->dom_build = $dom_build;
+        } else {
+            $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
+        }
     }
 
     protected function _getXMLObject(string $hudson_build_url)

@@ -24,14 +24,11 @@ namespace Tuleap\Hudson;
 use Http\Mock\Client;
 use HudsonBuild;
 use HudsonJobURLMalformedException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class HudsonBuildTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testMalformedURL(): void
@@ -60,16 +57,19 @@ final class HudsonBuildTest extends \Tuleap\Test\PHPUnit\TestCase
         $build_file = __DIR__ . '/resources/jobbuild.xml';
         $xmldom     = simplexml_load_string(file_get_contents($build_file), \SimpleXMLElement::class, LIBXML_NONET);
 
-        $build = Mockery::spy(HudsonBuild::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $build->shouldReceive('_getXMLObject')->andReturn($xmldom);
-        $build->__construct("http://myCIserver/jobs/myCIjob/lastBuild/", new Client(), HTTPFactoryBuilder::requestFactory());
+        $build = new HudsonBuild(
+            "http://myCIserver/jobs/myCIjob/lastBuild/",
+            new Client(),
+            HTTPFactoryBuilder::requestFactory(),
+            $xmldom,
+        );
 
-        $this->assertEquals($build->getBuildStyle(), "freeStyleBuild");
-        $this->assertFalse($build->isBuilding());
-        $this->assertEquals($build->getUrl(), "http://code4.grenoble.xrce.xerox.com:8080/hudson/job/Codendi/87/");
-        $this->assertEquals($build->getResult(), "UNSTABLE");
-        $this->assertEquals($build->getNumber(), 87);
-        $this->assertEquals($build->getDuration(), 359231);
-        $this->assertEquals($build->getTimestamp(), 1230051671000);
+        self::assertEquals("freeStyleBuild", $build->getBuildStyle());
+        self::assertFalse($build->isBuilding());
+        self::assertEquals("http://example.com:8080/hudson/job/tuleap/87/", $build->getUrl());
+        self::assertEquals("UNSTABLE", $build->getResult());
+        self::assertEquals(87, $build->getNumber());
+        self::assertEquals(359231, $build->getDuration());
+        self::assertEquals(1230051671000, $build->getTimestamp());
     }
 }

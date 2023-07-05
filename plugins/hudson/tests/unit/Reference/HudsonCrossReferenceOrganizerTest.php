@@ -20,46 +20,36 @@
 
 namespace Tuleap\Hudson\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery;
 use ProjectManager;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private HudsonCrossReferenceOrganizer $organizer;
     /**
-     * @var HudsonCrossReferenceOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureOrganizer
+     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferenceByNatureOrganizer
      */
     private $organizer_by_nature;
+    private \Project $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
      */
     private $user;
 
     protected function setUp(): void
     {
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
-        $this->project = Mockery::mock(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn(101);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->organizer_by_nature = Mockery::mock(CrossReferenceByNatureOrganizer::class);
-        $this->user                = Mockery::mock(\PFUser::class);
+        $this->organizer_by_nature = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $this->user                = $this->createMock(\PFUser::class);
 
         $this->organizer = new HudsonCrossReferenceOrganizer($this->project_manager);
     }
@@ -67,16 +57,16 @@ class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDontMoveCrossReferenceIfNotHudson(): void
     {
         $this->organizer_by_nature
-            ->shouldReceive("getCrossReferencePresenters")
-            ->andReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
+            ->method("getCrossReferencePresenters")
+            ->willReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
 
         $this->organizer_by_nature
-            ->shouldReceive("removeUnreadableCrossReference")
-            ->never();
+            ->expects(self::never())
+            ->method("removeUnreadableCrossReference");
 
         $this->organizer_by_nature
-            ->shouldReceive("moveCrossReferenceToSection")
-            ->never();
+            ->expects(self::never())
+            ->method("moveCrossReferenceToSection");
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }
@@ -87,31 +77,25 @@ class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ref_job   = CrossReferencePresenterBuilder::get(1)->withType("hudson_job")->withValue('MyJob')->withProjectId(101)->build();
 
         $this->organizer_by_nature
-            ->shouldReceive("getCrossReferencePresenters")
-            ->once()
-            ->andReturn([$ref_build, $ref_job]);
+            ->expects(self::once())
+            ->method("getCrossReferencePresenters")
+            ->willReturn([$ref_build, $ref_job]);
 
-        $this->user->shouldReceive('isMember')->with(101)->twice()->andReturn(false);
-
-        $this->organizer_by_nature
-            ->shouldReceive("getCurrentUser")
-            ->andReturn($this->user);
-
-        $this->project_manager->shouldReceive("getProject")->andReturn($this->project)->twice();
+        $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(false);
 
         $this->organizer_by_nature
-            ->shouldReceive("removeUnreadableCrossReference")
-            ->with($ref_build)
-            ->once();
+            ->method("getCurrentUser")
+            ->willReturn($this->user);
+
+        $this->project_manager->expects(self::exactly(2))->method("getProject")->willReturn($this->project);
 
         $this->organizer_by_nature
-            ->shouldReceive("removeUnreadableCrossReference")
-            ->with($ref_job)
-            ->once();
+            ->method("removeUnreadableCrossReference")
+            ->withConsecutive([$ref_build], [$ref_job]);
 
         $this->organizer_by_nature
-            ->shouldReceive("moveCrossReferenceToSection")
-            ->never();
+            ->expects(self::never())
+            ->method("moveCrossReferenceToSection");
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }
@@ -121,32 +105,28 @@ class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ref_build = CrossReferencePresenterBuilder::get(1)->withType("hudson_build")->withValue('23')->withProjectId(101)->build();
         $ref_job   = CrossReferencePresenterBuilder::get(1)->withType("hudson_job")->withValue('MyJob')->withProjectId(101)->build();
 
+        $this->organizer_by_nature
+            ->method("getCrossReferencePresenters")
+            ->willReturn([$ref_build, $ref_job]);
+
+        $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(true);
 
         $this->organizer_by_nature
-            ->shouldReceive("getCrossReferencePresenters")
-            ->andReturn([$ref_build, $ref_job]);
+            ->method("getCurrentUser")
+            ->willReturn($this->user);
 
-        $this->user->shouldReceive('isMember')->with(101)->twice()->andReturn(true);
-
-        $this->organizer_by_nature
-            ->shouldReceive("getCurrentUser")
-            ->andReturn($this->user);
-
-        $this->project_manager->shouldReceive("getProject")->andReturn($this->project)->twice();
+        $this->project_manager->expects(self::exactly(2))->method("getProject")->willReturn($this->project);
 
         $this->organizer_by_nature
-            ->shouldReceive("removeUnreadableCrossReference")
-            ->never();
+            ->expects(self::never())
+            ->method("removeUnreadableCrossReference");
 
         $this->organizer_by_nature
-            ->shouldReceive("moveCrossReferenceToSection")
-            ->with($ref_build, "")
-            ->once();
-
-        $this->organizer_by_nature
-            ->shouldReceive("moveCrossReferenceToSection")
-            ->with($ref_job, "")
-            ->once();
+            ->method("moveCrossReferenceToSection")
+            ->withConsecutive(
+                [$ref_build, ""],
+                [$ref_job, ""],
+            );
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
     }

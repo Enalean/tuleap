@@ -19,13 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/bootstrap.php';
-
 use PHPUnit\Framework\TestCase;
 
-class HudsonJobTest extends TestCase // @codingStandardsIgnoreLine
+final class HudsonJobTest extends TestCase // @codingStandardsIgnoreLine
 {
-    public function testSimpleJob()
+    public function testSimpleJob(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -76,17 +74,17 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('', $xml_element);
 
-        $this->assertEquals('Tuleap', $job->getName());
-        $this->assertEquals('https://example.com/hudson/job/Tuleap/', $job->getUrl());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'status_yellow.png', $job->getStatusIcon());
-        $this->assertEquals(60, $job->getLastBuildNumber());
-        $this->assertEquals(60, $job->getLastSuccessfulBuildNumber());
-        $this->assertEquals(30, $job->getLastFailedBuildNumber());
-        $this->assertTrue($job->hasBuilds());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'health_80_plus.gif', $job->getWeatherReportIcon());
+        self::assertEquals('Tuleap', $job->getName());
+        self::assertEquals('https://example.com/hudson/job/Tuleap/', $job->getUrl());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_yellow.png', $job->getStatusIcon());
+        self::assertEquals(60, $job->getLastBuildNumber());
+        self::assertEquals(60, $job->getLastSuccessfulBuildNumber());
+        self::assertEquals(30, $job->getLastFailedBuildNumber());
+        self::assertTrue($job->hasBuilds());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'health_80_plus.gif', $job->getWeatherReportIcon());
     }
 
-    public function testJobFromAnotherJob()
+    public function testJobFromAnotherJob(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -128,17 +126,17 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('', $xml_element);
 
-        $this->assertEquals('TestProjectExistingJob', $job->getName());
-        $this->assertEquals('https://example.com/hudson/job/TestProjectExistingJob/', $job->getUrl());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'status_red.png', $job->getStatusIcon());
-        $this->assertEquals(1, $job->getLastBuildNumber());
-        $this->assertEquals(0, $job->getLastSuccessfulBuildNumber());
-        $this->assertEquals(1, $job->getLastFailedBuildNumber());
-        $this->assertTrue($job->hasBuilds());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'health_00_to_19.gif', $job->getWeatherReportIcon());
+        self::assertEquals('TestProjectExistingJob', $job->getName());
+        self::assertEquals('https://example.com/hudson/job/TestProjectExistingJob/', $job->getUrl());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_red.png', $job->getStatusIcon());
+        self::assertEquals(1, $job->getLastBuildNumber());
+        self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
+        self::assertEquals(1, $job->getLastFailedBuildNumber());
+        self::assertTrue($job->hasBuilds());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'health_00_to_19.gif', $job->getWeatherReportIcon());
     }
 
-    public function testJobFromExternalJob()
+    public function testJobFromExternalJob(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -157,16 +155,16 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('', $xml_element);
 
-        $this->assertEquals('TestProjectExternalJob', $job->getName());
-        $this->assertEquals('https://example.com/hudson/job/TestProjectExternalJob/', $job->getUrl());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
-        $this->assertEquals(0, $job->getLastBuildNumber());
-        $this->assertEquals(0, $job->getLastSuccessfulBuildNumber());
-        $this->assertEquals(0, $job->getLastFailedBuildNumber());
-        $this->assertFalse($job->hasBuilds());
+        self::assertEquals('TestProjectExternalJob', $job->getName());
+        self::assertEquals('https://example.com/hudson/job/TestProjectExternalJob/', $job->getUrl());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals(0, $job->getLastBuildNumber());
+        self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
+        self::assertEquals(0, $job->getLastFailedBuildNumber());
+        self::assertFalse($job->hasBuilds());
     }
 
-    public function testJobFromMaven2Job()
+    public function testJobFromMaven2Job(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -185,16 +183,16 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('', $xml_element);
 
-        $this->assertEquals('TestProjectMaven2', $job->getName());
-        $this->assertEquals('https://example.com/hudson/job/TestProjectMaven2/', $job->getUrl());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
-        $this->assertEquals(0, $job->getLastBuildNumber());
-        $this->assertEquals(0, $job->getLastSuccessfulBuildNumber());
-        $this->assertEquals(0, $job->getLastFailedBuildNumber());
-        $this->assertFalse($job->hasBuilds());
+        self::assertEquals('TestProjectMaven2', $job->getName());
+        self::assertEquals('https://example.com/hudson/job/TestProjectMaven2/', $job->getUrl());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals(0, $job->getLastBuildNumber());
+        self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
+        self::assertEquals(0, $job->getLastFailedBuildNumber());
+        self::assertFalse($job->hasBuilds());
     }
 
-    public function testJobFromMultiConfiguration()
+    public function testJobFromMultiConfiguration(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -213,16 +211,16 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('', $xml_element);
 
-        $this->assertEquals('TestProjectMultiConfiguration', $job->getName());
-        $this->assertEquals('https://example.com/hudson/job/TestProjectMultiConfiguration/', $job->getUrl());
-        $this->assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
-        $this->assertEquals(0, $job->getLastBuildNumber());
-        $this->assertEquals(0, $job->getLastSuccessfulBuildNumber());
-        $this->assertEquals(0, $job->getLastFailedBuildNumber());
-        $this->assertFalse($job->hasBuilds());
+        self::assertEquals('TestProjectMultiConfiguration', $job->getName());
+        self::assertEquals('https://example.com/hudson/job/TestProjectMultiConfiguration/', $job->getUrl());
+        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals(0, $job->getLastBuildNumber());
+        self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
+        self::assertEquals(0, $job->getLastFailedBuildNumber());
+        self::assertFalse($job->hasBuilds());
     }
 
-    public function testNameIsReusedFromCacheWhenAvailable()
+    public function testNameIsReusedFromCacheWhenAvailable(): void
     {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>
@@ -235,6 +233,6 @@ XML;
         $xml_element = simplexml_load_string($xmlstr);
         $job         = new HudsonJob('NameWasCached', $xml_element);
 
-        $this->assertEquals('NameWasCached', $job->getName());
+        self::assertEquals('NameWasCached', $job->getName());
     }
 }

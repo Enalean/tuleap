@@ -42,6 +42,7 @@ class HudsonTestResult
         string $hudson_job_url,
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
+        ?SimpleXMLElement $dom_job = null,
     ) {
         $parsed_url = parse_url($hudson_job_url);
 
@@ -53,7 +54,11 @@ class HudsonTestResult
         $this->http_client            = $http_client;
         $this->request_factory        = $request_factory;
 
-        $this->dom_job = $this->_getXMLObject($this->hudson_test_result_url);
+        if ($dom_job !== null) {
+            $this->dom_job = $dom_job;
+        } else {
+            $this->dom_job = $this->_getXMLObject($this->hudson_test_result_url);
+        }
     }
 
     protected function _getXMLObject($hudson_test_result_url)
