@@ -66,7 +66,7 @@ git config gpg.ssh.allowedSignersFile tools/utils/signing-keys/allowed-integrato
     message**).
 
     ``` bash
-    $  git commit -v -S
+    $  `git commit -v -S`
     ```
 
 -   Commit (signed) the new version files
