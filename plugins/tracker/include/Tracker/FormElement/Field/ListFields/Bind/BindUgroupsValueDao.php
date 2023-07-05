@@ -139,6 +139,6 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
                 AND c.field_id = ?
             )
             ORDER BY f.id";
-        return $this->getDB()->run($sql, [$changeset_id, $field_id]);
+        return $this->getDB()->safeQuery($sql, [$changeset_id, $field_id]);
     }
 }
