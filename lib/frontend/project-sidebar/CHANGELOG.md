@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.4
+
+* `process.env.NODE_ENV` is removed from the distributed files so the element can be used without a bundler
+
 ## 2.2.3
 
 * Changes regarding the Tuleap icons have been re-introduced
