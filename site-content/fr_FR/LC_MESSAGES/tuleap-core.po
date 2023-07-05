@@ -2315,6 +2315,11 @@ msgstr "Mon tableau de bord"
 msgid "Name"
 msgstr "Nom"
 
+msgid "Name of passkey can contain up to 250 characters maximum"
+msgstr ""
+"Le nom de la clé d'authentification ne peut contenir que 250 caractères "
+"maximum"
+
 msgid "Name or description"
 msgstr "Nom ou description"
 
