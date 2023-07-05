@@ -20,114 +20,97 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var WidgetPermissionChecker
-     */
-    private $permission_checker;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var CrossTrackerReportDao|Mockery\MockInterface
-     */
-    private $cross_tracker_dao;
+    private WidgetPermissionChecker $permission_checker;
+    private ProjectManager&MockObject $project_manager;
+    private CrossTrackerReportDao&MockObject $cross_tracker_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->cross_tracker_dao = Mockery::mock(CrossTrackerReportDao::class);
-        $this->project_manager   = Mockery::mock(ProjectManager::class);
+        $this->cross_tracker_dao = $this->createMock(CrossTrackerReportDao::class);
+        $this->project_manager   = $this->createMock(ProjectManager::class);
 
         $this->permission_checker = new WidgetPermissionChecker($this->cross_tracker_dao, $this->project_manager);
     }
 
-    public function testItReturnsTrueForUserCheckingItsOwnWidget()
+    public function testItReturnsTrueForUserCheckingItsOwnWidget(): void
     {
-        $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
+        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
                 'user_id'        => 101,
             ]
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive("getId")->andReturn(101);
+        $user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->assertTrue($this->permission_checker->isUserWidgetAdmin($user, 1));
+        self::assertTrue($this->permission_checker->isUserWidgetAdmin($user, 1));
     }
 
-    public function testItReturnsFalseForUserCheckingAnOtherUserWidget()
+    public function testItReturnsFalseForUserCheckingAnOtherUserWidget(): void
     {
-        $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
+        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
                 'user_id'        => 101,
             ]
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive("getId")->andReturn(200);
+        $user = UserTestBuilder::aUser()->withId(200)->build();
 
-        $this->assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
+        self::assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
     }
 
-    public function testItReturnsTrueForProjectWidgetWhenUserIsAdmin()
+    public function testItReturnsTrueForProjectWidgetWhenUserIsAdmin(): void
     {
-        $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
+        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
                 'project_id'     => 101,
             ]
         );
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn("101");
-        $this->project_manager->shouldReceive("getProject")->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_manager->method("getProject")->willReturn($project);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(true);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isAdmin')->willReturn(true);
 
-        $this->assertTrue($this->permission_checker->isUserWidgetAdmin($user, 1));
+        self::assertTrue($this->permission_checker->isUserWidgetAdmin($user, 1));
     }
 
-    public function testItReturnsFalseForProjectWidgetWhenUserIsNotAdmin()
+    public function testItReturnsFalseForProjectWidgetWhenUserIsNotAdmin(): void
     {
-        $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
+        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
                 'project_id'     => 101,
             ]
         );
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn("101");
-        $this->project_manager->shouldReceive("getProject")->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_manager->method("getProject")->willReturn($project);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(false);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isAdmin')->willReturn(false);
 
-        $this->assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
+        self::assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
     }
 
-    public function testItReturnsFalseInOtherCase()
+    public function testItReturnsFalseInOtherCase(): void
     {
-        $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns([]);
-        $user = Mockery::mock(PFUser::class);
-        $this->assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
+        $this->cross_tracker_dao->method("searchCrossTrackerWidgetByCrossTrackerReportId")->willReturn([]);
+        $user = $this->createMock(PFUser::class);
+        self::assertFalse($this->permission_checker->isUserWidgetAdmin($user, 1));
     }
 }

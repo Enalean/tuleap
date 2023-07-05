@@ -20,43 +20,31 @@
 
 namespace Tuleap\CrossTracker\Report\CSV;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 
-class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var MockInterface */
-    private $visitor;
-    /** @var CSVRepresentationBuilder */
-    private $builder;
-    /** @var MockInterface */
-    private $user;
-    /** @var MockInterface */
-    private $user_manager;
-    /** @var MockInterface */
-    private $similar_fields;
-    /** @var MockInterface */
-    private $similar_fields_formatter;
+    private CSVFormatterVisitor&MockObject $visitor;
+    private CSVRepresentationBuilder $builder;
+    private \PFUser&MockObject $user;
+    private \UserManager&MockObject $user_manager;
+    private SimilarFieldCollection&MockObject $similar_fields;
+    private SimilarFieldsFormatter&MockObject $similar_fields_formatter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->similar_fields = Mockery::mock(SimilarFieldCollection::class);
-        $this->user           = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn(
+        $this->similar_fields = $this->createMock(SimilarFieldCollection::class);
+        $this->user           = $this->createMock(\PFUser::class);
+        $this->user->method('getPreference')->with('user_csv_separator')->willReturn(
             CSVRepresentation::COMMA_SEPARATOR_NAME
         );
-        $this->visitor                  = Mockery::mock(CSVFormatterVisitor::class);
-        $this->user_manager             = Mockery::mock(\UserManager::class);
-        $this->similar_fields_formatter = Mockery::mock(SimilarFieldsFormatter::class);
+        $this->visitor                  = $this->createMock(CSVFormatterVisitor::class);
+        $this->user_manager             = $this->createMock(\UserManager::class);
+        $this->similar_fields_formatter = $this->createMock(SimilarFieldsFormatter::class);
         $this->builder                  = new CSVRepresentationBuilder(
             $this->visitor,
             $this->user_manager,
@@ -64,45 +52,46 @@ class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testBuildHeaderLine()
+    public function testBuildHeaderLine(): void
     {
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['pentarchical']);
+        $this->similar_fields->method('getFieldNames')->willReturn(['pentarchical']);
 
         $result = $this->builder->buildHeaderLine($this->user, $this->similar_fields);
 
-        $this->assertEquals(
+        self::assertEquals(
             'id,project,tracker,title,description,status,submitted_by,submitted_on,last_update_by,last_update_date,pentarchical',
             $result->__toString()
         );
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getPublicName')->andReturn('Atacaman');
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $tracker->shouldReceive('getName')->andReturn('freckly');
+        $project = $this->createMock(\Project::class);
+        $project->method('getPublicName')->willReturn('Atacaman');
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('getName')->willReturn('freckly');
 
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn([]);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->similar_fields->method('getFieldNames')->willReturn([]);
 
         $artifact_id = 84;
-        $artifact->shouldReceive(
-            [
-                'getId'             => $artifact_id,
-                'getTracker'        => $tracker,
-                'getSubmittedOn'    => '1540456782',
-                'getLastUpdateDate' => '1540478708',
-                'getSubmittedBy'    => 992,
-                'getLastModifiedBy' => 851,
-                'getTitle'          => 'Uncinated unrecantable',
-                'getDescription'    => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua.',
-                'getStatus'         => 'On going',
-            ]
+
+        $artifact->method('getId')->willReturn($artifact_id);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getSubmittedOn')->willReturn(1540456782);
+        $artifact->method('getLastUpdateDate')->willReturn(1540478708);
+        $artifact->method('getSubmittedBy')->willReturn(992);
+        $artifact->method('getLastModifiedBy')->willReturn(851);
+        $artifact->method('getTitle')->willReturn('Uncinated unrecantable');
+        $artifact->method('getStatus')->willReturn('On going');
+        $artifact->method('getDescription')->willReturn(
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua.'
         );
-        $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
+
+
+        $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
 
         $formatted_project_name     = '"Atacaman"';
         $formatted_tracker_name     = '"freckly"';
@@ -115,19 +104,19 @@ class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             incididunt ut labore et dolore magna aliqua."';
         $formatted_status           = '"On going"';
 
-        $this->visitor->shouldReceive('visitTextValue')
-            ->andReturn(
+        $this->visitor->method('visitTextValue')
+            ->willReturn(
                 $formatted_project_name,
                 $formatted_tracker_name,
                 $formatted_title,
                 $formatted_description,
                 $formatted_status
             );
-        $this->visitor->shouldReceive('visitDateValue')
-            ->andReturn($formatted_submitted_on, $formatted_last_update_date);
-        $this->visitor->shouldReceive('visitUserValue')
-            ->andReturn($formatted_submitted_by, $formatted_last_update_by);
-        $this->similar_fields_formatter->shouldReceive('formatSimilarFields')->andReturn([]);
+        $this->visitor->method('visitDateValue')
+            ->willReturn($formatted_submitted_on, $formatted_last_update_date);
+        $this->visitor->method('visitUserValue')
+            ->willReturn($formatted_submitted_by, $formatted_last_update_by);
+        $this->similar_fields_formatter->method('formatSimilarFields')->willReturn([]);
 
         $expected_representation = new CSVRepresentation();
         $expected_representation->build(
@@ -148,6 +137,6 @@ class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->builder->build($artifact, $this->user, $this->similar_fields);
 
-        $this->assertEquals($expected_representation, $result);
+        self::assertEquals($expected_representation, $result);
     }
 }

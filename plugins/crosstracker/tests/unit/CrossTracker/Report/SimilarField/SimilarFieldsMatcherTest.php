@@ -20,43 +20,42 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SupportedFieldsDao | Mockery\MockInterface */
+    /** @var SupportedFieldsDao&\PHPUnit\Framework\MockObject\MockObject */
     private $similar_fields_dao;
-    /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
+    /** @var \Tracker_FormElementFactory&\PHPUnit\Framework\MockObject\MockObject */
     private $form_element_factory;
-    /** @var SimilarFieldsMatcher */
-    private $matcher;
-    /** @var \PFUser | Mockery\MockInterface */
-    private $user;
-    /** @var CrossTrackerReport | Mockery\MockInterface */
+    private SimilarFieldsMatcher $matcher;
+    private \PFUser $user;
+    /** @var CrossTrackerReport&\PHPUnit\Framework\MockObject\MockObject */
     private $report;
-    /** @var SimilarFieldsFilter | Mockery\MockInterface */
+    /** @var SimilarFieldsFilter&\PHPUnit\Framework\MockObject\MockObject */
     private $similar_fields_filter;
-    /** @var BindNameVisitor | Mockery\MockInterface */
+    /** @var BindNameVisitor&\PHPUnit\Framework\MockObject\MockObject */
     private $bind_name_visitor;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->similar_fields_dao    = Mockery::mock(SupportedFieldsDao::class);
-        $this->form_element_factory  = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->report                = Mockery::mock(CrossTrackerReport::class);
-        $this->user                  = Mockery::mock(\PFUser::class);
-        $this->similar_fields_filter = Mockery::mock(SimilarFieldsFilter::class)
-            ->shouldReceive('filterCandidatesUsedInSemantics')->andReturnUsing(function (...$args) {
-                return $args;
-            })->getMock();
-        $this->bind_name_visitor     = Mockery::mock(BindNameVisitor::class);
+        $this->similar_fields_dao    = $this->createMock(SupportedFieldsDao::class);
+        $this->form_element_factory  = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->report                = $this->createMock(CrossTrackerReport::class);
+        $this->user                  = UserTestBuilder::aUser()->build();
+        $this->similar_fields_filter = $this->createMock(SimilarFieldsFilter::class);
+
+        $this->similar_fields_filter
+            ->method('filterCandidatesUsedInSemantics')
+            ->willReturnCallback(
+                function (SimilarFieldCandidate ...$args): array {
+                    return $args;
+                }
+            );
+
+        $this->bind_name_visitor = $this->createMock(BindNameVisitor::class);
 
         $this->matcher = new SimilarFieldsMatcher(
             $this->similar_fields_dao,
@@ -66,53 +65,53 @@ class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testMatchingFieldsAreRetrieved()
+    public function testMatchingFieldsAreRetrieved(): void
     {
-        $this->report->shouldReceive('getTrackerIds')->andReturn([91, 26]);
+        $this->report->method('getTrackerIds')->willReturn([91, 26]);
         $first_field_row  = ['formElement_type' => 'string'];
         $second_field_row = ['formElement_type' => 'string'];
-        $this->similar_fields_dao->shouldReceive('searchByTrackerIds')
-            ->andReturn(
+        $this->similar_fields_dao->method('searchByTrackerIds')
+            ->willReturn(
                 [
                     $first_field_row,
                     $second_field_row,
                 ]
             );
 
-        $first_field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $first_field->shouldReceive('getName')->andReturn('field_name');
-        $first_field->shouldReceive('userCanRead')->andReturn(true);
-        $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $second_field->shouldReceive('getName')->andReturn('field_name');
-        $second_field->shouldReceive('userCanRead')->andReturn(true);
-        $this->form_element_factory->shouldReceive('getCachedInstanceFromRow')
-            ->andReturn($first_field, $second_field);
+        $first_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $first_field->method('getName')->willReturn('field_name');
+        $first_field->method('userCanRead')->willReturn(true);
+        $second_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field->method('getName')->willReturn('field_name');
+        $second_field->method('userCanRead')->willReturn(true);
+        $this->form_element_factory->method('getCachedInstanceFromRow')
+            ->willReturn($first_field, $second_field);
 
-        $this->assertCount(2, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
+        self::assertCount(2, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
     }
 
-    public function testMatchingFieldsWithoutEnoughPermissionsAreLeftOut()
+    public function testMatchingFieldsWithoutEnoughPermissionsAreLeftOut(): void
     {
-        $this->report->shouldReceive('getTrackerIds')->andReturn([91, 26]);
+        $this->report->method('getTrackerIds')->willReturn([91, 26]);
         $first_field_row  = ['formElement_type' => 'string'];
         $second_field_row = ['formElement_type' => 'string'];
-        $this->similar_fields_dao->shouldReceive('searchByTrackerIds')
-            ->andReturn(
+        $this->similar_fields_dao->method('searchByTrackerIds')
+            ->willReturn(
                 [
                     $first_field_row,
                     $second_field_row,
                 ]
             );
 
-        $first_field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $first_field->shouldReceive('getName')->andReturn('field_name');
-        $first_field->shouldReceive('userCanRead')->andReturn(true);
-        $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $second_field->shouldReceive('getName')->andReturn('field_name');
-        $second_field->shouldReceive('userCanRead')->andReturn(false);
-        $this->form_element_factory->shouldReceive('getCachedInstanceFromRow')
-            ->andReturn($first_field, $second_field);
+        $first_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $first_field->method('getName')->willReturn('field_name');
+        $first_field->method('userCanRead')->willReturn(true);
+        $second_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field->method('getName')->willReturn('field_name');
+        $second_field->method('userCanRead')->willReturn(false);
+        $this->form_element_factory->method('getCachedInstanceFromRow')
+            ->willReturn($first_field, $second_field);
 
-        $this->assertCount(0, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
+        self::assertCount(0, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
     }
 }

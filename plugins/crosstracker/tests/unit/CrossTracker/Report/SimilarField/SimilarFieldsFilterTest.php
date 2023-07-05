@@ -20,20 +20,15 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SimilarFieldsFilter */
-    private $filter;
+    private SimilarFieldsFilter $filter;
 
     protected function setUp(): void
     {
@@ -50,27 +45,23 @@ class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testFilterCandidatesUsedInSemantics()
+    public function testFilterCandidatesUsedInSemantics(): void
     {
-        $first_tracker  = Mockery::mock(\Tracker::class)
-            ->shouldReceive('getId')->andReturns(91)
-            ->getMock();
-        $second_tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive('getId')->andReturns(26)
-            ->getMock();
+        $first_tracker  = TrackerTestBuilder::aTracker()->withId(91)->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(26)->build();
 
-        $first_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $first_field->shouldReceive('accept')->andReturn(true);
+        $first_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $first_field->method('accept')->willReturn(true);
 
-        $second_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $second_field->shouldReceive('accept')->andReturn(false);
+        $second_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field->method('accept')->willReturn(false);
 
-        Tracker_Semantic_Title::setInstance(Mockery::mock(Tracker_Semantic_Title::class), $first_tracker);
-        Tracker_Semantic_Title::setInstance(Mockery::mock(Tracker_Semantic_Title::class), $second_tracker);
-        Tracker_Semantic_Description::setInstance(Mockery::mock(Tracker_Semantic_Description::class), $first_tracker);
-        Tracker_Semantic_Description::setInstance(Mockery::mock(Tracker_Semantic_Description::class), $second_tracker);
-        Tracker_Semantic_Status::setInstance(Mockery::mock(Tracker_Semantic_Status::class), $first_tracker);
-        Tracker_Semantic_Status::setInstance(Mockery::mock(Tracker_Semantic_Status::class), $second_tracker);
+        Tracker_Semantic_Title::setInstance($this->createMock(Tracker_Semantic_Title::class), $first_tracker);
+        Tracker_Semantic_Title::setInstance($this->createMock(Tracker_Semantic_Title::class), $second_tracker);
+        Tracker_Semantic_Description::setInstance($this->createMock(Tracker_Semantic_Description::class), $first_tracker);
+        Tracker_Semantic_Description::setInstance($this->createMock(Tracker_Semantic_Description::class), $second_tracker);
+        Tracker_Semantic_Status::setInstance($this->createMock(Tracker_Semantic_Status::class), $first_tracker);
+        Tracker_Semantic_Status::setInstance($this->createMock(Tracker_Semantic_Status::class), $second_tracker);
 
         $candidates = $this->buildCandidates([
             ['field' => $first_field, 'tracker' => $first_tracker],
@@ -79,10 +70,10 @@ class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $results = $this->filter->filterCandidatesUsedInSemantics(...$candidates);
 
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
     }
 
-    private function buildCandidates(array $values)
+    private function buildCandidates(array $values): array
     {
         $candidates = [];
         foreach ($values as $value) {
@@ -91,11 +82,12 @@ class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         return $candidates;
     }
 
-    private function buildCandidate($field, $tracker)
+    private function buildCandidate(\Tracker_FormElement_Field $field, \Tracker $tracker): SimilarFieldCandidate&MockObject
     {
-        $candidate = Mockery::mock(SimilarFieldCandidate::class);
-        $candidate->shouldReceive('getField')->andReturn($field);
-        $candidate->shouldReceive('getTracker')->andReturn($tracker);
+        $candidate = $this->createMock(SimilarFieldCandidate::class);
+        $candidate->method('getField')->willReturn($field);
+        $candidate->method('getTracker')->willReturn($tracker);
+
         return $candidate;
     }
 }
