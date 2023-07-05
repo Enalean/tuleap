@@ -49,6 +49,7 @@ require_once __DIR__ . '/../include/account.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
+$site_administrator = $request->getCurrentUser();
 
 $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
@@ -328,7 +329,7 @@ EventManager::instance()->processEvent(
 );
 
 $get_authenticators_event = EventManager::instance()->dispatch(
-    new \Tuleap\User\Admin\GetUserAuthenticatorsEvent($user, $um->getCurrentUser())
+    new \Tuleap\User\Admin\GetUserAuthenticatorsEvent($user, $site_administrator)
 );
 $webauthn_enabled         = $get_authenticators_event->answered;
 $authenticators           = $get_authenticators_event->authenticators;
@@ -367,7 +368,7 @@ $invited_by_builder         = new InvitedByPresenterBuilder(
     ProjectManager::instance(),
 );
 $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
-    ? $invited_by_builder->getInvitedByPresenter($user, $request->getCurrentUser())
+    ? $invited_by_builder->getInvitedByPresenter($user, $site_administrator)
     : null;
 
 $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
@@ -378,7 +379,7 @@ $siteadmin->renderAPresenter(
     new UserDetailsPresenter(
         $user,
         $projects,
-        new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user), $invited_by),
+        new UserDetailsAccessPresenter($site_administrator, $user, $um->getUserAccessInfo($user), $invited_by),
         new UserChangePasswordPresenter(
             $user,
             $user_administration_csrf,

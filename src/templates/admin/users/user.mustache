@@ -217,55 +217,60 @@
                         <div class="tlp-property">
                             <label class="tlp-label">{{ last_access_date_label }}</label>
                             <p>
-                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ last_access_date }}">
-                                    {{{ purified_last_access_date_ago }}}
-                                </span>
+                                {{# last_access_date }}
+                                    {{> tlp_relative_date }}
+                                {{/ last_access_date }}
+                                {{^ last_access_date }}-{{/ last_access_date }}
                             </p>
                         </div>
                         <div class="tlp-property">
                             <label class="tlp-label">{{ last_pwd_update_label }}</label>
                             <p>
-                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ last_pwd_update }}">
-                                    {{{ purified_last_pwd_update_ago }}}
-                                </span>
+                                {{# last_password_update_date }}
+                                    {{> tlp_relative_date }}
+                                {{/ last_password_update_date }}
+                                {{^ last_password_update_date }}-{{/ last_password_update_date }}
                             </p>
                         </div>
                         <div class="tlp-property">
-                            <label class="tlp-label">{{ auth_attempt_last_success_label }}</label>
+                            <label class="tlp-label">{{# gettext }}Last successful login:{{/ gettext }}</label>
                             <p>
-                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ auth_attempt_last_success }}">
-                                    {{{ purified_auth_attempt_last_success_ago }}}
-                                </span>
+                                {{# auth_attempt_last_success }}
+                                    {{> tlp_relative_date }}
+                                {{/ auth_attempt_last_success }}
+                                {{^ auth_attempt_last_success }}-{{/ auth_attempt_last_success }}
                             </p>
                         </div>
                         <div class="siteadmin-user-access-row">
                             <div class="tlp-property" id="siteadmin-user-access-row-nb-fail">
-                                <label class="tlp-label">{{ auth_attempt_nb_failure_label }}</label>
+                                <label class="tlp-label">{{# gettext }}Number of login failure:{{/ gettext }}</label>
                                 <p>{{ auth_attempt_nb_failure }}</p>
                             </div>
                             <div class="tlp-property">
-                                <label class="tlp-label">{{ auth_attempt_last_failure_label }}</label>
+                                <label class="tlp-label">{{# gettext }}Last login failure:{{/ gettext }}</label>
                                 <p>
-                                    <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ auth_attempt_last_failure }}">
-                                        {{{ purified_auth_attempt_last_failure_ago }}}
-                                    </span>
+                                    {{# auth_attempt_last_failure }}
+                                        {{> tlp_relative_date }}
+                                    {{/ auth_attempt_last_failure }}
+                                    {{^ auth_attempt_last_failure }}-{{/ auth_attempt_last_failure }}
                                 </p>
                             </div>
                         </div>
                         <div class="tlp-property">
-                            <label class="tlp-label">{{ auth_attempt_prev_success_label }}</label>
+                            <label class="tlp-label">{{# gettext }}Previous successful login:{{/ gettext }}</label>
                             <p>
-                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ auth_attempt_prev_success }}">
-                                    {{{ purified_auth_attempt_prev_success_ago }}}
-                                </span>
+                                {{# auth_attempt_last_success }}
+                                    {{> tlp_relative_date }}
+                                {{/ auth_attempt_last_success }}
+                                {{^ auth_attempt_last_success }}-{{/ auth_attempt_last_success }}
                             </p>
                         </div>
                         <div class="tlp-property">
                             <label class="tlp-label">{{ member_since_label }}</label>
                             <p>
-                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ member_since }}">
-                                    {{{ purified_member_since_ago }}}
-                                </span>
+                                {{# member_since }}
+                                    {{> tlp_relative_date }}
+                                {{/ member_since }}
                             </p>
                         </div>
                         {{> invited-by }}
