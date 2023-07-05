@@ -27,7 +27,6 @@ use Backend;
 use BackendSVN;
 use BackendSystem;
 use ColinODell\PsrTestLogger\TestLogger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 use Project;
@@ -48,38 +47,34 @@ use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use UserManager;
 
-class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
+    private XMLRepositoryImporter $repository_importer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XMLRepositoryImporter
-     */
-    private $repository_importer;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&PFUser
      */
     private $committer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RuleName
+     * @var \PHPUnit\Framework\MockObject\MockObject&RuleName
      */
     private $rule_name;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MailNotificationManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&MailNotificationManager
      */
     private $mail_notification_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessFileHistoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $accessfile_history_creator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
+     * @var \PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
     private TestLogger $logger;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ImportConfig
+     * @var \PHPUnit\Framework\MockObject\MockObject&ImportConfig
      */
     private $configuration;
     /**
@@ -87,85 +82,76 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $extraction_path;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RepositoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCreator
      */
     private $repository_creator;
     /**
-     * @var Backend|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Backend&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_svn;
     /**
-     * @var Backend|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Backend&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_system;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessFileHistoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $access_file_history_creator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RepositoryManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryManager
      */
     private $repository_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|NotificationsEmailsBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&NotificationsEmailsBuilder
      */
     private $notifications_emails_builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RepositoryCopier
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCopier
      */
     private $repository_copier;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SimpleXMLElement
-     */
-    private $xml_repo;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XMLUserChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&XMLUserChecker
      */
     private $xml_user_checker;
 
-    private function instantiateImporterWithXml(\SimpleXMLElement $xml)
+    private function instantiateImporterWithXml(\SimpleXMLElement $xml): void
     {
-        $this->xml_repo                     = $xml;
         $this->extraction_path              = vfsStream::setup()->url();
-        $this->repository_creator           = \Mockery::mock(RepositoryCreator::class);
-        $this->backend_svn                  = \Mockery::mock(BackendSVN::class);
-        $this->backend_system               = \Mockery::mock(BackendSystem::class);
-        $this->access_file_history_creator  = \Mockery::mock(AccessFileHistoryCreator::class);
-        $this->repository_manager           = \Mockery::mock(RepositoryManager::class);
-        $this->user_manager                 = \Mockery::mock(UserManager::class);
-        $this->notifications_emails_builder = \Mockery::mock(NotificationsEmailsBuilder::class);
-        $this->repository_copier            = \Mockery::mock(RepositoryCopier::class);
-        $this->xml_user_checker             = \Mockery::mock(XMLUserChecker::class);
+        $this->repository_creator           = $this->createMock(RepositoryCreator::class);
+        $this->backend_svn                  = $this->createMock(BackendSVN::class);
+        $this->backend_system               = $this->createMock(BackendSystem::class);
+        $this->access_file_history_creator  = $this->createMock(AccessFileHistoryCreator::class);
+        $this->repository_manager           = $this->createMock(RepositoryManager::class);
+        $this->user_manager                 = $this->createMock(UserManager::class);
+        $this->notifications_emails_builder = $this->createMock(NotificationsEmailsBuilder::class);
+        $this->repository_copier            = $this->createMock(RepositoryCopier::class);
+        $this->xml_user_checker             = $this->createMock(XMLUserChecker::class);
 
-        $this->repository_importer = \Mockery::mock(
-            XMLRepositoryImporter::class,
-            [
-                $this->xml_repo,
-                $this->extraction_path,
-                $this->repository_creator,
-                $this->backend_svn,
-                $this->backend_system,
-                $this->access_file_history_creator,
-                $this->repository_manager,
-                $this->user_manager,
-                $this->notifications_emails_builder,
-                $this->repository_copier,
-                $this->xml_user_checker,
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->repository_importer = new XMLRepositoryImporter(
+            $xml,
+            $this->extraction_path,
+            $this->repository_creator,
+            $this->backend_svn,
+            $this->backend_system,
+            $this->access_file_history_creator,
+            $this->repository_manager,
+            $this->user_manager,
+            $this->notifications_emails_builder,
+            $this->repository_copier,
+            $this->xml_user_checker,
+        );
 
-        $this->configuration              = \Mockery::mock(ImportConfig::class);
+        $this->configuration              = $this->createMock(ImportConfig::class);
         $this->logger                     = new TestLogger();
-        $this->project                    = \Mockery::mock(Project::class);
-        $this->accessfile_history_creator = \Mockery::mock(AccessFileHistoryCreator::class);
-        $this->mail_notification_manager  = \Mockery::mock(MailNotificationManager::class);
-        $this->rule_name                  = \Mockery::mock(RuleName::class);
-        $this->committer                  = \Mockery::mock(PFUser::class);
+        $this->project                    = $this->createMock(Project::class);
+        $this->accessfile_history_creator = $this->createMock(AccessFileHistoryCreator::class);
+        $this->mail_notification_manager  = $this->createMock(MailNotificationManager::class);
+        $this->rule_name                  = $this->createMock(RuleName::class);
+        $this->committer                  = $this->createMock(PFUser::class);
     }
 
     public function testItShouldFailsWhenRepositoryNameIsInvalid(): void
@@ -175,8 +161,8 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->instantiateImporterWithXml($xml);
 
-        $this->rule_name->shouldReceive('isValid')->andReturnFalse();
-        $this->rule_name->shouldReceive('getErrorMessage')->once();
+        $this->rule_name->method('isValid')->willReturn(false);
+        $this->rule_name->expects(self::once())->method('getErrorMessage');
 
         $this->expectException(XMLImporterException::class);
 
@@ -198,10 +184,10 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->instantiateImporterWithXml($xml);
 
-        $this->rule_name->shouldReceive('isValid')->andReturnTrue();
+        $this->rule_name->method('isValid')->willReturn(true);
 
-        $this->repository_creator->shouldReceive('createWithoutUserAdminCheck')
-            ->andThrows(RepositoryNameIsInvalidException::class);
+        $this->repository_creator->method('createWithoutUserAdminCheck')
+            ->willThrowException(new RepositoryNameIsInvalidException());
 
         $this->expectException(XMLImporterException::class);
 
@@ -223,9 +209,9 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->instantiateImporterWithXml($xml);
 
-        $this->rule_name->shouldReceive('isValid')->andReturnTrue();
+        $this->rule_name->method('isValid')->willReturn(true);
 
-        $this->repository_creator->shouldReceive('createWithoutUserAdminCheck')->once();
+        $this->repository_creator->expects(self::once())->method('createWithoutUserAdminCheck');
 
         $this->expectException(XMLImporterException::class);
 
@@ -247,17 +233,17 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->instantiateImporterWithXml($xml);
 
-        $this->rule_name->shouldReceive('isValid')->andReturnTrue();
+        $this->rule_name->method('isValid')->willReturn(true);
 
-        $event = \Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->shouldReceive('createWithoutUserAdminCheck')
-            ->once()
-            ->andReturn($event);
+        $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
+        $this->repository_creator->expects(self::once())
+            ->method('createWithoutUserAdminCheck')
+            ->willReturn($event);
 
-        $event->shouldReceive('injectDependencies')->once();
-        $event->shouldReceive('process')->once();
-        $event->shouldReceive('getStatus')->andReturn(SystemEvent::STATUS_ERROR);
-        $event->shouldReceive('getLog')->once();
+        $event->expects(self::once())->method('injectDependencies');
+        $event->expects(self::once())->method('process');
+        $event->method('getStatus')->willReturn(SystemEvent::STATUS_ERROR);
+        $event->expects(self::once())->method('getLog');
 
         $this->expectException(XMLImporterException::class);
 
@@ -286,27 +272,29 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->instantiateImporterWithXml(new SimpleXMLElement($xml));
 
-        $this->rule_name->shouldReceive('isValid')->andReturnTrue();
+        $this->rule_name->method('isValid')->willReturn(true);
 
-        $event = \Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->shouldReceive('createWithoutUserAdminCheck')
-            ->once()
-            ->andReturn($event);
+        $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
+        $this->repository_creator->expects(self::once())
+            ->method('createWithoutUserAdminCheck')
+            ->willReturn($event);
 
-        $event->shouldReceive('injectDependencies')->once();
-        $event->shouldReceive('process')->once();
-        $event->shouldReceive('getStatus')->andReturn(SystemEvent::STATUS_DONE);
-        $event->shouldReceive('getLog')->once();
+        $event->expects(self::once())->method('injectDependencies');
+        $event->expects(self::once())->method('process');
+        $event->method('getStatus')->willReturn(SystemEvent::STATUS_DONE);
+        $event->expects(self::once())->method('getLog');
 
-        $this->project->shouldReceive('getId')->andReturn(101);
+        $this->project->method('getId')->willReturn(101);
 
-        $this->backend_svn->shouldReceive('setUserAndGroup')->once();
+        $this->backend_svn->expects(self::once())->method('setUserAndGroup');
 
-        $this->notifications_emails_builder->shouldReceive('transformNotificationEmailsStringAsArray')->twice(
-        )->andReturn([]);
-        $this->mail_notification_manager->shouldReceive('create')->twice();
+        $this->notifications_emails_builder->expects(self::exactly(2))
+            ->method('transformNotificationEmailsStringAsArray')
+            ->willReturn([]);
 
-        $this->xml_user_checker->shouldReceive('currentUserIsHTTPUser')->once()->andReturnFalse();
+        $this->mail_notification_manager->expects(self::exactly(2))->method('create');
+
+        $this->xml_user_checker->expects(self::once())->method('currentUserIsHTTPUser')->willReturn(false);
 
         $this->repository_importer->import(
             $this->configuration,
@@ -333,25 +321,25 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->instantiateImporterWithXml(new SimpleXMLElement($xml));
 
-        $this->rule_name->shouldReceive('isValid')->andReturnTrue();
+        $this->rule_name->method('isValid')->willReturn(true);
 
-        $event = \Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->shouldReceive('createWithoutUserAdminCheck')
-            ->once()
-            ->andReturn($event);
+        $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
+        $this->repository_creator->expects(self::once())
+            ->method('createWithoutUserAdminCheck')
+            ->willReturn($event);
 
-        $event->shouldReceive('injectDependencies')->once();
-        $event->shouldReceive('process')->once();
-        $event->shouldReceive('getStatus')->andReturn(SystemEvent::STATUS_DONE);
-        $event->shouldReceive('getLog')->once();
+        $event->expects(self::once())->method('injectDependencies');
+        $event->expects(self::once())->method('process');
+        $event->method('getStatus')->willReturn(SystemEvent::STATUS_DONE);
+        $event->expects(self::once())->method('getLog');
 
-        $this->project->shouldReceive('getId')->andReturn(101);
+        $this->project->method('getId')->willReturn(101);
 
-        $this->backend_svn->shouldReceive('setUserAndGroup')->once();
+        $this->backend_svn->expects(self::once())->method('setUserAndGroup');
 
-        $this->accessfile_history_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
+        $this->accessfile_history_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
-        $this->xml_user_checker->shouldReceive('currentUserIsHTTPUser')->andReturnFalse();
+        $this->xml_user_checker->method('currentUserIsHTTPUser')->willReturn(false);
 
         $this->repository_importer->import(
             $this->configuration,

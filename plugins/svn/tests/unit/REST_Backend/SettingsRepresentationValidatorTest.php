@@ -20,6 +20,10 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Repository\HookConfig;
+use Tuleap\SVN\Repository\Repository;
+
 final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
@@ -46,13 +50,12 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/tags'
         );
 
-        $settings                      = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
         };
-        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
 
         $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPOSTRepresentation($settings);
@@ -70,7 +73,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/trunks'
         );
 
-        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
@@ -84,7 +87,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDontThrowAnExceptionAccessFileIsSentEmpty(): void
     {
-        $settings = new class ('') extends SettingsPUTRepresentation {
+        $settings = new /** @psalm-immutable */ class ('') extends SettingsPUTRepresentation {
             public function __construct(string $access_file)
             {
                 $this->access_file = $access_file;
@@ -98,7 +101,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItThrowAnExceptionAccessFileKeyIsNotPresent(): void
     {
-        $settings = new class extends SettingsPUTRepresentation {
+        $settings = new /** @psalm-immutable */ class extends SettingsPUTRepresentation {
             public function __construct()
             {
             }
@@ -122,7 +125,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/tags'
         );
 
-        $settings = new class ($notification_representation_01) extends SettingsPOSTRepresentation {
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
@@ -140,7 +143,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/tags'
         );
 
-        $settings = new class ($notification_representation_01) extends SettingsPOSTRepresentation {
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
@@ -163,7 +166,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/trunks'
         );
 
-        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
@@ -182,13 +185,15 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/tags'
         );
 
-        $settings = new class ($notification_representation_01) extends SettingsPUTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+        $repository = $this->createMock(Repository::class);
+
+        $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPUTRepresentation {
+            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';
-                $this->immutable_tags      = [];
-                $this->commit_rules        = [];
+                $this->immutable_tags      = ImmutableTagRepresentation::build(ImmutableTag::buildEmptyImmutableTag($repository));
+                $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
             }
         };
 
@@ -208,13 +213,15 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/trunks'
         );
 
-        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPUTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+        $repository = $this->createMock(Repository::class);
+
+        $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01, $notification_representation_02) extends SettingsPUTRepresentation {
+            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';
-                $this->immutable_tags      = [];
-                $this->commit_rules        = [];
+                $this->immutable_tags      = ImmutableTagRepresentation::build(ImmutableTag::buildEmptyImmutableTag($repository));
+                $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
             }
         };
 
@@ -230,13 +237,15 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
             '/tags'
         );
 
-        $settings = new class ($notification_representation_01) extends SettingsPUTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+        $repository = $this->createMock(Repository::class);
+
+        $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPUTRepresentation {
+            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';
-                $this->immutable_tags      = [];
-                $this->commit_rules        = [];
+                $this->immutable_tags      = ImmutableTagRepresentation::build(ImmutableTag::buildEmptyImmutableTag($repository));
+                $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
             }
         };
 

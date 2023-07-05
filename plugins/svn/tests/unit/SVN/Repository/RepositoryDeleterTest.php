@@ -20,66 +20,57 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \SystemEventManager
+     * @var \SystemEventManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $system_event_manager;
     /**
-     * @var RepositoryManager
+     * @var RepositoryManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_manager;
     /**
-     * @var Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
+    private \Project $project;
     /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var Repository
+     * @var Repository&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository;
+    private RepositoryDeleter $repository_deleter;
     /**
-     * @var RepositoryDeleter
-     */
-    private $repository_deleter;
-    /**
-     * @var \System_Command
+     * @var \System_Command&\PHPUnit\Framework\MockObject\MockObject
      */
     private $system_command;
-
-    private $fixtures_dir;
+    private string $fixtures_dir;
+    private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->system_command       = \Mockery::spy(\System_Command::class);
-        $project_history_dao        = \Mockery::spy(\ProjectHistoryDao::class);
-        $this->dao                  = \Mockery::spy(\Tuleap\SVN\Dao::class);
-        $this->system_event_manager = \Mockery::spy(\SystemEventManager::class);
-        $this->repository_manager   = \Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $this->system_command       = $this->createMock(\System_Command::class);
+        $this->project_history_dao  = $this->createMock(\ProjectHistoryDao::class);
+        $this->dao                  = $this->createMock(\Tuleap\SVN\Dao::class);
+        $this->system_event_manager = $this->createMock(\SystemEventManager::class);
+        $this->repository_manager   = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
 
         $this->repository_deleter = new RepositoryDeleter(
             $this->system_command,
-            $project_history_dao,
+            $this->project_history_dao,
             $this->dao,
             $this->system_event_manager,
-            $this->repository_manager
+            $this->repository_manager,
         );
 
-        $this->repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
         $this->project    = ProjectTestBuilder::aProject()->build();
 
         $this->fixtures_dir = __DIR__ . '/../_fixtures';
@@ -87,24 +78,24 @@ class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnFalseWhenRepositoryIsNotFoundOnFileSystem(): void
     {
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
-        $this->repository->shouldReceive('getSystemPath')->andReturn('/a/non/existing/path');
+        $this->repository->method('getProject')->willReturn($this->project);
+        $this->repository->method('getSystemPath')->willReturn('/a/non/existing/path');
 
-        $this->assertFalse($this->repository_deleter->delete($this->repository));
+        self::assertFalse($this->repository_deleter->delete($this->repository));
     }
 
     public function testItDeleteTheRepository(): void
     {
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
-        $this->repository->shouldReceive('getSystemPath')->andReturn($this->fixtures_dir);
-        $this->system_command->shouldReceive('exec')->andReturn(true);
+        $this->repository->method('getProject')->willReturn($this->project);
+        $this->repository->method('getSystemPath')->willReturn($this->fixtures_dir);
+        $this->system_command->method('exec')->willReturn(true);
 
-        $this->assertFalse($this->repository_deleter->delete($this->repository));
+        self::assertFalse($this->repository_deleter->delete($this->repository));
     }
 
     public function testItThrowsAnExceptionWhenRepositoryCantBeMarkedAsDeleted(): void
     {
-        $this->repository->shouldReceive('canBeDeleted')->andReturn(false);
+        $this->repository->method('canBeDeleted')->willReturn(false);
         $this->expectException(CannotDeleteRepositoryException::class);
 
         $this->repository_deleter->markAsDeleted($this->repository);
@@ -112,8 +103,12 @@ class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItMarkTheRepositoryAsDeleted(): void
     {
-        $this->repository->shouldReceive('canBeDeleted')->andReturn(true);
-        $this->dao->shouldReceive('markAsDeleted')->once();
+        $this->repository->method('canBeDeleted')->willReturn(true);
+        $this->repository->method('getId')->willReturn(1);
+        $this->repository->method('getSystemBackupPath')->willReturn('');
+        $this->repository->method('getBackupFileName')->willReturn('');
+        $this->repository->expects(self::once())->method('setDeletionDate');
+        $this->dao->expects(self::once())->method('markAsDeleted');
 
         $this->repository_deleter->markAsDeleted($this->repository);
     }
@@ -134,7 +129,7 @@ class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         \ForgeConfig::set('sys_data_dir', $directory->url());
-        $this->repository_manager->shouldReceive('getRepositoriesInProject')->andReturn(
+        $this->repository_manager->method('getRepositoriesInProject')->willReturn(
             [
                 SvnRepository::buildActiveRepository(1, 'repo01', $this->project),
                 SvnRepository::buildActiveRepository(2, 'repo02', $this->project),
@@ -142,7 +137,9 @@ class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->system_event_manager->shouldReceive('createEvent')->times(3);
+        $this->project_history_dao->method('groupAddHistory');
+
+        $this->system_event_manager->expects(self::exactly(3))->method('createEvent');
         $this->repository_deleter->deleteProjectRepositories($this->project);
     }
 }

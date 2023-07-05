@@ -20,33 +20,28 @@
 
 namespace Tuleap\SVN\AccessControl;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\SVN\Repository\Repository;
 
-class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Repository */
-    private $repository;
-
-    /** @var AccessFileReader */
-    private $reader;
+    private Repository&MockObject $repository;
+    private AccessFileReader $reader;
 
     protected function setUp(): void
     {
         parent::setUp();
         $fixtures_dir = __DIR__ . '/_fixtures';
 
-        $this->repository = \Mockery::mock(Repository::class);
-        $this->repository->shouldReceive('getSystemPath')->andReturn($fixtures_dir);
+        $this->repository = $this->createMock(Repository::class);
+        $this->repository->method('getSystemPath')->willReturn($fixtures_dir);
 
         $this->reader = new AccessFileReader();
     }
 
     public function testItReadsTheDefaultBlock(): void
     {
-        $this->assertMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             '/le default/',
             $this->reader->readDefaultBlock($this->repository)
         );
@@ -54,7 +49,7 @@ class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReadsTheContentBlock(): void
     {
-        $this->assertMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             '/le content/',
             $this->reader->readContentBlock($this->repository)
         );
@@ -62,7 +57,7 @@ class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotContainDelimiters(): void
     {
-        $this->assertDoesNotMatchRegularExpression(
+        self::assertDoesNotMatchRegularExpression(
             '/# BEGIN CODENDI DEFAULT SETTINGS/',
             $this->reader->readDefaultBlock($this->repository)
         );

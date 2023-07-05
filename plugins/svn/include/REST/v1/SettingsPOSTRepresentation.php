@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-
 /**
  * @psalm-immutable
  */

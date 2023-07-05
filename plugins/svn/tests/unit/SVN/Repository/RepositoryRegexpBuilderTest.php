@@ -20,13 +20,9 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery;
-
 class RepositoryRegexpBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $regexp;
+    private RepositoryRegexpBuilder $regexp;
 
     protected function setUp(): void
     {
@@ -37,18 +33,25 @@ class RepositoryRegexpBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAValidRegexpForARepository(): void
     {
         $path        = '/directory';
-        $data_access = Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $data_access->shouldReceive('escapeLikeValue')->withArgs(['directory'])->andReturn('directory');
-        $this->assertEquals($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$");
+        $data_access = $this->createMock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        $data_access->method('escapeLikeValue')->with('directory')->willReturn('directory');
+        self::assertEquals($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$");
     }
 
     public function testItReturnsAValidRegexpForARepositoryWithSubdirectories(): void
     {
         $path        = '/directory/subdirectory1/subdirectory2';
-        $data_access = Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $data_access->shouldReceive('escapeLikeValue')->withArgs(['directory'])->andReturn('directory');
-        $data_access->shouldReceive('escapeLikeValue')->withArgs(['subdirectory1'])->andReturn('subdirectory1');
-        $data_access->shouldReceive('escapeLikeValue')->withArgs(['subdirectory2'])->andReturn('subdirectory2');
-        $this->assertEquals($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*)/)$");
+        $data_access = $this->createMock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+
+        $data_access->method('escapeLikeValue')->willReturnMap([
+            ['directory', 'directory'],
+            ['subdirectory1', 'subdirectory1'],
+            ['subdirectory2', 'subdirectory2'],
+        ]);
+
+        self::assertEquals(
+            "^(/(directory|\\*))$|^(/(directory|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*)/)$",
+            $this->regexp->generateRegexpFromPath($path, $data_access),
+        );
     }
 }

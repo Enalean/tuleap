@@ -24,9 +24,7 @@ namespace Tuleap\SVN\Repository;
 use BackendSVN;
 use EventManager;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Psr\Log\NullLogger;
 use System_Command;
@@ -38,46 +36,40 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
     use TemporaryTestDirectory;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var MockObject&ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Dao
+     * @var MockObject&Dao
      */
     private $dao;
     /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var MockObject&HTTPRequest
      */
     private $request;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
+     * @var MockObject&\Project
      */
     private $project;
-
-    /**
-     * @var RepositoryManager
-     */
-    private $manager;
+    private RepositoryManager $manager;
 
     protected function setUp(): void
     {
-        $this->dao                   = Mockery::mock(Dao::class);
-        $this->project_manager       = Mockery::mock(ProjectManager::class);
-        $svn_admin                   = Mockery::mock(SvnAdmin::class);
+        $this->dao                   = $this->createMock(Dao::class);
+        $this->project_manager       = $this->createMock(ProjectManager::class);
+        $svn_admin                   = $this->createMock(SvnAdmin::class);
         $logger                      = new NullLogger();
-        $system_command              = Mockery::mock(System_Command::class);
-        $destructor                  = Mockery::mock(Destructor::class);
-        $event_manager               = Mockery::mock(EventManager::class);
-        $backend                     = Mockery::mock(BackendSVN::class);
-        $access_file_history_factory = Mockery::mock(AccessFileHistoryFactory::class);
+        $system_command              = $this->createMock(System_Command::class);
+        $destructor                  = $this->createMock(Destructor::class);
+        $event_manager               = $this->createMock(EventManager::class);
+        $backend                     = $this->createMock(BackendSVN::class);
+        $access_file_history_factory = $this->createMock(AccessFileHistoryFactory::class);
         $this->manager               = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -90,47 +82,49 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $access_file_history_factory
         );
 
-        $this->project = Mockery::mock(\Project::class);
-        $this->request = Mockery::mock(HTTPRequest::class);
+        $this->project = $this->createMock(\Project::class);
+        $this->request = $this->createMock(HTTPRequest::class);
     }
 
     public function testItReturnsRepositoryFromAPublicPath(): void
     {
-        $this->project->shouldReceive('getUnixNameMixedCase')->once()->andReturn('projectname');
-        $this->request->shouldReceive('get')->once()->andReturn('projectname/repositoryname');
-        $this->request->shouldReceive('getProject')->once()->andReturn($this->project);
+        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects(self::once())->method('get')->willReturn('projectname/repositoryname');
+        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
 
-        $this->dao->shouldReceive('searchRepositoryByName')->once()->withArgs(
-            [$this->project, 'repositoryname']
-        )->andReturn(
-            [
-                'id'                       => '1',
-                'name'                     => 'repositoryname',
-                'repository_deletion_date' => null,
-                'backup_path'              => null,
-                'is_core'                  => '0',
-            ]
-        );
+        $this->dao->expects(self::once())
+            ->method('searchRepositoryByName')
+            ->with($this->project, 'repositoryname')
+            ->willReturn(
+                [
+                    'id'                       => '1',
+                    'name'                     => 'repositoryname',
+                    'repository_deletion_date' => null,
+                    'backup_path'              => null,
+                    'is_core'                  => '0',
+                ]
+            );
 
-        $this->project->shouldReceive('getID')->once()->andReturn(101);
-        $this->project->shouldReceive('isError')->once()->andReturnFalse();
+        $this->project->expects(self::once())->method('getID')->willReturn(101);
+        $this->project->expects(self::once())->method('isError')->willReturn(false);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
-        $this->assertEquals($repository->getName(), 'repositoryname');
+        self::assertEquals($repository->getName(), 'repositoryname');
     }
 
     public function testItThrowsAnExceptionWhenRepositoryNameNotFound(): void
     {
-        $this->project->shouldReceive('getUnixNameMixedCase')->once()->andReturn('projectname');
-        $this->request->shouldReceive('get')->once()->andReturn('projectname/repositoryko');
-        $this->request->shouldReceive('getProject')->once()->andReturn($this->project);
+        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects(self::once())->method('get')->willReturn('projectname/repositoryko');
+        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
 
-        $this->project->shouldReceive('getID')->once()->andReturn(101);
-        $this->project->shouldReceive('isError')->once()->andReturnFalse();
+        $this->project->expects(self::once())->method('getID')->willReturn(101);
+        $this->project->expects(self::once())->method('isError')->willReturn(false);
 
-        $this->dao->shouldReceive('searchRepositoryByName')->once()->withArgs(
-            [$this->project, 'repositoryko']
-        )->andReturn(false);
+        $this->dao->expects(self::once())
+            ->method('searchRepositoryByName')
+            ->with($this->project, 'repositoryko')
+            ->willReturn(false);
 
         $this->expectException(CannotFindRepositoryException::class);
         $this->manager->getRepositoryFromPublicPath($this->request);
@@ -138,9 +132,9 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenProjectNameNotFound(): void
     {
-        $this->project->shouldReceive('getUnixNameMixedCase')->once()->andReturn('projectname');
-        $this->request->shouldReceive('get')->once()->andReturn('falsyproject/repositoryname');
-        $this->request->shouldReceive('getProject')->once()->andReturn($this->project);
+        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects(self::once())->method('get')->willReturn('falsyproject/repositoryname');
+        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
 
         $this->expectException(CannotFindRepositoryException::class);
         $this->manager->getRepositoryFromPublicPath($this->request);
@@ -148,35 +142,37 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsRepositoryFromAPublicPathWithLegacyAndNoMoreValidUnixName(): void
     {
-        $this->project->shouldReceive('getUnixNameMixedCase')->once()->andReturn('0abcd');
-        $this->request->shouldReceive('get')->once()->andReturn('0abcd/repositoryname');
-        $this->request->shouldReceive('getProject')->once()->andReturn($this->project);
+        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('0abcd');
+        $this->request->expects(self::once())->method('get')->willReturn('0abcd/repositoryname');
+        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
 
-        $this->dao->shouldReceive('searchRepositoryByName')->once()->withArgs([$this->project, 'repositoryname'])->once(
-        )->andReturn(
-            [
-                'id'                       => '1',
-                'name'                     => 'repositoryname',
-                'repository_deletion_date' => null,
-                'backup_path'              => null,
-                'is_core'                  => '0',
-            ]
-        );
+        $this->dao->expects(self::once())
+            ->method('searchRepositoryByName')
+            ->with($this->project, 'repositoryname')
+            ->willReturn(
+                [
+                    'id'                       => '1',
+                    'name'                     => 'repositoryname',
+                    'repository_deletion_date' => null,
+                    'backup_path'              => null,
+                    'is_core'                  => '0',
+                ]
+            );
 
-        $this->project->shouldReceive('getID')->once()->andReturn(101);
-        $this->project->shouldReceive('isError')->once()->andReturnFalse();
+        $this->project->expects(self::once())->method('getID')->willReturn(101);
+        $this->project->expects(self::once())->method('isError')->willReturn(false);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
-        $this->assertEquals($repository->getName(), 'repositoryname');
+        self::assertEquals($repository->getName(), 'repositoryname');
     }
 
     public function testItReturnsTheCoreRepository(): void
     {
-        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('projectname');
-        $this->request->shouldReceive('get')->andReturn('projectname');
-        $this->request->shouldReceive('getProject')->andReturn($this->project);
+        $this->project->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->method('get')->willReturn('projectname');
+        $this->request->method('getProject')->willReturn($this->project);
 
-        $this->dao->shouldReceive('getCoreRepositoryId')->andReturn(15);
+        $this->dao->method('getCoreRepositoryId')->willReturn(15);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         self::assertEquals('projectname', $repository->getName());
@@ -185,17 +181,17 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyArrayWhenNoProjectHaveMultiSVNRepositories(): void
     {
-        $this->dao->shouldReceive('searchRepositoriesOfNonDeletedProjects')->andReturn([]);
+        $this->dao->method('searchRepositoriesOfNonDeletedProjects')->willReturn([]);
 
         $collection          = $this->manager->getRepositoriesOfNonDeletedProjects();
         $expected_collection = [];
 
-        $this->assertEquals($expected_collection, $collection);
+        self::assertEquals($expected_collection, $collection);
     }
 
-    public function testItReturnsAnEArrayOfRepositoryByProjectCollection(): void
+    public function testItReturnsAnArrayOfRepositoryByProjectCollection(): void
     {
-        $this->dao->shouldReceive('searchRepositoriesOfNonDeletedProjects')->andReturn(
+        $this->dao->method('searchRepositoriesOfNonDeletedProjects')->willReturn(
             [
                 [
                     'project_id'               => '102',
@@ -224,10 +220,15 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $project_A = Mockery::mock(Project::class);
-        $this->project_manager->shouldReceive('getProject')->withArgs([102])->andReturn($project_A);
-        $project_B = Mockery::mock(Project::class);
-        $this->project_manager->shouldReceive('getProject')->withArgs([103])->andReturn($project_B);
+        $project_A = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_B = ProjectTestBuilder::aProject()->withId(103)->build();
+
+        $this->project_manager->method('getProject')->willReturnMap([
+            ['102', $project_A],
+            [102, $project_A],
+            ['103', $project_B],
+            [103, $project_B],
+        ]);
 
         $collection          = $this->manager->getRepositoriesOfNonDeletedProjects();
         $expected_collection = [
@@ -235,10 +236,10 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
                 SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
             ]),
-            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)]),
+            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_B)]),
         ];
 
-        $this->assertEquals($expected_collection, $collection);
+        self::assertEquals($expected_collection, $collection);
     }
 
     public function testGetRepositoryFromSystemPathWithCoreRepository(): void
@@ -248,8 +249,8 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir($tmp_dir . '/svnplugin/101/FooBar', 0750, true);
         \ForgeConfig::set('svn_prefix', $tmp_dir . '/svnroot');
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('ProjectName')->andReturn(ProjectTestBuilder::aProject()->build());
-        $this->dao->shouldReceive('getCoreRepositoryId')->andReturn(67);
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->with('ProjectName')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->dao->method('getCoreRepositoryId')->willReturn(67);
 
         $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnroot/ProjectName');
         self::assertInstanceOf(CoreRepository::class, $repository);
@@ -264,8 +265,8 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('svn_prefix', $tmp_dir . '/svnroot');
 
         $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
-        $this->dao->shouldReceive('searchRepositoryByName')->with($project, 'FooBar')->andReturn(['id' => 670, 'name' => 'FooBar', 'is_core' => '0', 'backup_path' => null, 'repository_deletion_date' => null]);
+        $this->project_manager->method('getProject')->with('101')->willReturn($project);
+        $this->dao->method('searchRepositoryByName')->with($project, 'FooBar')->willReturn(['id' => 670, 'name' => 'FooBar', 'is_core' => '0', 'backup_path' => null, 'repository_deletion_date' => null]);
 
         $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnplugin/101/FooBar');
         self::assertInstanceOf(SvnRepository::class, $repository);

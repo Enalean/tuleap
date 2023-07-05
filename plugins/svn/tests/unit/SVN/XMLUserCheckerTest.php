@@ -21,12 +21,10 @@
 namespace Tuleap\SVN;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 
 final class XMLUserCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testItReturnsTrueIfCurrentUserIsHTTPUser(): void
@@ -34,7 +32,7 @@ final class XMLUserCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_http_user', posix_getpwuid(posix_geteuid())['name']);
 
         $checker = new XMLUserChecker();
-        $this->assertTrue($checker->currentUserIsHTTPUser());
+        self::assertTrue($checker->currentUserIsHTTPUser());
     }
 
     public function testItReturnsFalseIfCurrentUserIsNotHTTPUser(): void
@@ -42,6 +40,6 @@ final class XMLUserCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_http_user', 'whatever');
 
         $checker = new XMLUserChecker();
-        $this->assertFalse($checker->currentUserIsHTTPUser());
+        self::assertFalse($checker->currentUserIsHTTPUser());
     }
 }

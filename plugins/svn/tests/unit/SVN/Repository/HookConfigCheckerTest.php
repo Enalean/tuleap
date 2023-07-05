@@ -20,39 +20,26 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HookConfigRetriever
-     */
-    private $config_hook_retriever;
-
-    /**
-     * @var Repository
-     */
-    private $repository;
-
-    /**
-     * @var HookConfigChecker
-     */
-    private $config_hook_checker;
+    private \PHPUnit\Framework\MockObject\MockObject&HookConfigRetriever $config_hook_retriever;
+    private Repository $repository;
+    private HookConfigChecker $config_hook_checker;
 
     protected function setUp(): void
     {
-        $this->config_hook_retriever = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
+        $this->config_hook_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
         $this->config_hook_checker   = new HookConfigChecker($this->config_hook_retriever);
 
-        $project          = \Mockery::mock(\Project::class);
+        $project          = ProjectTestBuilder::aProject()->build();
         $this->repository = SvnRepository::buildActiveRepository(12, 'repo01', $project);
     }
 
     public function testItReturnsTrueWhenCommitMessageParameterHaveChanged(): void
     {
-        $this->config_hook_retriever->shouldReceive('getHookConfig')->withArgs([$this->repository])->andReturn(
+        $this->config_hook_retriever->method('getHookConfig')->with($this->repository)->willReturn(
             new HookConfig(
                 $this->repository,
                 [
@@ -67,12 +54,12 @@ class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
         ];
 
-        $this->assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
+        self::assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }
 
     public function testItReturnsTrueWhenMandatoryReferenceParameterHaveChanged(): void
     {
-        $this->config_hook_retriever->shouldReceive('getHookConfig')->withArgs([$this->repository])->andReturn(
+        $this->config_hook_retriever->method('getHookConfig')->with($this->repository)->willReturn(
             new HookConfig(
                 $this->repository,
                 [
@@ -87,12 +74,12 @@ class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
         ];
 
-        $this->assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
+        self::assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }
 
     public function testItReturnsFalseWhenNoChangeAreMade(): void
     {
-        $this->config_hook_retriever->shouldReceive('getHookConfig')->withArgs([$this->repository])->andReturn(
+        $this->config_hook_retriever->method('getHookConfig')->with($this->repository)->willReturn(
             new HookConfig(
                 $this->repository,
                 [
@@ -107,6 +94,6 @@ class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
         ];
 
-        $this->assertFalse($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
+        self::assertFalse($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }
 }

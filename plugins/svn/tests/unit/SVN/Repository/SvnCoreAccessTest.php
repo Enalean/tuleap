@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\SVN\Dao;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
@@ -31,27 +31,16 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
-     */
-    private $dao;
-    /**
-     * @var SvnCoreAccess
-     */
-    private $plugin_svn_access;
+    private \Project $project;
+    private MockObject&Dao $dao;
+    private SvnCoreAccess $plugin_svn_access;
 
     public function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();
 
-        $this->dao = \Mockery::mock(Dao::class);
-        $this->dao->shouldReceive('getCoreRepositoryId')->with($this->project)->andReturn(29);
+        $this->dao = $this->createMock(Dao::class);
+        $this->dao->method('getCoreRepositoryId')->with($this->project)->willReturn(29);
 
         $this->plugin_svn_access = new SvnCoreAccess($this->dao);
     }

@@ -46,7 +46,6 @@
             <directory name="plugins/git/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
             <directory name="plugins/pullrequest/tests/unit/"/>
-            <directory name="plugins/svn/tests/unit/"/>
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
             <file name="plugins/openidconnectclient/tests/unit/Authentication/IDTokenVerifierTest.php"/>

@@ -20,39 +20,33 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&HookDao
      */
     private $hook_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectHistoryDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectHistoryDao
      */
     private $project_history_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HookConfigChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&HookConfigChecker
      */
     private $hook_config_checker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HookConfigSanitizer
+     * @var \PHPUnit\Framework\MockObject\MockObject&HookConfigSanitizer
      */
     private $hook_config_sanitizer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectHistoryFormatter
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectHistoryFormatter
      */
     private $project_history_formatter;
+    private HookConfigUpdator $updator;
     /**
-     * @var HookConfigUpdator
-     */
-    private $updator;
-
-    /**
-     * @var Repository
+     * @var \PHPUnit\Framework\MockObject\MockObject&Repository
      */
     private $repository;
 
@@ -60,11 +54,11 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->hook_dao                  = \Mockery::spy(\Tuleap\SVN\Repository\HookDao::class);
-        $this->project_history_dao       = \Mockery::spy(\ProjectHistoryDao::class);
-        $this->hook_config_checker       = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigChecker::class);
-        $this->hook_config_sanitizer     = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigSanitizer::class);
-        $this->project_history_formatter = \Mockery::spy(\Tuleap\SVN\Repository\ProjectHistoryFormatter::class);
+        $this->hook_dao                  = $this->createMock(\Tuleap\SVN\Repository\HookDao::class);
+        $this->project_history_dao       = $this->createMock(\ProjectHistoryDao::class);
+        $this->hook_config_checker       = $this->createMock(\Tuleap\SVN\Repository\HookConfigChecker::class);
+        $this->hook_config_sanitizer     = $this->createMock(\Tuleap\SVN\Repository\HookConfigSanitizer::class);
+        $this->project_history_formatter = $this->createMock(\Tuleap\SVN\Repository\ProjectHistoryFormatter::class);
 
         $this->updator = new HookConfigUpdator(
             $this->hook_dao,
@@ -74,22 +68,21 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_history_formatter
         );
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->repository = Mockery::mock(\Tuleap\SVN\Repository\Repository::class);
-        $this->repository->shouldReceive('getProject')->andReturn($project);
-        $this->repository->shouldReceive('getId')->andReturn(42);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $this->repository->method('getProject')->willReturn($project);
+        $this->repository->method('getId')->willReturn(42);
     }
 
     public function testItUpdatesHookConfig(): void
     {
-        $this->repository->shouldReceive('getName')->andReturn("repo name");
+        $this->repository->method('getName')->willReturn("repo name");
 
-        $this->hook_config_checker->shouldReceive('hasConfigurationChanged')->andReturn(true);
+        $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(true);
 
-        $this->hook_dao->shouldReceive('updateHookConfig')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
+        $this->hook_dao->expects(self::once())->method('updateHookConfig');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
         $hook_config = [
             'mandatory_reference'       => true,
@@ -97,17 +90,18 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ];
 
-        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+        $this->project_history_formatter->method('getHookConfigHistory')->willReturn('');
+        $this->hook_config_sanitizer->method('sanitizeHookConfigArray')->with($hook_config)->willReturn($hook_config);
 
         $this->updator->updateHookConfig($this->repository, $hook_config);
     }
 
     public function testItDoesNothingIfNothingChanged(): void
     {
-        $this->hook_config_checker->shouldReceive('hasConfigurationChanged')->andReturn(false);
+        $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(false);
 
-        $this->hook_dao->shouldReceive('updateHookConfig')->never();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->never();
+        $this->hook_dao->expects(self::never())->method('updateHookConfig');
+        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
 
         $hook_config = [
             'mandatory_reference'       => true,
@@ -115,17 +109,17 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ];
 
-        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+        $this->hook_config_sanitizer->method('sanitizeHookConfigArray')->with($hook_config)->willReturn($hook_config);
 
         $this->updator->updateHookConfig($this->repository, $hook_config);
     }
 
     public function testItCreatesHookConfig(): void
     {
-        $this->hook_config_checker->shouldReceive('hasConfigurationChanged')->andReturn(true);
+        $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(true);
 
-        $this->hook_dao->shouldReceive('updateHookConfig')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->never();
+        $this->hook_dao->expects(self::once())->method('updateHookConfig');
+        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
 
         $hook_config = [
             'mandatory_reference'       => true,
@@ -133,17 +127,17 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ];
 
-        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+        $this->hook_config_sanitizer->method('sanitizeHookConfigArray')->with($hook_config)->willReturn($hook_config);
 
         $this->updator->initHookConfiguration($this->repository, $hook_config);
     }
 
     public function testItCreatesHookConfigInAnyCases(): void
     {
-        $this->hook_config_checker->shouldReceive('hasConfigurationChanged')->andReturn(false);
+        $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(false);
 
-        $this->hook_dao->shouldReceive('updateHookConfig')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->never();
+        $this->hook_dao->expects(self::once())->method('updateHookConfig');
+        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
 
         $hook_config = [
             'mandatory_reference'       => true,
@@ -151,7 +145,7 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ];
 
-        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+        $this->hook_config_sanitizer->method('sanitizeHookConfigArray')->with($hook_config)->willReturn($hook_config);
 
         $this->updator->initHookConfiguration($this->repository, $hook_config);
     }

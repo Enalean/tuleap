@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
@@ -34,56 +34,33 @@ use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\Settings;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
-    /**
-     * @var MailNotificationManager
-     */
-    private $mail_notification_manager;
-    /**
-     * @var Repository
-     */
-    private $repository;
-    /**
-     * @var ImmutableTagFactory
-     */
-    private $immutable_tag_factory;
-    /**
-     * @var AccessFileHistoryFactory
-     */
-    private $access_file_factory;
-    /**
-     * @var AccessFileHistoryCreator
-     */
-    private $access_file_creator;
-    /**
-     * @var ImmutableTagCreator
-     */
-    private $immutable_tag_creator;
-    /**
-     * @var HookConfigUpdator
-     */
-    private $hook_config_updater;
-    /**
-     * @var RepositoryResourceUpdater
-     */
-    private $updater;
+    private MailNotificationManager&MockObject $mail_notification_manager;
+    private Repository&MockObject $repository;
+    private ImmutableTagFactory&MockObject $immutable_tag_factory;
+    private AccessFileHistoryFactory&MockObject $access_file_factory;
+    private AccessFileHistoryCreator&MockObject $access_file_creator;
+    private ImmutableTagCreator&MockObject $immutable_tag_creator;
+    private HookConfigUpdator&MockObject $hook_config_updater;
+    private RepositoryResourceUpdater $updater;
+    private NotificationUpdateChecker&MockObject $notification_updater_checker;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hook_config_updater       = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigUpdator::class);
-        $this->immutable_tag_creator     = \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagCreator::class);
-        $this->access_file_creator       = \Mockery::spy(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
-        $this->access_file_factory       = \Mockery::spy(\Tuleap\SVN\AccessControl\AccessFileHistoryFactory::class);
-        $this->immutable_tag_factory     = \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagFactory::class);
-        $this->mail_notification_manager = \Mockery::spy(\Tuleap\SVN\Admin\MailNotificationManager::class);
-        $notification_updater_checker    = \Mockery::spy(\Tuleap\SVN\REST\v1\NotificationUpdateChecker::class);
+        $this->hook_config_updater          = $this->createMock(\Tuleap\SVN\Repository\HookConfigUpdator::class);
+        $this->immutable_tag_creator        = $this->createMock(\Tuleap\SVN\Admin\ImmutableTagCreator::class);
+        $this->access_file_creator          = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
+        $this->access_file_factory          = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryFactory::class);
+        $this->immutable_tag_factory        = $this->createMock(\Tuleap\SVN\Admin\ImmutableTagFactory::class);
+        $this->mail_notification_manager    = $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class);
+        $this->notification_updater_checker = $this->createMock(\Tuleap\SVN\REST\v1\NotificationUpdateChecker::class);
 
         $this->updater = new RepositoryResourceUpdater(
             $this->hook_config_updater,
@@ -92,14 +69,14 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->access_file_creator,
             $this->immutable_tag_factory,
             $this->mail_notification_manager,
-            $notification_updater_checker
+            $this->notification_updater_checker,
         );
 
-        $this->repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
-        $project          = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $project          = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->repository->shouldReceive('getProject')->andReturn($project);
+        $this->repository->method('getProject')->willReturn($project);
+        $this->repository->method('getSystemPath')->willReturn('');
     }
 
     public function testItUpdatesRepositorySettings(): void
@@ -129,16 +106,22 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             time()
         );
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn(
-            \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTag::class)
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
+            new ImmutableTag(
+                $this->repository,
+                "/dev",
+                ""
+            ),
         );
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn(
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file
         );
 
-        $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
-        $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
+        $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
+
+        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -170,16 +153,22 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             time()
         );
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn(
-            \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTag::class)
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
+            new ImmutableTag(
+                $this->repository,
+                "/dev",
+                ""
+            ),
         );
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn(
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file
         );
 
-        $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
-        $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
+        $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
+
+        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -211,16 +200,22 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             time()
         );
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn(
-            \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTag::class)
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(
+            new ImmutableTag(
+                $this->repository,
+                "/dev",
+                ""
+            ),
         );
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn(
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file
         );
 
-        $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
-        $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->never();
+        $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
+
+        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->access_file_creator->expects(self::never())->method('create');
 
         $this->updater->update($this->repository, $settings);
     }
@@ -253,14 +248,16 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $existing_tags = new ImmutableTag($this->repository, "/tags", "/whitelist");
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($existing_tags);
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn(
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($existing_tags);
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
             $current_access_file
         );
 
-        $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
-        $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
+        $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
+
+        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }

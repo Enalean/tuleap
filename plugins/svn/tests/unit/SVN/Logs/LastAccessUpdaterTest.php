@@ -20,44 +20,38 @@
 
 namespace Tuleap\SVN\Logs;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Repository\Repository;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItUpdatesTheLastCommitDate()
+    public function testItUpdatesTheLastCommitDate(): void
     {
-        $dao                 = Mockery::mock(LastAccessDao::class);
+        $dao                 = $this->createMock(LastAccessDao::class);
         $last_access_updater = new LastAccessUpdater($dao);
 
-        $repository = Mockery::mock(Repository::class);
-        $repository->shouldReceive('getId')->andReturn(10);
-        $commit_info = Mockery::mock(CommitInfo::class);
-        $commit_info->shouldReceive('getDate')->andReturn('2017-06-06 11:59:45 +0000 (Tue, 06 Jun 2017)');
+        $repository = $this->createMock(Repository::class);
+        $repository->method('getId')->willReturn(10);
+        $commit_info = $this->createMock(CommitInfo::class);
+        $commit_info->method('getDate')->willReturn('2017-06-06 11:59:45 +0000 (Tue, 06 Jun 2017)');
 
-        $dao->shouldReceive('updateLastCommitDate')->withArgs([10, 1496750385])->once();
+        $dao->expects(self::once())->method('updateLastCommitDate')->with(10, 1496750385);
 
         $last_access_updater->updateLastCommitDate($repository, $commit_info);
     }
 
-    public function testItThrowsAnExceptionWhenTheCommitDateIsNotReadable()
+    public function testItThrowsAnExceptionWhenTheCommitDateIsNotReadable(): void
     {
-        $dao                 = Mockery::mock(LastAccessDao::class);
+        $dao                 = $this->createMock(LastAccessDao::class);
         $last_access_updater = new LastAccessUpdater($dao);
 
-        $repository = Mockery::mock(Repository::class);
-        $repository->shouldReceive('getId')->andReturn(10);
-        $commit_info = Mockery::mock(CommitInfo::class);
-        $commit_info->shouldReceive('getDate')->andReturn('This is not a valid commit date');
+        $repository = $this->createMock(Repository::class);
+        $repository->method('getId')->willReturn(10);
+        $commit_info = $this->createMock(CommitInfo::class);
+        $commit_info->method('getDate')->willReturn('This is not a valid commit date');
 
         $this->expectException(CannotGetCommitDateException::class);
-        $dao->shouldReceive('updateLastCommitDate')->never();
+        $dao->expects(self::never())->method('updateLastCommitDate');
 
         $last_access_updater->updateLastCommitDate($repository, $commit_info);
     }

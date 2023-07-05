@@ -21,37 +21,24 @@
 
 namespace Tuleap\SVN\Reference;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\SVN\Repository\CoreRepository;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Extractor
-     */
-    private $extractor;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var RepositoryManager
-     */
-    private $repository_manager;
+    private Extractor $extractor;
+    private Project&MockObject $project;
+    private RepositoryManager&MockObject $repository_manager;
 
     protected function setUp(): void
     {
-        $this->project = Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn(101);
-        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('FooBar');
-        $this->repository_manager = Mockery::mock(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $this->project = $this->createMock(\Project::class);
+        $this->project->method('getID')->willReturn(101);
+        $this->project->method('getUnixNameMixedCase')->willReturn('FooBar');
+        $this->repository_manager = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
         $this->extractor          = new Extractor($this->repository_manager);
     }
 
@@ -60,10 +47,10 @@ class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword = 'svn';
         $value   = '1';
 
-        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
-        $this->repository_manager->shouldReceive('getCoreRepository')->andThrow(new CannotFindRepositoryException());
+        $this->project->method('usesService')->with('plugin_svn')->willReturn(true);
+        $this->repository_manager->method('getCoreRepository')->willThrowException(new CannotFindRepositoryException());
 
-        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
+        self::assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
     public function testItReturnsTrueIfReferenceCorrespondsToACoreRepositoryManagedByPlugin(): void
@@ -71,8 +58,8 @@ class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword = 'svn';
         $value   = '1';
 
-        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
-        $this->repository_manager->shouldReceive('getCoreRepository')->with($this->project)->andReturn(CoreRepository::buildActiveRepository($this->project, 93));
+        $this->project->method('usesService')->with('plugin_svn')->willReturn(true);
+        $this->repository_manager->method('getCoreRepository')->with($this->project)->willReturn(CoreRepository::buildActiveRepository($this->project, 93));
 
         $reference = $this->extractor->getReference($this->project, $keyword, $value);
         self::assertInstanceOf(Reference::class, $reference);
@@ -83,9 +70,9 @@ class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword = 'svn';
         $value   = 'repo01/1';
 
-        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(false);
+        $this->project->method('usesService')->with('plugin_svn')->willReturn(false);
 
-        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
+        self::assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
     public function testItReturnsNullIfTheProvidedRepositoryIsNotInTheCurrentProject(): void
@@ -93,31 +80,31 @@ class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword = 'svn';
         $value   = 'repo02/1';
 
-        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
-        $this->repository_manager->shouldReceive('getRepositoryByName')
-            ->withArgs([$this->project, 'repo02'])
-            ->andThrow(CannotFindRepositoryException::class);
+        $this->project->method('usesService')->with('plugin_svn')->willReturn(true);
+        $this->repository_manager->method('getRepositoryByName')
+            ->with($this->project, 'repo02')
+            ->willThrowException(new CannotFindRepositoryException());
 
-        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
+        self::assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
     public function testItBuildsASubversionPluginReference(): void
     {
         $keyword    = 'svn';
         $value      = 'repo01/1';
-        $repository = Mockery::mock(\Tuleap\SVN\Repository\Repository::class);
-        $repository->shouldReceive('getFullName')->andReturn('project01/repo01');
+        $repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $repository->method('getFullName')->willReturn('project01/repo01');
 
-        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
-        $this->repository_manager->shouldReceive('getRepositoryByName')
-            ->withArgs([$this->project, 'repo01'])
-            ->andReturn($repository);
+        $this->project->method('usesService')->with('plugin_svn')->willReturn(true);
+        $this->repository_manager->method('getRepositoryByName')
+            ->with($this->project, 'repo01')
+            ->willReturn($repository);
 
         $reference = $this->extractor->getReference($this->project, $keyword, $value);
 
         self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertEquals(101, $reference->getGroupId());
-        $this->assertEquals('svn', $reference->getKeyword());
+        self::assertEquals(101, $reference->getGroupId());
+        self::assertEquals('svn', $reference->getKeyword());
     }
 }
