@@ -25,50 +25,43 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Project;
 use Tuleap\Baseline\Domain\ComparisonService;
 use Tuleap\Baseline\Domain\ComparisonsPage;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Factory\ComparisonFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class ProjectComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
-    /** @var ProjectComparisonController */
-    private $controller;
+    private ProjectComparisonController $controller;
 
-    /** @var CurrentUserProvider|MockInterface */
+    /** @var CurrentUserProvider&\PHPUnit\Framework\MockObject\MockObject */
     private $current_user_provider;
 
-    /** @var ComparisonService|MockInterface */
+    /** @var ComparisonService&\PHPUnit\Framework\MockObject\MockObject */
     private $comparison_service;
 
-    /** @var ProjectRepository */
+    /** @var ProjectRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $project_repository;
 
-    /** @var Project|MockInterface */
-    private $a_project;
+    private ProjectIdentifier $a_project;
 
     /**
      * @before
      */
-    public function createInstance()
+    public function createInstance(): void
     {
-        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class)->shouldIgnoreMissing();
-        $this->current_user_provider
-            ->allows(['getUser' => $this->current_user])
-            ->byDefault();
-        $this->comparison_service = Mockery::mock(ComparisonService::class);
-        $this->project_repository = Mockery::mock(ProjectRepository::class);
+        $this->current_user_provider = $this->createMock(CurrentUserProvider::class);
+        $this->current_user_provider->method('getUser')->willReturn($this->current_user);
+
+        $this->comparison_service = $this->createMock(ComparisonService::class);
+        $this->project_repository = $this->createMock(ProjectRepository::class);
 
         $this->controller = new ProjectComparisonController(
             $this->current_user_provider,
@@ -78,22 +71,22 @@ class ProjectComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /** @before */
-    public function createEntities()
+    public function createEntities(): void
     {
         $this->a_project = ProjectFactory::one();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->project_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 102)
-            ->andReturn($this->a_project);
+            ->willReturn($this->a_project);
 
         $this->comparison_service
-            ->shouldReceive('findByProject')
+            ->method('findByProject')
             ->with($this->current_user, $this->a_project, 10, 7)
-            ->andReturn(
+            ->willReturn(
                 new ComparisonsPage(
                     [ComparisonFactory::one()],
                     10,
@@ -104,18 +97,18 @@ class ProjectComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $this->controller->get(102, 10, 7);
 
-        $this->assertEquals(1, count($representation->comparisons));
-        $this->assertEquals(233, $representation->total_count);
+        self::assertEquals(1, count($representation->comparisons));
+        self::assertEquals(233, $representation->total_count);
     }
 
-    public function testGetThrows404WhenNoProjectFound()
+    public function testGetThrows404WhenNoProjectFound(): void
     {
         $this->expectException(NotFoundRestException::class);
 
         $this->project_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 102)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->controller->get(102, 10, 0);
     }

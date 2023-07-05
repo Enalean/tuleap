@@ -25,10 +25,6 @@ namespace Tuleap\Baseline\Domain;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Project;
 use Tuleap\Baseline\Adapter\AuthorizationsImpl;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
@@ -39,26 +35,25 @@ use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
     /** @var ComparisonService */
     private $service;
 
-    /** @var ComparisonRepository|MockInterface */
+    /** @var ComparisonRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $comparison_repository;
 
-    /** @var Authorizations|MockInterface */
+    /** @var Authorizations&\PHPUnit\Framework\MockObject\MockObject */
     private $authorizations;
     private UserProxy $a_user;
 
     /** @before */
     protected function createInstance(): void
     {
-        $this->comparison_repository = Mockery::mock(ComparisonRepository::class);
-        $this->authorizations        = Mockery::mock(AuthorizationsImpl::class);
+        $this->comparison_repository = $this->createMock(ComparisonRepository::class);
+        $this->authorizations        = $this->createMock(AuthorizationsImpl::class);
 
         $this->service = new ComparisonService(
             $this->comparison_repository,
@@ -66,17 +61,16 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @var Project|MockInterface */
-    private $a_project;
+    private ProjectIdentifier $a_project;
 
     /** @before */
-    public function createEntities()
+    public function createEntities(): void
     {
         $this->a_user    = UserProxy::fromUser(UserTestBuilder::aUser()->build());
         $this->a_project = ProjectFactory::one();
     }
 
-    public function testCreateThrowsWhenGivenBaselinesAreNotOnSameRootArtifacts()
+    public function testCreateThrowsWhenGivenBaselinesAreNotOnSameRootArtifacts(): void
     {
         $this->expectException(InvalidComparisonException::class);
 
@@ -88,61 +82,57 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
             ->comparedTo(BaselineFactory::one()->artifact($artifact2)->build())
             ->build();
 
-        $this->authorizations
-            ->shouldReceive(['canCreateComparison' => true]);
+        $this->authorizations->method('canCreateComparison')->willReturn(true);
 
         $this->service->create($comparison, $this->current_user);
 
-        $this->comparison_repository
-            ->shouldReceive('add')
-            ->never();
+        $this->comparison_repository->expects(self::never())->method('add');
     }
 
-    public function testDeleteDeletesGivenBaseline()
+    public function testDeleteDeletesGivenBaseline(): void
     {
-        $this->authorizations->allows(['canDeleteComparison' => true]);
+        $this->authorizations->method('canDeleteComparison')->willReturn(true);
 
         $comparison = ComparisonFactory::one();
         $this->comparison_repository
-            ->shouldReceive('delete')
-            ->with($comparison, $this->current_user)
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('delete')
+            ->with($comparison, $this->current_user);
 
         $this->service->delete($this->current_user, $comparison);
     }
 
-    public function testDeleteThrowsNotAuthorizedExceptionWhenNotAuthorized()
+    public function testDeleteThrowsNotAuthorizedExceptionWhenNotAuthorized(): void
     {
         $this->expectException(NotAuthorizedException::class);
 
         $comparison = ComparisonFactory::one();
-        $this->authorizations->allows()
-            ->canDeleteComparison($this->current_user, $comparison)
-            ->andReturn(false);
+        $this->authorizations->method('canDeleteComparison')
+            ->with($this->current_user, $comparison)
+            ->willReturn(false);
 
         $this->service->delete($this->current_user, $comparison);
     }
 
-    public function testFinByProject()
+    public function testFinByProject(): void
     {
         $comparisons = [ComparisonFactory::one()];
         $this->comparison_repository
-            ->shouldReceive('findByProject')
+            ->method('findByProject')
             ->with($this->a_user, $this->a_project, 10, 3)
-            ->andReturn($comparisons);
+            ->willReturn($comparisons);
         $this->comparison_repository
-            ->shouldReceive('countByProject')
+            ->method('countByProject')
             ->with($this->a_project)
-            ->andReturn(233);
+            ->willReturn(233);
 
-        $this->authorizations
-            ->shouldReceive(['canReadComparisonsOnProject' => true]);
+        $this->authorizations->method('canReadComparisonsOnProject')->willReturn(true);
 
         $comparisons_page = $this->service->findByProject($this->a_user, $this->a_project, 10, 3);
 
-        $this->assertEquals($comparisons, $comparisons_page->getComparisons());
-        $this->assertEquals(233, $comparisons_page->getTotalComparisonsCount());
-        $this->assertEquals(10, $comparisons_page->getPageSize());
-        $this->assertEquals(3, $comparisons_page->getComparisonOffset());
+        self::assertEquals($comparisons, $comparisons_page->getComparisons());
+        self::assertEquals(233, $comparisons_page->getTotalComparisonsCount());
+        self::assertEquals(10, $comparisons_page->getPageSize());
+        self::assertEquals(3, $comparisons_page->getComparisonOffset());
     }
 }

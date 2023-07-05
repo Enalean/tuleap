@@ -26,34 +26,35 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/../bootstrap.php';
 
 use DateTimeImmutable;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;
 
-class BaselineRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    public function testFromBaseline()
+    public function testFromBaseline(): void
     {
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
+
         $baseline = BaselineFactory::one()
             ->id(3)
             ->name('Matching baseline')
             ->artifact(BaselineArtifactFactory::one()->id(13)->build())
-            ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+            ->snapshotDate($date)
             ->author(UserProxy::fromUser(new PFUser(['user_id' => 22])))
             ->build();
 
         $representation = BaselineRepresentation::fromBaseline($baseline);
 
-        $this->assertEquals(3, $representation->id);
-        $this->assertEquals('Matching baseline', $representation->name);
-        $this->assertEquals(13, $representation->artifact_id);
-        $this->assertEquals(22, $representation->author_id);
-        $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
+        self::assertEquals(3, $representation->id);
+        self::assertEquals('Matching baseline', $representation->name);
+        self::assertEquals(13, $representation->artifact_id);
+        self::assertEquals(22, $representation->author_id);
+        self::assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
     }
 }

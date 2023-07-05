@@ -23,17 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Mockery\MockInterface;
-use Project;
 use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class ProjectFactory
 {
-    /**
-     * @return Project|MockInterface
-     */
     public static function one(): ProjectIdentifier
     {
         return self::oneWithId(103);

@@ -81,7 +81,7 @@ class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
         );
         self::assertSame(
             $user,
-            $handler->getCapturedRequest()->getAttribute(\PFUser::class)
+            $handler->getCapturedRequest()?->getAttribute(\PFUser::class)
         );
     }
 
@@ -113,7 +113,7 @@ class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
         );
         self::assertSame(
             $user,
-            $handler->getCapturedRequest()->getAttribute(\PFUser::class)
+            $handler->getCapturedRequest()?->getAttribute(\PFUser::class)
         );
     }
 

@@ -23,86 +23,80 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Mockery;
 use Tracker_FormElement_Field_Text;
 
-class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTestCase
+final class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTestCase
 {
     public function testFindDescription(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
-            ->shouldReceive('findDescriptionByTracker')
+            ->method('findDescriptionByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $this->changeset->shouldReceive('getValue')
+        $this->changeset->method('getValue')
             ->with($field)
-            ->andReturn($this->mockChangesetValue('Custom description'));
+            ->willReturn($this->mockChangesetValue('Custom description'));
 
         $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
-        $this->assertEquals('Custom description', $title);
+        self::assertEquals('Custom description', $title);
     }
 
     public function testFindDescriptionReturnNullWhenNotAuthorized(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(false)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field->method('userCanRead')->willReturn(false);
+
         $this->semantic_field_repository
-            ->shouldReceive('findDescriptionByTracker')
+            ->method('findDescriptionByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
         $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindDescriptionReturnsNullWhenNoDescriptionField(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
         $this->semantic_field_repository
-            ->shouldReceive('findDescriptionByTracker')
+            ->method('findDescriptionByTracker')
             ->with($this->tracker)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 
     public function testFindDescriptionReturnsNullWhenNoValueForGivenChangeset(): void
     {
-        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class)
-            ->shouldReceive('userCanRead')
-            ->andReturn(true)
-            ->getMock();
+        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
-            ->shouldReceive('findDescriptionByTracker')
+            ->method('findDescriptionByTracker')
             ->with($this->tracker)
-            ->andReturn($field);
+            ->willReturn($field);
 
-        $this->changeset->shouldReceive('getValue')
+        $this->changeset->method('getValue')
             ->with($field)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
-        $this->assertNull($title);
+        self::assertNull($title);
     }
 }

@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST\Exception;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-
-class ForbiddenRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ForbiddenRestExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testForbiddenRestException()
+    public function testForbiddenRestException(): void
     {
         $this->expectExceptionCode(403);
 

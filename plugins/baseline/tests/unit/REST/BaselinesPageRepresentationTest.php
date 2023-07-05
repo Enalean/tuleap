@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\REST;
 
 use DateTimeImmutable;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselinesPage;
@@ -34,13 +33,15 @@ use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    public function testBuild()
+    public function testBuild(): void
     {
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
+
         $representation = BaselinesPageRepresentation::build(
             new BaselinesPage(
                 [
@@ -48,7 +49,7 @@ class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
                         ->id(3)
                         ->name('Represented baseline')
                         ->artifact(BaselineArtifactFactory::one()->id(13)->build())
-                        ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                        ->snapshotDate($date)
                         ->author(UserProxy::fromUser(new PFUser(['user_id' => 22])))
                         ->build(),
 
@@ -71,6 +72,6 @@ class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             233
         );
-        $this->assertEquals($expected_representation, $representation);
+        self::assertEquals($expected_representation, $representation);
     }
 }

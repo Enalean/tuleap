@@ -29,6 +29,9 @@ class DateTimeFactory
 {
     public static function one(): DateTimeImmutable
     {
-        return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        assert($date instanceof DateTimeImmutable);
+
+        return $date;
     }
 }

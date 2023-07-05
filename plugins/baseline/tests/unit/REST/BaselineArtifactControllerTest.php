@@ -25,10 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\Domain\BaselineArtifactService;
@@ -40,60 +37,54 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private BaselineArtifactController $controller;
 
-    /** @var BaselineArtifactController */
-    private $controller;
-
-    /** @var BaselineRepository|MockInterface */
+    /** @var BaselineRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_repository;
 
-    /** @var BaselineArtifactService|MockInterface */
+    /** @var BaselineArtifactService&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_artifact_service;
 
-    /** @var CurrentUserProvider|MockInterface */
+    /** @var CurrentUserProvider&\PHPUnit\Framework\MockObject\MockObject */
     private $current_user_provider;
 
-    /** @var LoggerInterface|MockInterface */
-    private $logger;
     private UserProxy $current_user;
 
     /** @before */
-    public function createInstance()
+    public function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
 
-        $this->baseline_repository       = Mockery::mock(BaselineRepository::class);
-        $this->baseline_artifact_service = Mockery::mock(BaselineArtifactService::class);
-        $this->current_user_provider     = Mockery::mock(CurrentUserProvider::class);
+        $this->baseline_repository       = $this->createMock(BaselineRepository::class);
+        $this->baseline_artifact_service = $this->createMock(BaselineArtifactService::class);
+        $this->current_user_provider     = $this->createMock(CurrentUserProvider::class);
+
         $this->current_user_provider
-            ->shouldReceive('getUser')
-            ->andReturn($this->current_user)
-            ->byDefault();
-        $this->logger = Mockery::mock(LoggerInterface::class);
+            ->method('getUser')
+            ->willReturn($this->current_user);
 
         $this->controller = new BaselineArtifactController(
             $this->baseline_repository,
             $this->baseline_artifact_service,
             $this->current_user_provider,
             new QueryParameterParser(new JsonDecoder()),
-            $this->logger
+            new NullLogger(),
         );
     }
 
-    public function testGetThrows404WhenNoArtifactFound()
+    public function testGetThrows404WhenNoArtifactFound(): void
     {
         $this->expectException(NotFoundRestException::class);
 
         $this->baseline_repository
-            ->shouldReceive('findById')
-            ->andReturn(BaselineFactory::one()->build());
+            ->method('findById')
+            ->willReturn(BaselineFactory::one()->build());
 
         $this->baseline_artifact_service
-            ->shouldReceive('findByBaselineAndIds')
-            ->andThrow(new BaselineArtifactNotFoundException());
+            ->method('findByBaselineAndIds')
+            ->willThrowException(new BaselineArtifactNotFoundException());
 
         $this->controller->get(1, '{"ids": [1,2,3]}');
     }

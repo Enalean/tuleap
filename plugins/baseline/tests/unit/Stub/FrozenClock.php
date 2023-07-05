@@ -24,26 +24,19 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Tuleap\Baseline\Domain\Clock;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
 /**
  * A clock where time is frozen. Useful for tests.
  */
-class FrozenClock implements Clock
+final class FrozenClock implements Clock
 {
-    /** @var DateTimeInterface */
-    private $now;
+    private DateTimeImmutable $now;
 
     public function __construct()
     {
         $this->now = DateTimeFactory::one();
-    }
-
-    public function setNow(DateTimeInterface $now): void
-    {
-        $this->now = $now;
     }
 
     public function now(): DateTimeImmutable

@@ -43,7 +43,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ServiceSavePermissionsControllerTest extends TestCase
+final class ServiceSavePermissionsControllerTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;
 
@@ -94,6 +94,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
 
         $save_parameters = $role_assignment_repository->getLastAssignmentUpdate();
 
+        self::assertNotNull($save_parameters);
         self::assertEquals((int) $project->getID(), $save_parameters->getProject()->getID());
         self::assertEquals(102, $save_parameters->getAssignments()[0]->getUserGroupId());
         self::assertEquals(RoleBaselineAdmin::NAME, $save_parameters->getAssignments()[0]->getRoleName());

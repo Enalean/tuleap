@@ -23,34 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use DateTimeImmutable;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Baseline\Domain\Clock;
 
-class ClockAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ClockAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Clock */
-    private $clock;
+    private Clock $clock;
 
     /**
      * @before
      */
-    public function createInstance()
+    public function createInstance(): void
     {
         $this->clock = new ClockAdapter();
     }
 
-    public function testNowReturnsCurrentDateTime()
+    public function testNowReturnsCurrentDateTime(): void
     {
-        $before_now = new DateTimeImmutable("@$_SERVER[REQUEST_TIME]");
+        $before_now = new DateTimeImmutable();
         $now        = $this->clock->now();
-        $after_now  = new DateTimeImmutable("@$_SERVER[REQUEST_TIME]");
+        $after_now  = new DateTimeImmutable();
 
-        $this->assertGreaterThanOrEqual($before_now, $now);
-        $this->assertLessThanOrEqual($after_now, $now);
+        self::assertGreaterThanOrEqual($before_now, $now);
+        self::assertLessThanOrEqual($after_now, $now);
     }
 }

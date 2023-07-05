@@ -41,12 +41,12 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
     private $controller;
 
     /** @before */
-    public function getTestedComponent()
+    public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(BaselineArtifactController::class);
     }
 
-    public function testGetWithoutQuery()
+    public function testGetWithoutQuery(): void
     {
         $snapshot_date = DateTimeFactory::one();
         $epic          = BaselineArtifactFactory::one()
@@ -74,17 +74,17 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
         $artifacts_representation = $this->controller->get(1, null);
 
         $artifacts_representations = $artifacts_representation->artifacts;
-        $this->assertEquals(1, count($artifacts_representations));
+        self::assertEquals(1, count($artifacts_representations));
         $artifact_representation = $artifacts_representations[0];
-        $this->assertEquals(self::EPIC_ID, $artifact_representation->id);
-        $this->assertEquals(self::EPIC_TITLE, $artifact_representation->title);
-        $this->assertEquals('Epic description', $artifact_representation->description);
-        $this->assertEquals('On going', $artifact_representation->status);
-        $this->assertEquals('Epic', $artifact_representation->tracker_name);
-        $this->assertEquals([1, 2, 3], $artifact_representation->linked_artifact_ids);
+        self::assertEquals(self::EPIC_ID, $artifact_representation->id);
+        self::assertEquals(self::EPIC_TITLE, $artifact_representation->title);
+        self::assertEquals('Epic description', $artifact_representation->description);
+        self::assertEquals('On going', $artifact_representation->status);
+        self::assertEquals('Epic', $artifact_representation->tracker_name);
+        self::assertEquals([1, 2, 3], $artifact_representation->linked_artifact_ids);
     }
 
-    public function testGetWithQuery()
+    public function testGetWithQuery(): void
     {
         $snapshot_date = DateTimeFactory::one();
 
@@ -128,6 +128,6 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
             },
             $artifacts_representation->artifacts
         );
-        $this->assertEquals([2, 3, 4], $artifact_ids);
+        self::assertEquals([2, 3, 4], $artifact_ids);
     }
 }

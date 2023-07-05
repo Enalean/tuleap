@@ -38,9 +38,9 @@
             <directory name="src/themes/FlamingParrot/vendor/"/>
             <directory name="src/themes/BurningParrot/vendor/"/>
             <directory name="src/embedded_vendor/jpgraph/"/>
+            <directory name="tools/utils/xml-templates-to-php/vendor/"/>
             <directory name="plugins/agiledashboard/tests/unit/"/>
             <directory name="plugins/kanban/tests/unit/"/>
-            <directory name="plugins/baseline/tests/unit/"/>
             <directory name="plugins/cardwall/tests/unit/"/>
             <directory name="plugins/crosstracker/tests/unit/"/>
             <directory name="plugins/docman/tests/unit/"/>

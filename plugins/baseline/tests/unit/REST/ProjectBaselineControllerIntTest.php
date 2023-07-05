@@ -42,15 +42,18 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
     private $controller;
 
     /** @before */
-    public function getTestedComponent()
+    public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(ProjectBaselineController::class);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
+
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
 
         $this->baseline_repository->addBaseline(
             BaselineFactory::one()
@@ -62,7 +65,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
                         ->project($project)
                         ->build()
                 )
-                ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                ->snapshotDate($date)
                 ->author(UserProxy::fromUser(new PFUser(['user_id' => 22])))
                 ->build()
         );
@@ -76,11 +79,11 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
             '2019-03-21T14:47:03+01:00',
             22
         );
-        $this->assertEquals(1, $paginated_baselines->total_count);
-        $this->assertEquals([$expected_representation], $paginated_baselines->baselines);
+        self::assertEquals(1, $paginated_baselines->total_count);
+        self::assertEquals([$expected_representation], $paginated_baselines->baselines);
     }
 
-    public function testGetReturnsPaginatedBaselines()
+    public function testGetReturnsPaginatedBaselines(): void
     {
         $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
@@ -96,9 +99,9 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
         }
         $paginated_baselines = $this->controller->get(102, 3, 4);
 
-        $this->assertEquals(9, $paginated_baselines->total_count);
+        self::assertEquals(9, $paginated_baselines->total_count);
         $ids = $this->extractBaselineIds($paginated_baselines);
-        $this->assertEquals([5, 6, 7], $ids);
+        self::assertEquals([5, 6, 7], $ids);
     }
 
     /**

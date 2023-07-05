@@ -25,14 +25,11 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Project;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineService;
 use Tuleap\Baseline\Domain\BaselinesPage;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Domain\NotAuthorizedException;
@@ -41,39 +38,32 @@ use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ProjectBaselineController $controller;
 
-    /** @var ProjectBaselineController */
-    private $controller;
-
-    /** @var CurrentUserProvider|MockInterface */
+    /** @var CurrentUserProvider&\PHPUnit\Framework\MockObject\MockObject */
     private $current_user_provider;
 
-    /** @var BaselineService|MockInterface */
+    /** @var BaselineService&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_service;
 
-    /** @var ProjectRepository */
-    private $project_repository;
-
-    /** @var Project|MockInterface */
-    private $a_project;
+    private ProjectRepository&\PHPUnit\Framework\MockObject\MockObject $project_repository;
+    private ProjectIdentifier $a_project;
     private UserProxy $current_user;
 
     /**
      * @before
      */
-    public function createInstance()
+    public function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
 
-        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class)->shouldIgnoreMissing();
-        $this->current_user_provider
-            ->allows(['getUser' => $this->current_user])
-            ->byDefault();
-        $this->baseline_service   = Mockery::mock(BaselineService::class);
-        $this->project_repository = Mockery::mock(ProjectRepository::class);
+        $this->current_user_provider = $this->createMock(CurrentUserProvider::class);
+        $this->current_user_provider->method('getUser')->willReturn($this->current_user);
+
+        $this->baseline_service   = $this->createMock(BaselineService::class);
+        $this->project_repository = $this->createMock(ProjectRepository::class);
 
         $this->controller = new ProjectBaselineController(
             $this->current_user_provider,
@@ -83,22 +73,22 @@ class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /** @before */
-    public function createEntities()
+    public function createEntities(): void
     {
         $this->a_project = ProjectFactory::one();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->project_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 102)
-            ->andReturn($this->a_project);
+            ->willReturn($this->a_project);
 
         $this->baseline_service
-            ->shouldReceive('findByProject')
+            ->method('findByProject')
             ->with($this->current_user, $this->a_project, 10, 7)
-            ->andReturn(
+            ->willReturn(
                 new BaselinesPage(
                     [BaselineFactory::one()->build()],
                     10,
@@ -109,35 +99,35 @@ class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $this->controller->get(102, 10, 7);
 
-        $this->assertEquals(1, count($representation->baselines));
-        $this->assertEquals(233, $representation->total_count);
+        self::assertEquals(1, count($representation->baselines));
+        self::assertEquals(233, $representation->total_count);
     }
 
-    public function testGetThrows404WhenNoProjectFound()
+    public function testGetThrows404WhenNoProjectFound(): void
     {
         $this->expectException(NotFoundRestException::class);
 
         $this->project_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 102)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->controller->get(102, 10, 0);
     }
 
-    public function testGetThrows403WhenNotAuthorized()
+    public function testGetThrows403WhenNotAuthorized(): void
     {
         $this->expectException(ForbiddenRestException::class);
 
         $this->project_repository
-            ->shouldReceive('findById')
-            ->andReturn($this->a_project);
+            ->method('findById')
+            ->willReturn($this->a_project);
 
         $this->baseline_service
-            ->shouldReceive('findByProject')
-            ->andThrow(new NotAuthorizedException('not authorized'));
+            ->method('findByProject')
+            ->willThrowException(new NotAuthorizedException('not authorized'));
 
         $this->controller->get(102, 10, 0);
-        $this->assertTrue(false);
+        self::assertTrue(false);
     }
 }

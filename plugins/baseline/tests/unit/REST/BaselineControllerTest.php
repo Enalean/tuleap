@@ -26,9 +26,6 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . "/../bootstrap.php";
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineArtifact;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
@@ -42,27 +39,22 @@ use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private BaselineController $controller;
 
     /**
-     * @var BaselineController
-     */
-    private $controller;
-
-    /**
-     * @var CurrentUserProvider|MockInterface
+     * @var CurrentUserProvider&\PHPUnit\Framework\MockObject\MockObject
      */
     private $current_user_provider;
 
     /**
-     * @var BaselineArtifactRepository|MockInterface
+     * @var BaselineArtifactRepository&\PHPUnit\Framework\MockObject\MockObject
      */
     private $baseline_artifact_repository;
 
     /**
-     * @var BaselineService|MockInterface
+     * @var BaselineService&\PHPUnit\Framework\MockObject\MockObject
      */
     private $baseline_service;
     private UserProxy $current_user;
@@ -70,16 +62,14 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @before
      */
-    public function createInstance()
+    public function createInstance(): void
     {
         $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
 
-        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
-        $this->current_user_provider
-            ->allows(['getUser' => $this->current_user])
-            ->byDefault();
-        $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
-        $this->baseline_service             = Mockery::mock(BaselineService::class);
+        $this->current_user_provider = $this->createMock(CurrentUserProvider::class);
+
+        $this->baseline_artifact_repository = $this->createMock(BaselineArtifactRepository::class);
+        $this->baseline_service             = $this->createMock(BaselineService::class);
 
         $this->controller = new BaselineController(
             $this->current_user_provider,
@@ -88,8 +78,7 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @var BaselineArtifact */
-    private $an_artifact;
+    private BaselineArtifact $an_artifact;
 
     /** @before */
     public function createAnArtifact(): void
@@ -97,35 +86,39 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->an_artifact = BaselineArtifactFactory::one()->build();
     }
 
-    public function testPostCreatesNewBaseline()
+    public function testPostCreatesNewBaseline(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 3)
-            ->andReturn($this->an_artifact);
+            ->willReturn($this->an_artifact);
 
         $this->baseline_service
-            ->shouldReceive('create')
-            ->andReturn(BaselineFactory::one()->build())
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('create')
+            ->willReturn(BaselineFactory::one()->build());
 
         $this->controller->post('new baseline', 3, null);
     }
 
-    public function testPostReturnsRepresentationOfCreatedBaseline()
+    public function testPostReturnsRepresentationOfCreatedBaseline(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $artifact = BaselineArtifactFactory::one()
             ->id(3)
             ->build();
 
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 3)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
         $this->baseline_service
-            ->shouldReceive('create')
-            ->andReturn(
+            ->method('create')
+            ->willReturn(
                 BaselineFactory::one()
                     ->id(11)
                     ->name('first baseline')
@@ -136,13 +129,13 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $representation = $this->controller->post('first baseline', 3, null);
 
-        $this->assertEquals(11, $representation->id);
-        $this->assertEquals('first baseline', $representation->name);
-        $this->assertEquals(3, $representation->artifact_id);
-        $this->assertEquals(99, $representation->author_id);
+        self::assertEquals(11, $representation->id);
+        self::assertEquals('first baseline', $representation->name);
+        self::assertEquals(3, $representation->artifact_id);
+        self::assertEquals(99, $representation->author_id);
     }
 
-    public function testPostReturnsRepresentationOfBaselineSnapshotDateWithUserTimeZone()
+    public function testPostReturnsRepresentationOfBaselineSnapshotDateWithUserTimeZone(): void
     {
         $current_user = UserProxy::fromUser(
             UserTestBuilder::aUser()
@@ -150,57 +143,67 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withTimezone('GMT+2')
                 ->build()
         );
+
         $this->current_user_provider
-            ->shouldReceive('getUser')
-            ->andReturn($current_user);
+            ->method('getUser')
+            ->willReturn($current_user);
 
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($current_user, 3)
-            ->andReturn($this->an_artifact);
+            ->willReturn($this->an_artifact);
+
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        self::assertInstanceOf(DateTimeImmutable::class, $date);
 
         $this->baseline_service
-            ->shouldReceive('create')
-            ->andReturn(
+            ->method('create')
+            ->willReturn(
                 BaselineFactory::one()
-                    ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                    ->snapshotDate($date)
                     ->build()
             );
 
         $representation = $this->controller->post('first baseline', 3, null);
 
-        $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
+        self::assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
     }
 
-    public function testPostThrows403WhenNotAuthorized()
+    public function testPostThrows403WhenNotAuthorized(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->expectException(ForbiddenRestException::class);
 
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
-            ->andReturn($this->an_artifact);
+            ->method('findById')
+            ->willReturn($this->an_artifact);
 
         $this->baseline_service
-            ->shouldReceive('create')
-            ->andThrow(new NotAuthorizedException('not authorized'));
+            ->method('create')
+            ->willThrowException(new NotAuthorizedException('not authorized'));
 
         $this->controller->post('new baseline', 3, null);
     }
 
-    public function testPostThrows400WhenGivenDateIsMalFormed()
+    public function testPostThrows400WhenGivenDateIsMalFormed(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
         $this->baseline_artifact_repository
-            ->shouldReceive('findById')
-            ->andReturn($this->an_artifact);
+            ->method('findById')
+            ->willReturn($this->an_artifact);
 
         $this->controller->post('new baseline', 3, 'not a date');
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $baseline = BaselineFactory::one()
             ->id(1)
             ->name('found baseline')
@@ -208,72 +211,85 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->author(UserProxy::fromUser(UserTestBuilder::aUser()->withId(99)->build()))
             ->build();
         $this->baseline_service
-            ->shouldReceive('findById')
+            ->method('findById')
             ->with($this->current_user, 1)
-            ->andReturn($baseline);
+            ->willReturn($baseline);
 
         $representation = $this->controller->getById(1);
 
-        $this->assertEquals(1, $representation->id);
-        $this->assertEquals('found baseline', $representation->name);
-        $this->assertEquals(3, $representation->artifact_id);
-        $this->assertEquals(99, $representation->author_id);
+        self::assertEquals(1, $representation->id);
+        self::assertEquals('found baseline', $representation->name);
+        self::assertEquals(3, $representation->artifact_id);
+        self::assertEquals(99, $representation->author_id);
     }
 
-    public function testGetByIdThrows404WhenNoBaselineFound()
+    public function testGetByIdThrows404WhenNoBaselineFound(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->expectException(NotFoundRestException::class);
 
         $this->baseline_service
-            ->shouldReceive('findById')
-            ->andReturn(null);
+            ->method('findById')
+            ->willReturn(null);
 
         $this->controller->getById(1);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $baseline = BaselineFactory::one()
             ->id(2)
             ->build();
 
         $this->baseline_service
-            ->shouldReceive('findById')
-            ->andReturn($baseline);
+            ->method('findById')
+            ->willReturn($baseline);
 
         $this->baseline_service
-            ->shouldReceive('delete')
-            ->with($this->current_user, $baseline)
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('delete')
+            ->with($this->current_user, $baseline);
 
         $this->controller->delete(2);
     }
 
-    public function testDeleteThrows404WhenBaselineNotFound()
+    public function testDeleteThrows404WhenBaselineNotFound(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->expectException(NotFoundRestException::class);
 
         $this->baseline_service
-            ->shouldReceive('findById')
-            ->andReturn(null);
+            ->method('findById')
+            ->willReturn(null);
 
         $this->controller->delete(2);
     }
 
-    public function testDeleteThrows403WhenNotAllowed()
+    public function testDeleteThrows403WhenNotAllowed(): void
     {
+        $this->mockDefaultGetCurrentUser();
+
         $this->expectException(ForbiddenRestException::class);
 
         $this->baseline_service
-            ->shouldReceive('findById')
-            ->andReturn(
+            ->method('findById')
+            ->willReturn(
                 BaselineFactory::one()->build()
             );
 
         $this->baseline_service
-            ->shouldReceive('delete')
-            ->andThrow(new NotAuthorizedException('not allowed'));
+            ->method('delete')
+            ->willThrowException(new NotAuthorizedException('not allowed'));
 
         $this->controller->delete(2);
+    }
+
+    private function mockDefaultGetCurrentUser(): void
+    {
+        $this->current_user_provider->method('getUser')->willReturn($this->current_user);
     }
 }

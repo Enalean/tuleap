@@ -35,12 +35,12 @@ class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
     private $controller;
 
     /** @before */
-    public function getTestedComponent()
+    public function getTestedComponent(): void
     {
         $this->controller = $this->getContainer()->get(ProjectComparisonController::class);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
@@ -52,6 +52,9 @@ class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
 
         $paginated_baselines = $this->controller->get(102, 10, 0);
 
+        $formatted_date = JsonCast::fromDateTimeToDate($comparison->getCreationDate());
+        self::assertTrue(is_string($formatted_date));
+
         $expected_representation = new ComparisonRepresentation(
             $comparison->getId(),
             $comparison->getName(),
@@ -59,13 +62,13 @@ class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
             $comparison->getBaseBaseline()->getId(),
             $comparison->getComparedToBaseline()->getId(),
             $comparison->getAuthor()->getId(),
-            JsonCast::fromDateTimeToDate($comparison->getCreationDate())
+            $formatted_date,
         );
-        $this->assertEquals(1, $paginated_baselines->total_count);
-        $this->assertEquals([$expected_representation], $paginated_baselines->comparisons);
+        self::assertEquals(1, $paginated_baselines->total_count);
+        self::assertEquals([$expected_representation], $paginated_baselines->comparisons);
     }
 
-    public function testGetReturnsPaginatedBaselines()
+    public function testGetReturnsPaginatedBaselines(): void
     {
         $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
@@ -78,9 +81,9 @@ class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
         }
         $paginated_baselines = $this->controller->get(102, 3, 4);
 
-        $this->assertEquals(9, $paginated_baselines->total_count);
+        self::assertEquals(9, $paginated_baselines->total_count);
         $ids = $this->extractComparisonIds($paginated_baselines);
-        $this->assertEquals([5, 6, 7], $ids);
+        self::assertEquals([5, 6, 7], $ids);
     }
 
     /**

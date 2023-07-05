@@ -25,9 +25,6 @@ namespace Tuleap\Baseline\Domain;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use Tuleap\Baseline\Adapter\AuthorizationsImpl;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
@@ -36,33 +33,30 @@ use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
-class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use CurrentUserContext;
 
-    /** @var BaselineService */
-    private $service;
+    private BaselineService $service;
 
-    /** @var BaselineRepository|MockInterface */
+    /** @var BaselineRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $baseline_repository;
 
-    /** @var ComparisonRepository|MockInterface */
+    /** @var ComparisonRepository&\PHPUnit\Framework\MockObject\MockObject */
     private $comparison_repository;
 
-    /** @var FrozenClock */
-    private $clock;
+    private FrozenClock $clock;
 
-    /** @var Authorizations */
+    /** @var Authorizations&\PHPUnit\Framework\MockObject\MockObject */
     private $authorizations;
 
     /** @before */
-    public function createInstance()
+    public function createInstance(): void
     {
-        $this->baseline_repository   = Mockery::mock(BaselineRepository::class);
-        $this->comparison_repository = Mockery::mock(ComparisonRepository::class);
+        $this->baseline_repository   = $this->createMock(BaselineRepository::class);
+        $this->comparison_repository = $this->createMock(ComparisonRepository::class);
         $this->clock                 = new FrozenClock();
-        $this->authorizations        = Mockery::mock(AuthorizationsImpl::class);
+        $this->authorizations        = $this->createMock(AuthorizationsImpl::class);
 
         $this->service = new BaselineService(
             $this->baseline_repository,
@@ -72,115 +66,114 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @var Project|MockInterface */
-    private $a_project;
+    private ProjectIdentifier $a_project;
 
     /** @before */
-    public function createEntities()
+    public function createEntities(): void
     {
         $this->a_project = ProjectFactory::one();
     }
 
-    public function testCreateWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshotDate()
+    public function testCreateWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshotDate(): void
     {
-        $this->authorizations->allows(['canCreateBaseline' => true]);
+        $this->authorizations->method('canCreateBaseline')->willReturn(true);
 
         $baseline = TransientBaselineFactory::one()
             ->snapshotDate(null)
             ->build();
         $this->baseline_repository
-            ->shouldReceive('add')
-            ->with($baseline, $this->current_user, $this->clock->now())
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('add')
+            ->with($baseline, $this->current_user, $this->clock->now());
 
         $this->service->create($this->current_user, $baseline);
     }
 
-    public function testCreateWithSnapshotDateAddsBaselineWithGivenSnapshotDate()
+    public function testCreateWithSnapshotDateAddsBaselineWithGivenSnapshotDate(): void
     {
-        $this->authorizations->allows(['canCreateBaseline' => true]);
+        $this->authorizations->method('canCreateBaseline')->willReturn(true);
 
         $snapshot_date = DateTimeFactory::one();
         $baseline      = TransientBaselineFactory::one()
             ->snapshotDate($snapshot_date)
             ->build();
         $this->baseline_repository
-            ->shouldReceive('add')
-            ->with($baseline, $this->current_user, $snapshot_date)
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('add')
+            ->with($baseline, $this->current_user, $snapshot_date);
 
         $this->service->create($this->current_user, $baseline);
     }
 
-    public function testCreateThrowsNotAuthorizedExceptionWhenNotAuthorized()
+    public function testCreateThrowsNotAuthorizedExceptionWhenNotAuthorized(): void
     {
         $this->expectException(NotAuthorizedException::class);
 
         $baseline = TransientBaselineFactory::one()->build();
-        $this->authorizations->allows()
-            ->canCreateBaseline($this->current_user, $baseline)
-            ->andReturn(false);
+        $this->authorizations->method('canCreateBaseline')
+            ->with($this->current_user, $baseline)
+            ->willReturn(false);
 
         $this->service->create($this->current_user, $baseline);
     }
 
-    public function testDeleteDeletesGivenBaseline()
+    public function testDeleteDeletesGivenBaseline(): void
     {
-        $this->authorizations->allows(['canDeleteBaseline' => true]);
+        $this->authorizations->method('canDeleteBaseline')->willReturn(true);
 
-        $this->comparison_repository->shouldReceive(['countByBaseline' => 0]);
+        $this->comparison_repository->method('countByBaseline')->willReturn(0);
 
         $baseline = BaselineFactory::one()->build();
         $this->baseline_repository
-            ->shouldReceive('delete')
-            ->with($baseline)
-            ->atLeast()->once();
+            ->expects(self::atLeast(1))
+            ->method('delete')
+            ->with($baseline);
 
         $this->service->delete($this->current_user, $baseline);
     }
 
-    public function testDeleteThrowsNotAuthorizedExceptionWhenNotAuthorized()
+    public function testDeleteThrowsNotAuthorizedExceptionWhenNotAuthorized(): void
     {
         $this->expectException(NotAuthorizedException::class);
 
         $baseline = BaselineFactory::one()->build();
-        $this->authorizations->allows()
-            ->canDeleteBaseline($this->current_user, $baseline)
-            ->andReturn(false);
+        $this->authorizations->method('canDeleteBaseline')
+            ->with($this->current_user, $baseline)
+            ->willReturn(false);
 
         $this->service->delete($this->current_user, $baseline);
     }
 
-    public function testFindByProject()
+    public function testFindByProject(): void
     {
-        $this->authorizations->allows(['canReadBaselinesOnProject' => true]);
+        $this->authorizations->method('canReadBaselinesOnProject')->willReturn(true);
 
         $baselines = [BaselineFactory::one()->build()];
         $this->baseline_repository
-            ->shouldReceive('findByProject')
+            ->method('findByProject')
             ->with($this->current_user, $this->a_project, 10, 3)
-            ->andReturn($baselines);
+            ->willReturn($baselines);
         $this->baseline_repository
-            ->shouldReceive('countByProject')
+            ->method('countByProject')
             ->with($this->a_project)
-            ->andReturn(233);
+            ->willReturn(233);
 
         $baselines_page = $this->service->findByProject($this->current_user, $this->a_project, 10, 3);
 
-        $this->assertEquals($baselines, $baselines_page->getBaselines());
-        $this->assertEquals(233, $baselines_page->getTotalBaselineCount());
-        $this->assertEquals(10, $baselines_page->getPageSize());
-        $this->assertEquals(3, $baselines_page->getBaselineOffset());
+        self::assertEquals($baselines, $baselines_page->getBaselines());
+        self::assertEquals(233, $baselines_page->getTotalBaselineCount());
+        self::assertEquals(10, $baselines_page->getPageSize());
+        self::assertEquals(3, $baselines_page->getBaselineOffset());
     }
 
-    public function testFindByProjectThrowsNotAuthorizedExceptionWhenNotAuthorized()
+    public function testFindByProjectThrowsNotAuthorizedExceptionWhenNotAuthorized(): void
     {
         $this->expectException(NotAuthorizedException::class);
 
         $project = ProjectFactory::one();
-        $this->authorizations->allows()
-            ->canReadBaselinesOnProject($this->current_user, $project)
-            ->andReturn(false);
+        $this->authorizations->method('canReadBaselinesOnProject')
+            ->with($this->current_user, $project)
+            ->willReturn(false);
 
         $this->service->findByProject($this->current_user, $project, 10, 0);
     }

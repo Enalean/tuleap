@@ -24,17 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Tuleap\Baseline\Domain\Clock;
 
 class ClockAdapter implements Clock
 {
     public function now(): DateTimeImmutable
     {
-        return new DateTimeImmutable("@$_SERVER[REQUEST_TIME]");
+        return new DateTimeImmutable();
     }
 
-    public function at(int $timestamp): DateTimeInterface
+    public function at(int $timestamp): DateTimeImmutable
     {
         return $this->now()->setTimestamp($timestamp);
     }

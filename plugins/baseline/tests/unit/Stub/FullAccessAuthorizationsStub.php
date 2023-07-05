@@ -31,7 +31,7 @@ use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\Baseline\Domain\TransientComparison;
 use Tuleap\Baseline\Domain\UserIdentifier;
 
-class FullAccessAuthorizationsStub implements Authorizations
+final class FullAccessAuthorizationsStub implements Authorizations
 {
     public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
@@ -68,7 +68,7 @@ class FullAccessAuthorizationsStub implements Authorizations
         return true;
     }
 
-    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison)
+    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return true;
     }
