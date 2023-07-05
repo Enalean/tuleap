@@ -31,16 +31,16 @@ use Tuleap\Tracker\Artifact\Artifact;
 final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Stub & \Tracker_FormElement_Field_List $source_field;
-    private Stub & \Tracker_FormElement_Field_List $target_field;
+    private Stub & \Tracker_FormElement_Field_List $destination_field;
     private Stub & Artifact $artifact;
     private Stub & Tracker_Artifact_ChangesetValue_List $changeset_value;
     private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
-        $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
-        $this->target_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->user              = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
+        $this->source_field      = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->destination_field = $this->createStub(Tracker_FormElement_Field_List::class);
 
         $this->changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $this->artifact        = $this->createStub(Artifact::class);
@@ -60,7 +60,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->build());
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->target_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
     }
 
     public function testUserCanNotBeMovedWhenUserIsNotFound(): void
@@ -72,7 +72,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
         ]);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->target_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
     }
 
     public function testUserCanNotBeMovedWhenUserIsAnonymous(): void
@@ -84,7 +84,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
         ]);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->target_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
     }
 
     public function testUserCanNotBeMovedWhenUserDoesNotExistsInTarget(): void
@@ -95,9 +95,9 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->changeset_value->method('getListValues')->willReturn([
             new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
         ]);
-        $this->target_field->method('checkValueExists')->willReturn(false);
+        $this->destination_field->method('checkValueExists')->willReturn(false);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->target_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
     }
 
     public function testUserCanBeMoved(): void
@@ -108,8 +108,8 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->changeset_value->method('getListValues')->willReturn([
             new \Tracker_FormElement_Field_List_Bind_UsersValue(101, 'Irrelevant', 'Mildred Favorito'),
         ]);
-        $this->target_field->method('checkValueExists')->willReturn(true);
+        $this->destination_field->method('checkValueExists')->willReturn(true);
 
-        $this->assertTrue($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->target_field, $this->artifact));
+        $this->assertTrue($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
     }
 }

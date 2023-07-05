@@ -44,8 +44,8 @@ final class VerifyFieldCanBeEasilyMigratedStub implements VerifyFieldCanBeEasily
     }
 
     public function canFieldBeEasilyMigrated(
-        \Tracker_FormElement_Field $target_field,
         \Tracker_FormElement_Field $source_field,
+        \Tracker_FormElement_Field $destination_field,
     ): bool {
         return $this->are_types_compatible;
     }

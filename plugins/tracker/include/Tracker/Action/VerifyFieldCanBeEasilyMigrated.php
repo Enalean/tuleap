@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Action;
 interface VerifyFieldCanBeEasilyMigrated
 {
     public function canFieldBeEasilyMigrated(
-        \Tracker_FormElement_Field $target_field,
         \Tracker_FormElement_Field $source_field,
+        \Tracker_FormElement_Field $destination_field,
     ): bool;
 }

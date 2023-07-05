@@ -31,7 +31,7 @@ interface MoveDryRun
 {
     public function move(
         Tracker $source_tracker,
-        Tracker $target_tracker,
+        Tracker $destination_tracker,
         Artifact $artifact,
         PFUser $user,
     ): ArtifactPatchResponseRepresentation;

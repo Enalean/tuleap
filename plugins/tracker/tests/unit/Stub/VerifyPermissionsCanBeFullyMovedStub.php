@@ -42,7 +42,7 @@ final class VerifyPermissionsCanBeFullyMovedStub implements VerifyPermissionsCan
         return new self(true);
     }
 
-    public function canAllPermissionsBeFullyMoved(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Tracker_FormElement_Field_PermissionsOnArtifact $target_field, Artifact $artifact): bool
+    public function canAllPermissionsBeFullyMoved(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Tracker_FormElement_Field_PermissionsOnArtifact $destination_field, Artifact $artifact): bool
     {
         return $this->will_be_fully_moved;
     }

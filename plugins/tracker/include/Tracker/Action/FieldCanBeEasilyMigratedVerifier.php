@@ -41,36 +41,36 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
 
     public function __construct(
         private readonly RetrieveFieldType $retrieve_source_field_type,
-        private readonly RetrieveFieldType $retrieve_target_field_type,
+        private readonly RetrieveFieldType $retrieve_destination_field_type,
     ) {
     }
 
     public function canFieldBeEasilyMigrated(
-        \Tracker_FormElement_Field $target_field,
         \Tracker_FormElement_Field $source_field,
+        \Tracker_FormElement_Field $destination_field,
     ): bool {
-        $target_field_type = $this->retrieve_source_field_type->getType($target_field);
-        $source_field_type = $this->retrieve_target_field_type->getType($source_field);
+        $destination_field_type = $this->retrieve_source_field_type->getType($destination_field);
+        $source_field_type      = $this->retrieve_destination_field_type->getType($source_field);
 
-        return $this->areTypesCompatible($source_field_type, $target_field_type) ||
-            $this->isAnEasilyMovableField($target_field_type, $source_field_type);
+        return $this->areTypesCompatible($source_field_type, $destination_field_type) ||
+            $this->isAnEasilyMovableField($destination_field_type, $source_field_type);
     }
 
     private function isAnEasilyMovableField(
-        string $target_field_type,
+        string $destination_field_type,
         string $source_field_type,
     ): bool {
-        return $source_field_type === $target_field_type && in_array($source_field_type, self::EASILY_MOVABLE_FIELDS, true);
+        return $source_field_type === $destination_field_type && in_array($source_field_type, self::EASILY_MOVABLE_FIELDS, true);
     }
 
-    private function areTypesCompatible(string $source_field_type, string $target_field_type): bool
+    private function areTypesCompatible(string $source_field_type, string $destination_field_type): bool
     {
         return (
                 in_array($source_field_type, self::STRING_TYPES_COMPATIBILITIES, true) &&
-                in_array($target_field_type, self::STRING_TYPES_COMPATIBILITIES, true)
+                in_array($destination_field_type, self::STRING_TYPES_COMPATIBILITIES, true)
             ) || (
                 in_array($source_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true) &&
-                in_array($target_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true)
+                in_array($destination_field_type, self::NUMBER_TYPES_COMPATIBILITIES, true)
             );
     }
 }

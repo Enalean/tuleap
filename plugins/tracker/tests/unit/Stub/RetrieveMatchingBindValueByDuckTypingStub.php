@@ -42,7 +42,7 @@ final class RetrieveMatchingBindValueByDuckTypingStub implements RetrieveMatchin
 
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
     ): ?\Tracker_FormElement_Field_List_BindValue {
         return $this->bind_value;
     }

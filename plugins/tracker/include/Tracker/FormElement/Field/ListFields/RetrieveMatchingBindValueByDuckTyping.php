@@ -24,6 +24,6 @@ interface RetrieveMatchingBindValueByDuckTyping
 {
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
     ): ?\Tracker_FormElement_Field_List_BindValue;
 }

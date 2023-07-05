@@ -41,7 +41,7 @@ final class VerifyUserFieldValuesCanBeFullyMovedStub implements VerifyUserFieldV
         return new self(true);
     }
 
-    public function canAllUserFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $target_field, Artifact $artifact,): bool
+    public function canAllUserFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact,): bool
     {
         return $this->can_field_be_fully_moved;
     }

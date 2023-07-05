@@ -33,7 +33,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
 
     public function canAllStaticFieldValuesBeMoved(
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
@@ -46,7 +46,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
         foreach ($list_field_values as $value) {
             $list_bind_value = $this->retrieve_matching_bind_value_by_duck_typing->getMatchingBindValueByDuckTyping(
                 $value,
-                $target_field
+                $destination_field
             );
 
             if ($list_bind_value === null) {

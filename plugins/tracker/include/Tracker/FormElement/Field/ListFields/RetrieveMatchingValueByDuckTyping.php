@@ -26,7 +26,7 @@ interface RetrieveMatchingValueByDuckTyping
 {
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $target_field,
+        Tracker_FormElement_Field_List $destination_field,
         int $source_value_id,
     ): ?int;
 }

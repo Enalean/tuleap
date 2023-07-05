@@ -46,18 +46,18 @@ use Tuleap\Tracker\Test\Stub\VerifyUserGroupValuesCanBeFullyMovedStub;
 
 final class DryRunDuckTypingFieldCollectorTest extends TestCase
 {
-    private const TARGET_TRACKER_ID = 105;
+    private const DESTINATION_TRACKER_ID = 105;
 
     private \Tracker & Stub $source_tracker;
-    private \Tracker & Stub $target_tracker;
+    private \Tracker & Stub $destination_tracker;
     private Artifact $artifact;
 
     protected function setUp(): void
     {
         $this->source_tracker = $this->createStub(\Tracker::class);
 
-        $this->target_tracker = $this->createStub(\Tracker::class);
-        $this->target_tracker->method("getId")->willReturn(self::TARGET_TRACKER_ID);
+        $this->destination_tracker = $this->createStub(\Tracker::class);
+        $this->destination_tracker->method("getId")->willReturn(self::DESTINATION_TRACKER_ID);
 
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
     }
@@ -67,14 +67,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_string_field        = TrackerFormElementStringFieldBuilder::aStringField(101)->withName("source_string")->build();
         $source_tracker_used_fields = [$source_string_field];
 
-        $target_tracker_used_fields = [
-            TrackerFormElementStringFieldBuilder::aStringField(102)->withName("target_string")->build(),
-            TrackerFormElementStringFieldBuilder::aStringField(103)->withName("another_target_string")->build(),
+        $destination_tracker_used_fields = [
+            TrackerFormElementStringFieldBuilder::aStringField(102)->withName("destination_string")->build(),
+            TrackerFormElementStringFieldBuilder::aStringField(103)->withName("another_destination_string")->build(),
         ];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -90,7 +90,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -103,10 +103,10 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_string_field        = TrackerFormElementStringFieldBuilder::aStringField(101)->withName("release_number")->build();
         $source_tracker_used_fields = [$source_string_field];
 
-        $target_tracker_used_fields = [
+        $destination_tracker_used_fields = [
             new Tracker_FormElement_Field_Integer(
                 102,
-                self::TARGET_TRACKER_ID,
+                self::DESTINATION_TRACKER_ID,
                 null,
                 "release_number",
                 "Release number",
@@ -122,7 +122,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -138,7 +138,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -151,12 +151,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_string_field        = TrackerFormElementStringFieldBuilder::aStringField(101)->withName("source_string")->build();
         $source_tracker_used_fields = [$source_string_field];
 
-        $target_string_field        = TrackerFormElementStringFieldBuilder::aStringField(102)->withName("source_string")->build();
-        $target_tracker_used_fields = [$target_string_field];
+        $destination_string_field        = TrackerFormElementStringFieldBuilder::aStringField(102)->withName("source_string")->build();
+        $destination_tracker_used_fields = [$destination_string_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -172,14 +172,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_string_field, $collection->migrateable_field_list);
         self::assertCount(1, $collection->mapping_fields);
         self::assertEquals($source_string_field, $collection->mapping_fields[0]->source);
-        self::assertEquals($target_string_field, $collection->mapping_fields[0]->destination);
+        self::assertEquals($destination_string_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testStaticListFieldWillBeMigratedWhenMatchingDestinationFieldContainsAllTheSelectedValues(): void
@@ -187,12 +187,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("field_name")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -208,14 +208,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_list_field, $collection->migrateable_field_list);
         self::assertCount(1, $collection->mapping_fields);
         self::assertEquals($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertEquals($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertEquals($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testFieldWillNotBeMigratedWhenWhenListFieldsAreNotCompatible(): void
@@ -223,12 +223,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("field_name")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -244,7 +244,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -257,12 +257,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("field_name")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("field_name")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -278,7 +278,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -291,12 +291,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("source_string")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("source_string")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("source_string")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -312,13 +312,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
         self::assertContains($source_list_field, $collection->partially_migrated_fields);
         self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testUserBoundFieldWillBeNotMigratedWhenTheDestinationFieldIsNotBoundToUsers(): void
@@ -326,12 +326,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("assigned_to")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -347,7 +347,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -360,12 +360,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("assigned_to")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -381,13 +381,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
         self::assertContains($source_list_field, $collection->partially_migrated_fields);
         self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testUserBoundListFieldWillBeMigratedWhenMatchingDestinationFieldContainsAllTheSelectedUsers(): void
@@ -395,12 +395,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("assigned_to")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("assigned_to")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -416,13 +416,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_list_field, $collection->migrateable_field_list);
         self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testUserGroupBoundFieldWillBeNotMigratedWhenTheDestinationFieldIsNotBoundToUserGroups(): void
@@ -430,12 +430,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -451,7 +451,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -464,12 +464,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -485,13 +485,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
         self::assertContains($source_list_field, $collection->partially_migrated_fields);
         self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testUserGroupsBoundListFieldWillBeMigratedWhenMatchingDestinationFieldContainsAllTheSelectedUserGroups(): void
@@ -499,12 +499,12 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_list_field          = TrackerFormElementListFieldBuilder::aListField(101)->withName("cc")->build();
         $source_tracker_used_fields = [$source_list_field];
 
-        $target_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
-        $target_tracker_used_fields = [$target_list_field];
+        $destination_list_field          = TrackerFormElementListFieldBuilder::aListField(102)->withName("cc")->build();
+        $destination_tracker_used_fields = [$destination_list_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withCompatibleFields(),
@@ -520,13 +520,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
         self::assertContains($source_list_field, $collection->migrateable_field_list);
         self::assertSame($source_list_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_list_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_list_field, $collection->mapping_fields[0]->destination);
     }
 
     public function testPermissionsFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
@@ -536,13 +536,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = TrackerFormElementListFieldBuilder::aListField(1)->withName("permissions")->build();
+        $destination_permissions_field = TrackerFormElementListFieldBuilder::aListField(1)->withName("permissions")->build();
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -558,7 +558,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -572,14 +572,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $target_permissions_field->method("getName")->willReturn("permissions");
+        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getName")->willReturn("permissions");
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -595,7 +595,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -609,14 +609,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $target_permissions_field->method("getName")->willReturn("permissions");
+        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getName")->willReturn("permissions");
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -632,11 +632,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->partially_migrated_fields);
         self::assertSame($source_permissions_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_permissions_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_permissions_field, $collection->mapping_fields[0]->destination);
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
     }
@@ -648,14 +648,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $target_permissions_field->method("getName")->willReturn("permissions");
+        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getName")->willReturn("permissions");
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -671,11 +671,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->migrateable_field_list);
         self::assertSame($source_permissions_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_permissions_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_permissions_field, $collection->mapping_fields[0]->destination);
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
     }
@@ -687,13 +687,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = TrackerFormElementListFieldBuilder::aListField(1)->withName("permissions")->build();
+        $destination_permissions_field = TrackerFormElementListFieldBuilder::aListField(1)->withName("permissions")->build();
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -709,7 +709,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withoutCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -723,14 +723,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $source_tracker_used_fields = [$source_permissions_field];
 
-        $target_permissions_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
-        $target_permissions_field->method("getName")->willReturn("open_list");
+        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $destination_permissions_field->method("getName")->willReturn("open_list");
 
-        $target_tracker_used_fields = [$target_permissions_field];
+        $destination_tracker_used_fields = [$destination_permissions_field];
 
         $collector = new DryRunDuckTypingFieldCollector(
             RetrieveUsedFieldsStub::withFields(...$source_tracker_used_fields),
-            RetrieveUsedFieldsStub::withFields(...$target_tracker_used_fields),
+            RetrieveUsedFieldsStub::withFields(...$destination_tracker_used_fields),
             VerifyFieldCanBeEasilyMigratedStub::withoutEasilyMovableFields(),
             VerifyIsStaticListFieldStub::withoutSingleStaticListField(),
             VerifyListFieldsAreCompatibleStub::withoutCompatibleFields(),
@@ -746,11 +746,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyOpenListFieldsAreCompatibleStub::withCompatibleFields()
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->target_tracker, $this->artifact);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact);
 
         self::assertContains($source_permissions_field, $collection->migrateable_field_list);
         self::assertSame($source_permissions_field, $collection->mapping_fields[0]->source);
-        self::assertSame($target_permissions_field, $collection->mapping_fields[0]->destination);
+        self::assertSame($destination_permissions_field, $collection->mapping_fields[0]->destination);
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
     }

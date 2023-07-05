@@ -27,7 +27,7 @@ interface VerifyPermissionsCanBeFullyMoved
 {
     public function canAllPermissionsBeFullyMoved(
         Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
-        Tracker_FormElement_Field_PermissionsOnArtifact $target_field,
+        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
     ): bool;
 }

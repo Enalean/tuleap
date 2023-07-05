@@ -304,7 +304,7 @@ final class MoveChangesetXMLSemanticUpdater
         $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
         for ($value_index = $last_index; $value_index >= 0; $value_index--) {
             if (
-                ! $this->field_value_matcher->isSourceUserValueMatchingATargetUserValue(
+                ! $this->field_value_matcher->isSourceUserValueMatchingADestinationUserValue(
                     $target_contributor_field,
                     $changeset_xml->field_change[$field_change_index]->value[$value_index]
                 )

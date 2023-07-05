@@ -38,7 +38,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
     public function updateValueForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
         \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tracker_FormElement_Field_List $destination_field,
         int $index,
     ): void {
         $list_value_ids = $changeset_xml->field_change[$index]->value;
@@ -50,7 +50,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
         foreach ($list_value_ids as $value_id) {
             $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
                 $source_field,
-                $target_field,
+                $destination_field,
                 (int) $value_id
             );
 
@@ -62,7 +62,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
         }
 
         if (empty($destinations_values_ids)) {
-            $changeset_xml->field_change[$index]->value = (int) $target_field->getDefaultValue();
+            $changeset_xml->field_change[$index]->value = (int) $destination_field->getDefaultValue();
             return;
         }
 
