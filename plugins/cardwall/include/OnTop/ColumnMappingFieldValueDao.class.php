@@ -82,7 +82,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, array $tracker_mapping, array $field_mapping, array $column_mapping)
+    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, array $tracker_mapping, array $field_mapping, array|ArrayObject $column_mapping)
     {
         $from_cardwall_tracker_id = $this->da->escapeInt($from_cardwall_tracker_id);
         $to_cardwall_tracker_id   = $this->da->escapeInt($to_cardwall_tracker_id);
@@ -116,13 +116,13 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    private function associativeToSQLCase(array $mapping, $field_name)
+    private function associativeToSQLCase(array|ArrayObject $mapping, $field_name)
     {
         $when_then = $this->associativeToSQLWhenThen($mapping);
         return $this->getSQLCase($field_name, $when_then);
     }
 
-    private function associativeToSQLWhenThen(array $mapping)
+    private function associativeToSQLWhenThen(array|ArrayObject $mapping)
     {
         $stmt = '';
         foreach ($mapping as $from => $to) {

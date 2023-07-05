@@ -40,6 +40,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -58,20 +59,6 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
      *  'tracker_ids_list'  array containing tracker ids
      */
     public final const TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED = 'tracker_event_project_creation_trackers_required';
-
-    /**
-     * The trackers from a project have been duplicated in another project
-     *
-     * Parameters:
-     * 'tracker_mapping'   => The mapping between source and target project trackers
-     * 'field_mapping'     => The mapping between source and target fields
-     * 'group_id'          => The id of the target project
-     * 'ugroups_mapping'   => The mapping between source and target ugroups
-     * 'source_project_id' => The id of the source project
-     *
-     * No expected results
-     */
-    public final const TRACKER_EVENT_TRACKERS_DUPLICATED = 'tracker_event_trackers_duplicated';
 
     public const LEGACY_SUFFIX       = '_from_tv3';
     public const TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
@@ -399,7 +386,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
     }
 
     /**
-     * @return mixed array(Tracker object, field_mapping array)
+     * @return array{tracker: Tracker, field_mapping: list<array{from: int, to: int, values: array, workflow: bool}>, report_mapping: array}|null
      * @throws TrackerIsInvalidException
      */
     public function create($project_id, MappingRegistry $mapping_registry, $id_template, $name, $description, $itemname, ?string $color, array|false $ugroup_mapping = false)
@@ -542,37 +529,50 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
      */
     public function duplicate(DBTransactionExecutor $transaction_executor, int $from_project_id, int $to_project_id, MappingRegistry $mapping_registry): void
     {
-        $tracker_mapping        = [];
-        $field_mapping          = [];
-        $report_mapping         = [];
-        $trackers_from_template = [];
-
         $tracker_ids_list = [];
         $params           = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
 
-        $transaction_executor->execute(function () use ($from_project_id, $tracker_ids_list, &$trackers_from_template, &$tracker_mapping, &$field_mapping, &$report_mapping, $mapping_registry, $to_project_id) {
-            foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
-                if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
-                    $trackers_from_template[]                           = $tracker;
-                    [$tracker_mapping, $field_mapping, $report_mapping] = $this->duplicateTracker(
-                        $tracker_mapping,
-                        $field_mapping,
-                        $report_mapping,
-                        $tracker,
-                        $mapping_registry,
-                        $to_project_id,
-                        $mapping_registry->getUgroupMapping()
-                    );
-                    /*
-                     * @todo
-                     * Unless there is some odd dependency on the last tracker meeting
-                     * the requirement of the if() condition then there should be a break here.
-                     */
+        [$trackers_from_template, $tracker_mapping, $field_mapping, $report_mapping] = $transaction_executor->execute(
+            /**
+             * @return array{0: Tracker[], 1: array, 2: list<array{from: int, to: int, values: array, workflow: bool}>, 3: array}
+             */
+            function () use ($from_project_id, $tracker_ids_list, $mapping_registry, $to_project_id) {
+                $tracker_mapping = [];
+                /** @var list<array{from: int, to: int, values: array, workflow: bool}> $field_mapping */
+                $field_mapping          = [];
+                $report_mapping         = [];
+                $trackers_from_template = [];
+
+                foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
+                    if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
+                        $trackers_from_template[]                           = $tracker;
+                        [$tracker_mapping, $field_mapping, $report_mapping] = $this->duplicateTracker(
+                            $tracker_mapping,
+                            $field_mapping,
+                            $report_mapping,
+                            $tracker,
+                            $mapping_registry,
+                            $to_project_id,
+                            $mapping_registry->getUgroupMapping()
+                        );
+                        /*
+                         * @todo
+                         * Unless there is some odd dependency on the last tracker meeting
+                         * the requirement of the if() condition then there should be a break here.
+                         */
+                    }
                 }
+
+                return [
+                    $trackers_from_template,
+                    $tracker_mapping,
+                    $field_mapping,
+                    $report_mapping,
+                ];
             }
-        });
+        );
 
         if (! empty($tracker_mapping)) {
             $mapping_registry->setCustomMapping(self::TRACKER_MAPPING_KEY, $tracker_mapping);
@@ -589,15 +589,15 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
-        EventManager::instance()->processEvent(self::TRACKER_EVENT_TRACKERS_DUPLICATED, [
-            'tracker_mapping'   => $tracker_mapping,
-            'field_mapping'     => $field_mapping,
-            'report_mapping'    => $report_mapping,
-            'group_id'          => $to_project_id,
-            'ugroups_mapping'   => $mapping_registry->getUgroupMapping(),
-            'source_project_id' => $from_project_id,
-            'mapping_registry'  => $mapping_registry,
-        ]);
+        EventManager::instance()->processEvent(new TrackerEventTrackersDuplicated(
+            $tracker_mapping,
+            $field_mapping,
+            $report_mapping,
+            $to_project_id,
+            $mapping_registry->getUgroupMapping(),
+            $from_project_id,
+            $mapping_registry,
+        ));
     }
 
     /**
@@ -626,6 +626,11 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
         );
     }
 
+    /**
+     * @param list<array{from: int, to: int, values: array, workflow: bool}> $field_mapping
+     *
+     * @return array{0: array, 1: list<array{from: int, to: int, values: array, workflow: bool}>, 2: array}
+     */
     private function duplicateTracker(
         array $tracker_mapping,
         array $field_mapping,

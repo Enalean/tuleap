@@ -41,6 +41,7 @@ use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
+use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
@@ -91,7 +92,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
-            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(Event::JAVASCRIPT);
@@ -184,19 +184,19 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     }
 
     /**
-     * @see TRACKER_EVENT_TRACKERS_DUPLICATED
      * @todo transform into a OnTop_Config_Command, and move code to ConfigFactory
      */
-    public function tracker_event_trackers_duplicated($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
-        foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
+        foreach ($event->tracker_mapping as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
-                $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params);
-                $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
-                $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
+                $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $event);
+                $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $event->tracker_mapping, $event->field_mapping);
+                $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $event->tracker_mapping, $event->field_mapping, $event->mapping_registry->getCustomMapping('plugin_cardwall_column_mapping'));
             }
         }
-        (new \Tuleap\Cardwall\CardwallRendererDuplicatorDao())->duplicate($params['mapping_registry'], $params['field_mapping']);
+        (new \Tuleap\Cardwall\CardwallRendererDuplicatorDao())->duplicate($event->mapping_registry, $event->field_mapping);
     }
 
     /**

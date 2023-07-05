@@ -94,6 +94,7 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
@@ -360,16 +361,13 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
 
     /**
      * Configure new project's TestManagement trackers
-     *
-     * @param mixed array $params The duplication params (tracker_mapping array, field_mapping array)
-     *
      */
-    #[\Tuleap\Plugin\ListeningToEventName(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED)]
-    public function trackerEventTrackersDuplicated(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         $config       = $this->getConfig();
-        $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
-        $to_project   = ProjectManager::instance()->getProject($params['group_id']);
+        $from_project = ProjectManager::instance()->getProject($event->source_project_id);
+        $to_project   = ProjectManager::instance()->getProject($event->project_id);
 
         $plugin_testmanagement_is_used = $to_project->usesService($this->getServiceShortname());
         if (! $plugin_testmanagement_is_used) {
@@ -392,7 +390,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
 
         try {
-            $tracker_mapping = $params['tracker_mapping'];
+            $tracker_mapping = $event->tracker_mapping;
             $transaction_executor->execute(
                 function () use ($to_project, $from_project, $tracker_mapping, $config_creator): void {
                     $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $tracker_mapping);

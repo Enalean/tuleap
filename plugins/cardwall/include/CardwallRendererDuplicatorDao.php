@@ -31,7 +31,7 @@ use Tuleap\Project\MappingRegistry;
 final class CardwallRendererDuplicatorDao extends DataAccessObject
 {
     /**
-     * @param list<array{from: int, to: int}> $fields_mapping
+     * @param list<array{from: int, to: int, values: array, workflow: bool}> $fields_mapping
      */
     public function duplicate(MappingRegistry $registry, array $fields_mapping): void
     {
