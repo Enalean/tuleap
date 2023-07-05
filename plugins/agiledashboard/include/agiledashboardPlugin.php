@@ -147,6 +147,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
@@ -247,7 +248,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Tracker::TRACKER_USAGE);
             $this->addHook(RegisterProjectCreationEvent::NAME);
             $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-            $this->addHook(Tracker::TRACKER_EVENT_GENERAL_SETTINGS);
             $this->addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
@@ -588,14 +588,16 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    public function tracker_event_general_settings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function generalSettingsEvent(GeneralSettingsEvent $event): void
     {
-        $hierarchyChecker                                        = new AgileDashboard_HierarchyChecker(
+        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getKanbanFactory(),
             $this->getTrackerFactory()
         );
-        $params['cannot_configure_instantiate_for_new_projects'] = $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
+
+        $event->cannot_configure_instantiate_for_new_projects = $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($event->tracker);
     }
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
