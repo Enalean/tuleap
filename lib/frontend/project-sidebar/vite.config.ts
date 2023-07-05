@@ -31,4 +31,5 @@ export default vite.defineLibConfig({
         },
     },
     plugins: [viteDtsPlugin()],
+    define: { "process.env.NODE_ENV": '"production"' },
 });
