@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -43,6 +44,7 @@ use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPerm
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 use Tuleap\User\SessionManager;
+use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -394,6 +396,7 @@ $siteadmin->renderAPresenter(
         $details_formatter->getUnixStatus($user),
         $user_has_rest_read_only_administration_delegation,
         $webauthn_enabled,
-        $authenticators
+        $authenticators,
+        CSRFSynchronizerTokenPresenter::fromToken(new CSRFSynchronizerToken(DeleteSourceController::URL))
     )
 );

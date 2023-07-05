@@ -15,12 +15,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal, datePicker, openTargetModalIdOnClick } from "tlp";
+import { datePicker } from "tlp";
+import { createModal, EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import { selectOrThrow } from "@tuleap/dom";
+import { post, uri } from "@tuleap/fetch-result";
+import type { Fault } from "@tuleap/fault";
+
+const HIDDEN = "siteadmin-hidden";
 
 document.addEventListener("DOMContentLoaded", function () {
     initExpirationDatepicker();
     initChangePasswordModal();
     initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted();
+    initWebAuthnRemove();
 });
 
 function initExpirationDatepicker(): void {
@@ -103,5 +110,72 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
             destroy_on_hide: true,
         });
         modal.show();
+    });
+}
+
+function initWebAuthnRemove(): void {
+    if (document.getElementById("webauthn-section") === null) {
+        // WebAuthn is not enabled, skip init it
+        return;
+    }
+
+    const form_remove_modal = selectOrThrow(document, "#webauthn-remove-modal");
+    const key_id_input = selectOrThrow(document, "#webauthn-key-id-input", HTMLInputElement);
+    const csrf_modal_input = selectOrThrow(
+        form_remove_modal,
+        "input[name=challenge]",
+        HTMLInputElement
+    );
+    const error = selectOrThrow(form_remove_modal, "#webauthn-remove-error");
+    const remove_button = selectOrThrow(
+        form_remove_modal,
+        "#webauthn-modal-remove-button",
+        HTMLButtonElement
+    );
+    const remove_button_icon = selectOrThrow(form_remove_modal, "#webauthn-modal-remove");
+
+    document.querySelectorAll("[data-item-id=webauthn-remove]").forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        const modal = openTargetModalIdOnClick(document, button.id);
+        if (modal === null) {
+            return;
+        }
+        modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+            error.classList.add(HIDDEN);
+        });
+
+        button.addEventListener("click", () => {
+            key_id_input.value = button.id;
+        });
+    });
+
+    form_remove_modal.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const key_id = key_id_input.value;
+        const csrf_token = csrf_modal_input.value;
+
+        remove_button_icon.classList.remove(HIDDEN);
+        remove_button.disabled = true;
+
+        post(
+            uri`/webauthn/key/delete`,
+            {},
+            {
+                key_id: key_id,
+                csrf_token: csrf_token,
+            }
+        ).match(
+            () => location.reload(),
+            (fault: Fault) => {
+                remove_button_icon.classList.add(HIDDEN);
+                remove_button.disabled = false;
+                error.innerText = fault.toString();
+                error.classList.remove(HIDDEN);
+            }
+        );
     });
 }

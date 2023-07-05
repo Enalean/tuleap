@@ -23,6 +23,7 @@ namespace Tuleap\User\Admin;
 use DateTimeImmutable;
 use ForgeConfig;
 use PFUser;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 use User_UserStatusManager;
 
@@ -98,6 +99,7 @@ class UserDetailsPresenter
         bool $user_has_rest_read_only_administration_delegation,
         public readonly bool $webauthn_enabled,
         public readonly array $authenticators,
+        public readonly CSRFSynchronizerTokenPresenter $csrf_token_del,
     ) {
         $this->id    = $user->getId();
         $this->name  = $user->getRealName();
