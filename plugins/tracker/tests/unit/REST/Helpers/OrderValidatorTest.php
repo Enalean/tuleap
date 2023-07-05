@@ -20,16 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST\v1;
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Tracker\REST\Helpers;
 
 final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var OrderValidator */
-    private $order_validator;
+    private OrderValidator $order_validator;
 
     protected function setUp(): void
     {

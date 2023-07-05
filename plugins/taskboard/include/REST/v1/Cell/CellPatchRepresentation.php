@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1\Cell;
 
-use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\REST\I18NRestException;
 
 /**
@@ -35,7 +35,7 @@ final class CellPatchRepresentation
      */
     public $add;
     /**
-     * @var OrderRepresentation | null $order {@type \Tuleap\AgileDashboard\REST\v1\OrderRepresentation} {@required false}
+     * @var OrderRepresentation | null $order {@type \Tuleap\Tracker\REST\Helpers\OrderRepresentation} {@required false}
      */
     public $order;
 

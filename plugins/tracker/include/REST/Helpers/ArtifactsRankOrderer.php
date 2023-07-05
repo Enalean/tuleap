@@ -20,23 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST\v1\Rank;
+namespace Tuleap\Tracker\REST\Helpers;
 
 use Luracast\Restler\RestException;
-use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 
 class ArtifactsRankOrderer
 {
-    /** @var \Tracker_Artifact_PriorityManager */
-    private $priority_manager;
-    /** @var \EventManager */
-    private $event_manager;
-
-    public function __construct(\Tracker_Artifact_PriorityManager $priority_manager, \EventManager $event_manager)
-    {
-        $this->priority_manager = $priority_manager;
-        $this->event_manager    = $event_manager;
+    public function __construct(
+        private readonly \Tracker_Artifact_PriorityManager $priority_manager,
+        private readonly \EventManager $event_manager,
+    ) {
         $this->priority_manager->enableExceptionsOnError();
     }
 

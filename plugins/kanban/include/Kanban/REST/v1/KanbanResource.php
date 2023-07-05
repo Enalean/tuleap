@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Kanban\REST\v1;
 
 use Tuleap\Kanban\Kanban;
@@ -98,17 +100,17 @@ use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
 use Tuleap\Kanban\KanbanRightsPresenter;
-use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
+use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\TooManyPointsException;
 use Tuleap\Kanban\REST\v1\TrackerReport\FilteredDiagramRepresentationBuilder;
 use Tuleap\Kanban\REST\v1\TrackerReport\FilteredItemCollectionRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException;
-use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
-use Tuleap\AgileDashboard\REST\v1\OrderValidator;
-use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
+use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
+use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
+use Tuleap\Tracker\REST\Helpers\OrderValidator;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
@@ -649,10 +651,10 @@ final class KanbanResource extends AuthenticatedResource
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                $id          Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order       Order of the children {@from body}
-     * @param \Tuleap\Kanban\REST\v1\KanbanAddRepresentation     $add         Ids to add to Kanban backlog {@from body}
-     * @param string                                             $from_column Id of the column the item is coming from (when moving an item) {@from body}
+     * @param int                                              $id          Id of the Kanban
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order       Order of the children {@from body}
+     * @param \Tuleap\Kanban\REST\v1\KanbanAddRepresentation   $add         Ids to add to Kanban backlog {@from body}
+     * @param string                                           $from_column Id of the column the item is coming from (when moving an item) {@from body}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -918,7 +920,7 @@ final class KanbanResource extends AuthenticatedResource
      * @url PATCH {id}/archive
      *
      * @param int                                                $id          Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order       Order of the children {@from body}
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order       Order of the children {@from body}
      * @param \Tuleap\Kanban\REST\v1\KanbanAddRepresentation     $add         Ids to add to Kanban backlog {@from body}
      * @param string                                             $from_column Id of the column the item is coming from (when moving an item) {@from body}
      *
@@ -1111,7 +1113,7 @@ final class KanbanResource extends AuthenticatedResource
      *
      * @param int                                                $id          Id of the Kanban
      * @param int                                                $column_id   Id of the column the item belongs to {@from query}
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order       Order of the items {@from body}
+     * @param \Tuleap\Tracker\REST\Helpers\OrderRepresentation $order       Order of the items {@from body}
      * @param \Tuleap\Kanban\REST\v1\KanbanAddRepresentation     $add         Ids to add to the column {@from body}
      * @param string                                             $from_column Id of the column the item is coming from (when moving an item) {@from body}
      *

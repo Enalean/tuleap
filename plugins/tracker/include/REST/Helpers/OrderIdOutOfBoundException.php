@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\REST\Helpers;
 
 use Exception;
 
-class IdsFromBodyAreNotUniqueException extends Exception
+final class OrderIdOutOfBoundException extends Exception
 {
-    public function __construct()
+    public function __construct(int $wrong_id)
     {
-        parent::__construct('There are duplicated ids');
+        parent::__construct('Submitted id ' . $wrong_id . ' is not part of the set to order');
     }
 }

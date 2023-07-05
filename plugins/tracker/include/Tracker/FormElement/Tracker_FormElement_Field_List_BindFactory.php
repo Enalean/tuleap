@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 
-class Tracker_FormElement_Field_List_BindFactory
+class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const STATIK  = 'static';
     public const USERS   = 'users';
@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_List_BindFactory
                     $dao    = new BindStaticValueDao();
                     foreach ($dao->searchByFieldId($field->id, $row['is_rank_alpha']) as $row_value) {
                         $values[$row_value['id']] = $this->getStaticValueInstance(
-                            $row_value['id'],
+                            (int) $row_value['id'],
                             $row_value['label'],
                             $row_value['description'],
                             $row_value['rank'],
@@ -139,7 +139,7 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function duplicate($from_field_id, $to_field_id)
     {
-        return $this->_duplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_VALUE);
+        return $this->doDuplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_VALUE);
     }
 
     /**
@@ -150,10 +150,10 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function duplicateByReference($from_field_id, $to_field_id)
     {
-        return $this->_duplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_REFERENCE);
+        return $this->doDuplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_REFERENCE);
     }
 
-    private function _duplicate($from_field_id, $to_field_id, $by_reference)
+    private function doDuplicate($from_field_id, $to_field_id, $by_reference): array
     {
         //duplicate users info, if any
         $dao = new BindUsersDao();
