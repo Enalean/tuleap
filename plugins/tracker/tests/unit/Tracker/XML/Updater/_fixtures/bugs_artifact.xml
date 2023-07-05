@@ -58,6 +58,9 @@
       <value format="label"><![CDATA[testman@example.com]]></value>
       <value format="label"><![CDATA[admin]]></value>
     </field_change>
+    <field_change field_name="computed" type="computed">
+      <manual_value>22</manual_value>
+    </field_change>
   </changeset>
   <changeset id="CHANGESET_5">
     <submitted_by format="ldap">102</submitted_by>
