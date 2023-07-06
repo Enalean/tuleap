@@ -57,9 +57,11 @@ import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStu
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
+    const CURRENT_PROJECT = 10;
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         target = document.implementation
@@ -75,6 +77,8 @@ describe(`LinkedArtifactTemplate`, () => {
             controller: {
                 canMarkForRemoval: (link) => (link ? true : true),
                 canChangeType: (link) => (link ? true : true),
+                isLinkedArtifactInCurrentProject: (artifact) =>
+                    artifact.project.id === CURRENT_PROJECT,
             } as LinkFieldController,
         } as HostElement;
 
@@ -149,6 +153,22 @@ describe(`LinkedArtifactTemplate`, () => {
         }
     );
 
+    it("will render a linked artifact with project label if the artifact is not in the current project", () => {
+        const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
+            LinkedArtifactStub.withProject({
+                id: 6,
+                label: "Corsa OPC",
+            }),
+            false,
+            true
+        );
+        render(presenter);
+
+        const project = selectOrThrow(target, "[data-test=artifact-project-label]");
+
+        expect(project).not.toBeNull();
+    });
+
     it(`will render a linked artifact with no status color`, () => {
         const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
             LinkedArtifactStub.withDefaults({
@@ -198,7 +218,8 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
-                LinkTypesCollectionStub.withParentPair()
+                LinkTypesCollectionStub.withParentPair(),
+                CurrentProjectIdentifierStub.withId(10)
             );
 
             const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];

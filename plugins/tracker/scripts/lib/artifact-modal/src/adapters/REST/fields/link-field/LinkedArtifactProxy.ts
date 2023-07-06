@@ -22,6 +22,7 @@ import type { LinkedArtifact } from "../../../../domain/fields/link-field/Linked
 import { LinkedArtifactIdentifierProxy } from "./LinkedArtifactIdentifierProxy";
 import { ArtifactCrossReferenceProxy } from "../../ArtifactCrossReferenceProxy";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import { ProjectProxy } from "../../ProjectProxy";
 
 export const LinkedArtifactProxy = {
     fromAPIArtifactAndType: (
@@ -34,6 +35,7 @@ export const LinkedArtifactProxy = {
         xref: ArtifactCrossReferenceProxy.fromAPIArtifact(artifact),
         uri: artifact.html_url,
         is_open: artifact.is_open,
+        project: ProjectProxy.fromAPIArtifact(artifact),
         link_type,
     }),
 };

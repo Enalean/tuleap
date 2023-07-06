@@ -45,6 +45,7 @@ import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkT
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
+import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -162,7 +163,8 @@ describe(`NewLinkTemplate`, () => {
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
-                LinkTypesCollectionStub.withParentPair()
+                LinkTypesCollectionStub.withParentPair(),
+                CurrentProjectIdentifierStub.withId(10)
             );
 
             const new_links_presenter: ReadonlyArray<NewLink> = [new_link];

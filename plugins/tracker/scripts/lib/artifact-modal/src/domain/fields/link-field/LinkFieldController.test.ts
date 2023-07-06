@@ -61,11 +61,14 @@ import { ParentTrackerIdentifierStub } from "../../../../tests/stubs/ParentTrack
 import type { LinkTypesCollection } from "./LinkTypesCollection";
 import type { LinkedArtifact } from "./LinkedArtifact";
 import type { NewLink } from "./NewLink";
+import { ProjectStub } from "../../../../tests/stubs/ProjectStub";
+import { CurrentProjectIdentifierStub } from "../../../../tests/stubs/CurrentProjectIdentifierStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
 const FIRST_PARENT_ID = 527;
 const SECOND_PARENT_ID = 548;
+const CURRENT_PROJECT = 10;
 
 describe(`LinkFieldController`, () => {
     let links_retriever: RetrieveAllLinkedArtifacts,
@@ -127,7 +130,8 @@ describe(`LinkFieldController`, () => {
             current_tracker_identifier,
             parent_tracker_identifier,
             cross_reference,
-            LinkTypesCollectionStub.withParentPair()
+            LinkTypesCollectionStub.withParentPair(),
+            CurrentProjectIdentifierStub.withId(CURRENT_PROJECT)
         );
     };
 
@@ -438,5 +442,21 @@ describe(`LinkFieldController`, () => {
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(parents).toHaveLength(0);
         });
+    });
+    describe("isLinkedArtifactIsInCurrentProject", () => {
+        it.each([
+            [true, "the same", CURRENT_PROJECT],
+            [false, "NOT the same", 15],
+        ])(
+            "return %s if the artifact's project is %s as the current project",
+            (result: boolean, expected_result: string, project_id: number) => {
+                const current_artifact = LinkedArtifactStub.withProject(
+                    ProjectStub.withDefaults({ id: project_id })
+                );
+                expect(getController().isLinkedArtifactInCurrentProject(current_artifact)).toBe(
+                    result
+                );
+            }
+        );
     });
 });

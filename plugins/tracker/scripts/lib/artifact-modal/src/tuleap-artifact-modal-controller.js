@@ -190,7 +190,8 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types)
+                LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types),
+                current_project_identifier
             );
         },
         getLinkFieldAutoCompleter: () => {

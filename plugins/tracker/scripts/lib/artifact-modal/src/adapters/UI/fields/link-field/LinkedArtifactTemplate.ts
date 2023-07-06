@@ -129,7 +129,13 @@ export const getLinkedArtifactTemplate = (
                     data-test="artifact-title"
                     >${artifact.title}</span
                 ></a
-            ></span
+            >${!host.controller.isLinkedArtifactInCurrentProject(artifact) &&
+            html`<span
+                class="link-field-artifact-project-label tlp-label"
+                data-test="artifact-project-label"
+            >
+                ${artifact.project.label}
+            </span>`}</span
         >${artifact.status &&
         html`<span class="${getStatusBadgeClassesWithRemoval(artifact)}" data-test="artifact-status"
             >${artifact.status.value}</span

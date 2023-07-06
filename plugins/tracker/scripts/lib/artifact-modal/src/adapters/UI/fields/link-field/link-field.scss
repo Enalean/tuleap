@@ -124,23 +124,28 @@ $link-type-width: 150px;
 }
 
 .link-field-row-xref {
-    position: relative;
     flex: auto;
 }
 
 .link-field-artifact-link {
     display: flex;
     gap: 6px;
-    position: absolute;
-    inset: 0;
     align-items: center;
     color: var(--tlp-dark-color);
 }
 
 .link-field-artifact-title {
+    flex: 1;
+    width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.link-field-artifact-project-label {
+    margin: 2px 0 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.65rem;
 }
 
 .link-field-artifact-can-have-only-one-parent-note {

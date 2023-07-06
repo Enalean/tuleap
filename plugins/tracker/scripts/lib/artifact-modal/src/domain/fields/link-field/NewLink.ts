@@ -25,7 +25,7 @@ import { NewArtifactLinkIdentifier } from "./NewArtifactLinkIdentifier";
 /**
  * Alias LinkedArtifact because they both need the same properties
  */
-export type NewLink = Omit<LinkedArtifact, "identifier"> & {
+export type NewLink = Omit<LinkedArtifact, "identifier" | "project"> & {
     readonly identifier: NewArtifactLinkIdentifier;
 };
 
