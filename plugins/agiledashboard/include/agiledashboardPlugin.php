@@ -175,6 +175,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
@@ -233,7 +234,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
-            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated');
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
@@ -613,18 +613,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function tracker_event_trackers_duplicated($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         PlanningFactory::build()->duplicatePlannings(
-            $params['group_id'],
-            $params['tracker_mapping'],
-            $params['ugroups_mapping']
+            $event->project_id,
+            $event->tracker_mapping,
+            $event->ugroups_mapping,
         );
 
         $this->getKanbanManager()->duplicateKanbans(
-            $params['tracker_mapping'],
-            $params['field_mapping'],
-            $params['report_mapping']
+            $event->tracker_mapping,
+            $event->field_mapping,
+            $event->report_mapping,
         );
     }
 

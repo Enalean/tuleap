@@ -935,7 +935,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Duplicate a formElement
      * @param int $from_tracker_id
      * @param int $to_tracker_id
-     * @return array the mapping between old formElements and new ones
+     * @return list<array{from: int, to: int, values: array, workflow: bool}> the mapping between old formElements and new ones
      */
     public function duplicate($from_tracker_id, $to_tracker_id)
     {
@@ -1244,7 +1244,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      *
      * @param int $new_project_id
      * @param int $template_project_id
-     * @param array $field_mapping
+     * @param list<array{from: int, to: int, values: array, workflow: bool}> $field_mapping
      */
     public function fixOriginalFieldIdsAfterDuplication($new_project_id, $template_project_id, array $field_mapping)
     {
