@@ -72,7 +72,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 continue;
             }
 
-            if (! $destination_field->userCanUpdate($user)) {
+            if ($destination_field->isUpdateable() && ! $destination_field->userCanUpdate($user)) {
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
