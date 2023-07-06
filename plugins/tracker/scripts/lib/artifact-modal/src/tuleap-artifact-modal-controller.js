@@ -20,6 +20,7 @@
 import { loadTooltips } from "@tuleap/tooltip";
 import { Option } from "@tuleap/option";
 import { en_US_LOCALE } from "@tuleap/core-constants";
+import { EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -52,7 +53,7 @@ import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/Possib
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
-import { getSubmitDisabledReason } from "./gettext-catalog";
+import { getConfirmClosingModal, getSubmitDisabledReason } from "./gettext-catalog";
 import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesCollector";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
@@ -96,6 +97,7 @@ function ArtifactModalController(
     const self = this;
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
+    let has_changed_once = false;
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
@@ -256,6 +258,7 @@ function ArtifactModalController(
         hasRestError: hasError,
         isDisabled,
         isSubmitDisabled: () => self.submit_disabling_reason.isValue(),
+        onFormChange,
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,
@@ -315,6 +318,21 @@ function ArtifactModalController(
 
     function isNotAnonymousUser() {
         return String(modal_model.user_id) !== "0";
+    }
+
+    function onFormChange() {
+        if (has_changed_once) {
+            return;
+        }
+        modal_instance.tlp_modal.addEventListener(EVENT_TLP_MODAL_WILL_HIDE, (event) => {
+            event.preventDefault();
+            // eslint-disable-next-line no-alert
+            const should_close = window.confirm(getConfirmClosingModal());
+            if (should_close) {
+                modal_instance.tlp_modal.hide();
+            }
+        });
+        has_changed_once = true;
     }
 
     function reopenFieldsetsWithInvalidInput(form) {

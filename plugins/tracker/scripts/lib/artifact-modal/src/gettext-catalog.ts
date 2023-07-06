@@ -61,7 +61,6 @@ export const getLinkFieldCanHaveOnlyOneParent = (): string =>
     gettextCatalog.getString("An artifact can only have one parent.");
 export const getLinkFieldCanHaveOnlyOneParentWithCrossRef = (): string =>
     gettextCatalog.getString(`%(artifact)s can only have one parent.`);
-
 export const getLinkFieldTypeAlreadySet = (): string => {
     return gettextCatalog.getString("%(type)s (already set)");
 };
@@ -158,3 +157,5 @@ export const getProjectTrackersListPickerPlaceholder = (): string =>
     gettextCatalog.getString("Select the tracker");
 export const getSubmitDisabledForLinkableArtifactCreationReason = (): string =>
     gettextCatalog.getString("New artifact to link is being created");
+export const getConfirmClosingModal = (): string =>
+    gettextCatalog.getString("Changes you made may not be saved. Close the modal?");
