@@ -57,7 +57,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesMultiTrackersInXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
@@ -69,10 +69,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
-use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
-use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
@@ -298,7 +296,7 @@ final class CreateProjectFromJira
                         $import_user,
                     );
 
-                    $jira_exporter = JiraXmlExporter::build(
+                    $jira_exporter = JiraAllIssuesMultiTrackersInXmlExporter::build(
                         $jira_client,
                         $logger,
                         $jira_user_on_tuleap_cache,
@@ -345,26 +343,15 @@ final class CreateProjectFromJira
                     $field_id_generator = new FieldAndValueIDGenerator();
 
                     $trackers_xml = $xml_element->addChild('trackers');
-                    foreach ($jira_issue_types as $jira_issue_type) {
-                        $logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
-
-                        $tracker_fullname = $jira_issue_type->getName();
-                        $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
-
-                        $tracker = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
-
-                        $tracker_xml = $jira_exporter->exportJiraToXml(
-                            $platform_configuration_collection,
-                            $tracker,
-                            $jira_credentials->getJiraUrl(),
-                            $jira_project,
-                            $jira_issue_type,
-                            $field_id_generator,
-                            $linked_issues_collection,
-                        );
-
-                        $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
-                    }
+                    $jira_exporter->exportAllProjectIssuesToXml(
+                        $trackers_xml,
+                        $platform_configuration_collection,
+                        $jira_credentials->getJiraUrl(),
+                        $jira_project,
+                        $jira_issue_types,
+                        $field_id_generator,
+                        $linked_issues_collection,
+                    );
 
                     if ($board && $board_configuration) {
                         $jira_agile_importer = new JiraAgileImporter(

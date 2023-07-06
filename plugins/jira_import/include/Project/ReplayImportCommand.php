@@ -42,7 +42,7 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -148,7 +148,7 @@ final class ReplayImportCommand extends Command
         }
     }
 
-    private function generateXML(JiraXmlExporter $jira_xml_exporter, string $item_name, string $jira_project_key, string $jira_issue_type_id): SimpleXMLElement
+    private function generateXML(JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter $jira_xml_exporter, string $item_name, string $jira_project_key, string $jira_issue_type_id): SimpleXMLElement
     {
         $platform_configuration_collection = new PlatformConfiguration();
 
@@ -157,7 +157,7 @@ final class ReplayImportCommand extends Command
             ->withDescription('Bug')
             ->withColor(TrackerColor::default());
 
-        $tracker_xml = $jira_xml_exporter->exportJiraToXml(
+        $tracker_xml = $jira_xml_exporter->exportIssuesToXml(
             $platform_configuration_collection,
             $tracker,
             'https://jira.example.com',
@@ -170,9 +170,9 @@ final class ReplayImportCommand extends Command
         return $jira_xml_exporter->getProjectSimpleXmlElement($tracker_xml);
     }
 
-    private function getJiraXmlExporter(JiraClient $jira_client, LoggerInterface $logger): JiraXmlExporter
+    private function getJiraXmlExporter(JiraClient $jira_client, LoggerInterface $logger): JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
     {
-        return JiraXmlExporter::build(
+        return JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::build(
             $jira_client,
             $logger,
             new JiraUserOnTuleapCache(
