@@ -18,3 +18,11 @@ path = "src/memory-alloc-success/main.rs"
 [[bin]]
 name = "happy-path"
 path = "src/happy-path/main.rs"
+
+[[bin]]
+name = "read-from-preopened-dir"
+path = "src/read-from-preopened-dir/main.rs"
+
+[[bin]]
+name = "write-to-preopened-dir"
+path = "src/write-to-preopened-dir/main.rs"

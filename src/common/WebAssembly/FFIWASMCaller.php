@@ -63,11 +63,11 @@ final class FFIWASMCaller implements WASMCaller
     ) {
     }
 
-    public function call(string $wasm_path, string $input): Option
+    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option
     {
         $start_time = microtime(true);
 
-        $output     = self::getFFIModule()->callWasmModule($wasm_path, $input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
+        $output     = self::getFFIModule()->callWasmModule($wasm_path, $input, $read_only_dir_path, $read_only_dir_guest_path, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
         $output_php = \FFI::string($output);
         self::getFFIModule()->freeCallWasmModuleOutput($output);
 

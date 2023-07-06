@@ -29,14 +29,17 @@ use wasmtime_wasi::WasiCtx;
 use wire::{InternalErrorJson, SuccessResponseJson, UserErrorJson};
 
 mod wire;
+mod preview1;
 
 /// # Safety
 ///
-/// This function must be called with valid pointers (filename_ptr and json_ptr)
+/// This function must be called with valid pointers (filename_ptr, json_ptr and read_only_dir_path_ptr)
 #[no_mangle]
 pub unsafe extern "C" fn callWasmModule(
     filename_ptr: *const c_char,
     json_ptr: *const c_char,
+    read_only_dir_path_ptr: *const c_char,
+    read_only_dir_guest_path_ptr: *const c_char,
     max_exec_time_in_ms: u64,
     max_memory_size_in_bytes: usize,
 ) -> *mut c_char {
@@ -46,13 +49,21 @@ pub unsafe extern "C" fn callWasmModule(
     if json_ptr.is_null() {
         return internal_error("json_ptr is null in callWasmModule".to_owned());
     }
+    if read_only_dir_path_ptr.is_null() {
+        return internal_error("read_only_dir_path_ptr is null in callWasmModule".to_owned());
+    }
+    if read_only_dir_guest_path_ptr.is_null() {
+        return internal_error("read_only_dir_guest_path_ptr is null in callWasmModule".to_owned());
+    }
     let filename = unsafe { CStr::from_ptr(filename_ptr).to_string_lossy().into_owned() };
     let input = unsafe { CStr::from_ptr(json_ptr).to_string_lossy().into_owned() };
+    let read_only_dir_str = unsafe { CStr::from_ptr(read_only_dir_path_ptr).to_string_lossy().into_owned() };
+    let read_only_dir_guest_str = unsafe { CStr::from_ptr(read_only_dir_guest_path_ptr).to_string_lossy().into_owned() };
     let limits = Limitations {
         max_exec_time: max_exec_time_in_ms,
         max_memory: max_memory_size_in_bytes,
     };
-    match compile_and_exec(filename, input, &limits) {
+    match compile_and_exec(filename, input, read_only_dir_str, read_only_dir_guest_str, &limits) {
         Ok(out_struct) => match out_struct.result {
             Ok(output_message) => success_response(output_message, out_struct.stats),
             Err(e) => {
@@ -139,6 +150,8 @@ struct OutputAndStats {
 fn compile_and_exec(
     filename: String,
     input: String,
+    read_only_dir: String,
+    read_only_dir_guest: String,
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
     let stdin = ReadPipe::from(input);
@@ -164,6 +177,21 @@ fn compile_and_exec(
 
     let mut store = Store::new(&engine, my_state);
     store.limiter(|state| &mut state.limits);
+
+    if ! read_only_dir.is_empty() {
+        let cap_std_dir =
+            cap_std::fs::Dir::open_ambient_dir(read_only_dir, cap_std::ambient_authority())?;
+        let dir_host =
+            Box::new(wasmtime_wasi::dir::Dir::from_cap_std(cap_std_dir));
+        let read_only_dir_host = Box::new(preview1::ReadOnlyDir(dir_host));
+
+        if ! read_only_dir_guest.is_empty() {
+            store.data_mut().wasi.push_preopened_dir(read_only_dir_host, read_only_dir_guest)?;
+        } else {
+            return Err(anyhow!("wasmtime-wrapper-lib was called with a non empty 'read_only_dir' but the 'read_only_dir_guest' parameter is empty"))
+        }
+    }
+
     wasmtime_wasi::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
 
     store.epoch_deadline_trap();
@@ -231,6 +259,8 @@ fn compile_and_exec(
 #[cfg(test)]
 mod tests {
     use std::ffi::{CStr, CString};
+    use std::fs::File;
+    use std::io::Read;
     use std::os::raw::c_char;
     use std::ptr;
 
@@ -250,8 +280,16 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -263,26 +301,121 @@ mod tests {
     }
 
     #[test]
-    fn filename_ptr_is_null_error() {
-        let wasm_c_world = ptr::null();
+    fn can_read_from_preopened_dir() {
+        let wasm_module_path =
+            "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
-        let json = r#"{
-            "updated_references": {
-                "refs\/heads\/tuleap-master": {
-                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
-                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
-                },
-                "refs\/heads\/tuleap-hello": {
-                    "old_value": "0000000000000000000000000000000000000000",
-                    "new_value": "0066b8447a411086ecd19210dd3f5df818056f47"
-                }
-            }
-        }"#;
+        let json = "";
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "/git-dir-0000/";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+        let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
+
+        let mut file = File::open("./test-wasm-modules/TryToReadWriteHere/ReadTest.txt").unwrap();
+        let mut contents = String::new();
+        file.read_to_string(&mut contents).unwrap();
+
+        assert_eq!(contents, json_out.data);
+        assert!(json_out.stats.exec_time_as_seconds > 0.0);
+        assert!(json_out.stats.memory_in_bytes == 1114112);
+    }
+
+    #[test]
+    fn readonlydirectory_argument_set_but_readonlydirectoryguest_empty_error() {
+        let wasm_module_path =
+            "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+
+        assert_eq!(
+            r#"{"internal_error":"wasmtime-wrapper-lib was called with a non empty 'read_only_dir' but the 'read_only_dir_guest' parameter is empty"}"#,
+            str_out
+        );
+    }
+
+    #[test]
+    fn write_to_preopened_dir_fails() {
+        let wasm_module_path =
+            "./test-wasm-modules/target/wasm32-wasi/release/write-to-preopened-dir.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "/git-dir-7331/";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+        println!("{}", str_out);
+        let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
+
+        assert_eq!(
+            "Write permissions are denied: Operation not permitted (os error 63)",
+            json_out.data
+        );
+        assert!(json_out.stats.exec_time_as_seconds > 0.0);
+        assert!(json_out.stats.memory_in_bytes == 1114112);
+    }
+
+    #[test]
+    fn filename_ptr_is_null_error() {
+        let wasm_c_world = ptr::null();
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -300,8 +433,16 @@ mod tests {
 
         let json_c_world = ptr::null();
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -317,18 +458,20 @@ mod tests {
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
-        let json = r#"{
-            "updated_references": {
-                "refs\/heads\/tuleap-master": {
-                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
-                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
-                }
-        }"#;
+        let json = "";
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -345,8 +488,16 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -374,8 +525,16 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -404,8 +563,16 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
+        let read_only_directory = "";
+        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
+        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
+
+        let read_only_directory_guest = "";
+        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
+        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
+
         let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 

@@ -36,9 +36,11 @@ final class PreReceiveHookDataWithoutTechnicalReferenceTest extends \Tuleap\Test
             return $event;
         });
 
-        $input = "a b refs/tlpr/42/head\n\r";
+        $input          = "a b refs/tlpr/42/head\n\r";
+        $git_dir_path   = "/repo-git";
+        $guest_dir_path = "/repo-git-guest";
 
-        $result = PreReceiveHookData::fromRawStdinHook($input, new NullLogger())->map(
+        $result = PreReceiveHookData::fromRawStdinHook($input, $git_dir_path, $guest_dir_path, new NullLogger())->map(
             fn (PreReceiveHookData $hook_data): PreReceiveHookDataWithoutTechnicalReference => PreReceiveHookDataWithoutTechnicalReference::fromHookData($hook_data, $event_dispatcher, new NullLogger())
         );
 
@@ -49,9 +51,11 @@ final class PreReceiveHookDataWithoutTechnicalReferenceTest extends \Tuleap\Test
     public function testItDoesNotRemoveNonTechnicalReference(): void
     {
         $input                                     = "a b refs/heads/tuleap-pr\n\r";
+        $git_dir_path                              = "/repo-git";
+        $guest_dir_path                            = "/repo-git-guest";
         $updated_reference['refs/heads/tuleap-pr'] = new PreReceiveHookUpdatedReference('a', 'b');
 
-        $result = PreReceiveHookData::fromRawStdinHook($input, new NullLogger())->map(
+        $result = PreReceiveHookData::fromRawStdinHook($input, $git_dir_path, $git_dir_path, new NullLogger())->map(
             fn (PreReceiveHookData $hook_data): PreReceiveHookDataWithoutTechnicalReference => PreReceiveHookDataWithoutTechnicalReference::fromHookData($hook_data, EventDispatcherStub::withIdentityCallback(), new NullLogger())
         );
 
