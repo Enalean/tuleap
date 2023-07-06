@@ -24,12 +24,14 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy\FPM;
 
 use Psr\Log\LoggerInterface;
+use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    public const PHP81_DST_CONF_DIR = '/etc/opt/remi/php81';
-    public const PHP81_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm81';
+    public const PHP81_DST_CONF_DIR              = '/etc/opt/remi/php81';
+    public const PHP81_SRC_CONF_DIR              = __DIR__ . '/../../../../etc/fpm81';
+    private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php81-php-fpm.service', 'php74-php-fpm.service'];
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
@@ -68,11 +70,17 @@ final class SiteDeployFPM
      */
     private $session;
 
+    /**
+     * @psalm-param non-empty-list<string> $php_default_unit_service_names
+     */
+
     public function __construct(
+        private readonly ProcessFactory $process_factory,
         LoggerInterface $logger,
         string $application_user,
         bool $development,
         FPMSessionInterface $session,
+        private readonly array $php_default_unit_service_names,
         string $php_configuration_folder,
         string $tuleap_php_configuration_folder,
         array $previous_php_configuration_folders,
@@ -109,15 +117,18 @@ final class SiteDeployFPM
     }
 
     public static function buildForPHP81(
+        ProcessFactory $process_factory,
         LoggerInterface $logger,
         string $application_user,
         bool $development,
     ): self {
         return new self(
+            $process_factory,
             $logger,
             $application_user,
             $development,
             self::buildSessionFromEnv(),
+            self::PHP_DEFAULT_UNIT_SERVICE_NAMES,
             self::PHP81_DST_CONF_DIR,
             self::PHP81_SRC_CONF_DIR,
             []
@@ -127,6 +138,7 @@ final class SiteDeployFPM
     public function configure(): void
     {
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");
+        $this->maskDefaultUnits();
         $this->moveDefaultWww();
 
         foreach ($this->getConfigurationFilesToDeploy() as $reference_file => $fpm_configuration_to_deploy) {
@@ -157,6 +169,7 @@ final class SiteDeployFPM
 
     public function forceDeploy(): void
     {
+        $this->maskDefaultUnits();
         $this->moveDefaultWww();
         $this->remoteExistingTuleapParts();
 
@@ -239,5 +252,10 @@ final class SiteDeployFPM
                 unlink($item->getPathname());
             }
         }
+    }
+
+    private function maskDefaultUnits(): void
+    {
+        $this->process_factory->getProcess(['/usr/bin/systemctl', 'mask', '--', ...$this->php_default_unit_service_names])->mustRun();
     }
 }

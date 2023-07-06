@@ -31,6 +31,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use TuleapCfg\Command\ProcessFactory;
 
 final class SiteDeployFPMCommand extends Command
 {
@@ -67,7 +68,7 @@ final class SiteDeployFPMCommand extends Command
         $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
         if ($php_version === self::PHP81) {
-            $deploy = SiteDeployFPM::buildForPHP81($console_logger, ForgeConfig::get('sys_http_user'), $development);
+            $deploy = SiteDeployFPM::buildForPHP81(new ProcessFactory(), $console_logger, ForgeConfig::get('sys_http_user'), $development);
         } else {
             $output->write(
                 sprintf(

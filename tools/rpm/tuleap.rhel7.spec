@@ -990,7 +990,6 @@ chmod 750 /var/lib/gitolite
     tuleap.service \
     tuleap-workers.service \
     tuleap-php-fpm.service &>/dev/null || :
-/usr/bin/systemctl mask php81-php-fpm || :
 
 # Clean old tuleap cache file
 /usr/bin/rm -rf %{APP_CACHE_DIR}/tuleap_hooks_cache
@@ -1020,7 +1019,6 @@ fi
 
 %post plugin-mediawiki-standalone
 /usr/bin/systemctl enable mediawiki-tuleap-php-fpm.service &>/dev/null || :
-/usr/bin/systemctl mask php74-php-fpm || :
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -1066,6 +1064,10 @@ fi
 %endif
 
 %postun core-subversion
+/usr/bin/systemctl daemon-reload &>/dev/null || :
+
+%postun plugin-mediawiki-standalone
+/usr/bin/systemctl unmask php74-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %clean
