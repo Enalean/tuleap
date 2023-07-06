@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./FileField";
 import {
     FileField,
@@ -44,48 +45,85 @@ jest.mock("pretty-kibibytes", () => {
 describe(`FileField`, () => {
     beforeEach(() => {
         setCatalog({
-            getString: (msgid): string => msgid,
+            getString: (msgid) => msgid,
         });
     });
 
-    describe.each([[true, false]])(`Action button`, (is_marked_for_removal: boolean) => {
-        const selector = is_marked_for_removal
-            ? "[data-test=cancel-removal]"
-            : "[data-test=mark-for-removal]";
-        const file = {
-            marked_for_removal: is_marked_for_removal,
-        } as AttachedFileDescription;
+    describe(`Action button`, () => {
+        let file: AttachedFileDescription,
+            is_marked_for_removal: boolean,
+            is_disabled: boolean,
+            doc: Document;
 
-        const renderButton = (is_disabled: boolean): HTMLButtonElement => {
-            const doc = document.implementation.createHTMLDocument();
-            const field = {} as FileFieldType;
+        beforeEach(() => {
+            doc = document.implementation.createHTMLDocument();
+            is_marked_for_removal = false;
+            is_disabled = false;
+        });
+
+        const getHost = (): HostElement => {
+            file = {
+                marked_for_removal: is_marked_for_removal,
+            } as AttachedFileDescription;
+
+            const field = {
+                file_descriptions: [file],
+            } as FileFieldType;
+            const temporary_files: ReadonlyArray<NewFileToAttach> = [];
+            const value: ReadonlyArray<number> = [];
             const value_model = {
-                temporary_files: [file],
-                value: [],
-            } as unknown as FileFieldValueModel;
-            const host = {
-                controller: FileFieldController(field, value_model, EventDispatcher()),
-            } as unknown as HostElement;
+                temporary_files,
+                value: value,
+            } as FileFieldValueModel;
 
+            const element = doc.createElement("div");
+            return Object.assign(element, {
+                controller: FileFieldController(field, value_model, EventDispatcher()),
+            } as HostElement);
+        };
+
+        const renderButton = (host: HostElement): HTMLButtonElement => {
             const target = doc.createElement("div") as unknown as ShadowRoot;
             const render = getActionButton(file, is_disabled);
             render(host, target);
 
-            const button = target.querySelector(selector);
-            if (!(button instanceof HTMLButtonElement)) {
-                throw new Error("Unable to find an expected element in DOM");
-            }
-            return button;
+            const selector = is_marked_for_removal
+                ? "[data-test=cancel-removal]"
+                : "[data-test=mark-for-removal]";
+            return selectOrThrow(target, selector, HTMLButtonElement);
         };
 
-        it(`renders a button to mark a file for removal / cancel removal`, () => {
-            const button = renderButton(false);
+        it(`will mark a file for removal and dispatch a bubbling "change" event`, () => {
+            is_marked_for_removal = false;
+
+            const host = getHost();
+            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+            const button = renderButton(host);
             button.click();
-            expect(file.marked_for_removal).toBe(is_marked_for_removal);
+
+            expect(host.attached_files?.some((file) => file.marked_for_removal)).toBe(true);
+            const event = dispatchEvent.mock.calls[0][0];
+            expect(event.type).toBe("change");
+            expect(event.bubbles).toBe(true);
+        });
+
+        it(`will cancel the removal of a file and dispatch a bubbling "change" event`, () => {
+            is_marked_for_removal = true;
+
+            const host = getHost();
+            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+            const button = renderButton(host);
+            button.click();
+
+            expect(host.attached_files?.every((file) => file.marked_for_removal)).toBe(false);
+            const event = dispatchEvent.mock.calls[0][0];
+            expect(event.type).toBe("change");
+            expect(event.bubbles).toBe(true);
         });
 
         it(`renders a disabled button`, () => {
-            const button = renderButton(true);
+            is_disabled = true;
+            const button = renderButton(getHost());
             expect(button.disabled).toBe(true);
         });
     });
@@ -167,7 +205,8 @@ describe(`FileField`, () => {
     });
 
     describe(`New File to attach button`, () => {
-        const value_model = { temporary_files: [] } as unknown as FileFieldValueModel;
+        const temporary_files: ReadonlyArray<NewFileToAttach> = [];
+        const value_model = { temporary_files: temporary_files } as FileFieldValueModel;
 
         const renderButton = (disabled: boolean): HTMLButtonElement => {
             const doc = document.implementation.createHTMLDocument();
@@ -177,7 +216,7 @@ describe(`FileField`, () => {
                 field,
                 disabled,
                 controller: FileFieldController(field, value_model, EventDispatcher()),
-            } as unknown as HostElement;
+            } as HostElement;
 
             const render = getAddNewFileToAttachButtonTemplate(host);
             render(host, target);
@@ -203,9 +242,8 @@ describe(`FileField`, () => {
 
     describe(`File field template`, () => {
         const FIELD_LABEL = "Attachments";
-        const value_model = {
-            temporary_files: [NewFileToAttach.build()],
-        } as unknown as FileFieldValueModel;
+        const temporary_files: ReadonlyArray<NewFileToAttach> = [NewFileToAttach.build()];
+        const value_model = { temporary_files } as FileFieldValueModel;
 
         const renderField = (): ShadowRoot => {
             const doc = document.implementation.createHTMLDocument();
@@ -221,7 +259,7 @@ describe(`FileField`, () => {
                 controller: FileFieldController(field, value_model, EventDispatcher()),
                 new_files: value_model.temporary_files,
                 attached_files: undefined,
-            } as unknown as HostElement;
+            } as HostElement;
 
             const render = FileField.content(host);
             render(host, target);
