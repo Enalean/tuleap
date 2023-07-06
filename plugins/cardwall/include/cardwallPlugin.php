@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
+use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\Cardwall\REST\v1\MilestonesCardwallResource;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
@@ -51,15 +52,6 @@ use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
  */
 class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * Can we use standard javascript
-     *
-     * Parameters:
-     *   'use_standard' => boolean
-     *
-     */
-    public const CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT = 'cardwall_event_use_standard_javascript';
-
     /**
      * @var Cardwall_OnTop_ConfigFactory
      */
@@ -421,17 +413,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function canUseStandardJavsacript()
     {
-        $use_standard = true;
-
-        $em = EventManager::instance();
-        $em->processEvent(
-            self::CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
-            [
-                'use_standard' => &$use_standard,
-            ]
-        );
-
-        return $use_standard;
+        return EventManager::instance()
+            ->dispatch(new CardwallUseStandardJavascriptEvent())
+            ->use_standard_javascript;
     }
 
     public function javascript($params)

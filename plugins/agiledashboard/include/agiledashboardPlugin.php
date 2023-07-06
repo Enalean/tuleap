@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanURL;
@@ -304,10 +305,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
             $this->addHook(TrackerHierarchyUpdateEvent::NAME);
             $this->addHook(AfterArtifactCopiedEvent::NAME);
-        }
-
-        if (defined('CARDWALL_BASE_URL')) {
-            $this->addHook(cardwallPlugin::CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT, 'cardwall_event_use_standard_javascript');
         }
 
         return parent::getHooksAndCallbacks();
@@ -1079,12 +1076,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return $this->sequence_id_manager;
     }
 
-    public function cardwall_event_use_standard_javascript($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function cardwallUseStandardJavascriptEvent(CardwallUseStandardJavascriptEvent $event): void
     {
         $request              = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || KanbanURL::isKanbanURL($request)) {
-            $params['use_standard'] = false;
+            $event->use_standard_javascript = false;
         }
     }
 
