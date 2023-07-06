@@ -82,7 +82,10 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
                 <span class="link-field-artifact-title" data-test="link-title"
                     >${link.title}</span
                 ></a
-            ></span
+            >${!host.controller.isLinkedArtifactInCurrentProject(link) &&
+            html`<span class="link-field-artifact-project-label" data-test="artifact-project-label">
+                ${link.project.label}
+            </span>`}</span
         >${link.status &&
         html`<span class="${getArtifactStatusBadgeClasses(link)}" data-test="link-status"
             >${link.status.value}</span

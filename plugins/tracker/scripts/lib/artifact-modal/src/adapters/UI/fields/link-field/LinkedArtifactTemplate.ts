@@ -130,10 +130,7 @@ export const getLinkedArtifactTemplate = (
                     >${artifact.title}</span
                 ></a
             >${!host.controller.isLinkedArtifactInCurrentProject(artifact) &&
-            html`<span
-                class="link-field-artifact-project-label tlp-label"
-                data-test="artifact-project-label"
-            >
+            html`<span class="link-field-artifact-project-label" data-test="artifact-project-label">
                 ${artifact.project.label}
             </span>`}</span
         >${artifact.status &&

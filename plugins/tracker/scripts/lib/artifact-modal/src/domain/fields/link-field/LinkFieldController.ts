@@ -67,7 +67,7 @@ export type LinkFieldController = {
     hasParentLink(): boolean;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
-    isLinkedArtifactInCurrentProject(artifact: LinkedArtifact): boolean;
+    isLinkedArtifactInCurrentProject(artifact: LinkedArtifact | NewLink): boolean;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
