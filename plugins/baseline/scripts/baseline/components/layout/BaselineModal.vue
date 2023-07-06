@@ -51,7 +51,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 
 export default {
     name: "BaselineModal",

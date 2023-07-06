@@ -7,7 +7,9 @@
   "dependencies": {
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
