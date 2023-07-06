@@ -7,9 +7,15 @@ dependencies:
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../lib/frontend/project-background
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../src/scripts/tlp
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-swatch-colors
