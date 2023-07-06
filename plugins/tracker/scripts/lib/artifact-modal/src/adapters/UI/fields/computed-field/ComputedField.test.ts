@@ -20,33 +20,30 @@
 import type { HostElement } from "./ComputedField";
 import { ComputedField, getDisplayedValue, onInput, validateInput } from "./ComputedField";
 import { setCatalog } from "../../../../gettext-catalog";
+import { selectOrThrow } from "@tuleap/dom";
 
 const FIELD_ID = 371;
 
-const noop = (): void => {
-    //Do nothing
-};
-
-const getDocument = (): Document => document.implementation.createHTMLDocument();
-
-function getHost(data?: Partial<ComputedField>): HostElement {
-    return {
-        fieldId: FIELD_ID,
-        label: "Computed Field",
-        required: false,
-        disabled: false,
-        autocomputed: false,
-        manualValue: 5,
-        value: 8,
-        dispatchEvent: noop,
-        ...data,
-    } as unknown as HostElement;
-}
-
 describe(`ComputedField`, () => {
+    let doc: Document;
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
+        doc = document.implementation.createHTMLDocument();
     });
+
+    const getHost = (data?: Partial<ComputedField>): HostElement => {
+        const element = doc.createElement("span");
+        return Object.assign(element, {
+            fieldId: FIELD_ID,
+            label: "Computed Field",
+            required: false,
+            disabled: false,
+            autocomputed: false,
+            manualValue: 5,
+            value: 8,
+            ...data,
+        } as HostElement);
+    };
 
     describe(`input events`, () => {
         it.each([
@@ -54,24 +51,29 @@ describe(`ComputedField`, () => {
             ["when the input's value is a number", "the number", "26.79", 26.79],
             ["when the input's value is not a number", "empty string", "not a number", ""],
         ])(
-            `%s, it dispatches a "value-changed" event with manual value as %s`,
+            `%s, it dispatches a "change" event that bubbles
+            and a "value-changed" event with manual value as %s`,
             (when_statement, expected_statement, input_value, expected_manual_value) => {
                 const host = getHost({ autocomputed: false });
                 const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-                const inner_input = getDocument().createElement("input");
+                const inner_input = doc.createElement("input");
                 inner_input.addEventListener("input", (event) => onInput(host, event));
 
                 inner_input.value = input_value;
                 inner_input.dispatchEvent(new InputEvent("input"));
 
-                const event = dispatchEvent.mock.calls[0][0];
-                if (!(event instanceof CustomEvent)) {
+                const change_event = dispatchEvent.mock.calls[0][0];
+                expect(change_event.type).toBe("change");
+                expect(change_event.bubbles).toBe(true);
+
+                const custom_event = dispatchEvent.mock.calls[1][0];
+                if (!(custom_event instanceof CustomEvent)) {
                     throw new Error("Expected a CustomEvent");
                 }
-                expect(event.type).toBe("value-changed");
-                expect(event.detail.field_id).toBe(FIELD_ID);
-                expect(event.detail.autocomputed).toBe(false);
-                expect(event.detail.manual_value).toBe(expected_manual_value);
+                expect(custom_event.type).toBe("value-changed");
+                expect(custom_event.detail.field_id).toBe(FIELD_ID);
+                expect(custom_event.detail.autocomputed).toBe(false);
+                expect(custom_event.detail.manual_value).toBe(expected_manual_value);
             }
         );
     });
@@ -79,56 +81,60 @@ describe(`ComputedField`, () => {
     describe(`Template`, () => {
         let target: ShadowRoot;
         beforeEach(() => {
-            target = getDocument().createElement("div") as unknown as ShadowRoot;
+            target = doc.createElement("div") as unknown as ShadowRoot;
         });
 
         it(`when the field is switched to auto-computed,
-            it dispatches a "value-changed" event with autocomputed true and manual value as empty string`, () => {
+            it dispatches a "change" event that bubbles,
+            and a "value-changed" event with autocomputed true and manual value as empty string`, () => {
             const host = getHost({ manualValue: 3, autocomputed: false });
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
             const update = ComputedField.content(host);
             update(host, target);
 
-            const autocompute_button = target.querySelector("[data-test=switch-to-auto]");
-            if (!(autocompute_button instanceof HTMLButtonElement)) {
-                throw new Error("Could not find the AutoCompute button");
-            }
-            autocompute_button.click();
+            selectOrThrow(target, "[data-test=switch-to-auto]", HTMLButtonElement).click();
 
             expect(host.autocomputed).toBe(true);
             expect(host.manualValue).toBe("");
-            const event = dispatchEvent.mock.calls[0][0];
-            if (!(event instanceof CustomEvent)) {
+
+            const change_event = dispatchEvent.mock.calls[0][0];
+            expect(change_event.type).toBe("change");
+            expect(change_event.bubbles).toBe(true);
+
+            const custom_event = dispatchEvent.mock.calls[1][0];
+            if (!(custom_event instanceof CustomEvent)) {
                 throw new Error("Expected a CustomEvent");
             }
-            expect(event.type).toBe("value-changed");
-            expect(event.detail.field_id).toBe(FIELD_ID);
-            expect(event.detail.autocomputed).toBe(true);
-            expect(event.detail.manual_value).toBe("");
+            expect(custom_event.type).toBe("value-changed");
+            expect(custom_event.detail.field_id).toBe(FIELD_ID);
+            expect(custom_event.detail.autocomputed).toBe(true);
+            expect(custom_event.detail.manual_value).toBe("");
         });
 
         it(`when the field is switched to manual,
-            it dispatches a "value-changed" event with autocomputed false and manual value as empty string`, () => {
+            it dispatches a "change" event that bubbles
+            and a "value-changed" event with autocomputed false and manual value as empty string`, () => {
             const host = getHost({ manualValue: "", autocomputed: true });
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
             const update = ComputedField.content(host);
             update(host, target);
 
-            const edit_button = target.querySelector("[data-test=switch-to-manual]");
-            if (!(edit_button instanceof HTMLButtonElement)) {
-                throw new Error("Could not find the Edit button");
-            }
-            edit_button.click();
+            selectOrThrow(target, "[data-test=switch-to-manual]", HTMLButtonElement).click();
 
             expect(host.autocomputed).toBe(false);
-            const event = dispatchEvent.mock.calls[0][0];
-            if (!(event instanceof CustomEvent)) {
+
+            const change_event = dispatchEvent.mock.calls[0][0];
+            expect(change_event.type).toBe("change");
+            expect(change_event.bubbles).toBe(true);
+
+            const custom_event = dispatchEvent.mock.calls[1][0];
+            if (!(custom_event instanceof CustomEvent)) {
                 throw new Error("Expected a CustomEvent");
             }
-            expect(event.type).toBe("value-changed");
-            expect(event.detail.field_id).toBe(FIELD_ID);
-            expect(event.detail.autocomputed).toBe(false);
-            expect(event.detail.manual_value).toBe("");
+            expect(custom_event.type).toBe("value-changed");
+            expect(custom_event.detail.field_id).toBe(FIELD_ID);
+            expect(custom_event.detail.autocomputed).toBe(false);
+            expect(custom_event.detail.manual_value).toBe("");
         });
 
         it(`when the field is disabled, it only renders its value`, () => {

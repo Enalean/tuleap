@@ -62,8 +62,7 @@ export const onInput = (host: HostElement, event: Event): void => {
         return;
     }
     host.manualValue = cleanValue(event.target.value);
-    // Event type is value-changed to avoid interference with native "input" event
-    // which will bubble since the element does not use shadow DOM
+    dispatch(host, "change", { bubbles: true });
     dispatch(host, "value-changed", {
         detail: {
             field_id: host.fieldId,
@@ -75,6 +74,7 @@ export const onInput = (host: HostElement, event: Event): void => {
 
 function switchToManualValue(host: HostElement): void {
     host.autocomputed = false;
+    dispatch(host, "change", { bubbles: true });
     dispatch(host, "value-changed", {
         detail: {
             field_id: host.fieldId,
@@ -92,6 +92,7 @@ function switchToManualValue(host: HostElement): void {
 function switchToAutoComputed(host: HostElement): void {
     host.manualValue = "";
     host.autocomputed = true;
+    dispatch(host, "change", { bubbles: true });
     dispatch(host, "value-changed", {
         detail: {
             field_id: host.fieldId,
