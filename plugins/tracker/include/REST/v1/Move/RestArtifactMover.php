@@ -78,7 +78,7 @@ final class RestArtifactMover implements MoveRestArtifact
 
     private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
-        $field_collection = $this->collector->collect($source_tracker, $target_tracker, $artifact);
+        $field_collection = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user);
 
         $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);

@@ -26,5 +26,5 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 interface CollectDryRunTypingField
 {
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact): DuckTypedMoveFieldCollection;
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user): DuckTypedMoveFieldCollection;
 }
