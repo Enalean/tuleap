@@ -72,14 +72,14 @@ export class SingleSelectionManager implements SelectionManager {
         if (this.selection_element.contains(this.placeholder_element)) {
             this.replacePlaceholderWithCurrentSelection(list_item);
             if (should_dispatch_change) {
-                this.source_select_box.dispatchEvent(new Event("change"));
+                this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
             }
             return;
         }
         if (this.selection_state !== null) {
             this.replacePreviousSelectionWithCurrentOne(list_item, this.selection_state);
             if (should_dispatch_change) {
-                this.source_select_box.dispatchEvent(new Event("change"));
+                this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
             }
             return;
         }
@@ -181,7 +181,7 @@ export class SingleSelectionManager implements SelectionManager {
             this.showPlaceholder();
             this.clearSelection();
             this.dropdown_manager.openListPicker();
-            this.source_select_box.dispatchEvent(new Event("change"));
+            this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
         });
 
         return remove_value_button;

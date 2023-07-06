@@ -64,7 +64,7 @@ export class MultipleSelectionManager implements SelectionManager {
             this.togglePlaceholder();
             this.toggleClearValuesButton();
             if (should_dispatch_change) {
-                this.source_select_box.dispatchEvent(new Event("change"));
+                this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
             }
 
             if (this.selection_state.selected_items.size !== 0 || !this.none_item) {
@@ -87,7 +87,7 @@ export class MultipleSelectionManager implements SelectionManager {
         list_item.target_option.selected = true;
 
         if (should_dispatch_change) {
-            this.source_select_box.dispatchEvent(new Event("change"));
+            this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
         this.togglePlaceholder();
@@ -151,7 +151,7 @@ export class MultipleSelectionManager implements SelectionManager {
         ];
 
         this.removeListItemFromSelection(last_selected_item);
-        this.source_select_box.dispatchEvent(new Event("change"));
+        this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
         this.toggleClearValuesButton();
 
         this.search_field_element.value = last_selected_item.label;
@@ -218,7 +218,7 @@ export class MultipleSelectionManager implements SelectionManager {
             event.cancelBubble = true;
 
             this.clearSelectionState();
-            this.source_select_box.dispatchEvent(new Event("change"));
+            this.source_select_box.dispatchEvent(new Event("change", { bubbles: true }));
 
             if (this.none_item) {
                 this.selectListPickerItem(this.none_item, true);
