@@ -20,129 +20,142 @@
 import { datePicker } from "tlp";
 import "@tuleap/copy-to-clipboard";
 import { getAuthenticationResult, openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
-import { selectOrThrow } from "@tuleap/dom";
+import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
 import type { ResultAsync } from "neverthrow";
 import type { Modal } from "@tuleap/tlp-modal";
 import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import type { Fault } from "@tuleap/fault";
+import type { GetText } from "@tuleap/gettext";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import { sprintf } from "sprintf-js";
 
 const HIDDEN_CLASS = "user-preferences-hidden";
-
-document.addEventListener("DOMContentLoaded", () => {
-    handleSSHKeys();
-    handleAccessKeys();
-    handleSVNTokens();
-    handleCopySecretsToClipboard();
-});
-
 const ALERT_DANGER_ID = "keys-tokens-alert-danger";
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const locale = getDatasetItemOrThrow(document.body, "userLocale");
+    const gettext_provider = await initGettext(
+        locale,
+        "core-account",
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`)
+    );
+
+    Initializer(gettext_provider).init();
+});
+
+const isCouldNotCheckRegisteredPasskeys = (fault: Fault): boolean =>
+    "isCouldNotCheckRegisteredPasskeys" in fault &&
+    fault.isCouldNotCheckRegisteredPasskeys() === true;
+
 const addSSHKeyButton = (): ResultAsync<Modal | null, Fault> =>
     openTargetModalIdAfterAuthentication(document, ADD_SSH_KEY_BUTTON_ID);
 const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
 const addAccessKeyButton = (): ResultAsync<Modal | null, Fault> =>
     openTargetModalIdAfterAuthentication(document, GENERATE_ACCESS_KEY_BUTTON_ID);
 
-function handleSSHKeys(): void {
+type Initializer = { init(): void };
+
+function Initializer(gettext_provider: GetText): Initializer {
     const error_div = selectOrThrow(document, `#${ALERT_DANGER_ID}`);
-    addSSHKeyButton().match(
-        () => {
+    const handleWebAuthnModalFault = (fault: Fault): void => {
+        let error_message = String(fault);
+        if (isCouldNotCheckRegisteredPasskeys(fault)) {
+            error_message = sprintf(
+                gettext_provider.gettext(
+                    "Error while checking whether you have registered passkeys: %s"
+                ),
+                fault
+            );
+        }
+        error_div.innerText = error_message;
+        error_div.classList.remove(HIDDEN_CLASS);
+        openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
+    };
+
+    function handleSSHKeys(): void {
+        addSSHKeyButton().match(() => {
             const error = selectOrThrow(document, "#ssh-key-error");
             const form = selectOrThrow(document, "#ssh-key-form", HTMLFormElement);
-            form.addEventListener("submit", (event) => {
-                event.preventDefault();
+            authenticateAndAttachResponseToForm(form, error);
+        }, handleWebAuthnModalFault);
 
-                getAuthenticationResult().match(
-                    (result) => {
-                        const input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = "webauthn_result";
-                        input.value = JSON.stringify(result);
-                        form.appendChild(input);
+        toggleButtonAccordingToCheckBoxesStateWithIds(
+            "remove-ssh-keys-button",
+            "ssh_key_selected[]"
+        );
 
-                        form.submit();
-                    },
-                    (fault) => {
-                        error.innerText = fault.toString();
-                        error.classList.remove(HIDDEN_CLASS);
-                    }
-                );
-            });
-        },
-        (fault) => {
-            error_div.innerText = fault.toString();
-            error_div.classList.remove(HIDDEN_CLASS);
-            openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
+        const ssh_key = document.getElementById("ssh-key");
+        if (!(ssh_key instanceof HTMLTextAreaElement)) {
+            throw new Error("#ssh-key not found or is not a textarea");
         }
-    );
+        const button = document.getElementById("submit-new-ssh-key-button");
+        if (!(button instanceof HTMLButtonElement)) {
+            throw new Error("#submit-new-ssh-key-button not found or is not a button");
+        }
+        changeButtonStatusDependingTextareaStatus(button, ssh_key);
 
-    toggleButtonAccordingToCheckBoxesStateWithIds("remove-ssh-keys-button", "ssh_key_selected[]");
-
-    const ssh_key = document.getElementById("ssh-key");
-    if (!(ssh_key instanceof HTMLTextAreaElement)) {
-        throw new Error("#ssh-key not found or is not a textarea");
-    }
-    const button = document.getElementById("submit-new-ssh-key-button");
-    if (!(button instanceof HTMLButtonElement)) {
-        throw new Error("#submit-new-ssh-key-button not found or is not a button");
-    }
-    changeButtonStatusDependingTextareaStatus(button, ssh_key);
-
-    const ssh_keys_list = document.querySelectorAll<HTMLElement>("[data-ssh_key_value]");
-    ssh_keys_list.forEach((row) => {
-        row.addEventListener("click", () => {
-            const full_ssh_key = row.getAttribute("data-ssh_key_value");
-            if (!full_ssh_key) {
-                return;
-            }
-            row.innerText = full_ssh_key;
-            row.className = "ssh-key-value-reset-cursor";
+        const ssh_keys_list = document.querySelectorAll<HTMLElement>("[data-ssh_key_value]");
+        ssh_keys_list.forEach((row) => {
+            row.addEventListener("click", () => {
+                const full_ssh_key = row.getAttribute("data-ssh_key_value");
+                if (!full_ssh_key) {
+                    return;
+                }
+                row.innerText = full_ssh_key;
+                row.className = "ssh-key-value-reset-cursor";
+            });
         });
-    });
-}
+    }
 
-function handleAccessKeys(): void {
-    const error_div = selectOrThrow(document, `#${ALERT_DANGER_ID}`);
-    addAccessKeyButton().match(
-        () => {
+    function handleAccessKeys(): void {
+        addAccessKeyButton().match(() => {
             const error = selectOrThrow(document, "#access-key-error");
             const form = selectOrThrow(document, "#access-key-form", HTMLFormElement);
-            form.addEventListener("submit", (event) => {
-                event.preventDefault();
+            authenticateAndAttachResponseToForm(form, error);
+        }, handleWebAuthnModalFault);
+        addAccessKeyDatePicker();
 
-                getAuthenticationResult().match(
-                    (result) => {
-                        const input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = "webauthn_result";
-                        input.value = JSON.stringify(result);
-                        form.appendChild(input);
+        toggleButtonAccordingToCheckBoxesStateWithIds(
+            "button-revoke-access-tokens",
+            "access-keys-selected[]"
+        );
+        toggleButtonAccordingToCheckBoxesStateWithIds(
+            "generate-new-access-key-button",
+            "access-key-scopes[]"
+        );
+    }
 
-                        form.submit();
-                    },
-                    (fault) => {
-                        error.innerText = fault.toString();
-                        error.classList.remove(HIDDEN_CLASS);
-                    }
-                );
-            });
+    return {
+        init(): void {
+            handleSSHKeys();
+            handleAccessKeys();
+            handleSVNTokens();
+            handleCopySecretsToClipboard();
         },
-        (fault) => {
-            error_div.innerText = fault.toString();
-            error_div.classList.remove(HIDDEN_CLASS);
-            openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
-        }
-    );
-    addAccessKeyDatePicker();
+    };
+}
 
-    toggleButtonAccordingToCheckBoxesStateWithIds(
-        "button-revoke-access-tokens",
-        "access-keys-selected[]"
-    );
-    toggleButtonAccordingToCheckBoxesStateWithIds(
-        "generate-new-access-key-button",
-        "access-key-scopes[]"
-    );
+function authenticateAndAttachResponseToForm(form: HTMLFormElement, error: HTMLElement): void {
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        getAuthenticationResult().match(
+            (result) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "webauthn_result";
+                input.value = JSON.stringify(result);
+                form.appendChild(input);
+
+                form.submit();
+            },
+            (fault) => {
+                error.innerText = fault.toString();
+                error.classList.remove(HIDDEN_CLASS);
+            }
+        );
+    });
 }
 
 function addAccessKeyDatePicker(): void {

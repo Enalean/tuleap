@@ -4,9 +4,15 @@ dependencies:
   '@tuleap/copy-to-clipboard':
     specifier: workspace:*
     version: link:../../../lib/frontend/copy-to-clipboard
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/constants
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../lib/frontend/dom
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/gettext
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../tlp
@@ -36,6 +42,9 @@ devDependencies:
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../lib/frontend/fault
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/po-gettext-plugin
   '@types/dompurify':
     specifier: ^2.4.0
     version: 2.4.0
