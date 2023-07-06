@@ -60,6 +60,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
@@ -869,12 +870,12 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-    #[ListeningToEventName('plugin_statistics_service_usage')]
-    public function pluginStatisticsServiceUsage(array $params): void
+    #[ListeningToEventClass]
+    public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $statistic_dao       = new \Tuleap\SVN\Statistic\ServiceUsageDao();
         $statistic_collector = new \Tuleap\SVN\Statistic\ServiceUsageCollector($statistic_dao);
-        $statistic_collector->collect($params['csv_exporter'], $params['start_date'], $params['end_date']);
+        $statistic_collector->collect($event->csv_exporter, $event->start_date, $event->end_date);
     }
 
     #[ListeningToEventName(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES)]

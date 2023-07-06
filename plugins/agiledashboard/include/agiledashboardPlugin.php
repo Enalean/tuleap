@@ -135,6 +135,7 @@ use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -240,7 +241,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
             $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
-            $this->addHook('plugin_statistics_service_usage');
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
@@ -954,18 +954,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             ->process($request, $GLOBALS['Response'], []);
     }
 
-    public function plugin_statistics_service_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $dao                  = new AgileDashboard_Dao();
         $statistic_aggregator = new KanbanStatisticsAggregator(EventManager::instance());
-        $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
+        $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
         foreach ($statistic_aggregator->getStatisticsLabels() as $statistic_key => $statistic_name) {
             $statistic_data = $statistic_aggregator->getStatistics(
                 $statistic_key,
-                $params['start_date'],
-                $params['end_date']
+                $event->start_date,
+                $event->end_date,
             );
-            $params['csv_exporter']->buildDatas($statistic_data, $statistic_name);
+            $event->csv_exporter->buildDatas($statistic_data, $statistic_name);
         }
     }
 

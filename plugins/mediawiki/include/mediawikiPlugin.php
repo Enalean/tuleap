@@ -36,6 +36,7 @@ use Tuleap\Mediawiki\MediawikiMaintenanceWrapper;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\PermissionsPerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Mediawiki\XMLMediaWikiExporter;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -58,6 +59,7 @@ use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/constants.php';
@@ -99,8 +101,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
         $this->addHook(Event::SEARCH_TYPE);
-
-        $this->addHook('plugin_statistics_service_usage');
 
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
 
@@ -446,12 +446,13 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         return new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
-    public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $dao             = $this->getDao();
         $project_manager = ProjectManager::instance();
-        $start_date      = $params['start_date'];
-        $end_date        = $params['end_date'];
+        $start_date      = $event->start_date;
+        $end_date        = $event->end_date;
 
         $number_of_page                   = [];
         $number_of_page_between_two_dates = [];
@@ -464,9 +465,9 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
             }
         }
 
-        $params['csv_exporter']->buildDatas($number_of_page, "Mediawiki Pages");
-        $params['csv_exporter']->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
-        $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
+        $event->csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
+        $event->csv_exporter->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
+        $event->csv_exporter->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 
     public function project_admin_ugroup_deletion($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

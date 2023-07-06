@@ -184,14 +184,8 @@ class CSVBuilder
         $this->exportDiskUsageForDate($start_date, "Disk usage at start date (MB)");
         $this->exportDiskUsageForDate($end_date, "Disk usage at end date (MB)");
 
-        // Let plugins add their own data
-        $this->event_manager->processEvent(
-            'plugin_statistics_service_usage',
-            [
-                'csv_exporter' => $this->services_usage_formatter,
-                'start_date'   => $start_date,
-                'end_date'     => $end_date,
-            ]
+        $this->event_manager->dispatch(
+            new StatisticsServiceUsage($this->services_usage_formatter, $start_date, $end_date)
         );
 
         return $this->services_usage_formatter->exportCSV();
