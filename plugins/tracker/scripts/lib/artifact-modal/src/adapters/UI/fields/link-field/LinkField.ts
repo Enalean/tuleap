@@ -18,7 +18,7 @@
  */
 
 import type { UpdateFunction } from "hybrids";
-import { define, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { Option } from "@tuleap/option";
 import type { GroupCollection, Lazybox, LazyboxOptions } from "@tuleap/lazybox";
 import { createLazybox } from "@tuleap/lazybox";
@@ -116,12 +116,13 @@ export const getSkeletonIfNeeded = (host: InternalLinkField): UpdateFunction<Lin
 };
 
 export const setNewLinks = (
-    host: LinkField,
+    host: HostElement,
     new_value: ReadonlyArray<NewLink> | undefined
 ): ReadonlyArray<NewLink> => {
     if (!new_value) {
         return [];
     }
+    dispatch(host, "change", { bubbles: true });
     host.allowed_link_types =
         CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             host.controller.hasParentLink(),
