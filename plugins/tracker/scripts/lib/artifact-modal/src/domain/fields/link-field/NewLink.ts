@@ -25,7 +25,7 @@ import { NewArtifactLinkIdentifier } from "./NewArtifactLinkIdentifier";
 /**
  * Alias LinkedArtifact because they both need the same properties
  */
-export type NewLink = Omit<LinkedArtifact, "identifier" | "project"> & {
+export type NewLink = Omit<LinkedArtifact, "identifier"> & {
     readonly identifier: NewArtifactLinkIdentifier;
 };
 
@@ -37,6 +37,7 @@ export const NewLink = {
         uri: artifact.uri,
         status: artifact.status,
         is_open: artifact.is_open,
+        project: artifact.project,
         link_type: type,
     }),
 

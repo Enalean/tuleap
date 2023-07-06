@@ -61,7 +61,7 @@ import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/Current
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
-    const CURRENT_PROJECT = 10;
+    const CURRENT_PROJECT = 1025;
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         target = document.implementation

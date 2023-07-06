@@ -46,9 +46,12 @@ import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStu
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
+import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
+    const CURRENT_PROJECT = 1025;
+
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         target = document.implementation
@@ -61,6 +64,10 @@ describe(`NewLinkTemplate`, () => {
             current_artifact_reference: Option.fromValue(
                 ArtifactCrossReferenceStub.withRef("story #330")
             ),
+            controller: {
+                isLinkedArtifactInCurrentProject: (artifact) =>
+                    artifact.project.id === CURRENT_PROJECT,
+            },
         } as HostElement;
 
         const updateFunction = getNewLinkTemplate(host, link);
@@ -135,6 +142,17 @@ describe(`NewLinkTemplate`, () => {
 
         expect(row.classList.contains("link-field-new-row")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
+    });
+
+    it("will render a linked artifact with project label if the artifact is not in the current project", () => {
+        const new_link = NewLinkStub.withDefaults(246, {
+            project: ProjectStub.withDefaults({ id: 15, label: "Corsa GSi" }),
+        });
+        render(new_link);
+
+        const project = selectOrThrow(target, "[data-test=artifact-project-label]");
+
+        expect(project).not.toBeNull();
     });
 
     describe(`action button`, () => {
