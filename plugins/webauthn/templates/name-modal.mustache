@@ -17,7 +17,7 @@
                 <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
             <input type="text" class="tlp-input" id="webauthn-name-input" name="name" data-test="name-modal-input"
-                   placeholder="{{# dgettext }} tuleap-webauthn | My key {{/ dgettext }}" required />
+                   placeholder="{{# dgettext }} tuleap-webauthn | My key {{/ dgettext }}" required maxlength="250" />
         </div>
         {{# csrf_token_add }}
             {{> csrf_token_input }}

@@ -98,6 +98,9 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         if (! is_array($response) || ! is_string($name) || empty($name) || ! is_string($csrf_token) || empty($csrf_token)) {
             return $this->error_response_builder->build(400, _('Request body is not well formed'));
         }
+        if (mb_strlen($name) > 250) {
+            return $this->error_response_builder->build(400, _('Name of passkey can contain up to 250 characters maximum'));
+        }
 
         if (! $this->synchronizer_token->isValid($csrf_token)) {
             return $this->error_response_builder->build(400, $GLOBALS['Language']->getText('global', 'error_synchronizertoken'));

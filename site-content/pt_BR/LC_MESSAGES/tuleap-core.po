@@ -2288,6 +2288,9 @@ msgstr "Meu painel"
 msgid "Name"
 msgstr "Nome"
 
+msgid "Name of passkey can contain up to 250 characters maximum"
+msgstr ""
+
 msgid "Name or description"
 msgstr "Nome ou descrição"
 

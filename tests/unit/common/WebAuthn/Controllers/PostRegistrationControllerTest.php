@@ -244,6 +244,13 @@ final class PostRegistrationControllerTest extends TestCase
                 'csrf_token' => '',
             ],
         ];
+        yield 'It returns 400 when name is too long' => [
+            'body' => [
+                'response' => [],
+                'name' => 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+                'csrf_token' => '',
+            ],
+        ];
         yield 'It returns 400 when invalid response' => [
             'body' => [
                 'response' => ['invalid data'],
