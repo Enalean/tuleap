@@ -24,7 +24,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault, isFault } from "@tuleap/fault";
 import { TuleapAPIFault } from "../tests/stubs/TuleapAPIFault";
 import { AuthenticationResponseJSONStub } from "../tests/stubs/AuthenticationResponseJSONStub";
-import { authenticate, canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
+import { canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
 
 vi.mock("@simplewebauthn/browser");
 vi.mock("@tuleap/fetch-result");
@@ -36,78 +36,6 @@ const isCouldNotCheckRegisteredPasskeys = (fault: Fault): boolean =>
     fault.isCouldNotCheckRegisteredPasskeys() === true;
 
 describe("authenticate", () => {
-    describe(`authenticate()`, () => {
-        it("returns Ok with null when browser does not support WebAuthn", async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(false);
-
-            const result = await authenticate();
-            expect(result.isOk()).toBe(true);
-            expect(result.unwrapOr(false)).toBeNull();
-        });
-
-        it("returns Err if the call to authentication-challenge returns neither 200 nor 403", async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
-            vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(Fault.fromMessage("401 Unauthorized"))
-            );
-
-            expect((await authenticate()).isErr()).toBe(true);
-        });
-
-        it(`when user has no registered passkey
-            and the call to authentication-challenge returns Forbidden error code,
-            it will return Ok with null`, async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
-            vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(TuleapAPIFault.fromCodeAndMessage(403, "Forbidden"))
-            );
-
-            const result = await authenticate();
-            expect(result.isOk()).toBe(true);
-            expect(result.unwrapOr(false)).toBeNull();
-        });
-
-        it("returns Err when passkey authentication failed", async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
-            vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                okAsync({} as PublicKeyCredentialRequestOptionsJSON)
-            );
-            vi.spyOn(simplewebauthn, "startAuthentication").mockRejectedValue(new Error("failed"));
-
-            expect((await authenticate()).isErr()).toBe(true);
-        });
-
-        it("returns Err when the call to authentication endpoint failed", async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
-            vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                okAsync({} as PublicKeyCredentialRequestOptionsJSON)
-            );
-            vi.spyOn(simplewebauthn, "startAuthentication").mockResolvedValue(
-                AuthenticationResponseJSONStub()
-            );
-            vi.spyOn(fetch_result, "post").mockReturnValue(
-                errAsync(TuleapAPIFault.fromCodeAndMessage(400, "Bad Request"))
-            );
-
-            expect((await authenticate()).isErr()).toBe(true);
-        });
-
-        it("returns Ok with null when the call to authentication endpoint succeeded", async () => {
-            vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
-            vi.spyOn(fetch_result, "postJSON").mockReturnValue(okAsync({}));
-            vi.spyOn(simplewebauthn, "startAuthentication").mockResolvedValue(
-                AuthenticationResponseJSONStub()
-            );
-            vi.spyOn(fetch_result, "post").mockReturnValue(
-                okAsync(new Response("", { status: 200, statusText: "OK" }))
-            );
-
-            const result = await authenticate();
-            expect(result.isOk()).toBe(true);
-            expect(result.unwrapOr(false)).toBeNull();
-        });
-    });
-
     describe(`canUserDoWebAuthn()`, () => {
         it(`returns Ok with null`, async () => {
             vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);

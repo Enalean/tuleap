@@ -19,45 +19,29 @@
 
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
-import type { GetText } from "@tuleap/gettext";
-import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { selectOrThrow } from "@tuleap/dom";
 import { register } from "./register";
-import { authenticate } from "@tuleap/webauthn";
 import { deleteKey } from "./delete";
 import "@tuleap/tlp-relative-date";
 
 const HIDDEN = "user-preferences-hidden";
 
 document.addEventListener("DOMContentLoaded", (): void => {
-    prepareGettext().then((gettext_provider) => {
-        if (browserSupportsWebAuthn()) {
-            const webauthn_section = document.querySelector("#webauthn-section");
-            if (webauthn_section instanceof HTMLElement) {
-                webauthn_section.classList.remove(HIDDEN);
-            }
-
-            prepareRegistration();
-            prepareAuthentication(gettext_provider);
-            prepareRemove();
-        } else {
-            const disabled_section = document.querySelector("#webauthn-disabled-section");
-            if (disabled_section instanceof HTMLElement) {
-                disabled_section.classList.remove(HIDDEN);
-            }
+    if (browserSupportsWebAuthn()) {
+        const webauthn_section = document.querySelector("#webauthn-section");
+        if (webauthn_section instanceof HTMLElement) {
+            webauthn_section.classList.remove(HIDDEN);
         }
-    });
+
+        prepareRegistration();
+        prepareRemove();
+    } else {
+        const disabled_section = document.querySelector("#webauthn-disabled-section");
+        if (disabled_section instanceof HTMLElement) {
+            disabled_section.classList.remove(HIDDEN);
+        }
+    }
 });
-
-function prepareGettext(): Promise<GetText> {
-    const language = document.body.dataset.userLocale ?? "en_US";
-
-    return initGettext(
-        language,
-        "webauthn",
-        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
-    );
-}
 
 function prepareRegistration(): void {
     const form_name_modal = selectOrThrow(document, "#webauthn-name-modal");
@@ -104,41 +88,6 @@ function prepareRegistration(): void {
 
     name_modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
         name_modal_input.value = "";
-    });
-}
-
-function prepareAuthentication(gettext_provider: GetText): void {
-    const check_button = document.querySelector("#webauthn-check-button");
-    const button_icon = document.querySelector("#webauthn-check-button > i");
-    const message = document.querySelector("#webauthn-alert");
-    if (
-        !(check_button instanceof HTMLButtonElement) ||
-        !(button_icon instanceof HTMLElement) ||
-        !(message instanceof HTMLElement)
-    ) {
-        return;
-    }
-
-    check_button.addEventListener("click", () => {
-        button_icon.classList.remove(HIDDEN);
-
-        authenticate().match(
-            () => {
-                button_icon.classList.add(HIDDEN);
-                message.innerText = gettext_provider.gettext("Success!");
-                message.classList.remove("tlp-alert-danger");
-                message.classList.add("tlp-alert-success");
-                message.classList.remove(HIDDEN);
-                setTimeout(() => message.classList.add(HIDDEN), 5000);
-            },
-            (fault) => {
-                button_icon.classList.add(HIDDEN);
-                message.innerText = fault.toString();
-                message.classList.remove("tlp-alert-success");
-                message.classList.add("tlp-alert-danger");
-                message.classList.remove(HIDDEN);
-            }
-        );
     });
 }
 

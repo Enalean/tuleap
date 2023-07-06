@@ -18,7 +18,7 @@
  */
 
 import { Fault } from "@tuleap/fault";
-import { post, postJSON, uri } from "@tuleap/fetch-result";
+import { postJSON, uri } from "@tuleap/fetch-result";
 import type {
     AuthenticationResponseJSON,
     PublicKeyCredentialRequestOptionsJSON,
@@ -27,26 +27,6 @@ import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
 import { UserHasNoRegisteredPasskeyFault } from "./faults/UserHasNoRegisteredPasskeyFault";
 import { CouldNotCheckRegisteredPasskeysFault } from "./faults/CouldNotCheckRegisteredPasskeysFault";
-
-export function authenticate(): ResultAsync<null, Fault> {
-    if (!browserSupportsWebAuthn()) {
-        return okAsync(null);
-    }
-
-    return beginAuth()
-        .andThen((assertion_response) =>
-            post(uri`/webauthn/authentication`, {}, assertion_response)
-        )
-        .map(() => null)
-        .orElse((fault) => {
-            if ("isForbidden" in fault && fault.isForbidden()) {
-                // 403 is returned by first fetch when user has no key
-                // In this case authentication is considered ok
-                return okAsync(null);
-            }
-            return errAsync(fault);
-        });
-}
 
 function beginAuth(): ResultAsync<AuthenticationResponseJSON, Fault> {
     return postJSON<PublicKeyCredentialRequestOptionsJSON>(

@@ -246,7 +246,6 @@ use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationChallengeController;
-use Tuleap\WebAuthn\Controllers\PostAuthenticationController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
@@ -1421,42 +1420,6 @@ class RouteCollector
         );
     }
 
-    public static function postWebAuthnAuthentication(): DispatchablePSR15Compatible
-    {
-        $attestation_statement_manager = new AttestationStatementSupportManager();
-        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
-        $response_factory      = HTTPFactoryBuilder::responseFactory();
-        $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
-        $source_dao            = new WebAuthnCredentialSourceDao();
-
-        return new PostAuthenticationController(
-            \UserManager::instance(),
-            $source_dao,
-            new WebAuthnChallengeDao(),
-            new PublicKeyCredentialRpEntity(
-                \ForgeConfig::get(ConfigurationVariables::NAME),
-                ServerHostname::rawHostname()
-            ),
-            new PublicKeyCredentialLoader(
-                new AttestationObjectLoader($attestation_statement_manager)
-            ),
-            new AuthenticatorAssertionResponseValidator(
-                $source_dao,
-                null,
-                new ExtensionOutputCheckerHandler(),
-                Manager::create()
-                    ->add(
-                        Ed25519::create(),
-                        RS256::create(),
-                        ES256::create()
-                    )
-            ),
-            $response_factory,
-            new RestlerErrorResponseBuilder($json_response_builder),
-            new SapiEmitter()
-        );
-    }
-
     public static function deleteWebAuthnSource(): DispatchablePSR15Compatible
     {
         $response_factory      = HTTPFactoryBuilder::responseFactory();
@@ -1666,7 +1629,6 @@ class RouteCollector
             $r->post('/registration', [self::class, 'postWebAuthnRegistration']);
 
             $r->post('/authentication-challenge', [self::class, 'postWebAuthnAuthenticationChallenge']);
-            $r->post('/authentication', [self::class, 'postWebAuthnAuthentication']);
 
             $r->post('/key/delete', [self::class, 'deleteWebAuthnSource']);
         });
