@@ -668,6 +668,9 @@ msgstr "Aparência e linguagem"
 msgid "Archives"
 msgstr "Arquivos"
 
+msgid "Are you sure you want to remove this passkey?"
+msgstr ""
+
 msgid ""
 "As notified %s days ago and without any connection from you since, your user "
 "account is now suspended, in compliance with %s policies."
@@ -1285,6 +1288,9 @@ msgstr "Arquivos excluídos"
 
 msgid "Deleted wiki attachments"
 msgstr "Anexos wiki excluídos"
+
+msgid "Deleting a passkey"
+msgstr ""
 
 msgid "Description"
 msgstr "Descrição"
@@ -3881,6 +3887,9 @@ msgid ""
 msgstr ""
 "Já há um evento programado para renomear este projeto. Por favor, verifique "
 "<a href=\"/admin/system_events/\">System Event Monitor</a>."
+
+msgid "There is no registered passkeys"
+msgstr ""
 
 msgid "There is no users group bound to this one."
 msgstr "Não há grupo de usuários vinculado a este."

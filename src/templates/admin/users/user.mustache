@@ -302,7 +302,7 @@
         </section>
 
         {{# webauthn_enabled }}
-            <section class="tlp-pane">
+            <section class="tlp-pane" id="webauthn-section">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
@@ -317,6 +317,7 @@
                                 <th>Name</th>
                                 <th>Created at</th>
                                 <th>Last use</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -333,12 +334,21 @@
                                             {{> tlp_relative_date }}
                                         {{/ last_use }}
                                     </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button type="button"
+                                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                                id="{{ id }}" data-item-id="webauthn-remove"
+                                                data-target-modal-id="webauthn-remove-modal">
+                                            <i class="tlp-button-icon fa-solid fa-trash-can" aria-hidden="true"></i>
+                                            {{# gettext }}Remove{{/ gettext }}
+                                        </button>
+                                    </td>
                                 </tr>
                             {{/ authenticators }}
                             {{^ authenticators }}
                                 <tr>
-                                    <td colspan="3" class="tlp-table-cell-empty">
-                                        {{# dgettext }} tuleap-webauthn | There is no registered passkeys {{/ dgettext }}
+                                    <td colspan="4" class="tlp-table-cell-empty">
+                                        {{# gettext }}There is no registered passkeys{{/ gettext }}
                                     </td>
                                 </tr>
                             {{/ authenticators }}
@@ -347,6 +357,38 @@
                     </div>
                 </div>
             </section>
+
+            <form class="tlp-modal" id="webauthn-remove-modal"
+                  role="dialog" aria-labelledby="remove-modal-title">
+                <div class="tlp-modal-header">
+                    <h1 class="tlp-modal-title" id="remove-modal-title">
+                        {{# gettext }}Deleting a passkey{{/ gettext }}
+                    </h1>
+                    <button class="tlp-modal-close" type="button" data-dismiss="modal"
+                            aria-label="{{# gettext }}Close{{/ gettext }}">
+                        <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="tlp-modal-body">
+                    <div class="tlp-alert-danger siteadmin-hidden" id="webauthn-remove-error"></div>
+                    {{# gettext }}Are you sure you want to remove this passkey?{{/ gettext }}
+                    <input type="hidden" class="tlp-input siteadmin-hidden" id="webauthn-key-id-input" />
+                    {{# csrf_token_del }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token_del }}
+                </div>
+                <div class="tlp-modal-footer">
+                    <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                            data-dismiss="modal">
+                        {{# gettext }}Cancel{{/ gettext }}
+                    </button>
+                    <button class="tlp-button tlp-button-danger" type="submit" id="webauthn-modal-remove-button">
+                        <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon siteadmin-hidden" aria-hidden="true"
+                           id="webauthn-modal-remove"></i>
+                        {{# gettext }}Confirm{{/ gettext }}
+                    </button>
+                </div>
+            </form>
         {{/ webauthn_enabled }}
     </div>
 </div>

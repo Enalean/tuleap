@@ -19,6 +19,12 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fetch-result
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table
@@ -132,6 +138,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../lib/frontend/build-system-configurator
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fault
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
     version: link:../../../lib/frontend/vuex-store-wrapper-jest

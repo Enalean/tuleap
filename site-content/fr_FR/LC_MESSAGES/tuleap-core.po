@@ -678,6 +678,9 @@ msgstr "Apparence et langue"
 msgid "Archives"
 msgstr "Archives"
 
+msgid "Are you sure you want to remove this passkey?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette clé d'authentification ?"
+
 msgid ""
 "As notified %s days ago and without any connection from you since, your user "
 "account is now suspended, in compliance with %s policies."
@@ -1305,6 +1308,9 @@ msgstr "Fichiers supprimés"
 
 msgid "Deleted wiki attachments"
 msgstr "Pièces jointes wiki supprimées"
+
+msgid "Deleting a passkey"
+msgstr "Suppression d'une clé d'authentification"
 
 msgid "Description"
 msgstr "Description"
@@ -3942,6 +3948,9 @@ msgid ""
 msgstr ""
 "Il y a déjà une opération de renommage prévue pour ce projet. Merci de "
 "consulter les <a href=\"/admin/system_events/\">Événements Système</a>."
+
+msgid "There is no registered passkeys"
+msgstr "Aucune clé d'authentification enregistrée"
 
 msgid "There is no users group bound to this one."
 msgstr "Il n'y a pas de groupe lié à celui-ci."

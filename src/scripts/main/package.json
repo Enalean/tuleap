@@ -11,6 +11,8 @@
     "@tuleap/common-theme": "workspace:*",
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:*",
     "@tuleap/flamingparrot-theme": "workspace:*",
     "@tuleap/gettext": "workspace:*",
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/fault": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
