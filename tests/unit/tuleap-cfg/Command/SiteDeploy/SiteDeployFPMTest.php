@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy;
 
 use Psr\Log\NullLogger;
+use Symfony\Component\Process\Process;
 use Tuleap\TemporaryTestDirectory;
+use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionFiles;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
@@ -63,10 +65,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeployphp81Prod(): void
     {
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionFiles(),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -103,10 +107,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionFiles(),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -133,10 +139,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionFiles(),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -157,10 +165,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         touch($this->php_configuration_folder . '/php-fpm.d/custom_stuff.part');
 
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionFiles(),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -185,10 +195,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionFiles(),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -205,10 +217,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeployphp81WithSimpleRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'redis'),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -229,10 +243,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeployphp81WithAuthenticatedRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', false, 7222, 'this_is_secure,really'),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -253,10 +269,12 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeployphp81WithAuthenticatedRedisSessionWithTLS(): void
     {
         $deploy = new SiteDeployFPM(
+            $this->buildAlwaysSuccessfulProcessFactory(),
             new NullLogger(),
             $this->current_user,
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', true, 7222, ''),
+            ['php-fpm.service'],
             $this->php_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm81',
             [],
@@ -272,5 +290,16 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('tls://another-redis', $redis_server);
         $this->assertEquals(7222, $redis_port);
         $this->assertEquals('', $redis_password);
+    }
+
+    private function buildAlwaysSuccessfulProcessFactory(): ProcessFactory
+    {
+        return new class extends ProcessFactory
+        {
+            public function getProcess(array $args): Process
+            {
+                return new Process([]);
+            }
+        };
     }
 }
