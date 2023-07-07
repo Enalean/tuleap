@@ -22,59 +22,42 @@
 namespace Tuleap\SVN\AccessControl;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use SVN_AccessFile_Writer;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SVN_AccessFile_Writer
+     * @var \PHPUnit\Framework\MockObject\MockObject&SVN_AccessFile_Writer
      */
     private $access_file_writer;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectHistoryDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectHistoryDao
      */
     private $project_history_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectHistoryFormatter
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectHistoryFormatter
      */
     private $project_history_formatter;
     /**
-     * @var \BackendSVN|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \BackendSVN&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_svn;
+    private bool $globals_svnaccess_set_initially;
+    private bool $globals_svngroups_set_initially;
+    private AccessFileHistoryDao&MockObject $access_file_dao;
+    private Repository $repository;
+    private AccessFileHistoryCreator $creator;
     /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
-    /**
-     * @var AccessFileHistoryDao
-     */
-    private $access_file_dao;
-    /**
-     * @var Repository
-     */
-    private $repository;
-    /**
-     * @var AccessFileHistoryCreator
-     */
-    private $creator;
-    /**
-     * @var AccessFileHistoryFactory
+     * @var AccessFileHistoryFactory&MockObject
      */
     private $access_file_factory;
 
@@ -83,11 +66,11 @@ class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
         $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
 
-        $this->access_file_dao           = Mockery::mock(AccessFileHistoryDao::class);
-        $this->access_file_factory       = Mockery::mock(AccessFileHistoryFactory::class);
-        $this->project_history_formatter = Mockery::mock(ProjectHistoryFormatter::class);
-        $this->project_history_dao       = Mockery::mock(ProjectHistoryDao::class);
-        $this->backend_svn               = Mockery::mock(\BackendSVN::class);
+        $this->access_file_dao           = $this->createMock(AccessFileHistoryDao::class);
+        $this->access_file_factory       = $this->createMock(AccessFileHistoryFactory::class);
+        $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
+        $this->project_history_dao       = $this->createMock(ProjectHistoryDao::class);
+        $this->backend_svn               = $this->createMock(\BackendSVN::class);
 
         $this->creator = new AccessFileHistoryCreator(
             $this->access_file_dao,
@@ -97,14 +80,13 @@ class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->backend_svn
         );
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(100);
+        $project          = ProjectTestBuilder::aProject()->withId(100)->build();
         $this->repository = SvnRepository::buildActiveRepository(1, 'repo name', $project);
 
         $access_file_history = new NullAccessFileHistory($this->repository);
-        $this->access_file_factory->shouldReceive('getLastVersion')->withArgs([$this->repository])->andReturn($access_file_history);
+        $this->access_file_factory->method('getLastVersion')->with($this->repository)->willReturn($access_file_history);
 
-        $this->access_file_writer = Mockery::mock(SVN_AccessFile_Writer::class);
+        $this->access_file_writer = $this->createMock(SVN_AccessFile_Writer::class);
 
         ForgeConfig::set('svn_root_file', 'svn_root_file');
     }
@@ -130,13 +112,13 @@ class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             time()
         );
 
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
-        $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn($current_access_file);
+        $this->access_file_dao->expects(self::once())->method('create')->willReturn(true);
 
-        $this->project_history_formatter->shouldReceive('getAccessFileHistory')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
+        $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->shouldReceive('write_with_defaults')->once()->andReturnTrue();
+        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(true);
 
         $this->creator->create($this->repository, $new_access_file, time(), $this->access_file_writer);
     }
@@ -153,14 +135,14 @@ class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
 
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
-        $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn($current_access_file);
+        $this->access_file_dao->expects(self::once())->method('create')->willReturn(true);
 
-        $this->project_history_formatter->shouldReceive('getAccessFileHistory')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
+        $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->shouldReceive('write_with_defaults')->once()->andReturnFalse();
-        $this->access_file_writer->shouldReceive('isErrorFile')->once()->andReturnTrue();
+        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(false);
+        $this->access_file_writer->expects(self::once())->method('isErrorFile')->willReturn(true);
 
         $this->expectException(CannotCreateAccessFileHistoryException::class);
 
@@ -191,15 +173,15 @@ members = userA, userB
 
 EOT;
 
-        $this->backend_svn->shouldReceive('exportSVNAccessFileDefaultBloc')->andReturn($default_block);
+        $this->backend_svn->method('exportSVNAccessFileDefaultBloc')->willReturn($default_block);
 
-        $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
-        $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn($current_access_file);
+        $this->access_file_dao->expects(self::once())->method('create')->willReturn(true);
 
-        $this->project_history_formatter->shouldReceive('getAccessFileHistory')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
+        $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->shouldReceive('write_with_defaults')->once()->andReturnTrue();
+        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(true);
 
         $this->creator->create($this->repository, $new_access_file, time(), $this->access_file_writer);
     }

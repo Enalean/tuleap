@@ -25,11 +25,11 @@
 namespace Tuleap\SVN\Hooks;
 
 use ForgeConfig;
-use Mockery;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReferenceManager;
 use SVN_CommitToTagDeniedException;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagDao;
 use Tuleap\SVN\Commit\CommitMessageValidator;
@@ -39,50 +39,43 @@ use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\Repository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Repository
+     * @var \PHPUnit\Framework\MockObject\MockObject&Repository
      */
     private $repository;
+    private string $system_path;
+    private string $repository_name;
     /**
-     * @var string
-     */
-    private $system_path;
-    /**
-     * @var string
-     */
-    private $repository_name;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVN\Repository\RepositoryManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\SVN\Repository\RepositoryManager
      */
     private $repository_manager;
-
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVN\Admin\ImmutableTagFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\SVN\Admin\ImmutableTagFactory
      */
     private $immutable_tag_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->immutable_tag_factory = Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagFactory::class);
-        $this->repository_manager    = Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $this->immutable_tag_factory = $this->createMock(\Tuleap\SVN\Admin\ImmutableTagFactory::class);
+        $this->repository_manager    = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
 
         $this->repository_name = 'repositoryname';
         $project_id            = 1;
         $this->system_path     = $project_id . "/" . $this->repository_name;
 
-        $this->repository = Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
-        $this->repository->shouldReceive('getId')->andReturn(1);
-        $this->repository->shouldReceive('getName')->andReturn($this->repository_name);
-        $this->repository_manager->shouldReceive('getRepositoryFromSystemPath')
-            ->withArgs([$this->system_path])
-            ->andReturn($this->repository);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $this->repository->method('getId')->willReturn(1);
+        $this->repository->method('getName')->willReturn($this->repository_name);
+        $this->repository_manager->method('getRepositoryFromSystemPath')
+            ->with($this->system_path)
+            ->willReturn($this->repository);
     }
 
     private function assertCommitIsAllowed(): void
@@ -90,9 +83,9 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $paths = func_get_args();
         try {
             $this->preCommitToTags($paths);
-            $this->addToAssertionCount(1);
+            self::assertTrue(true); //This simulates that the test is OK
         } catch (SVN_CommitToTagDeniedException $ex) {
-            $this->fail('Commit of "' . implode(', ', $paths) . '" should be allowed');
+            self::fail('Commit of "' . implode(', ', $paths) . '" should be allowed');
         }
     }
 
@@ -103,7 +96,7 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->preCommitToTags($paths);
             $this->fail('Commit of "' . implode(', ', $paths) . '" should be denied');
         } catch (SVN_CommitToTagDeniedException $ex) {
-            $this->addToAssertionCount(1);
+            self::assertTrue(true); //This simulates that the test is OK
         }
     }
 
@@ -112,16 +105,19 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private function preCommitToTags(array $paths): void
     {
-        $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(["COMMIT MSG"]);
-        $svn_look->shouldReceive('getTransactionPath')->andReturn($paths);
-        $svn_look->shouldReceive('getContent');
-        $svn_look->shouldReceive('closeContentResource');
+        $svn_look = $this->createMock(Svnlook::class);
+        $svn_look->method('getMessageFromTransaction')->willReturn(["COMMIT MSG"]);
+        $svn_look->method('getTransactionPath')->willReturn($paths);
+        $svn_look->method('getContent');
+        $svn_look->method('closeContentResource');
+
+        $commit_message_validator = $this->createMock(CommitMessageValidator::class);
+        $commit_message_validator->method('assertCommitMessageIsValid');
 
         $pre_commit = new PreCommit(
             $svn_look,
             new NullLogger(),
-            Mockery::spy(CommitMessageValidator::class),
+            $commit_message_validator,
             new ImmutableTagCommitValidator(
                 new NullLogger(),
                 $this->immutable_tag_factory,
@@ -130,14 +126,14 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $pre_commit->assertCommitIsValid($this->repository, '1');
     }
 
-    public function testCommitToWhiteListedTagIsAllowed()
+    public function testCommitToWhiteListedTagIsAllowed(): void
     {
-        $immutable_tags = Mockery::mock(ImmutableTag::class);
+        $immutable_tags = $this->createMock(ImmutableTag::class);
 
-        $immutable_tags->shouldReceive('getPaths')->andReturn(['/*/tags/']);
-        $immutable_tags->shouldReceive('getWhitelist')->andReturn(["trunk/tags/v1/to to/"]);
+        $immutable_tags->method('getPaths')->willReturn(['/*/tags/']);
+        $immutable_tags->method('getWhitelist')->willReturn(["trunk/tags/v1/to to/"]);
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($immutable_tags);
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($immutable_tags);
 
         $this->assertCommitIsAllowed('A   trunk/tags/v1/to to/banana');
         $this->assertCommitIsDenied('A   trunk/tags/v2/to to/banana');
@@ -145,12 +141,12 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCommitToTagIsAllowed(): void
     {
-        $immutable_tags = Mockery::mock(ImmutableTag::class);
-        $immutable_tags->shouldReceive('getPaths')->andReturn([]);
+        $immutable_tags = $this->createMock(ImmutableTag::class);
+        $immutable_tags->method('getPaths')->willReturn([]);
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($immutable_tags);
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($immutable_tags);
 
-        $this->assertEquals($immutable_tags->getPaths(), []);
+        self::assertEquals($immutable_tags->getPaths(), []);
 
         $this->assertCommitIsAllowed('A   file');
         $this->assertCommitIsAllowed('U   file');
@@ -203,14 +199,14 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCommitToTagIsDeniedInModule(): void
     {
-        $immutable_tags = Mockery::mock(ImmutableTag::class);
-        $immutable_tags->shouldReceive('getPaths')->andReturn(['/*/tags/']);
-        $immutable_tags->shouldReceive('getWhitelist')->andReturn([]);
+        $immutable_tags = $this->createMock(ImmutableTag::class);
+        $immutable_tags->method('getPaths')->willReturn(['/*/tags/']);
+        $immutable_tags->method('getWhitelist')->willReturn([]);
 
-        $immutable_tag_dao = Mockery::mock(ImmutableTagDao::class);
-        $immutable_tag_dao->shouldReceive('searchByRepositoryId')->andReturn([$this->repository]);
+        $immutable_tag_dao = $this->createMock(ImmutableTagDao::class);
+        $immutable_tag_dao->method('searchByRepositoryId')->willReturn([$this->repository]);
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($immutable_tags);
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($immutable_tags);
 
         $this->assertCommitIsDenied('A   moduleA/branch', 'A   moduleA/tags/v1/toto');
 
@@ -263,14 +259,14 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCommitToTagIsDeniedAtRootAndInModules(): void
     {
-        $immutable_tags = Mockery::mock(ImmutableTag::class);
-        $immutable_tags->shouldReceive('getPaths')->andReturn(['tags', '/*/tags']);
-        $immutable_tags->shouldReceive('getWhitelist')->andReturn([]);
+        $immutable_tags = $this->createMock(ImmutableTag::class);
+        $immutable_tags->method('getPaths')->willReturn(['tags', '/*/tags']);
+        $immutable_tags->method('getWhitelist')->willReturn([]);
 
-        $immutable_tag_dao = Mockery::mock(ImmutableTagDao::class);
-        $immutable_tag_dao->shouldReceive('searchByRepositoryId')->andReturn([$this->repository]);
+        $immutable_tag_dao = $this->createMock(ImmutableTagDao::class);
+        $immutable_tag_dao->method('searchByRepositoryId')->willReturn([$this->repository]);
 
-        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($immutable_tags);
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($immutable_tags);
 
         $this->assertCommitIsAllowed('A   file');
         $this->assertCommitIsAllowed('U   file');
@@ -325,18 +321,18 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
 
-        $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn([""]);
+        $svn_look = $this->createMock(Svnlook::class);
+        $svn_look->method('getMessageFromTransaction')->willReturn([""]);
 
-        $hook_config = Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
-        $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturn(false);
+        $hook_config = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
+        $hook_config->method('getHookConfig')->with(HookConfig::MANDATORY_REFERENCE)->willReturn(false);
 
         $hook = new PreCommit(
             $svn_look,
-            Mockery::mock(LoggerInterface::class),
+            $this->createMock(LoggerInterface::class),
             new CommitMessageValidator(
                 $hook_config,
-                Mockery::mock(ReferenceManager::class),
+                $this->createMock(ReferenceManager::class),
             ),
         );
 
@@ -348,25 +344,25 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
 
-        $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn([""]);
-        $svn_look->shouldReceive('getTransactionPath')->andReturn([]);
+        $svn_look = $this->createMock(Svnlook::class);
+        $svn_look->method('getMessageFromTransaction')->willReturn([""]);
+        $svn_look->method('getTransactionPath')->willReturn([]);
 
-        $hook_config_retriever = Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
+        $hook_config_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
 
-        $hook_config = Mockery::mock(HookConfig::class);
-        $hook_config_retriever->shouldReceive('getHookConfig')
-            ->withArgs([$this->repository])
-            ->andReturn($hook_config);
+        $hook_config = $this->createMock(HookConfig::class);
+        $hook_config_retriever->method('getHookConfig')
+            ->with($this->repository)
+            ->willReturn($hook_config);
 
-        $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturnFalse();
+        $hook_config->method('getHookConfig')->with(HookConfig::MANDATORY_REFERENCE)->willReturn(false);
 
         $hook = new PreCommit(
             $svn_look,
             new NullLogger(),
             new CommitMessageValidator(
                 $hook_config_retriever,
-                Mockery::mock(ReferenceManager::class),
+                $this->createMock(ReferenceManager::class),
             ),
         );
 
@@ -377,28 +373,27 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIRejectsCommitMessagesWithoutArtifactReference(): void
     {
-        $project = Mockery::mock('Project');
+        $project = ProjectTestBuilder::aProject()->withId(123)->build();
 
-        $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(["Commit message without reference"]);
+        $svn_look = $this->createMock(Svnlook::class);
+        $svn_look->method('getMessageFromTransaction')->willReturn(["Commit message without reference"]);
 
-        $hook_config_retriever = Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
+        $hook_config_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);
 
-        $hook_config = Mockery::mock(HookConfig::class);
-        $hook_config_retriever->shouldReceive('getHookConfig')
-            ->withArgs([$this->repository])
-            ->andReturn($hook_config);
+        $hook_config = $this->createMock(HookConfig::class);
+        $hook_config_retriever->method('getHookConfig')
+            ->with($this->repository)
+            ->willReturn($hook_config);
 
-        $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturnTrue();
+        $hook_config->method('getHookConfig')->with(HookConfig::MANDATORY_REFERENCE)->willReturn(true);
 
-        $reference_manager = Mockery::mock(ReferenceManager::class);
+        $reference_manager = $this->createMock(ReferenceManager::class);
 
-        $this->repository->shouldReceive('getProject')->once()->andReturn($project);
-        $project->shouldReceive('getId')->andReturn(123);
-        $reference_manager->shouldReceive('stringContainsReferences')
-            ->withArgs(["Commit message without reference", Mockery::any()])
-            ->once()
-            ->andReturn(false);
+        $this->repository->expects(self::once())->method('getProject')->willReturn($project);
+        $reference_manager->expects(self::once())
+            ->method('stringContainsReferences')
+            ->with("Commit message without reference", self::anything())
+            ->willReturn(false);
 
         $hook = new PreCommit(
             $svn_look,

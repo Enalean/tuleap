@@ -20,10 +20,11 @@
 
 namespace Tuleap\SVN;
 
-use Backend;
-use Mockery;
+use BackendSVN;
 use org\bovigo\vfs\vfsStream;
 use Project;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -34,75 +35,61 @@ use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
+    private string $arpath;
     /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
-     */
-    private $arpath;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $access_file_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MailNotificationManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&MailNotificationManager
      */
     private $mail_notification_manager;
+    private Project $project;
+    private \PFUser $user;
+    private LoggerInterface $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var \Logger|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RuleName
+     * @var \PHPUnit\Framework\MockObject\MockObject&RuleName
      */
     private $rule_name;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RepositoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCreator
      */
     private $repository_creator;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RepositoryCopier
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCopier
      */
     private $repository_copier;
+    private NotificationsEmailsBuilder $notification_emails_builder;
     /**
-     * @var NotificationsEmailsBuilder
-     */
-    private $notification_emails_builder;
-    /**
-     * @var \BackendSystem|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \BackendSystem&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_system;
     /**
-     * @var Backend
+     * @var \PHPUnit\Framework\MockObject\MockObject&BackendSVN
      */
     private $backend_svn;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RepositoryManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryManager
      */
     private $repository_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $access_file_history_creator;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XMLUserChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&XMLUserChecker
      */
     private $xml_user_checker;
 
@@ -112,26 +99,28 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->arpath = vfsStream::setup()->url();
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
-        $this->logger       = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->user         = \Mockery::spy(\PFUser::class);
-        $this->project      = Mockery::mock(Project::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->logger       = new NullLogger();
+        $this->user         = UserTestBuilder::aUser()->build();
+        $this->project      = ProjectTestBuilder::aProject()->build();
 
-        $this->rule_name                   = Mockery::mock(RuleName::class);
-        $this->access_file_history_creator = \Mockery::spy(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
-        $this->repository_manager          = \Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
-        $this->backend_svn                 = Mockery::mock(\BackendSVN::class);
-        $this->backend_system              = \Mockery::spy(\BackendSystem::class);
+        $this->rule_name                   = $this->createMock(RuleName::class);
+        $this->access_file_history_creator = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
+        $this->repository_manager          = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $this->backend_svn                 = $this->createMock(\BackendSVN::class);
+        $this->backend_system              = $this->createMock(\BackendSystem::class);
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
-        $this->repository_copier           = \Mockery::spy(\Tuleap\SVN\Migration\RepositoryCopier::class);
-        $this->repository_creator          = Mockery::mock(RepositoryCreator::class);
-        $this->mail_notification_manager   = Mockery::mock(MailNotificationManager::class);
-        $this->access_file_manager         = Mockery::mock(AccessFileHistoryCreator::class);
-        $this->xml_user_checker            = Mockery::mock(XMLUserChecker::class);
+        $this->repository_copier           = $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class);
+        $this->repository_creator          = $this->createMock(RepositoryCreator::class);
+        $this->mail_notification_manager   = $this->createMock(MailNotificationManager::class);
+        $this->access_file_manager         = $this->createMock(AccessFileHistoryCreator::class);
+        $this->xml_user_checker            = $this->createMock(XMLUserChecker::class);
     }
 
     public function testItShouldDoNothingIfNoSvnNode(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $xml = new SimpleXMLElement('<project></project>');
 
         $importer = new XMLImporter(
@@ -157,8 +146,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->rule_name,
             $this->user
         );
-
-        $this->addToAssertionCount(1);
     }
 
     public function testXMLWithInvalidContentIsRejected(): void
@@ -179,8 +166,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->xml_user_checker
         );
 
-        $this->rule_name->shouldReceive('isValid')->once()->andReturnFalse();
-        $this->rule_name->shouldReceive('getErrorMessage')->once();
+        $this->rule_name->expects(self::once())->method('isValid')->willReturn(false);
+        $this->rule_name->expects(self::once())->method('getErrorMessage');
 
         $this->expectException(XMLImporterException::class);
 

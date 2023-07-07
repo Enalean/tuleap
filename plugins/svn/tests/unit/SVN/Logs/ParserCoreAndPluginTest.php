@@ -20,17 +20,13 @@
 
 namespace Tuleap\SVN\Logs;
 
-
-require_once __DIR__ . '/../../bootstrap.php';
-
-class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItReturnsLogsFromCoreAndPlugin()
+    public function testItReturnsLogsFromCoreAndPlugin(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -48,10 +44,10 @@ class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
-        $this->assertEquals(
-            $log_cache->getCoreProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'vaceletm' => [
@@ -67,20 +63,21 @@ class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getCoreProjects(),
         );
     }
 
-    public function testItReturnsLastAccessTimeStampForUsers()
+    public function testItReturnsLastAccessTimeStampForUsers(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
-        $this->assertEquals(
-            $log_cache->getLastAccessTimestamps(),
+        self::assertEquals(
             [
                 'vaceletm' => 1490094561,
                 'alice'    => 1478863364,
-            ]
+            ],
+            $log_cache->getLastAccessTimestamps(),
         );
     }
 }

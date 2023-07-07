@@ -20,63 +20,64 @@
 
 namespace Tuleap\SVN\Hooks;
 
-use Mockery;
 use Psr\Log\NullLogger;
 use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVNCore\SHA1CollisionException;
 
-class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVN\Commit\Svnlook
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\SVN\Commit\Svnlook
      */
     public $svnlook;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVNCore\SHA1CollisionDetector
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\SVNCore\SHA1CollisionDetector
      */
     public $sha1_collision_detector;
-    /**
-     * @var PreCommit
-     */
-    public $pre_commit_hook;
+    public PreCommit $pre_commit_hook;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->svnlook = Mockery::spy(\Tuleap\SVN\Commit\Svnlook::class);
-        $this->svnlook->shouldReceive('getMessageFromTransaction')->andReturn(["COMMIT MSG"]);
-        $this->sha1_collision_detector = Mockery::spy(\Tuleap\SVNCore\SHA1CollisionDetector::class);
+        $this->svnlook = $this->getMockBuilder(\Tuleap\SVN\Commit\Svnlook::class)
+            ->onlyMethods(['getMessageFromTransaction', 'getTransactionPath', 'getContent'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->svnlook->method('getMessageFromTransaction')->willReturn(["COMMIT MSG"]);
+
+        $this->sha1_collision_detector = $this->createMock(\Tuleap\SVNCore\SHA1CollisionDetector::class);
+
+        $commit_message_validator = $this->createMock(CommitMessageValidator::class);
+        $commit_message_validator->method('assertCommitMessageIsValid');
 
         $this->pre_commit_hook = new PreCommit(
             $this->svnlook,
             new NullLogger(),
-            Mockery::spy(CommitMessageValidator::class),
+            $commit_message_validator,
             new CollidingSHA1Validator($this->svnlook, $this->sha1_collision_detector)
         );
     }
 
     public function testItAcceptsCommitThatDoesNotContainSHA1Collision(): void
     {
-        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(['D   trunk/f1', 'A   trunk/f2']);
-        $this->svnlook->shouldReceive('getContent')->andReturn(popen('', 'rb'));
+        $this->svnlook->method('getTransactionPath')->willReturn(['D   trunk/f1', 'A   trunk/f2']);
+        $this->svnlook->method('getContent')->willReturn(popen('', 'rb'));
 
-        $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(false);
-        $this->pre_commit_hook->assertCommitIsValid(Mockery::mock(Repository::class), 'r1-1');
+        $this->sha1_collision_detector->expects(self::once())->method('isColliding')->willReturn(false);
+        $this->pre_commit_hook->assertCommitIsValid($this->createMock(Repository::class), 'r1-1');
     }
 
     public function testItRejectsCommitContainingSHA1Collision(): void
     {
-        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(['A   trunk/f1']);
-        $this->svnlook->shouldReceive('getContent')->andReturn(popen('', 'rb'));
+        $this->svnlook->method('getTransactionPath')->willReturn(['A   trunk/f1']);
+        $this->svnlook->method('getContent')->willReturn(popen('', 'rb'));
 
-        $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(true);
+        $this->sha1_collision_detector->expects(self::once())->method('isColliding')->willReturn(true);
 
         $this->expectException(SHA1CollisionException::class);
-        $this->pre_commit_hook->assertCommitIsValid(Mockery::mock(Repository::class), 'r1-1');
+        $this->pre_commit_hook->assertCommitIsValid($this->createMock(Repository::class), 'r1-1');
     }
 }

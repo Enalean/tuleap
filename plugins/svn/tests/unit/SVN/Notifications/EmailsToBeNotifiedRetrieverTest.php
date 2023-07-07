@@ -20,82 +20,51 @@
 
 namespace Tuleap\SVN\Notifications;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\Repository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private PFUser $user_suspended;
+    private PFUser $user_jdoe;
+    private PFUser $user_charles;
+    private PFUser $user_jsmith;
     /**
-     * @var PFUser
-     */
-    private $user_suspended;
-    /**
-     * @var PFUser
-     */
-    private $user_jdoe;
-    /**
-     * @var PFUser
-     */
-    private $user_charles;
-    /**
-     * @var PFUser
-     */
-    private $user_jsmith;
-    /**
-     * @var UsersToNotifyDao
+     * @var UsersToNotifyDao&MockObject
      */
     private $user_dao;
     /**
-     * @var Repository
+     * @var Repository&MockObject
      */
     private $repository;
     /**
-     * @var MailNotificationManager
+     * @var MailNotificationManager&MockObject
      */
     private $notification_manager;
-
-    /**
-     * @var EmailsToBeNotifiedRetriever
-     */
-    private $retriever;
+    private EmailsToBeNotifiedRetriever $retriever;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->repository           = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
-        $this->notification_manager = \Mockery::spy(\Tuleap\SVN\Admin\MailNotificationManager::class);
-        $this->user_dao             = \Mockery::spy(\Tuleap\SVN\Notifications\UsersToNotifyDao::class);
+        $this->repository           = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $this->notification_manager = $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class);
+        $this->user_dao             = $this->createMock(\Tuleap\SVN\Notifications\UsersToNotifyDao::class);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(222);
+        $project = ProjectTestBuilder::aProject()->withId(222)->build();
 
-        $this->repository->shouldReceive('getProject')->andReturn($project);
+        $this->repository->method('getProject')->willReturn($project);
 
-        $notified_ugroups_dao = \Mockery::spy(\Tuleap\SVN\Notifications\UgroupsToNotifyDao::class);
-        $ugroup_manager       = \Mockery::spy(\UGroupManager::class);
-
-        $this->user_jsmith = \Mockery::spy(\PFUser::class);
-        $this->user_jsmith->shouldReceive('getEmail')->andReturn('jsmith@example.com');
-        $this->user_jsmith->shouldReceive('isAlive')->andReturn(true);
-
-        $this->user_charles = \Mockery::spy(\PFUser::class);
-        $this->user_charles->shouldReceive('getEmail')->andReturn('charles@example.com');
-        $this->user_charles->shouldReceive('isAlive')->andReturn(true);
-
-        $this->user_jdoe = \Mockery::spy(\PFUser::class);
-        $this->user_jdoe->shouldReceive('getEmail')->andReturn('jdoe@example.com');
-        $this->user_jdoe->shouldReceive('isAlive')->andReturn(true);
-
-        $this->user_suspended = \Mockery::spy(\PFUser::class);
-        $this->user_suspended->shouldReceive('getEmail')->andReturn('suspended@example.com');
-        $this->user_suspended->shouldReceive('isAlive')->andReturn(false);
+        $this->user_jsmith    = UserTestBuilder::aUser()->withId(101)->withEmail('jsmith@example.com')->withStatus('A')->build();
+        $this->user_charles   = UserTestBuilder::aUser()->withId(102)->withEmail('charles@example.com')->withStatus('A')->build();
+        $this->user_jdoe      = UserTestBuilder::aUser()->withId(103)->withEmail('jdoe@example.com')->withStatus('A')->build();
+        $this->user_suspended = UserTestBuilder::aUser()->withId(104)->withEmail('jsmith@example.com')->withStatus('S')->build();
 
         $this->retriever = new EmailsToBeNotifiedRetriever(
             $this->notification_manager
@@ -104,7 +73,7 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmailsAsArray(): void
     {
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     1,
@@ -121,12 +90,12 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = ['jdoe@example.com', 'jsmith@example.com'];
 
-        $this->assertEquals($emails, $expected);
+        self::assertEquals($emails, $expected);
     }
 
     public function testItCombinesEmailsFromMultipleMatchingNotifications(): void
     {
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     1,
@@ -151,12 +120,12 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = ['jdoe@example.com', 'jsmith@example.com'];
 
-        $this->assertEquals($emails, $expected);
+        self::assertEquals($emails, $expected);
     }
 
     public function testItReturnsEmailsOfUsersForNotification(): void
     {
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     1,
@@ -172,14 +141,14 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = ['jsmith@example.com'];
 
-        $this->assertEquals($emails, $expected);
+        self::assertEquals($emails, $expected);
     }
 
     public function testItReturnsEmailsOfUgroupMembersForNotification(): void
     {
-        $user_group = \Mockery::mock(ProjectUGroup::class);
-        $user_group->shouldReceive('getMembers')->andReturn([$this->user_charles, $this->user_jdoe]);
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $user_group = $this->createMock(ProjectUGroup::class);
+        $user_group->method('getMembers')->willReturn([$this->user_charles, $this->user_jdoe]);
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     101,
@@ -194,15 +163,15 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $this->assertTrue(in_array('jdoe@example.com', $emails));
-        $this->assertTrue(in_array('charles@example.com', $emails));
+        self::assertTrue(in_array('jdoe@example.com', $emails));
+        self::assertTrue(in_array('charles@example.com', $emails));
     }
 
     public function testItRemovesGroupMembersThatAreNotAlive(): void
     {
-        $user_group = \Mockery::mock(ProjectUGroup::class);
-        $user_group->shouldReceive('getMembers')->andReturn([$this->user_suspended]);
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $user_group = $this->createMock(ProjectUGroup::class);
+        $user_group->method('getMembers')->willReturn([$this->user_suspended]);
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     101,
@@ -216,14 +185,14 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $this->assertTrue(! in_array('suspended@example.com', $emails));
+        self::assertTrue(! in_array('suspended@example.com', $emails));
     }
 
     public function testItRemovesDuplicates(): void
     {
-        $user_group = \Mockery::mock(ProjectUGroup::class);
-        $user_group->shouldReceive('getMembers')->andReturn([$this->user_jsmith]);
-        $this->notification_manager->shouldReceive('getByPath')->andReturn(
+        $user_group = $this->createMock(ProjectUGroup::class);
+        $user_group->method('getMembers')->willReturn([$this->user_jsmith]);
+        $this->notification_manager->method('getByPath')->willReturn(
             [
                 new MailNotification(
                     1,
@@ -235,10 +204,10 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
             ]
         );
-        $this->user_dao->shouldReceive('searchUsersByNotificationId')->andReturn(['email' => 'jsmith@example.com']);
+        $this->user_dao->method('searchUsersByNotificationId')->willReturn(['email' => 'jsmith@example.com']);
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $this->assertEquals($emails, array_unique($emails));
+        self::assertEquals($emails, array_unique($emails));
     }
 }

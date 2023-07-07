@@ -24,49 +24,44 @@
 
 namespace Tuleap\SVN\Hooks;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class PreRevPropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PreRevpropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var HookConfigRetriever
+     * @var HookConfigRetriever&MockObject
      */
     private $hook_config_retriever;
 
-    /** @var string repository path */
-    private $repo_path;
+    private string $repo_path;
 
-    /** @var RepositoryManager */
+    /** @var RepositoryManager&MockObject */
     private $repo_manager;
 
-    /** @var HookConfig */
+    /** @var HookConfig&MockObject */
     private $hook_config;
 
-    /** @var PreRevPropChange */
-    private $hook;
+    private PreRevpropChange $hook;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $repository = Mockery::mock(Repository::class);
-        $repository->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $repository = $this->createMock(Repository::class);
+        $repository->method('getProject')->willReturn($this->createMock(\Project::class));
 
-        $this->repo_manager          = Mockery::mock(RepositoryManager::class);
-        $this->hook_config           = Mockery::mock(HookConfig::class);
-        $this->hook_config_retriever = \Mockery::spy(HookConfigRetriever::class);
+        $this->repo_manager          = $this->createMock(RepositoryManager::class);
+        $this->hook_config           = $this->createMock(HookConfig::class);
+        $this->hook_config_retriever = $this->createMock(HookConfigRetriever::class);
         $this->repo_path             = "FOO";
 
-        $this->repo_manager->shouldReceive('getRepositoryFromSystemPath')->andReturn($repository);
-        $this->hook_config_retriever->shouldReceive('getHookConfig')->andReturn($this->hook_config);
+        $this->repo_manager->method('getRepositoryFromSystemPath')->willReturn($repository);
+        $this->hook_config_retriever->method('getHookConfig')->willReturn($this->hook_config);
 
         $this->hook = new PreRevpropChange(
             $this->repo_path,
@@ -85,29 +80,29 @@ class PreRevPropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsPropChangeIfNotAllowed(): void
     {
-        $reference_manager = Mockery::mock(ReferenceManager::class);
-        $this->hook_config->shouldReceive('getHookConfig')->withArgs(
-            [HookConfig::COMMIT_MESSAGE_CAN_CHANGE]
-        )->andReturn(false);
-        $this->hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturn(
-            false
-        );
+        $reference_manager = $this->createMock(ReferenceManager::class);
 
-        $this->expectException('Exception');
+        $this->hook_config->method('getHookConfig')->willReturnMap([
+            [HookConfig::COMMIT_MESSAGE_CAN_CHANGE, false],
+            [HookConfig::MANDATORY_REFERENCE, false],
+        ]);
+
+        $this->expectException(\Exception::class);
+
         $this->hook->checkAuthorized($reference_manager);
     }
 
     public function testItAllowsPropChangeIfNotAllowed(): void
     {
         $this->expectNotToPerformAssertions();
-        $reference_manager = Mockery::mock(ReferenceManager::class);
-        $reference_manager->shouldReceive('stringContainsReferences')->andReturnTrue();
-        $this->hook_config->shouldReceive('getHookConfig')->withArgs(
-            [HookConfig::COMMIT_MESSAGE_CAN_CHANGE]
-        )->andReturn(true);
-        $this->hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturn(
-            false
-        );
+
+        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager->method('stringContainsReferences')->willReturn(true);
+
+        $this->hook_config->method('getHookConfig')->willReturnMap([
+            [HookConfig::COMMIT_MESSAGE_CAN_CHANGE, true],
+            [HookConfig::MANDATORY_REFERENCE, false],
+        ]);
 
         $this->hook->checkAuthorized($reference_manager);
     }

@@ -20,45 +20,31 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 
 class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private \Project $project;
+    private HookConfigRetriever $hook_retriever;
     /**
-     * @var \Project
-     */
-    private $project;
-
-    /**
-     * @var HookConfigRetriever
-     */
-    private $hook_retriever;
-
-    /**
-     * @var HookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&HookDao
      */
     private $hook_dao;
-
-    /**
-     * @var HookConfigUpdator
-     */
-    private $hook_updater;
+    private HookConfigUpdator $hook_updater;
+    private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $project_history_dao = \Mockery::spy(\ProjectHistoryDao::class);
-        $project_dao         = \Mockery::spy(\ProjectDao::class);
-        $this->hook_dao      = \Mockery::spy(\Tuleap\SVN\Repository\HookDao::class);
+        $this->project_history_dao = $this->createMock(\ProjectHistoryDao::class);
+        $project_dao               = $this->createMock(\ProjectDao::class);
+        $this->hook_dao            = $this->createMock(\Tuleap\SVN\Repository\HookDao::class);
 
         $project_manager = ProjectManager::testInstance(
-            Mockery::mock(ProjectAccessChecker::class),
-            $project_history_dao,
+            $this->createMock(ProjectAccessChecker::class),
+            $this->project_history_dao,
             $project_dao
         );
 
@@ -73,15 +59,15 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->hook_retriever = new HookConfigRetriever($this->hook_dao, new HookConfigSanitizer());
-        $hook_checker         = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigChecker::class);
+        $hook_checker         = $this->createMock(\Tuleap\SVN\Repository\HookConfigChecker::class);
         $this->hook_updater   = new HookConfigUpdator(
             $this->hook_dao,
-            $project_history_dao,
+            $this->project_history_dao,
             $hook_checker,
             new HookConfigSanitizer(),
             new ProjectHistoryFormatter()
         );
-        $hook_checker->shouldReceive('hasConfigurationChanged')->andReturn(true);
+        $hook_checker->method('hasConfigurationChanged')->willReturn(true);
     }
 
     protected function tearDown(): void
@@ -93,18 +79,18 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseForEveryConfigWHenNoCustomConfigurationIsStored(): void
     {
-        $this->hook_dao->shouldReceive('getHookConfig')->withArgs([33])->andReturn([]);
+        $this->hook_dao->method('getHookConfig')->with(33)->willReturn([]);
 
         $repo = SvnRepository::buildActiveRepository(33, 'reponame', $this->project);
         $cfg  = $this->hook_retriever->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
-        $this->assertEquals(false, $mandatory_ref);
+        self::assertEquals(false, $mandatory_ref);
     }
 
     public function testItReturnsCustomsConfigurationWhenSaved(): void
     {
-        $this->hook_dao->shouldReceive('getHookConfig')->withArgs([33])->andReturn(
+        $this->hook_dao->method('getHookConfig')->with(33)->willReturn(
             [
                 HookConfig::MANDATORY_REFERENCE => true,
             ]
@@ -114,18 +100,18 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $cfg  = $this->hook_retriever->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
-        $this->assertEquals(true, $mandatory_ref);
+        self::assertEquals(true, $mandatory_ref);
     }
 
     public function testItCanChangeTheHookConfig(): void
     {
         $repository = SvnRepository::buildActiveRepository(22, 'reponame', $this->project);
-        $this->hook_dao->shouldReceive('updateHookConfig')->withArgs(
-            [
-                22,
-                [HookConfig::MANDATORY_REFERENCE => true],
-            ]
-        )->once()->andReturn(true);
+        $this->hook_dao->expects(self::once())
+            ->method('updateHookConfig')
+            ->with(22, [HookConfig::MANDATORY_REFERENCE => true])
+            ->willReturn(true);
+
+        $this->project_history_dao->method('groupAddHistory');
 
         $this->hook_updater->updateHookConfig(
             $repository,

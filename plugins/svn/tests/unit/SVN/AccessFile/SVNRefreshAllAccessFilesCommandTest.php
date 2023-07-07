@@ -23,54 +23,41 @@ declare(strict_types=1);
 namespace Tuleap\SVN\AccessControl;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $access_file_history_creator;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryFactory
      */
     private $access_file_history_factory;
-
     /**
-     * @var Mockery\MockInterface|RepositoryManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryManager
      */
     private $repository_manager;
 
-    /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
-
-    /**
-     * @var SVNRefreshAllAccessFilesCommand
-     */
-    private $command;
+    private bool $globals_svnaccess_set_initially;
+    private bool $globals_svngroups_set_initially;
+    private SVNRefreshAllAccessFilesCommand $command;
 
     protected function setUp(): void
     {
         $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
         $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
 
-        $this->repository_manager          = Mockery::mock(RepositoryManager::class);
-        $this->access_file_history_factory = Mockery::mock(AccessFileHistoryFactory::class);
-        $this->access_file_history_creator = Mockery::mock(AccessFileHistoryCreator::class);
+        $this->repository_manager          = $this->createMock(RepositoryManager::class);
+        $this->access_file_history_factory = $this->createMock(AccessFileHistoryFactory::class);
+        $this->access_file_history_creator = $this->createMock(AccessFileHistoryCreator::class);
         $this->command                     = new SVNRefreshAllAccessFilesCommand(
             $this->repository_manager,
             $this->access_file_history_factory,
@@ -92,54 +79,55 @@ class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDisplayEmptyResultWhenPlatformDoNotHaveAnySVNPluginRepositories(): void
     {
-        $this->repository_manager->shouldReceive('getRepositoriesOfNonDeletedProjects')->andReturn([]);
+        $this->repository_manager->method('getRepositoriesOfNonDeletedProjects')->willReturn([]);
         $command_tester = new CommandTester($this->command);
         $command_tester->execute([]);
 
         $text_table          = $command_tester->getDisplay();
         $expected_text_table = "Start refresh access files:\nNo SVN multi-repositories found.\nEnd of refresh access files.\n";
 
-        $this->assertEquals($expected_text_table, $text_table);
+        self::assertEquals($expected_text_table, $text_table);
     }
 
     public function testItDisplayATableOfProjectRepositories(): void
     {
-        $project_A = Mockery::mock(\Project::class);
-        $project_A->shouldReceive('getId')->andReturn(101);
-        $project_A->shouldReceive('getUnixName')->andReturn("Project A");
+        $project_A = $this->createMock(\Project::class);
+        $project_A->method('getId')->willReturn(101);
+        $project_A->method('getUnixName')->willReturn("Project A");
 
-        $repository_A = Mockery::mock(Repository::class);
-        $repository_A->shouldReceive('getSystemPath')->andReturn('/var/lib/tuleap/101/repo_A');
-        $repository_A->shouldReceive('getFullName')->andReturn('Project A/Repository A');
-        $repository_A->shouldReceive('getName')->andReturn('Repository A');
+        $repository_A = $this->createMock(Repository::class);
+        $repository_A->method('getSystemPath')->willReturn('/var/lib/tuleap/101/repo_A');
+        $repository_A->method('getFullName')->willReturn('Project A/Repository A');
+        $repository_A->method('getName')->willReturn('Repository A');
         $project_A_repositories = [
             $repository_A,
         ];
 
-        $project_B = Mockery::mock(\Project::class);
-        $project_B->shouldReceive('getId')->andReturn(102);
-        $project_B->shouldReceive('getUnixName')->andReturn("Project B");
-        $repository_B = Mockery::mock(Repository::class);
-        $repository_B->shouldReceive('getSystemPath')->andReturn('/var/lib/tuleap/102/repo_B');
-        $repository_B->shouldReceive('getFullName')->andReturn('Project B/Repository B');
-        $repository_B->shouldReceive('getName')->andReturn('Repository B');
-        $repository_C = Mockery::mock(Repository::class);
-        $repository_C->shouldReceive('getSystemPath')->andReturn('/var/lib/tuleap/102/repo_C');
-        $repository_C->shouldReceive('getFullName')->andReturn('Project B/Repository C');
-        $repository_C->shouldReceive('getName')->andReturn('Repository C');
+        $project_B = $this->createMock(\Project::class);
+        $project_B->method('getId')->willReturn(102);
+        $project_B->method('getUnixName')->willReturn("Project B");
+
+        $repository_B = $this->createMock(Repository::class);
+        $repository_B->method('getSystemPath')->willReturn('/var/lib/tuleap/102/repo_B');
+        $repository_B->method('getFullName')->willReturn('Project B/Repository B');
+        $repository_B->method('getName')->willReturn('Repository B');
+        $repository_C = $this->createMock(Repository::class);
+        $repository_C->method('getSystemPath')->willReturn('/var/lib/tuleap/102/repo_C');
+        $repository_C->method('getFullName')->willReturn('Project B/Repository C');
+        $repository_C->method('getName')->willReturn('Repository C');
         $project_B_repositories = [
             $repository_B,
             $repository_C,
         ];
-        $this->repository_manager->shouldReceive('getRepositoriesOfNonDeletedProjects')->andReturn(
+        $this->repository_manager->method('getRepositoriesOfNonDeletedProjects')->willReturn(
             [
                 RepositoryByProjectCollection::build($project_A, $project_A_repositories),
                 RepositoryByProjectCollection::build($project_B, $project_B_repositories),
             ]
         );
 
-        $this->access_file_history_factory->shouldReceive('getCurrentVersion')->andReturn(Mockery::mock(AccessFileHistory::class))->times(3);
-        $this->access_file_history_creator->shouldReceive('saveAccessFileAndForceDefaultGeneration')->times(3);
+        $this->access_file_history_factory->expects(self::exactly(3))->method('getCurrentVersion')->willReturn($this->createMock(AccessFileHistory::class));
+        $this->access_file_history_creator->expects(self::exactly(3))->method('saveAccessFileAndForceDefaultGeneration');
 
 
         $command_tester = new CommandTester($this->command);
@@ -161,6 +149,6 @@ class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
             EOT;
 
-        $this->assertEquals($expected_text_table, $text_table);
+        self::assertEquals($expected_text_table, $text_table);
     }
 }

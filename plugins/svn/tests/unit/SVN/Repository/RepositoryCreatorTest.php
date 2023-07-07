@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
@@ -29,64 +29,50 @@ use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\SVN\SvnPermissionManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     /**
-     * @var AccessFileHistoryCreator
+     * @var AccessFileHistoryCreator&MockObject
      */
     private $history_creator;
     /**
-     * @var \ProjectHistoryDao
+     * @var \ProjectHistoryDao&MockObject
      */
     private $history_dao;
     /**
-     * @var HookConfigUpdator
+     * @var HookConfigUpdator&MockObject
      */
     private $hook_config_updator;
     /**
-     * @var Dao
+     * @var Dao&MockObject
      */
     private $dao;
+    private \Project $project;
     /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var SvnPermissionManager
+     * @var SvnPermissionManager&MockObject
      */
     private $permissions_manager;
+    private \PFUser $user;
     /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var \SystemEventManager
+     * @var \SystemEventManager&MockObject
      */
     private $system_event_manager;
-
-    /**
-     * @var Repository
-     */
-    private $repository;
-
-    /**
-     * @var RepositoryCreator
-     */
-    private $repository_creator;
+    private Repository $repository;
+    private RepositoryCreator $repository_creator;
 
     protected function setUp(): void
     {
-        $this->system_event_manager = \Mockery::spy(\SystemEventManager::class);
-        $this->history_dao          = \Mockery::spy(\ProjectHistoryDao::class);
-        $this->dao                  = \Mockery::spy(\Tuleap\SVN\Dao::class);
-        $this->permissions_manager  = \Mockery::spy(\Tuleap\SVN\SvnPermissionManager::class);
-        $this->hook_config_updator  = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigUpdator::class);
-        $this->history_creator      = \Mockery::spy(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
+        $this->system_event_manager = $this->createMock(\SystemEventManager::class);
+        $this->history_dao          = $this->createMock(\ProjectHistoryDao::class);
+        $this->dao                  = $this->createMock(\Tuleap\SVN\Dao::class);
+        $this->permissions_manager  = $this->createMock(\Tuleap\SVN\SvnPermissionManager::class);
+        $this->hook_config_updator  = $this->createMock(\Tuleap\SVN\Repository\HookConfigUpdator::class);
+        $this->history_creator      = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
         $this->repository_creator   = new RepositoryCreator(
             $this->dao,
             $this->system_event_manager,
@@ -94,67 +80,67 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->permissions_manager,
             $this->hook_config_updator,
             new ProjectHistoryFormatter(),
-            \Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagCreator::class),
+            $this->createMock(\Tuleap\SVN\Admin\ImmutableTagCreator::class),
             $this->history_creator,
-            \Mockery::spy(\Tuleap\SVN\Admin\MailNotificationManager::class)
+            $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class)
         );
 
-        $this->project = \Mockery::mock(\Project::class);
-        $this->project->shouldReceive('getId')->andReturn(101);
-        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('project-unix-name');
-        $this->user = \Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(110);
+        $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project-unix-name')->build();
+        $this->user       = UserTestBuilder::aUser()->withId(110)->build();
         $this->repository = SvnRepository::buildActiveRepository(1, 'repo01', $this->project);
 
-        $this->dao->shouldReceive('create')->andReturn(1);
+        $this->dao->method('create')->willReturn(1);
     }
 
     public function testItCreatesTheRepository(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
-        $this->history_dao->shouldReceive('groupAddHistory')
-            ->withArgs(['svn_multi_repository_creation', \Mockery::any(), \Mockery::any()])
-            ->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->history_dao->expects(self::once())
+            ->method('groupAddHistory')
+            ->with('svn_multi_repository_creation', self::anything(), self::anything());
+
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
 
         $this->repository_creator->create($this->repository, $this->user);
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotASVNAdministrator(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(false);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(false);
 
-        $this->system_event_manager->shouldReceive('createEvent')->never();
+        $this->system_event_manager->expects(self::never())->method('createEvent');
         $this->expectException(UserIsNotSVNAdministratorException::class);
-        $this->history_dao->shouldReceive('groupAddHistory')->never();
+        $this->history_dao->expects(self::never())->method('groupAddHistory');
 
         $this->repository_creator->create($this->repository, $this->user);
     }
 
     public function testItThrowsAnExceptionWhenRepositoryNameIsAlreadyUsed(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
-        $this->dao->shouldReceive('doesRepositoryAlreadyExist')->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->never();
+        $this->system_event_manager->expects(self::never())->method('createEvent');
         $this->expectException(RepositoryNameIsInvalidException::class);
-        $this->history_dao->shouldReceive('groupAddHistory')->never();
+        $this->history_dao->expects(self::never())->method('groupAddHistory');
 
         $this->repository_creator->create($this->repository, $this->user);
     }
 
     public function testItCreatesRepositoryWithCustomSettingsAndImportAllAccessFileHistory(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
-        $this->history_creator->shouldReceive('useAVersionWithHistoryWithoutUpdateSVNAccessFile')->once();
-        $this->history_dao->shouldReceive('groupAddHistory')
-            ->withArgs(['svn_multi_repository_creation_with_full_settings', \Mockery::any(), \Mockery::any()])
-            ->once();
-        $this->history_creator->shouldReceive('storeInDBWithoutCleaningContent')->never();
-        $this->history_creator->shouldReceive('storeInDB')->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->history_creator->expects(self::once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
+        $this->history_dao->expects(self::once())->method('groupAddHistory')
+            ->with('svn_multi_repository_creation_with_full_settings', self::anything(), self::anything());
+        $this->history_creator->expects(self::never())->method('storeInDBWithoutCleaningContent');
+        $this->history_creator->expects(self::once())->method('storeInDB');
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
+        $this->hook_config_updator->method('initHookConfiguration');
 
         $commit_rules        = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
@@ -186,14 +172,16 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesRepositoryWithCustomSettingsAndImportAllAccessFileHistoryWithoutPurgeThemContent(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
-        $this->history_creator->shouldReceive('useAVersionWithHistoryWithoutUpdateSVNAccessFile')->once();
-        $this->history_dao->shouldReceive('groupAddHistory')
-            ->withArgs(['svn_multi_repository_creation_with_full_settings', \Mockery::any(), \Mockery::any()])
-            ->once();
-        $this->history_creator->shouldReceive('storeInDBWithoutCleaningContent')->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->history_creator->expects(self::once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
+        $this->history_dao->expects(self::once())
+            ->method('groupAddHistory')
+            ->with('svn_multi_repository_creation_with_full_settings', self::anything(), self::anything());
+        $this->history_creator->expects(self::once())->method('storeInDBWithoutCleaningContent');
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
+        $this->hook_config_updator->method('initHookConfiguration');
 
         $commit_rules        = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
@@ -225,15 +213,19 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesRepositoryWithCustomSettings(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
-        $this->hook_config_updator->shouldReceive('initHookConfiguration')->once();
-        $this->history_creator->shouldReceive('useAVersionWithHistoryWithoutUpdateSVNAccessFile')->never();
-        $this->history_dao->shouldReceive('groupAddHistory')->withArgs(
-            ['svn_multi_repository_creation_with_full_settings', \Mockery::any(), \Mockery::any()]
-        )->once();
-        $this->history_creator->shouldReceive('storeInDB')->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->hook_config_updator->expects(self::once())->method('initHookConfiguration');
+        $this->history_creator->expects(self::never())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
+        $this->history_dao->expects(self::once())->method('groupAddHistory')->with(
+            'svn_multi_repository_creation_with_full_settings',
+            self::anything(),
+            self::anything(),
+        );
+        $this->history_creator->expects(self::once())->method('storeInDB');
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
+        $this->hook_config_updator->method('initHookConfiguration');
 
         $commit_rules       = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
@@ -258,13 +250,14 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesRepositoryWithNoCustomSettings(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->withArgs([$this->project, $this->user])->andReturn(true);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
-        $this->hook_config_updator->shouldReceive('initHookConfiguration')->never();
-        $this->history_dao->shouldReceive('groupAddHistory')
-            ->withArgs(['svn_multi_repository_creation', \Mockery::any(), \Mockery::any()])
-            ->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->hook_config_updator->expects(self::never())->method('initHookConfiguration');
+        $this->history_dao->expects(self::once())
+            ->method('groupAddHistory')
+            ->with('svn_multi_repository_creation', self::anything(), self::anything());
+        $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
 
         $commit_rules       = [];
         $immutable_tag      = new ImmutableTag($this->repository, [], []);

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Commit;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -35,26 +34,16 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Svnlook
-     */
-    private $svnlook;
-    /**
-     * @var FileSizeValidator
-     */
-    private $validator;
-    /**
-     * @var SvnRepository
-     */
-    private $repository;
+    private Svnlook&MockObject $svnlook;
+    private FileSizeValidator $validator;
+    private SvnRepository $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->svnlook = Mockery::mock(Svnlook::class);
+        $this->svnlook = $this->createMock(Svnlook::class);
 
         $this->repository = SvnRepository::buildActiveRepository(10, 'foo', ProjectTestBuilder::aProject()->build());
 
@@ -74,7 +63,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '200');
 
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(150)->atLeast()->once();
+        $this->svnlook->expects(self::atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->willReturn(150);
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'U   trunk/README.mkd');
     }
@@ -83,7 +72,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '1');
 
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(2097152);
+        $this->svnlook->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->willReturn(2097152);
 
         $this->expectException(CommittedFileTooLargeException::class);
 
@@ -94,10 +83,13 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '200');
 
-        $failed_command = Mockery::mock(Process::class, ['getErrorOutput' => "svnlook: E160017: Path 'trunk/aaa' is not a file"]);
+        $failed_command = $this->getMockBuilder(Process::class)->onlyMethods(['getErrorOutput'])->disableOriginalConstructor()->getMock();
+        $failed_command->method('getErrorOutput')->willReturn("svnlook: E160017: Path 'trunk/aaa' is not a file");
 
-        $exception = Mockery::mock(ProcessFailedException::class, ['getProcess' => $failed_command]);
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->andThrow($exception)->atLeast()->once();
+        $exception = $this->createMock(ProcessFailedException::class);
+        $exception->method('getProcess')->willReturn($failed_command);
+
+        $this->svnlook->expects(self::atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->willThrowException($exception);
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'A   trunk/add/');
     }
@@ -106,10 +98,13 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '200');
 
-        $failed_command = Mockery::mock(Process::class, ['getErrorOutput' => "svnlook: E160013: Path 'trunk/aaad' does not exist"]);
+        $failed_command = $this->getMockBuilder(Process::class)->onlyMethods(['getErrorOutput'])->disableOriginalConstructor()->getMock();
+        $failed_command->method('getErrorOutput')->willReturn("svnlook: E160013: Path 'trunk/aaad' does not exist");
 
-        $exception = Mockery::mock(ProcessFailedException::class, ['getProcess' => $failed_command]);
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->andThrow($exception);
+        $exception = $this->createMock(ProcessFailedException::class);
+        $exception->method('getProcess')->willReturn($failed_command);
+
+        $this->svnlook->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->willThrowException($exception);
 
         $this->expectExceptionObject($exception);
 

@@ -20,72 +20,60 @@
 
 namespace Tuleap\SVN;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\SVN\AccessControl\AccessFileReader;
 use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalSVNPollution;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessFileReader
-     */
-    private $access_file_reader;
-    /**
-     * @var XMLSvnExporter
-     */
-    private $xml_exporter;
-
-    /**
-     * @var ZipArchive
-     */
-    private $zip;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_tree;
-
-    private $fixtures_dir;
+    private AccessFileReader&MockObject $access_file_reader;
+    private XMLSvnExporter $xml_exporter;
+    private ZipArchive&MockObject $zip;
+    private SimpleXMLElement $xml_tree;
+    private string $fixtures_dir;
+    private SvnAdmin&MockObject $svn_admin;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $repository_manager        = \Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
-        $mail_notification_manager = \Mockery::spy(\Tuleap\SVN\Admin\MailNotificationManager::class);
+        $repository_manager        = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $mail_notification_manager = $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class);
 
-        $this->access_file_reader = \Mockery::mock(AccessFileReader::class);
+        $this->access_file_reader = $this->createMock(AccessFileReader::class);
+        $this->svn_admin          = $this->createMock(SvnAdmin::class);
 
         $this->xml_exporter = new XMLSvnExporter(
             $repository_manager,
-            \Mockery::spy(\Project::class),
-            \Mockery::spy(\Tuleap\SVN\SvnAdmin::class),
+            ProjectTestBuilder::aProject()->build(),
+            $this->svn_admin,
             new XML_SimpleXMLCDATAFactory(),
             $mail_notification_manager,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
+            new NullLogger(),
             $this->access_file_reader
         );
 
         $this->fixtures_dir = vfsStream::setup()->url();
 
-        $this->zip = \Mockery::mock(ZipArchive::class);
+        $this->zip = $this->createMock(ZipArchive::class);
 
-        $repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
-        $repository->shouldReceive('getName')->andReturn('MyRepo');
-        $repository->shouldReceive('getSystemPath')->andReturn($this->fixtures_dir);
-        $repository_manager->shouldReceive('getRepositoriesInProject')->andReturn([$repository]);
+        $repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $repository->method('getName')->willReturn('MyRepo');
+        $repository->method('getSystemPath')->willReturn($this->fixtures_dir);
+        $repository_manager->method('getRepositoriesInProject')->willReturn([$repository]);
 
-        $mail_notification_manager->shouldReceive('getByRepository')->withArgs([$repository])->andReturn(
+        $mail_notification_manager->method('getByRepository')->with($repository)->willReturn(
             [
                 new MailNotification(
                     1,
@@ -114,18 +102,20 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportSvnAttributes(): void
     {
-        $this->zip->shouldReceive('isADirectory')->andReturnFalse();
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->method('isADirectory')->willReturn(false);
+        $this->zip->expects(self::once())->method('addFile');
 
-        $this->access_file_reader->shouldReceive('readContentBlock')->once();
+        $this->access_file_reader->expects(self::once())->method('readContentBlock');
+
+        $this->svn_admin->method('dumpRepository');
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, $this->fixtures_dir);
 
         foreach ($this->xml_tree->svn as $exported_xml) {
             $repository = $exported_xml->repository;
             $attrs      = $repository->attributes();
-            $this->assertEquals($attrs['name'], 'MyRepo');
-            $this->assertEquals($attrs['dump-file'], 'svn/MyRepo.svn');
+            self::assertEquals($attrs['name'], 'MyRepo');
+            self::assertEquals($attrs['dump-file'], 'svn/MyRepo.svn');
         }
     }
 
@@ -134,26 +124,30 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_access_file = "[/tags]
 @members = r";
 
-        $this->zip->shouldReceive('isADirectory')->andReturnFalse();
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->method('isADirectory')->willReturn(false);
+        $this->zip->expects(self::once())->method('addFile');
 
-        $this->access_file_reader->shouldReceive('readContentBlock')->once()->andReturn($expected_access_file);
+        $this->access_file_reader->expects(self::once())->method('readContentBlock')->willReturn($expected_access_file);
+
+        $this->svn_admin->method('dumpRepository');
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, $this->fixtures_dir);
 
         foreach ($this->xml_tree->svn as $exported_xml) {
             $repository = $exported_xml->repository;
 
-            $this->assertEquals($expected_access_file, (string) $repository->{"access-file"});
+            self::assertEquals($expected_access_file, (string) $repository->{"access-file"});
         }
     }
 
     public function testItExportsNotifiedMails(): void
     {
-        $this->zip->shouldReceive('isADirectory')->andReturnFalse();
-        $this->zip->shouldReceive('addFile')->once();
+        $this->zip->method('isADirectory')->willReturn(false);
+        $this->zip->expects(self::once())->method('addFile');
 
-        $this->access_file_reader->shouldReceive('readContentBlock')->once();
+        $this->access_file_reader->expects(self::once())->method('readContentBlock');
+
+        $this->svn_admin->method('dumpRepository');
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, $this->fixtures_dir);
 
@@ -162,13 +156,13 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
             $notified_mails = $repository->notification[0];
             $attrs          = $notified_mails->attributes();
-            $this->assertEquals($attrs['path'], '/');
-            $this->assertEquals($attrs['emails'], 'mail@example.com');
+            self::assertEquals($attrs['path'], '/');
+            self::assertEquals($attrs['emails'], 'mail@example.com');
 
             $notified_mails = $repository->notification[1];
             $attrs          = $notified_mails->attributes();
-            $this->assertEquals($attrs['path'], '/trunk');
-            $this->assertEquals($attrs['emails'], 'mail2@example.com');
+            self::assertEquals($attrs['path'], '/trunk');
+            self::assertEquals($attrs['emails'], 'mail2@example.com');
         }
     }
 }

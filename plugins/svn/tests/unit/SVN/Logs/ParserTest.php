@@ -20,23 +20,19 @@
 
 namespace Tuleap\SVN\Logs;
 
-
-require_once __DIR__ . '/../../bootstrap.php';
-
-class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItReturnsALogCache()
+    public function testItReturnsALogCache(): void
     {
         $parser = new Parser();
-        $this->assertInstanceOf(LogCache::class, $parser->parse(__DIR__ . '/_fixtures/svn.1.log'));
+        self::assertInstanceOf(LogCache::class, $parser->parse(__DIR__ . '/_fixtures/svn.1.log'));
     }
 
-    public function testItReturnsLogCacheARepository()
+    public function testItReturnsLogCacheARepository(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.1.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -48,16 +44,16 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
     }
 
-    public function testItReturnsLogCacheWithTwoUsers()
+    public function testItReturnsLogCacheWithTwoUsers(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.2.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -75,16 +71,16 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
     }
 
-    public function testItReturnsLogCacheWithMultipleRepo()
+    public function testItReturnsLogCacheWithMultipleRepo(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.3.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -120,16 +116,16 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
     }
 
-    public function testItReturnsLogCacheWithDifferentDates()
+    public function testItReturnsLogCacheWithDifferentDates(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.4.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -147,30 +143,30 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
     }
 
-    public function testItReturnsLastAccessTimeStampForUsers()
+    public function testItReturnsLastAccessTimeStampForUsers(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.3.log');
-        $this->assertEquals(
-            $log_cache->getLastAccessTimestamps(),
+        self::assertEquals(
             [
                 'vaceletm' => 1490105171,
                 'alice'    => 1490105053,
                 'bob'      => 1490105053,
-            ]
+            ],
+            $log_cache->getLastAccessTimestamps(),
         );
     }
 
-    public function testItParsesUserWithSpacesInName()
+    public function testItParsesUserWithSpacesInName(): void
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn-6.log');
-        $this->assertEquals(
-            $log_cache->getProjects(),
+        self::assertEquals(
             [
                 'scrum-08' => [
                     'zorglub' => [
@@ -182,7 +178,8 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
+            $log_cache->getProjects(),
         );
     }
 }

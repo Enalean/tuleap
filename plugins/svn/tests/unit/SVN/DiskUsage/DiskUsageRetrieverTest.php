@@ -21,61 +21,52 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\DiskUsage;
 
-use Mockery;
 use Project;
 use Psr\Log\LoggerInterface;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsageManager;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\MockInterface|RepositoryManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryManager
      */
     private $repository_manager;
 
     /**
-     * @var Mockery\MockInterface|Statistics_DiskUsageManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&Statistics_DiskUsageManager
      */
     private $disk_usage_manager;
 
     /**
-     * @var Mockery\MockInterface|DiskUsageDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&DiskUsageDao
      */
     private $disk_usage_dao;
 
     /**
-     * @var Mockery\MockInterface|Statistics_DiskUsageDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&Statistics_DiskUsageDao
      */
     private $dao;
 
     /**
-     * @var Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
 
-    /**
-     * @var DiskUsageRetriever
-     */
-    private $disk_usage_retriever;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private DiskUsageRetriever $disk_usage_retriever;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->project            = Mockery::mock(Project::class);
-        $this->repository_manager = Mockery::mock(RepositoryManager::class);
-        $this->disk_usage_manager = Mockery::mock(Statistics_DiskUsageManager::class);
-        $this->disk_usage_dao     = Mockery::mock(DiskUsageDao::class);
-        $this->dao                = Mockery::mock(Statistics_DiskUsageDao::class);
-        $this->logger             = Mockery::mock(LoggerInterface::class);
+        $this->project            = ProjectTestBuilder::aProject()->withId(111)->withUnixName('projet')->build();
+        $this->repository_manager = $this->createMock(RepositoryManager::class);
+        $this->disk_usage_manager = $this->createMock(Statistics_DiskUsageManager::class);
+        $this->disk_usage_dao     = $this->createMock(DiskUsageDao::class);
+        $this->dao                = $this->createMock(Statistics_DiskUsageDao::class);
+        $this->logger             = $this->createMock(LoggerInterface::class);
 
         $this->disk_usage_retriever = new DiskUsageRetriever(
             $this->repository_manager,
@@ -84,64 +75,65 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->logger
         );
-
-        $this->project->shouldReceive('getId')->andReturn(111);
-        $this->project->shouldReceive('getUnixName')->andReturn('projet');
     }
 
     public function testGetDiskUsageForProject(): void
     {
-        $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
+        $this->logger->method('info')->withConsecutive(
+            ['Collecting statistics for project projet'],
+            ['Project has new commit, collecting disk size data.'],
+        );
 
-        $this->disk_usage_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(true);
-        $this->logger->shouldReceive('info')->with('Project has new commit, collecting disk size data.')->once();
+        $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(true);
 
-        $repository = Mockery::mock(Repository::class);
-        $repository->shouldReceive('getSystemPath')->andReturn('path/to/repo');
+        $repository = $this->createMock(Repository::class);
+        $repository->method('getSystemPath')->willReturn('path/to/repo');
 
-        $this->disk_usage_manager->shouldReceive('getDirSize')
-            ->withArgs(['path/to/repo'])
-            ->andReturn(11);
+        $this->disk_usage_manager->method('getDirSize')
+            ->with('path/to/repo')
+            ->willReturn(11);
 
-        $this->repository_manager->shouldReceive('getRepositoriesInProject')
-            ->withArgs([$this->project])
-            ->andReturn([$repository]);
+        $this->repository_manager->method('getRepositoriesInProject')
+            ->with($this->project)
+            ->willReturn([$repository]);
 
         self::assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
     }
 
     public function testGetDiskUsageForProjectWhenNoNewCommit(): void
     {
-        $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
+        $this->logger->method('info')->withConsecutive(
+            ['Collecting statistics for project projet'],
+            ["No new commit made on this project since yesterday, duplicate value from DB."],
+        );
 
-        $this->disk_usage_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
-        $this->disk_usage_dao->shouldReceive('hasRepositories')->andReturn(true);
-        $this->logger->shouldReceive('info')
-                     ->with("No new commit made on this project since yesterday, duplicate value from DB.")
-                     ->once();
+        $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(false);
+        $this->disk_usage_dao->method('hasRepositories')->willReturn(true);
 
-        $this->dao->shouldReceive('getLastSizeForService')->andReturn(['size' => 11]);
+        $this->dao->method('getLastSizeForService')->willReturn(['size' => 11]);
 
         self::assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
     }
 
     public function testGetDiskUsageForProjectWhenNoRepositories(): void
     {
-        $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
+        $this->logger->method('info')->withConsecutive(
+            ['Collecting statistics for project projet'],
+            ['Project has new commit, collecting disk size data.'],
+        );
 
-        $this->disk_usage_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(true);
-        $this->logger->shouldReceive('info')->with('Project has new commit, collecting disk size data.')->once();
+        $this->disk_usage_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(true);
 
-        $this->repository_manager->shouldReceive('getRepositoriesInProject')
-            ->withArgs([$this->project])
-            ->andReturn([]);
+        $this->repository_manager->method('getRepositoriesInProject')
+            ->with($this->project)
+            ->willReturn([]);
 
         self::assertEquals(0, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
     }
 
     public function testLastSizeForProjectIs0WhenNoDataIsAvailable(): void
     {
-        $this->dao->shouldReceive('getLastSizeForService')->andReturn(false);
+        $this->dao->method('getLastSizeForService')->willReturn(false);
         self::assertEquals(0, $this->disk_usage_retriever->getLastSizeForProject($this->project));
     }
 }

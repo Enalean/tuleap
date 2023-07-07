@@ -23,73 +23,67 @@ declare(strict_types=1);
 namespace Tuleap\SVN\DiskUsage;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use Statistics_DiskUsageDao;
 use SvnPlugin;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItCollectsTheDiskUsage()
+    public function testItCollectsTheDiskUsage(): void
     {
-        $retriever = Mockery::mock(DiskUsageRetriever::class);
-        $dao       = Mockery::mock(Statistics_DiskUsageDao::class);
+        $retriever = $this->createMock(DiskUsageRetriever::class);
+        $dao       = $this->createMock(Statistics_DiskUsageDao::class);
 
         $collector = new DiskUsageCollector($retriever, $dao);
 
-        $project      = Mockery::mock(Project::class);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
         $collect_date = new DateTimeImmutable();
 
-        $project->shouldReceive('getID')->once()->andReturn(102);
-
-        $retriever->shouldReceive('getDiskUsageForProject')
-            ->once()
+        $retriever->expects(self::once())
+            ->method('getDiskUsageForProject')
             ->with($project)
-            ->andReturn(156);
+            ->willReturn(156);
 
-        $dao->shouldReceive('addGroup')
-            ->once()
+        $dao->expects(self::once())
+            ->method('addGroup')
             ->with(
                 102,
                 SvnPlugin::SERVICE_SHORTNAME,
                 156,
                 $collect_date->getTimestamp()
             );
-        $retriever->shouldReceive('hasCoreStatistics')->andReturnFalse();
+        $retriever->method('hasCoreStatistics')->willReturn(false);
 
         $collector->collectDiskUsageForProject($project, $collect_date);
     }
 
-    public function testItOverrideSvnCoreComputedStat()
+    public function testItOverrideSvnCoreComputedStat(): void
     {
-        $retriever = Mockery::mock(DiskUsageRetriever::class);
-        $dao       = Mockery::mock(Statistics_DiskUsageDao::class);
+        $retriever = $this->createMock(DiskUsageRetriever::class);
+        $dao       = $this->createMock(Statistics_DiskUsageDao::class);
 
         $collector = new DiskUsageCollector($retriever, $dao);
 
-        $project      = Mockery::mock(Project::class);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
         $collect_date = new DateTimeImmutable();
 
-        $project->shouldReceive('getID')->once()->andReturn(102);
-
-        $retriever->shouldReceive('getDiskUsageForProject')
-            ->once()
+        $retriever->expects(self::once())
+            ->method('getDiskUsageForProject')
             ->with($project)
-            ->andReturn(156);
+            ->willReturn(156);
 
-        $dao->shouldReceive('addGroup')
-            ->once()
+        $dao->expects(self::once())
+            ->method('addGroup')
             ->with(
                 102,
                 SvnPlugin::SERVICE_SHORTNAME,
                 156,
                 $collect_date->getTimestamp()
             );
-        $dao->shouldReceive('updateGroup')->once()->with($project, $collect_date, 'svn', '0');
-        $retriever->shouldReceive('hasCoreStatistics')->andReturnTrue();
+
+        $dao->expects(self::once())->method('updateGroup')->with($project, $collect_date, 'svn', '0');
+
+        $retriever->method('hasCoreStatistics')->willReturn(true);
 
         $collector->collectDiskUsageForProject($project, $collect_date);
     }
