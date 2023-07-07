@@ -34,9 +34,12 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
         \Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
         \Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
         \Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
-        \Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
+        \Tracker_FormElementFactory::FIELD_LAST_MODIFIED_BY,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE,
         \Tracker_FormElementFactory::FIELD_COMPUTED,
+        \Tracker_FormElementFactory::FIELD_ARTIFACT_IN_TRACKER,
+        \Tracker_FormElementFactory::FIELD_RANK,
+        \Tracker_FormElementFactory::FIELD_BURNDOWN,
     ];
 
     public function __construct(

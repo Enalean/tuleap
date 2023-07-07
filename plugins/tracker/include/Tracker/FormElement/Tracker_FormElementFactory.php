@@ -56,6 +56,8 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public const FIELD_COMPUTED              = 'computed';
     public const FIELD_BURNDOWN              = 'burndown';
     public const FIELD_LAST_MODIFIED_BY      = 'luby';
+    public const FIELD_ARTIFACT_IN_TRACKER   = 'atid';
+    public const FIELD_RANK                  = 'priority';
 
     public const CONTAINER_COLUMN_TYPE   = 'column';
     public const CONTAINER_FIELDSET_TYPE = 'fieldset';
@@ -95,16 +97,16 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     ];
 
     protected $special_classnames     = [
-        self::FIELD_LAST_UPDATE_DATE_TYPE  => Tracker_FormElement_Field_LastUpdateDate::class,
-        self::FIELD_ARTIFACT_ID_TYPE       => Tracker_FormElement_Field_ArtifactId::class,
-        self::FIELD_SUBMITTED_ON_TYPE      => Tracker_FormElement_Field_SubmittedOn::class,
-        'atid'                             => Tracker_FormElement_Field_PerTrackerArtifactId::class,
-        self::FIELD_SUBMITTED_BY_TYPE      => Tracker_FormElement_Field_SubmittedBy::class,
-        self::FIELD_LAST_MODIFIED_BY       => Tracker_FormElement_Field_LastModifiedBy::class,
-        self::FIELD_CROSS_REFERENCES       => Tracker_FormElement_Field_CrossReferences::class,
-        self::FIELD_BURNDOWN               => Tracker_FormElement_Field_Burndown::class,
-        self::FIELD_COMPUTED               => Tracker_FormElement_Field_Computed::class,
-        'priority'                         => Tracker_FormElement_Field_Priority::class,
+        self::FIELD_LAST_UPDATE_DATE_TYPE => Tracker_FormElement_Field_LastUpdateDate::class,
+        self::FIELD_ARTIFACT_ID_TYPE => Tracker_FormElement_Field_ArtifactId::class,
+        self::FIELD_SUBMITTED_ON_TYPE => Tracker_FormElement_Field_SubmittedOn::class,
+        self::FIELD_ARTIFACT_IN_TRACKER => Tracker_FormElement_Field_PerTrackerArtifactId::class,
+        self::FIELD_SUBMITTED_BY_TYPE => Tracker_FormElement_Field_SubmittedBy::class,
+        self::FIELD_LAST_MODIFIED_BY => Tracker_FormElement_Field_LastModifiedBy::class,
+        self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
+        self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
+        self::FIELD_COMPUTED => Tracker_FormElement_Field_Computed::class,
+        self::FIELD_RANK => Tracker_FormElement_Field_Priority::class,
     ];
     protected $group_classnames       = [
         self::CONTAINER_FIELDSET_TYPE => Tracker_FormElement_Container_Fieldset::class,
