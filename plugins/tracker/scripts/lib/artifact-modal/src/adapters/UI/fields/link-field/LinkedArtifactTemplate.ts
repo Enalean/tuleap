@@ -18,7 +18,7 @@
  */
 
 import type { UpdateFunction } from "hybrids";
-import { html } from "hybrids";
+import { dispatch, html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { getRestoreLabel, getUnlinkLabel } from "../../../../gettext-catalog";
 import type { HostElement } from "./LinkField";
@@ -84,6 +84,7 @@ export const getActionButton = (
 
     if (!artifact.is_marked_for_removal) {
         const markForRemoval = (host: HostElement): void => {
+            dispatch(host, "change", { bubbles: true });
             host.linked_artifacts = host.controller.markForRemoval(artifact.identifier);
         };
         return html`<button
@@ -97,6 +98,7 @@ export const getActionButton = (
     }
 
     const cancelRemoval = (host: HostElement): void => {
+        dispatch(host, "change", { bubbles: true });
         host.linked_artifacts = host.controller.unmarkForRemoval(artifact.identifier);
     };
     return html`<button

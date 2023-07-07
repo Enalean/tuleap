@@ -255,8 +255,9 @@ describe("LinkField", () => {
             });
 
             const getHost = (): HostElement => {
+                const element = doc.createElement("div");
                 const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
-                return {
+                return Object.assign(element, {
                     controller: {
                         getAllowedLinkTypes: () => LinkTypesCollectionStub.withParentPair(),
                         hasParentLink: () => has_parent_link,
@@ -264,7 +265,7 @@ describe("LinkField", () => {
                     },
                     linked_artifact_presenters,
                     parent_artifacts,
-                } as HostElement;
+                } as HostElement);
             };
 
             describe("setLinkedArtifacts", () => {
@@ -330,6 +331,17 @@ describe("LinkField", () => {
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
+                });
+
+                it(`dispatches a bubbling "change" event`, () => {
+                    const host = getHost();
+                    const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+
+                    setNewLinks(host, []);
+
+                    const event = dispatchEvent.mock.calls[0][0];
+                    expect(event.type).toBe("change");
+                    expect(event.bubbles).toBe(true);
                 });
             });
         });

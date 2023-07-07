@@ -225,14 +225,14 @@ describe(`LinkedArtifactTemplate`, () => {
             const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
             const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
             const parent_artifacts: ReadonlyArray<LinkedArtifactIdentifier> = [];
-            const host = {
+            const host = Object.assign(target, {
                 current_artifact_reference,
                 linked_artifacts,
                 linked_artifact_presenters,
                 parent_artifacts,
                 allowed_link_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
                 controller,
-            } as HostElement;
+            } as HostElement);
             return new Proxy(host, {
                 set: (target, property, new_value): boolean => {
                     if (property === "linked_artifacts") {
@@ -269,10 +269,11 @@ describe(`LinkedArtifactTemplate`, () => {
                 expect(target.children).toHaveLength(0);
             });
 
-            it(`will mark the artifact for removal`, () => {
+            it(`will mark the artifact for removal and dispatch a bubbling "change" event`, () => {
                 const linked_artifact = LinkedArtifactStub.withDefaults();
                 const host = getHost(linked_artifact);
                 render(host, linked_artifact, false);
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",
@@ -285,14 +286,18 @@ describe(`LinkedArtifactTemplate`, () => {
                         (artifact) => artifact.is_marked_for_removal
                     )
                 ).toBe(true);
+                const event = dispatchEvent.mock.calls[0][0];
+                expect(event.type).toBe("change");
+                expect(event.bubbles).toBe(true);
             });
 
-            it(`will cancel the removal of the artifact`, () => {
+            it(`will cancel the removal of the artifact and dispatch a bubbling "change" event`, () => {
                 marked_for_removal_verifier =
                     VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
                 const linked_artifact = LinkedArtifactStub.withDefaults();
                 const host = getHost(linked_artifact);
                 render(host, linked_artifact, true);
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",
@@ -305,6 +310,9 @@ describe(`LinkedArtifactTemplate`, () => {
                         (artifact) => artifact.is_marked_for_removal
                     )
                 ).toBe(false);
+                const event = dispatchEvent.mock.calls[0][0];
+                expect(event.type).toBe("change");
+                expect(event.bubbles).toBe(true);
             });
         });
 
