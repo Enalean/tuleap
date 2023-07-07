@@ -30,11 +30,8 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile(
-    $include_assets->getFileURL('site-admin-project-list.js')
-);
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-project-list.js'));
 
 //EXPORT-CSV
 if ($request->exist('export')) {

@@ -154,11 +154,8 @@ foreach ($dao->searchAll() as $row) {
     ];
 }
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile(
-    $include_assets->getFileURL('site-admin-system-events-notifications.js')
-);
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-system-events-notifications.js'));
 
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(

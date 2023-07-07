@@ -1,5 +1,7 @@
 /**
- * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "tlp";
+const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
 
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".delete-tv3-button");
-});
+const jest_base_config = defineJestConfiguration();
+module.exports = {
+    ...jest_base_config,
+    displayName: "@tuleap/core-site-admin",
+};

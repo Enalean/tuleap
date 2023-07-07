@@ -1,7 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +12,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "tlp";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".system-event-add-notification");
-    openAllTargetModalsOnClick(document, ".system-event-edit-notification");
-    openAllTargetModalsOnClick(document, ".system-event-delete-notification");
+    openAllTargetModalsOnClick(document, ".delete-tv3-button");
 });

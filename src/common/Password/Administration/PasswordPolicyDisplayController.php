@@ -27,6 +27,7 @@ use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Request\DispatchableWithRequest;
@@ -64,8 +65,8 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
-                'site-admin/password-policy.js'
+                new IncludeAssets(__DIR__ . '/../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin'),
+                'site-admin-password-policy.js'
             )
         );
 

@@ -19,7 +19,7 @@ import CKEDITOR from "ckeditor4";
 import { config } from "@tuleap/ckeditor-config";
 
 import { autocomplete_users_for_select2 as autocomplete } from "@tuleap/autocomplete-for-select2";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 
 const warning_element = document.getElementById("massmail-warning"),
     destination_element = document.getElementById("massmail-destination"),

@@ -249,12 +249,12 @@ class Admin_PermissionDelegationController
             $add_perm_presenter = new Admin_PermissionDelegationPermissionsModalPresenter($current_group, $unused_permissions);
         }
 
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
+        $include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+        $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-permission-delegation.js'));
 
         $presenter = new Admin_PermissionDelegationIndexPresenter(
             $this->csrf_token,
             $formatted_groups,
-            $include_assets->getFileURL('site-admin-permission-delegation.js'),
             new Admin_PermissionDelegationGroupModalPresenter(),
             $delete_group_presenter,
             $edit_group_presenter,
