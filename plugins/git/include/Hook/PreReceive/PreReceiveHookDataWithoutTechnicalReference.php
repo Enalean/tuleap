@@ -34,7 +34,7 @@ final class PreReceiveHookDataWithoutTechnicalReference
     /**
      * @param array<string,PreReceiveHookUpdatedReference> $updated_references
      */
-    private function __construct(public readonly array $updated_references, public readonly string $pre_opened_dir)
+    private function __construct(public readonly array $updated_references, public readonly string $repository_path)
     {
     }
 
@@ -52,6 +52,6 @@ final class PreReceiveHookDataWithoutTechnicalReference
             }
         }
 
-        return new self($updated_references, $hook_data->pre_opened_dir);
+        return new self($updated_references, $hook_data->repository_path);
     }
 }

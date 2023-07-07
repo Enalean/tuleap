@@ -28,11 +28,7 @@ abstract class FFIWASMCallerStub
     {
     }
 
-    /**
-     * @psalm-param positive-int $max_exec_time_in_ms
-     * @psalm-param positive-int $max_memory_size_in_bytes
-     */
-    abstract public function callWasmModule(string $filename, string $json, string $read_only_dir_path, string $read_only_dir_guest_path, int $max_exec_time_in_ms, int $max_memory_size_in_bytes): \FFI\CData;
+    abstract public function callWasmModule(string $config_json, string $module_input_json): \FFI\CData;
 
     abstract public function freeCallWasmModuleOutput(\FFI\CData $json_ptr): void;
 }

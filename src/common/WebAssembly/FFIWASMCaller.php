@@ -63,15 +63,29 @@ final class FFIWASMCaller implements WASMCaller
     ) {
     }
 
-    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option
+    public function call(string $wasm_path, string $module_input_json, string $read_only_dir_path, string $read_only_dir_guest_path): Option
     {
+        $config      = [
+            "wasm_module_path" => $wasm_path,
+            "read_only_dir" => [
+                "host_path" => $read_only_dir_path,
+                "guest_path" => $read_only_dir_guest_path,
+            ],
+            "limits" => [
+                "max_exec_time_in_ms" => self::MAX_EXEC_TIME_IN_MS,
+                "max_memory_size_in_bytes" => self::MAX_MEMORY_SIZE_IN_BYTES,
+            ],
+        ];
+        $config_json = json_encode($config, JSON_THROW_ON_ERROR);
+
         $start_time = microtime(true);
 
-        $output     = self::getFFIModule()->callWasmModule($wasm_path, $input, $read_only_dir_path, $read_only_dir_guest_path, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
+        $output     = self::getFFIModule()->callWasmModule($config_json, $module_input_json);
         $output_php = \FFI::string($output);
         self::getFFIModule()->freeCallWasmModuleOutput($output);
 
         $end_time = microtime(true);
+
         Prometheus::instance()->histogram(
             self::EXEC_TIME_FULL_NAME,
             self::EXEC_TIME_FULL_HELP,
