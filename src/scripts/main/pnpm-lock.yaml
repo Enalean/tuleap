@@ -10,6 +10,9 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../themes/BurningParrot
+  '@tuleap/ckeditor-config':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/ckeditor-config
   '@tuleap/common-theme':
     specifier: workspace:*
     version: link:../../themes/common

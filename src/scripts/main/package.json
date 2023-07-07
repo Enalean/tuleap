@@ -8,6 +8,7 @@
     "@joeattardi/emoji-button": "^4.6.2",
     "@tuleap/autocomplete-for-select2": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/ckeditor-config": "workspace:*",
     "@tuleap/common-theme": "workspace:*",
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/date-helper": "workspace:*",

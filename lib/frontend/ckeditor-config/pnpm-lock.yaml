@@ -1,0 +1,15 @@
+lockfileVersion: '6.0'
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@types/ckeditor':
+    specifier: ^4.9.10
+    version: 4.9.10
+
+packages:
+
+  /@types/ckeditor@4.9.10:
+    resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
+    dev: true

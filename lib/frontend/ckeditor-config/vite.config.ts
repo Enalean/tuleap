@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,10 +15,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import CKEDITOR from "ckeditor4";
-import { config } from "@tuleap/ckeditor-config";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-CKEDITOR.replace("license-agreement-content", config);
+export default vite.defineLibConfig({
+    plugins: [],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/tuleap-ckeditor-config.ts"),
+            name: "CKEditorConfig",
+        },
+    },
+});
