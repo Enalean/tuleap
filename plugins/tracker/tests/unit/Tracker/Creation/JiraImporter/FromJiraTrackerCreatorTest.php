@@ -131,7 +131,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator->shouldReceive('getJiraExporter')->andReturn($jira_exporter);
 
         $jira_exporter->shouldReceive('exportIssuesToXml')->once()->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
-        $jira_exporter->shouldReceive('getProjectSimpleXmlElement')->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
         $this->tracker_xml_import->shouldReceive('import')->once()->andReturn([1]);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));
 
