@@ -23,65 +23,54 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer;
 
 use GitRepoNotFoundException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project_AccessException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const USER_DOING_THE_CHANGES_ID = 999;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReviewerDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerDAO
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $permissions_checker;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
      */
     private $event_dispatcher;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user_doing_the_changes;
-    /**
-     * @var ReviewerUpdater
-     */
-    private $reviewer_updater;
+    private \PFUser $user_doing_the_changes;
+    private ReviewerUpdater $reviewer_updater;
 
     protected function setUp(): void
     {
-        $this->dao                 = Mockery::mock(ReviewerDAO::class);
-        $this->permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
-        $this->event_dispatcher    = Mockery::mock(EventDispatcherInterface::class);
+        $this->dao                 = $this->createMock(ReviewerDAO::class);
+        $this->permissions_checker = $this->createMock(PullRequestPermissionChecker::class);
+        $this->event_dispatcher    = $this->createMock(EventDispatcherInterface::class);
 
-        $this->user_doing_the_changes = Mockery::mock(\PFUser::class);
-        $this->user_doing_the_changes->shouldReceive('getId')->andReturn((string) self::USER_DOING_THE_CHANGES_ID);
+        $this->user_doing_the_changes = UserTestBuilder::aUser()->withId(self::USER_DOING_THE_CHANGES_ID)->build();
 
         $this->reviewer_updater = new ReviewerUpdater($this->dao, $this->permissions_checker, $this->event_dispatcher);
     }
 
     public function testListOfReviewersCanBeCleared(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)
-            ->once()->andReturn(78);
+        $this->dao->expects(self::once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)
+            ->willReturn(78);
 
-        $this->event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(ReviewerChangeEvent::class));
+        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(ReviewerChangeEvent::class));
 
         $this->reviewer_updater->updatePullRequestReviewers(
             $pull_request,
@@ -92,22 +81,22 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetListOfReviewers(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $user_1 = Mockery::mock(\PFUser::class);
-        $user_1->shouldReceive('getId')->andReturn('101');
-        $user_2 = Mockery::mock(\PFUser::class);
-        $user_2->shouldReceive('getId')->andReturn('102');
+        $user_1 = $this->createMock(\PFUser::class);
+        $user_1->method('getId')->willReturn('101');
+        $user_2 = $this->createMock(\PFUser::class);
+        $user_2->method('getId')->willReturn('102');
 
         $expected_change_id = 79;
-        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
-            ->once()->andReturn($expected_change_id);
-        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')->twice();
+        $this->dao->expects(self::once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
+            ->willReturn($expected_change_id);
+        $this->permissions_checker->expects(self::exactly(2))->method('checkPullRequestIsReadableByUser');
 
-        $this->event_dispatcher->shouldReceive('dispatch')->with(
-            Mockery::on(
+        $this->event_dispatcher->method('dispatch')->with(
+            self::callback(
                 static function (ReviewerChangeEvent $event) use ($expected_change_id): bool {
                     return $event->getChangeID() === $expected_change_id;
                 }
@@ -125,14 +114,14 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReviewerChangeEventIsNotSentWhenNoNewChangesAreCreated(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->shouldReceive('setReviewers')->once()->andReturnNull();
-        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser');
+        $this->dao->expects(self::once())->method('setReviewers')->willReturn(null);
+        $this->permissions_checker->method('checkPullRequestIsReadableByUser');
 
-        $this->event_dispatcher->shouldNotReceive('dispatch');
+        $this->event_dispatcher->expects(self::never())->method('dispatch');
 
         $this->reviewer_updater->updatePullRequestReviewers(
             $pull_request,
@@ -144,15 +133,15 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessThePullRequest(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn('101');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getId')->willReturn('101');
 
-        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->andThrow(UserCannotReadGitRepositoryException::class);
+        $this->permissions_checker->method('checkPullRequestIsReadableByUser')
+            ->willThrowException(new UserCannotReadGitRepositoryException());
 
         $this->expectException(UserCannotBeAddedAsReviewerException::class);
         $this->reviewer_updater->updatePullRequestReviewers(
@@ -165,15 +154,15 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessTheProject(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn('101');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getId')->willReturn('101');
 
-        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->andThrow(
+        $this->permissions_checker->method('checkPullRequestIsReadableByUser')
+            ->willThrowException(
                 new class extends Project_AccessException
                 {
                 }
@@ -190,15 +179,15 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessTheGitRepository(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(85);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(85);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn('101');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getId')->willReturn('101');
 
-        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->andThrow(GitRepoNotFoundException::class);
+        $this->permissions_checker->method('checkPullRequestIsReadableByUser')
+            ->willThrowException(new GitRepoNotFoundException());
 
         $this->expectException(UserCannotBeAddedAsReviewerException::class);
         $this->reviewer_updater->updatePullRequestReviewers(
@@ -211,9 +200,9 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatingListOfReviewersIsNotPossibleOnAClosedPullRequest(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(86);
-        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_MERGED);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(86);
+        $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_MERGED);
 
         $this->expectException(ReviewersCannotBeUpdatedOnClosedPullRequestException::class);
         $this->reviewer_updater->updatePullRequestReviewers($pull_request, $this->user_doing_the_changes, new \DateTimeImmutable('@1'));

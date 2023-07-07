@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use GitRepositoryFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineComment;
@@ -32,26 +31,20 @@ use Tuleap\PullRequest\UniDiffLine;
 
 final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FileUniDiffBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&FileUniDiffBuilder
      */
     private $file_unidiff_builder;
     /**
-     * @var GitRepositoryFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_repository_factory;
-
-    /**
-     * @var InlineCommentCodeContextExtractor
-     */
-    private $code_context_extractor;
+    private InlineCommentCodeContextExtractor $code_context_extractor;
 
     protected function setUp(): void
     {
-        $this->file_unidiff_builder   = \Mockery::mock(FileUniDiffBuilder::class);
-        $this->git_repository_factory = \Mockery::mock(GitRepositoryFactory::class);
+        $this->file_unidiff_builder   = $this->createMock(FileUniDiffBuilder::class);
+        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
 
         $this->code_context_extractor = new InlineCommentCodeContextExtractor(
             $this->file_unidiff_builder,
@@ -64,9 +57,9 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $pr             = $this->buildPullRequest(56);
         $inline_comment = $this->buildInlineComment(125, $pr->getId(), 8);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getFullPath')->andReturn('/repo_path');
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturn($repository);
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->method('getFullPath')->willReturn('/repo_path');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($repository);
 
         $unidiff = new FileUniDiff();
         $unidiff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'A');
@@ -78,11 +71,11 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $unidiff->addLine(UniDiffLine::REMOVED, 7, 7, 7, 'Foo');
         $unidiff->addLine(UniDiffLine::ADDED, 8, 8, 8, 'Bar');
         $unidiff->addLine(UniDiffLine::KEPT, 9, 9, 9, 'Should not be present');
-        $this->file_unidiff_builder->shouldReceive('buildFileUniDiffFromCommonAncestor')->andReturn($unidiff);
+        $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
         $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
 
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOF
              C
              D
@@ -100,17 +93,17 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $pr             = $this->buildPullRequest(57);
         $inline_comment = $this->buildInlineComment(128, $pr->getId(), 1);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getFullPath')->andReturn('/repo_path');
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturn($repository);
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->method('getFullPath')->willReturn('/repo_path');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($repository);
 
         $unidiff = new FileUniDiff();
         $unidiff->addLine(UniDiffLine::ADDED, 1, null, 1, 'Baz');
-        $this->file_unidiff_builder->shouldReceive('buildFileUniDiffFromCommonAncestor')->andReturn($unidiff);
+        $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
         $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
 
-        $this->assertEquals('+Baz', $code_context);
+        self::assertEquals('+Baz', $code_context);
     }
 
     public function testCodeContextEndingWithEmptyLinesIsKept(): void
@@ -118,9 +111,9 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $pr             = $this->buildPullRequest(57);
         $inline_comment = $this->buildInlineComment(128, $pr->getId(), 5);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getFullPath')->andReturn('/repo_path');
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturn($repository);
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->method('getFullPath')->willReturn('/repo_path');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($repository);
 
         $unidiff = new FileUniDiff();
         $unidiff->addLine(UniDiffLine::KEPT, 1, 1, 1, '');
@@ -128,11 +121,11 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $unidiff->addLine(UniDiffLine::KEPT, 3, 3, 3, '');
         $unidiff->addLine(UniDiffLine::KEPT, 4, 4, 4, '');
         $unidiff->addLine(UniDiffLine::KEPT, 5, 5, 5, '');
-        $this->file_unidiff_builder->shouldReceive('buildFileUniDiffFromCommonAncestor')->andReturn($unidiff);
+        $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
         $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
 
-        $this->assertEquals(" \n \n \n \n ", $code_context);
+        self::assertEquals(" \n \n \n \n ", $code_context);
     }
 
     public function testRefusesToExtractWhenTheInlineCommentDoesNotMatchTheGivenPullRequest(): void
@@ -149,7 +142,7 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $pr             = $this->buildPullRequest(61);
         $inline_comment = $this->buildInlineComment(130, $pr->getId(), 1);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturn(null);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn(null);
 
         $this->expectException(InlineCommentCodeContextRepositoryNotFoundException::class);
 

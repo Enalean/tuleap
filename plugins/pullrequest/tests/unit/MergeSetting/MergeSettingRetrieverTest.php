@@ -20,48 +20,38 @@
 
 namespace Tuleap\PullRequest\MergeSetting;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class MergeSettingRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MergeSettingRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $git_repository;
+    private MergeSettingDAO&MockObject $dao;
+    private \GitRepository&MockObject $git_repository;
 
     protected function setUp(): void
     {
-        $this->dao            = \Mockery::mock(MergeSettingDAO::class);
-        $this->git_repository = \Mockery::mock(\GitRepository::class);
+        $this->dao            = $this->createMock(MergeSettingDAO::class);
+        $this->git_repository = $this->createMock(\GitRepository::class);
     }
 
-    public function testDefaultSettingIsRetrievedWhenNoSpecificInformationIsGiven()
+    public function testDefaultSettingIsRetrievedWhenNoSpecificInformationIsGiven(): void
     {
-        $this->dao->shouldReceive('getMergeSettingByRepositoryID')->andReturns(null);
-        $this->git_repository->shouldReceive('getId')->andReturns(10);
+        $this->dao->method('getMergeSettingByRepositoryID')->willReturn(null);
+        $this->git_repository->method('getId')->willReturn(10);
 
         $merge_setting_retriever = new MergeSettingRetriever($this->dao);
         $merge_setting           = $merge_setting_retriever->getMergeSettingForRepository($this->git_repository);
 
-        $this->assertInstanceOf(MergeSettingDefault::class, $merge_setting);
+        self::assertInstanceOf(MergeSettingDefault::class, $merge_setting);
     }
 
-    public function testSettingAreRetrievedWhenInformationExist()
+    public function testSettingAreRetrievedWhenInformationExist(): void
     {
-        $this->dao->shouldReceive('getMergeSettingByRepositoryID')->andReturns(['merge_commit_allowed' => 1]);
-        $this->git_repository->shouldReceive('getId')->andReturns(10);
+        $this->dao->method('getMergeSettingByRepositoryID')->willReturn(['merge_commit_allowed' => 1]);
+        $this->git_repository->method('getId')->willReturn(10);
 
         $merge_setting_retriever = new MergeSettingRetriever($this->dao);
         $merge_setting           = $merge_setting_retriever->getMergeSettingForRepository($this->git_repository);
 
-        $this->assertInstanceOf(MergeSettingWithValue::class, $merge_setting);
+        self::assertInstanceOf(MergeSettingWithValue::class, $merge_setting);
     }
 }

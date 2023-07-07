@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
 final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testFindsRegisteredListener(): void
     {
-        $event_subject_notification_implementation = \Mockery::mock(EventSubjectToNotification::class);
+        $event_subject_notification_implementation = $this->createMock(EventSubjectToNotification::class);
 
         $listener_provider = new EventSubjectToNotificationListenerProvider([
             $event_subject_notification_implementation::class => [
-                static function (): EventSubjectToNotificationListener {
+                function (): EventSubjectToNotificationListener {
                     return new EventSubjectToNotificationListener(
-                        \Mockery::mock(PullRequestNotificationStrategy::class),
-                        \Mockery::mock(NotificationToProcessBuilder::class)
+                        $this->createMock(PullRequestNotificationStrategy::class),
+                        $this->createMock(NotificationToProcessBuilder::class)
                     );
                 },
-                static function (): EventSubjectToNotificationListener {
+                function (): EventSubjectToNotificationListener {
                     return new EventSubjectToNotificationListener(
-                        \Mockery::mock(PullRequestNotificationStrategy::class),
-                        \Mockery::mock(NotificationToProcessBuilder::class)
+                        $this->createMock(PullRequestNotificationStrategy::class),
+                        $this->createMock(NotificationToProcessBuilder::class)
                     );
                 },
             ],
@@ -52,7 +49,7 @@ final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\
 
         $listeners = $listener_provider->getListenersForEvent($event_subject_notification_implementation);
 
-        $this->assertCount(2, $listeners);
+        self::assertCount(2, $listeners);
     }
 
     public function testNoListenerAreFoundWhenNothingMatchesTheNotificationEvent(): void
@@ -73,6 +70,6 @@ final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\
 
         $listeners = $listener_provider->getListenersForEvent($event_subject_to_notification);
 
-        $this->assertEmpty($listeners);
+        self::assertEmpty($listeners);
     }
 }

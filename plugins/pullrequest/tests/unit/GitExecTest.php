@@ -21,11 +21,10 @@
 namespace Tuleap\PullRequest;
 
 use Git_Command_Exception;
+use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
 
@@ -58,7 +57,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfBranchDoesNotExist(): void
     {
-        $this->expectException('Tuleap\PullRequest\Exception\UnknownBranchNameException');
+        $this->expectException(UnknownBranchNameException::class);
 
         $this->git_exec->getBranchSha1('refs/heads/universitylike');
     }

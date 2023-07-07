@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ThreadCommentColorAssignerTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Dao|Dao&\PHPUnit\Framework\MockObject\MockObject
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $global_dao;
     private ThreadCommentColorAssigner $color_assigner;

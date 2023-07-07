@@ -22,14 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /**
@@ -75,42 +71,42 @@ class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEquals(7, count($lines));
+        self::assertEquals(7, count($lines));
 
         $line = $diff->getLineFromNewOffset(1);
-        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
-        $this->assertEquals(1, $line->getOldOffset());
-        $this->assertEquals('# Title', $line->getContent());
+        self::assertEquals(UniDiffLine::KEPT, $line->getType());
+        self::assertEquals(1, $line->getOldOffset());
+        self::assertEquals('# Title', $line->getContent());
 
         $line = $diff->getLineFromNewOffset(2);
-        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
-        $this->assertEquals(2, $line->getOldOffset());
-        $this->assertEquals('', $line->getContent());
+        self::assertEquals(UniDiffLine::KEPT, $line->getType());
+        self::assertEquals(2, $line->getOldOffset());
+        self::assertEquals('', $line->getContent());
 
         $line = $diff->getLineFromNewOffset(3);
-        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
-        $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('0', $line->getContent());
+        self::assertEquals(UniDiffLine::ADDED, $line->getType());
+        self::assertEquals(null, $line->getOldOffset());
+        self::assertEquals('0', $line->getContent());
 
         $line = $diff->getLineFromNewOffset(4);
-        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
-        $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('Bar', $line->getContent());
+        self::assertEquals(UniDiffLine::ADDED, $line->getType());
+        self::assertEquals(null, $line->getOldOffset());
+        self::assertEquals('Bar', $line->getContent());
 
         $line = $diff->getLineFromNewOffset(5);
-        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
-        $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('Baz', $line->getContent());
+        self::assertEquals(UniDiffLine::ADDED, $line->getType());
+        self::assertEquals(null, $line->getOldOffset());
+        self::assertEquals('Baz', $line->getContent());
 
         $line = $diff->getLineFromOldOffset(3);
-        $this->assertEquals(UniDiffLine::REMOVED, $line->getType());
-        $this->assertEquals(null, $line->getNewOffset());
-        $this->assertEquals('0.000', $line->getContent());
+        self::assertEquals(UniDiffLine::REMOVED, $line->getType());
+        self::assertEquals(null, $line->getNewOffset());
+        self::assertEquals('0.000', $line->getContent());
 
         $line = $diff->getLineFromOldOffset(4);
-        $this->assertEquals(UniDiffLine::REMOVED, $line->getType());
-        $this->assertEquals(null, $line->getNewOffset());
-        $this->assertEquals('Bar', $line->getContent());
+        self::assertEquals(UniDiffLine::REMOVED, $line->getType());
+        self::assertEquals(null, $line->getNewOffset());
+        self::assertEquals('Bar', $line->getContent());
     }
 
     public function testItHandlesDeletedFile(): void
@@ -127,15 +123,15 @@ class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEquals(2, count($lines));
+        self::assertEquals(2, count($lines));
 
-        $this->assertEquals(UniDiffLine::REMOVED, $lines[1]->getType());
-        $this->assertEquals(1, $lines[1]->getOldOffset());
-        $this->assertEquals(null, $lines[1]->getNewOffset());
+        self::assertEquals(UniDiffLine::REMOVED, $lines[1]->getType());
+        self::assertEquals(1, $lines[1]->getOldOffset());
+        self::assertEquals(null, $lines[1]->getNewOffset());
 
-        $this->assertEquals(UniDiffLine::REMOVED, $lines[2]->getType());
-        $this->assertEquals(2, $lines[2]->getOldOffset());
-        $this->assertEquals(null, $lines[2]->getNewOffset());
+        self::assertEquals(UniDiffLine::REMOVED, $lines[2]->getType());
+        self::assertEquals(2, $lines[2]->getOldOffset());
+        self::assertEquals(null, $lines[2]->getNewOffset());
     }
 
     public function testItHandlesAddedFile(): void
@@ -154,14 +150,14 @@ class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file2_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEquals(2, count($lines));
+        self::assertEquals(2, count($lines));
 
-        $this->assertEquals(UniDiffLine::ADDED, $lines[1]->getType());
-        $this->assertEquals(1, $lines[1]->getNewOffset());
-        $this->assertEquals(null, $lines[1]->getOldOffset());
+        self::assertEquals(UniDiffLine::ADDED, $lines[1]->getType());
+        self::assertEquals(1, $lines[1]->getNewOffset());
+        self::assertEquals(null, $lines[1]->getOldOffset());
 
-        $this->assertEquals(UniDiffLine::ADDED, $lines[2]->getType());
-        $this->assertEquals(2, $lines[2]->getNewOffset());
-        $this->assertEquals(null, $lines[2]->getOldOffset());
+        self::assertEquals(UniDiffLine::ADDED, $lines[2]->getType());
+        self::assertEquals(2, $lines[2]->getNewOffset());
+        self::assertEquals(null, $lines[2]->getOldOffset());
     }
 }

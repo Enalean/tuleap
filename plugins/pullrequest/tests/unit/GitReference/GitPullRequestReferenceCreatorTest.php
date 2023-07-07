@@ -20,107 +20,102 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testPullRequestReferenceIsCreatedDirectlyWhenReferenceIsAvailable()
+    public function testPullRequestReferenceIsCreatedDirectlyWhenReferenceIsAvailable(): void
     {
-        $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
+        $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
         $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
-        $pull_request           = \Mockery::mock(PullRequest::class);
-        $executor_source        = \Mockery::mock(GitExec::class);
-        $executor_destination   = \Mockery::mock(GitExec::class);
-        $repository_destination = \Mockery::mock(\GitRepository::class);
+        $pull_request           = $this->createMock(PullRequest::class);
+        $executor_source        = $this->createMock(GitExec::class);
+        $executor_destination   = $this->createMock(GitExec::class);
+        $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
-        $dao->shouldReceive('updateStatusByPullRequestId')->once();
-        $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
-        $executor_source->shouldReceive('push')->once();
+        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects(self::once())->method('updateStatusByPullRequestId');
+        $namespace_checker->method('isAvailable')->willReturn(true);
+        $executor_source->expects(self::once())->method('push');
 
-        $pull_request->shouldReceive('getId')->andReturns(1);
-        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $pull_request->shouldReceive('getSha1Src')->andReturns('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
-        $repository_destination->shouldReceive('getId')->andReturns(1);
-        $repository_destination->shouldReceive('getPath')->andReturns('/path');
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepoDestId')->willReturn(1);
+        $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
+        $repository_destination->method('getId')->willReturn(1);
+        $repository_destination->method('getPath')->willReturn('/path');
 
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    public function testPullRequestReferenceIsCreatedWithFirstAvailableOneWhenTheInitialOneIsAlreadyTaken()
+    public function testPullRequestReferenceIsCreatedWithFirstAvailableOneWhenTheInitialOneIsAlreadyTaken(): void
     {
-        $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
+        $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
         $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
-        $pull_request           = \Mockery::mock(PullRequest::class);
-        $executor_source        = \Mockery::mock(GitExec::class);
-        $executor_destination   = \Mockery::mock(GitExec::class);
-        $repository_destination = \Mockery::mock(\GitRepository::class);
+        $pull_request           = $this->createMock(PullRequest::class);
+        $executor_source        = $this->createMock(GitExec::class);
+        $executor_destination   = $this->createMock(GitExec::class);
+        $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
-        $dao->shouldReceive('updateGitReferenceToNextAvailableOne')->andReturns(2, 3)->twice();
-        $dao->shouldReceive('updateStatusByPullRequestId')->once();
-        $namespace_checker->shouldReceive('isAvailable')->andReturns(false, false, true);
-        $executor_source->shouldReceive('push')->once();
+        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects(self::exactly(2))->method('updateGitReferenceToNextAvailableOne')->willReturn(2, 3);
+        $dao->expects(self::once())->method('updateStatusByPullRequestId');
+        $namespace_checker->method('isAvailable')->willReturn(false, false, true);
+        $executor_source->expects(self::once())->method('push');
 
-        $pull_request->shouldReceive('getId')->andReturns(1);
-        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $pull_request->shouldReceive('getSha1Src')->andReturns('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
-        $repository_destination->shouldReceive('getId')->andReturns(1);
-        $repository_destination->shouldReceive('getPath')->andReturns('/path');
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepoDestId')->willReturn(1);
+        $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
+        $repository_destination->method('getId')->willReturn(1);
+        $repository_destination->method('getPath')->willReturn('/path');
 
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    public function testExpectedDestinationRepositoryIsGiven()
+    public function testExpectedDestinationRepositoryIsGiven(): void
     {
-        $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
+        $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
         $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
-        $pull_request           = \Mockery::mock(PullRequest::class);
-        $executor_source        = \Mockery::mock(GitExec::class);
-        $executor_destination   = \Mockery::mock(GitExec::class);
-        $repository_destination = \Mockery::mock(\GitRepository::class);
+        $pull_request           = $this->createMock(PullRequest::class);
+        $executor_source        = $this->createMock(GitExec::class);
+        $executor_destination   = $this->createMock(GitExec::class);
+        $repository_destination = $this->createMock(\GitRepository::class);
 
-        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $repository_destination->shouldReceive('getId')->andReturns(2);
+        $pull_request->method('getRepoDestId')->willReturn(1);
+        $repository_destination->method('getId')->willReturn(2);
 
         $this->expectException(\LogicException::class);
 
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    public function testGitReferenceIsMarkedAsBrokenWhenItCannotBeCreated()
+    public function testGitReferenceIsMarkedAsBrokenWhenItCannotBeCreated(): void
     {
-        $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $namespace_checker = \Mockery::mock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
+        $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
+        $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
         $reference_creator = new GitPullRequestReferenceCreator($dao, $namespace_checker);
 
-        $pull_request           = \Mockery::mock(PullRequest::class);
-        $executor_source        = \Mockery::mock(GitExec::class);
-        $executor_destination   = \Mockery::mock(GitExec::class);
-        $repository_destination = \Mockery::mock(\GitRepository::class);
+        $pull_request           = $this->createMock(PullRequest::class);
+        $executor_source        = $this->createMock(GitExec::class);
+        $executor_destination   = $this->createMock(GitExec::class);
+        $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->shouldReceive('createGitReferenceForPullRequest')->andReturns(1)->once();
-        $dao->shouldReceive('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN)->once();
-        $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
-        $executor_source->shouldReceive('push')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
+        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects(self::once())->method('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN);
+        $namespace_checker->method('isAvailable')->willReturn(true);
+        $executor_source->expects(self::once())->method('push')->willThrowException($this->createMock(\Git_Command_Exception::class));
 
-        $pull_request->shouldReceive('getId')->andReturns(1);
-        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $pull_request->shouldReceive('getSha1Src')->andReturns('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
-        $repository_destination->shouldReceive('getId')->andReturns(1);
-        $repository_destination->shouldReceive('getPath')->andReturns('/path');
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepoDestId')->willReturn(1);
+        $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
+        $repository_destination->method('getId')->willReturn(1);
+        $repository_destination->method('getPath')->willReturn('/path');
 
         $this->expectException(\Git_Command_Exception::class);
 

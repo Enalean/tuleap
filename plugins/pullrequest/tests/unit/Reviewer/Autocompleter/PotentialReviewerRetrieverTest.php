@@ -22,41 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
-use Mockery;
 use PFUser;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserDao;
 use UserManager;
 
 final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserDao
      */
     private $user_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $pull_request_permission_checker;
-
-    /**
-     * @var PotentialReviewerRetriever
-     */
-    private $retriever;
+    private PotentialReviewerRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->user_manager                    = Mockery::mock(UserManager::class);
-        $this->user_dao                        = Mockery::mock(UserDao::class);
-        $this->pull_request_permission_checker = Mockery::mock(PullRequestPermissionChecker::class);
+        $this->user_manager                    = $this->createMock(UserManager::class);
+        $this->user_dao                        = $this->createMock(UserDao::class);
+        $this->pull_request_permission_checker = $this->createMock(PullRequestPermissionChecker::class);
 
         $this->retriever = new PotentialReviewerRetriever(
             $this->user_manager,
@@ -67,26 +61,31 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchUsersThatCanAccessThePullRequest(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request = $this->createMock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([
+        $this->user_dao->method('searchUserNameLike')->willReturn([
             ['user_id' => 101],
             ['user_id' => 102],
             ['user_id' => 103],
         ]);
-        $this->user_dao->shouldReceive('foundRows')->andReturn('10');
+        $this->user_dao->method('foundRows')->willReturn(10);
 
-        $user_101 = Mockery::mock(PFUser::class);
-        $user_102 = Mockery::mock(PFUser::class);
-        $user_103 = Mockery::mock(PFUser::class);
+        $user_101 = UserTestBuilder::aUser()->withId(101)->build();
+        $user_102 = UserTestBuilder::aUser()->withId(102)->build();
+        $user_103 = UserTestBuilder::aUser()->withId(103)->build();
 
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')
-            ->andReturn($user_101, $user_102, $user_103);
+        $this->user_manager->method('getUserInstanceFromRow')
+            ->willReturn($user_101, $user_102, $user_103);
 
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->with($pull_request, Mockery::not($user_102));
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->with($pull_request, $user_102)->andThrow(UserCannotReadGitRepositoryException::class);
+        $this->pull_request_permission_checker
+            ->method('checkPullRequestIsReadableByUser')
+            ->willReturnCallback(
+                function (PullRequest $pull_request_param, PFUser $user_param) use ($pull_request, $user_102): void {
+                    if ($pull_request_param === $pull_request && $user_param === $user_102) {
+                        throw new UserCannotReadGitRepositoryException();
+                    }
+                }
+            );
 
         $potential_reviewers = $this->retriever->getPotentialReviewers(
             $pull_request,
@@ -94,22 +93,22 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             10
         );
 
-        $this->assertEquals([$user_101, $user_103], $potential_reviewers);
+        self::assertEquals([$user_101, $user_103], $potential_reviewers);
     }
 
     public function testSearchPotentialReviewersUpToTheRequestedLimit(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request = $this->createMock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([
+        $this->user_dao->method('searchUserNameLike')->willReturn([
             ['user_id' => 101],
             ['user_id' => 102],
         ]);
 
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')
-            ->andReturn(Mockery::mock(PFUser::class));
+        $this->user_manager->method('getUserInstanceFromRow')
+            ->willReturn(UserTestBuilder::aUser()->build());
 
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser');
+        $this->pull_request_permission_checker->method('checkPullRequestIsReadableByUser');
 
         $potential_reviewers = $this->retriever->getPotentialReviewers(
             $pull_request,
@@ -117,15 +116,15 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             1
         );
 
-        $this->assertCount(1, $potential_reviewers);
+        self::assertCount(1, $potential_reviewers);
     }
 
     public function testReturnsSearchEvenIfNoResultAreFound(): void
     {
-        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request = $this->createMock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([]);
-        $this->user_dao->shouldReceive('foundRows')->andReturn('0');
+        $this->user_dao->method('searchUserNameLike')->willReturn([]);
+        $this->user_dao->method('foundRows')->willReturn(0);
 
         $potential_reviewers = $this->retriever->getPotentialReviewers(
             $pull_request,
@@ -133,6 +132,6 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             20
         );
 
-        $this->assertEmpty($potential_reviewers);
+        self::assertEmpty($potential_reviewers);
     }
 }

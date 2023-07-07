@@ -20,57 +20,36 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
 class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $pull_request_ref_updater;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $pull_request_factory;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $git_repository_factory;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $logger;
+    private GitPullRequestReferenceDAO&MockObject $dao;
+    private GitPullRequestReferenceUpdater&MockObject $pull_request_ref_updater;
+    private Factory&MockObject $pull_request_factory;
+    private \GitRepositoryFactory&MockObject $git_repository_factory;
+    private \Psr\Log\LoggerInterface&MockObject $logger;
 
     protected function setUp(): void
     {
-        $this->dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $this->pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
-        $this->pull_request_factory     = \Mockery::mock(Factory::class);
-        $this->git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
-        $this->logger                   = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->dao                      = $this->createMock(GitPullRequestReferenceDAO::class);
+        $this->pull_request_ref_updater = $this->createMock(GitPullRequestReferenceUpdater::class);
+        $this->pull_request_factory     = $this->createMock(Factory::class);
+        $this->git_repository_factory   = $this->createMock(\GitRepositoryFactory::class);
+        $this->logger                   = $this->createMock(\Psr\Log\LoggerInterface::class);
 
         \ForgeConfig::store();
         $tmp_dir = vfsStream::setup();
         \ForgeConfig::set('tmp_dir', $tmp_dir->url());
     }
 
-    protected function tearDown(): void
-    {
-        \ForgeConfig::restore();
-    }
-
-    public function testAllPullRequestsWithoutRefsAreConverted()
+    public function testAllPullRequestsWithoutRefsAreConverted(): void
     {
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
             $this->dao,
@@ -80,17 +59,26 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
             $this->logger
         );
 
-        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2'], ['pr3']]);
-        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
-        $this->logger->shouldReceive('debug');
+        $this->dao->method('searchPullRequestsByReferenceStatus')->willReturn([['pr1'], ['pr2'], ['pr3']]);
 
-        $this->pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(3);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepositoryId')->willReturn(47);
+        $pull_request->method('getRepoDestId')->willReturn(48);
+        $this->pull_request_factory->method('getInstanceFromRow')->willReturn($pull_request);
+
+        $git_repository = $this->createMock(\GitRepository::class);
+        $git_repository->method('getId')->willReturn(47);
+        $git_repository->method('getFullPath')->willReturn('');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
+        $this->logger->method('debug');
+
+        $this->pull_request_ref_updater->expects(self::exactly(3))->method('updatePullRequestReference');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
-    public function testPullRequestsWithoutValidGitRepositoryAreMarkedAsBroken()
+    public function testPullRequestsWithoutValidGitRepositoryAreMarkedAsBroken(): void
     {
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
             $this->dao,
@@ -100,25 +88,25 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
             $this->logger
         );
 
-        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1']]);
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturns(1);
-        $pull_request->shouldReceive('getRepositoryId')->andReturns(1);
-        $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
-        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns($pull_request);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
-        $this->logger->shouldReceive('debug');
+        $this->dao->method('searchPullRequestsByReferenceStatus')->willReturn([['pr1']]);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepositoryId')->willReturn(1);
+        $pull_request->method('getRepoDestId')->willReturn(1);
+        $this->pull_request_factory->method('getInstanceFromRow')->willReturn($pull_request);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn(null);
+        $this->logger->method('debug');
 
-        $this->dao->shouldReceive('updateStatusByPullRequestId')->with(
+        $this->dao->method('updateStatusByPullRequestId')->with(
             $pull_request->getId(),
             GitPullRequestReference::STATUS_BROKEN
         );
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->expects(self::once())->method('error');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
-    public function testFailureToSetTheGitReferenceDoesNotInterruptTheWholeConversion()
+    public function testFailureToSetTheGitReferenceDoesNotInterruptTheWholeConversion(): void
     {
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
             $this->dao,
@@ -128,20 +116,28 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
             $this->logger
         );
 
-        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2']]);
-        $this->pull_request_factory->shouldReceive('getInstanceFromRow')->andReturns(\Mockery::spy(PullRequest::class));
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(\Mockery::spy(\GitRepository::class));
-        $this->logger->shouldReceive('debug');
+        $this->dao->method('searchPullRequestsByReferenceStatus')->willReturn([['pr1'], ['pr2']]);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(1);
+        $pull_request->method('getRepositoryId')->willReturn(47);
+        $pull_request->method('getRepoDestId')->willReturn(48);
+        $this->pull_request_factory->method('getInstanceFromRow')->willReturn($pull_request);
 
-        $this->pull_request_ref_updater->shouldReceive('updatePullRequestReference')->times(2)->andThrow(
-            \Mockery::mock(\Git_Command_Exception::class)
+        $git_repository = $this->createMock(\GitRepository::class);
+        $git_repository->method('getId')->willReturn(47);
+        $git_repository->method('getFullPath')->willReturn('');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
+        $this->logger->method('debug');
+
+        $this->pull_request_ref_updater->expects(self::exactly(2))->method('updatePullRequestReference')->willThrowException(
+            $this->createMock(\Git_Command_Exception::class)
         );
-        $this->logger->shouldReceive('error')->times(2);
+        $this->logger->expects(self::exactly(2))->method('error');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
-    public function testBulkConversionIsStoppedWhenStopFileIsFound()
+    public function testBulkConversionIsStoppedWhenStopFileIsFound(): void
     {
         $bulk_converter = new GitPullRequestReferenceBulkConverter(
             $this->dao,
@@ -151,11 +147,11 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
             $this->logger
         );
 
-        $this->dao->shouldReceive('searchPullRequestsByReferenceStatus')->andReturns([['pr1'], ['pr2']]);
+        $this->dao->method('searchPullRequestsByReferenceStatus')->willReturn([['pr1'], ['pr2']]);
 
         touch(\ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . GitPullRequestReferenceBulkConverter::STOP_CONVERSION_FILE);
 
-        $this->logger->shouldReceive('info')->once();
+        $this->logger->expects(self::once())->method('info');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }

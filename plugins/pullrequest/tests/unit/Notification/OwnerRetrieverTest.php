@@ -22,39 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReviewerRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerRetriever
      */
     private $reviewer_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimelineDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimelineDAO
      */
     private $timeline_dao;
-
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_retriever;
+    private OwnerRetriever $owner_retriever;
 
     protected function setUp(): void
     {
-        $this->user_manager       = \Mockery::mock(UserManager::class);
-        $this->reviewer_retriever = \Mockery::mock(ReviewerRetriever::class);
-        $this->timeline_dao       = \Mockery::mock(TimelineDAO::class);
+        $this->user_manager       = $this->createMock(UserManager::class);
+        $this->reviewer_retriever = $this->createMock(ReviewerRetriever::class);
+        $this->timeline_dao       = $this->createMock(TimelineDAO::class);
 
         $this->owner_retriever = new OwnerRetriever(
             $this->user_manager,
@@ -65,44 +59,45 @@ final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testOwnersArePullRequestCreatorUpdatersAndReviewers(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(74);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(74);
 
-        $user_102 = \Mockery::mock(\PFUser::class);
-        $user_103 = \Mockery::mock(\PFUser::class);
-        $user_104 = \Mockery::mock(\PFUser::class);
+        $user_102 = UserTestBuilder::aUser()->withId(102)->build();
+        $user_103 = UserTestBuilder::aUser()->withId(103)->build();
+        $user_104 = UserTestBuilder::aUser()->withId(104)->build();
 
-        $this->reviewer_retriever->shouldReceive('getReviewers')->andReturn([$user_102]);
+        $this->reviewer_retriever->method('getReviewers')->willReturn([$user_102]);
 
-        $pull_request->shouldReceive('getUserId')->andReturn(103);
-        $user_103->shouldReceive('getId')->andReturn(103);
-        $this->user_manager->shouldReceive('getUserById')->with(103)->andReturn($user_103);
+        $pull_request->method('getUserId')->willReturn(103);
 
-        $this->timeline_dao->shouldReceive('searchUserIDsByPullRequestIDAndEventType')->andReturn([
+        $this->timeline_dao->method('searchUserIDsByPullRequestIDAndEventType')->willReturn([
             ['user_id' => 104],
         ]);
-        $this->user_manager->shouldReceive('getUserById')->with(104)->andReturn($user_104);
+
+        $this->user_manager->method('getUserById')->willReturnMap([
+            [103, $user_103],
+            [104, $user_104],
+        ]);
 
         $owners = $this->owner_retriever->getOwners($pull_request);
 
-        $this->assertEqualsCanonicalizing([$user_102, $user_103, $user_104], $owners);
+        self::assertEqualsCanonicalizing([$user_102, $user_103, $user_104], $owners);
     }
 
     public function testAUserCanOnlyBeAOwnerOnce(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(75);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(75);
 
-        $user_105 = \Mockery::mock(\PFUser::class);
-        $user_105->shouldReceive('getId')->andReturn(105);
+        $user_105 = UserTestBuilder::aUser()->withId(105)->build();
 
-        $pull_request->shouldReceive('getUserId')->andReturn(105);
-        $this->reviewer_retriever->shouldReceive('getReviewers')->andReturn([$user_105]);
-        $this->timeline_dao->shouldReceive('searchUserIDsByPullRequestIDAndEventType')->andReturn([
+        $pull_request->method('getUserId')->willReturn(105);
+        $this->reviewer_retriever->method('getReviewers')->willReturn([$user_105]);
+        $this->timeline_dao->method('searchUserIDsByPullRequestIDAndEventType')->willReturn([
             ['user_id' => 105],
         ]);
-        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturn($user_105);
+        $this->user_manager->method('getUserById')->with(105)->willReturn($user_105);
 
-        $this->assertCount(1, $this->owner_retriever->getOwners($pull_request));
+        self::assertCount(1, $this->owner_retriever->getOwners($pull_request));
     }
 }

@@ -23,128 +23,124 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer;
 
 use GitRepoNotFoundException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project_AccessException;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReviewerDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerDAO
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $permission_checker;
-
-    /**
-     * @var ReviewerRetriever
-     */
-    private $retriever;
+    private ReviewerRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->dao                = Mockery::mock(ReviewerDAO::class);
-        $this->user_manager       = Mockery::mock(\UserManager::class);
-        $this->permission_checker = Mockery::mock(PullRequestPermissionChecker::class);
+        $this->dao                = $this->createMock(ReviewerDAO::class);
+        $this->user_manager       = $this->createMock(\UserManager::class);
+        $this->permission_checker = $this->createMock(PullRequestPermissionChecker::class);
 
         $this->retriever = new ReviewerRetriever($this->user_manager, $this->dao, $this->permission_checker);
     }
 
     public function testCanRetrieveReviewerListForAPRWithoutReviewers(): void
     {
-        $this->dao->shouldReceive('searchReviewers')->andReturn([]);
-        $pr = Mockery::mock(PullRequest::class);
-        $pr->shouldReceive('getId')->andReturn(12);
+        $this->dao->method('searchReviewers')->willReturn([]);
+        $pr = $this->createMock(PullRequest::class);
+        $pr->method('getId')->willReturn(12);
         $reviewers = $this->retriever->getReviewers($pr);
 
-        $this->assertEmpty($reviewers);
+        self::assertEmpty($reviewers);
     }
 
     public function testCanRetrieveReviewerList(): void
     {
         $user_row_147 = ['user_id' => 147];
         $user_row_148 = ['user_id' => 148];
-        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row_147, $user_row_148]);
+        $this->dao->method('searchReviewers')->willReturn([$user_row_147, $user_row_148]);
 
-        $user_147 = Mockery::mock(\PFUser::class);
-        $user_148 = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row_147)->andReturn($user_147);
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row_148)->andReturn($user_148);
+        $user_147 = UserTestBuilder::aUser()->build();
+        $user_148 = UserTestBuilder::aUser()->build();
 
-        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser');
+        $this->user_manager->method('getUserInstanceFromRow')->willReturnMap([
+            [$user_row_147, $user_147],
+            [$user_row_148, $user_148],
+        ]);
 
-        $pr = Mockery::mock(PullRequest::class);
-        $pr->shouldReceive('getId')->andReturn(13);
+        $this->permission_checker->method('checkPullRequestIsReadableByUser');
+
+        $pr = $this->createMock(PullRequest::class);
+        $pr->method('getId')->willReturn(13);
         $reviewers = $this->retriever->getReviewers($pr);
 
-        $this->assertSame([$user_147, $user_148], $reviewers);
+        self::assertSame([$user_147, $user_148], $reviewers);
     }
 
     public function testUsersNotAbleToAccessThePullRequestAreNotAddedToTheReviewerList(): void
     {
         $user_row = ['user_id' => 149];
-        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row]);
+        $this->dao->method('searchReviewers')->willReturn([$user_row]);
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getUserInstanceFromRow')->with($user_row)->willReturn($user);
 
-        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrow(new UserCannotReadGitRepositoryException());
+        $this->permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new UserCannotReadGitRepositoryException());
 
-        $pr = Mockery::mock(PullRequest::class);
-        $pr->shouldReceive('getId')->andReturn(13);
+        $pr = $this->createMock(PullRequest::class);
+        $pr->method('getId')->willReturn(13);
         $reviewers = $this->retriever->getReviewers($pr);
 
-        $this->assertEmpty($reviewers);
+        self::assertEmpty($reviewers);
     }
 
     public function testUsersNotAbleToAccessTheProjectAreNotAddedToTheReviewerList(): void
     {
         $user_row = ['user_id' => 149];
-        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row]);
+        $this->dao->method('searchReviewers')->willReturn([$user_row]);
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getUserInstanceFromRow')->with($user_row)->willReturn($user);
 
-        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->andThrow(
+        $this->permission_checker->method('checkPullRequestIsReadableByUser')
+            ->willThrowException(
                 new class extends Project_AccessException
                 {
                 }
             );
 
-        $pr = Mockery::mock(PullRequest::class);
-        $pr->shouldReceive('getId')->andReturn(13);
+        $pr = $this->createMock(PullRequest::class);
+        $pr->method('getId')->willReturn(13);
         $reviewers = $this->retriever->getReviewers($pr);
 
-        $this->assertEmpty($reviewers);
+        self::assertEmpty($reviewers);
     }
 
     public function testUsersNotAbleToAccessTheGitRepositoryAreNotAddedToTheReviewerList(): void
     {
         $user_row = ['user_id' => 149];
-        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row]);
+        $this->dao->method('searchReviewers')->willReturn([$user_row]);
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getUserInstanceFromRow')->with($user_row)->willReturn($user);
 
-        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->andThrow(GitRepoNotFoundException::class);
+        $this->permission_checker->method('checkPullRequestIsReadableByUser')
+            ->willThrowException(new GitRepoNotFoundException());
 
-        $pr = Mockery::mock(PullRequest::class);
-        $pr->shouldReceive('getId')->andReturn(13);
+        $pr = $this->createMock(PullRequest::class);
+        $pr->method('getId')->willReturn(13);
         $reviewers = $this->retriever->getReviewers($pr);
 
-        $this->assertEmpty($reviewers);
+        self::assertEmpty($reviewers);
     }
 }

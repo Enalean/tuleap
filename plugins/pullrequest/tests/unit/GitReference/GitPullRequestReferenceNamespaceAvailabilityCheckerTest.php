@@ -22,29 +22,25 @@ namespace Tuleap\PullRequest\GitReference;
 
 use Tuleap\PullRequest\GitExec;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testNamespaceIsAvailableWhenNoGitReferenceAreFound()
+    public function testNamespaceIsAvailableWhenNoGitReferenceAreFound(): void
     {
         $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker();
 
-        $executor = \Mockery::mock(GitExec::class);
-        $executor->shouldReceive('getReferencesFromPattern')->andReturns([]);
+        $executor = $this->createMock(GitExec::class);
+        $executor->method('getReferencesFromPattern')->willReturn([]);
 
-        $this->assertTrue($namespace_availability_checker->isAvailable($executor, 1));
+        self::assertTrue($namespace_availability_checker->isAvailable($executor, 1));
     }
 
-    public function testNamespaceIsNotAvailableWhenGitReferencesAreFound()
+    public function testNamespaceIsNotAvailableWhenGitReferencesAreFound(): void
     {
         $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker();
 
-        $executor = \Mockery::mock(GitExec::class);
-        $executor->shouldReceive('getReferencesFromPattern')->andReturns(['refs/tlpr/1/head']);
+        $executor = $this->createMock(GitExec::class);
+        $executor->method('getReferencesFromPattern')->willReturn(['refs/tlpr/1/head']);
 
-        $this->assertFalse($namespace_availability_checker->isAvailable($executor, 1));
+        self::assertFalse($namespace_availability_checker->isAvailable($executor, 1));
     }
 }

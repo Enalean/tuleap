@@ -32,7 +32,7 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
     private ParentIdValidatorForInlineComment $validator;
     private const PULL_REQUEST_ID = 10;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|InlineCommentRetriever|InlineCommentRetriever&\PHPUnit\Framework\MockObject\MockObject
+     * @var InlineCommentRetriever&\PHPUnit\Framework\MockObject\MockObject
      */
     private $inline_comment_retriever;
 
@@ -72,7 +72,7 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
         $comment   = new InlineComment(
             1,
             1234,
-            UserTestBuilder::anActiveUser()->build()->getId(),
+            (int) UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "/file/path",
             1,
@@ -96,7 +96,7 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
         $comment   = new InlineComment(
             1,
             self::PULL_REQUEST_ID,
-            UserTestBuilder::anActiveUser()->build()->getId(),
+            (int) UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "/file/path",
             1,

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\StateStatus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
@@ -33,7 +32,6 @@ use UserHelper;
 
 final class PullRequestAbandonedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
@@ -42,17 +40,17 @@ final class PullRequestAbandonedNotificationTest extends \Tuleap\Test\PHPUnit\Te
         $change_user      = $this->buildUser(102);
         $user_103         = $this->buildUser(103);
         $owners           = [$change_user, $user_103];
-        $pull_request     = \Mockery::mock(PullRequest::class);
-        $user_helper      = \Mockery::mock(UserHelper::class);
-        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+        $pull_request     = $this->createMock(PullRequest::class);
+        $user_helper      = $this->createMock(UserHelper::class);
+        $html_url_builder = $this->createMock(HTMLURLBuilder::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
-        $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
-        $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
-        $pull_request->shouldReceive('getId')->andReturn(13);
-        $pull_request->shouldReceive('getTitle')->andReturn('Broken contribution');
+        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($pull_request)->willReturn('https://example.com/pr-link');
+        $pull_request->method('getId')->willReturn(13);
+        $pull_request->method('getTitle')->willReturn('Broken contribution');
 
         $notification = PullRequestAbandonedNotification::fromOwners(
             $user_helper,
@@ -63,10 +61,10 @@ final class PullRequestAbandonedNotificationTest extends \Tuleap\Test\PHPUnit\Te
             $owners
         );
 
-        $this->assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
-        $this->assertSame($pull_request, $notification->getPullRequest());
-        $this->assertEquals('User A has abandoned the pull request #13: Broken contribution', $notification->asPlaintext());
-        $this->assertEquals(
+        self::assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
+        self::assertSame($pull_request, $notification->getPullRequest());
+        self::assertEquals('User A has abandoned the pull request #13: Broken contribution', $notification->asPlaintext());
+        self::assertEquals(
             '<a href="https://example.com/users/usera">User A</a> has abandoned the pull request <a href="https://example.com/pr-link">#13</a>: Broken contribution',
             $notification->asEnhancedContent()->toString()
         );

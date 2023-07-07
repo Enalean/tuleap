@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(147);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+
+        $user  = UserTestBuilder::aUser()->withId(147)->build();
         $event = PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
             $pull_request,
             $user,
@@ -46,7 +43,7 @@ final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319',
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'user_id' => $user->getId(),
                 'pr_id'   => $pull_request->getId(),
@@ -68,10 +65,10 @@ final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_dst = '4682f1f1fb9ee3cf6ca518547ae5525c9768a319';
         $new_dst = $old_dst;
 
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn($pr_id);
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn($user_id);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn($pr_id);
+
+        $user = UserTestBuilder::aUser()->withId($user_id)->build();
 
         $payload = [
             'pr_id'   => $pr_id,
@@ -84,7 +81,7 @@ final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $event = PullRequestUpdatedEvent::fromWorkerEventPayload($payload);
 
-        $this->assertEquals(
+        self::assertEquals(
             PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
                 $pull_request,
                 $user,

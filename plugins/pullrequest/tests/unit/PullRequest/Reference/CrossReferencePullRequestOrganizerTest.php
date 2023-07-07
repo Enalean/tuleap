@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reference;
 
 use GitRepositoryFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
@@ -37,51 +35,48 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserHelper;
 use UserManager;
 
-class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
+    private CrossReferencePullRequestOrganizer $organizer;
     /**
-     * @var CrossReferencePullRequestOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Factory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
      */
     private $pull_request_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $permission_checker;
     /**
-     * @var GitRepositoryFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_repository_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
      */
     private $user_helper;
 
     protected function setUp(): void
     {
-        $this->project_manager        = Mockery::mock(ProjectManager::class);
-        $this->pull_request_factory   = Mockery::mock(Factory::class);
-        $this->permission_checker     = Mockery::mock(PullRequestPermissionChecker::class);
-        $this->git_repository_factory = Mockery::mock(GitRepositoryFactory::class);
-        $this->user_manager           = Mockery::mock(UserManager::class);
-        $this->user_helper            = Mockery::mock(UserHelper::class);
+        $this->project_manager        = $this->createMock(ProjectManager::class);
+        $this->pull_request_factory   = $this->createMock(Factory::class);
+        $this->permission_checker     = $this->createMock(PullRequestPermissionChecker::class);
+        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $this->user_manager           = $this->createMock(UserManager::class);
+        $this->user_helper            = $this->createMock(UserHelper::class);
 
         $this->organizer = new CrossReferencePullRequestOrganizer(
             $this->project_manager,
@@ -101,187 +96,171 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
     {
-        $user                = Mockery::mock(PFUser::class);
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        CrossReferencePresenterBuilder::get(2)->withType('tracker')->build(),
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
-
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $user                = $this->createMock(PFUser::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
+            [
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                CrossReferencePresenterBuilder::get(2)->withType('tracker')->build(),
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
+        );
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRIsNotFound(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
             ->withValue("42")
             ->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        $ref,
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
+            [
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                $ref,
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
+        );
 
         $this->pull_request_factory
-            ->shouldReceive('getPullRequestById')
+            ->method('getPullRequestById')
             ->with(42)
-            ->andThrow(PullRequestNotFoundException::class);
+            ->willThrowException(new PullRequestNotFoundException());
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToAnInaccessibleProject(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
             ->withValue("42")
             ->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        $ref,
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
+            [
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                $ref,
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
+        );
 
-        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request = $this->createMock(PullRequest::class);
 
         $this->pull_request_factory
-            ->shouldReceive('getPullRequestById')
+            ->method('getPullRequestById')
             ->with(42)
-            ->andReturns($pull_request);
+            ->willReturn($pull_request);
 
         $this->permission_checker
-            ->shouldReceive('checkPullRequestIsReadableByUser')
+            ->method('checkPullRequestIsReadableByUser')
             ->with($pull_request, $user)
-            ->andThrow(Mockery::mock(\Project_AccessException::class));
+            ->willThrowException($this->createMock(\Project_AccessException::class));
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToARepositoryTheUserCannotAccess(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
             ->withValue("42")
             ->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        $ref,
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
+            [
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                $ref,
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
+        );
 
-        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request = $this->createMock(PullRequest::class);
 
         $this->pull_request_factory
-            ->shouldReceive('getPullRequestById')
+            ->method('getPullRequestById')
             ->with(42)
-            ->andReturns($pull_request);
+            ->willReturn($pull_request);
 
         $this->permission_checker
-            ->shouldReceive('checkPullRequestIsReadableByUser')
+            ->method('checkPullRequestIsReadableByUser')
             ->with($pull_request, $user)
-            ->andThrow(UserCannotReadGitRepositoryException::class);
+            ->willThrowException(new UserCannotReadGitRepositoryException());
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToARepositoryWeCannotInstantiate(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
             ->withValue("42")
             ->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        $ref,
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
-
-        $pull_request = Mockery::mock(
-            PullRequest::class,
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
             [
-                'getRepositoryId' => 101,
-            ]
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                $ref,
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
         );
 
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getRepositoryId')->willReturn(101);
+
         $this->pull_request_factory
-            ->shouldReceive('getPullRequestById')
+            ->method('getPullRequestById')
             ->with(42)
-            ->andReturns($pull_request);
+            ->willReturn($pull_request);
 
         $this->permission_checker
-            ->shouldReceive('checkPullRequestIsReadableByUser')
+            ->method('checkPullRequestIsReadableByUser')
             ->with($pull_request, $user);
 
         $this->git_repository_factory
-            ->shouldReceive('getRepositoryById')
+            ->method('getRepositoryById')
             ->with(101)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }
@@ -291,108 +270,85 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
      *           ["M", "Merged"]
      *           ["R", "Review"]
      */
-    public function testItMovesCrossReferenceToRepositorySection($status, $expected_status_label): void
+    public function testItMovesCrossReferenceToRepositorySection(string $status, string $expected_status_label): void
     {
-        $user = Mockery::mock(
-            PFUser::class,
-            [
-                'getLocale'     => 'en_US',
-                'getPreference' => 'relative_first-absolute_tooltip',
-            ]
-        );
+        $user = $this->createMock(PFUser::class);
+        $user->method('getLocale')->willReturn('en_US');
+        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
             ->withValue("42")
             ->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                        $ref,
-                        CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ],
-                ]
-            )->getMock();
-
-        $pull_request = Mockery::mock(
-            PullRequest::class,
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
             [
-                'getRepositoryId' => 101,
-                'getTitle'        => 'Lorem ipsum doloret',
-                'getCreationDate' => 1234567890,
-                'getUserId'       => 1001,
-                'getStatus'       => $status,
-            ]
+                CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                $ref,
+                CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
+            ],
         );
 
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getRepositoryId')->willReturn(101);
+        $pull_request->method('getTitle')->willReturn('Lorem ipsum doloret');
+        $pull_request->method('getCreationDate')->willReturn(1234567890);
+        $pull_request->method('getUserId')->willReturn(1001);
+        $pull_request->method('getStatus')->willReturn($status);
+
         $this->pull_request_factory
-            ->shouldReceive('getPullRequestById')
+            ->method('getPullRequestById')
             ->with(42)
-            ->andReturns($pull_request);
+            ->willReturn($pull_request);
 
         $this->permission_checker
-            ->shouldReceive('checkPullRequestIsReadableByUser')
+            ->method('checkPullRequestIsReadableByUser')
             ->with($pull_request, $user);
 
+        $gir_repository = $this->createMock(\GitRepository::class);
+        $gir_repository->method('getName')->willReturn('barry/ginger');
+
         $this->git_repository_factory
-            ->shouldReceive('getRepositoryById')
+            ->method('getRepositoryById')
             ->with(101)
-            ->andReturn(
-                Mockery::mock(
-                    \GitRepository::class,
-                    [
-                        'getName' => 'barry/ginger',
-                    ]
-                )
-            );
+            ->willReturn($gir_repository);
 
         $this->project_manager
-            ->shouldReceive('getProject')
-            ->andReturn(
-                Mockery::mock(
-                    \Project::class,
-                    [
-                        'getUnixNameLowerCase' => 'peculiar',
-                    ]
-                )
-            );
+            ->method('getProject')
+            ->willReturn(ProjectTestBuilder::aProject()->withUnixName('peculiar')->build());
+
+        $user_1001 = $this->createMock(PFUser::class);
+        $user_1001->method('hasAvatar')->willReturn(true);
+        $user_1001->method('getAvatarUrl')->willReturn('/path/to/avatar.png');
 
         $this->user_manager
-            ->shouldReceive('getUserById')
+            ->method('getUserById')
             ->with(1001)
-            ->andReturn(
-                Mockery::mock(
-                    PFUser::class,
-                    [
-                        'hasAvatar'    => true,
-                        'getAvatarUrl' => '/path/to/avatar.png',
-                    ]
-                )
-            );
+            ->willReturn($user_1001);
 
         $this->user_helper
-            ->shouldReceive('getDisplayNameFromUser')
-            ->andReturn('John Doe');
+            ->method('getDisplayNameFromUser')
+            ->willReturn('John Doe');
 
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $new_ref) use ($expected_status_label) {
+                self::callback(
+                    function (CrossReferencePresenter $new_ref) use ($expected_status_label): bool {
                         return $new_ref->id === 2
                             && $new_ref->title === 'Lorem ipsum doloret'
                             && $new_ref->additional_badges[0]->label === $expected_status_label
+                            && $new_ref->creation_metadata !== null
+                            && $new_ref->creation_metadata->created_by !== null
                             && $new_ref->creation_metadata->created_by->display_name === 'John Doe'
                             && $new_ref->creation_metadata->created_on->date === '2009-02-14T00:31:30+01:00';
                     }
                 ),
                 'peculiar/barry/ginger',
-            )
-            ->once();
+            );
 
         $this->organizer->organizePullRequestReferences($by_nature_organizer);
     }

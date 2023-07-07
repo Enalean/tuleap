@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
@@ -36,13 +35,11 @@ use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 
 final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNewInlineCommentCanBeCreated(): void
     {
         $dao                     = $this->createMock(Dao::class);
-        $reference_manager       = \Mockery::mock(ReferenceManager::class);
-        $event_dispatcher        = \Mockery::mock(EventDispatcherInterface::class);
+        $reference_manager       = $this->createMock(ReferenceManager::class);
+        $event_dispatcher        = $this->createMock(EventDispatcherInterface::class);
         $thread_comment_dao      = $this->createMock(ThreadCommentDao::class);
         $parent_comment_searcher = $this->createMock(ParentCommentSearcher::class);
         $thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
@@ -53,31 +50,33 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
 
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(102);
-        $representation                 = new PullRequestInlineCommentPOSTRepresentation();
-        $representation->file_path      = "/tmp";
-        $representation->content        = "stuff";
-        $representation->position       = 2;
-        $representation->unidiff_offset = 10;
-        $representation->parent_id      = 1;
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(102);
+
+        $representation = PullRequestInlineCommentPOSTRepresentation::build(
+            "stuff",
+            "/tmp",
+            10,
+            "2",
+            1,
+        );
 
         $inserted_id = 47;
 
         $dao->expects(self::once())->method('insert')->willReturn($inserted_id);
         $dao->expects(self::once())->method('setThreadColor');
-        $reference_manager->shouldReceive('extractCrossRef')->once();
-        $event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PullRequestNewInlineCommentEvent::class))->once();
+        $reference_manager->expects(self::once())->method('extractCrossRef');
+        $event_dispatcher->expects(self::once())->method('dispatch')->with(self::isInstanceOf(PullRequestNewInlineCommentEvent::class));
 
         $inline_comment = $creator->insert(
             $pull_request,
             $user,
             $representation,
             10,
-            1001
+            1001,
         );
-        $this->assertEquals(InsertedInlineComment::build($inserted_id, "graffiti-yellow"), $inline_comment);
+        self::assertEquals(InsertedInlineComment::build($inserted_id, "graffiti-yellow"), $inline_comment);
     }
 }

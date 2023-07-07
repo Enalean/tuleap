@@ -31,7 +31,7 @@ final class ThreadCommentColorRetrieverTest extends TestCase
     private const PULLREQUEST_ID = 1;
     private const PARENT_ID      = 10;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ThreadCommentDao|ThreadCommentDao&\PHPUnit\Framework\MockObject\MockObject
+     * @var ThreadCommentDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $thread_global;
     private ThreadCommentColorRetriever $color_assigner;

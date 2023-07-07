@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\BranchUpdate;
 use Git_GitRepositoryUrlManager;
 use GitRepository;
 use GitRepositoryFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
@@ -40,57 +39,53 @@ use UserManager;
 
 final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Factory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
      */
     private $pull_request_factory;
     /**
-     * @var GitRepositoryFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_repository_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OwnerRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&OwnerRetriever
      */
     private $owner_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
      */
     private $user_helper;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HTMLURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
      */
     private $html_url_builder;
     /**
-     * @var Git_GitRepositoryUrlManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Git_GitRepositoryUrlManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $url_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestUpdateCommitDiff
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestUpdateCommitDiff
      */
     private $commits_differ;
 
-    /**
-     * @var PullRequestUpdatedNotificationToProcessBuilder
-     */
-    private $builder;
+    private PullRequestUpdatedNotificationToProcessBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->user_manager           = \Mockery::mock(UserManager::class);
-        $this->pull_request_factory   = \Mockery::mock(Factory::class);
-        $this->git_repository_factory = \Mockery::mock(GitRepositoryFactory::class);
-        $this->owner_retriever        = \Mockery::mock(OwnerRetriever::class);
-        $this->user_helper            = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder       = \Mockery::mock(HTMLURLBuilder::class);
-        $this->url_manager            = \Mockery::mock(Git_GitRepositoryUrlManager::class);
-        $this->commits_differ         = \Mockery::mock(PullRequestUpdateCommitDiff::class);
+        $this->user_manager           = $this->createMock(UserManager::class);
+        $this->pull_request_factory   = $this->createMock(Factory::class);
+        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $this->owner_retriever        = $this->createMock(OwnerRetriever::class);
+        $this->user_helper            = $this->createMock(UserHelper::class);
+        $this->html_url_builder       = $this->createMock(HTMLURLBuilder::class);
+        $this->url_manager            = $this->createMock(Git_GitRepositoryUrlManager::class);
+        $this->commits_differ         = $this->createMock(PullRequestUpdateCommitDiff::class);
 
         $this->builder = new PullRequestUpdatedNotificationToProcessBuilder(
             $this->user_manager,
@@ -107,53 +102,53 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
 
     public function testBuildUpdateNotificationFromPullRequestUpdatedEvent(): void
     {
-        $event = $event = $this->setUpValidRepositoryWithoutDeterminingTheExpectedDiff();
+        $event = $this->setUpValidRepositoryWithoutDeterminingTheExpectedDiff();
 
-        $this->commits_differ->shouldReceive('findNewCommitReferences')->andReturn(['fbe4dade4f744aa203ec35bf09f71475ecc3f9d6']);
+        $this->commits_differ->method('findNewCommitReferences')->willReturn(['fbe4dade4f744aa203ec35bf09f71475ecc3f9d6']);
 
         $notifications = $this->builder->getNotificationsToProcess($event);
-        $this->assertCount(1, $notifications);
-        $this->assertInstanceOf(PullRequestUpdatedNotification::class, $notifications[0]);
+        self::assertCount(1, $notifications);
+        self::assertInstanceOf(PullRequestUpdatedNotification::class, $notifications[0]);
     }
 
     public function testNoNotificationIsBuiltWhenNoNewCommitIsFound(): void
     {
         $event = $this->setUpValidRepositoryWithoutDeterminingTheExpectedDiff();
 
-        $this->commits_differ->shouldReceive('findNewCommitReferences')->andReturn([]);
+        $this->commits_differ->method('findNewCommitReferences')->willReturn([]);
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        self::assertEmpty($this->builder->getNotificationsToProcess($event));
     }
 
     public function testNoNotificationIsBuiltWhenContentOfTheRepositoryHasAlreadyChanged(): void
     {
         $event = $this->setUpValidRepositoryWithoutDeterminingTheExpectedDiff();
 
-        $this->commits_differ->shouldReceive('findNewCommitReferences')
-            ->andThrow(\Mockery::mock(\Git_Command_Exception::class));
+        $this->commits_differ->method('findNewCommitReferences')
+            ->willThrowException($this->createMock(\Git_Command_Exception::class));
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        self::assertEmpty($this->builder->getNotificationsToProcess($event));
     }
 
     private function setUpValidRepositoryWithoutDeterminingTheExpectedDiff(): PullRequestUpdatedEvent
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR Title');
         $change_user = $this->buildUser(102);
         $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
 
         $git_exec = new GitExec($this->getTmpDir());
         $git_exec->init();
-        $git_repository = \Mockery::mock(GitRepository::class);
-        $git_repository->shouldReceive('getId')->andReturn(1);
-        $git_repository->shouldReceive('getFullPath')->andReturn($this->getTmpDir() . '/myrepo.git');
-        $git_repository->shouldReceive('getGitRootPath')->andReturn($this->getTmpDir());
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn('');
-        $git_repository->shouldReceive('getProject')->andReturn($project);
-        $git_repository->shouldReceive('getFullName')->andReturn('myrepo');
-        $pull_request->shouldReceive('getRepoDestId')->andReturn($git_repository->getId());
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method('getId')->willReturn(1);
+        $git_repository->method('getFullPath')->willReturn($this->getTmpDir() . '/myrepo.git');
+        $git_repository->method('getGitRootPath')->willReturn($this->getTmpDir());
+        $project = $this->createMock(\Project::class);
+        $project->method('getUnixName')->willReturn('');
+        $git_repository->method('getProject')->willReturn($project);
+        $git_repository->method('getFullName')->willReturn('myrepo');
+        $pull_request->method('getRepoDestId')->willReturn($git_repository->getId());
         $git_exec = \Git_Exec::buildFromRepository($git_repository);
         $git_exec->init();
 
@@ -166,25 +161,25 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_factory->shouldReceive('getPullRequestById')
-            ->with($pull_request->getId())->andReturn($pull_request);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')
-            ->with($git_repository->getId())->andReturn($git_repository);
-        $this->user_manager->shouldReceive('getUserById')
-            ->with($change_user->getId())->andReturn($change_user);
-        $this->owner_retriever->shouldReceive('getOwners')->andReturn($owners);
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('Display name');
-        $this->user_helper->shouldReceive('getAbsoluteUserURL')->andReturn('https://example.com/users/foo');
-        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('https://example.com/link-to-pr');
-        $this->url_manager->shouldReceive('getAbsoluteCommitURL')->andReturn('https://example.com/link-to-commit');
+        $this->pull_request_factory->method('getPullRequestById')
+            ->with($pull_request->getId())->willReturn($pull_request);
+        $this->git_repository_factory->method('getRepositoryById')
+            ->with($git_repository->getId())->willReturn($git_repository);
+        $this->user_manager->method('getUserById')
+            ->with($change_user->getId())->willReturn($change_user);
+        $this->owner_retriever->method('getOwners')->willReturn($owners);
+        $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
+        $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
+        $this->url_manager->method('getAbsoluteCommitURL')->willReturn('https://example.com/link-to-commit');
 
         return $event;
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(404);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(404);
         $change_user = $this->buildUser(102);
 
         $event = PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
@@ -196,16 +191,16 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andThrow(PullRequestNotFoundException::class);
+        $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
 
         $notifications = $this->builder->getNotificationsToProcess($event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     public function testNoNotificationIsBuiltWhenTheUserUpdatingThePullRequestCannotBeFound(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(14);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(14);
         $change_user = $this->buildUser(404);
 
         $event = PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
@@ -217,22 +212,22 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn($pull_request);
-        $this->user_manager->shouldReceive('getUserById')
-            ->with($change_user->getId())->andReturn(null);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($pull_request);
+        $this->user_manager->method('getUserById')
+            ->with($change_user->getId())->willReturn(null);
 
         $notifications = $this->builder->getNotificationsToProcess($event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     public function testNoNotificationIsBuiltWhenTheDestinationRepositoryCannotBeFound(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(14);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(14);
         $change_user    = $this->buildUser(102);
-        $git_repository = \Mockery::mock(GitRepository::class);
-        $git_repository->shouldReceive('getId')->andReturn(404);
-        $pull_request->shouldReceive('getRepoDestId')->andReturn($git_repository->getId());
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method('getId')->willReturn(404);
+        $pull_request->method('getRepoDestId')->willReturn($git_repository->getId());
 
         $event = PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
             $pull_request,
@@ -243,32 +238,32 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn($pull_request);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')
-            ->with($git_repository->getId())->andReturn(null);
-        $this->user_manager->shouldReceive('getUserById')
-            ->with($change_user->getId())->andReturn($change_user);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($pull_request);
+        $this->git_repository_factory->method('getRepositoryById')
+            ->with($git_repository->getId())->willReturn(null);
+        $this->user_manager->method('getUserById')
+            ->with($change_user->getId())->willReturn($change_user);
 
         $notifications = $this->builder->getNotificationsToProcess($event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     public function testNoNotificationIsBuiltWhenTheDestinationRepositoryDataAreNotAvailable(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR Title');
         $change_user = $this->buildUser(102);
 
-        $git_repository = \Mockery::mock(GitRepository::class);
-        $git_repository->shouldReceive('getId')->andReturn(2);
-        $git_repository->shouldReceive('getFullPath')->andReturn($this->getTmpDir() . '/myrepo.git');
-        $git_repository->shouldReceive('getGitRootPath')->andReturn($this->getTmpDir());
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn('');
-        $git_repository->shouldReceive('getProject')->andReturn($project);
-        $git_repository->shouldReceive('getFullName')->andReturn('myrepo');
-        $pull_request->shouldReceive('getRepoDestId')->andReturn($git_repository->getId());
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method('getId')->willReturn(2);
+        $git_repository->method('getFullPath')->willReturn($this->getTmpDir() . '/myrepo.git');
+        $git_repository->method('getGitRootPath')->willReturn($this->getTmpDir());
+        $project = $this->createMock(\Project::class);
+        $project->method('getUnixName')->willReturn('');
+        $git_repository->method('getProject')->willReturn($project);
+        $git_repository->method('getFullName')->willReturn('myrepo');
+        $pull_request->method('getRepoDestId')->willReturn($git_repository->getId());
 
         $event = PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
             $pull_request,
@@ -279,14 +274,14 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn($pull_request);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')
-            ->with($git_repository->getId())->andReturn($git_repository);
-        $this->user_manager->shouldReceive('getUserById')
-            ->with($change_user->getId())->andReturn($change_user);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($pull_request);
+        $this->git_repository_factory->method('getRepositoryById')
+            ->with($git_repository->getId())->willReturn($git_repository);
+        $this->user_manager->method('getUserById')
+            ->with($change_user->getId())->willReturn($change_user);
 
         $notifications = $this->builder->getNotificationsToProcess($event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     private function buildUser(int $user_id): PFUser

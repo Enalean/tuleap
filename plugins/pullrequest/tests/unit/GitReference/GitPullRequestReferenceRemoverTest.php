@@ -20,34 +20,38 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Tuleap\PullRequest\GitExec;
 
-class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @dataProvider pullRequestReferencesProvider
-     */
-    public function testAllReferencesInPullRequestNamespaceAreRemoved(array $references)
+    public function testAllReferencesInPullRequestNamespaceAreRemoved(): void
     {
-        $executor = \Mockery::mock(GitExec::class);
-        $executor->shouldReceive('getReferencesFromPattern')->once()->andReturns($references);
-        foreach ($references as $reference) {
-            $executor->shouldReceive('removeReference')->with($reference);
-        }
+        $reference_01 = GitPullRequestReference::PR_NAMESPACE . '1/head';
+        $reference_02 = GitPullRequestReference::PR_NAMESPACE . '2/head';
+
+        $executor = $this->createMock(GitExec::class);
+        $executor->expects(self::once())->method('getReferencesFromPattern')->willReturn([
+            $reference_01,
+            $reference_02,
+        ]);
+
+        $executor->method('removeReference')->withConsecutive(
+            [$reference_01],
+            [$reference_02],
+        );
 
         $reference_remover = new GitPullRequestReferenceRemover();
         $reference_remover->removeAll($executor);
     }
 
-    public static function pullRequestReferencesProvider()
+    public function testEmptyReferencesInPullRequestNamespaceAreNotRemoved(): void
     {
-        return [
-            [[]],
-            [[GitPullRequestReference::PR_NAMESPACE . '1/head', GitPullRequestReference::PR_NAMESPACE . '2/head']],
-        ];
+        $executor = $this->createMock(GitExec::class);
+        $executor->expects(self::once())->method('getReferencesFromPattern')->willReturn([]);
+
+        $executor->expects(self::never())->method('removeReference');
+
+        $reference_remover = new GitPullRequestReferenceRemover();
+        $reference_remover->removeAll($executor);
     }
 }

@@ -22,32 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
-     */
-    private $dao;
-
-    /**
-     * @var InlineCommentRetriever
-     */
-    private $retriever;
+    private Dao&MockObject $dao;
+    private InlineCommentRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(Dao::class);
+        $this->dao = $this->createMock(Dao::class);
 
         $this->retriever = new InlineCommentRetriever($this->dao);
     }
 
     public function testInlineCommentCanBeRetrievedWhenItExists(): void
     {
-        $this->dao->shouldReceive('searchByCommentID')->andReturn([
+        $this->dao->method('searchByCommentID')->willReturn([
             'id' => 12,
             'pull_request_id' => 147,
             'user_id' => 102,
@@ -61,13 +52,13 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             "color" => '',
         ]);
 
-        $this->assertNotNull($this->retriever->getInlineCommentByID(12));
+        self::assertNotNull($this->retriever->getInlineCommentByID(12));
     }
 
     public function testInlineCommentCannotBeRetrievedWhenItDoesNotExist(): void
     {
-        $this->dao->shouldReceive('searchByCommentID')->andReturn(null);
+        $this->dao->method('searchByCommentID')->willReturn(null);
 
-        $this->assertNull($this->retriever->getInlineCommentByID(404));
+        self::assertNull($this->retriever->getInlineCommentByID(404));
     }
 }
