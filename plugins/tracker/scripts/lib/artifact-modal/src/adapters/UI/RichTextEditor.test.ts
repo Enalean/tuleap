@@ -75,13 +75,10 @@ const noopHandler = (event: CKEDITOR.eventInfo): void => {
 };
 const null_event = {} as CKEDITOR.eventInfo;
 
-const getDocument = (): Document => document.implementation.createHTMLDocument();
-
 let format: TextFieldFormat,
     value: string,
     disabled: boolean,
     required: boolean,
-    dispatchEvent: jest.SpyInstance,
     editor_factory: RichTextEditorFactory,
     editor: TextEditorInterface,
     ckeditor: CKEDITOR.editor,
@@ -90,38 +87,18 @@ let format: TextFieldFormat,
     isThereAnImageWithDataURI: jest.SpyInstance,
     event_dispatcher: DispatchEventsStub;
 
-function getHost(): HostElement {
-    return {
-        identifier: "unique-id",
-        format,
-        contentValue: value,
-        disabled,
-        required,
-        rows: 5,
-        textarea: {} as unknown as HTMLTextAreaElement,
-        is_help_shown: false,
-        upload_setup,
-        controller: FormattedTextController(
-            event_dispatcher,
-            InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-            TEXT_FORMAT_TEXT
-        ),
-        dispatchEvent,
-    } as unknown as HostElement;
-}
-
 describe(`RichTextEditor`, () => {
+    let doc: Document;
     beforeEach(() => {
         jest.resetAllMocks();
         setCatalog({ getString: (msgid) => msgid });
+        doc = document.implementation.createHTMLDocument();
 
         buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");
 
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
         isThereAnImageWithDataURI = jest.spyOn(image_upload, "isThereAnImageWithDataURI");
-
-        dispatchEvent = jest.fn();
 
         ckeditor = {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -166,6 +143,26 @@ describe(`RichTextEditor`, () => {
         });
     });
 
+    function getHost(): HostElement {
+        const element = doc.createElement("div");
+        return Object.assign(element, {
+            identifier: "unique-id",
+            format,
+            contentValue: value,
+            disabled,
+            required,
+            rows: 5,
+            textarea: {} as HTMLTextAreaElement,
+            is_help_shown: false,
+            upload_setup,
+            controller: FormattedTextController(
+                event_dispatcher,
+                InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
+                TEXT_FORMAT_TEXT
+            ),
+        } as HostElement);
+    }
+
     describe(`when the editor's format is "html"`, () => {
         beforeEach(() => {
             format = "html";
@@ -173,7 +170,8 @@ describe(`RichTextEditor`, () => {
         describe(`onInstanceReady()`, () => {
             it(`and when the editor dispatched the "change" event,
                 and the editor's data was different from its contentValue
-                then it will dispatch a "content-change" event with the new content`, () => {
+                then it will dispatch a bubbling "change" event
+                and a "content-change" event with the new content`, () => {
                 let triggerChange = noopHandler;
                 ckeditor = {
                     on(
@@ -193,19 +191,29 @@ describe(`RichTextEditor`, () => {
                         return "caramba";
                     },
                 } as CKEDITOR.editor;
+                const host = getHost();
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
-                onInstanceReady(getHost(), ckeditor);
+                onInstanceReady(host, ckeditor);
                 triggerChange(null_event);
 
                 const event = dispatchEvent.mock.calls[0][0];
-                expect(event.type).toBe("content-change");
-                expect(event.detail.content).toBe("caramba");
+                expect(event.type).toBe("change");
+                expect(event.bubbles).toBe(true);
+
+                const custom_event = dispatchEvent.mock.calls[1][0];
+                if (!(custom_event instanceof CustomEvent)) {
+                    throw Error("Expected a CustomEvent");
+                }
+                expect(custom_event.type).toBe("content-change");
+                expect(custom_event.detail.content).toBe("caramba");
             });
 
             it(`and when the editor dispatched the "mode" event,
                 and the editor was in "source" mode (direct HTML edition)
                 and the editor's editable textarea dispatched the "input" event,
-                then it will dispatch a "content-change" event with the new content`, () => {
+                then it will dispatch a bubbling "change" event
+                and a "content-change" event with the new content`, () => {
                 let triggerMode = noopHandler,
                     triggerEditableInput = noopHandler;
                 const editable = {
@@ -234,8 +242,10 @@ describe(`RichTextEditor`, () => {
                     },
                 } as CKEDITOR.editor;
                 const attachListener = jest.spyOn(editable, "attachListener");
+                const host = getHost();
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
-                onInstanceReady(getHost(), ckeditor);
+                onInstanceReady(host, ckeditor);
                 triggerMode(null_event);
                 triggerEditableInput(null_event);
 
@@ -244,9 +254,17 @@ describe(`RichTextEditor`, () => {
                     "input",
                     expect.any(Function)
                 );
+
                 const event = dispatchEvent.mock.calls[0][0];
-                expect(event.type).toBe("content-change");
-                expect(event.detail.content).toBe("noniodized");
+                expect(event.type).toBe("change");
+                expect(event.bubbles).toBe(true);
+
+                const custom_event = dispatchEvent.mock.calls[1][0];
+                if (!(custom_event instanceof CustomEvent)) {
+                    throw Error("Expected a CustomEvent");
+                }
+                expect(custom_event.type).toBe("content-change");
+                expect(custom_event.detail.content).toBe("noniodized");
             });
         });
 
@@ -321,12 +339,13 @@ describe(`RichTextEditor`, () => {
                 onInstanceReady(getHost(), ckeditor);
 
                 const event = {
-                    cancel: jest.fn(),
+                    cancel: noop,
                     data: { dataValue: `<p></p>` },
-                } as unknown as CKEDITOR.eventInfo;
+                } as CKEDITOR.eventInfo;
+                const cancel = jest.spyOn(event, "cancel");
                 triggerPaste(event);
 
-                expect(event.cancel).toHaveBeenCalled();
+                expect(cancel).toHaveBeenCalled();
                 expect(showNotification).toHaveBeenCalled();
             });
 
@@ -339,7 +358,7 @@ describe(`RichTextEditor`, () => {
 
         describe(`setupImageUpload() when uploading is possible`, () => {
             it(`informs users that they can paste images`, () => {
-                const target = getDocument().createElement("div") as unknown as ShadowRoot;
+                const target = doc.createElement("div") as unknown as ShadowRoot;
                 const host = getHost();
                 host.is_help_shown = true;
                 const update = RichTextEditor.content(host);
@@ -434,15 +453,18 @@ describe(`RichTextEditor`, () => {
 
         describe(`and I wrote text in the textarea`, () => {
             it(`will dispatch a "content-change" event with the new content`, () => {
-                const inner_textarea = getDocument().createElement("textarea");
-                inner_textarea.addEventListener("input", (event) =>
-                    onTextareaInput(getHost(), event)
-                );
+                const inner_textarea = doc.createElement("textarea");
+                const host = getHost();
+                inner_textarea.addEventListener("input", (event) => onTextareaInput(host, event));
+                const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
                 inner_textarea.value = "flattening";
                 inner_textarea.dispatchEvent(new InputEvent("input"));
 
                 const event = dispatchEvent.mock.calls[0][0];
+                if (!(event instanceof CustomEvent)) {
+                    throw Error("Expected a CustomEvent");
+                }
                 expect(event.type).toBe("content-change");
                 expect(event.detail.content).toBe("flattening");
             });
@@ -470,7 +492,7 @@ describe(`RichTextEditor`, () => {
         });
 
         it(`will set the textarea to disabled`, () => {
-            const target = getDocument().createElement("div") as unknown as ShadowRoot;
+            const target = doc.createElement("div") as unknown as ShadowRoot;
             const host = getHost();
             const update = RichTextEditor.content(host);
             update(host, target);
@@ -486,7 +508,7 @@ describe(`RichTextEditor`, () => {
         });
 
         it(`will set the textarea to required`, () => {
-            const target = getDocument().createElement("div") as unknown as ShadowRoot;
+            const target = doc.createElement("div") as unknown as ShadowRoot;
             const host = getHost();
             const update = RichTextEditor.content(host);
             update(host, target);

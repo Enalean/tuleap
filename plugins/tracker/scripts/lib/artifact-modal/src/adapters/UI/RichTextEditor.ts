@@ -105,6 +105,7 @@ function onChange(host: HostElement, ckeditor: CKEDITOR.editor): void {
         return;
     }
     host.contentValue = new_content;
+    dispatch(host, "change", { bubbles: true });
     dispatch(host, "content-change", { detail: { content: new_content } });
 }
 
