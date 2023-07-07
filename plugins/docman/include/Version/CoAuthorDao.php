@@ -42,7 +42,7 @@ class CoAuthorDao extends DataAccessObject
     {
         $rows = [];
 
-        foreach ($co_author_ids as $co_author_id) {
+        foreach (array_unique($co_author_ids) as $co_author_id) {
             $rows[] = ['version_id' => $id, 'user_id' => $co_author_id];
         }
 

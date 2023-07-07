@@ -74,6 +74,7 @@ load_project() {
 seed_data() {
     sudo -u codendiadm /usr/bin/tuleap plugin:install \
         tracker \
+        docman \
         agiledashboard \
         statistics \
         git \
