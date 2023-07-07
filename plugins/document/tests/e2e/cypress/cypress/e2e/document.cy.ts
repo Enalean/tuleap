@@ -152,8 +152,59 @@ describe("Document new UI", () => {
         });
 
         context("Item manipulation", () => {
+            let permission_project_name: string;
             beforeEach(() => {
+                permission_project_name = `perm-doc-${now}`;
                 disableSpecificErrorThrownByCkeditor();
+            });
+
+            it("projectMember can ask permission to see a document he can not access", function () {
+                cy.projectAdministratorSession();
+                cy.createNewPublicProject(permission_project_name, "issues")
+                    .then((project_id) =>
+                        cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
+                    )
+                    .then((response) => {
+                        const root_folder_id = response.body.root_item.id;
+                        const embedded_payload = {
+                            title: "test",
+                            description: "",
+                            type: "embedded",
+                            embedded_properties: {
+                                content: "<p>embedded</p>\n",
+                            },
+                            should_lock_file: false,
+                        };
+                        return cy.postFromTuleapApi(
+                            `api/docman_folders/${root_folder_id}/embedded_files`,
+                            embedded_payload
+                        );
+                    });
+
+                cy.visitProjectService(permission_project_name, "Documents");
+                cy.get("[data-test=document-drop-down-button]").first().click();
+                cy.get("[data-test=document-permissions]").first().click();
+
+                cy.get("[data-test=document-permission-Reader]").select("Project administrators");
+                cy.get("[data-test=document-permission-Writer]").select("Project administrators");
+                cy.get("[data-test=document-permission-Manager]").select("Project administrators");
+
+                cy.get("[data-test=document-modal-submit-update-permissions]").click();
+                cy.get("[data-test=document-folder-content-row]").click();
+
+                cy.url().then((url) => {
+                    cy.projectMemberSession();
+                    //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
+                    cy.visit(url, { failOnStatusCode: false });
+                    const message = "private_document";
+                    cy.get("[data-test=message-request-access-private-document]").type(message);
+                    cy.get("[data-test=private-document-access-button]").click();
+
+                    cy.assertUserMessagesReceivedByWithSpecificContent(
+                        "ProjectAdministrator@example.com",
+                        message
+                    );
+                });
             });
 
             it("user can manipulate folders", () => {

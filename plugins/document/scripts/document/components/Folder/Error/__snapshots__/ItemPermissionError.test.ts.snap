@@ -50,6 +50,7 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
           </label>
           <textarea
             class="tlp-textarea"
+            data-test="message-request-access-private-document"
             id="msg_private_project"
             name="msg_private_project"
             placeholder="Please write something meaningful for the admin."
@@ -69,6 +70,7 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
       >
         <button
           class="tlp-button-primary"
+          data-test="private-document-access-button"
           type="button"
         >
           <i

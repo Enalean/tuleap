@@ -54,6 +54,7 @@
                             class="tlp-textarea"
                             rows="5"
                             id="msg_private_project"
+                            data-test="message-request-access-private-document"
                             name="msg_private_project"
                             v-bind:placeholder="placeholder"
                             v-model="mail_content"
@@ -70,7 +71,12 @@
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button type="button" class="tlp-button-primary" v-on:click="submit">
+                    <button
+                        type="button"
+                        class="tlp-button-primary"
+                        v-on:click="submit"
+                        data-test="private-document-access-button"
+                    >
                         <i class="fa-regular fa-envelope tlp-button-icon"></i>
                         {{ $gettext("Send mail") }}
                     </button>
