@@ -18,7 +18,7 @@
  */
 
 import type { UpdateFunction } from "hybrids";
-import { define, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import {
@@ -44,6 +44,7 @@ export const getActionButton = (
 ): UpdateFunction<FileField> => {
     if (!file.marked_for_removal) {
         const markForRemoval = (host: HostElement): void => {
+            dispatch(host, "change", { bubbles: true });
             host.attached_files = host.controller.markFileForRemoval(file);
         };
         return html`
@@ -61,6 +62,7 @@ export const getActionButton = (
     }
 
     const cancelRemoval = (host: HostElement): void => {
+        dispatch(host, "change", { bubbles: true });
         host.attached_files = host.controller.cancelFileRemoval(file);
     };
     return html`
