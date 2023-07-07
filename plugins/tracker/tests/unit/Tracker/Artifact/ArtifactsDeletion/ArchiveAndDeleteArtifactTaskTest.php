@@ -25,9 +25,11 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,9 +48,8 @@ final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $task = new ArchiveAndDeleteArtifactTask($artifact_exporter, $artifact_deletor, $field_content_indexer, $comments_indexer, $event_manager, $db_connection, $logger);
 
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(10);
-        $user = \Mockery::mock(\PFUser::class);
+        $artifact = ArtifactTestBuilder::anArtifact(10)->build();
+        $user     = UserTestBuilder::anActiveUser()->build();
 
         $artifact_exporter->shouldReceive('exportArtifactAndTrackerStructureToXML');
         $event_manager->shouldReceive('processEvent');
@@ -58,6 +59,7 @@ final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 
-        $task->archive($artifact, $user);
+        $project_id = 102;
+        $task->archive($artifact, $user, DeletionContext::regularDeletion($project_id));
     }
 }

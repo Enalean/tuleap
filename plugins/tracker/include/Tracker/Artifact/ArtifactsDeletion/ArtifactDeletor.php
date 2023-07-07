@@ -32,68 +32,42 @@ class ArtifactDeletor
 {
     public const PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete';
 
-    /**
-     * @var Tracker_ArtifactDao
-     */
-    private $dao;
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $project_history_dao;
-    /**
-     * @var PendingArtifactRemovalDao
-     */
-    private $pending_artifact_removal_dao;
-    /**
-     * @var AsynchronousArtifactsDeletionActionsRunner
-     */
-    private $asynchronous_actions_runner;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_manager;
-
     public function __construct(
-        Tracker_ArtifactDao $dao,
-        ProjectHistoryDao $project_history_dao,
-        PendingArtifactRemovalDao $pending_artifact_removal_dao,
-        AsynchronousArtifactsDeletionActionsRunner $asynchronous_actions_runner,
-        EventDispatcherInterface $event_manager,
+        private readonly Tracker_ArtifactDao $dao,
+        private readonly ProjectHistoryDao $project_history_dao,
+        private readonly PendingArtifactRemovalDao $pending_artifact_removal_dao,
+        private readonly AsynchronousArtifactsDeletionActionsRunner $asynchronous_actions_runner,
+        private readonly EventDispatcherInterface $event_manager,
     ) {
-        $this->dao                          = $dao;
-        $this->project_history_dao          = $project_history_dao;
-        $this->pending_artifact_removal_dao = $pending_artifact_removal_dao;
-        $this->asynchronous_actions_runner  = $asynchronous_actions_runner;
-        $this->event_manager                = $event_manager;
     }
 
-    public function delete(Artifact $artifact, PFUser $user)
+    public function delete(Artifact $artifact, PFUser $user, DeletionContext $context): void
     {
         $this->dao->startTransaction();
-        $this->processDelete($artifact, $user);
+        $this->processDelete($artifact, $user, $context);
         $this->dao->commit();
         ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_DELETED);
         $this->addProjectHistory($artifact);
         $this->processEvent($artifact);
     }
 
-    public function deleteWithoutTransaction(Artifact $artifact, PFUser $user)
+    public function deleteWithoutTransaction(Artifact $artifact, PFUser $user, DeletionContext $context): void
     {
-        $this->processDelete($artifact, $user);
+        $this->processDelete($artifact, $user, $context);
         $this->addProjectHistory($artifact);
         $this->processEvent($artifact);
     }
 
-    private function processDelete(Artifact $artifact, PFUser $user)
+    private function processDelete(Artifact $artifact, PFUser $user, DeletionContext $context): void
     {
         $this->pending_artifact_removal_dao->addArtifactToPendingRemoval($artifact->getId());
 
-        $this->asynchronous_actions_runner->executeArchiveAndArtifactDeletion($artifact, $user);
+        $this->asynchronous_actions_runner->executeArchiveAndArtifactDeletion($artifact, $user, $context);
 
         $this->dao->delete($artifact->getId());
     }
 
-    private function addProjectHistory(Artifact $artifact)
+    private function addProjectHistory(Artifact $artifact): void
     {
         $this->project_history_dao->groupAddHistory(
             self::PROJECT_HISTORY_ARTIFACT_DELETED,

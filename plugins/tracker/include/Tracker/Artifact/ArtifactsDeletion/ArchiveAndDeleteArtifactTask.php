@@ -32,47 +32,21 @@ use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class ArchiveAndDeleteArtifactTask
 {
-    /**
-     * @var ArtifactWithTrackerStructureExporter
-     */
-    private $artifact_with_tracker_structure_exporter;
-    /**
-     * @var ArtifactDependenciesDeletor
-     */
-    private $dependencies_deletor;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var DBConnection
-     */
-    private $db_connection;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
-        ArtifactDependenciesDeletor $dependencies_deletor,
-        private FieldContentIndexer $field_content_indexer,
-        private ChangesetCommentIndexer $changeset_comment_indexer,
-        EventManager $event_manager,
-        DBConnection $db_connection,
-        LoggerInterface $logger,
+        private readonly ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
+        private readonly ArtifactDependenciesDeletor $dependencies_deletor,
+        private readonly FieldContentIndexer $field_content_indexer,
+        private readonly ChangesetCommentIndexer $changeset_comment_indexer,
+        private readonly EventManager $event_manager,
+        private readonly DBConnection $db_connection,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
-        $this->dependencies_deletor                     = $dependencies_deletor;
-        $this->event_manager                            = $event_manager;
-        $this->db_connection                            = $db_connection;
-        $this->logger                                   = $logger;
     }
 
-    public function archive(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user): void
+    public function archive(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user, DeletionContext $context): void
     {
         $this->tryToArchiveArtifact($artifact, $user);
-        $this->dependencies_deletor->cleanDependencies($artifact);
+        $this->dependencies_deletor->cleanDependencies($artifact, $context);
         $this->field_content_indexer->askForDeletionOfIndexedFieldsFromArtifact($artifact);
         $this->changeset_comment_indexer->askForDeletionOfIndexedCommentsFromArtifact($artifact);
     }

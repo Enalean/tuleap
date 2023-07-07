@@ -25,32 +25,16 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use PFUser;
-use SystemEventDao;
+use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactsDeletionManager
 {
-    /**
-     * @var SystemEventDao
-     */
-    private $dao;
-    /**
-     * @var ArtifactDeletor
-     */
-    private $artifact_deletor;
-    /**
-     * @var ArtifactDeletionLimitRetriever
-     */
-    private $deletion_limit_retriever;
-
     public function __construct(
-        ArtifactsDeletionDAO $dao,
-        ArtifactDeletor $artifact_deletor,
-        ArtifactDeletionLimitRetriever $deletion_limit_retriever,
+        private readonly ArtifactsDeletionDAO $dao,
+        private readonly ArtifactDeletor $artifact_deletor,
+        private readonly ArtifactDeletionLimitRetriever $deletion_limit_retriever,
     ) {
-        $this->dao                      = $dao;
-        $this->artifact_deletor         = $artifact_deletor;
-        $this->deletion_limit_retriever = $deletion_limit_retriever;
     }
 
     /**
@@ -62,10 +46,11 @@ class ArtifactsDeletionManager
     public function deleteArtifact(
         Artifact $artifact,
         PFUser $user,
-    ) {
+    ): int {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 
-        $this->artifact_deletor->delete($artifact, $user);
+        $project_id = (int) $artifact->getTracker()->getGroupId();
+        $this->artifact_deletor->delete($artifact, $user, DeletionContext::regularDeletion($project_id));
         $this->dao->recordDeletionForUser($user->getId(), time());
 
         return $remaining_deletions;
@@ -80,10 +65,15 @@ class ArtifactsDeletionManager
     public function deleteArtifactBeforeMoveOperation(
         Artifact $artifact,
         PFUser $user,
-    ) {
+        Tracker $destination_tracker,
+    ): int {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 
-        $this->artifact_deletor->deleteWithoutTransaction($artifact, $user);
+        $this->artifact_deletor->deleteWithoutTransaction(
+            $artifact,
+            $user,
+            DeletionContext::moveContext((int) $artifact->getTracker()->getGroupId(), (int) $destination_tracker->getGroupId())
+        );
         $this->dao->recordDeletionForUser($user->getId(), time());
 
         return $remaining_deletions;

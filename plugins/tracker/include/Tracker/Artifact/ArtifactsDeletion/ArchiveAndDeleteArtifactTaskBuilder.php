@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use CrossReferenceManager;
+use CrossReferenceDao;
 use EventManager;
 use ForgeConfig;
 use PermissionsDao;
@@ -41,6 +41,8 @@ use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\DB\DBFactory;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Reference\CrossReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
@@ -115,7 +117,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
             ),
             new ArtifactDependenciesDeletor(
                 new PermissionsManager(new PermissionsDao()),
-                new CrossReferenceManager(),
+                new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao()),
                 new Tracker_Artifact_PriorityManager(
                     new Tracker_Artifact_PriorityDao(),
                     new Tracker_Artifact_PriorityHistoryDao(),
@@ -125,7 +127,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new Tracker_ArtifactDao(),
                 new ComputedFieldDaoCache(new ComputedFieldDao()),
                 new RecentlyVisitedDao(),
-                new PendingArtifactRemovalDao()
+                new PendingArtifactRemovalDao(),
             ),
             new FieldContentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager),
             new ChangesetCommentIndexer(

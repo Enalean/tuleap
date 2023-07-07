@@ -45,4 +45,23 @@ class CrossReferencesDao extends DataAccessObject
             $entity_id,
         );
     }
+
+    public function updateReferencesWhenArtifactIsInTarget(int $source_id, int $destination_project_id): void
+    {
+        $this->getDB()->run(
+            "UPDATE cross_references SET target_gid = ? WHERE target_id = ?",
+            $destination_project_id,
+            $source_id
+        );
+    }
+
+    public function deleteReferencesWhenArtifactIsSource(int $id, string $nature, int $project_id): void
+    {
+        $this->getDB()->run(
+            "DELETE FROM cross_references WHERE source_type = ? AND source_id = ? AND source_gid = ?",
+            $nature,
+            $id,
+            $project_id
+        );
+    }
 }

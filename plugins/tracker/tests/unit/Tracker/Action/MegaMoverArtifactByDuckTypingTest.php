@@ -50,6 +50,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     private Tracker $source_tracker;
     private \PFUser $user;
     private DuckTypedMoveFieldCollection $fields;
+    private \Project $project;
 
     protected function setUp(): void
     {
@@ -66,12 +67,13 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
             $this->xml_updater,
             $this->artifact_priority_manager,
             $transaction_executor,
-            $this->xml_import
+            $this->xml_import,
         );
 
         $this->user           = UserTestBuilder::anActiveUser()->build();
         $this->artifact       = ArtifactTestBuilder::anArtifact(1)->submittedBy($this->user)->build();
-        $this->source_tracker = TrackerTestBuilder::aTracker()->build();
+        $this->project        = ProjectTestBuilder::aProject()->withId(199)->build();
+        $this->source_tracker = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
         $this->fields         = DuckTypedMoveFieldCollection::fromFields([], [], [], []);
     }
 
@@ -105,13 +107,12 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 
-    public function testItRunTheMoveAndUpdateRandAndReturnTotalArtifactsDeleted(): void
+    public function testItRunTheMoveAndUpdateRankAndReturnTotalArtifactsDeleted(): void
     {
-        $project  = ProjectTestBuilder::aProject()->withStatusActive()->build();
         $workflow = $this->createStub(\Workflow::class);
         $workflow->expects(self::once())->method('disable');
         $target_tracker = $this->createStub(Tracker::class);
-        $target_tracker->method('getProject')->willReturn($project);
+        $target_tracker->method('getProject')->willReturn($this->project);
         $target_tracker->method('getWorkflow')->willReturn($workflow);
 
         $exported_artifact = ArtifactTestBuilder::anArtifact(1)->build();

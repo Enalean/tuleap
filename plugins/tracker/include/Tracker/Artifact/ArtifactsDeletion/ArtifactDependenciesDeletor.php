@@ -20,73 +20,48 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use CrossReferenceManager;
 use PermissionsManager;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
+use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 
 class ArtifactDependenciesDeletor
 {
-    /**
-     * @var PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var CrossReferenceManager
-     */
-    private $cross_reference_manager;
-    /**
-     * @var Tracker_Artifact_PriorityManager
-     */
-    private $tracker_artifact_priority_manager;
-    /**
-     * @var Tracker_ArtifactDao
-     */
-    private $dao;
-    /**
-     * @var ComputedFieldDaoCache
-     */
-    private $computed_dao_cache;
-    /**
-     * @var RecentlyVisitedDao
-     */
-    private $recently_visited_dao;
-    /**
-     * @var PendingArtifactRemovalDao
-     */
-    private $artifact_removal;
-
     public function __construct(
-        PermissionsManager $permissions_manager,
-        CrossReferenceManager $cross_reference_manager,
-        Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
-        Tracker_ArtifactDao $dao,
-        ComputedFieldDaoCache $computed_dao_cache,
-        RecentlyVisitedDao $recently_visited_dao,
-        PendingArtifactRemovalDao $artifact_removal,
+        private readonly PermissionsManager $permissions_manager,
+        private readonly CrossReferenceManager $cross_reference_manager,
+        private readonly Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
+        private readonly Tracker_ArtifactDao $dao,
+        private readonly ComputedFieldDaoCache $computed_dao_cache,
+        private readonly RecentlyVisitedDao $recently_visited_dao,
+        private readonly PendingArtifactRemovalDao $artifact_removal,
     ) {
-        $this->permissions_manager               = $permissions_manager;
-        $this->cross_reference_manager           = $cross_reference_manager;
-        $this->tracker_artifact_priority_manager = $tracker_artifact_priority_manager;
-        $this->dao                               = $dao;
-        $this->computed_dao_cache                = $computed_dao_cache;
-        $this->recently_visited_dao              = $recently_visited_dao;
-        $this->artifact_removal                  = $artifact_removal;
     }
 
-    public function cleanDependencies(Artifact $artifact)
+    public function cleanDependencies(Artifact $artifact, DeletionContext $context): void
     {
         $artifact_deletor_visitor = new ArtifactFilesDeletorVisitor($artifact);
         $this->permissions_manager->clearPermission(Artifact::PERMISSION_ACCESS, $artifact->getId());
         $tracker = $artifact->getTracker();
-        $this->cross_reference_manager->deleteEntity(
-            (string) $artifact->getId(),
-            Artifact::REFERENCE_NATURE,
-            $tracker->getGroupId()
-        );
+
+        if (! $context->isAnArtifactMove()) {
+            $this->cross_reference_manager->deleteEntity(
+                (string) $artifact->getId(),
+                Artifact::REFERENCE_NATURE,
+                $tracker->getGroupId()
+            );
+        } else {
+            $this->cross_reference_manager->deleteReferencesWhenArtifactIsSource(
+                $artifact
+            );
+
+            if ($context->getSourceProjectId() !== $context->getDestinationProjectId()) {
+                $this->cross_reference_manager->updateReferencesWhenArtifactIsInTarget($artifact, $context);
+            }
+        }
 
         foreach ($tracker->getFormElementFields() as $form_element) {
             $form_element->accept($artifact_deletor_visitor);

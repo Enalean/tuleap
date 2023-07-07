@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
 use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
@@ -105,7 +106,9 @@ while ($current_artifact_id <= $last_artifact_id) {
         continue;
     }
 
+    $project_id = (int) $artifact->getTracker()->getGroupId();
+
     fwrite(STDOUT, 'Removing artifact #' . $current_artifact_id . PHP_EOL);
-    $artifact_deletor->delete($artifact, $tuleap_user);
+    $artifact_deletor->delete($artifact, $tuleap_user, DeletionContext::regularDeletion($project_id));
     $current_artifact_id++;
 }

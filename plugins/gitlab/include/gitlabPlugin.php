@@ -114,6 +114,8 @@ use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
+use Tuleap\Reference\CrossReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
@@ -297,7 +299,7 @@ class gitlabPlugin extends Plugin
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $semantic_status_factory        = Tracker_Semantic_StatusFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
-        $cross_reference_manager        = new CrossReferenceManager();
+        $cross_reference_manager        = new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao());
 
         $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -521,7 +523,7 @@ class gitlabPlugin extends Plugin
         $semantic_status_factory        = \Tracker_Semantic_StatusFactory::instance();
         $artifact_factory               = Tracker_ArtifactFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
-        $cross_reference_manager        = new CrossReferenceManager();
+        $cross_reference_manager        = new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao());
         $db_transaction_executor        = new DBTransactionExecutorWithConnection(
             DBFactory::getMainTuleapDBConnection()
         );

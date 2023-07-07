@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use CrossReferenceManager;
 use DateTimeImmutable;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase

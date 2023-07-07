@@ -33,20 +33,12 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var AsynchronousArtifactsDeletionActionsRunner
-     */
-    private $runner;
-
+    private AsynchronousArtifactsDeletionActionsRunner $runner;
     private IsAsyncTaskProcessingAvailable $worker_availability;
-    /**
-     * @var QueueFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $queue_factory;
-    /**
-     * @var ArchiveAndDeleteArtifactTaskBuilder&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $task_builder;
+    private QueueFactory|\PHPUnit\Framework\MockObject\MockObject $queue_factory;
+    private ArchiveAndDeleteArtifactTaskBuilder|\PHPUnit\Framework\MockObject\MockObject $task_builder;
+    private PendingArtifactRemovalDao|\PHPUnit\Framework\MockObject\MockObject $pending_artifact_removal_dao;
+
 
     protected function setUp(): void
     {
@@ -59,8 +51,9 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
             }
         };
 
-        $this->runner = new AsynchronousArtifactsDeletionActionsRunner(
-            $this->createMock(PendingArtifactRemovalDao::class),
+        $this->pending_artifact_removal_dao = $this->createMock(PendingArtifactRemovalDao::class);
+        $this->runner                       = new AsynchronousArtifactsDeletionActionsRunner(
+            $this->pending_artifact_removal_dao,
             new NullLogger(),
             $this->createMock(\UserManager::class),
             $this->queue_factory,
@@ -78,9 +71,11 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
 
         $artifact = ArtifactTestBuilder::anArtifact(1234)->build();
 
+        $project_id = 104;
         $this->runner->executeArchiveAndArtifactDeletion(
             $artifact,
-            UserTestBuilder::anActiveUser()->build()
+            UserTestBuilder::anActiveUser()->build(),
+            DeletionContext::regularDeletion($project_id)
         );
     }
 }

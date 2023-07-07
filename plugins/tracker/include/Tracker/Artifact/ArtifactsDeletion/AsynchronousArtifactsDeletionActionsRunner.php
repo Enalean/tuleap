@@ -32,43 +32,19 @@ use Tuleap\Tracker\Artifact\Artifact;
 class AsynchronousArtifactsDeletionActionsRunner
 {
     public const TOPIC = 'tuleap.tracker.artifact.deletion';
-    /**
-     * @var PendingArtifactRemovalDao
-     */
-    private $pending_artifact_removal_dao;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var ArchiveAndDeleteArtifactTaskBuilder
-     */
-    private $task_builder;
+
 
     public function __construct(
-        PendingArtifactRemovalDao $pending_artifact_removal_dao,
-        LoggerInterface $logger,
-        \UserManager $user_manager,
-        QueueFactory $queue_factory,
-        private IsAsyncTaskProcessingAvailable $worker_availability,
-        ArchiveAndDeleteArtifactTaskBuilder $task_builder,
+        private readonly PendingArtifactRemovalDao $pending_artifact_removal_dao,
+        private readonly LoggerInterface $logger,
+        private readonly \UserManager $user_manager,
+        private readonly QueueFactory $queue_factory,
+        private readonly IsAsyncTaskProcessingAvailable $worker_availability,
+        private readonly ArchiveAndDeleteArtifactTaskBuilder $task_builder,
     ) {
-        $this->pending_artifact_removal_dao = $pending_artifact_removal_dao;
-        $this->logger                       = $logger;
-        $this->user_manager                 = $user_manager;
-        $this->queue_factory                = $queue_factory;
-        $this->task_builder                 = $task_builder;
     }
 
-    public function addListener(WorkerEvent $event)
+    public function addListener(WorkerEvent $event): void
     {
         if ($event->getEventName() === self::TOPIC) {
             $message = $event->getPayload();
@@ -83,22 +59,30 @@ class AsynchronousArtifactsDeletionActionsRunner
             );
 
             $user = $this->user_manager->getUserById($message['user_id']);
+            if (! $user) {
+                return;
+            }
 
-            $this->processArchiveAndArtifactDeletion($artifact, $user);
+            $context = DeletionContext::regularDeletion((int) $message['source_project_id']);
+            if ($message["context"] === DeletionContext::MOVE_TYPE) {
+                $context = DeletionContext::moveContext((int) $message['source_project_id'], (int) $message['destination_project_id']);
+            }
+
+            $this->processArchiveAndArtifactDeletion($artifact, $user, $context);
         }
     }
 
-    private function processArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user): void
+    private function processArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user, DeletionContext $context): void
     {
         $task = $this->task_builder->build($this->logger);
 
-        $task->archive($artifact, $user);
+        $task->archive($artifact, $user, $context);
     }
 
-    public function executeArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user): void
+    public function executeArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user, DeletionContext $context): void
     {
         if (! $this->worker_availability->canProcessAsyncTasks()) {
-            $this->processArchiveAndArtifactDeletion($artifact, $user);
+            $this->processArchiveAndArtifactDeletion($artifact, $user, $context);
             return;
         }
 
@@ -107,13 +91,16 @@ class AsynchronousArtifactsDeletionActionsRunner
             $queue->pushSinglePersistentMessage(
                 self::TOPIC,
                 [
-                    'artifact_id' => (int) $artifact->getId(),
-                    'user_id'     => (int) $user->getId(),
+                    'artifact_id' => $artifact->getId(),
+                    'user_id' => (int) $user->getId(),
+                    'source_project_id' => $context->getSourceProjectId(),
+                    'destination_project_id' => $context->getDestinationProjectId(),
+                    'context' => $context->getType(),
                 ]
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue deletion for {$artifact->getId()}");
-            $this->processArchiveAndArtifactDeletion($artifact, $user);
+            $this->processArchiveAndArtifactDeletion($artifact, $user, $context);
         }
     }
 }
