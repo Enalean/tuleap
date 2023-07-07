@@ -21,7 +21,6 @@ import { define, dispatch, html } from "hybrids";
 import { cleanValue } from "./int-field-value-formatter";
 
 export type AllowedValue = number | "";
-export type HostElement = IntField & HTMLElement;
 
 export interface IntField {
     fieldId: number;
@@ -30,6 +29,10 @@ export interface IntField {
     disabled: boolean;
     value: AllowedValue;
 }
+type InternalIntField = IntField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalIntField & HTMLElement;
 
 export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
@@ -46,7 +49,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const IntField = define<IntField>({
+export const IntField = define<InternalIntField>({
     tag: "tuleap-artifact-modal-int-field",
     fieldId: 0,
     label: "",

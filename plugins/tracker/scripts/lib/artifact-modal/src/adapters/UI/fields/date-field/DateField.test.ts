@@ -17,48 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setCatalog } from "../../../../gettext-catalog";
-import { DateField, onInput } from "./DateField";
-
+import { selectOrThrow } from "@tuleap/dom";
 import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./DateField";
+import { DateField, onInput } from "./DateField";
 
 function getField(data?: Partial<EditableDateFieldStructure>): EditableDateFieldStructure {
     return {
         field_id: 60,
         label: "Start date",
         ...data,
-    } as unknown as EditableDateFieldStructure;
+    } as EditableDateFieldStructure;
 }
 
 describe("DateField", () => {
-    let target: ShadowRoot;
-
+    let is_disabled: boolean, is_required: boolean, doc: Document;
     beforeEach(() => {
-        target = document.implementation
-            .createHTMLDocument()
-            .createElement("div") as unknown as ShadowRoot;
-
         setCatalog({ getString: (msgid) => msgid });
+        doc = document.implementation.createHTMLDocument();
+        is_disabled = false;
+        is_required = false;
     });
 
-    it("should display the field", () => {
-        const field_data = { is_time_displayed: true, required: true };
-        const host = {
+    const getHost = (): HostElement => {
+        const element = doc.createElement("div");
+        const field_data = { is_time_displayed: true, required: is_required };
+        return Object.assign(element, {
             field: getField(field_data),
-            isDisabled: false,
+            isDisabled: is_disabled,
             value: "27-01-2022 12:30",
-        } as unknown as HostElement;
+        } as HostElement);
+    };
 
+    const render = (host: HostElement): ShadowRoot => {
         const update = DateField.content(host);
+        update(host, host);
+        return host as unknown as ShadowRoot;
+    };
 
-        update(host, target);
+    it("should display the field", () => {
+        is_required = true;
+        const target = render(getHost());
 
-        const input = target.querySelector("[data-test=date-field-input]");
-        if (!(input instanceof HTMLInputElement)) {
-            throw new Error("Input not found in DateField");
-        }
-
+        const input = selectOrThrow(target, "[data-test=date-field-input]", HTMLInputElement);
         expect(input.id).toBe("tracker_field_60");
         expect(input.size).toBe(19);
         expect(input.value).toBe("27-01-2022 12:30");
@@ -69,21 +71,12 @@ describe("DateField", () => {
     });
 
     it("When the field is required and no value has been provided, Then the field is in error", () => {
-        const field_data = { is_time_displayed: true, required: true };
-        const host = {
-            field: getField(field_data),
-            isDisabled: false,
-            value: "",
-        } as unknown as HostElement;
+        is_required = true;
+        const host = getHost();
+        host.value = "";
+        const target = render(host);
 
-        const update = DateField.content(host);
-
-        update(host, target);
-
-        const form_element = target.querySelector("[data-test=date-field]");
-        if (!(form_element instanceof HTMLElement)) {
-            throw new Error("form element not found in DateField");
-        }
+        const form_element = selectOrThrow(target, "[data-test=date-field]");
 
         expect(form_element.classList.contains("tlp-form-element-error")).toBe(true);
         expect(
@@ -92,20 +85,11 @@ describe("DateField", () => {
     });
 
     it("When the field is disabled, then the form-element and its input should be disabled", () => {
-        const host = {
-            field: getField(),
-            isDisabled: true,
-        } as unknown as HostElement;
+        is_disabled = true;
+        const target = render(getHost());
 
-        const update = DateField.content(host);
-
-        update(host, target);
-
-        const form_element = target.querySelector("[data-test=date-field]");
-        const input = target.querySelector("[data-test=date-field-input]");
-        if (!(form_element instanceof HTMLElement) || !(input instanceof HTMLInputElement)) {
-            throw new Error("form element or input not found in DateField");
-        }
+        const form_element = selectOrThrow(target, "[data-test=date-field]");
+        const input = selectOrThrow(target, "[data-test=date-field-input]", HTMLInputElement);
 
         expect(form_element.classList.contains("tlp-form-element-disabled")).toBe(true);
         expect(input.disabled).toBe(true);
@@ -117,15 +101,9 @@ describe("DateField", () => {
     ])(
         `%s, it dispatches a "value-changed" event with value as %s`,
         (when_statement, expected_statement, input_value) => {
-            const host = {
-                field: getField(),
-                dispatchEvent: (): void => {
-                    // Do nothing
-                },
-            } as unknown as HostElement;
-
+            const host = getHost();
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const inner_input = document.implementation.createHTMLDocument().createElement("input");
+            const inner_input = doc.createElement("input");
             inner_input.addEventListener("input", (event) => onInput(host, event));
 
             inner_input.value = input_value;
@@ -140,4 +118,19 @@ describe("DateField", () => {
             expect(event.detail.value).toBe(input_value);
         }
     );
+
+    it(`dispatches a bubbling "change" event when its inner field is changed
+        so that the modal shows a warning when closed`, () => {
+        const host = getHost();
+        const target = render(host);
+        let is_bubbling = false;
+        host.addEventListener("change", (event) => {
+            is_bubbling = event.bubbles;
+        });
+        const input = selectOrThrow(target, "[data-test=date-field-input]", HTMLInputElement);
+        input.value = "12-07-2029 01:43";
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+
+        expect(is_bubbling).toBe(true);
+    });
 });

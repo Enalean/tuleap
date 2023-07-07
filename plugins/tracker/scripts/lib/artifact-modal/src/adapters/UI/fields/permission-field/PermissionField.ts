@@ -23,12 +23,14 @@ import type { PermissionFieldControllerType } from "./PermissionFieldController"
 import type { PermissionFieldPresenter } from "./PermissionFieldPresenter";
 import { getPermissionFieldLabel } from "../../../../gettext-catalog";
 
-export type HostElement = PermissionField & HTMLElement;
-
 interface PermissionField {
     readonly controller: PermissionFieldControllerType;
     field_presenter: PermissionFieldPresenter;
 }
+type InternalPermissionField = PermissionField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalPermissionField & HTMLElement;
 
 const onPermissionCheckboxChange = (host: PermissionField, event: Event): void => {
     const target = event.target;
@@ -105,7 +107,7 @@ export const getGrantedGroupsSelect = (
     </select>
 `;
 
-export const PermissionField = define<PermissionField>({
+export const PermissionField = define<InternalPermissionField>({
     tag: "tuleap-artifact-modal-permission-field",
     controller: {
         set(host, controller: PermissionFieldControllerType) {

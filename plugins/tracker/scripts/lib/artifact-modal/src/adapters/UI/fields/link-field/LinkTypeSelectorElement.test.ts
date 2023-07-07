@@ -36,11 +36,10 @@ const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupEleme
 describe("LinkTypeSelectorElement", () => {
     let allowed_link_types: CollectionOfAllowedLinksTypesPresenters,
         cross_reference: Option<ArtifactCrossReference>,
-        dispatchEvent: jest.SpyInstance;
-
+        doc: Document;
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
-        dispatchEvent = jest.fn();
+        doc = document.implementation.createHTMLDocument();
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 false,
@@ -49,27 +48,24 @@ describe("LinkTypeSelectorElement", () => {
         cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #150"));
     });
 
-    const render = (): HTMLSelectElement => {
-        const doc = document.implementation.createHTMLDocument();
-        const target = doc.createElement("div") as unknown as ShadowRoot;
+    const getHost = (): HostElement => {
         const element = doc.createElement("span");
-        const host = Object.assign(element, {
+        return Object.assign(element, {
             value: LinkTypeStub.buildUntyped(),
             disabled: false,
             current_artifact_reference: cross_reference,
             available_types: allowed_link_types,
-            dispatchEvent,
-            content: () => element,
         }) as HostElement;
+    };
 
-        const render = LinkTypeSelectorElement.content(host);
-        render(host, target);
-
-        return selectOrThrow(target, "[data-test=link-type-select]", HTMLSelectElement);
+    const render = (host: HostElement): HTMLSelectElement => {
+        const update = LinkTypeSelectorElement.content(host);
+        update(host, host);
+        return selectOrThrow(host, "[data-test=link-type-select]", HTMLSelectElement);
     };
 
     it("should build the type selector", () => {
-        const select = render();
+        const select = render(getHost());
         const optgroup = getSelectMainOptionsGroup(select);
 
         expect(optgroup.label).toBe("story #150");
@@ -96,7 +92,7 @@ describe("LinkTypeSelectorElement", () => {
                 true,
                 LinkTypesCollectionStub.withParentPair()
             );
-        const select = render();
+        const select = render(getHost());
 
         const child_of_is_disabled = Array.from(select.options).find(
             (option) => option.value === "_is_child reverse"
@@ -111,19 +107,38 @@ describe("LinkTypeSelectorElement", () => {
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {
         cross_reference = Option.nothing();
-        const select = render();
+        const select = render(getHost());
 
         expect(getSelectMainOptionsGroup(select).label).toBe("New artifact");
     });
 
     it(`will dispatch a bubbling type-changed event when there's a change in the select`, () => {
-        const select = render();
+        const host = getHost();
+        const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+        const select = render(host);
         select.value = `${IS_CHILD_LINK_TYPE} ${FORWARD_DIRECTION}`;
         select.dispatchEvent(new Event("change"));
 
         const event = dispatchEvent.mock.calls[0][0];
         expect(event.type).toBe("type-changed");
         expect(event.bubbles).toBe(true);
+        if (!(event instanceof CustomEvent)) {
+            throw Error("Expected a custom event");
+        }
         expect(LinkType.isForwardChild(event.detail.new_link_type)).toBe(true);
+    });
+
+    it(`dispatches a bubbling "change" event when its selectbox is changed
+        so that the modal shows a warning when closed`, () => {
+        const host = getHost();
+        const select = render(host);
+        let is_bubbling = false;
+        host.addEventListener("change", (event) => {
+            is_bubbling = event.bubbles;
+        });
+        select.value = `${IS_CHILD_LINK_TYPE} ${FORWARD_DIRECTION}`;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+
+        expect(is_bubbling).toBe(true);
     });
 });

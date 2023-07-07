@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SelectBoxField } from "./SelectBoxField";
+import type { HostElement } from "./SelectBoxField";
 
-export const highlightSelectBoxField = (host: SelectBoxField): void => {
+export const highlightSelectBoxField = (host: HostElement): void => {
     const list_picker = host.content().querySelector("[data-list-picker=wrapper]");
     if (!list_picker) {
         return;

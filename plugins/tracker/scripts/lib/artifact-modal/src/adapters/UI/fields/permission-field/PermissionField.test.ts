@@ -17,28 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
 import { setCatalog } from "../../../../gettext-catalog";
-import { getGrantedGroupsSelect, getIsUsedByDefaultCheckbox } from "./PermissionField";
-import { PermissionFieldController } from "./PermissionFieldController";
-import type { PermissionFieldControllerType } from "./PermissionFieldController";
 import type { HostElement } from "./PermissionField";
+import {
+    getGrantedGroupsSelect,
+    getIsUsedByDefaultCheckbox,
+    PermissionField,
+} from "./PermissionField";
+import { PermissionFieldController } from "./PermissionFieldController";
 
 describe("PermissionField", () => {
-    let doc: Document, target: ShadowRoot, controller: PermissionFieldControllerType;
-
+    let doc: Document, is_required: boolean;
     beforeEach(() => {
-        setCatalog({
-            getString: (msgid): string => msgid,
-        });
+        setCatalog({ getString: (msgid) => msgid });
 
         doc = document.implementation.createHTMLDocument();
-        target = doc.createElement("div") as unknown as ShadowRoot;
+        is_required = true;
+    });
 
-        controller = PermissionFieldController(
+    const getHost = (): HostElement => {
+        const element = doc.createElement("div");
+        const controller = PermissionFieldController(
             {
                 field_id: 1060,
                 label: "Permissions",
-                required: true,
+                required: is_required,
                 values: {
                     ugroup_representations: [
                         {
@@ -61,55 +65,96 @@ describe("PermissionField", () => {
             },
             false
         );
-    });
-
-    it('when the "is_used checkbox has been checked/unchecked, it should ask the controller to update its value', () => {
-        jest.spyOn(controller, "setIsFieldUsedByDefault");
-
-        const host = {
+        return Object.assign(element, {
             controller,
             field_presenter: controller.buildPresenter(),
-        } as unknown as HostElement;
+        } as HostElement);
+    };
+
+    it('when the "is_used checkbox has been checked/unchecked, it should ask the controller to update its value', () => {
+        const host = getHost();
+        const setIsFieldUsedByDefault = jest.spyOn(host.controller, "setIsFieldUsedByDefault");
 
         const update = getIsUsedByDefaultCheckbox(host);
+        update(host, host);
 
-        update(host, target);
-
-        const checkbox = target.querySelector("[data-test=permission-field-checkbox]");
-        if (!(checkbox instanceof HTMLInputElement)) {
-            throw new Error("Permission checkbox not found in target");
-        }
-
+        const checkbox = selectOrThrow(
+            host,
+            "[data-test=permission-field-checkbox]",
+            HTMLInputElement
+        );
         checkbox.checked = true;
         checkbox.dispatchEvent(new Event("change"));
 
-        expect(controller.setIsFieldUsedByDefault).toHaveBeenCalledWith(true);
+        expect(setIsFieldUsedByDefault).toHaveBeenCalledWith(true);
         expect(host.field_presenter.is_used).toBe(true);
     });
 
     it('when the "granted_groups select has been updated, it should ask the controller to update its value', () => {
-        jest.spyOn(controller, "setGrantedGroups");
-
-        const host = {
-            controller,
-            field_presenter: controller.buildPresenter(),
-        } as unknown as HostElement;
+        const host = getHost();
+        const setGrantedGroups = jest.spyOn(host.controller, "setGrantedGroups");
 
         const update = getGrantedGroupsSelect(host);
-        update(host, target);
+        update(host, host);
 
-        const select = target.querySelector("[data-test=permission-field-select]");
-        if (!(select instanceof HTMLSelectElement)) {
-            throw new Error("Granted groups select not found in target");
-        }
-
+        const select = selectOrThrow(
+            host,
+            "[data-test=permission-field-select]",
+            HTMLSelectElement
+        );
         const [first_option] = select.options;
 
         first_option.selected = true;
         select.dispatchEvent(new Event("change"));
 
-        expect(controller.setGrantedGroups).toHaveBeenCalledWith([first_option.value]);
+        expect(setGrantedGroups).toHaveBeenCalledWith([first_option.value]);
         expect(host.field_presenter.granted_groups).toHaveLength(1);
         expect(host.field_presenter.granted_groups).toContain(first_option.value);
+    });
+
+    const render = (host: HostElement): ShadowRoot => {
+        const update = PermissionField.content(host);
+        update(host, host);
+        return host as unknown as ShadowRoot;
+    };
+
+    it(`dispatches a bubbling "change" event when its checkbox is changed
+        so that the modal shows a warning when closed`, () => {
+        is_required = false;
+        const host = getHost();
+        const target = render(host);
+        let is_bubbling = false;
+        host.addEventListener("change", (event) => {
+            is_bubbling = event.bubbles;
+        });
+        const checkbox = selectOrThrow(
+            target,
+            "[data-test=permission-field-checkbox]",
+            HTMLInputElement
+        );
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+
+        expect(is_bubbling).toBe(true);
+    });
+
+    it(`dispatches a bubbling "change" event when its selectbox is changed
+        so that the modal shows a warning when closed`, () => {
+        const host = getHost();
+        const target = render(host);
+        let is_bubbling = false;
+        host.addEventListener("change", (event) => {
+            is_bubbling = event.bubbles;
+        });
+        const select = selectOrThrow(
+            target,
+            "[data-test=permission-field-select]",
+            HTMLSelectElement
+        );
+        const [first_option] = select.options;
+        first_option.selected = true;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+
+        expect(is_bubbling).toBe(true);
     });
 });

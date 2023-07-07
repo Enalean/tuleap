@@ -26,7 +26,10 @@ export interface StringField {
     disabled: boolean;
     value: string;
 }
-export type HostElement = StringField & HTMLElement;
+type InternalStringField = StringField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalStringField & HTMLElement;
 
 export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
@@ -43,7 +46,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const StringField = define<StringField>({
+export const StringField = define<InternalStringField>({
     tag: "tuleap-artifact-modal-string-field",
     fieldId: 0,
     label: "",
