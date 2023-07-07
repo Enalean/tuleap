@@ -1,0 +1,23 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/ckeditor-config",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "types": "./src/tuleap-ckeditor-config.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/ckeditor-config.mjs",
+      "require": "./dist/ckeditor-config.umd.js"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/ckeditor": "^4.9.10"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

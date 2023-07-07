@@ -18,7 +18,7 @@
  */
 
 import CKEDITOR from "ckeditor4";
-import { config as ckeditor_config } from "../../tuleap/tuleap-ckeditor-config";
+import { config as ckeditor_config } from "@tuleap/ckeditor-config";
 import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
