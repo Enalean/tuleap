@@ -129,13 +129,7 @@ final class KanbanPresenter
         $this->view_mode                         = (string) $user->getPreference(
             'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
         );
-        $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
-            [
-                'group_id' => $this->project_id,
-                'action' => 'showKanban',
-                'id' => $kanban->getId(),
-            ]
-        );
+        $this->kanban_url                        = '/kanban/' . urlencode((string) $kanban->getId());
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->mercure_enabled                   = ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) === "1";
     }

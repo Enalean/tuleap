@@ -184,11 +184,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         [$first_entry, $second_entry] = $collection->getEntries();
         self::assertSame(self::FIRST_KANBAN_VISIT_TIMESTAMP, $first_entry->getVisitTime());
         self::assertSame(
-            sprintf(
-                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
-                self::PROJECT_ID,
-                self::FIRST_KANBAN_ID
-            ),
+            '/kanban/' . self::FIRST_KANBAN_ID,
             $first_entry->getLink()
         );
         self::assertSame(self::FIRST_KANBAN_ID, $first_entry->getPerTypeId());
@@ -197,11 +193,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertSame(self::SECOND_KANBAN_VISIT_TIMESTAMP, $second_entry->getVisitTime());
         self::assertSame(
-            sprintf(
-                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
-                self::PROJECT_ID,
-                self::SECOND_KANBAN_ID
-            ),
+            '/kanban/' . self::SECOND_KANBAN_ID,
             $second_entry->getLink()
         );
         self::assertSame(self::SECOND_KANBAN_ID, $second_entry->getPerTypeId());

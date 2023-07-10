@@ -31,7 +31,7 @@
                 <div class="closed"><span class="number">{{ count_closed_kanban_items }}</span>{{ closed }}</div>
             </div>
             <div class="footer">
-                <a href="?group_id={{ group_id }}&action=showKanban&id={{ id }}" data-test="go-to-kanban">
+                <a href="/kanban/{{ id }}" data-test="go-to-kanban">
                     <i class="fas fa-columns" aria-hidden="true"></i> {{# dgettext }} tuleap-agiledashboard | Kanban board {{/ dgettext }}
                 </a>
             </div>
