@@ -21,3 +21,24 @@ How to use it:
     info into `profiler_output_dir`
 -   With kcachegrind (on your host) you can analyse the generated trace
     and find hotspots
+
+# Profiling of SQL Queries
+
+## Using Explain
+
+Starting MySQL 8.0, ``EXPLAIN FORMAT=json`` of queries gives a lot of insights on how query behaves:
+
+* https://www.percona.com/blog/explain-format-json-nested-loop-makes-join-hierarchy-transparent/
+* https://www.percona.com/blog/cost_info-knows-why-optimizer-prefers-one-index-to-another/
+* https://www.percona.com/blog/used_key_parts-explain-formatjson-provides-insights-on-which-part-of-multiple-column-key-is-used/
+* https://www.percona.com/blog/used_columns-explain-formatjson-tells-when-you-should-use-covered-index/
+
+## Finding key usage
+
+In order to find if a query is using indexes properly, you can look at ``handler_...`` in status:
+
+```
+flush status;
+SELECT ...
+show status like 'handler_%';
+```
