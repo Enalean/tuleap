@@ -18,7 +18,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.14",
     "browserslist": "^4.21.5",
-    "postcss": "^8.4.21"
+    "postcss": "^8.4.25"
   },
   "devDependencies": {
     "@types/webpack": "^5.28.0"

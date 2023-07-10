@@ -18,7 +18,7 @@
  */
 
 import { describe, it, beforeEach, vi, expect } from "vitest";
-import tlp_modal from "@tuleap/tlp-modal";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import * as gitlab_querier from "@tuleap/plugin-git-gitlab-api-querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync, errAsync } from "neverthrow";

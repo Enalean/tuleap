@@ -24,7 +24,7 @@ import type {
     ArtifactResponse,
     TrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
-import docgen_docx from "@tuleap/plugin-docgen-docx";
+import * as docgen_docx from "@tuleap/plugin-docgen-docx";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 
 describe("artifacts-retriever", () => {
