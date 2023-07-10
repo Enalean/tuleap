@@ -28,13 +28,15 @@ export interface RadioButtonsField {
     name: string;
     required: boolean;
     disabled: boolean;
-    values: Array<ListValue>;
+    values: Array<RadioButtonValue>;
     value: string;
-    content: () => HTMLElement;
 }
-export type HostElement = RadioButtonsField & HTMLElement;
+type InternalRadioButtonsField = RadioButtonsField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalRadioButtonsField & HTMLElement;
 
-interface ListValue {
+export interface RadioButtonValue {
     id: number;
     label: string;
 }
@@ -54,7 +56,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const RadioButtonsField = define<RadioButtonsField>({
+export const RadioButtonsField = define<InternalRadioButtonsField>({
     tag: "tuleap-artifact-modal-radio-buttons-field",
     fieldId: 0,
     label: "",

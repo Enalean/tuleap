@@ -17,29 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./IntField";
-import { onInput } from "./IntField";
+import { IntField, onInput } from "./IntField";
 
 const FIELD_ID = 43;
 
-const noop = (): void => {
-    //Do nothing
-};
-
-const getDocument = (): Document => document.implementation.createHTMLDocument();
-
-function getHost(): HostElement {
-    return {
-        fieldId: FIELD_ID,
-        label: "Int Field",
-        required: false,
-        disabled: false,
-        value: 0,
-        dispatchEvent: noop,
-    } as unknown as HostElement;
-}
-
 describe(`IntField`, () => {
+    let doc: Document;
+    beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+    });
+
+    const getHost = (): HostElement => {
+        const element = doc.createElement("div");
+        return Object.assign(element, {
+            fieldId: FIELD_ID,
+            label: "Int Field",
+            required: false,
+            disabled: false,
+            value: 0,
+        } as HostElement);
+    };
+
     it.each([
         ["when the input is emptied", "empty string", "", ""],
         ["when the input's value is a number", "the number", "13", 13],
@@ -49,7 +49,7 @@ describe(`IntField`, () => {
         (when_statement, expected_statement, input_value, expected_manual_value) => {
             const host = getHost();
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const inner_input = getDocument().createElement("input");
+            const inner_input = doc.createElement("input");
             inner_input.addEventListener("input", (event) => onInput(host, event));
 
             inner_input.value = input_value;
@@ -64,4 +64,20 @@ describe(`IntField`, () => {
             expect(event.detail.value).toBe(expected_manual_value);
         }
     );
+
+    it(`dispatches a bubbling "change" event when its inner input is changed
+        so that the modal shows a warning when closed`, () => {
+        const host = getHost();
+        const update = IntField.content(host);
+        update(host, host);
+        let is_bubbling = false;
+        host.addEventListener("change", (event) => {
+            is_bubbling = event.bubbles;
+        });
+        const input = selectOrThrow(host, "[data-test=int-field-input]", HTMLInputElement);
+        input.value = "53";
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+
+        expect(is_bubbling).toBe(true);
+    });
 });

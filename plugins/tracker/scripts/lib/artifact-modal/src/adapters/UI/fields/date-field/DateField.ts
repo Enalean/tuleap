@@ -28,14 +28,16 @@ const DATETIME_PICKER_SIZE = 19;
 
 export interface DateField {
     readonly date_input_element: HTMLInputElement | null;
-    readonly content: () => HTMLElement;
     readonly field: EditableDateFieldStructure;
     readonly isDisabled: boolean;
     readonly datePickerInitializer: DatePickerInitializerType;
     value: string;
 }
+type InternalDateField = DateField & {
+    content(): HTMLElement;
+};
 
-export type HostElement = DateField & HTMLElement;
+export type HostElement = InternalDateField & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -65,7 +67,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const DateField = define<DateField>({
+export const DateField = define<InternalDateField>({
     tag: "tuleap-artifact-modal-date-field",
     field: undefined,
     isDisabled: false,

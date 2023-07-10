@@ -25,14 +25,15 @@ import type { BindValueId } from "../../../../domain/fields/select-box-field/Bin
 import { highlightSelectBoxField } from "./SelectBoxHighlighter";
 
 export interface SelectBoxField {
-    readonly content: () => HTMLElement;
     readonly controller: ControlSelectBoxField;
     readonly select_element: HTMLSelectElement;
     field_presenter: SelectBoxFieldPresenter;
     bind_value_ids: ReadonlyArray<BindValueId>;
 }
-
-export type HostElement = SelectBoxField & HTMLElement;
+type InternalSelectboxField = SelectBoxField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalSelectboxField & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -49,7 +50,7 @@ function getDisconnectedCallback(host: HostElement): () => void {
     };
 }
 
-export const SelectBoxField = define<SelectBoxField>({
+export const SelectBoxField = define<InternalSelectboxField>({
     tag: "tuleap-artifact-modal-select-box-field",
     select_element: ({ content }) => {
         const input = content().querySelector(`[data-select=list-picker]`);

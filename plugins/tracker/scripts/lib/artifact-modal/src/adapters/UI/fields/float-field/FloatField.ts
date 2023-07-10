@@ -29,8 +29,10 @@ export interface FloatField {
     disabled: boolean;
     value: AllowedValue;
 }
-
-export type HostElement = FloatField & HTMLElement;
+type InternalFloatField = FloatField & {
+    content(): HTMLElement;
+};
+export type HostElement = InternalFloatField & HTMLElement;
 
 export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
@@ -47,7 +49,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const FloatField = define<FloatField>({
+export const FloatField = define<InternalFloatField>({
     tag: "tuleap-artifact-modal-float-field",
     fieldId: 0,
     label: "",

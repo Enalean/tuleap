@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SelectBoxField } from "./SelectBoxField";
+import type { HostElement } from "./SelectBoxField";
 import { highlightSelectBoxField } from "./SelectBoxHighlighter";
 
 describe("SelectBoxHighlighter", () => {
@@ -32,8 +32,8 @@ describe("SelectBoxHighlighter", () => {
         field_element.append(list_picker_element);
 
         highlightSelectBoxField({
-            content: () => field_element,
-        } as unknown as SelectBoxField);
+            content: (): HTMLElement => field_element,
+        } as HostElement);
 
         expect(
             list_picker_element.classList.contains("select-box-allowed-values-updated-highlight")
