@@ -83,9 +83,17 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
 
         $not_migrateable_fields_names = array_map(static fn($field) => $field->getName(), $field_collection->not_migrateable_field_list);
         for ($index = $last_index; $index >= 0; $index--) {
+            $changeset_xml = $artifact_xml->changeset[$index];
+
+            $this->move_changeset_XML_updater->deleteEmptyCommentsNode($changeset_xml);
             $this->parseFieldChangeNodesInReverseOrderForDuckTypingCollection(
-                $artifact_xml->changeset[$index],
+                $changeset_xml,
                 $field_collection,
+                $not_migrateable_fields_names
+            );
+
+            $this->parseExternalFieldChangeNodesInReverseOrderForDuckTypingCollection(
+                $changeset_xml,
                 $not_migrateable_fields_names
             );
 
@@ -94,7 +102,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
             }
 
             if ($index === 0) {
-                $this->move_changeset_XML_updater->addSubmittedInformation($artifact_xml->changeset[$index], $submitted_by, $submitted_on);
+                $this->move_changeset_XML_updater->addSubmittedInformation($changeset_xml, $submitted_by, $submitted_on);
             }
         }
     }
@@ -111,8 +119,6 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
         DuckTypedMoveFieldCollection $field_collection,
         array $not_migrateable_fields_names,
     ): void {
-        $this->move_changeset_XML_updater->deleteEmptyCommentsNode($changeset_xml);
-
         $last_index = $changeset_xml->field_change === null ? -1 : count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             if (! $changeset_xml->field_change || ! $changeset_xml->field_change[$index]) {
@@ -125,11 +131,35 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 continue;
             }
 
-            $this->updateFieldChangeNode($field_collection, $changeset_xml, $field_change_name, $index);
+            $this->updateInternalFieldChangeNode($field_collection, $changeset_xml, $field_change_name, $index);
         }
     }
 
-    private function updateFieldChangeNode(
+    /**
+     * Parse the SimpleXMLElement external_field_change nodes to prepare the move action.
+     *
+     * The parse is done in reverse order to be able to delete a SimpleXMLElement without any issues.
+     *
+     * @param string[] $not_migrateable_fields_names
+     */
+    private function parseExternalFieldChangeNodesInReverseOrderForDuckTypingCollection(
+        SimpleXMLElement $changeset_xml,
+        array $not_migrateable_fields_names,
+    ): void {
+        $last_index = $changeset_xml->external_field_change === null ? -1 : count($changeset_xml->external_field_change) - 1;
+        for ($index = $last_index; $index >= 0; $index--) {
+            if (! $changeset_xml->external_field_change || ! $changeset_xml->external_field_change[$index]) {
+                continue;
+            }
+
+            $field_change_name = (string) $changeset_xml->external_field_change[$index]["field_name"];
+            if (in_array($field_change_name, $not_migrateable_fields_names, true)) {
+                $this->move_changeset_XML_updater->deleteExternalFieldChangeNode($changeset_xml, $index);
+            }
+        }
+    }
+
+    private function updateInternalFieldChangeNode(
         DuckTypedMoveFieldCollection $field_collection,
         SimpleXMLElement $changeset_xml,
         string $field_change_name,
@@ -145,7 +175,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 continue;
             }
 
-            $destination_field = $this->findTargetFieldInFieldsMapping($field_collection, $source_field);
+            $destination_field = $this->findDestinationFieldInFieldsMapping($field_collection, $source_field);
             if (! $destination_field) {
                 continue;
             }
@@ -178,7 +208,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
         }
     }
 
-    private function findTargetFieldInFieldsMapping(
+    private function findDestinationFieldInFieldsMapping(
         DuckTypedMoveFieldCollection $field_collection,
         \Tracker_FormElement_Field $source_field,
     ): ?\Tracker_FormElement_Field {

@@ -29,8 +29,9 @@ final class MoveChangesetXMLUpdater
 {
     public function isChangesetNodeDeletable(SimpleXMLElement $artifact_xml, $index): bool
     {
-        return ( count($artifact_xml->changeset[$index]->field_change)) === 0 &&
-            (count($artifact_xml->changeset[$index]->comments) === 0) &&
+        return count($artifact_xml->changeset[$index]->field_change) === 0 &&
+            count($artifact_xml->changeset[$index]->external_field_change) === 0 &&
+            count($artifact_xml->changeset[$index]->comments) === 0 &&
             $index > 0;
     }
 
@@ -42,6 +43,11 @@ final class MoveChangesetXMLUpdater
     public function deleteFieldChangeNode(SimpleXMLElement $changeset_xml, $index): void
     {
         unset($changeset_xml->field_change[$index]);
+    }
+
+    public function deleteExternalFieldChangeNode(SimpleXMLElement $changeset_xml, int $index): void
+    {
+        unset($changeset_xml->external_field_change[$index]);
     }
 
     public function deleteFieldChangeValueNode(SimpleXMLElement $changeset_xml, $index): void

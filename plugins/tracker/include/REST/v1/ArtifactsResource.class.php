@@ -62,7 +62,9 @@ use Tuleap\Tracker\Action\CanPermissionsBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanUserGroupValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
+use Tuleap\Tracker\Action\ExternalFieldsHaveSameTypeVerifier;
 use Tuleap\Tracker\Action\FieldCanBeEasilyMigratedVerifier;
+use Tuleap\Tracker\Action\FieldIsExternalVerifier;
 use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
@@ -1200,6 +1202,7 @@ class ArtifactsResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
 
         $collector = new DryRunDuckTypingFieldCollector(
+            EventManager::instance(),
             $this->formelement_factory,
             $this->formelement_factory,
             new FieldCanBeEasilyMigratedVerifier(
@@ -1222,6 +1225,8 @@ class ArtifactsResource extends AuthenticatedResource
             new CanPermissionsBeFullyMovedVerifier(),
             new OpenListFieldVerifier(),
             new OpenListFieldsCompatibilityVerifier(),
+            new FieldIsExternalVerifier(),
+            new ExternalFieldsHaveSameTypeVerifier(),
         );
 
         $mega_mover_artifact = $this->getMegaMoverArtifact($user);
@@ -1445,7 +1450,7 @@ class ArtifactsResource extends AuthenticatedResource
                 ),
                 new OpenListFieldVerifier(),
                 new UserGroupOpenListFieldVerifier(),
-                new IsPermissionsOnArtifactFieldVerifier()
+                new IsPermissionsOnArtifactFieldVerifier(),
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

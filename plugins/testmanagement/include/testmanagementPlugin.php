@@ -36,6 +36,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -51,12 +52,11 @@ use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactTrackerExcluder;
 use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionSubmittedValuesTransformator;
-use Tuleap\TestManagement\Type\TypeCoveredByOverrider;
-use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
+use Tuleap\TestManagement\Move\TTMMovableFieldsCollector;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionSubmittedValuesTransformator;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TestmanagementTrackersConfiguration;
@@ -64,6 +64,8 @@ use Tuleap\TestManagement\TestmanagementTrackersConfigurator;
 use Tuleap\TestManagement\TestmanagementTrackersCreator;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
+use Tuleap\TestManagement\Type\TypeCoveredByOverrider;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\TestManagement\Workflow\PostActionChecker;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\ImportXMLFromTracker;
@@ -71,6 +73,7 @@ use Tuleap\TestManagement\XML\StepXMLExporter;
 use Tuleap\TestManagement\XML\TrackerArtifactXMLImportXMLImportFieldStrategySteps;
 use Tuleap\TestManagement\XML\TrackerXMLExporterChangesetValueStepDefinitionXMLExporter;
 use Tuleap\TestManagement\XML\XMLImport;
+use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\DisplayingTrackerEvent;
@@ -78,8 +81,8 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
-use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
@@ -103,7 +106,6 @@ use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdateEvent;
-use Tuleap\QuickLink\SwitchToQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -990,5 +992,11 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
                 Workflow_Transition_ConditionFactory::build()
             )
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectMovableExternalFieldEvent(CollectMovableExternalFieldEvent $event): void
+    {
+        TTMMovableFieldsCollector::collectMovableFields($event);
     }
 }

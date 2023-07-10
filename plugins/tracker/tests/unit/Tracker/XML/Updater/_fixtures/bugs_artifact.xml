@@ -61,6 +61,12 @@
     <field_change field_name="computed" type="computed">
       <manual_value>22</manual_value>
     </field_change>
+    <external_field_change field_name="external_field" type="some_type">
+      <external_stuff />
+    </external_field_change>
+    <external_field_change field_name="external_field_not_movable" type="some_type">
+      <external_stuff />
+    </external_field_change>
   </changeset>
   <changeset id="CHANGESET_5">
     <submitted_by format="ldap">102</submitted_by>

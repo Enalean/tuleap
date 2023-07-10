@@ -34,6 +34,7 @@ use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
+use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementListStaticBindBuilder;
@@ -213,6 +214,11 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $destination_open_list_user_field       = TrackerFormElementOpenListBuilder::aBind()->withId(31)->withName("open_users")->buildUserBind()->getField();
         $destination_open_list_user_group_field = TrackerFormElementOpenListBuilder::aBind()->withId(32)->withTracker($this->destination_tracker)->withName("open_ugroups")->buildUserGroupBind()->getField();
 
+        $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(13)->withName("external_field")->build();
+        $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(23)->withName("external_field")->build();
+
+        $source_not_movable_external_field = TrackerExternalFormElementBuilder::anExternalField(14)->withName("external_field_not_movable")->build();
+
         $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
         $destination_severity_field             = $destination_severity_field_bind->getField();
         $destination_status_field               = $destination_status_field_bind->getField();
@@ -245,9 +251,11 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 $source_open_list_user_field,
                 $source_open_list_user_group_field,
                 $source_computed_field,
+                $source_external_field,
             ],
             [
                 $source_not_existing_field,
+                $source_not_movable_external_field,
             ],
             [
                 $source_static_multiple_list_field,
@@ -270,6 +278,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 FieldMapping::fromFields($source_open_list_static_field, $destination_open_list_static_field),
                 FieldMapping::fromFields($source_open_list_user_field, $destination_open_list_user_field),
                 FieldMapping::fromFields($source_open_list_user_group_field, $destination_open_list_user_group_field),
+                FieldMapping::fromFields($source_external_field, $destination_external_field),
             ]
         );
 
@@ -301,6 +310,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $this->assertSame($destination_open_list_static_field->getName(), (string) $artifact_xml->changeset->field_change[12]->attributes()->field_name);
         $this->assertSame($destination_open_list_user_field->getName(), (string) $artifact_xml->changeset->field_change[13]->attributes()->field_name);
         $this->assertSame($destination_computed_field->getName(), (string) $artifact_xml->changeset->field_change[14]->attributes()->field_name);
+
+        $this->assertCount(1, $artifact_xml->changeset->external_field_change);
+        $this->assertSame($destination_external_field->getName(), (string) $artifact_xml->changeset->external_field_change[0]->attributes()->field_name);
     }
 
     private function getXMLArtifact(): \SimpleXMLElement
