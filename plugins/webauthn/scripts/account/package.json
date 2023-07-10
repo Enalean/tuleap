@@ -10,16 +10,13 @@
     "@simplewebauthn/typescript-types": "^7.0.0",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
-    "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/dom": "workspace:*",
-    "@tuleap/webauthn": "workspace:*",
     "neverthrow": "^6.0.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:*"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

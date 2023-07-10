@@ -20,7 +20,7 @@
 import type { Modal } from "@tuleap/tlp-modal";
 import { getTargetModal, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import { selectOrThrow } from "@tuleap/dom";
-import { authenticate, canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
+import { canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
 import fr_FR from "../po/fr_FR.po";
 import pt_BR from "../po/pt_BR.po";
 import { initGettextSync } from "@tuleap/gettext";
@@ -30,7 +30,7 @@ import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { en_US_LOCALE } from "@tuleap/core-constants";
 
-export { authenticate, getAuthenticationResult, AUTHENTICATION_MODAL_TAG };
+export { getAuthenticationResult, AUTHENTICATION_MODAL_TAG };
 
 const isUserHasNoRegisteredPasskey = (fault: Fault): boolean =>
     "isUserHasNoRegisteredPasskey" in fault && fault.isUserHasNoRegisteredPasskey() === true;

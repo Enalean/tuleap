@@ -110,6 +110,7 @@ export class AuthenticationModal extends HTMLElement {
         const modal_footer_submit = document.createElement("button");
         modal_footer_submit.type = "submit";
         modal_footer_submit.classList.add("tlp-button-primary", "tlp-modal-action");
+        modal_footer_submit.setAttribute("data-test", "webauthn-modal-submit-button");
         modal_footer_submit.append(this.gettext_provider.gettext("OK"));
         modal_footer.appendChild(modal_footer_submit);
         this.modal_form.appendChild(modal_footer);

@@ -1,9 +1,0 @@
-{
-    "name": "webauthn",
-    "gettext-ts": {
-        "webauthn": {
-            "src": "scripts/account/src",
-            "po": "scripts/account/po"
-        }
-    }
-}

@@ -30,9 +30,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Check"
-msgstr ""
-
 msgid "Close"
 msgstr ""
 

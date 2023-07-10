@@ -33,12 +33,22 @@ describe("User preferences | WebAuthn", () => {
             cy.get("[data-test=name-modal-input]").type("My awesome key");
             cy.get("[data-test=name-modal-button]").click();
 
-            cy.get("[data-test=check-button]").should("be.visible");
-            cy.get("[data-test=no-passkey]").should("not.exist");
+            cy.visit("/account/keys-tokens");
+            cy.get("[data-test=generate-access-key-button]").click();
+            cy.get("[data-test=webauthn-modal-submit-button]:visible").click();
+            cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
+                multiple: true,
+            });
+            cy.get("[data-test=generate-new-access-key-button]").click();
 
-            cy.get("[data-test=check-button]").click();
-            cy.get("[data-test=webauthn-alert]").contains("Success!");
+            cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 1);
 
+            cy.log("revoke the access key");
+            cy.get("[data-test=user-prefs-personal-access-key-checkbox]").click();
+            cy.get("[data-test=button-revoke-access-tokens]").click();
+            cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 0);
+
+            cy.visit("/plugins/webauthn/account");
             cy.get("[data-test=remove-button]").click();
             cy.get("[data-test=remove-modal-button]").click();
 

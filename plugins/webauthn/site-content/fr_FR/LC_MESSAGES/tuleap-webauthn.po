@@ -30,9 +30,6 @@ msgstr "Authentification avec des clés d'authentification"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Check"
-msgstr "Vérifier"
-
 msgid "Close"
 msgstr "Fermer"
 

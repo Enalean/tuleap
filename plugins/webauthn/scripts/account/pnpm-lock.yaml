@@ -16,18 +16,12 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
-  '@tuleap/gettext':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/gettext
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-relative-date
-  '@tuleap/webauthn':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/webauthn
   neverthrow:
     specifier: ^6.0.0
     version: 6.0.0
@@ -36,9 +30,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/po-gettext-plugin
 
 packages:
 
