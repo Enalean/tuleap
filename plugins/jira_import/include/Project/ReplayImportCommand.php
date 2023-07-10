@@ -46,6 +46,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicat
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\TrackerColor;
@@ -167,7 +168,7 @@ final class ReplayImportCommand extends Command
             new LinkedIssuesCollection(),
         );
 
-        return $jira_xml_exporter->getProjectSimpleXmlElement($tracker_xml);
+        return JiraXMLNodeBuilder::buildProjectSimpleXmlElement($tracker_xml);
     }
 
     private function getJiraXmlExporter(JiraClient $jira_client, LoggerInterface $logger): JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter

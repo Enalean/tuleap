@@ -41,6 +41,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
@@ -160,7 +161,7 @@ class FromJiraTrackerCreator
             new LinkedIssuesCollection(),
         );
 
-        $xml = $jira_exporter->getProjectSimpleXmlElement($tracker_xml);
+        $xml = JiraXMLNodeBuilder::buildProjectSimpleXmlElement($tracker_xml);
 
         try {
             $trackers = $this->tracker_xml_import->import(

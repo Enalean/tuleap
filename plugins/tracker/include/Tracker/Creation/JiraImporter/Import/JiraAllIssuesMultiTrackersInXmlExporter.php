@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -92,25 +93,7 @@ class JiraAllIssuesMultiTrackersInXmlExporter
                 $linked_issues_collection,
             );
 
-            $this->appendTrackerXML($trackers_xml, $tracker_xml);
+            JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker_xml);
         }
-    }
-
-    public function appendTrackerXML(\SimpleXMLElement $all_trackers_node, \SimpleXMLElement $one_tracker_node): void
-    {
-        $dom_trackers = dom_import_simplexml($all_trackers_node);
-        if (! ($dom_trackers instanceof \DOMElement)) {
-            throw new \Exception('Cannot get DOM from trackers XML');
-        }
-        $dom_tracker = dom_import_simplexml($one_tracker_node);
-        if (! ($dom_tracker instanceof \DOMElement)) {
-            throw new \Exception('Cannot get DOM from tracker XML');
-        }
-        if (! $dom_trackers->ownerDocument) {
-            throw new \Exception('No ownerDocument node in trackers');
-        }
-
-        $dom_tracker = $dom_trackers->ownerDocument->importNode($dom_tracker, true);
-        $dom_trackers->appendChild($dom_tracker);
     }
 }
