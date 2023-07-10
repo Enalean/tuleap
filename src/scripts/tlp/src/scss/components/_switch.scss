@@ -62,10 +62,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
         content: "";
         display: block;
         position: absolute;
-        top: $tlp-switch-button-padding;
-        right: $tlp-switch-button-padding;
-        bottom: $tlp-switch-button-padding;
-        left: $tlp-switch-button-padding;
+        inset: $tlp-switch-button-padding;
         transition: background-color 200ms, box-shadow 350ms;
         border-radius: $tlp-switch-height / 2;
         background-color: $tlp-switch-background;

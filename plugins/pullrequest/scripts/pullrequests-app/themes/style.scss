@@ -20,7 +20,6 @@
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/merge/merge";
 @use "@tuleap/plugin-pullrequest-comments";
-
 @use "./includes/dashboard";
 @use "./includes/pull-request";
 @use "./includes/overview";

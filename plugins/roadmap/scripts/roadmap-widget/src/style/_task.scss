@@ -132,10 +132,7 @@
         content: "";
         display: block;
         position: absolute;
-        top: 1px;
-        right: 1px;
-        bottom: 1px;
-        left: 1px;
+        inset: 1px;
         border-radius: var(--tlp-small-radius);
         opacity: 0.5;
     }

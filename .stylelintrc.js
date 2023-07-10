@@ -32,8 +32,6 @@ module.exports = {
         "function-calc-no-unspaced-operator": true,
         "max-nesting-depth": [4],
         "no-duplicate-selectors": true,
-        "no-eol-whitespace": true,
-        "number-leading-zero": ["always"],
         "selector-id-pattern": [
             "^[a-z0-9\\-]+$",
             {
@@ -66,6 +64,8 @@ module.exports = {
             "%",
             "fr"
         ],
+        "media-feature-range-notation": "prefix",
+        "media-query-no-invalid": null, // Disabled because it does not play with SCSS var in media queries
         // Plugins
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
