@@ -272,7 +272,9 @@ describe("TuleapArtifactModalController", () => {
             );
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(mockCallback).toHaveBeenCalledWith(8155);
+            expect(mockCallback).toHaveBeenCalledWith(8155, {
+                did_artifact_links_change: expect.any(Boolean),
+            });
             $scope.$apply();
             expect(TuleapArtifactModalLoading.loading).toBe(false);
         });
@@ -325,7 +327,9 @@ describe("TuleapArtifactModalController", () => {
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(mockCallback).toHaveBeenCalledWith(8155);
+            expect(mockCallback).toHaveBeenCalledWith(8155, {
+                did_artifact_links_change: expect.any(Boolean),
+            });
             $scope.$apply();
             expect(TuleapArtifactModalLoading.loading).toBe(false);
         });

@@ -96,7 +96,9 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} user_id                  The id of current user
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} artifact_id              The id of the artifact we want to edit
-     * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
+     * @param {function} displayItemCallback The function to call after receiving the last HTTP response.
+     * It will be called with the edited artifact's id and with an object like `{ did_artifact_links_change: boolean }`.
+     * `did_artifact_links_change` is true when the user made a change in the artifact links field of the artifact under edition.
      */
     function showEdition(user_id, tracker_id, artifact_id, displayItemCallback) {
         TuleapArtifactModalLoading.loading = true;

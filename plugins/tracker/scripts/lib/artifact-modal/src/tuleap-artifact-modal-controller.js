@@ -401,7 +401,7 @@ function ArtifactModalController(
             })
             .then(function (new_artifact) {
                 modal_instance.tlp_modal.hide();
-                return displayItemCallback(new_artifact.id);
+                return displayItemCallback(new_artifact.id, { did_artifact_links_change: false });
             })
             .catch(async (e) => {
                 if (is_error_already_handled || hasError()) {
