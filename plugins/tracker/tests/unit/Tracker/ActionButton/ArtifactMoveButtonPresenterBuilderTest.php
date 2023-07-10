@@ -25,6 +25,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tracker;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Stub\RetrieveActionDeletionLimitStub;
@@ -34,6 +35,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private PFUser $user;
     /**
@@ -190,6 +192,34 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         );
 
         $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
+
+        $this->assertEquals($built_presenter, $expected_presenter);
+    }
+
+    public function testItReturnAButtonWhenUserCanPerformTheMoveBasedOnDuckTypingEvenIfNoSemanticIsDefined(): void
+    {
+        \ForgeConfig::set('feature_flag_enable_complete_move_artifact', "1");
+
+        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
+        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(false);
+        $this->tracker->shouldReceive('hasSemanticsDescription')->andReturn(false);
+        $this->tracker->shouldReceive('hasSemanticsStatus')->andReturn(false);
+        $this->tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
+
+        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
+        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
+            $deletion_limit_retriever,
+            $this->event_manager
+        );
+
+        $expected_presenter = new ArtifactMoveButtonPresenter(
+            dgettext('plugin-tracker', "Move this artifact"),
+            []
+        );
+        $built_presenter    = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
 
         $this->assertEquals($built_presenter, $expected_presenter);
     }

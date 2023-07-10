@@ -51,9 +51,12 @@ class ArtifactMoveButtonPresenterBuilder
 
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
         $this->event_manager->processEvent($event);
-        $semantic_error = $this->collectErrorRelatedToSemantics($artifact->getTracker(), $event);
-        if ($semantic_error) {
-            $errors[] = $semantic_error;
+
+        if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
+            $semantic_error = $this->collectErrorRelatedToSemantics($artifact->getTracker(), $event);
+            if ($semantic_error) {
+                $errors[] = $semantic_error;
+            }
         }
 
         $external_errors = $this->collectErrorsThrownByExternalPlugins($event);
