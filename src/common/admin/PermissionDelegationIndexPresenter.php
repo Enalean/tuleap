@@ -57,7 +57,6 @@ class Admin_PermissionDelegationIndexPresenter
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         array $groups,
-        $permission_delegation_javascript_url,
         Admin_PermissionDelegationGroupModalPresenter $add_group,
         ?Admin_PermissionDelegationDeleteGroupModalPresenter $delete_group = null,
         ?Admin_PermissionDelegationGroupModalPresenter $edit_group = null,
@@ -71,8 +70,6 @@ class Admin_PermissionDelegationIndexPresenter
         $this->delete_group       = $delete_group;
         $this->edit_group         = $edit_group;
         $this->add_perm_presenter = $add_perm_presenter;
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($permission_delegation_javascript_url);
     }
 
     public function page_title()

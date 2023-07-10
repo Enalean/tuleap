@@ -22,12 +22,6 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../lib/frontend/date-helper
-  '@tuleap/dom':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/dom
-  '@tuleap/fetch-result':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/fetch-result
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table
@@ -49,18 +43,12 @@ dependencies:
   '@tuleap/mention':
     specifier: workspace:*
     version: link:../../../lib/frontend/mention
-  '@tuleap/pie-chart':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/pie-chart
   '@tuleap/potentially-dangerous-bidirectional-characters':
     specifier: workspace:*
     version: link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../lib/frontend/project-background
-  '@tuleap/project-privacy-helper':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/project-privacy-helper
   '@tuleap/project-sidebar-internal':
     specifier: workspace:*
     version: link:../../../lib/frontend/project-sidebar-internal
@@ -141,9 +129,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../lib/frontend/build-system-configurator
-  '@tuleap/fault':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/fault
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
     version: link:../../../lib/frontend/vuex-store-wrapper-jest

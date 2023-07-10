@@ -85,7 +85,8 @@ $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("ckeditor.js"));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-mass-emailing.js'));
+$site_admin_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($site_admin_assets, 'site-admin-mass-emailing.js'));
 
 $csrf  = new CSRFSynchronizerToken('/admin/massmail.php');
 $title = _('Mass emailing');

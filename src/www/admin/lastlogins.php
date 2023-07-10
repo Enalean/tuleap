@@ -29,11 +29,8 @@ use Tuleap\Admin\MostRecentLoginPresenter;
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile(
-    $include_assets->getFileURL('site-admin-most-recent-logins.js')
-);
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-most-recent-logins.js'));
 
 $res_logins = db_query("SELECT session.user_id AS user_id,"
     . "session.ip_addr AS ip_addr,"

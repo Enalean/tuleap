@@ -39,9 +39,8 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-pending-users.js'));
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-pending-users.js'));
 
 define('ADMIN_APPROVE_PENDING_PAGE_PENDING', 'pending');
 define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');

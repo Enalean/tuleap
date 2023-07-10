@@ -26,6 +26,7 @@ use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;
 use Tuleap\Project\Admin\DescriptionFields\FieldsListPresenter;
@@ -54,8 +55,8 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
-                "site-admin/description-fields.js"
+                new IncludeAssets(__DIR__ . '/../../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin'),
+                "site-admin-description-fields.js"
             )
         );
 

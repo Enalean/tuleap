@@ -62,9 +62,11 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
             $this->buildWidgetPresenters($project_widgets)
         );
 
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-        $layout->includeFooterJavascriptFile(
-            $include_assets->getFileURL('site-admin-project-widgets.js')
+        $layout->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset(
+                new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin'),
+                'site-admin-project-widgets.js'
+            )
         );
 
         $admin_renderer = new AdminPageRenderer();

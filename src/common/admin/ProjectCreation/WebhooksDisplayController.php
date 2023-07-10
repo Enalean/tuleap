@@ -27,6 +27,8 @@ use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\WebhookPresenter;
 use Tuleap\Project\Admin\WebhooksPresenter;
 use Tuleap\Project\Webhook\Log\StatusRetriever;
@@ -77,11 +79,8 @@ class WebhooksDisplayController implements DispatchableWithRequest
             $csrf_token
         );
 
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $include_assets->getFileURL('site-admin-project-configuration.js')
-        );
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+        $layout->addJavascriptAsset(new JavascriptAsset($include_assets, 'site-admin-project-configuration.js'));
 
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(

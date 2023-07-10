@@ -53,11 +53,9 @@ $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 $site_administrator = $request->getCurrentUser();
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-user-details.js'));
 
-$GLOBALS['HTML']->includeFooterJavascriptFile(
-    $include_assets->getFileURL('site-admin-user-details.js')
-);
 $GLOBALS['HTML']->addJavascriptAsset(
     new JavascriptAsset(
         new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/account/frontend-assets', '/assets/core/account'),

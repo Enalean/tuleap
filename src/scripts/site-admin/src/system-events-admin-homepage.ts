@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-export {};
+import "./generate-pie-charts";
 
 document.addEventListener("DOMContentLoaded", () => {
     const admin_homepage_queues = document.querySelectorAll(

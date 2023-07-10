@@ -1,0 +1,57 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@tuleap/autocomplete-for-select2':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/autocomplete-for-select2
+  '@tuleap/ckeditor-config':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/ckeditor-config
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fetch-result
+  '@tuleap/filter-inline-table':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/filter-table
+  '@tuleap/pie-chart':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/pie-chart
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../tlp
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-relative-date
+  ckeditor4:
+    specifier: ^4.18.0
+    version: 4.18.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fault
+  '@types/ckeditor':
+    specifier: ^4.9.10
+    version: 4.9.10
+
+packages:
+
+  /@types/ckeditor@4.9.10:
+    resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
+    dev: true
+
+  /ckeditor4@4.18.0:
+    resolution: {integrity: sha512-O4tnQCH0APKrBsz78L+m48s9Cs90aq0Nsatmh9CUj2YBTh8UZYdYcelBLVA84SlwA1nsx07aC76Zn08vgHqmLQ==}
+    dev: false

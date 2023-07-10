@@ -27,6 +27,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -67,11 +68,10 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
             RelativeDatesAssetsRetriever::getAsJavascriptAssets()
         );
 
-        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $this->admin_page_renderer->addJavascriptAsset(
             new JavascriptAsset(
-                $core_assets,
-                'site-admin/dates-display.js'
+                new IncludeAssets(__DIR__ . '/../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin'),
+                'site-admin-dates-display.js'
             )
         );
 

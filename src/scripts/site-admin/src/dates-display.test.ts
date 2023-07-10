@@ -20,7 +20,7 @@
 import { listenToPreferenceChange } from "./dates-display";
 import { RelativeDateElement } from "@tuleap/tlp-relative-date";
 
-function appendTheDisplayPreferencesSelect(doc: HTMLDocument): HTMLSelectElement {
+function appendTheDisplayPreferencesSelect(doc: Document): HTMLSelectElement {
     const select = document.createElement("select");
     select.setAttribute("id", "relative-dates-display");
 
@@ -42,7 +42,7 @@ function appendTheDisplayPreferencesSelect(doc: HTMLDocument): HTMLSelectElement
     return select;
 }
 
-function appendTheTlpRelativeDateElement(doc: HTMLDocument): RelativeDateElement {
+function appendTheTlpRelativeDateElement(doc: Document): RelativeDateElement {
     const container = document.createElement("div");
 
     container.innerHTML = `<tlp-relative-date
@@ -64,7 +64,7 @@ function appendTheTlpRelativeDateElement(doc: HTMLDocument): RelativeDateElement
 }
 
 describe("dates display", (): void => {
-    let doc: HTMLDocument;
+    let doc: Document;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
