@@ -33,15 +33,12 @@ describe(`Artifact Modal`, function () {
             .then((tracker_id) => {
                 getArtifactLinkIdFromREST(tracker_id).as("artifact_link_id");
             });
-
-        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
-        cy.get("[data-test=go-to-kanban]").first().click();
-        findKanbanIdFromURL().as("kanban_id");
     });
 
     it(`can create an artifact with all fields`, function () {
         cy.projectMemberSession();
-        visitKanban(this.project_id, this.kanban_id);
+        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
+        cy.get("[data-test=go-to-kanban]").first().click();
         cy.get("[data-test=kanban-add-artifact]").click();
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
@@ -205,7 +202,8 @@ describe(`Artifact Modal`, function () {
 
     it(`can edit an artifact with all fields`, function () {
         cy.projectMemberSession();
-        visitKanban(this.project_id, this.kanban_id);
+        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
+        cy.get("[data-test=go-to-kanban]").first().click();
 
         getKanbanCard("Editable Artifact").within(() => {
             cy.get("[data-test=edit-link]").click();
@@ -384,16 +382,6 @@ function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number
     });
 }
 
-function findKanbanIdFromURL(): Cypress.Chainable<number> {
-    return cy.location("search").then((search) => {
-        const string_kanban_id = new URLSearchParams(search).get("id");
-        if (string_kanban_id === null) {
-            throw Error("Could not deduce kanban_id from URL");
-        }
-        return cy.wrap(Number.parseInt(string_kanban_id, 10));
-    });
-}
-
 interface Artifact {
     id: number;
     title: string;
@@ -455,10 +443,6 @@ function selectLabelInSelect2Dropdown(label: string): Cypress.Chainable<JQuery<H
 function clearSelect2(): void {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection__clear").click();
-}
-
-function visitKanban(project_id: number, kanban_id: number): void {
-    cy.visit(`/plugins/agiledashboard/?group_id=${project_id}&action=showKanban&id=${kanban_id}`);
 }
 
 function getKanbanCard(label: string): CypressWrapper {

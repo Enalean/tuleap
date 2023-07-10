@@ -52,9 +52,9 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
+use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
 use Tuleap\Kanban\KanbanPermissionsManager;
-use Tuleap\Kanban\KanbanURL;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanColumnManager;
 use Tuleap\Kanban\KanbanColumnFactory;
@@ -161,6 +161,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
+use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
@@ -1081,7 +1082,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         $request              = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
-        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || KanbanURL::isKanbanURL($request)) {
+        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
             $event->use_standard_javascript = false;
         }
     }
@@ -1639,6 +1640,32 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
             $r->post('/mercure_realtime_token/{kanban_id:\d+}', $this->getRouteHandler('routeGetJWT'));
         });
+        $event->getRouteCollector()->get('/kanban/{id:[0-9]+}', $this->getRouteHandler('routeShowKanban'));
+    }
+
+    public function routeShowKanban(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $tracker_factory = TrackerFactory::instance();
+
+        return new \Tuleap\Kanban\ShowKanbanController(
+            $this->getKanbanFactory(),
+            $tracker_factory,
+            new KanbanPermissionsManager(),
+            new AgileDashboardCrumbBuilder($this->getPluginPath()),
+            new BreadCrumbBuilder($tracker_factory, $this->getKanbanFactory()),
+            new RecentlyVisitedKanbanDao(),
+            new \Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider(
+                $this->getKanbanFactory(),
+                $tracker_factory,
+                new TrackerNewDropdownLinkPresenterBuilder(),
+                new KanbanActionsChecker(
+                    $tracker_factory,
+                    new KanbanPermissionsManager(),
+                    Tracker_FormElementFactory::instance(),
+                    \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
+                )
+            )
+        );
     }
 
     public function routeGetJWT(): MercureJWTController

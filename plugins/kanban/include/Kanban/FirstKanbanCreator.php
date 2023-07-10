@@ -84,13 +84,7 @@ final class FirstKanbanCreator
             Feedback::INFO,
             sprintf(
                 dgettext('tuleap-kanban', 'We created <a href="%1$s">a first kanban</a> for you. Enjoy!'),
-                '?' . http_build_query(
-                    [
-                        'group_id' => $this->project->getId(),
-                        'action'   => 'showKanban',
-                        'id'       => $kanban_id,
-                    ]
-                )
+                '/kanban/' . urlencode((string) $kanban_id),
             ),
             CODENDI_PURIFIER_DISABLED
         );

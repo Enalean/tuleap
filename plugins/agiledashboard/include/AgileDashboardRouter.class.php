@@ -30,14 +30,8 @@ use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
-use Tuleap\Kanban\KanbanPermissionsManager;
-use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
-use Tuleap\Kanban\KanbanCannotAccessException;
-use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
@@ -49,7 +43,6 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -184,10 +177,6 @@ class AgileDashboardRouter
      * @var UpdateRequestValidator
      */
     private $update_request_validator;
-    /**
-     * @var NewDropdownCurrentContextSectionForKanbanProvider
-     */
-    private $current_context_section_for_kanban_provider;
 
     public function __construct(
         Plugin $plugin,
@@ -217,7 +206,6 @@ class AgileDashboardRouter
         UpdateIsAllowedChecker $root_planning_update_checker,
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
-        NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
         private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
     ) {
         $this->plugin                             = $plugin;
@@ -247,8 +235,6 @@ class AgileDashboardRouter
         $this->root_planning_update_checker       = $root_planning_update_checker;
         $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
         $this->update_request_validator           = $update_request_validator;
-
-        $this->current_context_section_for_kanban_provider = $current_context_section_for_kanban_provider;
     }
 
     /**
@@ -357,29 +343,7 @@ class AgileDashboardRouter
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
             case 'showKanban':
-                $header_options  = [
-                    'body_class'                 => ['Tuleap\Kanban\Kanban', 'reduce-help-button', 'agiledashboard-body'],
-                    Layout::INCLUDE_FAT_COMBINED => false,
-                ];
-                $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
-                    (int) $request->get('id'),
-                    $request->getCurrentUser()
-                );
-                if ($current_section) {
-                    $header_options['new_dropdown_current_context_section'] = $current_section;
-                }
-
-                $tracker_factory = TrackerFactory::instance();
-                $controller      = new ShowKanbanController(
-                    $request,
-                    $this->kanban_factory,
-                    TrackerFactory::instance(),
-                    new KanbanPermissionsManager(),
-                    $this->service_crumb_builder,
-                    new BreadCrumbBuilder($tracker_factory, $this->kanban_factory),
-                    new RecentlyVisitedKanbanDao()
-                );
-                $this->renderAction($controller, 'showKanban', $request, [], $header_options);
+                $GLOBALS['Layout']->redirect('/kanban/' . urlencode((string) $request->get('id')));
                 break;
             case 'burnup-cache-generate':
                 $this->buildFormElementController()->forceBurnupCacheGeneration($request);
@@ -430,16 +394,9 @@ class AgileDashboardRouter
             'edit'                => dgettext('tuleap-agiledashboard', 'Edit'),
             'show'                => dgettext('tuleap-agiledashboard', 'View Planning'),
             'showTop'             => dgettext('tuleap-agiledashboard', 'View Planning'),
-            'showKanban'          => dgettext('tuleap-agiledashboard', 'Kanban'),
         ];
 
-        $title = $header_title[$action_name];
-
-        if ($action_name === 'showKanban') {
-            return $this->getPageTitleWithKanbanName($request, $title);
-        }
-
-        return $title;
+        return $header_title[$action_name];
     }
 
     /**
@@ -659,20 +616,5 @@ class AgileDashboardRouter
         );
         echo $top_planning_rendered;
         $this->displayFooter($request);
-    }
-
-    private function getPageTitleWithKanbanName(Codendi_Request $request, $title)
-    {
-        $kanban_id = $request->get('id');
-        $user      = $request->getCurrentUser();
-
-        try {
-            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
-            $title  = $kanban->getName();
-        } catch (KanbanNotFoundException $exception) {
-        } catch (KanbanCannotAccessException $exception) {
-        }
-
-        return $title;
     }
 }

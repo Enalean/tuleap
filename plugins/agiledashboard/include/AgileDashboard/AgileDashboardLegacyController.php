@@ -26,10 +26,8 @@ namespace Tuleap\AgileDashboard;
 use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
-use Tuleap\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
-use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -81,8 +79,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
     {
-        return KanbanURL::isKanbanURL($request)
-            || $this->isInOverviewTab($request)
+        return $this->isInOverviewTab($request)
             || $this->isPlanningV2URL($request)
             || $this->isScrumAdminURL($request);
     }
@@ -109,20 +106,6 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
     {
-        if (KanbanURL::isKanbanURL($request)) {
-            $kanban_assets = new IncludeAssets(
-                __DIR__ . '/../../../kanban/scripts/kanban/frontend-assets',
-                '/assets/kanban/kanban'
-            );
-            $provider      = new KanbanJavascriptDependenciesProvider($kanban_assets);
-            foreach ($provider->getDependencies() as $dependency) {
-                $layout->includeFooterJavascriptFile($dependency['file']);
-            }
-            $layout->addCssAsset(
-                new CssAssetWithoutVariantDeclinaisons($kanban_assets, 'kanban-style')
-            );
-            return;
-        }
         if (self::isPlanningV2URL($request)) {
             $planning_assets = new IncludeAssets(
                 __DIR__ . '/../../scripts/planning-v2/frontend-assets',

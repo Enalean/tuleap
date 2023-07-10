@@ -40,9 +40,8 @@ final class BreadCrumbBuilder
      * @throws \Tuleap\Kanban\KanbanCannotAccessException
      * @throws \Tuleap\Kanban\KanbanNotFoundException
      */
-    public function build(\PFUser $current_user, int $kanban_id): BreadCrumb
+    public function build(\PFUser $current_user, Kanban $kanban): BreadCrumb
     {
-        $kanban  = $this->kanban_factory->getKanban($current_user, $kanban_id);
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($tracker && $tracker->userCanView($current_user)) {
             $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($tracker, $current_user));
@@ -63,13 +62,7 @@ final class BreadCrumbBuilder
                     new TrackerCrumbLinkInContext(
                         $kanban->getName(),
                         sprintf(dgettext('tuleap-kanban', '%s Kanban'), $kanban->getName()),
-                        AGILEDASHBOARD_BASE_URL . '?' . http_build_query(
-                            [
-                                'group_id' => $tracker->getProject()->getID(),
-                                'action'   => 'showKanban',
-                                'id'       => $kanban_id,
-                            ]
-                        )
+                        '/kanban/' . urlencode((string) $kanban_id),
                     )
                 );
             } catch (\Tuleap\Kanban\KanbanCannotAccessException $e) {

@@ -72,13 +72,7 @@ final class VisitRetriever
             new HistoryEntry(
                 $created_on,
                 null,
-                AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
-                    [
-                        'group_id' => $tracker->getProject()->getID(),
-                        'action'   => 'showKanban',
-                        'id'       => $kanban->getId(),
-                    ]
-                ),
+                '/kanban/' . urlencode((string) $kanban_id),
                 $kanban->getName(),
                 $tracker->getColor()->getName(),
                 self::TYPE,

@@ -20,61 +20,50 @@
 
 namespace Tuleap\Kanban;
 
-use Codendi_Request;
-use Feedback;
+use HTTPRequest;
 use Project;
+use TemplateRendererFactory;
 use TrackerFactory;
-use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\NotFoundException;
 
-final class ShowKanbanController extends BaseController
+final class ShowKanbanController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    private Project $project;
-
     public function __construct(
-        Codendi_Request $request,
         private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
         private readonly KanbanPermissionsManager $permissions_manager,
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
+        private readonly NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
     ) {
-        parent::__construct('kanban', $request);
-
-        $this->project = $this->request->getProject();
     }
 
-    public function getBreadcrumbs(): BreadCrumbCollection
+    public function getBreadcrumbs(\PFUser $user, Project $project, Kanban $kanban): BreadCrumbCollection
     {
-        $kanban_id = (int) $this->request->get('id');
-        $user      = $this->request->getCurrentUser();
-
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
-            $this->agile_dashboard_crumb_builder->build(
-                $this->getCurrentUser(),
-                $this->project
-            )
+            $this->agile_dashboard_crumb_builder->build($user, $project)
         );
 
-        try {
-            $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban_id));
-        } catch (KanbanNotFoundException $exception) {
-            // ignore, it will be catch in showKanban
-        } catch (KanbanCannotAccessException $exception) {
-            // ignore, it will be catch in showKanban
-        }
+        $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban));
 
         return $breadcrumbs;
     }
 
-    public function showKanban(): string
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $kanban_id = (int) $this->request->get('id');
-        $user      = $this->request->getCurrentUser();
+        $kanban_id = (int) $variables['id'];
+        $user      = $request->getCurrentUser();
 
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
@@ -87,15 +76,45 @@ final class ShowKanbanController extends BaseController
                 throw new \RuntimeException('Tracker does not exist');
             }
 
-            $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
-                $user,
-                $tracker->getProject()
-            );
+            $project              = $tracker->getProject();
+            $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate($user, $project);
 
-            $filter_tracker_report_id = (int) $this->request->get('tracker_report_id');
+            $filter_tracker_report_id = (int) $request->get('tracker_report_id');
             $dashboard_widget_id      = 0;
 
-            return $this->renderToString(
+            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/');
+
+            $service         = $this->getService($project);
+            $header_options  = [
+                'body_class' => ['reduce-help-button', 'kanban-body'],
+            ];
+            $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
+                (int) $request->get('id'),
+                $request->getCurrentUser()
+            );
+            if ($current_section) {
+                $header_options['new_dropdown_current_context_section'] = $current_section;
+            }
+
+            $kanban_assets = new IncludeAssets(
+                __DIR__ . '/../../scripts/kanban/frontend-assets',
+                '/assets/kanban/kanban'
+            );
+            $provider      = new KanbanJavascriptDependenciesProvider($kanban_assets);
+            foreach ($provider->getDependencies() as $dependency) {
+                $layout->includeFooterJavascriptFile($dependency['file']);
+            }
+            $layout->addCssAsset(
+                new CssAssetWithoutVariantDeclinaisons($kanban_assets, 'kanban-style')
+            );
+
+            $service->displayHeader(
+                $kanban->getName(),
+                $this->getBreadcrumbs($user, $project, $kanban),
+                [],
+                $header_options
+            );
+            $renderer->renderToPage(
                 'kanban',
                 new KanbanPresenter(
                     $kanban,
@@ -107,18 +126,19 @@ final class ShowKanbanController extends BaseController
                     $filter_tracker_report_id,
                 )
             );
-        } catch (KanbanNotFoundException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-kanban', 'Kanban not found.')
-            );
-        } catch (KanbanCannotAccessException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('global', 'error_perm_denied')
-            );
+            $service->displayFooter();
+        } catch (KanbanCannotAccessException | KanbanNotFoundException) {
+            throw new NotFoundException(dgettext('tuleap-kanban', 'Kanban not found.'));
+        }
+    }
+
+    private function getService(Project $project): \Service
+    {
+        $service = $project->getService(\AgileDashboardPlugin::PLUGIN_SHORTNAME);
+        if (! $service) {
+            throw new NotFoundException();
         }
 
-        return '';
+        return $service;
     }
 }
