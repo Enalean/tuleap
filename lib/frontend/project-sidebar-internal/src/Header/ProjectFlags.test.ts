@@ -25,7 +25,7 @@ import { shallowMount } from "@vue/test-utils";
 import ProjectFlags from "./ProjectFlags.vue";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import tlp_popovers from "@tuleap/tlp-popovers";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 

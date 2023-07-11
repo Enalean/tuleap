@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as trigger_download from "../trigger-blob-download";
-import image_loader from "@tuleap/plugin-docgen-docx";
+import * as image_loader from "@tuleap/plugin-docgen-docx";
 import type { GetText } from "@tuleap/gettext";
 import { downloadDocx } from "./download-docx";
 import { ImageRun } from "docx";

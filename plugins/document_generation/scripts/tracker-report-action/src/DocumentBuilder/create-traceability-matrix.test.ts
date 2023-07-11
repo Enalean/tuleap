@@ -20,7 +20,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { TraceabilityMatrixElement } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
-import docgen_docx from "@tuleap/plugin-docgen-docx";
+import * as docgen_docx from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactFromReport,
     ArtifactReportResponseUserRepresentation,

@@ -18,7 +18,7 @@
  */
 
 import { describe, it, beforeEach, vi, expect } from "vitest";
-import tlp_modal from "@tuleap/tlp-modal";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import * as fetch_result from "@tuleap/fetch-result";
 import {
     EDIT_CONFIG_SELECTOR,
