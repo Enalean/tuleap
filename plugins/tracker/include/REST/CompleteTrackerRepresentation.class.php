@@ -81,8 +81,9 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
 
     /**
      * @var array {@type Tuleap\Tracker\REST\SemanticRepresentation}
+     * @psalm-var object{string: \Tuleap\Tracker\REST\SemanticRepresentation}|non-empty-array<string,\Tuleap\Tracker\REST\SemanticRepresentation>
      */
-    public $semantics = [];
+    public object|array $semantics;
 
     /**
      * @var WorkflowRepresentation | null
@@ -131,7 +132,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->item_name              = $tracker->getItemName();
         $this->fields                 = $tracker_fields;
         $this->structure              = $structure;
-        $this->semantics              = $semantics;
+        $this->semantics              = JsonCast::toObject($semantics);
         $this->workflow               = $workflow;
         $this->resources              = [
             [
