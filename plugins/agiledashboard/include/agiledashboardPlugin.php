@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
@@ -138,6 +139,7 @@ use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
+use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -2217,5 +2219,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $event->getArtifactImportedMapping(),
             $event->getProject(),
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectMovableExternalFieldEvent(CollectMovableExternalFieldEvent $event): void
+    {
+        AgileDashboardMovableFieldsCollector::collectMovableFields($event);
     }
 }
