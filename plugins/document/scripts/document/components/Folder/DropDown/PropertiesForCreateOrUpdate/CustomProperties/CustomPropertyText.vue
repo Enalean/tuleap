@@ -23,10 +23,7 @@
         v-if="currentlyUpdatedItemProperty.type === 'text'"
         data-test="document-custom-property-text"
     >
-        <label
-            class="tlp-label"
-            v-bind:for="`document-{{currentlyUpdatedItemProperty.short_name}}`"
-        >
+        <label class="tlp-label" v-bind:for="`document-${currentlyUpdatedItemProperty.short_name}`">
             {{ currentlyUpdatedItemProperty.name }}
             <i
                 class="fa-solid fa-asterisk"
@@ -37,10 +34,9 @@
         <textarea
             class="tlp-textarea tlp-form-element"
             data-test="document-text-input"
-            v-bind:id="`document-{{currentlyUpdatedItemProperty.short_name}}`"
+            v-bind:id="`document-${currentlyUpdatedItemProperty.short_name}`"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             v-model="value"
-            v-on:input="oninput"
         ></textarea>
     </div>
 </template>
@@ -48,17 +44,19 @@
 <script setup lang="ts">
 import type { Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
+import { computed } from "vue";
 
 const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
-const value = String(props.currentlyUpdatedItemProperty.value);
-
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLTextAreaElement) {
+const value = computed({
+    get() {
+        return String(props.currentlyUpdatedItemProperty.value);
+    },
+    set(value) {
         emitter.emit("update-custom-property", {
             property_short_name: props.currentlyUpdatedItemProperty.short_name,
-            value: $event.target.value,
+            value: value,
         });
-    }
-}
+    },
+});
 </script>

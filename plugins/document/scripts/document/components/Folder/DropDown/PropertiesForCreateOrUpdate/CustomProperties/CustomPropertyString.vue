@@ -38,7 +38,6 @@
             v-bind:id="`document-${currentlyUpdatedItemProperty.short_name}`"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             v-model="value"
-            v-on:input="oninput"
         />
     </div>
 </template>
@@ -46,17 +45,19 @@
 <script setup lang="ts">
 import type { Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
+import { computed } from "vue";
 
 const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
-const value = String(props.currentlyUpdatedItemProperty.value);
-
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLInputElement) {
+const value = computed({
+    get() {
+        return String(props.currentlyUpdatedItemProperty.value);
+    },
+    set(value) {
         emitter.emit("update-custom-property", {
             property_short_name: props.currentlyUpdatedItemProperty.short_name,
-            value: $event.target.value,
+            value: value,
         });
-    }
-}
+    },
+});
 </script>

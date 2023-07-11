@@ -41,7 +41,6 @@
             multiple
             v-model="multiple_list_values"
             data-test="document-custom-list-multiple-select"
-            v-on:change="updatePropertiesListValue"
         >
             <option
                 v-for="possible_value in allowed_values"
@@ -61,7 +60,7 @@ import type { ListValue, Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { PropertiesState } from "../../../../../store/properties/module";
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
@@ -70,10 +69,18 @@ const { project_properties } = useNamespacedState<Pick<PropertiesState, "project
     ["project_properties"]
 );
 
-const multiple_list_values = ref<Array<number> | Array<ListValue> | null>([]);
-
-onMounted((): void => {
-    multiple_list_values.value = props.currentlyUpdatedItemProperty.list_value;
+const multiple_list_values = computed({
+    get() {
+        return props.currentlyUpdatedItemProperty.list_value;
+    },
+    set(value) {
+        emitter.emit("update-multiple-properties-list-value", {
+            detail: {
+                value: value,
+                id: props.currentlyUpdatedItemProperty.short_name,
+            },
+        });
+    },
 });
 
 const allowed_values = computed((): Array<ListValue> => {
@@ -92,13 +99,4 @@ const allowed_values = computed((): Array<ListValue> => {
 
     return [];
 });
-
-function updatePropertiesListValue(): void {
-    emitter.emit("update-multiple-properties-list-value", {
-        detail: {
-            value: multiple_list_values.value,
-            id: props.currentlyUpdatedItemProperty.short_name,
-        },
-    });
-}
 </script>
