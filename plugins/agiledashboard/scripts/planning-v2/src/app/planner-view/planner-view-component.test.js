@@ -19,14 +19,23 @@
 
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 import planning_module from "../app.js";
 import * as rest_querier from "../api/rest-querier";
+import { SESSION_STORAGE_KEY } from "../session";
+
+const noop = () => {
+    // Do nothing
+};
+
+const SUB_MILESTONE_ID = 9040;
 
 describe("PlannerView", () => {
     let $scope,
         $filter,
         $q,
+        $window,
         PlanningController,
         BacklogItemService,
         BacklogService,
@@ -36,7 +45,8 @@ describe("PlannerView", () => {
         UserPreferencesService,
         BacklogItemCollectionService,
         BacklogItemSelectedService,
-        ItemAnimatorService;
+        ItemAnimatorService,
+        wrapPromise;
 
     const user_id = 102;
 
@@ -57,8 +67,13 @@ describe("PlannerView", () => {
             _BacklogItemSelectedService_,
             _ItemAnimatorService_
         ) {
+            wrapPromise = createAngularPromiseWrapper($rootScope);
             $scope = $rootScope.$new();
             $q = _$q_;
+            $window = {
+                sessionStorage: { setItem: noop },
+                location: { reload: noop },
+            };
 
             SharedPropertiesService = _SharedPropertiesService_;
             jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
@@ -116,6 +131,7 @@ describe("PlannerView", () => {
                 $filter,
                 $q,
                 $scope,
+                $window,
                 BacklogService,
                 BacklogItemService,
                 MilestoneService,
@@ -445,110 +461,58 @@ describe("PlannerView", () => {
         });
     });
 
-    describe("showEditModal() -", function () {
-        var event, item, get_request;
-        beforeEach(function () {
-            get_request = $q.defer();
-            event = { preventDefault: jest.fn() };
-            event.which = 1;
-            item = {
-                artifact: {
-                    id: 651,
-                    tracker: {
-                        id: 30,
-                    },
-                },
+    describe("showEditSubmilestoneModal()", () => {
+        const SUB_MILESTONE_TRACKER_ID = 12;
+        let did_artifact_links_change, event;
+        beforeEach(() => {
+            did_artifact_links_change = false;
+            event = new Event("click", { cancelable: true });
+        });
+
+        const editSubMilestone = () => {
+            NewTuleapArtifactModalService.showEdition.mockImplementation((a, b, c, callback) => {
+                callback(SUB_MILESTONE_ID, { did_artifact_links_change });
+            });
+
+            const item = {
+                artifact: { id: SUB_MILESTONE_ID, tracker: { id: SUB_MILESTONE_TRACKER_ID } },
             };
-            NewTuleapArtifactModalService.showEdition.mockImplementation(function (
-                c,
-                a,
-                b,
-                callback
-            ) {
-                callback(8541);
-            });
-            BacklogItemCollectionService.refreshBacklogItem.mockReturnValue(get_request.promise);
-        });
-
-        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function () {
-            PlanningController.showEditModal(event, item);
-
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(
-                102,
-                30,
-                651,
-                expect.any(Function)
-            );
-            expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(
-                8541,
-                undefined
-            );
-        });
-
-        it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function () {
-            event.which = 2;
-
-            PlanningController.showEditModal(event, item);
-
-            expect(event.preventDefault).not.toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
-        });
-
-        describe("callback -", function () {
-            it("Given a milestone, when the artifact modal calls its callback, then the milestone's initial effort will be updated", function () {
-                const updateInitialEffort = jest
-                    .spyOn(MilestoneService, "updateInitialEffort")
-                    .mockImplementation(() => {});
-                var milestone = {
-                    id: 38,
-                    label: "Release v1.0",
-                };
-
-                PlanningController.showEditModal(event, item, milestone);
-                get_request.resolve();
-                $scope.$apply();
-
-                expect(updateInitialEffort).toHaveBeenCalledWith(milestone);
-            });
-        });
-    });
-
-    describe("showEditSubmilestoneModal() -", function () {
-        var event, item;
-        beforeEach(function () {
-            event = { preventDefault: jest.fn(), stopPropagation: jest.fn() };
-            NewTuleapArtifactModalService.showEdition.mockImplementation(function (
-                c,
-                a,
-                b,
-                callback
-            ) {
-                callback(9040);
-            });
-        });
-
-        it("Given a left click event and a submilestone to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function () {
-            event.which = 1;
-            item = {
-                artifact: {
-                    id: 9040,
-                    tracker: {
-                        id: 12,
-                    },
-                },
-            };
-            jest.spyOn(PlanningController, "refreshSubmilestone").mockImplementation(() => {});
-
             PlanningController.showEditSubmilestoneModal(event, item);
+        };
 
+        it(`When I click on a sub-milestone's edit button,
+            it will prevent default and stop propagation to avoid navigating to the Artifact view page
+            and after edition, it will refresh the sub-milestone`, () => {
+            const stopPropagation = jest.spyOn(event, "stopPropagation");
+            const refreshSubmilestone = jest
+                .spyOn(PlanningController, "refreshSubmilestone")
+                .mockImplementation(noop);
+
+            editSubMilestone();
+
+            expect(event.defaultPrevented).toBe(true);
+            expect(stopPropagation).toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(
                 user_id,
-                12,
-                9040,
+                SUB_MILESTONE_TRACKER_ID,
+                SUB_MILESTONE_ID,
                 expect.any(Function)
             );
-            expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
+            expect(refreshSubmilestone).toHaveBeenCalledWith(SUB_MILESTONE_ID);
+        });
+
+        it(`when the user changed the artifact links during edition,
+            it will store a feedback message in the session storage
+            and will reload the page
+            so that user stories that might have been planned / unplanned from the sub-milestone are shown correctly`, () => {
+            did_artifact_links_change = true;
+            const reload = jest.spyOn($window.location, "reload");
+            const setItem = jest.spyOn($window.sessionStorage, "setItem");
+
+            editSubMilestone();
+
+            expect(setItem).toHaveBeenCalledWith(SESSION_STORAGE_KEY, expect.any(String));
+            expect(reload).toHaveBeenCalled();
         });
     });
 
@@ -725,30 +689,24 @@ describe("PlannerView", () => {
         });
     });
 
-    describe("refreshSubmilestone() -", function () {
-        var get_milestone_request;
+    describe("refreshSubmilestone()", () => {
+        it(`will retrieve the sub-milestone again from the server
+            and will update the milestones collection`, async () => {
+            PlanningController.milestones.content = [{ id: SUB_MILESTONE_ID }];
+            MilestoneService.getMilestone.mockReturnValue(
+                $q.when({ results: { id: SUB_MILESTONE_ID } })
+            );
 
-        beforeEach(function () {
-            get_milestone_request = $q.defer();
-        });
+            const promise = PlanningController.refreshSubmilestone(SUB_MILESTONE_ID);
 
-        it("Given an existing submilestone, when I refresh it, then the submilestone will be retrieved from the server and the milestones collection will be updated", function () {
-            PlanningController.milestones.content = [{ id: 9040 }];
-            MilestoneService.getMilestone.mockReturnValue(get_milestone_request.promise);
-
-            PlanningController.refreshSubmilestone(9040);
-
-            get_milestone_request.resolve({
-                results: { id: 9040 },
-            });
             expect(PlanningController.milestones.content).toStrictEqual([
-                expect.objectContaining({ id: 9040, updating: true }),
+                expect.objectContaining({ id: SUB_MILESTONE_ID, updating: true }),
             ]);
-            $scope.$apply();
+            await wrapPromise(promise);
 
-            expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
+            expect(MilestoneService.getMilestone).toHaveBeenCalledWith(SUB_MILESTONE_ID);
             expect(PlanningController.milestones.content).toStrictEqual([
-                expect.objectContaining({ id: 9040, updating: false }),
+                expect.objectContaining({ id: SUB_MILESTONE_ID, updating: false }),
             ]);
         });
     });

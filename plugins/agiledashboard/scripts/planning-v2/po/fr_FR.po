@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-07-13 11:07+0200\n"
+"PO-Revision-Date: 2023-07-13 12:36+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -131,6 +131,9 @@ msgstr "Voir les détails de l'erreur"
 
 msgid "Successfully updated %(artifact)s"
 msgstr "%(artifact)s a été mis à jour avec succès"
+
+msgid "Successfully updated milestone '%s'"
+msgstr "Jalon '%s' mis à jour avec succès"
 
 msgid "There are no closed milestones"
 msgstr "Aucun jalon fermé"
