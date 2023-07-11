@@ -66,12 +66,12 @@ reason = "No impact in our situation. No fix available upstream."
 id = "GHSA-p8p7-x288-28g6" # CVE-2023-28155
 reason = "No impact in our situation. No fix available upstream."
 
-### TO BE FIXED
-
+# unplugin-vue2-script-setup via the transitive dep @antfu/utils
 [[IgnoredVulns]]
 id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
-reason = "unplugin-vue2-script-setup must update its dependency. Reported upstream, waiting for a new release."
-ignoreUntil = 2023-07-10
+reason = "No impact in our situation, unplugin-vue2-script-setup will be removed when the Vue 2 migration is completed."
+
+### TO BE FIXED
 
 # semver
 ## Used as a transitive dep for dev tool, no fix available yet for 5.7 and 6.3 branches
