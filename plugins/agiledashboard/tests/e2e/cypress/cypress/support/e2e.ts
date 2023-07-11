@@ -18,5 +18,4 @@
  *
  */
 
-import "./commands";
 import "@tuleap/cypress-utilities-support";

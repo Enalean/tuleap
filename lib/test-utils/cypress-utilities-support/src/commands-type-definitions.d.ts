@@ -93,6 +93,15 @@ declare global {
             createFRSPackage(project_id: number, package_name: string): void;
 
             getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
+
+            searchItemInLazyboxDropdown(
+                query: string,
+                dropdown_item_label: string
+            ): Chainable<JQuery<HTMLElement>>;
+
+            searchItemInListPickerDropdown(
+                dropdown_item_label: string
+            ): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
