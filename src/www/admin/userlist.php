@@ -225,7 +225,9 @@ $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
     $offset
 );
 
-$admin_page = new AdminPageRenderer();
+$admin_page     = new AdminPageRenderer();
+$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$admin_page->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'site-admin-userlist-styles'));
 
 if ($group_id) {
     $project = ProjectManager::instance()->getProject($group_id);
