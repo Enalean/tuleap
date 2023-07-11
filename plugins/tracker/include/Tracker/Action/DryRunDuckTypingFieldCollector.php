@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
@@ -45,6 +46,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     private array $fields_mapping = [];
 
     public function __construct(
+        private readonly EventDispatcherInterface $event_dispatcher,
         private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
         private readonly RetrieveUsedFields $retrieve_destination_tracker_used_fields,
         private readonly VerifyFieldCanBeEasilyMigrated $verify_field_can_be_easily_migrated,
@@ -60,6 +62,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         private readonly VerifyPermissionsCanBeFullyMoved $verify_permissions_can_be_fully_moved,
         private readonly VerifyIsOpenListField $verify_is_open_list_field,
         private readonly VerifyOpenListFieldsAreCompatible $verify_open_list_fields_are_compatible,
+        private readonly VerifyIsExternalField $verify_is_external_field,
+        private readonly VerifyExternalFieldsHaveSameType $verify_external_fields_have_same_type,
     ) {
     }
 
@@ -74,6 +78,14 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
             if ($destination_field->isUpdateable() && ! $destination_field->userCanUpdate($user)) {
                 $this->addFieldToNotMigrateableList($source_field);
+                continue;
+            }
+
+            if (
+                $this->verify_is_external_field->isAnExternalField($source_field) &&
+                $this->verify_is_external_field->isAnExternalField($destination_field)
+            ) {
+                $this->collectExternalFields($source_field, $destination_field);
                 continue;
             }
 
@@ -217,6 +229,31 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     ): void {
         if (! $this->verify_open_list_fields_are_compatible->areOpenListFieldsCompatible($source_field, $destination_field)) {
             $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        $this->addFieldToMigrateableList($source_field, $destination_field);
+    }
+
+    private function collectExternalFields(
+        \Tracker_FormElement_Field $source_field,
+        \Tracker_FormElement_Field $destination_field,
+    ): void {
+        if (! $this->verify_external_fields_have_same_type->haveBothFieldsSameType($source_field, $destination_field)) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        $event = new CollectMovableExternalFieldEvent($source_field, $destination_field);
+        $this->event_dispatcher->dispatch($event);
+
+        if (! $event->isFieldMigrateable()) {
+            $this->addFieldToNotMigrateableList($source_field);
+            return;
+        }
+
+        if (! $event->isFieldFullyMigrateable()) {
+            $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
 

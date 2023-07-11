@@ -7,6 +7,11 @@
     "classmap": ["include/"],
     "files": ["include/constants.php"]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\TestManagement\\Test\\": ["./tests/unit/"]
+    }
+  },
   "config": {
     "sort-packages": true
   },

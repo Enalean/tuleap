@@ -54,10 +54,17 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                   <value format="id">123</value>
                 </field_change>
             </changeset>
+            <changeset>
+                <comments/>
+                <external_field_change field_name="some_field" type="some_type">
+                  <value format="id">123</value>
+                </external_field_change>
+            </changeset>
             </changesets>';
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->assertFalse($this->updater->isChangesetNodeDeletable($changeset_xml, 1));
+        $this->assertFalse($this->updater->isChangesetNodeDeletable($changeset_xml, 2));
     }
 
     public function testChangesIsNotDeletableWhenCommentHasChanged(): void
@@ -117,6 +124,20 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $this->updater->deleteFieldChangeNode($changeset_xml, 0);
+        $this->assertSame("", trim((string) $changeset_xml));
+    }
+
+    public function testItDeletesAnExternalFieldChangeNode(): void
+    {
+        $xml           = '<?xml version="1.0" encoding="UTF-8"?>
+            <changeset>
+                <external_field_change>
+                    <value/>
+                </external_field_change>
+            </changeset>';
+        $changeset_xml = new SimpleXMLElement($xml);
+
+        $this->updater->deleteExternalFieldChangeNode($changeset_xml, 0);
         $this->assertSame("", trim((string) $changeset_xml));
     }
 
