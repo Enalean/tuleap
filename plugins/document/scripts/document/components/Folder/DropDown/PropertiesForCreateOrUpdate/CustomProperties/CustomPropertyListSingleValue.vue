@@ -33,7 +33,6 @@
         <select
             class="tlp-form-element tlp-select"
             v-bind:id="`document-${currentlyUpdatedItemProperty.short_name}`"
-            v-on:input="oninput"
             v-model="value"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             data-test="document-custom-list-select"
@@ -56,7 +55,7 @@ import type { ListValue, Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { PropertiesState } from "../../../../../store/properties/module";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
@@ -65,11 +64,21 @@ const { project_properties } = useNamespacedState<Pick<PropertiesState, "project
     ["project_properties"]
 );
 
-const value = ref("");
+const value = computed({
+    get() {
+        return String(props.currentlyUpdatedItemProperty.value);
+    },
+    set(value) {
+        emitter.emit("update-custom-property", {
+            property_short_name: props.currentlyUpdatedItemProperty.short_name,
+            value: String(value),
+        });
+    },
+});
+
 const project_properties_list_possible_values = ref<Array<ListValue> | null>([]);
 
 onMounted((): void => {
-    value.value = String(props.currentlyUpdatedItemProperty.value);
     const values = project_properties.value.find(
         ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name
     )?.allowed_list_values;
@@ -78,13 +87,4 @@ onMounted((): void => {
     }
     project_properties_list_possible_values.value = values;
 });
-
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLSelectElement) {
-        emitter.emit("update-custom-property", {
-            property_short_name: props.currentlyUpdatedItemProperty.short_name,
-            value: $event.target.value,
-        });
-    }
-}
 </script>
