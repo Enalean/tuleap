@@ -238,7 +238,7 @@ if (ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1) {
     $groups_pending_class = '';
 
     if ($project_pending_count > 0) {
-        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide">' . _('Review pending projects') . '</a>';
+        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide" data-test="pending-projects-button">' . _('Review pending projects') . '</a>';
         $groups_pending_class = 'tlp-text-warning';
     }
 

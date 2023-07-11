@@ -9,7 +9,9 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
-    "@tuleap/plugin-tracker-rest-api-types": "workspace:*"
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@types/quoted-printable": "^1.0.0",
+    "quoted-printable": "^1.0.1"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

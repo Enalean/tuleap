@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as quotedPrintable from "quoted-printable";
 import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
 import type {
     StructureFields,
@@ -305,6 +306,23 @@ Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: stri
 
     cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
 });
+
+Cypress.Commands.add(
+    "assertUserMessagesReceivedByWithSpecificContent",
+    (email: string, specific_content_of_mail: string): void => {
+        cy.request({
+            method: "GET",
+            url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email),
+            headers: {
+                accept: "application/json",
+            },
+        }).then((response) => {
+            expect(quotedPrintable.decode(response.body.items[0].Content.Body)).contains(
+                specific_content_of_mail
+            );
+        });
+    }
+);
 
 const MAX_ATTEMPTS = 10;
 
