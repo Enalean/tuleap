@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tracker_UserWithReadAllPermission;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -385,13 +386,20 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
-        $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
-        $int_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $string_field
+            ->method('getRESTValue')
+            ->with(self::isInstanceOf(Tracker_UserWithReadAllPermission::class), $changeset)
+            ->willReturn($string_value);
+
+        $int_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
         $int_value = new ArtifactFieldValueFullRepresentation();
         $int_value->build(10001, 'int', 'Initial effort', 8);
-        $int_field->shouldReceive('getRESTValue')->andReturn($int_value);
+        $int_field
+            ->method('getRESTValue')
+            ->with(self::isInstanceOf(Tracker_UserWithReadAllPermission::class), $changeset)
+            ->willReturn($int_value);
 
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
             ->once()
