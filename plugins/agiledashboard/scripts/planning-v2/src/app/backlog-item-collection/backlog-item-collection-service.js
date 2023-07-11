@@ -18,12 +18,26 @@
  */
 
 import { remove } from "lodash-es";
+import { sprintf } from "sprintf-js";
+import { SESSION_STORAGE_KEY } from "../session";
 
 export default BacklogItemCollectionService;
 
-BacklogItemCollectionService.$inject = ["BacklogItemService", "ItemAnimatorService"];
+BacklogItemCollectionService.$inject = [
+    "$q",
+    "$window",
+    "BacklogItemService",
+    "ItemAnimatorService",
+    "gettextCatalog",
+];
 
-function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
+function BacklogItemCollectionService(
+    $q,
+    $window,
+    BacklogItemService,
+    ItemAnimatorService,
+    gettextCatalog
+) {
     const self = this;
     Object.assign(self, {
         items: {},
@@ -33,8 +47,19 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
         removeExplicitBacklogElement,
     });
 
-    function refreshBacklogItem(backlog_item_id) {
+    function refreshBacklogItem(backlog_item_id, options) {
         self.items[backlog_item_id].updating = true;
+
+        if (options && options.did_artifact_links_change) {
+            $window.sessionStorage.setItem(
+                SESSION_STORAGE_KEY,
+                sprintf(gettextCatalog.getString("Successfully updated %(artifact)s"), {
+                    artifact: `${self.items[backlog_item_id].short_type} #${backlog_item_id}`,
+                })
+            );
+            $window.location.reload();
+            return $q.when();
+        }
 
         return BacklogItemService.getBacklogItem(backlog_item_id).then(({ backlog_item }) => {
             const {
