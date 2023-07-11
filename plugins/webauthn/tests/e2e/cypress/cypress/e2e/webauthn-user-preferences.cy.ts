@@ -33,6 +33,8 @@ describe("User preferences | WebAuthn", () => {
             cy.get("[data-test=name-modal-input]").type("My awesome key");
             cy.get("[data-test=name-modal-button]").click();
 
+            cy.get("[data-test=feedback]").contains("Key 'My awesome key' successfully added");
+
             cy.visit("/account/keys-tokens");
             cy.get("[data-test=generate-access-key-button]").click();
             cy.get("[data-test=webauthn-modal-submit-button]:visible").click();
