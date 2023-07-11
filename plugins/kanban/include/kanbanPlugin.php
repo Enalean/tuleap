@@ -40,6 +40,7 @@ use Tuleap\Kanban\KanbanUserPreferences;
 use Tuleap\Kanban\Plugin\KanbanPluginInfo;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\Kanban\RealTime\KanbanRealtimeArtifactMessageSender;
 use Tuleap\Kanban\RealTime\RealTimeArtifactMessageController;
 use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
 use Tuleap\Kanban\RealTimeMercure\KanbanArtifactMessageSenderMercure;
@@ -342,15 +343,21 @@ final class KanbanPlugin extends Plugin
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
         $artifact = $event->getArtifact();
-        $this->getRealtimeMessageController()->sendMessageForKanban(
-            $this->getCurrentUser(),
-            $artifact,
-            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
+        $sender   = new KanbanRealtimeArtifactMessageSender(
+            $this->getRealtimeMessageControllerMercure(),
+            $this->getRealtimeMessageController()
         );
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-            $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+            $sender->sendMessageArtifact(
                 $artifact,
+                $this->getCurrentUser(),
                 RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED
+            );
+        } else {
+            $sender->sendMessageArtifact(
+                $artifact,
+                $this->getCurrentUser(),
+                RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
             );
         }
     }
@@ -359,15 +366,21 @@ final class KanbanPlugin extends Plugin
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
         $artifact = $event->getArtifact();
-        $this->getRealtimeMessageController()->sendMessageForKanban(
-            $this->getCurrentUser(),
-            $artifact,
-            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
+        $sender   = new KanbanRealtimeArtifactMessageSender(
+            $this->getRealtimeMessageControllerMercure(),
+            $this->getRealtimeMessageController()
         );
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-            $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+            $sender->sendMessageArtifact(
                 $artifact,
+                $this->getCurrentUser(),
                 RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_UPDATED
+            );
+        } else {
+            $sender->sendMessageArtifact(
+                $artifact,
+                $this->getCurrentUser(),
+                RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
             );
         }
     }
@@ -387,18 +400,24 @@ final class KanbanPlugin extends Plugin
     {
         $artifacts_ids = $event->getArtifactsIds();
         $artifacts     = $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifacts_ids);
-        foreach ($artifacts as $artifact) {
-            $this->getRealtimeMessageController()->sendMessageForKanban(
-                $this->getCurrentUser(),
-                $artifact,
-                RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
-            );
-        }
+        $sender        = new KanbanRealtimeArtifactMessageSender(
+            $this->getRealtimeMessageControllerMercure(),
+            $this->getRealtimeMessageController()
+        );
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             foreach ($artifacts as $artifact) {
-                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+                $sender->sendMessageArtifact(
                     $artifact,
+                    $this->getCurrentUser(),
                     RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_REORDERED
+                );
+            }
+        } else {
+            foreach ($artifacts as $artifact) {
+                $sender->sendMessageArtifact(
+                    $artifact,
+                    $this->getCurrentUser(),
+                    RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
                 );
             }
         }

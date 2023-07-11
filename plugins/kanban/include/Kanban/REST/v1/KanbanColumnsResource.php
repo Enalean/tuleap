@@ -20,6 +20,7 @@
 namespace Tuleap\Kanban\REST\v1;
 
 use EventManager;
+use Tuleap\Kanban\RealTime\KanbanRealtimeStructureMessageSender;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
@@ -28,7 +29,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Kanban\RealTimeMercure\KanbanStructureRealTimeMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
-use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\REST\Header;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanDao;
@@ -55,8 +55,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
-use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\Kanban\KanbanRightsPresenter;
 
 class KanbanColumnsResource
 {
@@ -198,30 +196,24 @@ class KanbanColumnsResource
             $this->getProjectIdForKanban($kanban)
         );
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                throw new \RuntimeException('Tracker does not exist');
-            }
-            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $data    = [
-                'id'        => $id,
-                'label'     => $updated_column_properties->label,
-                'wip_limit' => $updated_column_properties->wip_limit,
-            ];
-            $message = new MessageDataPresenter(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban_column:edit',
-                $data
-            );
-            $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->kanban_structural_realtime->sendStructureUpdate($kanban);
-            }
-        }
+        $kanban_sender = new KanbanRealtimeStructureMessageSender(
+            $this->tracker_factory,
+            $this->kanban_structural_realtime,
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+        $data          = [
+            'id'        => $id,
+            'label'     => $updated_column_properties->label,
+            'wip_limit' => $updated_column_properties->wip_limit,
+        ];
+        $kanban_sender->sendMessageStructure(
+            $kanban,
+            'kanban_column:edit',
+            $current_user,
+            \HTTPRequest::instance(),
+            $data
+        );
     }
 
     /**
@@ -273,26 +265,19 @@ class KanbanColumnsResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                throw new \RuntimeException('Tracker does not exist');
-            }
-            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban_column:delete',
-                $column->getId()
-            );
-
-            $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->kanban_structural_realtime->sendStructureUpdate($kanban);
-            }
-        }
+        $kanban_sender = new KanbanRealtimeStructureMessageSender(
+            $this->tracker_factory,
+            $this->kanban_structural_realtime,
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+        $kanban_sender->sendMessageStructure(
+            $kanban,
+            'kanban_column:delete',
+            $current_user,
+            \HTTPRequest::instance(),
+            $column->getId()
+        );
     }
 
     private function getKanban(PFUser $user, int $id): Kanban
