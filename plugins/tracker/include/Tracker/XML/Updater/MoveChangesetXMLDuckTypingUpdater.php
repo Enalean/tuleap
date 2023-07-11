@@ -203,8 +203,6 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 assert($destination_field instanceof \Tracker_FormElement_Field_OpenList);
                 $this->update_open_list_user_groups_by_duck_typing->updateUserGroupsForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
             }
-
-            $this->move_changeset_XML_updater->useTargetTrackerFieldName($changeset_xml, $destination_field, $index);
         }
     }
 
