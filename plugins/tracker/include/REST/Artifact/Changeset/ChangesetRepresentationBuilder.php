@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
 use PFUser;
+use Tracker_UserWithReadAllPermission;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -145,9 +146,12 @@ class ChangesetRepresentationBuilder
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
     ): ChangesetRepresentation {
+        //build and provide fake tracker admin user so that all artifact fields values can be read
+        $fake_admin_user = new Tracker_UserWithReadAllPermission($user);
+
         $last_comment = $this->getCommentOrDefaultWithNullWithoutPermission($changeset);
-        $field_values = $this->getRESTFieldValuesWithoutPermissions($changeset, $user);
-        return $this->buildFromFieldValues($changeset, $last_comment, $field_values, $user);
+        $field_values = $this->getRESTFieldValuesWithoutPermissions($changeset, $fake_admin_user);
+        return $this->buildFromFieldValues($changeset, $last_comment, $field_values, $fake_admin_user);
     }
 
     private function getRESTFieldValuesWithoutPermissions(\Tracker_Artifact_Changeset $changeset, \PFUser $user): array
