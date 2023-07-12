@@ -38,6 +38,7 @@ const config = {
         "site-admin-dates-display": "./src/dates-display.ts",
         "site-admin-description-fields": "./src/description-fields.ts",
         "site-admin-password-policy": "./src/password-policy.ts",
+        "site-admin-userlist-styles": "./themes/siteadmin-user-list.scss",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(
@@ -49,11 +50,15 @@ const config = {
         ckeditor4: "CKEDITOR",
     },
     module: {
-        rules: [...webpack_configurator.configureTypescriptRules()],
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.rule_scss_loader,
+        ],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
     resolve: {
         extensions: [".ts", ".js"],
