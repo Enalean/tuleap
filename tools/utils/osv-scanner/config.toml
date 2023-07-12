@@ -51,6 +51,11 @@ reason = "ReDoS. No direct impact in our situation."
 id = "GHSA-f4c9-cqv8-9v98" # CVE-2021-20066
 reason = "No impact in our situation. No fix available upstream."
 
+## tough-cookie (transitive dep of jsdom)
+[[IgnoredVulns]]
+id = "GHSA-72xf-g2v4-qvf3" # CVE-2023-26136
+reason = "No impact in our situation. No fix available upstream because the version used is far too old (2.5.0 vs current 4.x)."
+
 ## ms
 [[IgnoredVulns]]
 id = "GHSA-w9mr-4mfr-499f" # CVE-2017-20162

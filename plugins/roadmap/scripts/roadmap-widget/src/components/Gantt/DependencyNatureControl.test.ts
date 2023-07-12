@@ -40,7 +40,7 @@ describe("DependencyNatureControl", () => {
         const wrapper = shallowMount(DependencyNatureControl, {
             localVue: await createRoadmapLocalVue(),
             propsData: {
-                value: null,
+                value: "depends_on",
                 available_natures: new NaturesLabels([
                     ["", "Linked to"],
                     ["depends_on", "Depends on"],
@@ -58,9 +58,9 @@ describe("DependencyNatureControl", () => {
             },
         });
 
-        expect(isSelected(wrapper, "none")).toBe(true);
+        expect(isSelected(wrapper, "none")).toBe(false);
         expect(isSelected(wrapper, "")).toBe(false);
-        expect(isSelected(wrapper, "depends_on")).toBe(false);
+        expect(isSelected(wrapper, "depends_on")).toBe(true);
     });
 
     it("should emit input event when the value is changed", async () => {
