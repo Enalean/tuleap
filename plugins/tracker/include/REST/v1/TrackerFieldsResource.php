@@ -211,6 +211,9 @@ class TrackerFieldsResource extends AuthenticatedResource
         return $field;
     }
 
+    /**
+     * @throws RestException
+     */
     private function getFileFieldUserCanUpdate(int $id, PFUser $user): Tracker_FormElement_Field_File
     {
         $field = $this->getField($id, $user);
@@ -221,7 +224,7 @@ class TrackerFieldsResource extends AuthenticatedResource
             throw new RestException(400, "Field must be of type File.");
         }
 
-        if (! $field->userCanSubmit($user) || ! $field->userCanUpdate($user)) {
+        if (! $field->userCanSubmit($user) && ! $field->userCanUpdate($user)) {
             throw new RestException(403);
         }
 
