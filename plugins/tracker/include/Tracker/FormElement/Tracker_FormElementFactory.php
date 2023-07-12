@@ -58,6 +58,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public const FIELD_LAST_MODIFIED_BY      = 'luby';
     public const FIELD_ARTIFACT_IN_TRACKER   = 'atid';
     public const FIELD_RANK                  = 'priority';
+    public const FIELD_SHARED                = 'shared';
 
     public const CONTAINER_COLUMN_TYPE   = 'column';
     public const CONTAINER_FIELDSET_TYPE = 'fieldset';
@@ -83,17 +84,17 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_STRING_TYPE           => Tracker_FormElement_Field_String::class,
         self::FIELD_TEXT_TYPE             => Tracker_FormElement_Field_Text::class,
         self::FIELD_FLOAT_TYPE            => Tracker_FormElement_Field_Float::class,
-        self::FIELD_DATE_TYPE             => Tracker_FormElement_Field_Date::class,
-        self::FIELD_SELECT_BOX_TYPE       => Tracker_FormElement_Field_Selectbox::class,
-        self::FIELD_RADIO_BUTTON_TYPE     => Tracker_FormElement_Field_Radiobutton::class,
+        self::FIELD_DATE_TYPE => Tracker_FormElement_Field_Date::class,
+        self::FIELD_SELECT_BOX_TYPE => Tracker_FormElement_Field_Selectbox::class,
+        self::FIELD_RADIO_BUTTON_TYPE => Tracker_FormElement_Field_Radiobutton::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
-        self::FIELD_FILE_TYPE             => Tracker_FormElement_Field_File::class,
-        self::FIELD_CHECKBOX_TYPE         => Tracker_FormElement_Field_Checkbox::class,
-        self::FIELD_INTEGER_TYPE          => Tracker_FormElement_Field_Integer::class,
-        self::FIELD_OPEN_LIST_TYPE        => Tracker_FormElement_Field_OpenList::class,
-        self::FIELD_ARTIFACT_LINKS        => Tracker_FormElement_Field_ArtifactLink::class,
-        'perm'                            => Tracker_FormElement_Field_PermissionsOnArtifact::class,
-        'shared'                          => Tracker_FormElement_Shared::class,
+        self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
+        self::FIELD_CHECKBOX_TYPE => Tracker_FormElement_Field_Checkbox::class,
+        self::FIELD_INTEGER_TYPE => Tracker_FormElement_Field_Integer::class,
+        self::FIELD_OPEN_LIST_TYPE => Tracker_FormElement_Field_OpenList::class,
+        self::FIELD_ARTIFACT_LINKS => Tracker_FormElement_Field_ArtifactLink::class,
+        'perm' => Tracker_FormElement_Field_PermissionsOnArtifact::class,
+        self::FIELD_SHARED => Tracker_FormElement_Shared::class,
     ];
 
     protected $special_classnames     = [
