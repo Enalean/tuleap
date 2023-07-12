@@ -26,6 +26,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\Move\MoveRestArtifact;
@@ -37,28 +38,38 @@ final class MoveRestArtifactStub implements MoveRestArtifact
 {
     private int $call_count = 0;
 
-    private function __construct(public int $remaining_deletions, public bool $move_artifact_not_done, public bool $move_semantic_exception, public bool $target_project_not_active)
-    {
+    private function __construct(
+        public int $remaining_deletions,
+        public bool $move_artifact_not_done,
+        public bool $move_semantic_exception,
+        public bool $target_project_not_active,
+        public bool $has_no_fields_to_move,
+    ) {
     }
 
     public static function andReturnRemainingDeletions(): self
     {
-        return new self(9, false, false, false);
+        return new self(9, false, false, false, false);
     }
 
     public static function andThrowMoveArtifactNotDone(): self
     {
-        return new self(10, true, false, false);
+        return new self(10, true, false, false, false);
     }
 
     public static function andThrowMoveArtifactSemanticsException(): self
     {
-        return new self(10, false, true, false);
+        return new self(10, false, true, false, false);
     }
 
     public static function andMoveArtifactTargetProjectNotActiveException(): self
     {
-        return new self(10, false, false, true);
+        return new self(10, false, false, true, false);
+    }
+
+    public static function andMoveArtifactNoValuesToProcessException(): self
+    {
+        return new self(10, false, false, false, true);
     }
 
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success): int
@@ -74,6 +85,11 @@ final class MoveRestArtifactStub implements MoveRestArtifact
         if ($this->target_project_not_active) {
             throw new MoveArtifactTargetProjectNotActiveException();
         }
+
+        if ($this->has_no_fields_to_move) {
+            throw new MoveArtifactNoValuesToProcessException();
+        }
+
         $this->call_count++;
         return $this->remaining_deletions;
     }

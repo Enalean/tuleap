@@ -213,6 +213,30 @@ final class MovePatchActionTest extends TestCase
         $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
     }
 
+    public function testItThrowsWhenThereAreNoFieldsToMove(): void
+    {
+        $retrieve_tracker         = RetrieveTrackerStub::withTracker($this->tracker);
+        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
+        $move_rest_artifact       = MoveRestArtifactStub::andMoveArtifactNoValuesToProcessException();
+
+        $this->patch_representation->move->dry_run = false;
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+        $move_patch_action = new MovePatchAction(
+            $retrieve_tracker,
+            $this->dry_run_move,
+            $move_rest_artifact,
+            $deletion_limit_retriever,
+            $this->before_move_checker,
+            $this->header_for_move_sender,
+            $this->artifact_deletion_config
+        );
+        $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+    }
+
     public function testItReturnsARepresentationWitDryRunWhenMoveIsComplete(): void
     {
         $retrieve_tracker         = RetrieveTrackerStub::withTracker($this->tracker);

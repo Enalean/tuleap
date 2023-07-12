@@ -1855,6 +1855,9 @@ msgstr ""
 msgid "No element selected."
 msgstr ""
 
+msgid "No fields in the artifact can be moved in the destination tracker."
+msgstr ""
+
 msgid "No logs yet"
 msgstr ""
 

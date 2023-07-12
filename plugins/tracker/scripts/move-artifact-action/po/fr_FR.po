@@ -81,3 +81,11 @@ msgstr "Déplacer l'artéfact"
 
 msgid "Show more"
 msgstr "Voir plus"
+
+msgid ""
+"This artifact cannot be moved to the selected tracker because none of its "
+"fields matches\n"
+"        with it."
+msgstr ""
+"Cet artéfact ne peut pas être déplacé vers l'outil de suivi sélectionné car "
+"aucun de ses champs ne correspond avec celui-ci."

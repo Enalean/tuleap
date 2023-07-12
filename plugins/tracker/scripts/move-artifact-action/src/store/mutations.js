@@ -68,6 +68,9 @@ export default {
     resetState(state) {
         Object.assign(state, initial_state);
     },
+    blockArtifactMove(state) {
+        state.is_move_possible = false;
+    },
 };
 
 function resetError(state) {

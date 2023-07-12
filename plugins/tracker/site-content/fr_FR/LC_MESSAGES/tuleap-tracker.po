@@ -2081,6 +2081,11 @@ msgstr "Aucune donnée à importer."
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 
+msgid "No fields in the artifact can be moved in the destination tracker."
+msgstr ""
+"Aucun champ de l'artéfact ne peut être déplacé dans l'outil de suivi de "
+"destination."
+
 msgid "No logs yet"
 msgstr "Pas encore d'historique"
 
