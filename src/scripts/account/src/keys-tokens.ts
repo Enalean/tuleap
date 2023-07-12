@@ -77,7 +77,9 @@ function Initializer(gettext_provider: GetText): Initializer {
         addSSHKeyButton().match(() => {
             const error = selectOrThrow(document, "#ssh-key-error");
             const form = selectOrThrow(document, "#ssh-key-form", HTMLFormElement);
-            authenticateAndAttachResponseToForm(form, error);
+            const icon = selectOrThrow(document, "#submit-new-ssh-key-button-icon");
+            const button = selectOrThrow(document, "#submit-new-ssh-key-button", HTMLButtonElement);
+            authenticateAndAttachResponseToForm(form, error, icon, button);
         }, handleWebAuthnModalFault);
 
         toggleButtonAccordingToCheckBoxesStateWithIds(
@@ -112,7 +114,13 @@ function Initializer(gettext_provider: GetText): Initializer {
         addAccessKeyButton().match(() => {
             const error = selectOrThrow(document, "#access-key-error");
             const form = selectOrThrow(document, "#access-key-form", HTMLFormElement);
-            authenticateAndAttachResponseToForm(form, error);
+            const icon = selectOrThrow(document, "#generate-new-access-key-button-icon");
+            const button = selectOrThrow(
+                document,
+                "#generate-new-access-key-button",
+                HTMLButtonElement
+            );
+            authenticateAndAttachResponseToForm(form, error, icon, button);
         }, handleWebAuthnModalFault);
         addAccessKeyDatePicker();
 
@@ -136,12 +144,21 @@ function Initializer(gettext_provider: GetText): Initializer {
     };
 }
 
-function authenticateAndAttachResponseToForm(form: HTMLFormElement, error: HTMLElement): void {
+function authenticateAndAttachResponseToForm(
+    form: HTMLFormElement,
+    error: HTMLElement,
+    icon: HTMLElement,
+    button: HTMLButtonElement
+): void {
     form.addEventListener("submit", (event) => {
         event.preventDefault();
 
+        icon.classList.remove(HIDDEN_CLASS);
+        button.disabled = true;
+
         getAuthenticationResult().match(
             (result) => {
+                icon.classList.add(HIDDEN_CLASS);
                 const input = document.createElement("input");
                 input.type = "hidden";
                 input.name = "webauthn_result";
@@ -151,6 +168,8 @@ function authenticateAndAttachResponseToForm(form: HTMLFormElement, error: HTMLE
                 form.submit();
             },
             (fault) => {
+                icon.classList.add(HIDDEN_CLASS);
+                button.disabled = false;
                 error.innerText = fault.toString();
                 error.classList.remove(HIDDEN_CLASS);
             }
