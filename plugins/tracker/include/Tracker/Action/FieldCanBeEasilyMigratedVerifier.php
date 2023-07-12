@@ -40,6 +40,7 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
         \Tracker_FormElementFactory::FIELD_ARTIFACT_IN_TRACKER,
         \Tracker_FormElementFactory::FIELD_RANK,
         \Tracker_FormElementFactory::FIELD_BURNDOWN,
+        \Tracker_FormElementFactory::FIELD_SHARED,
     ];
 
     public function __construct(

@@ -53,6 +53,7 @@ final class FieldCanBeEasilyMigratedVerifierTest extends TestCase
      *           ["priority", "priority", true]
      *           ["burndown", "burndown", true]
      *           ["computed", "computed", true]
+     *           ["shared", "shared", true]
      */
     public function testSimpleTypesAreCompatibles(string $source_type, string $destination_field, bool $are_compatible): void
     {
