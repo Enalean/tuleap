@@ -57,7 +57,7 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
             $xml_artifacts = $this->getUpdatedXML($artifact, $source_tracker, $user, $field_collection);
 
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
+            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
             if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user)) {
                 throw new MoveArtifactNotDoneException();

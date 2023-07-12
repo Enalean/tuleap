@@ -65,23 +65,23 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
 
     public function move(
         Artifact $artifact,
-        Tracker $target_tracker,
+        Tracker $destination_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector,
     ): int {
-        if (! $target_tracker->getProject()->isActive()) {
+        if (! $destination_tracker->getProject()->isActive()) {
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        return $this->transaction_executor->execute(function () use ($artifact, $target_tracker, $user, $feedback_field_collector) {
-            $this->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_field_collector);
+        return $this->transaction_executor->execute(function () use ($artifact, $destination_tracker, $user, $feedback_field_collector) {
+            $this->checkMoveIsPossible($artifact, $destination_tracker, $user, $feedback_field_collector);
 
-            $xml_artifacts = $this->getUpdatedXML($artifact, $target_tracker, $user, $feedback_field_collector);
+            $xml_artifacts = $this->getUpdatedXML($artifact, $destination_tracker, $user, $feedback_field_collector);
 
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
+            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
-            if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank, $user)) {
+            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, $global_rank, $user)) {
                 throw new MoveArtifactNotDoneException();
             }
 

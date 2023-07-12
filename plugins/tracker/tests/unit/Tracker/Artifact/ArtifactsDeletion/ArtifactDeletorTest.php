@@ -27,7 +27,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectHistoryDao;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,29 +55,24 @@ final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $event_dispatcher
         );
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn("My tracker name");
-        $tracker->shouldReceive('getGroupId')->andReturn(104);
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withName("My tracker name")->withProject($project)->build();
 
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive("getId")->andReturn($artifact_id);
-        $artifact->shouldReceive('getTrackerId')->andReturn(4);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(110);
+        $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
+        $user     = UserTestBuilder::anActiveUser()->withId(110)->build();
 
         $dao->shouldReceive("startTransaction");
         $pending_artifact_removal_dao->shouldReceive("addArtifactToPendingRemoval")->withArgs([$artifact_id]);
         $dao->shouldReceive("delete")->withArgs([$artifact_id]);
         $dao->shouldReceive("commit");
 
-        $artifact_runnner->shouldReceive("executeArchiveAndArtifactDeletion")->withArgs([$artifact, $user]);
+        $context = DeletionContext::regularDeletion((int) $project->getID());
+        $artifact_runnner->shouldReceive("executeArchiveAndArtifactDeletion")->withArgs([$artifact, $user, $context]);
 
         $project_history_dao->shouldReceive("groupAddHistory");
 
         $event_dispatcher->shouldReceive('dispatch')->with(ArtifactDeleted::class)->once();
 
-        $artifact_deletor->delete($artifact, $user);
+        $artifact_deletor->delete($artifact, $user, $context);
     }
 }

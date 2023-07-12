@@ -44,7 +44,7 @@ interface MoveArtifact
      */
     public function move(
         Artifact $artifact,
-        Tracker $target_tracker,
+        Tracker $destination_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector,
     ): int;

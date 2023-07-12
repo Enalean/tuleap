@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
 use CrossReferenceDao;
-use CrossReferenceManager;
 use DateTimeImmutable;
 use Psr\Log\NullLogger;
 use Reference;
@@ -32,6 +31,7 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
+use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

@@ -21,34 +21,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use CrossReferenceManager;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Reference\CrossReferenceManager;
 
 class TagPushWebhookDeleteAction
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var TagInfoDao
-     */
-    private $tag_info_dao;
-    /**
-     * @var CrossReferenceManager
-     */
-    private $cross_reference_manager;
-
     public function __construct(
-        TagInfoDao $tag_info_dao,
-        CrossReferenceManager $cross_reference_manager,
-        LoggerInterface $logger,
+        private readonly TagInfoDao $tag_info_dao,
+        private readonly CrossReferenceManager $cross_reference_manager,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->tag_info_dao            = $tag_info_dao;
-        $this->cross_reference_manager = $cross_reference_manager;
-        $this->logger                  = $logger;
     }
 
     public function deleteTagReferences(

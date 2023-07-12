@@ -40,6 +40,7 @@ use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -897,7 +898,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
                         if ($artifact && $artifact->getTrackerId() == $this->getId()) {
                             $artifact_deletor = ArtifactDeletorBuilder::build();
-                            $artifact_deletor->delete($artifact, $current_user);
+                            $project_id       = (int) $artifact->getTracker()->getGroupId();
+                            $artifact_deletor->delete($artifact, $current_user, DeletionContext::regularDeletion($project_id));
                             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
                         } else {
                             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));

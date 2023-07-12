@@ -44,7 +44,7 @@ final class MoveArtifactStub implements MoveArtifact
         return new self(random_int(1, 1000));
     }
 
-    public function move(Artifact $artifact, Tracker $target_tracker, PFUser $user, FeedbackFieldCollectorInterface $feedback_field_collector,): int
+    public function move(Artifact $artifact, Tracker $destination_tracker, PFUser $user, FeedbackFieldCollectorInterface $feedback_field_collector,): int
     {
         $this->call_count++;
         return $this->remaining_deletions;

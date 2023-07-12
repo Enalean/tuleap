@@ -23,7 +23,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
 use CrossReference;
 use CrossReferenceDao;
-use CrossReferenceManager;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
@@ -36,33 +35,19 @@ use Tuleap\Gitlab\Repository\Webhook\EmptyBranchNameException;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataBranchNameExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Reference\CrossReferenceManager;
 
 class PostPushWebhookActionBranchHandler
 {
-    private ReferenceManager $reference_manager;
-    private TuleapReferenceRetriever $tuleap_reference_retriever;
-    private CrossReferenceDao $cross_reference_dao;
-    private LoggerInterface $logger;
-    private BranchInfoDao $branch_info_dao;
-    private BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser;
-    private CrossReferenceManager $cross_reference_manager;
-
     public function __construct(
-        BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser,
-        ReferenceManager $reference_manager,
-        TuleapReferenceRetriever $tuleap_reference_retriever,
-        BranchInfoDao $branch_info_dao,
-        CrossReferenceDao $cross_reference_dao,
-        CrossReferenceManager $cross_reference_manager,
-        LoggerInterface $logger,
+        private readonly BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser,
+        private readonly ReferenceManager $reference_manager,
+        private readonly TuleapReferenceRetriever $tuleap_reference_retriever,
+        private readonly BranchInfoDao $branch_info_dao,
+        private readonly CrossReferenceDao $cross_reference_dao,
+        private readonly CrossReferenceManager $cross_reference_manager,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->branch_name_tuleap_reference_parser = $branch_name_tuleap_reference_parser;
-        $this->reference_manager                   = $reference_manager;
-        $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
-        $this->branch_info_dao                     = $branch_info_dao;
-        $this->cross_reference_dao                 = $cross_reference_dao;
-        $this->cross_reference_manager             = $cross_reference_manager;
-        $this->logger                              = $logger;
     }
 
     public function parseBranchReference(
