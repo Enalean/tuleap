@@ -42,6 +42,6 @@ class TrackerReportUpdater
 
     public function deleteAllForReport(Tracker_Report $report): void
     {
-        $this->dao->deleteAllForReport($report->getId());
+        $this->dao->deleteAllForReport((int) $report->getId());
     }
 }
