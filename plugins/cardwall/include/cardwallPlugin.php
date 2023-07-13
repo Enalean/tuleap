@@ -126,17 +126,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $project_id  = (int) $event->getProject()->getID();
         $xml_content = $event->getXmlElement();
 
-        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
-            $event->getUser(),
-            $project_id
-        );
-
-        $this->getAgileDashboardExporter()->exportFull(
-            $event->getProject(),
-            $xml_content,
-            $plannings
-        );
-
         $this->getCardwallXmlExporter($project_id)->export($xml_content);
     }
 
@@ -145,17 +134,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $project_id  = (int) $event->getProject()->getID();
         $xml_content = $event->getXmlElement();
-
-        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
-            $event->getUser(),
-            $project_id
-        );
-
-        $this->getAgileDashboardExporter()->export(
-            $event->getProject(),
-            $xml_content,
-            $plannings
-        );
 
         $this->getCardwallXmlExporter($project_id)->export($xml_content);
     }

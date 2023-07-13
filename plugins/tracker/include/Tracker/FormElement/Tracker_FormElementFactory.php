@@ -497,8 +497,11 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     {
         $all = [];
         foreach ($this->getDao()->searchByParentId($parent_id) as $row) {
-            $form_element_id       = $row['id'];
-            $all[$form_element_id] = $this->getCachedInstanceFromRow($row);
+            $form_element_id = $row['id'];
+            $form_element    = $this->getCachedInstanceFromRow($row);
+            if ($form_element) {
+                $all[$form_element_id] = $form_element;
+            }
         }
         return $all;
     }
