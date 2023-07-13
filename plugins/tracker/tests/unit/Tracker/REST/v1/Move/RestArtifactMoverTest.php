@@ -86,6 +86,8 @@ final class RestArtifactMoverTest extends TestCase
 
     public function testItMoveArtifactBasedOnSemanticsModeWithoutFeedback(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $source_tracker = TrackerTestBuilder::aTracker()->build();
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
@@ -99,6 +101,8 @@ final class RestArtifactMoverTest extends TestCase
 
     public function testItMoveArtifactBasedOnSemanticsModeWithFeedback(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $source_tracker = TrackerTestBuilder::aTracker()->build();
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
@@ -112,8 +116,6 @@ final class RestArtifactMoverTest extends TestCase
 
     public function testItMovesArtifactBasedOnDuckTypingModeWithoutFeedback(): void
     {
-        \ForgeConfig::set("feature_flag_enable_complete_move_artifact", "1");
-
         $source_tracker = TrackerTestBuilder::aTracker()->build();
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
@@ -127,8 +129,6 @@ final class RestArtifactMoverTest extends TestCase
 
     public function testItMovesArtifactBasedOnDuckTypingModeWithFeedback(): void
     {
-        \ForgeConfig::set("feature_flag_enable_complete_move_artifact", "1");
-
         $source_tracker = TrackerTestBuilder::aTracker()->build();
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
@@ -142,8 +142,6 @@ final class RestArtifactMoverTest extends TestCase
 
     public function testItThrowsWhenNoFieldsCanBeMoved(): void
     {
-        \ForgeConfig::set("feature_flag_enable_complete_move_artifact", "1");
-
         $source_tracker = TrackerTestBuilder::aTracker()->build();
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();

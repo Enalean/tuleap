@@ -30,7 +30,7 @@ use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 final class DryRunMover implements MoveDryRun
 {
@@ -50,7 +50,7 @@ final class DryRunMover implements MoveDryRun
         Artifact $artifact,
         PFUser $user,
     ): ArtifactPatchResponseRepresentation {
-        if (MoveArtifactCompleteFeatureFlag::isEnabled()) {
+        if (! MoveArtifactSemanticFeatureFlag::isEnabled()) {
             return ArtifactPatchResponseRepresentation::fromDuckTypedCollection(
                 $this->collect_dry_run_typing_field->collect($source_tracker, $destination_tracker, $artifact, $user)
             );

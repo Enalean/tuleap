@@ -58,8 +58,6 @@ final class BeforeMoveCheckerTest extends TestCase
 
     public function testItDoesNotThrowIfEverythingIsOK(): void
     {
-        \ForgeConfig::set("feature_flag_enable_complete_move_artifact", "1");
-
         $source_tracker = $this->getTrackerUserIsAdmin();
         $artifact       = $this->createStub(Artifact::class);
         $artifact->method('getTracker')->willReturn($source_tracker);
@@ -117,6 +115,8 @@ final class BeforeMoveCheckerTest extends TestCase
 
     public function testIThrowsWhenArtifactLinksAreUsedInSemanticMoveMode(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $source_tracker = $this->getTrackerUserIsAdmin();
         $source_tracker->method("getId")->willReturn(1);
         $artifact = $this->createStub(Artifact::class);
@@ -151,6 +151,8 @@ final class BeforeMoveCheckerTest extends TestCase
 
     public function testIThrowsWhenAnExternalPluginForbidTheMove(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $source_tracker = $this->getTrackerUserIsAdmin();
         $artifact       = $this->createStub(Artifact::class);
         $artifact->method('getTracker')->willReturn($source_tracker);

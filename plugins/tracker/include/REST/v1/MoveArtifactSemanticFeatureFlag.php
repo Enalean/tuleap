@@ -27,10 +27,10 @@ use Tuleap\Config\FeatureFlagConfigKey;
 /**
  * @psalm-immutable
  */
-final class MoveArtifactCompleteFeatureFlag
+final class MoveArtifactSemanticFeatureFlag
 {
-    #[FeatureFlagConfigKey("Feature flag to enable the 'complete move artifact' feature.")]
-    public const FEATURE_FLAG_KEY = 'enable_complete_move_artifact';
+    #[FeatureFlagConfigKey("Feature flag to rollback the move feature to perform a move based on semantic.")]
+    public const FEATURE_FLAG_KEY = 'rollback_to_semantic_move_artifact';
 
     public static function isEnabled(): bool
     {

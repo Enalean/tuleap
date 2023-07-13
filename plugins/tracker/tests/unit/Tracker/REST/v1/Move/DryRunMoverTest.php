@@ -31,7 +31,6 @@ use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalFieldRepresentation;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -58,6 +57,8 @@ final class DryRunMoverTest extends TestCase
 
     public function testItDoesNotPerformTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $migrated_fields           = [TrackerFormElementStringFieldBuilder::aStringField(102)->withName("title")->build()];
         $not_migrated_fields       = [TrackerFormElementStringFieldBuilder::aStringField(103)->withName("summary")->build()];
         $partially_migrated_fields = [];
@@ -85,8 +86,6 @@ final class DryRunMoverTest extends TestCase
 
     public function testItPerformsTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
     {
-        \ForgeConfig::set("feature_flag_" . MoveArtifactCompleteFeatureFlag::FEATURE_FLAG_KEY, "1");
-
         $source_title_field = TrackerFormElementStringFieldBuilder::aStringField(102)->withName("title")->build();
         $target_title_field = TrackerFormElementStringFieldBuilder::aStringField(202)->withName("title")->build();
 
