@@ -5386,6 +5386,9 @@ msgstr "commit(s) correspondant(s)"
 msgid "or"
 msgstr "ou"
 
+msgid "or login with"
+msgstr "ou connectez-vous avec"
+
 #, php-format
 msgid "parameter \"query\" syntax error: \"%s\" property not found"
 msgstr ""

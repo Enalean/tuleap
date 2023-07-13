@@ -79,12 +79,15 @@ use Tuleap\OpenIDConnectClient\UserAccount\UnlinkController;
 use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\Register\AfterUserRegistrationEvent;
 use Tuleap\User\Account\Register\BeforeUserRegistrationEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
+use Tuleap\User\AdditionalConnector;
+use Tuleap\User\AdditionalConnectorsCollector;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserNameNormalizer;
 
@@ -106,7 +109,6 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 
         $this->setScope(self::SCOPE_SYSTEM);
 
-        $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
         $this->addHook(BeforeUserRegistrationEvent::NAME);
         $this->addHook(AfterUserRegistrationEvent::NAME);
         $this->addHook('anonymous_access_to_script_allowed');
@@ -140,7 +142,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 
     public function cssfile()
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('fp-style.css') . '" />';
         }
     }
@@ -251,19 +253,20 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function login_additional_connector(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function additionalConnectorsCollector(AdditionalConnectorsCollector $collector): void
     {
-        $provider_manager                  = $this->getProviderManager();
-        $login_connector_presenter_builder = new ConnectorPresenterBuilder(
-            $provider_manager,
-            new Login\LoginURLGenerator($this->getPluginPath())
-        );
-        $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
-            $params['return_to']
-        );
+        $provider_manager    = $this->getProviderManager();
+        $login_url_generator = new Login\LoginURLGenerator($this->getPluginPath());
 
-        $renderer                        = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
-        $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
+        foreach ($provider_manager->getProvidersUsableToLogIn() as $provider) {
+            $collector->addConnector(new AdditionalConnector(
+                $provider->getName(),
+                $login_url_generator->getLoginURL($provider, $collector->return_to),
+                $provider->getIcon(),
+                $provider->getColor()
+            ));
+        }
     }
 
     public function beforeUserRegistrationEvent(BeforeUserRegistrationEvent $event): void

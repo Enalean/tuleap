@@ -1,0 +1,15 @@
+{{# hasConnector }}
+    <div class="additional-connectors">
+        <span class="additional-connectors-or">
+            <span>{{# gettext }}or login with{{/ gettext }}</span>
+        </span>
+
+        <div class="additional-connectors-list">
+            {{# connectors }}
+                <a href="{{ link }}"
+                   class="btn tlp-button-primary tlp-button-large {{# color }}btn-primary {{ color }}{{/ color }} colored-button"
+                >{{# icon }}<i aria-hidden="true" class="fa fa-{{ icon }} tlp-button-icon"></i>{{/ icon }}{{ label }}</a>
+            {{/ connectors }}
+        </div>
+    </div>
+{{/ hasConnector }}

@@ -23,33 +23,32 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginPresenterBuilder
 {
+    public function __construct(
+        private readonly EventManager $event_manager,
+    ) {
+    }
+
     /** @return User_LoginPresenter */
     public function build($return_to, $printer_version, $form_loginname, CSRFSynchronizerToken $login_csrf, string $prompt_param)
     {
-        $additional_connectors = '';
-        EventManager::instance()->processEvent(
-            Event::LOGIN_ADDITIONAL_CONNECTOR,
-            [
-                'return_to'            => $return_to,
-                'additional_connector' => &$additional_connectors,
-            ]
-        );
+        $additional_connectors = $this->event_manager->dispatch(new Tuleap\User\AdditionalConnectorsCollector($return_to));
+        assert($additional_connectors instanceof Tuleap\User\AdditionalConnectorsCollector);
 
-        $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
+        $registration_guard = $this->event_manager->dispatch(new RegistrationGuardEvent());
 
         $presenter = new User_LoginPresenter(
             $return_to,
             $printer_version,
             $form_loginname,
-            $additional_connectors,
             $login_csrf,
             $prompt_param,
+            $additional_connectors,
             $registration_guard->isRegistrationPossible(),
         );
 
         $authoritative = false;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             'login_presenter',
             [
                 'presenter'     => &$presenter,

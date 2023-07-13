@@ -296,6 +296,7 @@ const theme_entry_points = {
         "./node_modules/@tuleap/burningparrot-theme/css/account-registration/account-registration.scss",
     "BurningParrot/burning-parrot":
         "./node_modules/@tuleap/burningparrot-theme/css/burning-parrot.scss",
+    "homepage-style": "./node_modules/@tuleap/burningparrot-theme/css/homepage/homepage.scss",
 };
 
 const project_background_themes = [
