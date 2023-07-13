@@ -16,17 +16,6 @@
         <div class="tlp-dropdown-menu" role="menu">
             <span class="tlp-dropdown-menu-title"
                   role="menuitem"
-                  ng-if="backlog.details.accepted_types.parent_trackers.length > 0"
-                  translate>Parents</span>
-            <a href=""
-               ng-repeat="accepted_type in backlog.details.accepted_types.parent_trackers"
-               ng-click="backlog.showAddBacklogItemParentModal(accepted_type)"
-               class="tlp-dropdown-menu-item"
-               role="menuitem"
-            ><i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span></a>
-
-            <span class="tlp-dropdown-menu-title"
-                  role="menuitem"
                   ng-if="backlog.details.accepted_types.content.length > 0"
                   translate>Backlog Item</span>
             <a href=""
