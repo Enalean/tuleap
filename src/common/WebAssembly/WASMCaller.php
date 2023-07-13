@@ -33,5 +33,5 @@ interface WASMCaller
     /**
      * @psalm-return Option<\Tuleap\NeverThrow\Ok<string>|\Tuleap\NeverThrow\Err<Fault>>
      */
-    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option;
+    public function call(string $wasm_path, string $module_input_json, string $read_only_dir_path, string $read_only_dir_guest_path): Option;
 }

@@ -34,7 +34,7 @@ final class PreReceiveHookData
     /**
      * @param array<string,PreReceiveHookUpdatedReference> $updated_references
      */
-    private function __construct(public readonly array $updated_references, public readonly string $pre_opened_dir)
+    private function __construct(public readonly array $updated_references, public readonly string $repository_path)
     {
     }
 

@@ -1,4 +1,3 @@
-use crate::Stats;
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -20,9 +19,34 @@ use crate::Stats;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
+pub struct ExecConfig {
+    pub wasm_module_path: String,
+    pub read_only_dir: Option<MountPoint>,
+    pub limits: Limitations,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct MountPoint {
+    pub host_path: String,
+    pub guest_path: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Limitations {
+    pub max_exec_time_in_ms: u64,
+    pub max_memory_size_in_bytes: usize,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct SuccessResponseJson {
     pub data: String,
     pub stats: Stats,
+}
+
+#[derive(Serialize, Debug, Deserialize)]
+pub struct Stats {
+    pub exec_time_as_seconds: f64,
+    pub memory_in_bytes: usize,
 }
 
 #[derive(Serialize)]

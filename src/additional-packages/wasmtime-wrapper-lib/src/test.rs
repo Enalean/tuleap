@@ -9,29 +9,24 @@ mod tests {
     use crate::callWasmModule;
     use crate::wire::{SuccessResponseJson, UserErrorJson};
 
-    const MAX_EXEC_TIME: u64 = 80;
-    const MAX_MEMORY_SIZE: usize = 4194304; /* 4 Mo */
-
     #[test]
     fn expected_output_normal() {
-        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "Hello world !";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "Hello world !";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -44,25 +39,26 @@ mod tests {
 
     #[test]
     fn can_read_from_preopened_dir() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm",
+            "read_only_dir": {
+                "host_path": "./test-wasm-modules/TryToReadWriteHere",
+                "guest_path": "/git-dir-0000/"
+            },
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "/git-dir-0000/";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
         let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
@@ -78,55 +74,57 @@ mod tests {
 
     #[test]
     fn readonlydirectory_argument_set_but_readonlydirectoryguest_empty_error() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm",
+            "read_only_dir": {
+                "host_path": "./test-wasm-modules/TryToReadWriteHere",
+                "guest_path": ""
+            },
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"internal_error":"wasmtime-wrapper-lib was called with a non empty 'read_only_dir' but the 'read_only_dir_guest' parameter is empty"}"#,
+            r#"{"internal_error":"wasmtime-wrapper-lib was called with a non empty 'host_path' but the 'guest_path' parameter is empty"}"#,
             str_out
         );
     }
 
     #[test]
     fn write_to_preopened_dir_fails() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/write-to-preopened-dir.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/write-to-preopened-dir.wasm",
+            "read_only_dir": {
+                "host_path": "./test-wasm-modules/TryToReadWriteHere",
+                "guest_path": "/git-dir-7331/"
+            },
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "./test-wasm-modules/TryToReadWriteHere";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "/git-dir-7331/";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
         println!("{}", str_out);
@@ -141,115 +139,100 @@ mod tests {
     }
 
     #[test]
-    fn filename_ptr_is_null_error() {
-        let wasm_c_world = ptr::null();
+    fn config_json_ptr_is_null_error() {
+        let config_json_c_world = ptr::null();
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"internal_error":"filename_ptr is null in callWasmModule"}"#,
+            r#"{"internal_error":"config_json_ptr is null in callWasmModule"}"#,
             str_out
         );
     }
 
     #[test]
-    fn json_ptr_is_null_error() {
-        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+    fn module_input_json_ptr_is_null_error() {
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json_c_world = ptr::null();
+        let module_input_json_c_world: *const c_char = ptr::null();
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"internal_error":"json_ptr is null in callWasmModule"}"#,
+            r#"{"internal_error":"module_input_json is null in callWasmModule"}"#,
             str_out
         );
     }
 
     #[test]
     fn module_not_found() {
-        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/do-not-exist.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/i-do-not-exist.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        assert_eq!(r#"{"internal_error":"failed to read input file"}"#, str_out);
+        assert_eq!(
+            r#"{"internal_error":"Failed to load the wasm module: failed to read input file"}"#,
+            str_out
+        );
     }
 
     #[test]
     fn module_exceeding_max_running_time_gets_killed() {
-        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         let json_out: UserErrorJson = serde_json::from_str(str_out).unwrap();
 
         assert_eq!(
-            format!(
-                "The module has exceeded the {} ms of allowed computation time",
-                MAX_EXEC_TIME
-            ),
+            "The module has exceeded the 80 ms of allowed computation time",
             json_out.error
         );
 
@@ -258,35 +241,29 @@ mod tests {
 
     #[test]
     fn wasm_module_allocate_too_much_memory() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-fail.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-fail.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         let json_out: UserErrorJson = serde_json::from_str(str_out).unwrap();
 
         assert_eq!(
-            format!(
-                "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
-                MAX_MEMORY_SIZE
-            ),
+            "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the 4194304 bytes of memory that it is allowed to use",
             json_out.error
         );
 
@@ -296,25 +273,22 @@ mod tests {
 
     #[test]
     fn wasm_module_allocate_okay_amount_of_memory() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-success.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+        let config_json = r#"{
+            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-success.wasm",
+            "limits": {
+                "max_exec_time_in_ms": 80,
+                "max_memory_size_in_bytes": 4194304
+            }
+        }"#;
+        let config_json_c_str = CString::new(config_json).unwrap();
+        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
 
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+        let module_input_json = "";
+        let module_input_json_c_str = CString::new(module_input_json).unwrap();
+        let module_input_json_c_world: *const c_char =
+            module_input_json_c_str.as_ptr() as *const c_char;
 
-        let read_only_directory = "";
-        let read_only_directory_c_str = CString::new(read_only_directory).unwrap();
-        let read_only_directory_c_world: *const c_char = read_only_directory_c_str.as_ptr() as *const c_char;
-
-        let read_only_directory_guest = "";
-        let read_only_directory_guest_c_str = CString::new(read_only_directory_guest).unwrap();
-        let read_only_directory_guest_c_world: *const c_char = read_only_directory_guest_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, read_only_directory_c_world, read_only_directory_guest_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
+        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 

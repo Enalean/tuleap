@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use anyhow::{anyhow, Result};
-use serde::{Deserialize, Serialize};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::Arc;
@@ -26,56 +25,63 @@ use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wasmtime_wasi::WasiCtx;
-use wire::{InternalErrorJson, SuccessResponseJson, UserErrorJson};
+use wire::{
+    ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
+    UserErrorJson,
+};
 
-mod wire;
 mod preview1;
+mod wire;
 
 /// # Safety
 ///
-/// This function must be called with valid pointers (filename_ptr, json_ptr and read_only_dir_path_ptr)
+/// This function must be called with valid pointers (config_json_ptr, module_input_json_ptr)
 #[no_mangle]
 pub unsafe extern "C" fn callWasmModule(
-    filename_ptr: *const c_char,
-    json_ptr: *const c_char,
-    read_only_dir_path_ptr: *const c_char,
-    read_only_dir_guest_path_ptr: *const c_char,
-    max_exec_time_in_ms: u64,
-    max_memory_size_in_bytes: usize,
+    config_json_ptr: *const c_char,
+    module_input_json_ptr: *const c_char,
 ) -> *mut c_char {
-    if filename_ptr.is_null() {
-        return internal_error("filename_ptr is null in callWasmModule".to_owned());
+    if config_json_ptr.is_null() {
+        return internal_error("config_json_ptr is null in callWasmModule".to_owned());
     }
-    if json_ptr.is_null() {
-        return internal_error("json_ptr is null in callWasmModule".to_owned());
+    if module_input_json_ptr.is_null() {
+        return internal_error("module_input_json is null in callWasmModule".to_owned());
     }
-    if read_only_dir_path_ptr.is_null() {
-        return internal_error("read_only_dir_path_ptr is null in callWasmModule".to_owned());
-    }
-    if read_only_dir_guest_path_ptr.is_null() {
-        return internal_error("read_only_dir_guest_path_ptr is null in callWasmModule".to_owned());
-    }
-    let filename = unsafe { CStr::from_ptr(filename_ptr).to_string_lossy().into_owned() };
-    let input = unsafe { CStr::from_ptr(json_ptr).to_string_lossy().into_owned() };
-    let read_only_dir_str = unsafe { CStr::from_ptr(read_only_dir_path_ptr).to_string_lossy().into_owned() };
-    let read_only_dir_guest_str = unsafe { CStr::from_ptr(read_only_dir_guest_path_ptr).to_string_lossy().into_owned() };
-    let limits = Limitations {
-        max_exec_time: max_exec_time_in_ms,
-        max_memory: max_memory_size_in_bytes,
+    let config_json_str = unsafe {
+        CStr::from_ptr(config_json_ptr)
+            .to_string_lossy()
+            .into_owned()
     };
-    match compile_and_exec(filename, input, read_only_dir_str, read_only_dir_guest_str, &limits) {
+    let config_json: ExecConfig =
+        serde_json::from_str(&config_json_str).expect("Failed to process config_json_str");
+    let module_input_json = unsafe {
+        CStr::from_ptr(module_input_json_ptr)
+            .to_string_lossy()
+            .into_owned()
+    };
+
+    if config_json.wasm_module_path.is_empty() {
+        return internal_error("The wasm_module_path provided in config_json is empty".to_owned());
+    }
+
+    match compile_and_exec(
+        config_json.wasm_module_path,
+        module_input_json,
+        &config_json.read_only_dir,
+        &config_json.limits,
+    ) {
         Ok(out_struct) => match out_struct.result {
             Ok(output_message) => success_response(output_message, out_struct.stats),
             Err(e) => {
                 return match e.downcast_ref::<Trap>() {
                         Some(&Trap::Interrupt) => user_error(format!(
                             "The module has exceeded the {} ms of allowed computation time",
-                            limits.max_exec_time
+                            config_json.limits.max_exec_time_in_ms
                         ),
                         out_struct.stats),
                         Some(&Trap::UnreachableCodeReached) => user_error(format!(
                             "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
-                            limits.max_memory
+                            config_json.limits.max_memory_size_in_bytes
                         ),
                         out_struct.stats),
                         _ => user_error(format!("{}", e.root_cause()), out_struct.stats),
@@ -131,35 +137,23 @@ struct StoreState {
     wasi: WasiCtx,
 }
 
-struct Limitations {
-    max_exec_time: u64,
-    max_memory: usize,
-}
-
-#[derive(Serialize, Debug, Deserialize)]
-pub struct Stats {
-    pub exec_time_as_seconds: f64,
-    pub memory_in_bytes: usize,
-}
-
 struct OutputAndStats {
     result: Result<String, Error>,
     stats: Stats,
 }
 
 fn compile_and_exec(
-    filename: String,
-    input: String,
-    read_only_dir: String,
-    read_only_dir_guest: String,
+    wasm_module_path: String,
+    module_input_json: String,
+    read_only_dir: &Option<MountPoint>,
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
-    let stdin = ReadPipe::from(input);
+    let stdin = ReadPipe::from(module_input_json);
     let stdout = WritePipe::new_in_memory();
 
     let my_state = StoreState {
         limits: StoreLimitsBuilder::new()
-            .memory_size(limits.max_memory)
+            .memory_size(limits.max_memory_size_in_bytes)
             .memories(1)
             .instances(1)
             .build(),
@@ -178,17 +172,21 @@ fn compile_and_exec(
     let mut store = Store::new(&engine, my_state);
     store.limiter(|state| &mut state.limits);
 
-    if ! read_only_dir.is_empty() {
-        let cap_std_dir =
-            cap_std::fs::Dir::open_ambient_dir(read_only_dir, cap_std::ambient_authority())?;
-        let dir_host =
-            Box::new(wasmtime_wasi::dir::Dir::from_cap_std(cap_std_dir));
+    if let Some(mountpoint) = read_only_dir {
+        let cap_std_dir = cap_std::fs::Dir::open_ambient_dir(
+            &mountpoint.host_path,
+            cap_std::ambient_authority(),
+        )?;
+        let dir_host = Box::new(wasmtime_wasi::dir::Dir::from_cap_std(cap_std_dir));
         let read_only_dir_host = Box::new(preview1::ReadOnlyDir(dir_host));
 
-        if ! read_only_dir_guest.is_empty() {
-            store.data_mut().wasi.push_preopened_dir(read_only_dir_host, read_only_dir_guest)?;
+        if !mountpoint.guest_path.is_empty() {
+            store
+                .data_mut()
+                .wasi
+                .push_preopened_dir(read_only_dir_host, &mountpoint.guest_path)?;
         } else {
-            return Err(anyhow!("wasmtime-wrapper-lib was called with a non empty 'read_only_dir' but the 'read_only_dir_guest' parameter is empty"))
+            return Err(anyhow!("wasmtime-wrapper-lib was called with a non empty 'host_path' but the 'guest_path' parameter is empty"));
         }
     }
 
@@ -197,13 +195,16 @@ fn compile_and_exec(
     store.epoch_deadline_trap();
     store.set_epoch_deadline(1);
 
-    let module = load_module(&engine, &filename)?;
+    let module = match load_module(&engine, &wasm_module_path) {
+        Ok(m) => m,
+        Err(e) => return Err(anyhow!("Failed to load the wasm module: {}", e)),
+    };
 
     let instance = linker
         .instantiate(&mut store, &module)
         .expect("Failed to instantiate imported instance");
 
-    let max_exec_time = limits.max_exec_time;
+    let max_exec_time = limits.max_exec_time_in_ms;
     std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_millis(max_exec_time));
         engine.increment_epoch();

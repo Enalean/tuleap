@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 // Ports of `ReadOnlyDir` and `ReadOnlyFile` to Preview 1 API.
 // Adapted from https://github.com/fermyon/spin/commit/1102b9b117258689343f44cd39fa33346561ebfb
-
 use std::{any::Any, path::PathBuf};
 use wasi_common::{
     dir::{OpenResult, ReaddirCursor, ReaddirEntity},
