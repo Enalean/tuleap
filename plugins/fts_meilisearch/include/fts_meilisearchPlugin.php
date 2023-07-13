@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\FullTextSearchCommon\CLI\IdentifyAllItemsToIndexCommand;
 use Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
+use Tuleap\FullTextSearchMeilisearch\CLI\PrepareStartMeilisearchServerCommand;
+use Tuleap\FullTextSearchMeilisearch\Index\Asynchronous\ProcessPendingItemsToIndexTask;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandler;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandlerFactory;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchMetadataDAO;
+use Tuleap\FullTextSearchMeilisearch\Index\ProgressQueueIndexItemCategoryLogger;
 use Tuleap\FullTextSearchMeilisearch\Server\GenerateServerMasterKey;
 use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsController;
 use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsPresenter;
@@ -36,7 +41,10 @@ use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchSaveAdminS
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
 use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Search\IndexAllPendingItemsEvent;
+use Tuleap\Search\ProgressQueueIndexItemCategory;
 
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -70,9 +78,49 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectCLICommands(CLICommandsCollector $collector): void
+    {
+        parent::collectCLICommands($collector);
+        $collector->addCommand(
+            PrepareStartMeilisearchServerCommand::NAME,
+            function (): PrepareStartMeilisearchServerCommand {
+                return new PrepareStartMeilisearchServerCommand(
+                    EventManager::instance(),
+                    new \Tuleap\Queue\EnqueueTask(),
+                );
+            }
+        );
+        $collector->addCommand(
+            IdentifyAllItemsToIndexCommand::NAME,
+            function (): IdentifyAllItemsToIndexCommand {
+                return new IdentifyAllItemsToIndexCommand(EventManager::instance());
+            }
+        );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
     {
         (new GenerateServerMasterKey(new LocalMeilisearchServer(), $event->logger))->generateMasterKey();
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function workerEvent(WorkerEvent $event): void
+    {
+        parent::workerEvent($event);
+        ProcessPendingItemsToIndexTask::runIndexationProcessIfNeeded(
+            $event,
+            function () use ($event): void {
+                EventManager::instance()->dispatch(
+                    new IndexAllPendingItemsEvent(
+                        $this->getBatchQueue(),
+                        function (string $item_category) use ($event): ProgressQueueIndexItemCategory {
+                            return new ProgressQueueIndexItemCategoryLogger($event->getLogger(), $item_category);
+                        }
+                    )
+                );
+            }
+        );
     }
 
     public function getConfigKeys(ConfigClassProvider $event): void

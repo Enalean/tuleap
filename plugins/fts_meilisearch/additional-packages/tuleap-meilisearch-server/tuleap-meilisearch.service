@@ -10,6 +10,7 @@ User=codendiadm
 Group=codendiadm
 WorkingDirectory=/var/lib/tuleap/fts_meilisearch_server
 EnvironmentFile=/var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env
+ExecStartPre=/usr/bin/tuleap full-text-search-meilisearch:prepare-start-meilisearch-server
 ExecStart=/usr/bin/tuleap-meilisearch --env=production
 Restart=on-failure
 PrivateTmp=yes
