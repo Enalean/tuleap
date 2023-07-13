@@ -480,7 +480,10 @@ describe("PlannerView", () => {
                 651,
                 expect.any(Function)
             );
-            expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
+            expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(
+                8541,
+                undefined
+            );
         });
 
         it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function () {

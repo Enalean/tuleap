@@ -137,6 +137,7 @@ function ArtifactModalController(
         tracker: modal_model.tracker,
         values: modal_model.values,
         submit_disabling_reason: Option.nothing(),
+        did_artifact_links_change: false,
         new_followup_comment: {
             body: "",
             format: modal_model.text_fields_format,
@@ -271,6 +272,7 @@ function ArtifactModalController(
         showHiddenFieldsets,
         confirm_action_to_edit,
         getButtonText,
+        linkFieldChanged,
     });
 
     function getButtonText() {
@@ -401,7 +403,9 @@ function ArtifactModalController(
             })
             .then(function (new_artifact) {
                 modal_instance.tlp_modal.hide();
-                return displayItemCallback(new_artifact.id, { did_artifact_links_change: false });
+                return displayItemCallback(new_artifact.id, {
+                    did_artifact_links_change: self.did_artifact_links_change,
+                });
             })
             .catch(async (e) => {
                 if (is_error_already_handled || hasError()) {
@@ -452,6 +456,10 @@ function ArtifactModalController(
 
     function formatColor(color) {
         return color.split("_").join("-");
+    }
+
+    function linkFieldChanged() {
+        self.did_artifact_links_change = true;
     }
 
     function setFieldValueForCustomElement(event) {

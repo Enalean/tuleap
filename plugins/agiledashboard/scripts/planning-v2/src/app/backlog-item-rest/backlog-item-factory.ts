@@ -39,6 +39,7 @@ export interface BacklogItemRepresentation {
     };
     readonly status: Status;
     readonly artifact: ArtifactRepresentation;
+    readonly short_type: string;
 }
 
 interface AcceptedTypes {

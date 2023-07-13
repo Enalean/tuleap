@@ -19,12 +19,20 @@
 
 import moment from "moment";
 import { setAccessibilityMode } from "./user-accessibility-mode.js";
+import { setSuccess } from "./success-state.js";
+import { SESSION_STORAGE_KEY } from "./session";
 
 export default MainController;
 
-MainController.$inject = ["$element", "SharedPropertiesService", "amMoment", "gettextCatalog"];
+MainController.$inject = [
+    "$element",
+    "$window",
+    "SharedPropertiesService",
+    "amMoment",
+    "gettextCatalog",
+];
 
-function MainController($element, SharedPropertiesService, amMoment, gettextCatalog) {
+function MainController($element, $window, SharedPropertiesService, amMoment, gettextCatalog) {
     init();
 
     function init() {
@@ -50,6 +58,12 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
 
         const language = planning_init_data.language;
         initLocale(language);
+
+        const success_feedback = $window.sessionStorage.getItem(SESSION_STORAGE_KEY);
+        if (success_feedback !== null) {
+            setSuccess(success_feedback);
+            $window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        }
     }
 
     function initLocale(lang) {
