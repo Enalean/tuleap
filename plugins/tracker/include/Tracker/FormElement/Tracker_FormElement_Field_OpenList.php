@@ -617,7 +617,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         if ($openvalues || $bindvalues) {
             $a         = 'A_' . $this->id;
             $b         = 'B_' . $this->id;
-            $statement = new ParametrizedSQLFragment('1', []);
+            $statement = new ParametrizedSQLFragment('0', []);
             if ($openvalues) {
                 $in        = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $openvalues);
                 $statement = new ParametrizedSQLFragment("$b.openvalue_id IN ($in)", $in->values());
@@ -632,7 +632,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     ]
                 );
             }
-            if ($statement->sql === '1') {
+            if ($statement->sql === '0') {
                 return Option::nothing(ParametrizedFromWhere::class);
             }
 
