@@ -262,10 +262,10 @@ final class KanbanPlugin extends Plugin
     #[ListeningToEventClass]
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
-        $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function (FastRoute\RouteCollector $r) {
-            $r->post('/mercure_realtime_token/{kanban_id:\d+}', $this->getRouteHandler('routeGetJWT'));
+        $event->getRouteCollector()->addGroup('/kanban', function (FastRoute\RouteCollector $r) {
+            $r->get('/{id:[0-9]+}', $this->getRouteHandler('routeShowKanban'));
+            $r->post('/{kanban_id:\d+}/mercure-realtime-token', $this->getRouteHandler('routeGetJWT'));
         });
-        $event->getRouteCollector()->get('/kanban/{id:[0-9]+}', $this->getRouteHandler('routeShowKanban'));
     }
 
     public function routeShowKanban(): \Tuleap\Request\DispatchableWithRequest

@@ -65,8 +65,8 @@ function MercureService(
     }
     function getToken(id) {
         return $q.when(
-            post(encodeURI("/plugins/agiledashboard/mercure_realtime_token/" + id)).then(
-                (response) => response.text()
+            post(encodeURI(`/kanban/${id}/mercure-realtime-token`)).then((response) =>
+                response.text()
             )
         );
     }
