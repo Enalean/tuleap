@@ -25,11 +25,15 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Action\CollectDryRunTypingField;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
+use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\AddPostMoveArtifactFeedbackStub;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
@@ -46,6 +50,7 @@ final class RestArtifactMoverTest extends TestCase
     private MoveRestArtifact $artifact_move;
     private FeedbackFieldCollectorInterface $feedback_collector;
     private MoveArtifact $move_action;
+    private CollectDryRunTypingField $dry_run_collector;
 
     protected function setUp(): void
     {
@@ -53,8 +58,22 @@ final class RestArtifactMoverTest extends TestCase
         $this->post_move_action   = AddPostMoveArtifactFeedbackStub::build();
         $this->mega_mover         = MoveArtifactByDuckTypingStub::withReturnRandomLimit();
         $this->feedback_collector = FeedbackFieldCollectorInterfaceStub::withFields([], [], []);
-        $dry_run_collector        =
-            CollectDryRunTypingFieldStub::withCollectionOfField(DuckTypedMoveFieldCollection::fromFields([], [], [], []));
+
+        $source_title_field      = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("title")->build();
+        $destination_title_field = TrackerFormElementStringFieldBuilder::aStringField(2)->withName("title")->build();
+        $dry_run_collector       = CollectDryRunTypingFieldStub::withCollectionOfField(
+            DuckTypedMoveFieldCollection::fromFields(
+                [$source_title_field],
+                [],
+                [],
+                [
+                    FieldMapping::fromFields(
+                        $source_title_field,
+                        $destination_title_field
+                    ),
+                ]
+            )
+        );
 
         $this->artifact_move = new RestArtifactMover(
             $this->move_action,
@@ -115,6 +134,34 @@ final class RestArtifactMoverTest extends TestCase
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
         $user           = UserTestBuilder::anActiveUser()->build();
         $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true);
+
+        self::assertSame(0, $this->move_action->getCallCount());
+        self::assertSame(1, $this->post_move_action->getCallCount());
+        self::assertSame(1, $this->mega_mover->getCallCount());
+    }
+
+    public function testItThrowsWhenNoFieldsCanBeMoved(): void
+    {
+        \ForgeConfig::set("feature_flag_enable_complete_move_artifact", "1");
+
+        $source_tracker = TrackerTestBuilder::aTracker()->build();
+        $target_tracker = TrackerTestBuilder::aTracker()->build();
+        $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
+        $user           = UserTestBuilder::anActiveUser()->build();
+
+        $this->expectException(MoveArtifactNoValuesToProcessException::class);
+
+        $artifact_move = new RestArtifactMover(
+            $this->move_action,
+            $this->post_move_action,
+            $this->mega_mover,
+            $this->feedback_collector,
+            CollectDryRunTypingFieldStub::withCollectionOfField(
+                DuckTypedMoveFieldCollection::fromFields([], [], [], [])
+            )
+        );
+
+        $artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true);
 
         self::assertSame(0, $this->move_action->getCallCount());
         self::assertSame(1, $this->post_move_action->getCallCount());

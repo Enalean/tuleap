@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedExc
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation;
@@ -89,7 +90,11 @@ final class MovePatchAction
             throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
             throw new RestException(500, $exception->getMessage());
-        } catch (MoveArtifactSemanticsException | MoveArtifactTargetProjectNotActiveException $exception) {
+        } catch (
+            MoveArtifactSemanticsException |
+            MoveArtifactTargetProjectNotActiveException |
+            MoveArtifactNoValuesToProcessException $exception
+        ) {
             throw new RestException(400, $exception->getMessage());
         } finally {
             $this->header_for_move_sender->sendHeader($limit, $remaining_deletions ?? 0);

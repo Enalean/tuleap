@@ -63,3 +63,9 @@ msgstr ""
 
 msgid "Show more"
 msgstr ""
+
+msgid ""
+"This artifact cannot be moved to the selected tracker because none of its "
+"fields matches\n"
+"        with it."
+msgstr ""

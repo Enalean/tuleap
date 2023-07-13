@@ -63,7 +63,7 @@
                         type="button"
                         class="btn btn-primary"
                         v-on:click="moveArtifact()"
-                        v-bind:disabled="is_processing_move"
+                        v-bind:disabled="is_processing_move || !is_move_possible"
                         v-show="has_processed_dry_run"
                         data-test="confirm-move-artifact"
                     >
@@ -99,6 +99,7 @@ export default {
             "has_processed_dry_run",
             "selected_tracker",
             "is_processing_move",
+            "is_move_possible",
         ]),
         ...mapGetters(["has_error"]),
         has_no_selected_tracker() {

@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
@@ -52,6 +53,7 @@ final class RestArtifactMover implements MoveRestArtifact
      * @throws DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactSemanticsException
      * @throws ArtifactsDeletionLimitReachedException
+     * @throws MoveArtifactNoValuesToProcessException
      */
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
@@ -76,9 +78,16 @@ final class RestArtifactMover implements MoveRestArtifact
         return $remaining_deletions;
     }
 
+    /**
+     * @throws MoveArtifactNoValuesToProcessException
+     */
     private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
         $field_collection = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user);
+
+        if (empty($field_collection->mapping_fields)) {
+            throw new MoveArtifactNoValuesToProcessException();
+        }
 
         $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);

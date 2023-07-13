@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
+use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 
@@ -38,6 +39,7 @@ interface MoveRestArtifact
      * @throws DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactSemanticsException
      * @throws ArtifactsDeletionLimitReachedException
+     * @throws MoveArtifactNoValuesToProcessException
      */
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int;
 }

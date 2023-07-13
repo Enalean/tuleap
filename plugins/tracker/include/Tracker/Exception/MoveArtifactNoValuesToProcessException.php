@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: "",
-    selected_tracker: {
-        tracker_id: null,
-    },
-    selected_project_id: null,
-    dry_run_fields: {
-        fields_not_migrated: [],
-        fields_partially_migrated: [],
-        fields_migrated: [],
-    },
-    has_processed_dry_run: false,
-    is_processing_move: false,
-    is_move_possible: true,
-};
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Exception;
+
+final class MoveArtifactNoValuesToProcessException extends \Exception
+{
+    public function __construct()
+    {
+        parent::__construct(
+            dgettext('tuleap-tracker', 'No fields in the artifact can be moved in the destination tracker.'),
+            400
+        );
+    }
+}

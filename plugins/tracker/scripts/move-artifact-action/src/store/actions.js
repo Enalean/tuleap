@@ -58,10 +58,15 @@ export async function moveDryRun(context, artifact_id) {
         );
         const result = await response.json();
 
-        const { fields_partially_migrated, fields_not_migrated } = result.dry_run.fields;
+        const { fields_migrated, fields_partially_migrated, fields_not_migrated } =
+            result.dry_run.fields;
 
         if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
             return await move(context, artifact_id);
+        }
+
+        if (fields_migrated.length === 0 && fields_partially_migrated.length === 0) {
+            context.commit("blockArtifactMove");
         }
 
         context.commit("hasProcessedDryRun", result.dry_run.fields);

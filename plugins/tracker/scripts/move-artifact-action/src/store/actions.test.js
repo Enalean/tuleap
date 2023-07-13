@@ -163,6 +163,33 @@ describe("Store actions", () => {
         it("When I process move in Dry run, if at least one field has en error, I store dry run has been processed in store", async () => {
             const fields = {
                 fields_not_migrated: ["not_migrated"],
+                fields_partially_migrated: ["a field"],
+                fields_migrated: ["another field"],
+            };
+            const return_json = {
+                dry_run: {
+                    fields,
+                },
+            };
+
+            mockFetchSuccess(moveDryRunArtifact, { return_json });
+
+            const artifact_id = 101;
+            const tracker_id = 5;
+            context.state.selected_tracker = {
+                tracker_id,
+            };
+
+            await moveDryRun(context, artifact_id);
+            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
+            expect(context.commit).toHaveBeenCalledWith("hasProcessedDryRun", fields);
+            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
+            expect(redirectTo).not.toHaveBeenCalled();
+        });
+
+        it("Given that there are no fields can be moved or partially moved, then the move should be blocked", async () => {
+            const fields = {
+                fields_not_migrated: ["not_migrated"],
                 fields_partially_migrated: [],
                 fields_migrated: [],
             };
@@ -184,6 +211,7 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
             expect(context.commit).toHaveBeenCalledWith("hasProcessedDryRun", fields);
             expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
+            expect(context.commit).toHaveBeenCalledWith("blockArtifactMove");
             expect(redirectTo).not.toHaveBeenCalled();
         });
 
