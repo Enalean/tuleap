@@ -448,59 +448,6 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("showAddBacklogItemParentModal() -", () => {
-        let item_type;
-        beforeEach(() => {
-            item_type = { id: 50 };
-        });
-
-        it(`Given an event and an item_type,
-            when I show the new artifact modal,
-            then the NewTuleapArtifactModalService will be called with a callback`, () => {
-            BacklogController.showAddBacklogItemParentModal(item_type);
-
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
-                user_id,
-                50,
-                null,
-                expect.any(Function),
-                []
-            );
-        });
-
-        describe("callback -", () => {
-            beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.mockImplementation(
-                    (user_id, a, b, callback) => callback(5202)
-                );
-            });
-
-            describe("Given an item id and given that we were in a project's context,", () => {
-                it("when the new artifact modal calls its callback, then the created artifact will not be added to milestone content", () => {
-                    jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(false);
-
-                    BacklogController.showAddBacklogItemParentModal(item_type);
-                    $scope.$apply();
-
-                    expect(MilestoneService.addToContent).not.toHaveBeenCalled();
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                });
-            });
-
-            describe("Given an item id and given that we were in a milestone's context,", () => {
-                it("when the new artifact modal calls its callback, then the created artifact will be added to milestone content", () => {
-                    jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(true);
-
-                    BacklogController.showAddBacklogItemParentModal(item_type);
-                    $scope.$apply();
-
-                    expect(MilestoneService.addToContent).toHaveBeenCalled();
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                });
-            });
-        });
-    });
-
     describe("showAddBacklogItemModal() -", () => {
         let event, item_type;
         beforeEach(() => {
@@ -1147,46 +1094,35 @@ describe("BacklogController -", () => {
     });
 
     describe("soloButtonCanBeDisplayed()", () => {
-        it("button is not displayed if user cannot move cards", function () {
+        it("button is not displayed if user cannot move cards", () => {
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(false);
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }],
-                    parent_trackers: [],
                 },
             };
 
-            var result = BacklogController.soloButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
+            expect(BacklogController.soloButtonCanBeDisplayed()).toBe(false);
         });
 
-        it("button is not displayed if there are multiple trackers", function () {
+        it("button is not displayed if there are multiple trackers", () => {
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }, { id: 105 }],
-                    parent_trackers: [],
                 },
             };
 
-            var result = BacklogController.soloButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
+            expect(BacklogController.soloButtonCanBeDisplayed()).toBe(false);
         });
 
-        it("button is not displayed if there is at least one parent tracker", function () {
+        it("button is not displayed if no tracker can be planned", () => {
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
             BacklogController.details = {
-                accepted_types: {
-                    content: [],
-                    parent_trackers: [{ id: 104 }],
-                },
+                accepted_types: { content: [] },
             };
 
-            var result = BacklogController.soloButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
+            expect(BacklogController.soloButtonCanBeDisplayed()).toBe(false);
         });
 
         it("button is displayed if there is only one element, shared property is set to true and user can move cards", function () {
@@ -1194,57 +1130,44 @@ describe("BacklogController -", () => {
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }],
-                    parent_trackers: [],
                 },
             };
 
-            var result = BacklogController.soloButtonCanBeDisplayed();
-
-            expect(result).toBe(true);
+            expect(BacklogController.soloButtonCanBeDisplayed()).toBe(true);
         });
     });
 
     describe("addItemButtonCanBeDisplayed()", () => {
-        it("button is not displayed if user cannot move cards", function () {
+        it("button is not displayed if user cannot move cards", () => {
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }, { id: 105 }],
-                    parent_trackers: [{ id: 101 }],
                 },
                 user_can_move_cards: false,
             };
 
-            var result = BacklogController.addItemButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
+            expect(BacklogController.addItemButtonCanBeDisplayed()).toBe(false);
         });
 
-        it("button is not displayed if there is no tracker", function () {
+        it("button is not displayed if no tracker can be planned", () => {
             BacklogController.details = {
-                accepted_types: {
-                    content: [],
-                    parent_trackers: [],
-                },
+                accepted_types: { content: [] },
                 user_can_move_cards: true,
             };
 
-            var result = BacklogController.addItemButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
+            expect(BacklogController.addItemButtonCanBeDisplayed()).toBe(false);
         });
 
-        it("button is displayed if there are elements, shared property is set to true and user can move cards", function () {
+        it(`button is displayed if there are elements,
+            shared property is set to true and user can move cards`, () => {
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }, { id: 105 }],
-                    parent_trackers: [{ id: 101 }],
                 },
                 user_can_move_cards: true,
             };
 
-            var result = BacklogController.addItemButtonCanBeDisplayed();
-
-            expect(result).toBe(true);
+            expect(BacklogController.addItemButtonCanBeDisplayed()).toBe(true);
         });
     });
 });

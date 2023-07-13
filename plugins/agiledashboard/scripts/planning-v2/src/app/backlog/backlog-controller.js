@@ -19,9 +19,7 @@
 
 import angular from "angular";
 import { extend, keyBy, isEmpty } from "lodash-es";
-import { sprintf } from "sprintf-js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
-import { setSuccess } from "../success-state.js";
 
 export default BacklogController;
 
@@ -87,7 +85,6 @@ function BacklogController(
         moveToTop,
         reorderBacklogItems,
         showAddBacklogItemModal,
-        showAddBacklogItemParentModal,
         soloButtonCanBeDisplayed,
         addItemButtonCanBeDisplayed,
     });
@@ -309,31 +306,6 @@ function BacklogController(
             });
 
             return promise;
-        }
-
-        NewTuleapArtifactModalService.showCreation(
-            SharedPropertiesService.getUserId(),
-            item_type.id,
-            null,
-            callback,
-            []
-        );
-    }
-
-    function showAddBacklogItemParentModal(item_type) {
-        function callback(item_id) {
-            let patch_promise;
-            if (self.isMilestoneContext()) {
-                patch_promise = MilestoneService.addToContent(self.milestone_id, [item_id]);
-            }
-
-            const get_promise = BacklogItemService.getBacklogItem(item_id);
-
-            return $q.all([get_promise, patch_promise]).then(([{ backlog_item }]) => {
-                setSuccess(
-                    sprintf(gettextCatalog.getString("%s succesfully created."), backlog_item.label)
-                );
-            });
         }
 
         NewTuleapArtifactModalService.showCreation(
@@ -574,18 +546,14 @@ function BacklogController(
         return (
             self.canUserMoveCards() &&
             "content" in self.details.accepted_types &&
-            self.details.accepted_types.content.length === 1 &&
-            ("parent_trackers" in self.details.accepted_types === false ||
-                self.details.accepted_types.parent_trackers.length === 0)
+            self.details.accepted_types.content.length === 1
         );
     }
 
     function addItemButtonCanBeDisplayed() {
         return (
             "content" in self.details.accepted_types &&
-            "parent_trackers" in self.details.accepted_types &&
-            (self.details.accepted_types.content.length > 1 ||
-                self.details.accepted_types.parent_trackers.length > 0) &&
+            self.details.accepted_types.content.length > 1 &&
             self.details.user_can_move_cards
         );
     }

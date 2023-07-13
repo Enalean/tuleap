@@ -16,9 +16,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.3.2\n"
 
-msgid "%s succesfully created."
-msgstr "%s a été créé avec succès."
-
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 
@@ -103,9 +100,6 @@ msgstr "Aucun effort n’a été estimé"
 
 msgid "Overview"
 msgstr "Résumé"
-
-msgid "Parents"
-msgstr "Parents"
 
 msgid "Planning"
 msgstr "Planification"
