@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
+use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\XML\KanbanXMLExporter;
@@ -68,7 +69,7 @@ class AgileDashboard_XMLExporter
             new XML_RNGValidator(),
             new PlanningXMLExporter(new PlanningPermissionsManager()),
             new KanbanXMLExporter(
-                new AgileDashboard_ConfigurationDao(),
+                new LegacyConfigurationDao(),
                 new KanbanFactory(
                     $tracker_factory,
                     new KanbanDao()

@@ -20,9 +20,11 @@
 
 namespace Tuleap\Kanban;
 
-use AgileDashboard_ConfigurationManager;
 use AgileDashboardConfigurationResponse;
 use Codendi_Request;
+use Tuleap\Kanban\Legacy\LegacyKanbanActivator;
+use Tuleap\Kanban\Legacy\LegacyKanbanDeactivator;
+use Tuleap\Kanban\Legacy\LegacyKanbanRetriever;
 
 final class KanbanConfigurationUpdater
 {
@@ -30,7 +32,9 @@ final class KanbanConfigurationUpdater
 
     public function __construct(
         private readonly Codendi_Request $request,
-        private readonly AgileDashboard_ConfigurationManager $config_manager,
+        private readonly LegacyKanbanRetriever $legacy_kanban_retriever,
+        private readonly LegacyKanbanActivator $legacy_kanban_activator,
+        private readonly LegacyKanbanDeactivator $legacy_kanban_deactivator,
         private readonly AgileDashboardConfigurationResponse $response,
         private readonly FirstKanbanCreator $first_kanban_creator,
     ) {
@@ -39,31 +43,21 @@ final class KanbanConfigurationUpdater
 
     public function updateConfiguration(): void
     {
-        $kanban_is_activated = $this->getActivatedKanban();
-
-        $this->config_manager->updateConfiguration(
-            $this->project_id,
-            $this->config_manager->scrumIsActivatedForProject($this->request->getProject()),
-            $kanban_is_activated,
-            $this->config_manager->getScrumTitle($this->project_id),
-        );
+        $kanban_was_activated = $this->legacy_kanban_retriever->isKanbanActivated($this->project_id);
+        $kanban_is_activated  = (bool) $this->request->get('activate-kanban');
 
         if ($kanban_is_activated) {
-            $this->first_kanban_creator->createFirstKanban($this->request->getCurrentUser());
+            if (! $kanban_was_activated) {
+                $this->legacy_kanban_activator->activateKanban($this->project_id);
+                $this->first_kanban_creator->createFirstKanban($this->request->getCurrentUser());
+                $this->response->kanbanActivated();
+            }
+        } else {
+            if ($kanban_was_activated) {
+                $this->legacy_kanban_deactivator->deactivateKanban($this->project_id);
+            }
         }
 
         $this->response->kanbanConfigurationUpdated();
-    }
-
-    private function getActivatedKanban(): bool
-    {
-        $kanban_was_activated = $this->config_manager->kanbanIsActivatedForProject($this->project_id);
-        $kanban_is_activated  = (bool) $this->request->get('activate-kanban');
-
-        if ($kanban_is_activated && ! $kanban_was_activated) {
-            $this->response->kanbanActivated();
-        }
-
-        return $kanban_is_activated;
     }
 }

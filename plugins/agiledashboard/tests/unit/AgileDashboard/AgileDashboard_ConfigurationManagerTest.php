@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -38,7 +39,11 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             }
         };
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager($config_dao, $event_dispatcher);
+        $configuration_manager = new AgileDashboard_ConfigurationManager(
+            $config_dao,
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            $event_dispatcher,
+        );
 
         self::assertTrue($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
     }
@@ -56,7 +61,11 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             }
         };
 
-        $configuration_manager = new AgileDashboard_ConfigurationManager($config_dao, $event_dispatcher);
+        $configuration_manager = new AgileDashboard_ConfigurationManager(
+            $config_dao,
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            $event_dispatcher,
+        );
 
         self::assertFalse($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
     }

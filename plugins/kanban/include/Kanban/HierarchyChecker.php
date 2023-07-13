@@ -19,29 +19,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Kanban;
 
-class AgileDashboard_HierarchyChecker
+use Project;
+use Tracker;
+use Tracker_Hierarchy;
+use TrackerFactory;
+
+final class HierarchyChecker
 {
     public function __construct(
-        private readonly PlanningFactory $planning_factory,
+        private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
     ) {
     }
 
-    public function isPartOfScrumHierarchy(Tracker $tracker): bool
+    public function isPartOfKanbanHierarchy(Tracker $tracker): bool
     {
         $project   = $tracker->getProject();
         $hierarchy = $tracker->getHierarchy();
 
-        return $this->checkHierarchyContainsGivenTrackerIds($hierarchy, $this->getScrumTrackerIds($project));
+        return $this->checkHierarchyContainsGivenTrackerIds($hierarchy, $this->getKanbanTrackerIds($project));
     }
 
-    private function getScrumTrackerIds(Project $project): array
+    /**
+     * @return int[]
+     */
+    private function getKanbanTrackerIds(Project $project): array
     {
-        $planning_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($project->getID());
-        $backlog_tracker_ids  = $this->planning_factory->getBacklogTrackerIdsByGroupId($project->getID());
-
-        return array_unique(array_merge($planning_tracker_ids, $backlog_tracker_ids));
+        return $this->kanban_factory->getKanbanTrackerIds((int) $project->getID());
     }
 
     private function checkHierarchyContainsGivenTrackerIds(Tracker_Hierarchy $hierarchy, array $tracker_ids): bool
@@ -57,15 +63,12 @@ class AgileDashboard_HierarchyChecker
 
     public function getADTrackerIdsByProjectId(int $project_id): array
     {
-        $planning_tracker_ids       = $this->planning_factory->getPlanningTrackerIdsByGroupId($project_id);
-        $backlog_tracker_ids        = $this->planning_factory->getBacklogTrackerIdsByGroupId($project_id);
-        $agiledashboard_tracker_ids = array_unique(
-            array_merge($planning_tracker_ids, $backlog_tracker_ids)
-        );
-        $hierachy_factory           = $this->tracker_factory->getHierarchyFactory();
-        $trackers_hierarchy         = $hierachy_factory->getHierarchy($agiledashboard_tracker_ids);
-        $hierarchy_tracker_ids      = $trackers_hierarchy->flatten();
+        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project_id);
 
-        return array_unique(array_merge($agiledashboard_tracker_ids, $hierarchy_tracker_ids));
+        $hierachy_factory      = $this->tracker_factory->getHierarchyFactory();
+        $trackers_hierarchy    = $hierachy_factory->getHierarchy($kanban_tracker_ids);
+        $hierarchy_tracker_ids = $trackers_hierarchy->flatten();
+
+        return array_unique(array_merge($kanban_tracker_ids, $hierarchy_tracker_ids));
     }
 }
