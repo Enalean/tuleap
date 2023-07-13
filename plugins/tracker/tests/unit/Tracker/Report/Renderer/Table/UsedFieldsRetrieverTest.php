@@ -48,12 +48,15 @@ final class UsedFieldsRetrieverTest extends TestCase
             ->willReturn([
                 [
                     'field' => $field_01,
+                    'rank'  => 3,
                 ],
                 [
                     'field' => $field_02,
+                    'rank'  => 1,
                 ],
                 [
                     'field' => $field_03,
+                    'rank'  => 2,
                 ],
             ]);
 
@@ -63,8 +66,8 @@ final class UsedFieldsRetrieverTest extends TestCase
         );
 
         self::assertCount(2, $fields);
-        self::assertEqualsCanonicalizing(
-            [$field_01, $field_02],
+        self::assertSame(
+            [$field_02, $field_01],
             $fields
         );
     }
