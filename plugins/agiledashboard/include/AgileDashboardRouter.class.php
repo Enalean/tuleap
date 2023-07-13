@@ -343,7 +343,7 @@ class AgileDashboardRouter
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
             case 'showKanban':
-                $GLOBALS['Response']->redirect('/kanban/' . urlencode((string) $request->get('id')));
+                $GLOBALS['Response']->permanentRedirect('/kanban/' . urlencode((string) $request->get('id')));
                 break;
             case 'burnup-cache-generate':
                 $this->buildFormElementController()->forceBurnupCacheGeneration($request);
