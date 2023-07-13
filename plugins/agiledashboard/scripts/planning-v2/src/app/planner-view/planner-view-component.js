@@ -28,6 +28,8 @@ import {
 } from "../api/rest-querier";
 import { isEmpty } from "lodash-es";
 import { isFunction } from "angular";
+import { sprintf } from "sprintf-js";
+import { SESSION_STORAGE_KEY } from "../session";
 
 export default {
     templateUrl: "planner-view.tpl.html",
@@ -36,10 +38,11 @@ export default {
 };
 
 controller.$inject = [
+    "$document",
     "$filter",
     "$q",
     "$scope",
-    "$document",
+    "$window",
     "SharedPropertiesService",
     "BacklogService",
     "BacklogItemService",
@@ -53,13 +56,15 @@ controller.$inject = [
     "EditItemService",
     "ItemAnimatorService",
     "ErrorState",
+    "gettextCatalog",
 ];
 
 function controller(
+    $document,
     $filter,
     $q,
     $scope,
-    $document,
+    $window,
     SharedPropertiesService,
     BacklogService,
     BacklogItemService,
@@ -72,7 +77,8 @@ function controller(
     BacklogItemSelectedService,
     EditItemService,
     ItemAnimatorService,
-    ErrorState
+    ErrorState,
+    gettextCatalog
 ) {
     const self = this;
 
@@ -88,7 +94,6 @@ function controller(
 
         getRestError: RestErrorService.getError,
         getNumberOfSelectedBacklogItem: BacklogItemSelectedService.getNumberOfSelectedBacklogItem,
-        showEditModal: EditItemService.showEditModal,
         $onInit: init,
         canShowBacklogItem,
         displayClosedMilestones,
@@ -236,7 +241,20 @@ function controller(
             self.user_id,
             submilestone.artifact.tracker.id,
             submilestone.artifact.id,
-            self.refreshSubmilestone
+            (submilestone_id, changes) => {
+                if (changes.did_artifact_links_change) {
+                    $window.sessionStorage.setItem(
+                        SESSION_STORAGE_KEY,
+                        sprintf(
+                            gettextCatalog.getString("Successfully updated milestone '%s'"),
+                            submilestone.label
+                        )
+                    );
+                    $window.location.reload();
+                    return;
+                }
+                self.refreshSubmilestone(submilestone_id);
+            }
         );
     }
 
