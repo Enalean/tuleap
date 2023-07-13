@@ -141,6 +141,8 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\User\ProvideCurrentUser;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -316,6 +318,42 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for Agile Dashboard
+    }
+
+    #[ListeningToEventClass]
+    public function trackerEventExportStructureXML(TrackerEventExportStructureXML $event): void
+    {
+        $project_id  = (int) $event->getProject()->getID();
+        $xml_content = $event->getXmlElement();
+
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
+            $event->getUser(),
+            $project_id
+        );
+
+        AgileDashboard_XMLExporter::build()->export(
+            $event->getProject(),
+            $xml_content,
+            $plannings
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
+    {
+        $project_id  = (int) $event->getProject()->getID();
+        $xml_content = $event->getXmlElement();
+
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
+            $event->getUser(),
+            $project_id
+        );
+
+        AgileDashboard_XMLExporter::build()->exportFull(
+            $event->getProject(),
+            $xml_content,
+            $plannings
+        );
     }
 
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
