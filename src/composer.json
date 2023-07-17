@@ -79,7 +79,7 @@
     "symfony/process": "^6.0",
     "symfony/var-exporter": "^6.0",
     "tuleap/prometheus-client": "^1.0",
-    "web-auth/webauthn-lib": "^4.5",
+    "web-auth/webauthn-lib": "^4.6",
     "webimpress/safe-writer": "^2.0",
     "willdurand/negotiation": "^3.0"
   },
