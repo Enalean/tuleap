@@ -3279,6 +3279,10 @@ msgid "The two fields must be different"
 msgstr ""
 
 #, php-format
+msgid "The type \"%s\" of the link to artifact #%s has been set to \"no type\""
+msgstr ""
+
+#, php-format
 msgid "The type %1$s has been successfully created."
 msgstr ""
 

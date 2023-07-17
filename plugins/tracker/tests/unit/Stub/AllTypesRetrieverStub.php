@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Test\Stub;
 
-use PFUser;
-use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
-interface MoveArtifactByDuckTyping
+final class AllTypesRetrieverStub implements AllTypesRetriever
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    /**
+     * @param TypePresenter[] $types
+     */
+    private function __construct(private readonly array $types)
+    {
+    }
+
+    public static function withTypes(TypePresenter ...$types): self
+    {
+        return new self($types);
+    }
+
+    public function getAllTypes(): array
+    {
+        return $this->types;
+    }
 }

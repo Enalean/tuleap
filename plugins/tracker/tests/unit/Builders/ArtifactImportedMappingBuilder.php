@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Test\Builders;
 
-use PFUser;
-use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
 
-interface MoveArtifactByDuckTyping
+final class ArtifactImportedMappingBuilder
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    /**
+     * @psalm-param array{ source_id: int, destination_id: int }
+     */
+    public static function fromSourcesAndDestinations(array $sources_and_destinations): Tracker_XML_Importer_ArtifactImportedMapping
+    {
+        $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+
+        foreach ($sources_and_destinations as $source_and_destination) {
+            $mapping->add($source_and_destination->source_id, $source_and_destination->destination_id);
+        }
+
+        return $mapping;
+    }
 }

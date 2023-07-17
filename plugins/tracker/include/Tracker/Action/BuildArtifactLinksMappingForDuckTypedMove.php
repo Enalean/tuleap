@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
@@ -27,14 +25,11 @@ use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Artifact\Artifact;
 
-interface MoveArtifactByDuckTyping
+interface BuildArtifactLinksMappingForDuckTypedMove
 {
-    public function move(
-        Artifact $artifact,
+    public function buildMapping(
         Tracker $source_tracker,
-        Tracker $destination_tracker,
+        Artifact $artifact,
         PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    ): Tracker_XML_Importer_ArtifactImportedMapping;
 }

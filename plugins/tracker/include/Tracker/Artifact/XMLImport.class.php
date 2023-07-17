@@ -702,12 +702,13 @@ class Tracker_Artifact_XMLImport
     /**
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
-    public function importArtifactWithAllDataFromXMLContent(
+    public function importArtifactWithAllDataFromXMLContentInAMoveContext(
         Tracker $tracker,
         SimpleXMLElement $xml_artifact,
         PFUser $user,
         bool $is_ducktyping_move,
         array $field_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
     ): ?Artifact {
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
@@ -728,7 +729,7 @@ class Tracker_Artifact_XMLImport
                     $xml_artifact,
                     '',
                     new TrackerXmlFieldsMapping_InSamePlatform(),
-                    new Tracker_XML_Importer_ArtifactImportedMapping()
+                    $artifacts_links_collection
                 );
 
                 $date                  = new DateTimeImmutable();

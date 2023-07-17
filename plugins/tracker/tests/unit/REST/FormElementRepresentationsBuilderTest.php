@@ -27,6 +27,7 @@ use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
@@ -94,7 +95,9 @@ class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             $permission_exporter,
             $hidden_fieldset_checker,
             $permissions_for_groups_builder,
-            new RetrieveAllUsableTypesInProjectStub()
+            RetrieveAllUsableTypesInProjectStub::withUsableTypes(
+                new TypeIsChildPresenter()
+            )
         );
 
         $form_element_factory->shouldReceive('getAllUsedFormElementOfAnyTypesForTracker')

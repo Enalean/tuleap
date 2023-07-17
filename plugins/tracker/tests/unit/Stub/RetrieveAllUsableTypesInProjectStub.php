@@ -23,18 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class RetrieveAllUsableTypesInProjectStub implements IRetrieveAllUsableTypesInProject
 {
     /**
+     * @param TypePresenter[] $types
+     */
+    public function __construct(private readonly array $types)
+    {
+    }
+
+    public static function withUsableTypes(TypePresenter ...$types): self
+    {
+        return new self($types);
+    }
+
+    /**
      * @return TypePresenter[]
      */
     public function getAllUsableTypesInProject(\Project $project): array
     {
-        return [
-            new TypeIsChildPresenter(),
-        ];
+        return $this->types;
     }
 }

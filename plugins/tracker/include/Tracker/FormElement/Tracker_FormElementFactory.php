@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -34,7 +35,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
@@ -764,12 +765,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $fields;
     }
 
-    /**
-     * Return the first (and only one) ArtifactLink field (if any)
-     *
-     * @return Tracker_FormElement_Field_ArtifactLink|null
-     */
-    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker)
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink
     {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {

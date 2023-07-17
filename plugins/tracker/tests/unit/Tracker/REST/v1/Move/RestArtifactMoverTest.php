@@ -26,6 +26,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
+use Tuleap\Tracker\Action\DuckTypedMoveArtifactLinksMappingBuilder;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
@@ -40,6 +41,9 @@ use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
 use Tuleap\Tracker\Test\Stub\FeedbackFieldCollectorInterfaceStub;
 use Tuleap\Tracker\Test\Stub\MoveArtifactByDuckTypingStub;
 use Tuleap\Tracker\Test\Stub\MoveArtifactStub;
+use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
+use Tuleap\Tracker\Test\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMoveStub;
 
 final class RestArtifactMoverTest extends TestCase
 {
@@ -80,7 +84,8 @@ final class RestArtifactMoverTest extends TestCase
             $this->post_move_action,
             $this->mega_mover,
             $this->feedback_collector,
-            $dry_run_collector
+            $dry_run_collector,
+            BuildArtifactLinksMappingForDuckTypedMoveStub::withMapping([])
         );
     }
 
@@ -156,6 +161,10 @@ final class RestArtifactMoverTest extends TestCase
             $this->feedback_collector,
             CollectDryRunTypingFieldStub::withCollectionOfField(
                 DuckTypedMoveFieldCollection::fromFields([], [], [], [])
+            ),
+            new DuckTypedMoveArtifactLinksMappingBuilder(
+                RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField(),
+                RetrieveForwardLinksStub::withoutLinks()
             )
         );
 

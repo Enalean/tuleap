@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use Tracker;
+use Tuleap\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMove;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Action\MoveArtifact;
@@ -44,6 +45,7 @@ final class RestArtifactMover implements MoveRestArtifact
         private readonly MoveArtifactByDuckTyping $duck_typing_move,
         private readonly FeedbackFieldCollectorInterface $feedback_collector,
         private readonly CollectDryRunTypingField $collector,
+        private readonly BuildArtifactLinksMappingForDuckTypedMove $collect_artifact_links_for_duck_typed_move,
     ) {
     }
 
@@ -83,13 +85,14 @@ final class RestArtifactMover implements MoveRestArtifact
      */
     private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
-        $field_collection = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user);
+        $field_collection           = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user);
+        $artifacts_links_collection = $this->collect_artifact_links_for_duck_typed_move->buildMapping($source_tracker, $artifact, $user);
 
         if (empty($field_collection->mapping_fields)) {
             throw new MoveArtifactNoValuesToProcessException();
         }
 
-        $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection);
+        $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection, $artifacts_links_collection);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);
         return $remaining_deletions;
     }

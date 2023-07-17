@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Tracker;
+use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -41,8 +42,14 @@ final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
         return new self(random_int(1, 1000));
     }
 
-    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $destination_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int
-    {
+    public function move(
+        Artifact $artifact,
+        Tracker $source_tracker,
+        Tracker $destination_tracker,
+        PFUser $user,
+        DuckTypedMoveFieldCollection $field_collection,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
+    ): int {
         $this->call_count++;
 
         return $this->limit;

@@ -20,21 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Test\Stub;
 
-use PFUser;
-use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
+use SimpleXMLElement;
+use Tuleap\Tracker\Tracker\XML\Updater\UpdateArtifactLinkXML;
 
-interface MoveArtifactByDuckTyping
+/**
+ * @psalm-immutable
+ */
+final class UpdateArtifactLinkXMLStub implements UpdateArtifactLinkXML
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    private function __construct(private int $nb_calls)
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self(0);
+    }
+
+    public function getNbValuesUpdated(): int
+    {
+        return $this->nb_calls;
+    }
+
+    public function updateArtifactLinks(SimpleXMLElement $changeset_xml, \Tracker_FormElement_Field_ArtifactLink $destination_field, int $index,): void
+    {
+        $this->nb_calls++;
+    }
 }

@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
@@ -47,19 +48,25 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
     ) {
     }
 
-    public function move(Artifact $artifact, Tracker $source_tracker, Tracker $destination_tracker, PFUser $user, DuckTypedMoveFieldCollection $field_collection): int
-    {
+    public function move(
+        Artifact $artifact,
+        Tracker $source_tracker,
+        Tracker $destination_tracker,
+        PFUser $user,
+        DuckTypedMoveFieldCollection $field_collection,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
+    ): int {
         if (! $destination_tracker->getProject()->isActive()) {
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        return $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $destination_tracker, $user, $field_collection) {
+        return $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $destination_tracker, $user, $field_collection, $artifacts_links_collection) {
             $xml_artifacts = $this->getUpdatedXML($artifact, $source_tracker, $user, $field_collection);
 
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
             $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
-            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user, $field_collection->mapping_fields)) {
+            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user, $field_collection->mapping_fields, $artifacts_links_collection)) {
                 throw new MoveArtifactNotDoneException();
             }
 
@@ -102,11 +109,19 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
      * @throws \Tracker_Artifact_Exception_XMLImportException
      *
      */
-    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user, array $field_mapping): bool
+
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user, array $field_mapping, Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,): bool
     {
         $tracker->getWorkflow()->disable();
 
-        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user, true, $field_mapping);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContentInAMoveContext(
+            $tracker,
+            $artifact_xml,
+            $user,
+            true,
+            $field_mapping,
+            $artifacts_links_collection
+        );
 
         if (! $moved_artifact) {
             return false;
