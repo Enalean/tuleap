@@ -35,7 +35,7 @@ class UsedFieldsRetriever
         PFUser $current_user,
         Tracker_Report_Renderer_Table $renderer_table,
     ): array {
-        $used_fields = [];
+        $used_columns = [];
 
         foreach ($renderer_table->getColumns() as $column) {
             if (! isset($column['field'])) {
@@ -48,9 +48,16 @@ class UsedFieldsRetriever
                 continue;
             }
 
-            $used_fields[] = $field;
+            $used_columns[] = $column;
         }
 
-        return $used_fields;
+        usort(
+            $used_columns,
+            static fn (array $column_a, array $column_b): int => (int) $column_a['rank'] <=> (int) $column_b['rank'],
+        );
+        return array_map(
+            static fn (array $column): Tracker_FormElement_Field => $column['field'],
+            $used_columns
+        );
     }
 }
