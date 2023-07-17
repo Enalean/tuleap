@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "244dd20678d67a6c17536c19dd3d6670",
+    "content-hash": "452747616ede44b788c5cc1a0c8e8291",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -4885,16 +4885,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.2.1",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e"
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
                 "shasum": ""
             },
             "require": {
@@ -4903,7 +4903,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.3-dev"
+                    "dev-main": "3.4-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -4932,7 +4932,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.3.0"
             },
             "funding": [
                 {
@@ -4948,7 +4948,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-01T10:25:55+00:00"
+            "time": "2023-05-23T14:45:45+00:00"
         },
         {
             "name": "symfony/lock",
@@ -5984,16 +5984,16 @@
         },
         {
             "name": "symfony/uid",
-            "version": "v6.2.7",
+            "version": "v6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/uid.git",
-                "reference": "d30c72a63897cfa043e1de4d4dd2ffa9ecefcdc0"
+                "reference": "01b0f20b1351d997711c56f1638f7a8c3061e384"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/uid/zipball/d30c72a63897cfa043e1de4d4dd2ffa9ecefcdc0",
-                "reference": "d30c72a63897cfa043e1de4d4dd2ffa9ecefcdc0",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/01b0f20b1351d997711c56f1638f7a8c3061e384",
+                "reference": "01b0f20b1351d997711c56f1638f7a8c3061e384",
                 "shasum": ""
             },
             "require": {
@@ -6038,7 +6038,7 @@
                 "uuid"
             ],
             "support": {
-                "source": "https://github.com/symfony/uid/tree/v6.2.7"
+                "source": "https://github.com/symfony/uid/tree/v6.3.0"
             },
             "funding": [
                 {
@@ -6054,7 +6054,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-14T08:44:56+00:00"
+            "time": "2023-04-08T07:25:02+00:00"
         },
         {
             "name": "symfony/var-exporter",
@@ -6268,16 +6268,16 @@
         },
         {
             "name": "web-auth/metadata-service",
-            "version": "4.5.1",
+            "version": "4.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-metadata-service.git",
-                "reference": "82b3a517894987db1f8959a9320b9891515af9e7"
+                "reference": "b58fbb0df46450acc426329bd87b60d794859da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-metadata-service/zipball/82b3a517894987db1f8959a9320b9891515af9e7",
-                "reference": "82b3a517894987db1f8959a9320b9891515af9e7",
+                "url": "https://api.github.com/repos/web-auth/webauthn-metadata-service/zipball/b58fbb0df46450acc426329bd87b60d794859da0",
+                "reference": "b58fbb0df46450acc426329bd87b60d794859da0",
                 "shasum": ""
             },
             "require": {
@@ -6300,6 +6300,12 @@
                 "web-token/jwt-signature-algorithm-ecdsa": "Mandatory for fetching Metadata Statement from distant sources"
             },
             "type": "library",
+            "extra": {
+                "thanks": {
+                    "name": "web-auth/webauthn-framework",
+                    "url": "https://github.com/web-auth/webauthn-framework"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Webauthn\\MetadataService\\": "src/"
@@ -6327,7 +6333,7 @@
                 "webauthn"
             ],
             "support": {
-                "source": "https://github.com/web-auth/webauthn-metadata-service/tree/4.5.1"
+                "source": "https://github.com/web-auth/webauthn-metadata-service/tree/4.6.4"
             },
             "funding": [
                 {
@@ -6339,20 +6345,20 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-01-22T17:02:25+00:00"
+            "time": "2023-06-01T19:06:30+00:00"
         },
         {
             "name": "web-auth/webauthn-lib",
-            "version": "4.5.1",
+            "version": "4.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "64920a2eb97d93cdfe30bcb2fdba3b48b669ad04"
+                "reference": "8cb4949d81ef8414c82f334fb3514141aa013340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/64920a2eb97d93cdfe30bcb2fdba3b48b669ad04",
-                "reference": "64920a2eb97d93cdfe30bcb2fdba3b48b669ad04",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/8cb4949d81ef8414c82f334fb3514141aa013340",
+                "reference": "8cb4949d81ef8414c82f334fb3514141aa013340",
                 "shasum": ""
             },
             "require": {
@@ -6382,6 +6388,12 @@
                 "web-token/jwt-signature-algorithm-rsa": "Mandatory for the AndroidSafetyNet Attestation Statement support"
             },
             "type": "library",
+            "extra": {
+                "thanks": {
+                    "name": "web-auth/webauthn-framework",
+                    "url": "https://github.com/web-auth/webauthn-framework"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Webauthn\\": "src/"
@@ -6409,7 +6421,7 @@
                 "webauthn"
             ],
             "support": {
-                "source": "https://github.com/web-auth/webauthn-lib/tree/4.5.1"
+                "source": "https://github.com/web-auth/webauthn-lib/tree/4.6.4"
             },
             "funding": [
                 {
@@ -6421,7 +6433,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-01-31T17:31:30+00:00"
+            "time": "2023-07-15T14:53:06+00:00"
         },
         {
             "name": "webimpress/safe-writer",
