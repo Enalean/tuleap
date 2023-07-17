@@ -22,20 +22,15 @@ function FilterTrackerReportController(
     });
 
     function changeFilter() {
-        const params = $window.location.search.split("?")[1];
-        let search_params = params.split("&");
-        let index = search_params.findIndex((search_param) => {
-            return search_param.split("=")[0] === "tracker_report_id";
-        });
-
-        index = index < 0 ? search_params.length : index;
+        const search_params = new URLSearchParams($window.location.search);
 
         if (parseInt(self.selected_item, 10)) {
-            search_params[index] = "tracker_report_id=" + self.selected_item;
+            search_params.set("tracker_report_id", self.selected_item);
         } else {
-            search_params.splice(index, 1);
+            search_params.delete("tracker_report_id");
         }
-        $window.location.search = "?" + search_params.join("&");
+
+        $window.location.search = search_params.toString();
     }
 
     function displaySelectbox() {
