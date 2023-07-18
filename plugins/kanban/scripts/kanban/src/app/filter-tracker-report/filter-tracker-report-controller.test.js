@@ -11,7 +11,7 @@ describe("FilterTrackerReportController -", () => {
             $provide.value("$window", {
                 location: {
                     href: "https://tuleap-web.tuleap-aio-dev.docker/plugins/agiledashboard/?group_id=126&action=showKanban&id=19&tracker_report_id=305#!/kanban",
-                    search: "?group_id=126&action=showKanban&id=19&tracker_report_id=305",
+                    search: "?tracker_report_id=305",
                 },
             });
         });
@@ -59,17 +59,15 @@ describe("FilterTrackerReportController -", () => {
 
     describe("changeFilter() -", () => {
         it("when the user change the filter to another tracker report, then the search param is modified", function () {
-            FilterTrackerReportController.selected_item = "305";
+            FilterTrackerReportController.selected_item = "308";
             FilterTrackerReportController.changeFilter();
-            expect($window.location.search).toBe(
-                "?group_id=126&action=showKanban&id=19&tracker_report_id=305"
-            );
+            expect($window.location.search).toBe("tracker_report_id=308");
         });
 
         it("when the user change the filter to none, then the search param is not anymore in the url", function () {
             FilterTrackerReportController.selected_item = "0";
             FilterTrackerReportController.changeFilter();
-            expect($window.location.search).toBe("?group_id=126&action=showKanban&id=19");
+            expect($window.location.search).toBe("");
         });
     });
 });
