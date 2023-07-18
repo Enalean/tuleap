@@ -123,7 +123,6 @@ function KanbanCtrl(
         reflowKustomScrollBars,
         slugifyLabel,
         displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
-        displayWIPNotUpdated: FilterTrackerReportService.isNotWIPUpdated,
         filter: KanbanFilterValue,
         loading_modal: NewTuleapArtifactModalService.loading,
         user_can_add_artifact: kanban.user_can_add_artifact,
@@ -573,8 +572,7 @@ function KanbanCtrl(
 
     function isColumnWipReached(column) {
         return (
-            (FilterTrackerReportService.areCardsAndWIPUpdated() ||
-                FilterTrackerReportService.isWIPUpdated()) &&
+            FilterTrackerReportService.areCardsAndWIPUpdated() &&
             column.limit &&
             column.limit < column.content.length
         );

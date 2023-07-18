@@ -237,9 +237,6 @@ msgstr ""
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
 
-msgid "Your kanban is filtered, there is no update of WIP."
-msgstr "Votre kanban est filtré, il n'y a pas de mise à jour du WIP."
-
 msgid ""
 "Your kanban is filtered, there is no update of cards in real time or WIP."
 msgstr ""

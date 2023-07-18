@@ -11,9 +11,7 @@ function FilterTrackerReportService() {
         isFiltersTrackerReportSelected,
         changeSelectableReports,
         areCardsAndWIPUpdated,
-        isWIPUpdated,
         areNotCardsAndWIPUpdated,
-        isNotWIPUpdated,
         initTrackerReports,
         getTrackerReports() {
             return self.tracker_reports;
@@ -59,15 +57,7 @@ function FilterTrackerReportService() {
         return !isFiltersTrackerReportSelected();
     }
 
-    function isWIPUpdated() {
-        return !isFiltersTrackerReportSelected();
-    }
-
     function areNotCardsAndWIPUpdated() {
-        return isFiltersTrackerReportSelected();
-    }
-
-    function isNotWIPUpdated() {
         return isFiltersTrackerReportSelected();
     }
 }
