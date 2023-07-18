@@ -28,42 +28,23 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\Tus\TusCORSMiddleware;
 use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusRequestMethodOverride;
 use Tuleap\Tus\TusServer;
-use UserManager;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 final class FileUploadController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    /**
-     * @var \Tuleap\Tus\TusServer
-     */
-    private $tus_server;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $stream_factory;
-
     private function __construct(
-        TusServer $tus_server,
-        UserManager $user_manager,
-        StreamFactoryInterface $stream_factory,
+        private readonly TusServer $tus_server,
+        private readonly StreamFactoryInterface $stream_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->tus_server     = $tus_server;
-        $this->user_manager   = $user_manager;
-        $this->stream_factory = $stream_factory;
     }
 
     public static function build(TusDataStore $data_store, MiddlewareInterface $current_user_provider): self
@@ -71,7 +52,6 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new self(
             new TusServer($response_factory, $data_store),
-            UserManager::instance(),
             HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter(),
             new SessionWriteCloseMiddleware(),
@@ -84,10 +64,6 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->user_manager->getCurrentUser()->isAnonymous()) {
-            throw new ForbiddenException();
-        }
-
         return $this->tus_server->handle(
             $request->withBody($this->stream_factory->createStreamFromFile('php://input'))
         );
