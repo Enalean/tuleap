@@ -253,7 +253,7 @@ class ArtifactType
      */
     public function getID()
     {
-        return $this->data_array['group_artifact_id'];
+        return $this->data_array['group_artifact_id'] ?? 0;
     }
 
     /**
