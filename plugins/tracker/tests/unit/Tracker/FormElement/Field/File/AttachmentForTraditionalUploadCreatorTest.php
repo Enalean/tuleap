@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 use Mockery;
-use PFUser;
-use Tracker_FormElement_Field_File;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
 
-class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -35,8 +35,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -52,7 +51,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'tmp_name'    => '/var/tmp',
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -72,8 +71,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -90,7 +88,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'is_migrated' => true,
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -110,8 +108,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -129,7 +126,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'previous_fileinfo_id' => 123,
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -156,11 +153,9 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $another_user = Mockery::mock(PFUser::class);
-        $another_user->shouldReceive('getId')->andReturn(666);
+        $another_user = UserTestBuilder::aUser()->withId(666)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -177,7 +172,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'submitted_by' => $another_user,
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -197,8 +192,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -214,7 +208,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'tmp_name'    => '/var/tmp',
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -234,8 +228,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $mover
@@ -251,7 +244,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'tmp_name'    => '/var/tmp',
         ];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -271,13 +264,12 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(false);
 
-        $current_user = Mockery::mock(PFUser::class);
+        $current_user = UserTestBuilder::aUser()->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-
+        $mover                = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $submitted_value_info = [];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
 
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
@@ -288,5 +280,42 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
+    }
+
+    public function testItCreatesAttachmentWithMove(): void
+    {
+        $rule_file = Mockery::mock(\Rule_File::class);
+        $rule_file->shouldReceive('isValid')->andReturn(true);
+
+        $current_user = UserTestBuilder::aUser()->withId(101)->build();
+
+        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover
+            ->shouldReceive('moveAttachmentToFinalPlace')
+            ->with(Mockery::any(), 'rename', '/var/tmp')
+            ->andReturn(true);
+
+        $submitted_value_info = [
+            'description' => '',
+            'name' => 'readme.mkd',
+            'size' => 123,
+            'type' => 'text/plain',
+            'tmp_name' => '/var/tmp',
+            'is_moved' => true,
+        ];
+
+        $field = TrackerFormElementFileFieldBuilder::aFileField(1234)->build();
+
+        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
+        $creator->shouldAllowMockingProtectedMethods();
+
+        $creator->shouldReceive('save')->andReturn(true);
+
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
+        $this->assertEquals(101, $attachment->getSubmittedBy());
     }
 }

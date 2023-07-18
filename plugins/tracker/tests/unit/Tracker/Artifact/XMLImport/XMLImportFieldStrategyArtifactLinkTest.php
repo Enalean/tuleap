@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -77,8 +78,8 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->nature_dao->method('getTypeByShortname')->willReturn([[]]);
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
 
-        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
+        $expected_res = ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -102,7 +103,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->nature_dao->method('getTypeByShortname')->willReturn([[]]);
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
 
-        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
         $expected_res = ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '_fixed_in', '2' => '_is_child']];
 
         $this->assertEquals($expected_res, $res);
@@ -130,8 +131,8 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->nature_dao->method('getTypeByShortname')->willReturn([['titi']]);
 
-        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
+        $expected_res = ["new_values" => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -152,7 +153,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
 
         $this->logger->shouldReceive('error')->once();
-        $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
     }
 
     public function testItShouldRemoveValuesWhenArtifactChildrenAreRemoved(): void
@@ -179,8 +180,8 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([['toto']]);
-        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
+        $expected_res = ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
 
         $this->assertEquals($expected_res, $res);
     }

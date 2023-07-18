@@ -20,6 +20,7 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -204,7 +205,9 @@ class Tracker_Action_CopyArtifact
             $config             = new \Tuleap\Project\XML\Import\ImportConfig();
             $tracker_xml_config = new \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig(
                 $current_user,
-                $imported_at
+                $imported_at,
+                MoveImportConfig::buildForRegularImport(),
+                false
             );
             if ($tracker === null) {
                 return null;

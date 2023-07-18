@@ -26,27 +26,16 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 use DateTimeImmutable;
 use PFUser;
 
-class TrackerXmlImportConfig implements TrackerImportConfig
+final class TrackerXmlImportConfig implements TrackerImportConfig
 {
-    /**
-     * @var int
-     */
-    private $user_id;
-    /**
-     * @var int
-     */
-    private $import_timestamp;
+    private int $user_id;
+    private int $import_timestamp;
 
-    /**
-     * @var bool
-     */
-    private $with_all_data;
 
-    public function __construct(PFUser $user, DateTimeImmutable $import_time, bool $with_all_data = false)
+    public function __construct(PFUser $user, DateTimeImmutable $import_time, private MoveImportConfig $move_import_config, private bool $with_all_data = false)
     {
         $this->user_id          = (int) $user->getId();
         $this->import_timestamp = $import_time->getTimestamp();
-        $this->with_all_data    = $with_all_data;
     }
 
     public function getUserId(): int
@@ -67,5 +56,10 @@ class TrackerXmlImportConfig implements TrackerImportConfig
     public function isWithAllData(): bool
     {
         return $this->with_all_data;
+    }
+
+    public function getMoveImportConfig(): MoveImportConfig
+    {
+        return $this->move_import_config;
     }
 }

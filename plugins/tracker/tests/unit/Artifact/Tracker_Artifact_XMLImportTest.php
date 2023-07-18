@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -37,24 +38,20 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig
-     */
-    private $tracker_xml_config;
-    protected $tracker_id = 12;
+    private TrackerXmlImportConfig $tracker_xml_config;
+    protected int $tracker_id = 12;
 
     /** @var Tracker */
     protected $tracker;
 
-    /** @var Tracker_Artifact_XMLImport */
-    protected $importer;
+    protected Tracker_Artifact_XMLImport $importer;
 
     /** @var TrackerArtifactCreator */
     protected $artifact_creator;
@@ -108,11 +105,15 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
         $this->tracker->shouldReceive('getWorkflow')->andReturns(\Mockery::spy(\Workflow::class));
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(101)->build();
         $this->tracker->shouldReceive('getPRoject')->andReturns($project);
 
-        $this->tracker_xml_config = Mockery::mock(\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
+        $this->tracker_xml_config = new TrackerXmlImportConfig(
+            \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build(),
+            new DateTimeImmutable(),
+            MoveImportConfig::buildForRegularImport(),
+            false
+        );
 
         $this->artifact_creator      = \Mockery::spy(TrackerArtifactCreator::class);
         $this->new_changeset_creator = \Mockery::spy(NewChangesetCreator::class);
@@ -178,8 +179,6 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->private_comment_extractor,
             $this->db_connection,
         );
-
-        $this->tracker_xml_config->shouldReceive('isWithAllData')->andReturnFalse();
     }
 
     public function testItCallsImportFromXMLWithContentFromArchive(): void
@@ -2533,8 +2532,13 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($bare_artifact);
 
-        $tracker_xml_config = Mockery::mock(\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
-        $tracker_xml_config->shouldReceive('isWithAllData')->andReturnTrue();
+        $tracker_xml_config = new TrackerXmlImportConfig(
+            \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build(),
+            new DateTimeImmutable(),
+            MoveImportConfig::buildForRegularImport(),
+            true
+        );
+
 
         $this->importer->importFromXML(
             $this->tracker,

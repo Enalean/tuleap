@@ -29,4 +29,9 @@ class TrackerNoXMLImportLoggedConfig implements TrackerImportConfig
     {
         return false;
     }
+
+    public function getMoveImportConfig(): MoveImportConfig
+    {
+        return MoveImportConfig::buildForRegularImport();
+    }
 }

@@ -27,9 +27,9 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
 {
     /**
-     * @var array of Tracker_FileInfo
+     * @var Tracker_FileInfo[]
      */
-    protected $files;
+    protected array $files;
 
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $files)
     {
@@ -251,7 +251,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return $this->fetchAddedFiles($this->files, $format, false);
     }
 
-    private function fetchAddedFiles(array $files, $format, $is_for_mail)
+    private function fetchAddedFiles(array $files, $format, bool $is_for_mail): string
     {
         $artifact = $this->changeset->getArtifact();
 

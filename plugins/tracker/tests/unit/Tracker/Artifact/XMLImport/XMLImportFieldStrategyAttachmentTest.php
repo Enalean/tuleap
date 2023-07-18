@@ -31,12 +31,20 @@ use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment;
-use Tracker_FormElement_Field;
+use Tracker_FormElement_InvalidFieldException;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFileFieldBuilder;
 
-class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var Logger|Mockery\MockInterface
@@ -50,10 +58,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment
      */
     private $strategy;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Field
-     */
-    private $field;
+    private \Tracker_FormElement_Field_File $field;
     /**
      * @var Mockery\MockInterface|PFUser
      */
@@ -71,6 +76,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->extraction_path = vfsStream::setup()->url() . '/tmp';
         mkdir($this->extraction_path);
+        \ForgeConfig::set("sys_data_dir", $this->extraction_path);
 
         $this->logger         = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->files_importer = Mockery::mock(Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact::class);
@@ -81,9 +87,8 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->field = Mockery::mock(Tracker_FormElement_Field::class);
-        $this->field->shouldReceive('getLabel')->andReturn('Attachments');
-        $this->submitted_by = Mockery::mock(PFUser::class);
+        $this->field        = TrackerFormElementFileFieldBuilder::aFileField(1)->withName('Attachments')->build();
+        $this->submitted_by = UserTestBuilder::anActiveUser()->build();
         $this->artifact     = Mockery::mock(Artifact::class);
     }
 
@@ -106,7 +111,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F123">
+                    <file id="fileinfo_123">
                         <filename>Readme.mkd</filename>
                         <path>Readme.mkd</path>
                         <filesize>1024</filesize>
@@ -121,7 +126,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F456">
+                    <file id="fileinfo_456">
                         <filename>Lenna.png</filename>
                         <path>Lenna.png</path>
                         <filesize>2048</filesize>
@@ -159,6 +164,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
                     'size'         => 1024,
                     'tmp_name'     => $this->extraction_path . '/Readme.mkd',
                     'error'        => 0,
+                    'previous_fileinfo_id' => 123,
                 ],
                 [
                     'is_migrated'  => true,
@@ -169,9 +175,10 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
                     'size'         => 2048,
                     'tmp_name'     => $this->extraction_path . '/Lenna.png',
                     'error'        => 0,
+                    'previous_fileinfo_id' => 456,
                 ],
             ],
-            $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact)
+            $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false))
         );
     }
 
@@ -191,7 +198,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [],
-            $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact)
+            $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false))
         );
     }
 
@@ -218,7 +225,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F123">
+                    <file id="fileinfo_123">
                         <filename>Readme.mkd</filename>
                         <path>Readme.mkd</path>
                         <filesize>1024</filesize>
@@ -233,7 +240,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F456">
+                    <file id="fileinfo_456">
                         <filename>Lenna.png</filename>
                         <path>Lenna.png</path>
                         <filesize>2048</filesize>
@@ -259,17 +266,24 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 [
-                    'is_migrated'  => true,
+                    'is_migrated' => true,
                     'submitted_by' => $this->submitted_by,
-                    'name'         => 'Lenna.png',
-                    'type'         => 'image/png',
-                    'description'  => '',
-                    'size'         => 2048,
-                    'tmp_name'     => $this->extraction_path . '/Lenna.png',
-                    'error'        => 0,
+                    'name' => 'Lenna.png',
+                    'type' => 'image/png',
+                    'description' => '',
+                    'size' => 2048,
+                    'tmp_name' => $this->extraction_path . '/Lenna.png',
+                    'error' => 0,
+                    'previous_fileinfo_id' => 456,
                 ],
             ],
-            $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact)
+            $this->strategy->getFieldData(
+                $this->field,
+                $field_change,
+                $this->submitted_by,
+                $this->artifact,
+                PostCreationContext::withNoConfig(false)
+            )
         );
     }
 
@@ -298,7 +312,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F123">
+                    <file id="fileinfo_123">
                         <filename>Readme.mkd</filename>
                         <path>Readme.mkd</path>
                         <filesize>1024</filesize>
@@ -313,7 +327,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SimpleXMLElement(
                     '<?xml version="1.0"?>
-                    <file id="F456">
+                    <file id="fileinfo_456">
                         <filename>Lenna.png</filename>
                         <path>Lenna.png</path>
                         <filesize>2048</filesize>
@@ -332,6 +346,173 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(false);
 
         $this->expectException(Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException::class);
-        $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact);
+        $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact, PostCreationContext::withNoConfig(false));
+    }
+
+    public function testItReturnsListOfFileInfoInMoveContext(): void
+    {
+        mkdir($this->extraction_path . '/tracker');
+        mkdir($this->extraction_path . '/tracker/2');
+        touch($this->extraction_path . '/tracker/2/123');
+        touch($this->extraction_path . '/tracker/2/456');
+
+        $field_change = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+            <field_change field_name="file" type="file">
+                <value ref="F123"/>
+                <value ref="F456"/>
+            </field_change>'
+        );
+
+        $this->files_importer
+            ->shouldReceive('getFileXML')
+            ->with("F123")
+            ->andReturn(
+                new SimpleXMLElement(
+                    '<?xml version="1.0"?>
+                    <file id="fileinfo_123">
+                        <filename>Readme.mkd</filename>
+                        <path>Readme.mkd</path>
+                        <filesize>1024</filesize>
+                        <filetype>text/plain</filetype>
+                        <description></description>
+                    </file>'
+                )
+            );
+        $this->files_importer
+            ->shouldReceive('getFileXML')
+            ->with("F456")
+            ->andReturn(
+                new SimpleXMLElement(
+                    '<?xml version="1.0"?>
+                    <file id="fileinfo_456">
+                        <filename>Lenna.png</filename>
+                        <path>Lenna.png</path>
+                        <filesize>2048</filesize>
+                        <filetype>image/png</filetype>
+                        <description></description>
+                    </file>'
+                )
+            );
+        $this->files_importer
+            ->shouldReceive('fileIsAlreadyImported')
+            ->with('F123')
+            ->andReturn(false);
+        $this->files_importer
+            ->shouldReceive('fileIsAlreadyImported')
+            ->with('F456')
+            ->andReturn(false);
+
+        $this->files_importer
+            ->shouldReceive('markAsImported')
+            ->with('F123')
+            ->once();
+        $this->files_importer
+            ->shouldReceive('markAsImported')
+            ->with('F456')
+            ->once();
+
+        $this->assertEquals(
+            [
+                [
+                    'is_moved' => true,
+                    'submitted_by' => $this->submitted_by,
+                    'name' => 'Readme.mkd',
+                    'type' => 'text/plain',
+                    'description' => '',
+                    'size' => 1024,
+                    'tmp_name' => 'vfs://root/tmp/tracker/2/123',
+                    'error' => 0,
+                    'previous_fileinfo_id' => 123,
+                ],
+                [
+                    'is_moved' => true,
+                    'submitted_by' => $this->submitted_by,
+                    'name' => 'Lenna.png',
+                    'type' => 'image/png',
+                    'description' => '',
+                    'size' => 2048,
+                    'tmp_name' => 'vfs://root/tmp/tracker/2/456',
+                    'error' => 0,
+                    'previous_fileinfo_id' => 456,
+                ],
+            ],
+            $this->strategy->getFieldData(
+                $this->field,
+                $field_change,
+                $this->submitted_by,
+                $this->artifact,
+                PostCreationContext::withConfig(
+                    new TrackerXmlImportConfig(
+                        $this->submitted_by,
+                        new \DateTimeImmutable(),
+                        MoveImportConfig::buildForMoveArtifact(true, [FieldMapping::fromFields(TrackerFormElementFileFieldBuilder::aFileField(2)->withName('Attachments')->build(), $this->field)])
+                    ),
+                    false
+                )
+            )
+        );
+    }
+
+    public function testItThrowExceptionWhenSourceFieldIsNotFound(): void
+    {
+        touch($this->extraction_path . '/Readme.mkd');
+        touch($this->extraction_path . '/Lenna.png');
+
+        $field_change = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+            <field_change field_name="file" type="file">
+                <value ref="F123"/>
+                <value ref="F456"/>
+            </field_change>'
+        );
+
+        $this->files_importer
+            ->shouldReceive('getFileXML')
+            ->with("F123")
+            ->andReturn(
+                new SimpleXMLElement(
+                    '<?xml version="1.0"?>
+                    <file id="fileinfo_123">
+                        <filename>Readme.mkd</filename>
+                        <path>Readme.mkd</path>
+                        <filesize>1024</filesize>
+                        <filetype>text/plain</filetype>
+                        <description></description>
+                    </file>'
+                )
+            );
+        $this->files_importer
+            ->shouldReceive('getFileXML')
+            ->with("F456")
+            ->andReturn(
+                new SimpleXMLElement(
+                    '<?xml version="1.0"?>
+                    <file id="fileinfo_456">
+                        <filename>Lenna.png</filename>
+                        <path>Lenna.png</path>
+                        <filesize>2048</filesize>
+                        <filetype>image/png</filetype>
+                        <description></description>
+                    </file>'
+                )
+            );
+        $this->files_importer
+            ->shouldReceive('fileIsAlreadyImported')
+            ->with('F123')
+            ->andReturn(false);
+        $this->files_importer
+            ->shouldReceive('fileIsAlreadyImported')
+            ->with('F456')
+            ->andReturn(false);
+
+        $this->expectException(Tracker_FormElement_InvalidFieldException::class);
+        $this->strategy->getFieldData(
+            $this->field,
+            $field_change,
+            $this->submitted_by,
+            $this->artifact,
+            PostCreationContext::withConfig(new TrackerXmlImportConfig($this->submitted_by, new \DateTimeImmutable(), MoveImportConfig::buildForMoveArtifact(true, [])), false)
+        );
     }
 }

@@ -122,7 +122,7 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
     {
         $tracker->getWorkflow()->disable();
 
-        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user, false, []);
 
         if (! $moved_artifact) {
             return false;

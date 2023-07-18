@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_ChangesetDao;
 use Tracker_ArtifactDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
@@ -101,7 +102,7 @@ final class ArtifactChangesetSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStoreChangesetCreatedFromXML(): void
     {
         $time          = new \DateTimeImmutable();
-        $import_config = new TrackerXmlImportConfig($this->user, $time);
+        $import_config = new TrackerXmlImportConfig($this->user, $time, MoveImportConfig::buildForRegularImport(), false);
 
         $this->changeset_dao->shouldReceive('create')->once()->andReturn(1234);
         $this->tracker_artifact_dao->shouldReceive('updateLastChangsetId')->once();

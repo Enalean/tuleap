@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategy;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 class TrackerArtifactXMLImportXMLImportFieldStrategySteps implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
@@ -35,6 +36,7 @@ class TrackerArtifactXMLImportXMLImportFieldStrategySteps implements Tracker_Art
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ): array {
         $data = [];
         foreach ($field_change->step as $step) {

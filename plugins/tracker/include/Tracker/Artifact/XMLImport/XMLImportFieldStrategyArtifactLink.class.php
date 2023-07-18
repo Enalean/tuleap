@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
@@ -44,6 +45,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $new_values     = $this->extractArtifactLinkFromXml($field_change);
         $last_changeset = $artifact->getLastChangeset();

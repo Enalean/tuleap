@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -98,7 +99,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     /**
      * @return array
      */
-    public function getFieldsData(SimpleXMLElement $xml_changeset, PFUser $submitted_by, Artifact $artifact)
+    public function getFieldsData(SimpleXMLElement $xml_changeset, PFUser $submitted_by, Artifact $artifact, PostCreationContext $context)
     {
         $data = [];
 
@@ -107,10 +108,10 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         }
 
         foreach ($xml_changeset->field_change as $xml_field_change) {
-            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data);
+            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data, $context);
         }
         foreach ($xml_changeset->external_field_change as $xml_field_change) {
-            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data);
+            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data, $context);
         }
 
         return $data;
@@ -121,6 +122,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         PFUser $submitted_by,
         Artifact $artifact,
         array &$data,
+        PostCreationContext $context,
     ) {
         $field = $this->formelement_factory->getUsedFieldByName(
             $this->tracker->getId(),
@@ -129,7 +131,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
 
         if ($field) {
             $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
-            $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact);
+            $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact, $context);
         } else {
             $this->logger->debug("Skipped unknown/unused field " . (string) $field_change['field_name']);
         }
@@ -147,9 +149,10 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         try {
-            $submitted_value = $this->getFieldData($field, $field_change, $submitted_by, $artifact);
+            $submitted_value = $this->getFieldData($field, $field_change, $submitted_by, $artifact, $context);
             if ($field->validateField($this->createFakeArtifact(), $submitted_value)) {
                 $data[$field->getId()] = $submitted_value;
             } else {
@@ -183,6 +186,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $type = (string) $field_change['type'];
 
@@ -190,6 +194,6 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
             throw new Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException();
         }
 
-        return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by, $artifact);
+        return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by, $artifact, $context);
     }
 }

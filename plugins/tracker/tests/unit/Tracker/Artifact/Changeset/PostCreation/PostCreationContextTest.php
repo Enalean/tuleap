@@ -24,6 +24,7 @@ namespace Tracker\Artifact\Changeset\PostCreation;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
@@ -54,7 +55,7 @@ final class PostCreationContextTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user        = UserTestBuilder::buildWithDefaults();
         $import_time = new \DateTimeImmutable();
-        $config      = new TrackerXmlImportConfig($user, $import_time);
+        $config      = new TrackerXmlImportConfig($user, $import_time, MoveImportConfig::buildForRegularImport());
 
         $context = PostCreationContext::withConfig($config, $send_notifications);
         self::assertSame($send_notifications, $context->shouldSendNotifications());

@@ -26,8 +26,9 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
-class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -59,6 +60,6 @@ class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Te
             'expected_results'        => ["Non", "Non"],
         ];
 
-        $this->assertEquals($data, $import_strategie->getFieldData($field, $xml, $user, $artifact));
+        $this->assertEquals($data, $import_strategie->getFieldData($field, $xml, $user, $artifact, PostCreationContext::withNoConfig(false)));
     }
 }

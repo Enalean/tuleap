@@ -24,6 +24,7 @@ use Mockery;
 use PFUser;
 use Tracker_FormElement_Field_Computed;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -39,7 +40,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
 
         $this->assertSame($expected_result, $change_computed);
@@ -55,7 +56,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
         $this->assertSame($expected_result, $change_computed);
@@ -72,7 +73,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class), PostCreationContext::withNoConfig(false));
         $expected_result = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',

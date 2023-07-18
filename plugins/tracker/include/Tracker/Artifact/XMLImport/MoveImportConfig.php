@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
-interface TrackerImportConfig
-{
-    public function isFromXml(): bool;
+use Tuleap\Tracker\Action\FieldMapping;
 
-    public function getMoveImportConfig(): MoveImportConfig;
+/**
+ * @psalm-immutable
+ */
+final class MoveImportConfig
+{
+    private function __construct(public array $field_mapping, public bool $is_ducktyping_move)
+    {
+    }
+
+    public static function buildForRegularImport(): self
+    {
+        return new self([], false);
+    }
+
+    /**
+     * @param FieldMapping[] $field_mapping
+     */
+    public static function buildForMoveArtifact(bool $is_ducktyping_move, array $field_mapping): self
+    {
+        return new self($field_mapping, $is_ducktyping_move);
+    }
 }

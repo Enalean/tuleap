@@ -68,6 +68,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $fields_data       = [];
     private $submitted_on      = 1234567890;
     private $send_notification = true;
+    private EventDispatcherInterface|MockObject $event_dispatcher;
 
     public function setUp(): void
     {

@@ -43,11 +43,13 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -64,20 +66,13 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImportConfig
-     */
-    private $import_config;
+    private TrackerXmlImportConfig $import_config;
     private $summary_field_id = 50;
 
     private $tracker_id = 100;
 
     private $extraction_path;
-
-    /**
-     * @var PFUser
-     */
-    private $john_doe;
+    private PFUser $john_doe;
 
     /**
      * @var Tracker
@@ -202,8 +197,7 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_formelement_field_string->shouldReceive('getLabel')->andReturns('summary');
         $this->tracker_formelement_field_string->shouldReceive('validateField')->andReturns(true);
 
-        $this->john_doe = Mockery::mock(PFUser::class);
-        $this->john_doe->shouldReceive('getId')->andReturn(200);
+        $this->john_doe = UserTestBuilder::aUser()->withId(200)->build();
 
         $this->user_manager = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('getUserByIdentifier')->withArgs(['john_doe'])->andReturn($this->john_doe);
@@ -217,7 +211,7 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
 
-        $this->import_config = Mockery::mock(TrackerXmlImportConfig::class);
+        $this->import_config = new TrackerXmlImportConfig($this->john_doe, new \DateTimeImmutable(), MoveImportConfig::buildForRegularImport(), false);
 
         $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
@@ -318,8 +312,6 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_source_id_dao->shouldReceive('save')->withArgs([101, 4918, "https://web/"])->once();
 
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
-
-        $this->import_config->shouldReceive('isWithAllData')->once()->andReturnFalse();
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -787,8 +779,6 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_source_id_dao->shouldReceive('save')->withArgs([101, 4918, "https://web/"])->once();
 
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
-
-        $this->import_config->shouldReceive('isWithAllData')->once()->andReturnFalse();
 
         $this->importer->importFromXML(
             $this->tracker,

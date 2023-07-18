@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -272,7 +273,7 @@ class TrackerXmlImport
             __DIR__ . '/../resources/trackers.rng'
         );
 
-        $tracker_import_config = new TrackerXmlImportConfig($user, new \DateTimeImmutable());
+        $tracker_import_config = new TrackerXmlImportConfig($user, new \DateTimeImmutable(), MoveImportConfig::buildForRegularImport(), false);
 
         $this->activateArtlinkV2($project, $xml_input->trackers);
 

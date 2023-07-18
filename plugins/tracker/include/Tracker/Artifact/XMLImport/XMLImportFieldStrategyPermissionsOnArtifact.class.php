@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
@@ -33,6 +34,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $data = [
             'use_artifact_permissions' => (int) $field_change['use_perm'],

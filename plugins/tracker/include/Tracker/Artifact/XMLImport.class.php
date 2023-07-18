@@ -19,6 +19,7 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -146,7 +147,7 @@ class Tracker_Artifact_XMLImport
         $url_mapping        = new CreatedFileURLMapping();
         $config             = new ImportConfig();
         $date               = new DateTimeImmutable();
-        $tracker_xml_config = new TrackerXmlImportConfig($user, $date);
+        $tracker_xml_config = new TrackerXmlImportConfig($user, $date, MoveImportConfig::buildForRegularImport(), false);
 
         $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping, $url_mapping, $config, $tracker_xml_config);
 
@@ -550,7 +551,8 @@ class Tracker_Artifact_XMLImport
         TrackerImportConfig $tracker_import_config,
     ): ?Tracker_Artifact_Changeset {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
-        $fields_data  = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact);
+        $context      = PostCreationContext::withConfig($tracker_import_config, $this->send_notifications);
+        $fields_data  = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact, $context);
         if (count($fields_data) === 0) {
             return null;
         }
@@ -627,10 +629,11 @@ class Tracker_Artifact_XMLImport
                 ->extractUGroupsFromXML($artifact, $xml_changeset->comments->comment[0]);
         }
 
+        $context       = PostCreationContext::withConfig($tracker_xml_import_config, $this->send_notifications);
         $submitted_by  = $this->getSubmittedBy($xml_changeset);
         $new_changeset = NewChangeset::fromFieldsDataArray(
             $artifact,
-            $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact),
+            $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact, $context),
             $initial_comment_body,
             CommentFormatIdentifier::fromFormatString($initial_comment_format),
             $ugroups_for_private_comment,
@@ -638,9 +641,10 @@ class Tracker_Artifact_XMLImport
             $this->getSubmittedOn($xml_changeset),
             $url_mapping,
         );
-        $changeset     = $this->new_changeset_creator->create(
+
+        $changeset = $this->new_changeset_creator->create(
             $new_changeset,
-            PostCreationContext::withConfig($tracker_xml_import_config, $this->send_notifications)
+            $context
         );
         if ($changeset) {
             if ((string) $xml_changeset['id']) {
@@ -702,6 +706,8 @@ class Tracker_Artifact_XMLImport
         Tracker $tracker,
         SimpleXMLElement $xml_artifact,
         PFUser $user,
+        bool $is_ducktyping_move,
+        array $field_mapping,
     ): ?Artifact {
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
@@ -726,7 +732,7 @@ class Tracker_Artifact_XMLImport
                 );
 
                 $date                  = new DateTimeImmutable();
-                $tracker_import_config = new TrackerXmlImportConfig($user, $date);
+                $tracker_import_config = new TrackerXmlImportConfig($user, $date, MoveImportConfig::buildForMoveArtifact($is_ducktyping_move, $field_mapping));
 
                 $this->importAllChangesetsBySubmitionDate(
                     $artifact,

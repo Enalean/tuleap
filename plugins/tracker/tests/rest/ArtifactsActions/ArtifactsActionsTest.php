@@ -90,14 +90,13 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertArrayHasKey("fields", $json['dry_run']);
 
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
-        $this->assertCount(36, $migrated_fields);
+        $this->assertCount(37, $migrated_fields);
 
         $not_migrated_fields = $json['dry_run']['fields']['fields_not_migrated'];
-        $this->assertCount(3, $not_migrated_fields);
+        $this->assertCount(2, $not_migrated_fields);
 
         $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'step exec'));
         $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'artifact link'));
-        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'file'));
 
         $partially_migrated_fields = $json['dry_run']['fields']['fields_partially_migrated'];
         $this->assertCount(0, $partially_migrated_fields);

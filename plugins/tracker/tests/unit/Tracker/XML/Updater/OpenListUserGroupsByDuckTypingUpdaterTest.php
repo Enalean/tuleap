@@ -39,6 +39,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
     private \Tracker_FormElement_Field_OpenList $source_field;
     private \Tracker_FormElement_Field_OpenList $target_field;
     private XML_SimpleXMLCDATAFactory $cdata_factory;
+    private MoveChangesetXMLUpdater $move_changeset_updater;
 
     protected function setUp(): void
     {
