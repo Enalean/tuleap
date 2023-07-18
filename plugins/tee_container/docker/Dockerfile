@@ -97,7 +97,7 @@ FROM scratch
 EXPOSE 22 80 443
 
 ENV TLP_SYSTEMCTL=docker-centos7
-ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
+ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import kanban label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
 
 COPY --from=0 / /
 
