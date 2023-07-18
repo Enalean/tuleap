@@ -4,7 +4,7 @@ let
   tuleapVersion = builtins.readFile ../../../VERSION;
 in pkgs.stdenvNoCC.mkDerivation rec {
   pname = "tuleap-gitolite3";
-  version = "3.6.13";
+  version = "3.6.12";
 
   src = pkgs.stdenvNoCC.mkDerivation {
     name = "gitolite-src.tar";
@@ -12,8 +12,8 @@ in pkgs.stdenvNoCC.mkDerivation rec {
     src = pkgs.fetchFromGitHub {
       owner = "sitaramc";
       repo = "gitolite";
-      rev = "v${version}";
-      hash = "sha256-/VBu+aepIrxWc2padPa/WoXbIdKfIwqmA/M8d1GE5FI=";
+      rev = "v3.6.12";
+      hash = "sha256-/iN1tYyJD0cKEQS5cXpZhnmcZh/03aLeX3nup+oNvBc=";
     };
 
     installPhase = ''
