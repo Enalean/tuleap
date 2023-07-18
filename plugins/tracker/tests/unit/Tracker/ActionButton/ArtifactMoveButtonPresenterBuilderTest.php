@@ -125,6 +125,8 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCollectsErrorWhenNoSemanticAreDefined(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(false);
@@ -152,6 +154,8 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCollectErrorsWhenArtifactHasArtifactLinks(): void
     {
+        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
+
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
@@ -198,8 +202,6 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItReturnAButtonWhenUserCanPerformTheMoveBasedOnDuckTypingEvenIfNoSemanticIsDefined(): void
     {
-        \ForgeConfig::set('feature_flag_enable_complete_move_artifact', "1");
-
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(false);

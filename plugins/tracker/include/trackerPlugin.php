@@ -235,7 +235,7 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -2488,7 +2488,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(Tracker_ReportDao::class);
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
-        $event->addConfigClass(MoveArtifactCompleteFeatureFlag::class);
+        $event->addConfigClass(MoveArtifactSemanticFeatureFlag::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

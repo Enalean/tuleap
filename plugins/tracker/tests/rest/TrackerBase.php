@@ -45,8 +45,8 @@ class TrackerBase extends RestBase
     private const TRACKER_REPORTS_PROJECT_NAME               = 'tracker-reports';
     private const OPEN_LIST_PROJECT_NAME                     = 'openlistxml';
 
-    public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
-    public const BASE_TRACKER_SHORTNAME                           = 'base';
+    public const MOVE_TRACKER_SHORTNAME                           = 'tracker_destination';
+    public const BASE_TRACKER_SHORTNAME                           = 'tracker_source';
     public const DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2';
     public const TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker';
     public const SIMPLE_01_TRACKER_SHORTNAME                      = 'simple_tracker_01';

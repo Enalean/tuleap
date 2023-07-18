@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 class ArtifactMoveButtonPresenterBuilder
 {
@@ -52,7 +52,7 @@ class ArtifactMoveButtonPresenterBuilder
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
         $this->event_manager->processEvent($event);
 
-        if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
+        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
             $semantic_error = $this->collectErrorRelatedToSemantics($artifact->getTracker(), $event);
             if ($semantic_error) {
                 $errors[] = $semantic_error;
@@ -64,7 +64,7 @@ class ArtifactMoveButtonPresenterBuilder
             $errors[] = $external_errors;
         }
 
-        if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
+        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
             $links_error = $this->collectErrorsRelatedToArtifactLinks($artifact, $user);
             if ($links_error) {
                 $errors[] = $links_error;

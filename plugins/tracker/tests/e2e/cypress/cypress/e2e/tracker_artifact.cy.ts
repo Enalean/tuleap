@@ -282,7 +282,7 @@ describe("Tracker artifacts", function () {
         });
 
         it("regular user must be able to move artifact", function () {
-            cy.projectMemberSession();
+            cy.projectAdministratorSession();
             cy.getTrackerIdFromREST(parseInt(this.project_id, 10), "bug").then((tracker_id) => {
                 cy.createArtifact({
                     tracker_id: tracker_id,
@@ -298,7 +298,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=tracker-action-button-move]").click();
 
             cy.get("[data-test=move-artifact-project-selector]").select("tracker artifact");
-            cy.get("[data-test=move-artifact-tracker-selector]").select("User Stories");
+            cy.get("[data-test=move-artifact-tracker-selector]").select("Bugs for Move");
 
             cy.get("[data-test=move-artifact]").click();
 
@@ -307,6 +307,10 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=dry-run-message-info]");
 
             cy.get("[data-test=confirm-move-artifact]").click();
+
+            cy.get("[data-test=feedback]").contains("has been successfully");
+            cy.get('[data-test="tracker-artifact-value-summary"]').contains("move artifact");
+            cy.get('[data-test="tracker-artifact-value-status"]').contains("New");
         });
 
         it("user with tracker admin permissions are tracker admin", function () {

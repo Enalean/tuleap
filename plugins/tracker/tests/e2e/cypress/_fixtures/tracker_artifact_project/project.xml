@@ -639,6 +639,603 @@
       </permissions>
       <artifacts/>
     </tracker>
+    <tracker id="T31899" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Bugs for Move]]></name>
+      <item_name><![CDATA[bug_move]]></item_name>
+      <description><![CDATA[Incident, anomalies]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F91119" rank="41" id="71119" tracker_id="3182" parent_id="0" required="1">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <formElements>
+            <formElement type="string" ID="F91120" rank="0" id="71120" tracker_id="3182" parent_id="71119" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="60"/>
+            </formElement>
+            <formElement type="text" ID="F91121" rank="4" id="71121" tracker_id="3182" parent_id="71119">
+              <name><![CDATA[details]]></name>
+              <label><![CDATA[Original Submission]]></label>
+              <description><![CDATA[A full description of the artifact]]></description>
+              <properties rows="7" cols="60"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F91124" rank="445" id="71124" tracker_id="3182" parent_id="0" required="1">
+          <name><![CDATA[fieldset_2]]></name>
+          <label><![CDATA[fieldset_status_bugs_lbl_key]]></label>
+          <description><![CDATA[fieldset_status_bugs_desc_key]]></description>
+          <formElements>
+            <formElement type="column" ID="F91125" rank="0" id="71125" tracker_id="3182" parent_id="71124">
+              <name><![CDATA[column_0_1]]></name>
+              <label><![CDATA[c0]]></label>
+              <formElements>
+                <formElement type="sb" ID="F91126" rank="0" id="71126" tracker_id="3182" parent_id="71125">
+                  <name><![CDATA[status]]></name>
+                  <label><![CDATA[Status]]></label>
+                  <description>
+                    <![CDATA[How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)]]></description>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V71541" label="New" is_hidden="0">
+                        <description><![CDATA[New entry, no progress done so far]]></description>
+                      </item>
+                      <item ID="V71542" label="On going" is_hidden="0">
+                        <description><![CDATA[The team is working on the subject]]></description>
+                      </item>
+                      <item ID="V71543" label="Invalid" is_hidden="0">
+                        <description><![CDATA[
+                      The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)]]></description>
+                      </item>
+                      <item ID="V71544" label="Wont Fix" is_hidden="0">
+                        <description>
+                          <![CDATA[The bug won't be fixed (probably because it is very minor)]]></description>
+                      </item>
+                      <item ID="V71545" label="Works for me" is_hidden="0">
+                        <description><![CDATA[The project team was unable to reproduce the bug]]></description>
+                      </item>
+                      <item ID="V71546" label="Duplicate" is_hidden="0">
+                        <description><![CDATA[
+                      This bug is already covered by another bug description (see related bugs list)]]></description>
+                      </item>
+                      <item ID="V71547" label="Fixed" is_hidden="0">
+                        <description><![CDATA[The bug was resolved]]></description>
+                      </item>
+                    </items>
+                    <decorators>
+                      <decorator REF="V71541" tlp_color_name="acid-green"/>
+                      <decorator REF="V71542" tlp_color_name="clockwork-orange"/>
+                      <decorator REF="V71543" tlp_color_name="chrome-silver"/>
+                      <decorator REF="V71544" tlp_color_name="inca-silver"/>
+                      <decorator REF="V71545" tlp_color_name="firemist-silver"/>
+                      <decorator REF="V71546" tlp_color_name="teddy-brown"/>
+                      <decorator REF="V71547" tlp_color_name="army-green"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V71541"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+                <formElement type="sb" ID="F91127" rank="2" id="71127" tracker_id="3182" parent_id="71125">
+                  <name><![CDATA[severity]]></name>
+                  <label><![CDATA[Severity]]></label>
+                  <description><![CDATA[Impact of the artifact on the system (Critical, Major,...)]]></description>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V71548" label="Low impact" is_hidden="0"/>
+                      <item ID="V71549" label="Major impact" is_hidden="0"/>
+                      <item ID="V71550" label="Critical impact" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V71548" tlp_color_name="graffiti-yellow"/>
+                      <decorator REF="V71549" tlp_color_name="clockwork-orange"/>
+                      <decorator REF="V71550" tlp_color_name="fiesta-red"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V71548"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F91128" rank="3" id="71128" tracker_id="3182" parent_id="71124">
+              <name><![CDATA[column_1_1]]></name>
+              <label><![CDATA[c1]]></label>
+              <formElements>
+                <formElement type="sb" ID="F91129" rank="0" id="71129" tracker_id="3182" parent_id="71128"
+                             notifications="1">
+                  <name><![CDATA[assigned_to]]></name>
+                  <label><![CDATA[Assigned to]]></label>
+                  <description><![CDATA[Who is in charge of solving the artifact]]></description>
+                  <bind type="users">
+                    <items>
+                      <item label="group_members"/>
+                    </items>
+                  </bind>
+                </formElement>
+                <formElement type="date" ID="F91130" rank="1" id="71130" tracker_id="3182" parent_id="71128">
+                  <name><![CDATA[close_date]]></name>
+                  <label><![CDATA[Close Date]]></label>
+                  <properties display_time="0"/>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F91131" rank="448" id="71131" tracker_id="3182" parent_id="0">
+          <name><![CDATA[effort]]></name>
+          <label><![CDATA[Effort]]></label>
+          <formElements>
+            <formElement type="column" ID="F91132" rank="0" id="71132" tracker_id="3182" parent_id="71131">
+              <name><![CDATA[effort_col1]]></name>
+              <label><![CDATA[effort_col1]]></label>
+              <formElements>
+                <formElement type="float" ID="F91133" rank="0" id="71133" tracker_id="3182" parent_id="71132">
+                  <name><![CDATA[initial_effort]]></name>
+                  <label><![CDATA[Initial Effort]]></label>
+                  <properties size="5"/>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F91134" rank="1" id="71134" tracker_id="3182" parent_id="71131">
+              <name><![CDATA[effort_col2]]></name>
+              <label><![CDATA[effort_col2]]></label>
+              <formElements>
+                <formElement type="computed" ID="F91245" rank="0" id="71245" tracker_id="3182" parent_id="71134"
+                             required="0">
+                  <name><![CDATA[remaining_effort]]></name>
+                  <label><![CDATA[remaining_effort]]></label>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F91136" rank="460" id="71136" tracker_id="3182" parent_id="0" required="1">
+          <name><![CDATA[fieldset_5]]></name>
+          <label><![CDATA[Links]]></label>
+          <description>
+            <![CDATA[Establish a dependency link from an artifact to one or several other artifacts belonging to any of the tracker of any project]]></description>
+          <formElements>
+            <formElement type="art_link" ID="F91137" rank="0" id="71137" tracker_id="3182" parent_id="71136">
+              <name><![CDATA[links]]></name>
+              <label><![CDATA[Links]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F91120"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Define the description of an artifact]]></description>
+          <field REF="F91121"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F91126"/>
+          <open_values>
+            <open_value REF="V71541"/>
+            <open_value REF="V71542"/>
+            <open_value REF="V71545"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values>
+            <closed_value REF="V71543"/>
+            <closed_value REF="V71544"/>
+            <closed_value REF="V71546"/>
+            <closed_value REF="V71547"/>
+          </closed_values>
+        </semantic>
+        <semantic type="contributor">
+          <shortname><![CDATA[contributor]]></shortname>
+          <label><![CDATA[Contributor/assignee]]></label>
+          <description><![CDATA[Define the contributor/assignee of an artifact]]></description>
+          <field REF="F91129"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F91120"/>
+          <field REF="F91126"/>
+          <field REF="F91121"/>
+          <field REF="F91127"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields">
+          <field REF="F91127"/>
+          <field REF="F91129"/>
+        </semantic>
+        <semantic type="initial_effort">
+          <shortname><![CDATA[initial_effort]]></shortname>
+          <label><![CDATA[Initial Effort]]></label>
+          <description><![CDATA[Define the initial effort of an artifact.]]></description>
+          <field REF="F91133"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[All Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F91120"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F91126"/>
+            </criteria>
+            <criteria rank="3">
+              <field REF="F91127"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R7103" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Bugs]]></name>
+              <columns>
+                <field REF="F91120"/>
+                <field REF="F91126"/>
+                <field REF="F91127"/>
+                <field REF="F91129"/>
+              </columns>
+            </renderer>
+            <renderer ID="R7104" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[Bug Charts]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0" base="F91126">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0" base="F91129">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0" base="F91127" group="F91126">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R7105" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+        <report is_default="0" is_in_expert_mode="1"
+                expert_query="assigned_to = MYSELF() and status IN (&quot;New&quot;, &quot;On going&quot;)">
+          <name><![CDATA[My Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F91120"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F91126"/>
+            </criteria>
+            <criteria rank="3">
+              <field REF="F91127"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R7106" type="table" rank="0" chunksz="15">
+              <name><![CDATA[My Bugs]]></name>
+              <columns>
+                <field REF="F91120"/>
+                <field REF="F91126"/>
+                <field REF="F91127"/>
+                <field REF="F91129"/>
+              </columns>
+            </renderer>
+            <renderer ID="R7107" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[My Bugs chart]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R7108" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+        <report is_default="0" is_in_expert_mode="1"
+                expert_query="status = &quot;New&quot; and submitted_on &gt; NOW() - 1w and assigned_to = &quot;&quot;">
+          <name><![CDATA[New submitted bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F91120"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F91126"/>
+            </criteria>
+            <criteria rank="3">
+              <field REF="F91127"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R7109" type="table" rank="0" chunksz="15">
+              <name><![CDATA[New submitted bugs]]></name>
+              <columns>
+                <field REF="F91120"/>
+                <field REF="F91126"/>
+                <field REF="F91127"/>
+                <field REF="F91129"/>
+              </columns>
+            </renderer>
+            <renderer ID="R7110" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[Graph]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R7111" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <simple_workflow>
+        <field_id REF="F91126"/>
+        <is_used><![CDATA[0]]></is_used>
+        <states>
+          <state>
+            <to_id REF="V71541"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71547"/>
+              </transition>
+              <transition>
+                <from_id REF="V71543"/>
+              </transition>
+              <transition>
+                <from_id REF="V71544"/>
+              </transition>
+              <transition>
+                <from_id REF="V71545"/>
+              </transition>
+              <transition>
+                <from_id REF="V71546"/>
+              </transition>
+            </transitions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71542"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+              <transition>
+                <from_id REF="V71547"/>
+              </transition>
+              <transition>
+                <from_id REF="V71543"/>
+              </transition>
+              <transition>
+                <from_id REF="V71544"/>
+              </transition>
+              <transition>
+                <from_id REF="V71545"/>
+              </transition>
+              <transition>
+                <from_id REF="V71546"/>
+              </transition>
+            </transitions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71547"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+              <transition>
+                <from_id REF="V71542"/>
+              </transition>
+            </transitions>
+            <postactions>
+              <postaction_field_date valuetype="2">
+                <field_id REF="F91130"/>
+              </postaction_field_date>
+            </postactions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71543"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+              <transition>
+                <from_id REF="V71542"/>
+              </transition>
+            </transitions>
+            <postactions>
+              <postaction_field_date valuetype="2">
+                <field_id REF="F91130"/>
+              </postaction_field_date>
+            </postactions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71544"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+              <transition>
+                <from_id REF="V71542"/>
+              </transition>
+            </transitions>
+            <postactions>
+              <postaction_field_date valuetype="2">
+                <field_id REF="F91130"/>
+              </postaction_field_date>
+            </postactions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71545"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+              <transition>
+                <from_id REF="V71542"/>
+              </transition>
+            </transitions>
+            <postactions>
+              <postaction_field_date valuetype="2">
+                <field_id REF="F91130"/>
+              </postaction_field_date>
+            </postactions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+          <state>
+            <to_id REF="V71546"/>
+            <transitions>
+              <transition>
+                <from_id REF="null"/>
+              </transition>
+              <transition>
+                <from_id REF="V71541"/>
+              </transition>
+            </transitions>
+            <postactions>
+              <postaction_field_date valuetype="2">
+                <field_id REF="F91130"/>
+              </postaction_field_date>
+            </postactions>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </state>
+        </states>
+      </simple_workflow>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F91120" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91120" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91120" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91121" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91121" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91121" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91126" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91126" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91126" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91127" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91127" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91129" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91129" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91130" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91130" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91130" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91133" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91133" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91133" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91245" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91245" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F91245" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91137" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F91137" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F91137" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+      </permissions>
+      <artifacts/>
+    </tracker>
     <tracker id="T3187" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[User Stories]]></name>
       <item_name><![CDATA[story]]></item_name>

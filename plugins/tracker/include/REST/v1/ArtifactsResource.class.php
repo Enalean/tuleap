@@ -1115,78 +1115,78 @@ class ArtifactsResource extends AuthenticatedResource
      * <pre>
      * /!\ REST route under construction and subject to changes /!\
      * </pre>
-     * <br/>
      *
-     * This partial update allows user to move an artifact from one tracker to another.
-     * <br/>
-     * This route moves an artifact from one tracker to another keeping:
-     * <br/>
-     * <ul>
-     * <li> Artifact ID </li>
-     * <li> Submitter user </li>
-     * <li> Submitted on date </li>
-     * <li> Semantic title</li>
-     * <li> Semantic descprition</li>
-     * <li> Semantic status</li>
-     * <li> Semantic initial effort</li>
-     * </ul>
+     * <p>This route moves an artifact from one tracker to another based on field names.</p>
      *
-     * <br/>
-     * To move an Artifact:
-     * <pre>
-     * {<br>
-     * &nbsp;"move": {<br/>
-     * &nbsp;&nbsp;"tracker_id": 1<br/>
-     * &nbsp;}<br/>
-     * }
-     * </pre>
-     * <br/>
-     * Limitations:
-     * <ul>
-     * <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
-     * <li>Artifact must not be linked to a FRS release or be part of a Program.</li>
-     * <li>Both trackers must have the title semantic, the description semantic, the status semantic, the contributor semantic and the initial effort semantic aligned
-     * (traget tracker must have at least one semantic used in source tracker)
-     * </li>
-     * </ul>
-     * <br/>
-     * <br/>
-     * Values for list fields (status and initial effort) are retrieved with duck typing:
-     * <ul>
-     * <li>Values are checked without taking into account the case</li>
-     * <li>The first value matching the label is returned</li>
-     * <li>If no corresponding value found, the default value is returned</li>
-     * </ul>
-     * <br/>
-     * <br/>
-     * Values for list fields bound to users (contributor) are are moved "as much as possible".
-     * <br/>
-     * If a user is not part of the target group, he is silently ignored..
-     * <br/>
-     * <br/>
-     * A new dry-run mode has been added, it allows user to know which fields will be moved or not without doing the action.
-     *  <br/>
-     * To move an Artifact in dry-run:
-     * <pre>
-     * {<br>
-     * &nbsp;"move": {<br/>
-     * &nbsp;&nbsp;"tracker_id": 1<br/>
-     * &nbsp;&nbsp;"dry_run": true<br/>
-     * &nbsp;}<br/>
-     * }
-     * </pre>
+     * <p>
+     *     The conditions for a field value to be taken into account are:
+     *     <ul>
+     *         <li>
+     *             The name of the field it comes from in the source tracker, and the name of the field it will be moved in, in the destination tracker, must be the same.
+     *             For instance: OK: initial_effort -> initial_effort, KO: initial_effort -> initial_effort_1
+     *         </li>
+     *         <li>
+     *             The source and destination fields must have the same type, or have compatible types: text and string, float and integer.
+     *         </li>
+     *     </ul>
+     * </p>
      *
-     * <br>
-     * Note for should_populate_feedback_on_success: this parameter is here to create (if true) a feedback in Tuleap UI
-     * in case of a successful move. The feedback will be displayed the next time the user browse Tuleap. If dry_run is
-     * true, then should_populate_feedback_on_success has no incidence since no move is really done.
-     * By default should_populate_feedback_on_success is false, no feedback will be created.
+     * <p>
+     *     Regarding values of the Selectbox, Multi Selectbox, Radio button, Checkbox, user/user groups bound open lists fields and the "Permissions on artifact" field, the conditions are:
+     *     <ul>
+     *         <li>The source and destination fields must have the same name.</li>
+     *         <li>The source and destination fields must have the same bind type (static values, users, user groups).</li>
+     *         <li>The selected values must exist in the destination field (same name).</li>
+     *     </ul>
+     *
+     *     Note: When a value is selected in the source field, but cannot be found in the destination tracker, then field will be indicated as partially moved, and the unknown value will be lost.
+     * </p>
+     *
+     * <p>For Open list fields bound to static values: the selected values will be added to the destination field.</p>
+     *
+     * <p>
+     *     To move an artifact:
+     *     <pre>
+     *     {<br>
+     *     &nbsp;"move": {<br/>
+     *     &nbsp;&nbsp;"tracker_id": 1<br/>
+     *     &nbsp;}<br/>
+     *     }
+     *     </pre>
+     *
+     *     Limitations:
+     *     <ul>
+     *         <li>User must be admin of both source and target trackers in order to be able to move an artifact.</li>
+     *         <li>Artifact must not be linked to an FRS release or be part of a Program.</li>
+     *     </ul>
+     * </p>
+     *
+     * <p>
+     *     A new dry-run mode has been added. It allows users to know which fields will be moved or not without doing the action.
+     *     <br/>
+     *     To move an artifact in dry-run mode:
+     *     <pre>
+     *     {<br>
+     *     &nbsp;"move": {<br/>
+     *     &nbsp;&nbsp;"tracker_id": 1<br/>
+     *     &nbsp;&nbsp;"dry_run": true<br/>
+     *     &nbsp;}<br/>
+     *     }
+     *     </pre>
+     * </p>
+     *
+     * <p>
+     *     Note for should_populate_feedback_on_success: this parameter is here to create (if true) a feedback in Tuleap UI
+     *     in case of a successful move. The feedback will be displayed the next time the user browse Tuleap. If dry_run is
+     *     true, then should_populate_feedback_on_success has no incidence since no move is really done.
+     *     By default, should_populate_feedback_on_success is false, no feedback will be created.
+     * </p>
      *
      * @url PATCH {id}
      *
      * @access protected
      *
-     * @param int                         $id    Id of the artifact
+     * @param int $id Id of the artifact
      * @param ArtifactPatchRepresentation $patch Tracker in which the artifact must be created {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation}
      *
      *

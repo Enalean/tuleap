@@ -34,7 +34,7 @@ use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 final class RestArtifactMover implements MoveRestArtifact
 {
@@ -57,7 +57,7 @@ final class RestArtifactMover implements MoveRestArtifact
      */
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
     {
-        if (! MoveArtifactCompleteFeatureFlag::isEnabled()) {
+        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
             return $this->perfomMoveBasedOnSemantic($artifact, $target_tracker, $user, $should_populate_feedback_on_success, $source_tracker);
         }
         return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success);

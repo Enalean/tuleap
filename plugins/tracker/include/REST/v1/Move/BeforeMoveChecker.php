@@ -27,7 +27,7 @@ use Tracker;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\v1\MoveArtifactCompleteFeatureFlag;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 final class BeforeMoveChecker implements CheckBeforeMove
 {
@@ -61,7 +61,7 @@ final class BeforeMoveChecker implements CheckBeforeMove
             throw new RestException(400, "An artifact cannot be moved in the same tracker");
         }
 
-        if (! MoveArtifactCompleteFeatureFlag::isEnabled() && count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
+        if (MoveArtifactSemanticFeatureFlag::isEnabled() && count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
             throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
         }
 

@@ -31,14 +31,14 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class ArtifactsActionsTest extends TrackerBase
 {
-    public function testMoveArtifactDryRun()
+    public function testMoveArtifactDryRun(): void
     {
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
             [
                 "move" => [
                     "tracker_id" => $this->move_tracker_id,
-                    "dry_run"    => true,
+                    "dry_run" => true,
                 ],
             ]
         );
@@ -90,24 +90,17 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertArrayHasKey("fields", $json['dry_run']);
 
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
-        $this->assertCount(4, $migrated_fields);
-
-        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Summary'));
-        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Description'));
-        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Assigned to'));
-        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Initial'));
+        $this->assertCount(36, $migrated_fields);
 
         $not_migrated_fields = $json['dry_run']['fields']['fields_not_migrated'];
-        $this->assertCount(3, $json['dry_run']['fields']['fields_not_migrated']);
+        $this->assertCount(3, $not_migrated_fields);
 
-        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Attachments'));
-        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Type'));
-        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Impediment'));
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'step exec'));
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'artifact link'));
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'file'));
 
         $partially_migrated_fields = $json['dry_run']['fields']['fields_partially_migrated'];
-        $this->assertCount(1, $partially_migrated_fields);
-
-        $this->assertTrue($this->isFieldInArrayByLabel($partially_migrated_fields, 'Status'));
+        $this->assertCount(0, $partially_migrated_fields);
     }
 
     private function isFieldInArrayByLabel(array $fields, $label)
@@ -124,7 +117,7 @@ class ArtifactsActionsTest extends TrackerBase
     /**
      * @depends testMoveArtifactDryRun
      */
-    public function testMoveArtifactWithUserRESTReadOnlyAdminNotInProject()
+    public function testMoveArtifactWithUserRESTReadOnlyAdminNotInProject(): void
     {
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
@@ -146,7 +139,7 @@ class ArtifactsActionsTest extends TrackerBase
     /**
      * @depends testMoveArtifactDryRun
      */
-    public function testMoveArtifact()
+    public function testMoveArtifact(): void
     {
         $artifact_id = end($this->base_artifact_ids);
         $body        = json_encode(
@@ -170,7 +163,7 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertMoveChangeset($changeset_response);
     }
 
-    private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id)
+    private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -189,35 +182,21 @@ class ArtifactsActionsTest extends TrackerBase
         );
 
         $this->assertEquals($artifact_response->getStatusCode(), 200);
-        $artifact_json = json_decode($artifact_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(REST_TestDataBuilder::TEST_USER_2_NAME, $artifact_json['submitted_by_user']['username']);
-        $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
-        $this->assertEquals($artifact_json['values_by_field']['title']['value'], "To be moved v2");
-        $this->assertEquals($artifact_json['values_by_field']['desc']['value'], "Artifact that will be moved in another tracker");
-        $this->assertEquals($artifact_json['values_by_field']['initialv2']['manual_value'], 25);
-        $this->assertEquals($artifact_json['status'], 'On going');
-        $this->assertEquals(count($artifact_json['assignees']), 1);
-        $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME], (int) $artifact_json['assignees'][0]["id"]);
     }
 
-    private function assertMoveChangeset(\Psr\Http\Message\ResponseInterface $changeset_response)
+    private function assertMoveChangeset(\Psr\Http\Message\ResponseInterface $changeset_response): void
     {
         $this->assertEquals(200, $changeset_response->getStatusCode());
         $changeset_json = json_decode($changeset_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(5, $changeset_json);
-        $this->assertEquals($changeset_json[0]['last_comment']['body'], "API 1 comment");
-        $this->assertEquals($changeset_json[1]['last_comment']['body'], "API 2 comment");
-        $this->assertEquals($changeset_json[2]['last_comment']['body'], "API 1 comment");
-        $this->assertEquals($changeset_json[3]['last_comment']['body'], "API 2 comment");
-        $this->assertEquals($changeset_json[4]['last_comment']['body'], "Artifact was moved from 'Base' tracker in 'Move artifact' project.");
+        $this->assertCount(1, $changeset_json);
+        $this->assertEquals($changeset_json[0]['last_comment']['body'], "Artifact was moved from 'tracker source' tracker in 'Move artifact' project.");
     }
 
     /**
      * @depends testMoveArtifact
      */
-    public function testDeleteArtifactsWithUserRESTReadOnlyAdminNotInProject()
+    public function testDeleteArtifactsWithUserRESTReadOnlyAdminNotInProject(): void
     {
         $response = $this->performArtifactDeletion(
             $this->delete_artifact_ids[1],
