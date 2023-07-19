@@ -10,6 +10,9 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../lib/frontend/fault

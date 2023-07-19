@@ -32,7 +32,7 @@ import MomentTimezoneDataPlugin from "moment-timezone-data-webpack-plugin";
 import {VueLoaderPlugin} from "vue-loader";
 
 const entry_points = {
-    document: "./scripts/document/index.js",
+    document: "./scripts/document/index.ts",
     "admin-search-view": "./scripts/admin-search-view/index.ts",
     "document-style": "./themes/document.scss",
 };

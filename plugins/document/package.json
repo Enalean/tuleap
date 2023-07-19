@@ -8,6 +8,7 @@
     "@tuleap/autocomplete-for-select2": "workspace:*",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
+    "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/keyboard-shortcuts": "workspace:*",
