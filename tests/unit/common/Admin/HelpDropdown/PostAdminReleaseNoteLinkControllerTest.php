@@ -24,39 +24,32 @@ namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\HelpDropdown\ReleaseNoteCustomLinkUpdater;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private PostAdminReleaseNoteLinkController $post_admin_release_note_controller;
 
     /**
-     * @var PostAdminReleaseNoteLinkController
-     */
-    private $post_admin_release_note_controller;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReleaseNoteCustomLinkUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReleaseNoteCustomLinkUpdater
      */
     private $custom_link_updater;
 
     /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&CSRFSynchronizerToken
      */
     private $csrf_token;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
+
+    private PFUser $admin_user;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
@@ -64,8 +57,8 @@ class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         parent::setUp();
 
-        $this->custom_link_updater = Mockery::mock(ReleaseNoteCustomLinkUpdater::class);
-        $this->csrf_token          = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->custom_link_updater = $this->createMock(ReleaseNoteCustomLinkUpdater::class);
+        $this->csrf_token          = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->post_admin_release_note_controller = new PostAdminReleaseNoteLinkController(
             $this->custom_link_updater,
@@ -73,41 +66,38 @@ class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             '11.18'
         );
 
-        $this->user   = Mockery::mock(PFUser::class);
-        $this->layout = Mockery::mock(BaseLayout::class);
+        $this->user       = UserTestBuilder::anActiveUser()->withoutSiteAdministrator()->build();
+        $this->admin_user = UserTestBuilder::buildSiteAdministrator();
+        $this->layout     = $this->createMock(BaseLayout::class);
     }
 
-    public function testItUpdatesTheLink()
+    public function testItUpdatesTheLink(): void
     {
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($this->user);
-        $request->shouldReceive('get')->with('url')->once()->andReturn("https://example.com");
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn($this->admin_user);
+        $request->expects(self::once())->method('get')->with('url')->willReturn("https://example.com");
 
-        $this->user->shouldReceive('isSuperUser')->andReturnTrue();
+        $this->csrf_token->method("check");
+        $this->custom_link_updater->method("updateReleaseNoteLink");
 
-        $this->csrf_token->shouldReceive("check");
-        $this->custom_link_updater->shouldReceive("updateReleaseNoteLink");
-
-        $this->layout->shouldReceive('addFeedback')->once();
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::once())->method('addFeedback');
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->post_admin_release_note_controller->process($request, $this->layout, []);
     }
 
-    public function testNoSiteAdminUserIsNotAllowed()
+    public function testNoSiteAdminUserIsNotAllowed(): void
     {
-        $this->user->shouldReceive('isSuperUser')->andReturnFalse();
-
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn($this->user);
 
         $this->expectException(ForbiddenException::class);
 
-        $this->csrf_token->shouldNotReceive("check");
-        $this->custom_link_updater->shouldNotReceive("updateReleaseNoteLink");
+        $this->csrf_token->expects(self::never())->method("check");
+        $this->custom_link_updater->expects(self::never())->method("updateReleaseNoteLink");
 
-        $this->layout->shouldNotReceive('addFeedback');
-        $this->layout->shouldNotReceive('redirect');
+        $this->layout->expects(self::never())->method('addFeedback');
+        $this->layout->expects(self::never())->method('redirect');
 
         $this->post_admin_release_note_controller->process($request, $this->layout, []);
     }

@@ -24,8 +24,6 @@ namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
@@ -33,40 +31,31 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminPageRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&AdminPageRenderer
      */
     private $admin_page_renderer;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReleaseNoteManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReleaseNoteManager
      */
     private $release_note_manager;
+    private AdminReleaseNoteLinkController $admin_release_note_controller;
     /**
-     * @var AdminReleaseNoteLinkController
-     */
-    private $admin_release_note_controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
-    /**
-     * @var UserTestBuilder
-     */
-    private $admin_user;
+    private PFUser $admin_user;
 
     protected function setUp(): void
     {
-        $this->admin_user = Mockery::mock(PFUser::class);
-        $this->admin_user->shouldReceive("isSuperUser")->andReturn(true);
+        $this->admin_user = UserTestBuilder::buildSiteAdministrator();
 
-        $this->layout               = Mockery::mock(BaseLayout::class);
-        $this->admin_page_renderer  = Mockery::mock(AdminPageRenderer::class);
-        $this->release_note_manager = Mockery::mock(ReleaseNoteManager::class);
-        $csrf_token                 = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->layout               = $this->createMock(BaseLayout::class);
+        $this->admin_page_renderer  = $this->createMock(AdminPageRenderer::class);
+        $this->release_note_manager = $this->createMock(ReleaseNoteManager::class);
+        $csrf_token                 = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->admin_release_note_controller = new AdminReleaseNoteLinkController(
             $this->admin_page_renderer,
@@ -75,33 +64,32 @@ class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             '11.18'
         );
 
-        $csrf_token->shouldReceive('getTokenName')->andReturn('challenge');
-        $csrf_token->shouldReceive('getToken')->andReturn('token');
+        $csrf_token->method('getTokenName')->willReturn('challenge');
+        $csrf_token->method('getToken')->willReturn('token');
     }
 
-    public function testItDisplaysTheAdminPage()
+    public function testItDisplaysTheAdminPage(): void
     {
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($this->admin_user);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn($this->admin_user);
 
-        $this->release_note_manager->shouldReceive("getReleaseNoteLink")->atLeast()->once();
-        $this->admin_page_renderer->shouldReceive("renderANoFramedPresenter");
+        $this->release_note_manager->expects(self::atLeastOnce())->method("getReleaseNoteLink");
+        $this->admin_page_renderer->method("renderANoFramedPresenter");
 
         $this->admin_release_note_controller->process($request, $this->layout, []);
     }
 
-    public function testNoSiteAdminUserIsNotAllowed()
+    public function testNoSiteAdminUserIsNotAllowed(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive("isSuperUser")->andReturnFalse();
+        $user = UserTestBuilder::anActiveUser()->withoutSiteAdministrator()->build();
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);
 
-        $this->release_note_manager->shouldNotReceive("getReleaseNoteLink");
-        $this->admin_page_renderer->shouldNotReceive("renderANoFramedPresenter");
+        $this->release_note_manager->method("getReleaseNoteLink");
+        $this->admin_page_renderer->method("renderANoFramedPresenter");
 
         $this->admin_release_note_controller->process($request, $this->layout, []);
     }
