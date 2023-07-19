@@ -22,33 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestV2FeatureFlag;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var \GitRepositoryFactory
-     */
-    private $git_repository_factory;
-    /**
-     * @var int
-     */
-    private $repository_id;
-
-    /**
-     * @var int
-     */
-    private $project_id;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
+    private \GitRepositoryFactory&MockObject $git_repository_factory;
+    private int $repository_id;
+    private int $project_id;
+    private HTMLURLBuilder $html_url_builder;
 
     protected function setUp(): void
     {
@@ -56,11 +43,12 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository_id = 8;
         $this->project_id    = 109;
 
-        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $repository                   = \Mockery::spy(\GitRepository::class);
-        $project                      = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUserName' => false, 'isPublic' => false]);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($repository);
+        $this->git_repository_factory = $this->createMock(\GitRepositoryFactory::class);
+
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withId($this->project_id)->build());
+
+        $this->git_repository_factory->method('getRepositoryById')->with($this->repository_id)->willReturn($repository);
 
         $this->html_url_builder = new HTMLURLBuilder(
             $this->git_repository_factory
@@ -75,7 +63,7 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_url = '/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/27/overview';
 
-        $this->assertEquals($expected_url, $result);
+        self::assertEquals($expected_url, $result);
     }
 
     public function testItReturnsTheAbsoluteWebURLToPullRequestOverview(): void
@@ -86,14 +74,14 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_url = 'https://example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
 
-        $this->assertEquals($expected_url, $result);
+        self::assertEquals($expected_url, $result);
     }
 
-    private function buildPullRequest(int $pull_request_id): PullRequest
+    private function buildPullRequest(int $pull_request_id): PullRequest&MockObject
     {
-        $pull_request = \Mockery::mock(\Tuleap\PullRequest\PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturns($pull_request_id);
-        $pull_request->shouldReceive('getRepositoryId')->andReturns($this->repository_id);
+        $pull_request = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
+        $pull_request->method('getId')->willReturn($pull_request_id);
+        $pull_request->method('getRepositoryId')->willReturn($this->repository_id);
 
         return $pull_request;
     }

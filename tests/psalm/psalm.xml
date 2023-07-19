@@ -45,10 +45,12 @@
             <directory name="plugins/docman/tests/unit/"/>
             <directory name="plugins/git/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
-            <directory name="plugins/pullrequest/tests/unit/"/>
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
             <file name="plugins/openidconnectclient/tests/unit/Authentication/IDTokenVerifierTest.php"/>
+            <file name="plugins/pullrequest/tests/unit/Notification/EventSubjectToNotificationSynchronousDispatcherTest.php"/>
+            <file name="plugins/pullrequest/tests/unit/Notification/EventSubjectToNotificationListenerTest.php"/>
+            <file name="plugins/pullrequest/tests/unit/Notification/EventSubjectToNotificationListenerProviderTest.php"/>
         </ignoreFiles>
     </projectFiles>
 

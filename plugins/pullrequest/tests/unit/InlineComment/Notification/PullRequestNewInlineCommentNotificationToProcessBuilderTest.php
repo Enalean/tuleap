@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
@@ -37,51 +36,45 @@ use UserManager;
 
 final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Factory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
      */
     private $pull_request_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InlineCommentRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentRetriever
      */
     private $inline_comment_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OwnerRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&OwnerRetriever
      */
     private $owner_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InlineCommentCodeContextExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentCodeContextExtractor
      */
     private $code_context_extractor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
      */
     private $user_helper;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HTMLURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
      */
     private $html_url_builder;
-
-    /**
-     * @var PullRequestNewInlineCommentNotificationToProcessBuilder
-     */
-    private $builder;
+    private PullRequestNewInlineCommentNotificationToProcessBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->user_manager             = \Mockery::mock(UserManager::class);
-        $this->pull_request_factory     = \Mockery::mock(Factory::class);
-        $this->inline_comment_retriever = \Mockery::mock(InlineCommentRetriever::class);
-        $this->code_context_extractor   = \Mockery::mock(InlineCommentCodeContextExtractor::class);
-        $this->owner_retriever          = \Mockery::mock(OwnerRetriever::class);
-        $this->user_helper              = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder         = \Mockery::mock(HTMLURLBuilder::class);
+        $this->user_manager             = $this->createMock(UserManager::class);
+        $this->pull_request_factory     = $this->createMock(Factory::class);
+        $this->inline_comment_retriever = $this->createMock(InlineCommentRetriever::class);
+        $this->code_context_extractor   = $this->createMock(InlineCommentCodeContextExtractor::class);
+        $this->owner_retriever          = $this->createMock(OwnerRetriever::class);
+        $this->user_helper              = $this->createMock(UserHelper::class);
+        $this->html_url_builder         = $this->createMock(HTMLURLBuilder::class);
 
         $this->builder = new PullRequestNewInlineCommentNotificationToProcessBuilder(
             $this->user_manager,
@@ -97,26 +90,26 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
     public function testBuildNewInlineCommentNotificationFromPullRequestNewInlineCommentEvent(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR Title');
         $change_user = $this->buildUser(102);
         $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
-        $comment     = $this->buildInlineComment(41, $change_user->getId(), $pull_request->getId());
+        $comment     = $this->buildInlineComment(41, (int) $change_user->getId(), $pull_request->getId());
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->shouldReceive('getInlineCommentByID')
-            ->with($comment->getId())->andReturn($comment);
-        $this->pull_request_factory->shouldReceive('getPullRequestById')
-            ->with($pull_request->getId())->andReturn($pull_request);
-        $this->user_manager->shouldReceive('getUserById')
-            ->with($change_user->getId())->andReturn($change_user);
-        $this->owner_retriever->shouldReceive('getOwners')->andReturn($owners);
-        $this->code_context_extractor->shouldReceive('getCodeContext')->andReturn('+Some code');
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('Display name');
-        $this->user_helper->shouldReceive('getAbsoluteUserURL')->andReturn('https://example.com/users/foo');
-        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('https://example.com/link-to-pr');
+        $this->inline_comment_retriever->method('getInlineCommentByID')
+            ->with($comment->getId())->willReturn($comment);
+        $this->pull_request_factory->method('getPullRequestById')
+            ->with($pull_request->getId())->willReturn($pull_request);
+        $this->user_manager->method('getUserById')
+            ->with($change_user->getId())->willReturn($change_user);
+        $this->owner_retriever->method('getOwners')->willReturn($owners);
+        $this->code_context_extractor->method('getCodeContext')->willReturn('+Some code');
+        $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
+        $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
 
         $notifications = $this->builder->getNotificationsToProcess($event);
         $this->assertCount(1, $notifications);
@@ -129,7 +122,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->shouldReceive('getInlineCommentByID')->andReturn(null);
+        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn(null);
 
         $this->assertEmpty($this->builder->getNotificationsToProcess($event));
     }
@@ -140,8 +133,8 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->shouldReceive('getInlineCommentByID')->andReturn($comment);
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andThrow(PullRequestNotFoundException::class);
+        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
 
         $this->assertEmpty($this->builder->getNotificationsToProcess($event));
     }
@@ -152,9 +145,9 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->shouldReceive('getInlineCommentByID')->andReturn($comment);
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn(\Mockery::mock(PullRequest::class));
-        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         $this->assertEmpty($this->builder->getNotificationsToProcess($event));
     }
@@ -162,17 +155,17 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
     public function testNoNotificationIsBuiltWhenTheCodeContextExtractionFails(): void
     {
         $change_user = $this->buildUser(102);
-        $comment     = $this->buildInlineComment(14, $change_user->getId(), 16);
+        $comment     = $this->buildInlineComment(14, (int) $change_user->getId(), 16);
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->shouldReceive('getInlineCommentByID')->andReturn($comment);
-        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn(\Mockery::mock(PullRequest::class));
-        $this->user_manager->shouldReceive('getUserById')->with($change_user->getId())->andReturn($change_user);
-        $this->owner_retriever->shouldReceive('getOwners')->andReturn([$change_user]);
+        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
+        $this->user_manager->method('getUserById')->with($change_user->getId())->willReturn($change_user);
+        $this->owner_retriever->method('getOwners')->willReturn([$change_user]);
 
-        $this->code_context_extractor->shouldReceive('getCodeContext')
-            ->andThrow(
+        $this->code_context_extractor->method('getCodeContext')
+            ->willThrowException(
                 new class extends InlineCommentCodeContextException
                 {
                 }

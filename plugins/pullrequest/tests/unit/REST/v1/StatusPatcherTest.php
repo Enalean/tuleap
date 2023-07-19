@@ -23,75 +23,58 @@ namespace Tuleap\PullRequest\REST\v1;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
+use Psr\Log\NullLogger;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestReopener;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use URLVerification;
 
 final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private StatusPatcher $patcher;
+    private PFUser $user;
 
     /**
-     * @var StatusPatcher
-     */
-    private $patcher;
-
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var GitRepositoryFactory|Mockery\MockInterface
+     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $git_repository_factory;
 
     /**
-     * @var Mockery\MockInterface|URLVerification
+     * @var \PHPUnit\Framework\MockObject\MockObject&URLVerification
      */
     private $url_verification;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $pull_request_permissions_checker;
 
     /**
-     * @var Mockery\MockInterface|AccessControlVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessControlVerifier
      */
     private $access_control_verifier;
 
     /**
-     * @var Mockery\MockInterface|PullRequestCloser
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestCloser
      */
     private $pull_request_closer;
-
+    private Project $project_source;
     /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project_source;
-
-    /**
-     * @var GitRepository|Mockery\MockInterface
+     * @var GitRepository&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_source;
-
     /**
-     * @var GitRepository|Mockery\MockInterface
+     * @var GitRepository&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_destination;
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project_destination;
+    private Project $project_destination;
     /**
      * @var PullRequestReopener&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -101,13 +84,12 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->git_repository_factory           = Mockery::mock(GitRepositoryFactory::class);
-        $this->access_control_verifier          = Mockery::mock(AccessControlVerifier::class);
-        $this->pull_request_permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
-        $this->pull_request_closer              = Mockery::mock(PullRequestCloser::class);
-        $this->url_verification                 = Mockery::mock(URLVerification::class);
+        $this->git_repository_factory           = $this->createMock(GitRepositoryFactory::class);
+        $this->access_control_verifier          = $this->createMock(AccessControlVerifier::class);
+        $this->pull_request_permissions_checker = $this->createMock(PullRequestPermissionChecker::class);
+        $this->pull_request_closer              = $this->createMock(PullRequestCloser::class);
+        $this->url_verification                 = $this->createMock(URLVerification::class);
         $this->reopener                         = $this->createMock(PullRequestReopener::class);
-        $logger                                 = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $this->patcher = new StatusPatcher(
             $this->git_repository_factory,
@@ -116,50 +98,50 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->pull_request_closer,
             $this->reopener,
             $this->url_verification,
-            $logger
+            new NullLogger(),
         );
 
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(102);
+        $this->user = UserTestBuilder::aUser()->withId(102)->build();
 
-        $this->project_source    = Mockery::mock(Project::class);
-        $this->repository_source = Mockery::mock(GitRepository::class);
-        $this->repository_source->shouldReceive('getProject')
-            ->atMost()
-            ->once()
-            ->andReturn($this->project_source);
+        $this->project_source    = ProjectTestBuilder::aProject()->build();
+        $this->repository_source = $this->createMock(GitRepository::class);
+        $this->repository_source
+            ->expects(self::atMost(1))
+            ->method('getProject')
+            ->willReturn($this->project_source);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryById')
-            ->with(2)
-            ->once()
-            ->andReturn($this->repository_source);
+        $this->project_destination    = ProjectTestBuilder::aProject()->build();
+        $this->repository_destination = $this->createMock(GitRepository::class);
+        $this->repository_destination
+            ->expects(self::atMost(1))
+            ->method('getProject')
+            ->willReturn($this->project_destination);
 
-        $this->project_destination    = Mockery::mock(Project::class);
-        $this->repository_destination = Mockery::mock(GitRepository::class);
-        $this->repository_destination->shouldReceive('getProject')
-            ->atMost()
-            ->once()
-            ->andReturn($this->project_destination);
-
-        $this->git_repository_factory->shouldReceive('getRepositoryById')
-            ->with(1)
-            ->once()
-            ->andReturn($this->repository_destination);
+        $this->git_repository_factory
+            ->method('getRepositoryById')
+            ->willReturnMap([
+                [1, $this->repository_destination],
+                [2, $this->repository_source],
+            ]);
     }
 
-    public function testItAbandonsAPullRequest()
+    public function testItAbandonsAPullRequest(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
+        $this->mockUserCanAccessBothProjects($this->project_source, $this->project_destination);
 
-        $this->mockUserCanWrite($this->repository_source, 'fork01');
-        $this->mockUserCanWrite($this->repository_destination, 'master');
+        $this->mockUserCanWriteInBothRepositories(
+            $this->repository_source,
+            'fork01',
+            $this->repository_destination,
+            'main'
+        );
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request, $this->user)
-            ->once();
+        $this->pull_request_closer
+            ->expects(self::once())
+            ->method('abandon')
+            ->with($pull_request, $this->user);
 
         $this->patcher->patchStatus(
             $this->user,
@@ -168,19 +150,23 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserCanAbandonAPullRequestIfItCanOnlyWriteInSourceRepository()
+    public function testUserCanAbandonAPullRequestIfItCanOnlyWriteInSourceRepository(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
+        $this->mockUserCanAccessBothProjects($this->project_source, $this->project_destination);
 
-        $this->mockUserCanWrite($this->repository_source, 'fork01');
-        $this->mockUserCannotWrite($this->repository_destination, 'master');
+        $this->mockUserCanOnlyWriteInSourceRepository(
+            $this->repository_source,
+            'fork01',
+            $this->repository_destination,
+            'main'
+        );
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request, $this->user)
-            ->once();
+        $this->pull_request_closer
+            ->expects(self::once())
+            ->method('abandon')
+            ->with($pull_request, $this->user);
 
         $this->patcher->patchStatus(
             $this->user,
@@ -189,19 +175,23 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserCanAbandonAPullRequestIfItCanOnlyWriteInDestinationRepository()
+    public function testUserCanAbandonAPullRequestIfItCanOnlyWriteInDestinationRepository(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
+        $this->mockUserCanAccessBothProjects($this->project_source, $this->project_destination);
 
-        $this->mockUserCannotWrite($this->repository_source, 'fork01');
-        $this->mockUserCanWrite($this->repository_destination, 'master');
+        $this->mockUserCanOnlyWriteInDestinationRepository(
+            $this->repository_source,
+            'fork01',
+            $this->repository_destination,
+            'main'
+        );
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request, $this->user)
-            ->once();
+        $this->pull_request_closer
+            ->expects(self::once())
+            ->method('abandon')
+            ->with($pull_request, $this->user);
 
         $this->patcher->patchStatus(
             $this->user,
@@ -210,19 +200,23 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserCannotAbandonAPullRequestIfItCannotWriteInBothSourceAndDestination()
+    public function testUserCannotAbandonAPullRequestIfItCannotWriteInBothSourceAndDestination(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
+        $this->mockUserCanAccessBothProjects($this->project_source, $this->project_destination);
 
-        $this->mockUserCannotWrite($this->repository_source, 'fork01');
-        $this->mockUserCannotWrite($this->repository_destination, 'master');
+        $this->mockUserCannotWriteInBothRepositories(
+            $this->repository_source,
+            'fork01',
+            $this->repository_destination,
+            'main',
+        );
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request, $this->user)
-            ->never();
+        $this->pull_request_closer
+            ->expects(self::never())
+            ->method('abandon')
+            ->with($pull_request, $this->user);
 
         $this->expectException(RestException::class);
 
@@ -233,15 +227,16 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserCannotAbandonAPullRequestIfItCannotAccessSourceProject()
+    public function testUserCannotAbandonAPullRequestIfItCannotAccessSourceProject(): void
     {
         $pull_request = $this->buildAPullRequest();
 
         $this->mockUserCannotAccessProject($this->project_source);
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->never();
+        $this->pull_request_closer
+            ->expects(self::never())
+            ->method('abandon')
+            ->with($pull_request);
 
         $this->expectException(RestException::class);
 
@@ -252,23 +247,23 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserCannotAbandonAPullRequestIfItCannotAccessDestinationProject()
+    public function testUserCannotAbandonAPullRequestIfItCannotAccessDestinationProject(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCannotAccessProject($this->project_destination);
+        $this->mockUserCanOnlyAccessSourceProject($this->project_source, $this->project_destination);
 
-        $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->never();
+        $this->pull_request_closer
+            ->expects(self::never())
+            ->method('abandon')
+            ->with($pull_request);
 
         $this->expectException(RestException::class);
 
         $this->patcher->patchStatus(
             $this->user,
             $pull_request,
-            'abandon'
+            'abandon',
         );
     }
 
@@ -276,20 +271,21 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->pull_request_permissions_checker->shouldReceive('checkPullRequestIsMergeableByUser');
+        $this->pull_request_permissions_checker->method('checkPullRequestIsMergeableByUser');
 
-        $this->pull_request_closer->shouldReceive('doMerge')
+        $this->pull_request_closer
+            ->expects(self::once())
+            ->method('doMerge')
             ->with(
                 $this->repository_destination,
                 $pull_request,
                 $this->user
-            )
-            ->once();
+            );
 
         $this->patcher->patchStatus(
             $this->user,
             $pull_request,
-            'merge'
+            'merge',
         );
     }
 
@@ -297,16 +293,17 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->pull_request_permissions_checker->shouldReceive('checkPullRequestIsMergeableByUser')
-            ->andThrow(new UserCannotMergePullRequestException($pull_request, $this->user));
+        $this->pull_request_permissions_checker->method('checkPullRequestIsMergeableByUser')
+            ->willThrowException(new UserCannotMergePullRequestException($pull_request, $this->user));
 
-        $this->pull_request_closer->shouldReceive('doMerge')
+        $this->pull_request_closer
+            ->expects(self::never())
+            ->method('doMerge')
             ->with(
                 $this->repository_destination,
                 $pull_request,
                 $this->user
-            )
-            ->never();
+            );
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
@@ -322,11 +319,14 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildAPullRequest('A');
 
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
+        $this->mockUserCanAccessBothProjects($this->project_source, $this->project_destination);
 
-        $this->mockUserCanWrite($this->repository_source, 'fork01');
-        $this->mockUserCanWrite($this->repository_destination, 'master');
+        $this->mockUserCanWriteInBothRepositories(
+            $this->repository_source,
+            'fork01',
+            $this->repository_destination,
+            'main',
+        );
 
         $this->reopener->expects(self::once())->method("reopen");
 
@@ -337,7 +337,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfStatusIsNotKnown()
+    public function testItThrowsAnExceptionIfStatusIsNotKnown(): void
     {
         $pull_request = $this->buildAPullRequest();
 
@@ -361,7 +361,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $creation_date              = 1565169592;
         $source_reference           = 'fork01';
         $source_reference_sha1      = '0000000000000000000000000000000000000000';
-        $destination_reference      = 'master';
+        $destination_reference      = 'main';
         $destination_reference_sha1 = '0000000000000000000000000000000000000001';
 
         return new PullRequest(
@@ -380,45 +380,95 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function mockUserCanAccessProject(Project $project): void
+    private function mockUserCanAccessBothProjects(Project $source_project, Project $destination_project): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once()
-            ->andReturnTrue();
+        $this->url_verification
+            ->method('userCanAccessProject')
+            ->willReturnMap([
+                [$this->user, $source_project, true],
+                [$this->user, $destination_project, true],
+            ]);
+    }
+
+    private function mockUserCanOnlyAccessSourceProject(Project $source_project, Project $destination_project): void
+    {
+        $this->url_verification
+            ->method('userCanAccessProject')
+            ->willReturnCallback(
+                function (PFUser $user_param, Project $project_param) use ($source_project, $destination_project): bool {
+                    if ($user_param === $this->user && $project_param === $source_project) {
+                        return true;
+                    } elseif ($user_param === $this->user && $project_param === $destination_project) {
+                        throw new RestException(401, '');
+                    }
+
+                    return false;
+                }
+            );
     }
 
     private function mockUserCannotAccessProject(Project $project): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')
+        $this->url_verification
+            ->expects(self::once())
+            ->method('userCanAccessProject')
             ->with($this->user, $project)
-            ->once()
-            ->andThrow(Mockery::mock(RestException::class));
+            ->willThrowException($this->createMock(RestException::class));
     }
 
-    private function mockUserCanWrite(GitRepository $repository, string $reference): void
-    {
-        $this->access_control_verifier->shouldReceive('canWrite')
-            ->with(
-                $this->user,
-                $repository,
-                $reference
-            )
-            ->atMost()
-            ->once()
-            ->andReturnTrue();
+    private function mockUserCanWriteInBothRepositories(
+        GitRepository $source_repository,
+        string $source_reference,
+        GitRepository $destination_repository,
+        string $destination_reference,
+    ): void {
+        $this->access_control_verifier
+            ->method('canWrite')
+            ->willReturnMap([
+                [$this->user, $source_repository, $source_reference, true],
+                [$this->user, $destination_repository, $destination_reference, true],
+            ]);
     }
 
-    private function mockUserCannotWrite(GitRepository $repository, string $reference): void
-    {
-        $this->access_control_verifier->shouldReceive('canWrite')
-            ->with(
-                $this->user,
-                $repository,
-                $reference
-            )
-            ->atMost()
-            ->once()
-            ->andReturnFalse();
+    private function mockUserCannotWriteInBothRepositories(
+        GitRepository $source_repository,
+        string $source_reference,
+        GitRepository $destination_repository,
+        string $destination_reference,
+    ): void {
+        $this->access_control_verifier
+            ->method('canWrite')
+            ->willReturnMap([
+                [$this->user, $source_repository, $source_reference, false],
+                [$this->user, $destination_repository, $destination_reference, false],
+            ]);
+    }
+
+    private function mockUserCanOnlyWriteInSourceRepository(
+        GitRepository $source_repository,
+        string $source_reference,
+        GitRepository $destination_repository,
+        string $destination_reference,
+    ): void {
+        $this->access_control_verifier
+            ->method('canWrite')
+            ->willReturnMap([
+                [$this->user, $source_repository, $source_reference, true],
+                [$this->user, $destination_repository, $destination_reference, false],
+            ]);
+    }
+
+    private function mockUserCanOnlyWriteInDestinationRepository(
+        GitRepository $source_repository,
+        string $source_reference,
+        GitRepository $destination_repository,
+        string $destination_reference,
+    ): void {
+        $this->access_control_verifier
+            ->method('canWrite')
+            ->willReturnMap([
+                [$this->user, $source_repository, $source_reference, false],
+                [$this->user, $destination_repository, $destination_reference, true],
+            ]);
     }
 }

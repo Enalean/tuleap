@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification\Strategy;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -33,40 +32,35 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \MailBuilder|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \MailBuilder&\PHPUnit\Framework\MockObject\MockObject
      */
     private $mail_builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestPermissionChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
      */
     private $pull_request_permission_checker;
     /**
-     * @var \GitRepositoryFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HTMLURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
      */
     private $html_url_builder;
 
-    /**
-     * @var PullRequestNotificationSendMail
-     */
-    private $notification_strategy;
+    private PullRequestNotificationSendMail $notification_strategy;
 
     protected function setUp(): void
     {
-        $this->mail_builder                    = \Mockery::mock(\MailBuilder::class);
-        $this->pull_request_permission_checker = \Mockery::mock(PullRequestPermissionChecker::class);
-        $this->repository_factory              = \Mockery::mock(\GitRepositoryFactory::class);
-        $this->html_url_builder                = \Mockery::mock(HTMLURLBuilder::class);
+        $this->mail_builder                    = $this->createMock(\MailBuilder::class);
+        $this->pull_request_permission_checker = $this->createMock(PullRequestPermissionChecker::class);
+        $this->repository_factory              = $this->createMock(\GitRepositoryFactory::class);
+        $this->html_url_builder                = $this->createMock(HTMLURLBuilder::class);
 
         $this->notification_strategy = new PullRequestNotificationSendMail(
             $this->mail_builder,
-            \Mockery::mock(\MailEnhancer::class),
+            $this->createMock(\MailEnhancer::class),
             $this->pull_request_permission_checker,
             $this->repository_factory,
             $this->html_url_builder,
@@ -76,81 +70,86 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testMailNotificationsAreSent(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getRepoDestId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR title');
-        $recipient_en = \Mockery::mock(\PFUser::class);
-        $recipient_en->shouldReceive('getEmail')->andReturn('user_en@example.com');
-        $recipient_en->shouldReceive('getLocale')->andReturn('en_US');
-        $recipient_fr = \Mockery::mock(\PFUser::class);
-        $recipient_fr->shouldReceive('getEmail')->andReturn('user_fr@example.com');
-        $recipient_fr->shouldReceive('getLocale')->andReturn('fr_FR');
-        $recipient_with_same_email_but_different_locale = \Mockery::mock(\PFUser::class);
-        $recipient_with_same_email_but_different_locale->shouldReceive('getEmail')->andReturn('user_fr@example.com');
-        $recipient_with_same_email_but_different_locale->shouldReceive('getLocale')->andReturn('jp_JP');
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getRepoDestId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR title');
+        $recipient_en = $this->createMock(\PFUser::class);
+        $recipient_en->method('getEmail')->willReturn('user_en@example.com');
+        $recipient_en->method('getLocale')->willReturn('en_US');
+        $recipient_fr = $this->createMock(\PFUser::class);
+        $recipient_fr->method('getEmail')->willReturn('user_fr@example.com');
+        $recipient_fr->method('getLocale')->willReturn('fr_FR');
+        $recipient_with_same_email_but_different_locale = $this->createMock(\PFUser::class);
+        $recipient_with_same_email_but_different_locale->method('getEmail')->willReturn('user_fr@example.com');
+        $recipient_with_same_email_but_different_locale->method('getLocale')->willReturn('jp_JP');
         $notification = $this->buildNotificationToProcess($pull_request, $recipient_en, $recipient_fr);
 
-        $destination_repository = \Mockery::mock(\GitRepository::class);
-        $destination_repository->shouldReceive('getFullName')->andReturn('Repository name');
-        $destination_repository->shouldReceive('getProject')->andReturn(\Mockery::mock(\Project::class));
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn($destination_repository);
+        $destination_repository = $this->createMock(\GitRepository::class);
+        $destination_repository->method('getFullName')->willReturn('Repository name');
+        $destination_repository->method('getProject')->willReturn($this->createMock(\Project::class));
+        $this->repository_factory->method('getRepositoryById')->willReturn($destination_repository);
 
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser');
+        $this->pull_request_permission_checker->method('checkPullRequestIsReadableByUser');
 
-        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('/path/to/pr');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('/path/to/pr');
 
-        $this->mail_builder->shouldReceive('buildAndSendEmail')->twice();
+        $this->mail_builder->expects(self::exactly(2))->method('buildAndSendEmail');
 
         $this->notification_strategy->execute($notification);
     }
 
     public function testDoNotSendMailToRecipientThatCannotAccessThePullRequest(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getRepoDestId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR title');
-        $recipient_with_access = \Mockery::mock(\PFUser::class);
-        $recipient_with_access->shouldReceive('getEmail')->andReturn('user@example.com');
-        $recipient_with_access->shouldReceive('getLocale')->andReturn('en_US');
-        $recipient_without_access = \Mockery::mock(\PFUser::class);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getRepoDestId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR title');
+        $recipient_with_access = $this->createMock(\PFUser::class);
+        $recipient_with_access->method('getEmail')->willReturn('user@example.com');
+        $recipient_with_access->method('getLocale')->willReturn('en_US');
+        $recipient_without_access = $this->createMock(\PFUser::class);
         $notification             = $this->buildNotificationToProcess($pull_request, $recipient_with_access, $recipient_without_access);
 
-        $destination_repository = \Mockery::mock(\GitRepository::class);
-        $destination_repository->shouldReceive('getFullName')->andReturn('Repository name');
-        $destination_repository->shouldReceive('getProject')->andReturn(\Mockery::mock(\Project::class));
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn($destination_repository);
+        $destination_repository = $this->createMock(\GitRepository::class);
+        $destination_repository->method('getFullName')->willReturn('Repository name');
+        $destination_repository->method('getProject')->willReturn($this->createMock(\Project::class));
+        $this->repository_factory->method('getRepositoryById')->willReturn($destination_repository);
 
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->with($pull_request, $recipient_with_access);
-        $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
-            ->with($pull_request, $recipient_without_access)->andThrow(UserCannotReadGitRepositoryException::class);
-
-        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('/path/to/pr');
-
-        $this->mail_builder->shouldReceive('buildAndSendEmail')->with(
-            \Mockery::any(),
-            \Mockery::on(
-                static function (\Notification $notification) use ($recipient_with_access): bool {
-                    $emails = $notification->getEmails();
-                    return count($emails) === 1 && $emails[0] === $recipient_with_access->getEmail();
+        $this->pull_request_permission_checker->method('checkPullRequestIsReadableByUser')->willReturnCallback(
+            function (PullRequest $pull_request_param, \PFUser $user_param) use ($pull_request, $recipient_without_access): void {
+                if ($pull_request_param === $pull_request && $user_param === $recipient_without_access) {
+                    throw new UserCannotReadGitRepositoryException();
                 }
-            ),
-            \Mockery::any()
-        )->once();
+            }
+        );
+
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('/path/to/pr');
+
+        $this->mail_builder->expects(self::once())
+            ->method('buildAndSendEmail')
+            ->with(
+                self::anything(),
+                self::callback(
+                    static function (\Notification $notification) use ($recipient_with_access): bool {
+                        $emails = $notification->getEmails();
+                        return count($emails) === 1 && $emails[0] === $recipient_with_access->getEmail();
+                    }
+                ),
+                self::anything(),
+            );
 
         $this->notification_strategy->execute($notification);
     }
 
     public function testDoNotSendMailIfTheDestinationRepositoryCannotBeFound(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getRepoDestId')->andReturn(404);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getRepoDestId')->willReturn(404);
 
         $notification = $this->buildNotificationToProcess($pull_request);
 
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturn(null);
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
 
-        $this->mail_builder->shouldNotReceive('buildAndSendEmail');
+        $this->mail_builder->expects(self::never())->method('buildAndSendEmail');
 
         $this->notification_strategy->execute($notification);
     }
@@ -174,21 +173,33 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
                 $this->recipients   = $recipients;
             }
 
+            /**
+             * @psalm-mutation-free
+             */
             public function getPullRequest(): PullRequest
             {
                 return $this->pull_request;
             }
 
+            /**
+             * @psalm-mutation-free
+             */
             public function getRecipients(): array
             {
                 return $this->recipients;
             }
 
+            /**
+             * @psalm-mutation-free
+             */
             public function asPlaintext(): string
             {
                 return 'Plaintext mail body';
             }
 
+            /**
+             * @psalm-mutation-free
+             */
             public function asEnhancedContent(): NotificationEnhancedContent
             {
                 return new class implements NotificationEnhancedContent {

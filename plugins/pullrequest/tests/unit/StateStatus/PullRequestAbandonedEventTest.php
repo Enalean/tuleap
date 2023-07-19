@@ -22,21 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\StateStatus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PullRequestAbandonedEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(147);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $user  = UserTestBuilder::aUser()->withId(147)->build();
         $event = PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest($pull_request, $user);
 
         $this->assertEquals(
@@ -50,10 +46,9 @@ final class PullRequestAbandonedEventTest extends \Tuleap\Test\PHPUnit\TestCase
         $pr_id   = 13;
         $user_id = 147;
 
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn($pr_id);
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn($user_id);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn($pr_id);
+        $user = UserTestBuilder::aUser()->withId($user_id)->build();
 
         $payload = [
             'pr_id'   => $pr_id,

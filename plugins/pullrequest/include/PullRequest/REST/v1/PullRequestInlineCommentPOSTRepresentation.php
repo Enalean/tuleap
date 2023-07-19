@@ -48,4 +48,34 @@ class PullRequestInlineCommentPOSTRepresentation
      * @var int | null {@type int} {@required false}
      */
     public int|null $parent_id = 0;
+
+    private function __construct(
+        string $content,
+        string $file_path,
+        int $unidiff_offset,
+        string $position,
+        ?int $parent_id,
+    ) {
+        $this->content        = $content;
+        $this->file_path      = $file_path;
+        $this->unidiff_offset = $unidiff_offset;
+        $this->position       = $position;
+        $this->parent_id      = $parent_id;
+    }
+
+    public static function build(
+        string $content,
+        string $file_path,
+        int $unidiff_offset,
+        string $position,
+        ?int $parent_id,
+    ): self {
+        return new self(
+            $content,
+            $file_path,
+            $unidiff_offset,
+            $position,
+            $parent_id,
+        );
+    }
 }

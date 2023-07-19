@@ -20,35 +20,31 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testGitReferenceIsRetrieved()
+    public function testGitReferenceIsRetrieved(): void
     {
-        $dao = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $dao->shouldReceive('getReferenceByPullRequestId')->andReturns(
+        $dao = $this->createMock(GitPullRequestReferenceDAO::class);
+        $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_OK]
         );
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturns(1);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(1);
 
         $reference_retriever = new GitPullRequestReferenceRetriever($dao);
         $git_reference       = $reference_retriever->getGitReferenceFromPullRequest($pull_request);
 
-        $this->assertInstanceOf(GitPullRequestReference::class, $git_reference);
+        self::assertInstanceOf(GitPullRequestReference::class, $git_reference);
     }
 
-    public function testNotFoundExceptionIsThrownWhenGitReferenceIsNotReservedForThePullRequest()
+    public function testNotFoundExceptionIsThrownWhenGitReferenceIsNotReservedForThePullRequest(): void
     {
-        $dao = \Mockery::mock(GitPullRequestReferenceDAO::class);
-        $dao->shouldReceive('getReferenceByPullRequestId')->andReturns([]);
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturns(1);
+        $dao = $this->createMock(GitPullRequestReferenceDAO::class);
+        $dao->method('getReferenceByPullRequestId')->willReturn([]);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(1);
 
         $reference_retriever = new GitPullRequestReferenceRetriever($dao);
 

@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Authorization;
 
 use GitRepoNotFoundException;
 use GitRepositoryFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project_AccessException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
@@ -32,51 +31,48 @@ use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var GitRepositoryFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitRepositoryFactory
      */
     private $git_repository_factory;
+    private \PFUser $user;
     /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var PullRequest
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequest
      */
     private $pull_request;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectAccessChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectAccessChecker
      */
     private $project_access_checker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessControlVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessControlVerifier
      */
     private $access_control_verifier;
     /**
-     * @var \GitRepository
+     * @var \PHPUnit\Framework\MockObject\MockObject&\GitRepository
      */
     private $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                    = \Mockery::spy(\PFUser::class);
-        $this->pull_request            = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
-        $this->repository              = \Mockery::spy(\GitRepository::class);
-        $this->git_repository_factory  = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->project_access_checker  = \Mockery::spy(ProjectAccessChecker::class);
-        $this->access_control_verifier = \Mockery::mock(AccessControlVerifier::class);
+        $this->user                    = UserTestBuilder::aUser()->build();
+        $this->pull_request            = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
+        $this->repository              = $this->createMock(\GitRepository::class);
+        $this->git_repository_factory  = $this->createMock(\GitRepositoryFactory::class);
+        $this->project_access_checker  = $this->createMock(ProjectAccessChecker::class);
+        $this->access_control_verifier = $this->createMock(AccessControlVerifier::class);
     }
 
     public function testItThrowsWhenGitRepoIsNotFound(): void
     {
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn(null);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -87,10 +83,10 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItLetsExceptionBubbleUpWhenUserHasNotAccessToProject(): void
     {
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessPrivateException());
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->project_access_checker->method('checkUserCanAccessProject')->willThrowException(new Project_AccessPrivateException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -101,10 +97,10 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItLetsExceptionBubbleUpWhenProjectIsNotFound(): void
     {
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->project_access_checker->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -115,10 +111,12 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItThrowsWhenUserCannotReadTheDestinationGitRepo(): void
     {
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
-        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->repository->method('userCanRead')->with($this->user)->willReturn(false);
+        $this->repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
+
+        $this->project_access_checker->method('checkUserCanAccessProject');
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -130,10 +128,11 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testChecksTheUserCanMergeAPullRequest(): void
     {
         $this->expectNotToPerformAssertions();
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->repository->shouldReceive('userCanAccessProject')->andReturn(\Mockery::mock(\Project::class));
-        $this->access_control_verifier->shouldReceive('canWrite')->andReturn(true);
+        $this->pull_request->method('getId')->willReturn(1);
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->pull_request->method('getBranchDest')->willReturn('main');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->access_control_verifier->method('canWrite')->willReturn(true);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -142,10 +141,11 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testRejectsUserThatCannotMergeAPullRequest(): void
     {
-        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-        $this->repository->shouldReceive('userCanAccessProject')->andReturn(\Mockery::mock(\Project::class));
-        $this->access_control_verifier->shouldReceive('canWrite')->andReturn(false);
+        $this->pull_request->method('getId')->willReturn(1);
+        $this->pull_request->method('getRepoDestId')->willReturn(10);
+        $this->pull_request->method('getBranchDest')->willReturn('main');
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
+        $this->access_control_verifier->method('canWrite')->willReturn(false);
 
         $permission_checker = $this->instantiatePermissionChecker();
 

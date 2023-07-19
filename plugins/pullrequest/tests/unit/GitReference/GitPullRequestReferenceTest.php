@@ -20,22 +20,19 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-
-class GitPullRequestReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testInvalidStatusIsRejected()
+    public function testInvalidStatusIsRejected(): void
     {
         $this->expectException(\DomainException::class);
         new GitPullRequestReference(1, 99999999999999999);
     }
 
-    public function testBuildReferenceWithUpdatedId()
+    public function testBuildReferenceWithUpdatedId(): void
     {
         $reference         = new GitPullRequestReference(1, GitPullRequestReference::STATUS_OK);
         $updated_reference = GitPullRequestReference::buildReferenceWithUpdatedId(2, $reference);
 
-        $this->assertEquals(2, $updated_reference->getGitReferenceId());
+        self::assertEquals(2, $updated_reference->getGitReferenceId());
     }
 }

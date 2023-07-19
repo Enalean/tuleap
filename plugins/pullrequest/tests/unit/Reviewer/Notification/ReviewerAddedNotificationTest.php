@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
@@ -32,7 +31,6 @@ use UserHelper;
 
 final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
@@ -40,17 +38,17 @@ final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $change_user      = $this->buildUser(102);
         $new_reviewers    = [$this->buildUser(103), $this->buildUser(104)];
-        $pull_request     = \Mockery::mock(PullRequest::class);
-        $user_helper      = \Mockery::mock(UserHelper::class);
-        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+        $pull_request     = $this->createMock(PullRequest::class);
+        $user_helper      = $this->createMock(UserHelper::class);
+        $html_url_builder = $this->createMock(HTMLURLBuilder::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
-        $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
-        $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('My awesome contribution');
+        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($pull_request)->willReturn('https://example.com/pr-link');
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('My awesome contribution');
 
         $notification = ReviewerAddedNotification::fromReviewerChangeInformation(
             $user_helper,
@@ -60,10 +58,10 @@ final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
             $new_reviewers
         );
 
-        $this->assertSame($new_reviewers, $notification->getRecipients());
-        $this->assertSame($pull_request, $notification->getPullRequest());
-        $this->assertEquals('User A requested your review on #12: My awesome contribution', $notification->asPlaintext());
-        $this->assertEquals(
+        self::assertSame($new_reviewers, $notification->getRecipients());
+        self::assertSame($pull_request, $notification->getPullRequest());
+        self::assertEquals('User A requested your review on #12: My awesome contribution', $notification->asPlaintext());
+        self::assertEquals(
             '<a href="https://example.com/users/usera">User A</a> requested your review on <a href="https://example.com/pr-link">#12</a>: My awesome contribution',
             $notification->asEnhancedContent()->toString()
         );
@@ -72,17 +70,17 @@ final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserAddingItselfAsReviewerDoesNotReceiveANotificationForItsOwnAction(): void
     {
         $change_user      = $this->buildUser(102);
-        $pull_request     = \Mockery::mock(PullRequest::class);
-        $user_helper      = \Mockery::mock(UserHelper::class);
-        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+        $pull_request     = $this->createMock(PullRequest::class);
+        $user_helper      = $this->createMock(UserHelper::class);
+        $html_url_builder = $this->createMock(HTMLURLBuilder::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
-        $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
-        $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('My awesome contribution');
+        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($pull_request)->willReturn('https://example.com/pr-link');
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('My awesome contribution');
 
         $notification = ReviewerAddedNotification::fromReviewerChangeInformation(
             $user_helper,
@@ -93,7 +91,7 @@ final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
 
-        $this->assertEmpty($notification->getRecipients());
+        self::assertEmpty($notification->getRecipients());
     }
 
     private function buildUser(int $user_id): PFUser

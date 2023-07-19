@@ -22,112 +22,102 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Label;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
-     * @var \Tuleap\PullRequest\Reference\HTMLURLBuilder
-     */
-    private $html_url_builder;
-    /**
-     * @var LabeledItemCollection
-     */
-    private $item_collection;
-    /**
-     * @var PullRequestLabelDao
-     */
-    private $label_dao;
-    /**
-     * @var PullRequestPermissionChecker
-     */
-    private $pullrequest_permission_checker;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-    /**
-     * @var Factory
-     */
-    private $pullrequest_factory;
-    /**
-     * @var int
-     */
-    private $project_id;
-    /**
-     * @var array
-     */
-    private $label_ids;
+    private \UserManager&MockObject $user_manager;
+    private \GitRepositoryFactory&MockObject $repository_factory;
+    private \Tuleap\PullRequest\Reference\HTMLURLBuilder&MockObject $html_url_builder;
+    private LabeledItemCollection&MockObject $item_collection;
+    private PullRequestLabelDao&MockObject $label_dao;
+    private PullRequestPermissionChecker&MockObject $pullrequest_permission_checker;
+    private GlyphFinder&MockObject $glyph_finder;
+    private Factory&MockObject $pullrequest_factory;
+    private int $project_id;
+    private array $label_ids;
+    private \UserHelper&MockObject $user_helper;
+    private \TemplateRenderer&MockObject $template_renderer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->pullrequest_permission_checker = \Mockery::spy(\Tuleap\PullRequest\Authorization\PullRequestPermissionChecker::class);
-        $this->label_dao                      = \Mockery::spy(\Tuleap\PullRequest\Label\PullRequestLabelDao::class);
-        $this->glyph_finder                   = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
-        $this->pullrequest_factory            = \Mockery::spy(\Tuleap\PullRequest\Factory::class);
+        $this->pullrequest_permission_checker = $this->createMock(\Tuleap\PullRequest\Authorization\PullRequestPermissionChecker::class);
+        $this->label_dao                      = $this->createMock(\Tuleap\PullRequest\Label\PullRequestLabelDao::class);
+        $this->glyph_finder                   = $this->createMock(\Tuleap\Glyph\GlyphFinder::class);
+        $this->pullrequest_factory            = $this->createMock(\Tuleap\PullRequest\Factory::class);
 
-        $glyph = \Mockery::spy(\Tuleap\Glyph\Glyph::class);
-        $this->glyph_finder->shouldReceive('get')->andReturns($glyph);
+        $glyph = $this->createMock(\Tuleap\Glyph\Glyph::class);
+        $this->glyph_finder->method('get')->willReturn($glyph);
 
         $this->label_ids = [19, 27];
 
         $this->item_collection = $this->mockLabeledItemCollection();
 
-        $this->label_dao->shouldReceive('foundRows')->andReturns(99);
+        $this->label_dao->method('foundRows')->willReturn(99);
 
-        $first_pullrequest = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
-        $first_pullrequest->shouldReceive('getTitle')->andReturns('First PR');
-        $second_pullrequest = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
-        $second_pullrequest->shouldReceive('getTitle')->andReturns('Second PR');
-        $this->pullrequest_factory->shouldReceive('getPullRequestById')->with(75)->andReturns($first_pullrequest);
-        $this->pullrequest_factory->shouldReceive('getPullRequestById')->with(66)->andReturns($second_pullrequest);
+        $first_pullrequest = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
+        $first_pullrequest->method('getTitle')->willReturn('First PR');
+        $first_pullrequest->method('getRepoDestId')->willReturn(2);
+        $first_pullrequest->method('getUserId')->willReturn(101);
+        $first_pullrequest->method('getCreationDate')->willReturn('');
+        $second_pullrequest = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
+        $second_pullrequest->method('getTitle')->willReturn('Second PR');
+        $second_pullrequest->method('getRepoDestId')->willReturn(2);
+        $second_pullrequest->method('getUserId')->willReturn(101);
+        $second_pullrequest->method('getCreationDate')->willReturn('');
 
-        $this->html_url_builder = \Mockery::spy(\Tuleap\PullRequest\Reference\HTMLURLBuilder::class);
+        $this->pullrequest_factory->method('getPullRequestById')->willReturnMap([
+            [75, $first_pullrequest],
+            [66, $second_pullrequest],
+        ]);
 
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $repository               = \Mockery::spy(\GitRepository::class);
-        $repository->shouldReceive('getName')->andReturns('repo001');
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($repository);
+        $this->html_url_builder = $this->createMock(\Tuleap\PullRequest\Reference\HTMLURLBuilder::class);
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
-        $user               = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getRealName')->andReturns('user1');
-        $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+        $this->repository_factory = $this->createMock(\GitRepositoryFactory::class);
+        $repository               = $this->createMock(\GitRepository::class);
+        $repository->method('getName')->willReturn('repo001');
+        $repository->method('getHTMLLink')->willReturn('');
+        $this->repository_factory->method('getRepositoryById')->willReturn($repository);
+
+        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->withRealName('user1')->build());
+
+        $this->user_helper       = $this->createMock(\UserHelper::class);
+        $this->template_renderer = $this->createMock(\TemplateRenderer::class);
 
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItCollectsPullRequestsWithTheGivenLabel(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')
+        $this->label_dao
+            ->expects(self::once())
+            ->method('searchPullRequestsByLabels')
             ->with($this->project_id, $this->label_ids, 50, 0)
-            ->once()
-            ->andReturns(\TestHelper::argListToDar([
+            ->willReturn(\TestHelper::argListToDar([
                 ['id' => 75],
                 ['id' => 66],
             ]));
 
-        $this->item_collection->shouldReceive('add')->times(2);
-        $this->item_collection->shouldReceive('setTotalSize')->with(99)->once();
+        $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser');
+
+        $this->user_helper->method('getLinkOnUser')->willReturn('');
+        $this->template_renderer->method('renderToString')->willReturn('');
+        $this->html_url_builder->method('getPullRequestOverviewUrl');
+
+        $this->item_collection->expects(self::exactly(2))->method('add');
+        $this->item_collection->expects(self::once())->method('setTotalSize')->with(99);
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -135,14 +125,14 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAddPullRequestsUserCannotSee(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+        $this->label_dao->method('searchPullRequestsByLabels')->willReturn(\TestHelper::argListToDar([
             ['id' => 75],
             ['id' => 66],
         ]));
 
-        $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new UserCannotReadGitRepositoryException());
-        $this->item_collection->shouldReceive('add')->never();
-        $this->item_collection->shouldReceive('thereAreItemsUserCannotSee')->atLeast()->once();
+        $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new UserCannotReadGitRepositoryException());
+        $this->item_collection->expects(self::never())->method('add');
+        $this->item_collection->expects(self::atLeast(1))->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -150,14 +140,14 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAddPullRequestsFromProjectsUserCannotSee(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+        $this->label_dao->method('searchPullRequestsByLabels')->willReturn(\TestHelper::argListToDar([
             ['id' => 75],
             ['id' => 66],
         ]));
 
-        $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessPrivateException());
-        $this->item_collection->shouldReceive('add')->never();
-        $this->item_collection->shouldReceive('thereAreItemsUserCannotSee')->atLeast()->once();
+        $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \Project_AccessPrivateException());
+        $this->item_collection->expects(self::never())->method('add');
+        $this->item_collection->expects(self::atLeast(1))->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -165,14 +155,14 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAddPullRequestsWhenNotFound(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+        $this->label_dao->method('searchPullRequestsByLabels')->willReturn(\TestHelper::argListToDar([
             ['id' => 75],
             ['id' => 66],
         ]));
 
-        $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \GitRepoNotFoundException());
-        $this->item_collection->shouldReceive('add')->never();
-        $this->item_collection->shouldReceive('thereAreItemsUserCannotSee')->never();
+        $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \GitRepoNotFoundException());
+        $this->item_collection->expects(self::never())->method('add');
+        $this->item_collection->expects(self::never())->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -180,34 +170,35 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAddPullRequestsWhenProjectNotFound(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+        $this->label_dao->method('searchPullRequestsByLabels')->willReturn(\TestHelper::argListToDar([
             ['id' => 75],
             ['id' => 66],
         ]));
 
-        $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessProjectNotFoundException());
-        $this->item_collection->shouldReceive('add')->never();
-        $this->item_collection->shouldReceive('thereAreItemsUserCannotSee')->never();
+        $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \Project_AccessProjectNotFoundException());
+        $this->item_collection->expects(self::never())->method('add');
+        $this->item_collection->expects(self::never())->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
     }
 
-    private function mockLabeledItemCollection()
+    private function mockLabeledItemCollection(): LabeledItemCollection&MockObject
     {
-        $collection = \Mockery::spy(\Tuleap\Label\LabeledItemCollection::class);
+        $collection = $this->createMock(\Tuleap\Label\LabeledItemCollection::class);
 
         $this->project_id = 174;
         $limit            = 50;
         $offset           = 0;
-        $project          = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUserName' => false, 'isPublic' => false]);
-        $user             = Mockery::mock(\PFUser::class)->shouldReceive('getId')->andReturn(265)->getMock();
+        $project          = ProjectTestBuilder::aProject()->withId($this->project_id)->withAccessPrivate()->build();
+        $user             = UserTestBuilder::aUser()->withId(265)->build();
 
-        $collection->shouldReceive('getLabelIds')->andReturns($this->label_ids);
-        $collection->shouldReceive('getProject')->andReturns($project);
-        $collection->shouldReceive('getUser')->andReturns($user);
-        $collection->shouldReceive('getLimit')->andReturns($limit);
-        $collection->shouldReceive('getOffset')->andReturns($offset);
+        $collection->method('getLabelIds')->willReturn($this->label_ids);
+        $collection->method('getProject')->willReturn($project);
+        $collection->method('getUser')->willReturn($user);
+        $collection->method('getLimit')->willReturn($limit);
+        $collection->method('getOffset')->willReturn($offset);
+        $collection->method('setTotalSize');
 
         return $collection;
     }
@@ -222,9 +213,9 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->glyph_finder,
             $this->repository_factory,
             $this->user_manager,
-            \Mockery::spy(\UserHelper::class),
-            \Mockery::spy(\Git_GitRepositoryUrlManager::class),
-            \Mockery::spy(\TemplateRenderer::class)
+            $this->user_helper,
+            $this->createMock(\Git_GitRepositoryUrlManager::class),
+            $this->template_renderer,
         );
     }
 }

@@ -31,72 +31,63 @@ use GitRepository;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private PullRequestUpdater $pull_request_updater;
+    private Dao $dao;
     /**
-     * @var PullRequestUpdater
-     */
-    private $pull_request_updater;
-
-    /**
-     * @var Dao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InlineCommentDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentDAO
      */
     private $inline_comments_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitRepositoryFactory
      */
     private $git_repository_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitExecFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitExecFactory
      */
     private $git_exec_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitExec
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitExec
      */
     private $git_exec;
+    private PFUser $user;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitPullRequestReferenceUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitPullRequestReferenceUpdater
      */
     private $pr_reference_updater;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestMerger
+     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestMerger
      */
     private $pr_merger;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimelineEventCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimelineEventCreator
      */
     private $timeline_event_creator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
      */
     private $event_dispatcher;
 
     protected function setUp(): void
     {
-        $reference_manager = \Mockery::mock(ReferenceManager::class);
+        $reference_manager = $this->createMock(ReferenceManager::class);
 
         $this->dao                    = new Dao();
-        $this->inline_comments_dao    = \Mockery::spy(InlineCommentDAO::class);
-        $this->git_repository_factory = \Mockery::mock(GitRepositoryFactory::class);
-        $this->git_exec_factory       = \Mockery::mock(GitExecFactory::class);
-        $this->pr_reference_updater   = \Mockery::mock(GitPullRequestReferenceUpdater::class);
-        $this->pr_merger              = \Mockery::mock(PullRequestMerger::class);
-        $this->timeline_event_creator = \Mockery::mock(TimelineEventCreator::class);
-        $this->event_dispatcher       = \Mockery::mock(EventDispatcherInterface::class);
+        $this->inline_comments_dao    = $this->createMock(InlineCommentDAO::class);
+        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $this->git_exec_factory       = $this->createMock(GitExecFactory::class);
+        $this->pr_reference_updater   = $this->createMock(GitPullRequestReferenceUpdater::class);
+        $this->pr_merger              = $this->createMock(PullRequestMerger::class);
+        $this->timeline_event_creator = $this->createMock(TimelineEventCreator::class);
+        $this->event_dispatcher       = $this->createMock(EventDispatcherInterface::class);
         $this->pull_request_updater   = new PullRequestUpdater(
             new Factory($this->dao, $reference_manager),
             $this->pr_merger,
             $this->inline_comments_dao,
-            \Mockery::mock(InlineCommentUpdater::class),
+            $this->createMock(InlineCommentUpdater::class),
             new FileUniDiffBuilder(),
             $this->timeline_event_creator,
             $this->git_repository_factory,
@@ -105,29 +96,30 @@ class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->event_dispatcher
         );
 
-        $this->git_exec = \Mockery::mock(GitExec::class);
-        $this->user     = \Mockery::mock(PFUser::class, ['getId' => 1337]);
+        $this->git_exec = $this->createMock(GitExec::class);
+        $this->user     = UserTestBuilder::aUser()->withId(1337)->build();
     }
 
     public function testItUpdatesSourceBranchInPRs(): void
     {
-        $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
-        $this->pr_merger->shouldReceive('detectMergeabilityStatus');
-        $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
+        $this->pr_reference_updater->method('updatePullRequestReference');
+        $this->git_exec->method('getCommonAncestor')->willReturn('sha2');
+        $this->pr_merger->method('detectMergeabilityStatus');
+        $this->timeline_event_creator->method('storeUpdateEvent');
 
         $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
         $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0);
         $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0);
 
-        $git_repo = \Mockery::mock(GitRepository::class, ['getId' => 1]);
+        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo->method('getId')->willReturn(1);
 
-        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
+        $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
-        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
+        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
 
-        $this->event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PullRequestUpdatedEvent::class))->atLeast()->once();
+        $this->event_dispatcher->expects(self::atLeast(1))->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
@@ -135,45 +127,46 @@ class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
         $pr3 = $this->dao->searchByPullRequestId($pr3_id);
 
-        $this->assertEquals('sha1new', $pr1['sha1_src']);
-        $this->assertEquals('sha1new', $pr2['sha1_src']);
-        $this->assertEquals('sha1', $pr3['sha1_src']);
+        self::assertEquals('sha1new', $pr1['sha1_src']);
+        self::assertEquals('sha1new', $pr2['sha1_src']);
+        self::assertEquals('sha1', $pr3['sha1_src']);
     }
 
     public function testItDoesNotUpdateSourceBranchOfOtherRepositories(): void
     {
-        $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
-        $this->pr_merger->shouldReceive('detectMergeabilityStatus');
-        $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
+        $this->pr_reference_updater->method('updatePullRequestReference');
+        $this->git_exec->method('getCommonAncestor')->willReturn('sha2');
+        $this->pr_merger->method('detectMergeabilityStatus');
+        $this->timeline_event_creator->method('storeUpdateEvent');
 
         $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0);
         $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0);
 
-        $git_repo = \Mockery::mock(GitRepository::class, ['getId' => 1]);
+        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo->method('getId')->willReturn(1);
 
-        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
+        $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
-        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
+        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
 
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->event_dispatcher->method('dispatch');
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
-        $this->assertEquals('sha1', $pr1['sha1_src']);
-        $this->assertEquals('sha1', $pr2['sha1_src']);
+        self::assertEquals('sha1', $pr1['sha1_src']);
+        self::assertEquals('sha1', $pr2['sha1_src']);
     }
 
     public function testItDoesNotUpdateClosedPRs(): void
     {
-        $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
-        $this->pr_merger->shouldReceive('detectMergeabilityStatus');
-        $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
+        $this->pr_reference_updater->method('updatePullRequestReference');
+        $this->git_exec->method('getCommonAncestor')->willReturn('sha2');
+        $this->pr_merger->method('detectMergeabilityStatus');
+        $this->timeline_event_creator->method('storeUpdateEvent');
 
         $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
         $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2', 0);
@@ -181,21 +174,22 @@ class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->markAsMerged($pr1_id);
         $this->dao->markAsAbandoned($pr2_id);
 
-        $git_repo = \Mockery::mock(GitRepository::class, ['getId' => 1]);
+        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo->method('getId')->willReturn(1);
 
-        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
+        $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
-        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
+        $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
+        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
 
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->event_dispatcher->method('dispatch');
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
-        $this->assertEquals('sha1', $pr1['sha1_src']);
-        $this->assertEquals('sha1', $pr2['sha1_src']);
+        self::assertEquals('sha1', $pr1['sha1_src']);
+        self::assertEquals('sha1', $pr2['sha1_src']);
     }
 }

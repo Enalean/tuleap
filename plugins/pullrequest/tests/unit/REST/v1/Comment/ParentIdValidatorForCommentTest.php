@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ParentIdValidatorForCommentTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Factory|Factory&\PHPUnit\Framework\MockObject\MockObject
+     * @var Factory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $comment_factory;
     private ParentIdValidatorForComment $validator;
@@ -44,8 +44,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
 
     public function testItDoesNothingIfParentIdIsZero(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->validator->checkParentValidity(0, self::PULL_REQUEST_ID);
-        $this->addToAssertionCount(1);
     }
 
     public function testItThrowsAnExceptionWhenCommentIsNotAddedOnARootComment(): void
@@ -54,7 +54,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
         $comment   = new Comment(
             1,
             self::PULL_REQUEST_ID,
-            UserTestBuilder::anActiveUser()->build()->getId(),
+            (int) UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
             1234,
@@ -73,7 +73,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
         $comment   = new Comment(
             1,
             1234,
-            UserTestBuilder::anActiveUser()->build()->getId(),
+            (int) UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
             0,
@@ -88,11 +88,13 @@ final class ParentIdValidatorForCommentTest extends TestCase
 
     public function testItDoesNotThrowIfParentIdIsValidForComment(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $parent_id = 1;
         $comment   = new Comment(
             1,
             self::PULL_REQUEST_ID,
-            UserTestBuilder::anActiveUser()->build()->getId(),
+            (int) UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
             0,
@@ -101,6 +103,5 @@ final class ParentIdValidatorForCommentTest extends TestCase
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
         $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
-        $this->addToAssertionCount(1);
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -34,31 +33,26 @@ use UserHelper;
 
 final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReviewerChangeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerChangeRetriever
      */
     private $reviewer_change_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
      */
     private $user_helper;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HTMLURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
      */
     private $html_url_builder;
 
-    /**
-     * @var ReviewerChangeNotificationToProcessBuilder
-     */
-    private $builder;
+    private ReviewerChangeNotificationToProcessBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->reviewer_change_retriever = \Mockery::mock(ReviewerChangeRetriever::class);
-        $this->user_helper               = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
+        $this->reviewer_change_retriever = $this->createMock(ReviewerChangeRetriever::class);
+        $this->user_helper               = $this->createMock(UserHelper::class);
+        $this->html_url_builder          = $this->createMock(HTMLURLBuilder::class);
 
         $this->builder = new ReviewerChangeNotificationToProcessBuilder(
             $this->reviewer_change_retriever,
@@ -69,20 +63,20 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\
 
     public function testBuildReviewerAddedNotificationFromReviewerChangeEvent(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $pull_request->method('getTitle')->willReturn('PR Title');
         $change_user   = $this->buildUser(102);
         $new_reviewers = [$this->buildUser(103), $this->buildUser(104)];
 
         $reviewer_change_event = ReviewerChangeEvent::fromID(147);
 
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('Display name');
-        $this->user_helper->shouldReceive('getAbsoluteUserURL')->andReturn('https://example.com/users/foo');
-        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('https://example.com/link-to-pr');
-        $this->reviewer_change_retriever->shouldReceive('getChangeWithTheAssociatedPullRequestByID')
+        $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
+        $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
+        $this->reviewer_change_retriever->method('getChangeWithTheAssociatedPullRequestByID')
             ->with($reviewer_change_event->getChangeID())
-            ->andReturn(
+            ->willReturn(
                 new ReviewerChangePullRequestAssociation(
                     new ReviewerChange(
                         new \DateTimeImmutable('@10'),
@@ -95,20 +89,20 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\
             );
 
         $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
-        $this->assertNotEmpty($notifications);
+        self::assertNotEmpty($notifications);
     }
 
     public function testNoAddedNotificationIsBuiltIfThereIsNoNewReviewer(): void
     {
-        $pull_request = \Mockery::mock(PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturn(12);
-        $change_user = \Mockery::mock(PFUser::class);
+        $pull_request = $this->createMock(PullRequest::class);
+        $pull_request->method('getId')->willReturn(12);
+        $change_user = $this->createMock(PFUser::class);
 
         $reviewer_change_event = ReviewerChangeEvent::fromID(148);
 
-        $this->reviewer_change_retriever->shouldReceive('getChangeWithTheAssociatedPullRequestByID')
+        $this->reviewer_change_retriever->method('getChangeWithTheAssociatedPullRequestByID')
             ->with($reviewer_change_event->getChangeID())
-            ->andReturn(
+            ->willReturn(
                 new ReviewerChangePullRequestAssociation(
                     new ReviewerChange(
                         new \DateTimeImmutable('@20'),
@@ -121,18 +115,18 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\
             );
 
         $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     public function testNoNotificationAreBuiltWhenTheCorrespondingChangeCannotBeFound(): void
     {
         $reviewer_change_event = ReviewerChangeEvent::fromID(404);
-        $this->reviewer_change_retriever->shouldReceive('getChangeWithTheAssociatedPullRequestByID')
+        $this->reviewer_change_retriever->method('getChangeWithTheAssociatedPullRequestByID')
             ->with($reviewer_change_event->getChangeID())
-            ->andReturn(null);
+            ->willReturn(null);
 
         $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
-        $this->assertEmpty($notifications);
+        self::assertEmpty($notifications);
     }
 
     private function buildUser(int $user_id): PFUser

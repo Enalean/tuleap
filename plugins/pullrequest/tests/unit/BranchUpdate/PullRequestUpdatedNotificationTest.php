@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\GitPHP\Commit;
@@ -35,7 +34,6 @@ use UserHelper;
 
 final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
@@ -44,35 +42,38 @@ final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\Test
         $change_user      = $this->buildUser(102);
         $user_103         = $this->buildUser(103);
         $owners           = [$change_user, $user_103];
-        $pull_request     = \Mockery::mock(PullRequest::class);
-        $user_helper      = \Mockery::mock(UserHelper::class);
-        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+        $pull_request     = $this->createMock(PullRequest::class);
+        $user_helper      = $this->createMock(UserHelper::class);
+        $html_url_builder = $this->createMock(HTMLURLBuilder::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
-        $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
-        $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
-        $pull_request->shouldReceive('getId')->andReturn(14);
-        $pull_request->shouldReceive('getTitle')->andReturn('A contribution');
-        $pull_request->shouldReceive('getBranchDest')->andReturn('master');
+        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($pull_request)->willReturn('https://example.com/pr-link');
+        $pull_request->method('getId')->willReturn(14);
+        $pull_request->method('getTitle')->willReturn('A contribution');
+        $pull_request->method('getBranchDest')->willReturn('master');
 
-        $git_resource_accessor = \Mockery::mock(Project::class);
-        $commit_a              = \Mockery::mock(Commit::class);
-        $commit_a->shouldReceive('GetTitle')->andReturn('Commit A');
-        $git_resource_accessor->shouldReceive('GetCommit')
-            ->with('230549fc4be136fcae6ea6ed574c2f5c7b922346')->andReturn($commit_a);
-        $commit_b = \Mockery::mock(Commit::class);
-        $commit_b->shouldReceive('GetTitle')->andReturn('Commit B');
-        $git_resource_accessor->shouldReceive('GetCommit')
-            ->with('fbe4dade4f744aa203ec35bf09f71475ecc3f9d6')->andReturn($commit_b);
-        $git_resource_accessor->shouldReceive('GetCommit')
-            ->with('a7d1692502252a5ec18bfcae4184498b1459810c')->andReturn(null);
-        $url_to_commit_builder = \Mockery::mock(RepositoryURLToCommitBuilder::class);
-        $url_to_commit_builder->shouldReceive('buildURLForReference')
-            ->with('230549fc4be136fcae6ea6ed574c2f5c7b922346')->andReturn('https://example.com/230549');
-        $url_to_commit_builder->shouldReceive('buildURLForReference')
-            ->with('fbe4dade4f744aa203ec35bf09f71475ecc3f9d6')->andReturn('https://example.com/fbe4da');
+        $git_resource_accessor = $this->createMock(Project::class);
+        $commit_a              = $this->createMock(Commit::class);
+        $commit_a->method('GetTitle')->willReturn('Commit A');
+
+        $commit_b = $this->createMock(Commit::class);
+        $commit_b->method('GetTitle')->willReturn('Commit B');
+
+        $git_resource_accessor->method('GetCommit')->willReturnMap([
+            ['230549fc4be136fcae6ea6ed574c2f5c7b922346', $commit_a],
+            ['fbe4dade4f744aa203ec35bf09f71475ecc3f9d6', $commit_b],
+            ['a7d1692502252a5ec18bfcae4184498b1459810c', null],
+        ]);
+
+        $url_to_commit_builder = $this->createMock(RepositoryURLToCommitBuilder::class);
+        $url_to_commit_builder->method('buildURLForReference')->willReturnMap([
+            ['230549fc4be136fcae6ea6ed574c2f5c7b922346', 'https://example.com/230549'],
+            ['fbe4dade4f744aa203ec35bf09f71475ecc3f9d6', 'https://example.com/fbe4da'],
+            [],
+        ]);
 
         $notification = PullRequestUpdatedNotification::fromOwnersAndReferences(
             $user_helper,
@@ -86,9 +87,10 @@ final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\Test
             ['230549fc4be136fcae6ea6ed574c2f5c7b922346', 'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6', 'a7d1692502252a5ec18bfcae4184498b1459810c']
         );
 
-        $this->assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
-        $this->assertSame($pull_request, $notification->getPullRequest());
-        $this->assertEquals(
+        self::assertNotNull($notification);
+        self::assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
+        self::assertSame($pull_request, $notification->getPullRequest());
+        self::assertEquals(
             <<<EOF
             User A pushed 2 commits updating the pull request #14: A contribution.
 
@@ -97,7 +99,7 @@ final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\Test
             EOF,
             $notification->asPlaintext()
         );
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOF
             <p>
             <a href="https://example.com/users/usera">User A</a> pushed 2 commits updating the pull request <a href="https://example.com/pr-link">#14</a>: A contribution.</p>
@@ -116,22 +118,22 @@ final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\Test
         $change_user = $this->buildUser(102);
         $owners      = [$change_user];
 
-        $git_resource_accessor = \Mockery::mock(Project::class);
-        $git_resource_accessor->shouldReceive('GetCommit')->andReturn(null);
+        $git_resource_accessor = $this->createMock(Project::class);
+        $git_resource_accessor->method('GetCommit')->willReturn(null);
 
         $notification = PullRequestUpdatedNotification::fromOwnersAndReferences(
-            \Mockery::mock(UserHelper::class),
-            \Mockery::mock(HTMLURLBuilder::class),
+            $this->createMock(UserHelper::class),
+            $this->createMock(HTMLURLBuilder::class),
             new FilterUserFromCollection(),
-            \Mockery::mock(PullRequest::class),
+            $this->createMock(PullRequest::class),
             $change_user,
             $owners,
             $git_resource_accessor,
-            \Mockery::mock(RepositoryURLToCommitBuilder::class),
+            $this->createMock(RepositoryURLToCommitBuilder::class),
             ['a7d1692502252a5ec18bfcae4184498b1459810c']
         );
 
-        $this->assertNull($notification);
+        self::assertNull($notification);
     }
 
     private function buildUser(int $user_id): PFUser

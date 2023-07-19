@@ -23,12 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_Command_Exception;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testAdditionalCommitsAreFound(): void
     {
         $old_src = 'a7d1692502252a5ec18bfcae4184498b1459810c';
@@ -36,16 +33,11 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
         $old_dst = '4682f1f1fb9ee3cf6ca518547ae5525c9768a319';
         $new_dst = $old_dst;
 
-        $git_exec = \Mockery::mock(\Git_Exec::class);
-        $git_exec->shouldReceive('revList')->with($old_dst, $old_src)->andReturn(
-            [$old_src]
-        );
-        $git_exec->shouldReceive('revList')->with($new_dst, $new_src)->andReturn(
-            [
-                $old_src,
-                $new_src,
-            ]
-        );
+        $git_exec = $this->createMock(\Git_Exec::class);
+        $git_exec->method('revList')->willReturnMap([
+            [$old_dst, $old_src, [$old_src]],
+            [$new_dst, $new_src, [$old_src, $new_src]],
+        ]);
 
         $differ = new PullRequestUpdateCommitDiff();
 
@@ -57,7 +49,7 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
             $new_dst
         );
 
-        $this->assertEqualsCanonicalizing(
+        self::assertEqualsCanonicalizing(
             [$new_src],
             $new_commits
         );
@@ -70,13 +62,11 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
         $old_dst = '4682f1f1fb9ee3cf6ca518547ae5525c9768a319';
         $new_dst = $old_dst;
 
-        $git_exec = \Mockery::mock(\Git_Exec::class);
-        $git_exec->shouldReceive('revList')->with($old_dst, $old_src)->andReturn(
-            [$old_src]
-        );
-        $git_exec->shouldReceive('revList')->with($new_dst, $new_src)->andReturn(
-            [$new_src]
-        );
+        $git_exec = $this->createMock(\Git_Exec::class);
+        $git_exec->method('revList')->willReturnMap([
+            [$old_dst, $old_src, [$old_src]],
+            [$new_dst, $new_src, [$new_src]],
+        ]);
 
         $differ = new PullRequestUpdateCommitDiff();
 
@@ -88,7 +78,7 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
             $new_dst
         );
 
-        $this->assertEqualsCanonicalizing(
+        self::assertEqualsCanonicalizing(
             [$new_src],
             $new_commits
         );
@@ -101,12 +91,18 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
         $old_dst = '4682f1f1fb9ee3cf6ca518547ae5525c9768a319';
         $new_dst = $old_dst;
 
-        $git_exec = \Mockery::mock(\Git_Exec::class);
-        $git_exec->shouldReceive('revList')->with($old_dst, $old_src)->andThrow(
-            new Git_Command_Exception('command execution failure', ['fatal: ambiguous argument'], 128)
-        );
-        $git_exec->shouldReceive('revList')->with($new_dst, $new_src)->andReturn(
-            [$new_src]
+        $git_exec = $this->createMock(\Git_Exec::class);
+
+        $git_exec->method('revList')->willReturnCallback(
+            function (string $oldrev_param, string $newrev_param) use ($old_dst, $old_src, $new_dst, $new_src): array {
+                if ($oldrev_param === $old_dst && $newrev_param === $old_src) {
+                    throw new Git_Command_Exception('command execution failure', ['fatal: ambiguous argument'], 128);
+                } elseif ($oldrev_param === $new_dst && $newrev_param === $new_src) {
+                    return [$new_src];
+                }
+
+                return [];
+            }
         );
 
         $differ = new PullRequestUpdateCommitDiff();
@@ -119,7 +115,7 @@ final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCas
             $new_dst
         );
 
-        $this->assertEqualsCanonicalizing(
+        self::assertEqualsCanonicalizing(
             [$new_src],
             $new_commits
         );

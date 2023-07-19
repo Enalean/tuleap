@@ -23,23 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_GitRepositoryUrlManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class RepositoryURLToCommitBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildsURLToCommitForASpecificGitRepository(): void
     {
-        $repository  = \Mockery::mock(\GitRepository::class);
-        $url_manager = \Mockery::mock(Git_GitRepositoryUrlManager::class);
+        $repository  = $this->createMock(\GitRepository::class);
+        $url_manager = $this->createMock(Git_GitRepositoryUrlManager::class);
 
         $builder = new RepositoryURLToCommitBuilder($url_manager, $repository);
 
-        $url_manager->shouldReceive('getAbsoluteCommitURL')->with($repository, \Mockery::any())
-            ->andReturn('https://example.com/my-commit-link');
+        $url_manager->method('getAbsoluteCommitURL')->with($repository, self::anything())
+            ->willReturn('https://example.com/my-commit-link');
 
-        $this->assertEquals(
+        self::assertEquals(
             'https://example.com/my-commit-link',
             $builder->buildURLForReference('0000000000000000000000000000000000000000')
         );

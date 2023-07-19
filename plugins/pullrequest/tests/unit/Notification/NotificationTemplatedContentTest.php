@@ -22,25 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class NotificationTemplatedContentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildsTemplatedHTML(): void
     {
-        $renderer = \Mockery::mock(\TemplateRenderer::class);
+        $renderer = $this->createMock(\TemplateRenderer::class);
 
         $expected_template_name    = 'template_name';
         $expected_presenter        = new class {
         };
         $expected_rendered_content = 'rendered_content';
 
-        $renderer->shouldReceive('renderToString')
+        $renderer->expects(self::once())
+            ->method('renderToString')
             ->with($expected_template_name, $expected_presenter)
-            ->andReturn($expected_rendered_content)
-            ->once();
+            ->willReturn($expected_rendered_content);
 
         $notification_html_content = new NotificationTemplatedContent(
             $renderer,
@@ -48,6 +44,6 @@ final class NotificationTemplatedContentTest extends \Tuleap\Test\PHPUnit\TestCa
             $expected_presenter
         );
 
-        $this->assertEquals($expected_rendered_content, $notification_html_content->toString());
+        self::assertEquals($expected_rendered_content, $notification_html_content->toString());
     }
 }
