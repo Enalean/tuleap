@@ -20,10 +20,11 @@
 <template>
     <div class="document-permissions-ugroups">
         <permissions-selector
-            v-bind:label="label_reader"
+            v-bind:label="`${$gettext('Reader')}`"
             v-bind:project_ugroups="project_ugroups"
-            v-model="permissions_for_groups.can_read"
+            v-bind:selected_ugroups="value.can_read"
             v-bind:key="'permissions-selector-can_read'"
+            v-bind:identifier="can_read"
         >
             <template #permission-information>
                 <p class="tlp-text-info">
@@ -37,10 +38,11 @@
             </template>
         </permissions-selector>
         <permissions-selector
-            v-bind:label="label_writer"
+            v-bind:label="`${$gettext('Writer')}`"
             v-bind:project_ugroups="project_ugroups"
-            v-model="permissions_for_groups.can_write"
+            v-bind:selected_ugroups="value.can_write"
             v-bind:key="'permissions-selector-can_write'"
+            v-bind:identifier="can_write"
         >
             <template #permission-information>
                 <p class="tlp-text-info">
@@ -54,16 +56,18 @@
             </template>
         </permissions-selector>
         <permissions-selector
-            v-bind:label="label_manager"
+            v-bind:label="`${$gettext('Manager')}`"
             v-bind:project_ugroups="project_ugroups"
-            v-model="permissions_for_groups.can_manage"
+            v-bind:selected_ugroups="value.can_manage"
             v-bind:key="'permission-selectors-can_manage'"
+            v-bind:identifier="can_manage"
         />
     </div>
 </template>
 
 <script>
 import PermissionsSelector from "./PermissionsSelector.vue";
+import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 
 export default {
     name: "PermissionsForGroupsSelector",
@@ -81,22 +85,14 @@ export default {
         },
     },
     computed: {
-        permissions_for_groups: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
+        can_read() {
+            return CAN_READ;
         },
-        label_reader() {
-            return this.$gettext("Reader");
+        can_write() {
+            return CAN_WRITE;
         },
-        label_writer() {
-            return this.$gettext("Writer");
-        },
-        label_manager() {
-            return this.$gettext("Manager");
+        can_manage() {
+            return CAN_MANAGE;
         },
     },
 };

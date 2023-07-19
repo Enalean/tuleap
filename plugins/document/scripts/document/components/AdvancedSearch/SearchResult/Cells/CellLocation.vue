@@ -25,7 +25,6 @@
                 v-bind:to="getSearchFolderRoute(parent_item)"
                 custom
                 v-slot="{ navigate, href }"
-                data-test="document-cell-location-parent-item-title"
             >
                 <a v-bind:href="href" v-on:click="navigate">{{ parent_item.title }}</a>
             </router-link>

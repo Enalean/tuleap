@@ -17,10 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+
 import { shallowMount } from "@vue/test-utils";
 import CriterionGlobalText from "./CriterionGlobalText.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
 
 describe("CriterionGlobalText", () => {
     it("should render the component", async () => {
@@ -41,6 +49,6 @@ describe("CriterionGlobalText", () => {
         });
 
         wrapper.find("[data-test=global-search]").setValue("Lorem ipsum");
-        expect(wrapper.emitted().input[0]).toStrictEqual(["Lorem ipsum"]);
+        expect(emitMock).toHaveBeenCalledWith("update-global-criteria", "Lorem ipsum");
     });
 });

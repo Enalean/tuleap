@@ -51,3 +51,7 @@ export const PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME = "obsolescence_date";
 
 export const CLIPBOARD_OPERATION_CUT = "cut";
 export const CLIPBOARD_OPERATION_COPY = "copy";
+
+export const CAN_READ = "can_read";
+export const CAN_WRITE = "can_write";
+export const CAN_MANAGE = "can_manage";

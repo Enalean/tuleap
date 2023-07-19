@@ -7,7 +7,6 @@ exports[`CellLocation should display path via the router link and the folder sep
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
-    data-test="document-cell-location-parent-item-title"
     replace="false"
     to="[object Object]"
   />
@@ -20,7 +19,6 @@ exports[`CellLocation should display path via the router link and the folder sep
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
-    data-test="document-cell-location-parent-item-title"
     replace="false"
     to="[object Object]"
   />
@@ -33,7 +31,6 @@ exports[`CellLocation should display path via the router link and the folder sep
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
-    data-test="document-cell-location-parent-item-title"
     replace="false"
     to="[object Object]"
   />

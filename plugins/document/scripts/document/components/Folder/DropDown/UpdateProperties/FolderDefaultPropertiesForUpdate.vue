@@ -28,7 +28,9 @@
             >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
-            <h2 class="tlp-modal-subtitle">{{ $gettext("Default properties") }}</h2>
+            <h2 class="tlp-modal-subtitle">
+                {{ $gettext("Default properties") }}
+            </h2>
         </div>
         <template v-if="has_loaded_properties">
             <p>
@@ -80,7 +82,7 @@
                 </div>
                 <recursion-options
                     v-bind:value="recursion_option"
-                    v-on:input="updateRecursionOption"
+                    v-on:update-recursion-option="updateRecursionOption"
                     data-test="document-custom-property-recursion-option"
                 />
             </div>

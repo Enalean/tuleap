@@ -33,16 +33,15 @@
 
         <div class="tlp-modal-body">
             <link-properties
-                v-model="new_item_version.link_properties"
-                v-bind:value="new_item_version.link_properties"
+                v-bind:value="new_item_version.link_properties.link_url"
                 v-bind:item="new_item_version"
             />
             <embedded-properties
-                v-model="new_item_version.embedded_properties"
+                v-bind:value="new_item_version.embedded_properties.content"
                 v-bind:item="new_item_version"
             />
             <file-properties
-                v-model="new_item_version.file_properties"
+                v-bind:value="new_item_version.file_properties"
                 v-bind:item="new_item_version"
             />
         </div>
@@ -67,6 +66,7 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CreateNewVersionEmptyModal",
@@ -116,6 +116,16 @@ export default {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.modal.show();
+        emitter.on("update-link-properties", this.updateLinkProperties);
+        emitter.on("update-wiki-properties", this.updateWikiProperties);
+        emitter.on("update-embedded-properties", this.updateEmbeddedContent);
+        emitter.on("update-file-properties", this.updateFilesProperties);
+    },
+    beforeUnmount() {
+        emitter.off("update-link-properties", this.updateLinkProperties);
+        emitter.off("update-wiki-properties", this.updateWikiProperties);
+        emitter.off("update-embedded-properties", this.updateEmbeddedContent);
+        emitter.off("update-file-properties", this.updateFilesProperties);
     },
     methods: {
         reset() {
@@ -141,6 +151,18 @@ export default {
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
+        },
+        updateLinkProperties(url) {
+            this.new_item_version.link_properties.link_url = url;
+        },
+        updateWikiProperties(page_name) {
+            this.new_item_version.wiki_properties.page_name = page_name;
+        },
+        updateEmbeddedContent(content) {
+            this.new_item_version.embedded_properties.content = content;
+        },
+        updateFilesProperties(file_properties) {
+            this.new_item_version.file_properties = file_properties;
         },
     },
 };

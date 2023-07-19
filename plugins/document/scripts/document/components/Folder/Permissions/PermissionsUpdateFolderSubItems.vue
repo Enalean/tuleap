@@ -20,28 +20,31 @@
 <template>
     <div class="tlp-form-element" v-if="is_item_a_folder">
         <label class="tlp-label tlp-checkbox">
-            <input
-                type="checkbox"
-                v-bind:value="value"
-                v-on:input="$emit('input', $event.target.checked)"
-            />
+            <input type="checkbox" v-bind:value="props.value" v-on:input="onInput" />
             {{ $gettext("Apply same permissions to all sub-items of this folder") }}
         </label>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import { isFolder } from "../../../helpers/type-check-helper";
+import type { Folder } from "../../../type";
+import { computed } from "vue";
 
-export default {
-    name: "PermissionsUpdateFolderSubItems",
-    props: {
-        item: Object,
-        value: Boolean,
-    },
-    computed: {
-        is_item_a_folder() {
-            return isFolder(this.item);
-        },
-    },
-};
+const props = defineProps<{ item: Folder }>();
+
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+function onInput($event: Event): void {
+    const event_target = $event.target;
+
+    if (event_target instanceof HTMLInputElement) {
+        emit("input", event_target.value);
+    }
+}
+
+const is_item_a_folder = computed((): boolean => {
+    return isFolder(props.item);
+});
 </script>

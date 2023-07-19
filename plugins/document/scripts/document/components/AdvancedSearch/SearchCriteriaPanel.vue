@@ -22,21 +22,19 @@
     <section class="tlp-pane search-criteria-panel">
         <form class="tlp-pane-container" data-test="form" v-on:submit.prevent="advancedSearch">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">{{ $gettext("Search criteria") }}</h1>
+                <h1 class="tlp-pane-title">
+                    {{ $gettext("Search criteria") }}
+                </h1>
             </div>
             <section class="tlp-pane-section search-criteria-panel-criteria-container">
                 <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                 <div class="document-search-criteria" v-if="new_query">
-                    <criterion-global-text
-                        v-model="new_query.global_search"
-                        v-bind:value="new_query.global_search"
-                    />
+                    <criterion-global-text v-bind:value="new_query.global_search" />
                     <component
                         v-for="criterion in criteria"
                         v-bind:key="criterion.name"
                         v-bind:is="`criterion-${criterion.type}`"
                         v-bind:criterion="criterion"
-                        v-model="new_query[criterion.name]"
                         v-bind:value="new_query[criterion.name]"
                     />
                 </div>
@@ -62,7 +60,9 @@ import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Ref } from "vue";
 // eslint-disable-next-line import/no-duplicates
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import type { UpdateCriteriaDateEvent, UpdateCriteriaEvent } from "../../helpers/emitter";
+import emitter from "../../helpers/emitter";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
@@ -75,6 +75,16 @@ const new_query: Ref<AdvancedSearchParams | null> = ref(null);
 
 onMounted((): void => {
     new_query.value = props.query;
+
+    emitter.on("update-criteria", updateCriteria);
+    emitter.on("update-criteria-date", updateCriteriaDate);
+    emitter.on("update-global-criteria", updateGlobalSearch);
+});
+
+onUnmounted(() => {
+    emitter.off("update-criteria", updateCriteria);
+    emitter.off("update-criteria-date", updateCriteriaDate);
+    emitter.off("update-global-criteria", updateGlobalSearch);
 });
 
 const emit = defineEmits<{
@@ -83,6 +93,21 @@ const emit = defineEmits<{
 
 function advancedSearch(): void {
     emit("advanced-search", new_query.value);
+}
+
+function updateGlobalSearch(value: string): void {
+    if (!new_query.value) {
+        return;
+    }
+    new_query.value.global_search = value;
+}
+
+function updateCriteria(event: UpdateCriteriaEvent): void {
+    new_query.value[event.criteria] = event.value;
+}
+
+function updateCriteriaDate(event: UpdateCriteriaDateEvent): void {
+    new_query.value[event.criteria] = event.value;
 }
 
 const is_in_root_folder = computed((): boolean => {

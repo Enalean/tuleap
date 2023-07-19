@@ -19,8 +19,12 @@
   -->
 
 <template>
-    <cell-string v-if="is_string">{{ value_string }}</cell-string>
-    <cell-string v-else-if="is_list">{{ get_value_list }}</cell-string>
+    <cell-string v-if="is_string">
+        {{ value_string }}
+    </cell-string>
+    <cell-string v-else-if="is_list">
+        {{ value_list }}
+    </cell-string>
     <cell-date v-else-if="is_date" v-bind:date="value_date" />
     <td v-else></td>
 </template>

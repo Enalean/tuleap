@@ -22,11 +22,7 @@
     <div class="tlp-form-element document-search-criterion document-search-criterion-owner">
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
         <select class="tlp-input" v-bind:id="id" ref="owner_input">
-            <option
-                selected
-                v-if="currently_selected_user"
-                v-bind:value="currently_selected_user.id"
-            >
+            <option selected v-if="currently_selected_user">
                 {{ get_currently_selected_user.display_name }}
             </option>
             <slot />
@@ -43,6 +39,7 @@ import type { RestUser } from "../../../api/rest-querier";
 import { retrieveSelectedOwner } from "../../../helpers/owner/retrieve-selected-owner";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
@@ -54,10 +51,6 @@ const { project_name } = useNamespacedState<Pick<ConfigurationState, "project_na
 const owner_input = ref<InstanceType<typeof HTMLElement>>();
 const select2_people_picker = ref<(Select2Plugin & { trigger(event: string): void }) | undefined>();
 const currently_selected_user = ref<RestUser | undefined>();
-
-const emit = defineEmits<{
-    (e: "input", value: string): void;
-}>();
 
 const get_currently_selected_user = computed(
     (): RestUser | undefined => currently_selected_user.value,
@@ -98,10 +91,16 @@ onMounted(async (): Promise<void> => {
         .trigger("change")
         .on("select2:select", (e: { params: { data: RestUser } }): void => {
             const data = e.params.data;
-            emit("input", data.username);
+            emitter.emit("update-criteria", {
+                criteria: "owner",
+                value: data.username,
+            });
         })
         .on("select2:clear", (): void => {
-            emit("input", "");
+            emitter.emit("update-criteria", {
+                criteria: "owner",
+                value: "",
+            });
         });
 });
 

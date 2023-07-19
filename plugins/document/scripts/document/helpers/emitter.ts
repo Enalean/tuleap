@@ -19,7 +19,15 @@
  */
 
 import mitt from "mitt";
-import type { Empty, Item, ListValue, ItemType, NewItemAlternative } from "../type";
+import type {
+    Empty,
+    Item,
+    ListValue,
+    ItemType,
+    NewItemAlternative,
+    FileProperties,
+    SearchDate,
+} from "../type";
 
 export interface DeleteItemEvent {
     item: Item;
@@ -58,6 +66,28 @@ export interface ItemHasJustBeenUpdatedEvent {
     readonly item: Item;
 }
 
+export interface UpdateMultipleListValueEvent {
+    detail: { value: number[] | [] | ListValue[] | null; id: string };
+}
+
+export interface updateRecursionOptionEvent {
+    recursion_option: string;
+}
+
+export interface updatePropertyListEvent {
+    detail: { property_list: Array<string> };
+}
+
+export interface UpdateCriteriaEvent {
+    criteria: string;
+    value: string;
+}
+
+export interface UpdateCriteriaDateEvent {
+    criteria: string;
+    value: SearchDate;
+}
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -76,9 +106,7 @@ export type Events = {
     "show-archive-size-warning-modal": ArchiveSizeWarningModalEvent;
     "show-new-folder-modal": { detail: { parent: Item } };
     "hide-action-menu": void;
-    "update-multiple-properties-list-value": {
-        detail: { value: number[] | [] | ListValue[] | null; id: string };
-    };
+    "update-multiple-properties-list-value": UpdateMultipleListValueEvent;
     createItem: { item: Item; type: ItemType; from_alternative?: NewItemAlternative };
     deleteItem: DeleteItemEvent;
     "new-item-has-just-been-created": { id: number };
@@ -89,9 +117,20 @@ export type Events = {
     "item-is-being-uploaded": void;
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;
-    "properties-recursion-option": { recursion_option: string };
+    "properties-recursion-option": updateRecursionOptionEvent;
     "update-obsolescence-date-property": string;
-    "properties-recursion-list": { detail: { property_list: Array<string> } };
+    "update-link-properties": string;
+    "update-wiki-properties": string;
+    "update-embedded-properties": string;
+    "update-recursion-option": string;
+    "update-file-properties": { FileProperties: FileProperties };
+    "properties-recursion-list": updatePropertyListEvent;
+
+    "update-permissions": string;
+    "update-global-criteria": string;
+
+    "update-criteria": UpdateCriteriaEvent;
+    "update-criteria-date": UpdateCriteriaDateEvent;
 };
 
 export default mitt<Events>();

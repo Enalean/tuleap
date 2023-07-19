@@ -35,8 +35,8 @@
                 name="page-name"
                 v-bind:placeholder="`${$gettext('My wiki page')}`"
                 required
-                v-bind:value="value.page_name"
-                v-on:input="$emit('input', { page_name: $event.target.value })"
+                v-bind:value="page_name"
+                v-on:input="onInput"
                 data-test="document-new-item-wiki-page-name"
             />
         </div>
@@ -47,10 +47,17 @@
 import { isWiki } from "../../../../helpers/type-check-helper";
 import type { Item, WikiProperties } from "../../../../type";
 import { computed } from "vue";
+import emitter from "../../../../helpers/emitter";
 
 const props = defineProps<{ value: WikiProperties; item: Item }>();
 
 const is_displayed = computed((): boolean => {
     return isWiki(props.item);
 });
+
+function onInput($event: Event): void {
+    if ($event.target instanceof HTMLInputElement) {
+        emitter.emit("update-wiki-properties", $event.target.value);
+    }
+}
 </script>

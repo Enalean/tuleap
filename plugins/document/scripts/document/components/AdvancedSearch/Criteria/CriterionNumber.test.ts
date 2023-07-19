@@ -17,9 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+
 import { shallowMount, mount } from "@vue/test-utils";
 import CriterionNumber from "./CriterionNumber.vue";
 import { nextTick } from "vue";
+
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
 
 describe("CriterionNumber", () => {
     it("should render the component", async () => {
@@ -50,6 +58,9 @@ describe("CriterionNumber", () => {
         });
 
         wrapper.find("[data-test=document-criterion-number-id]").setValue("256");
-        expect(wrapper.emitted().input[0]).toStrictEqual(["256"]);
+        expect(emitMock).toHaveBeenCalledWith("update-criteria", {
+            criteria: "id",
+            value: "256",
+        });
     });
 });

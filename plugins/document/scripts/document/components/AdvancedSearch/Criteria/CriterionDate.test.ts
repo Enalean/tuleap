@@ -17,11 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+
 import { shallowMount, mount } from "@vue/test-utils";
 import CriterionDate from "./CriterionDate.vue";
 import type { SearchDate } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
 
 describe("CriterionDate", () => {
     it("should render the component when no date set", async () => {
@@ -74,7 +82,10 @@ describe("CriterionDate", () => {
         wrapper.find("[data-test=document-criterion-date-create_date]").setValue("2022-01-01");
 
         const expected: SearchDate = { date: "2022-01-01", operator: ">" };
-        expect(wrapper.emitted().input).toStrictEqual([[expected]]);
+        expect(emitMock).toHaveBeenCalledWith("update-criteria-date", {
+            criteria: "create_date",
+            value: expected,
+        });
     });
 
     it("should warn parent component when user is changing operator", () => {
@@ -92,6 +103,9 @@ describe("CriterionDate", () => {
         wrapper.find("[data-test=equal]").setSelected();
 
         const expected: SearchDate = { date: "", operator: "=" };
-        expect(wrapper.emitted().input).toStrictEqual([[expected]]);
+        expect(emitMock).toHaveBeenCalledWith("update-criteria-date", {
+            criteria: "create_date",
+            value: expected,
+        });
     });
 });

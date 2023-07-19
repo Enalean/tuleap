@@ -38,7 +38,7 @@
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
-            v-bind:submit-button-label="submit_button_label"
+            v-bind:submit-button-label="$gettext('Update properties')"
             v-bind:aria-labelled-by="aria_labelled_by"
             v-bind:icon-submit-button-class="'fa-solid fa-pencil'"
             data-test="document-modal-submit-button-update-properties"
@@ -55,6 +55,7 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FolderGlobalPropertyForUpdate from "./FolderGlobalPropertyForUpdate.vue";
 import {
+    formatCustomPropertiesForFolderUpdate,
     transformCustomPropertiesForItemUpdate,
     transformFolderPropertiesForRecursionAtUpdate,
 } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
@@ -147,6 +148,11 @@ export default {
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
             this.item_to_update.properties = this.formatted_item_properties;
+            formatCustomPropertiesForFolderUpdate(
+                this.item_to_update,
+                this.properties_to_update,
+                this.recursion_option,
+            );
             await this.$store.dispatch("properties/updateFolderProperties", {
                 item: this.item,
                 item_to_update: this.item_to_update,
