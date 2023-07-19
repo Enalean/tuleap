@@ -50,7 +50,7 @@ import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Vue from "vue";
-import type { PackagePermission } from "./type";
+import type { PackagePermission } from "./types";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({ components: { PackagePermissionsTable } })

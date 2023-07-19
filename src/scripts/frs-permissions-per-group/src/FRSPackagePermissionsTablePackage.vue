@@ -53,7 +53,7 @@ import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 import Component from "vue-class-component";
 import Vue from "vue";
 import { Prop } from "vue-property-decorator";
-import type { PackagePermission } from "./type";
+import type { PackagePermission } from "./types";
 
 @Component({ components: { EmptyState, UgroupBadge, ReleasePermissions } })
 export default class FRSPackagePermissionsTablePackage extends Vue {

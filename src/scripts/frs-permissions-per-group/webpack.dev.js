@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
-import type { PackagePermission } from "../type";
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-export async function getPackagesPermissions(
-    group_id: string,
-    selected_ugroup_id: string
-): Promise<PackagePermission[]> {
-    const response = await get("/file/files_permissions_per_group.php", {
-        params: {
-            group_id,
-            selected_ugroup_id,
-        },
-    });
-
-    return response.json();
-}
+export default webpack_configurator.extendDevConfiguration(common);

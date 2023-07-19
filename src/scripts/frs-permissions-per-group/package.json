@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/frs-permissions-per-group",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/vue-permissions-per-group-badge": "workspace:*",
+    "@tuleap/vue2-gettext-init": "workspace:*",
+    "vue": "^2.7.8"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  }
+}

@@ -34,7 +34,7 @@
 import PackagePermissions from "./FRSPackagePermissionsTablePackage.vue";
 import Component from "vue-class-component";
 import Vue from "vue";
-import type { PackagePermission } from "./type";
+import type { PackagePermission } from "./types";
 import { Prop } from "vue-property-decorator";
 
 @Component({ components: { PackagePermissions } })
