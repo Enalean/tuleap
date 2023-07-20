@@ -23,6 +23,7 @@ export type ProjectReference = {
     readonly id: number;
     readonly label: string;
     readonly icon: string;
+    readonly uri: string;
 };
 
 /**

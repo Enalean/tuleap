@@ -23,11 +23,13 @@ import type {
     TrackerProjectRepresentation,
 } from "@tuleap/plugin-tracker-rest-api-types";
 
+export type TrackerProject = Pick<TrackerProjectRepresentation, "id" | "label" | "icon">;
+
 export type ArtifactWithStatus = Pick<
     ArtifactResponseNoInstance,
     "id" | "xref" | "title" | "html_url" | "is_open" | "full_status"
 > & {
     readonly tracker: Pick<TrackerResponseWithColor, "color_name"> & {
-        readonly project: Pick<TrackerProjectRepresentation, "id" | "label" | "icon">;
+        readonly project: Pick<TrackerProject, "id" | "label" | "icon">;
     };
 };

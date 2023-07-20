@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
-import type { Tracker } from "../type";
+import type { TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 
 describe("TrackerListWritingMode", () => {
@@ -27,8 +27,8 @@ describe("TrackerListWritingMode", () => {
         return shallowMount(TrackerListWritingMode, {
             propsData: {
                 trackers: [
-                    { label: "fake_tracker", id: 1 } as Tracker,
-                    { label: "bugs", id: 2 } as Tracker,
+                    { tracker_label: "fake_tracker", tracker_id: 1 } as TrackerToUpdate,
+                    { tracker_label: "bugs", tracker_id: 2 } as TrackerToUpdate,
                 ],
             },
         });
@@ -40,7 +40,7 @@ describe("TrackerListWritingMode", () => {
 
     it("when I remove a tracker, then an event will be emitted", () => {
         const wrapper = instantiateComponent();
-        const tracker = { label: "fake_tracker", id: 1 } as Tracker;
+        const tracker = { tracker_label: "fake_tracker", tracker_id: 1 } as TrackerToUpdate;
 
         wrapper.get("[data-test=remove-tracker-1]").trigger("click");
 
@@ -48,6 +48,6 @@ describe("TrackerListWritingMode", () => {
         if (!emitted) {
             throw new Error("Event has not been emitted");
         }
-        expect(emitted[0][0]).toEqual(tracker);
+        expect(emitted[0][0]).toStrictEqual(tracker);
     });
 });

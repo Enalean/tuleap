@@ -18,7 +18,7 @@
  */
 
 import ExtendableError from "extendable-error";
-import type { Project, Tracker, TrackerAndProject } from "../type";
+import type { ProjectInfo, TrackerInfo, TrackerAndProject } from "../type";
 import type ReadingCrossTrackerReport from "../reading-mode/reading-cross-tracker-report";
 
 export default class WritingCrossTrackerReport {
@@ -30,7 +30,7 @@ export default class WritingCrossTrackerReport {
         this.expert_query = "";
     }
 
-    addTracker(project: Project, tracker: Tracker): void {
+    addTracker(project: ProjectInfo, tracker: TrackerInfo): void {
         if (this.trackers.size === 25) {
             throw new TooManyTrackersSelectedError();
         }

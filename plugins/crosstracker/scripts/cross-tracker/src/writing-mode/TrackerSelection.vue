@@ -98,18 +98,23 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { getSortedProjectsIAmMemberOf } from "./projects-cache";
 import { getTrackersOfProject } from "../api/rest-querier";
-import type { Project, SelectedTracker, Tracker } from "../type";
+import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
+
+type TrackerSelectOption = TrackerInfo & {
+    disabled: boolean;
+};
 
 @Component({})
 export default class TrackerSelection extends Vue {
     @Prop({ required: true })
-    readonly selectedTrackers!: SelectedTracker[];
+    private readonly selectedTrackers!: SelectedTracker[];
 
-    private selected_project: Project | null = null;
-    private selected_tracker: Tracker | null = null;
-    private projects: Project[] = [];
-    private trackers: Tracker[] = [];
-    private is_loader_shown = false;
+    private trackers: TrackerInfo[] = [];
+
+    selected_project: ProjectInfo | null = null;
+    selected_tracker: TrackerInfo | null = null;
+    projects: ProjectInfo[] = [];
+    is_loader_shown = false;
 
     get is_project_select_disabled(): boolean {
         return this.projects.length === 0;
@@ -121,7 +126,7 @@ export default class TrackerSelection extends Vue {
         return this.selected_tracker === null;
     }
 
-    get tracker_options(): Tracker[] {
+    get tracker_options(): TrackerSelectOption[] {
         return this.trackers.map(({ id, label }) => {
             const is_already_selected = this.selectedTrackers.find(
                 ({ tracker_id }) => tracker_id === id
@@ -135,7 +140,7 @@ export default class TrackerSelection extends Vue {
     }
 
     @Watch("selected_project")
-    selected_project_value(new_value: Tracker | null) {
+    selected_project_value(new_value: TrackerInfo | null) {
         this.selected_tracker = null;
         this.trackers = [];
         if (new_value) {

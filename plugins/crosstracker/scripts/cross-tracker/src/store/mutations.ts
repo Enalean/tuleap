@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { State, Tracker } from "../type";
+import type { State, InvalidTracker } from "../type";
 
 export function setErrorMessage(state: State, message: string): void {
     state.error_message = message;
@@ -50,7 +50,7 @@ export function discardUnsavedReport(state: State): void {
     state.is_report_saved = true;
 }
 
-export function setInvalidTrackers(state: State, invalid_trackers: Array<Tracker>): void {
+export function setInvalidTrackers(state: State, invalid_trackers: InvalidTracker[]): void {
     state.invalid_trackers = invalid_trackers;
 }
 

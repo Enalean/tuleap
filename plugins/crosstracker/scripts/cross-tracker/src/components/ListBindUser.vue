@@ -17,9 +17,9 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <a v-bind:href="props.user.user_url" class="cross-tracker-list-bind-user">
-        {{ props.user.display_name }}
+<template>
+    <a v-bind:href="user.user_url" class="cross-tracker-list-bind-user">
+        {{ user.display_name }}
     </a>
 </template>
 <script lang="ts">

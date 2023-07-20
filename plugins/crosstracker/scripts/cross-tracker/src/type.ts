@@ -17,64 +17,68 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 import type { TrackerForInit } from "./backend-cross-tracker-report";
 
-export interface State {
+export type InvalidTracker = Pick<TrackerResponseNoInstance, "id" | "label" | "project">;
+export type TrackerInfo = Pick<TrackerResponseNoInstance, "id" | "label">;
+export type ProjectInfo = Pick<ProjectReference, "id" | "uri" | "label">;
+
+export type State = {
     error_message: string | null;
     success_message: string | null;
-    invalid_trackers: Array<Tracker>;
+    invalid_trackers: InvalidTracker[];
     reading_mode: boolean;
     is_report_saved: boolean;
     is_user_admin: boolean;
     report_id: number;
-}
+};
 
-export interface SelectedTracker {
+export type SelectedTracker = {
+    readonly tracker_id: number;
+};
+
+export type TrackerAndProject = {
+    project: Pick<ProjectInfo, "id" | "label">;
+    tracker: TrackerInfo;
+};
+
+export type TrackerToUpdate = {
     tracker_id: number;
-}
+    tracker_label: string;
+    project_label: string;
+};
 
-export interface Tracker {
-    id: number;
-    label: string;
-}
-
-export interface TrackerAndProject {
-    project: Project;
-    tracker: Tracker;
-}
-
-export interface Project {
-    id: number;
-    label: string;
-}
-
-export interface Report {
+export type Report = {
     trackers: Map<number, TrackerForInit>;
     expert_query: string;
-    invalid_trackers: Array<Tracker>;
-}
+    invalid_trackers: InvalidTracker[];
+};
 
-export interface ReadingReport {
-    trackers: Map<number, TrackerAndProject>;
-    expert_query: string;
-    invalid_trackers: Array<Tracker>;
-}
-
-export interface ArtifactsCollection {
+export type ArtifactsCollection = {
     artifacts: Artifact[];
     total: string;
-}
+};
 
-export interface Artifact {
+export type Artifact = {
     id: number;
+    title: string;
     badge: {
+        uri: string;
+        cross_ref: string;
         color: string;
     };
     formatted_last_update_date: string;
     last_update_date: string;
-}
+    status: string;
+    submitted_by: User;
+    assigned_to: User[];
+    project: ProjectReference;
+};
 
-export interface User {
+export type User = {
+    id: number;
     display_name: string;
     user_url: string;
-}
+};

@@ -18,11 +18,11 @@
  */
 
 import { getSortedProjectsIAmMemberOf as getProjects } from "../api/rest-querier";
-import type { Project } from "../type";
+import type { ProjectInfo } from "../type";
 
-let cached_projects: Array<Project> = [];
+let cached_projects: Array<ProjectInfo> = [];
 
-export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
+export async function getSortedProjectsIAmMemberOf(): Promise<Array<ProjectInfo>> {
     if (cached_projects.length > 0) {
         return cached_projects;
     }
@@ -34,7 +34,7 @@ export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
 
 async function fetchProjects(): Promise<void> {
     const projects = await getProjects();
-    cached_projects = projects.map(({ id, label }) => {
-        return { id, label };
+    cached_projects = projects.map(({ id, label, uri }) => {
+        return { id, label, uri };
     });
 }

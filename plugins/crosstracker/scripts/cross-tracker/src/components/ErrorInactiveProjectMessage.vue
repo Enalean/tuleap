@@ -36,15 +36,15 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { State, Getter } from "vuex-class";
-import type { Tracker } from "../type";
+import type { InvalidTracker } from "../type";
 
 @Component
 export default class ErrorInactiveProjectMessage extends Vue {
     @State
-    private readonly invalid_trackers!: Tracker[];
+    readonly invalid_trackers!: InvalidTracker[];
 
     @State
-    private readonly is_user_admin!: boolean;
+    readonly is_user_admin!: boolean;
 
     @Getter
     readonly has_invalid_trackers!: boolean;

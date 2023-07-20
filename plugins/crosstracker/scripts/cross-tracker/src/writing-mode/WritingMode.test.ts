@@ -27,9 +27,10 @@ import {
 } from "./writing-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Project, Tracker, State } from "../type";
+import type { ProjectInfo, TrackerInfo, State } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
 describe("WritingMode", () => {
     let store = {
@@ -38,7 +39,7 @@ describe("WritingMode", () => {
 
     beforeEach(() => {
         jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([
-            { id: 102 } as Project,
+            { id: 102 } as ProjectReference,
         ]);
     });
 
@@ -61,17 +62,17 @@ describe("WritingMode", () => {
         it("on init, the selected trackers will be formatted from the writing report", async () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
-                { id: 804, label: "fanatical" } as Project,
-                { id: 29, label: "charry" } as Tracker
+                { id: 804, label: "fanatical" } as ProjectInfo,
+                { id: 29, label: "charry" } as TrackerInfo
             );
             writingCrossTrackerReport.addTracker(
-                { id: 146, label: "surly" } as Project,
-                { id: 51, label: "monodynamism" } as Tracker
+                { id: 146, label: "surly" } as ProjectInfo,
+                { id: 51, label: "monodynamism" } as TrackerInfo
             );
 
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
 
-            expect(wrapper.vm.$data.selected_trackers).toEqual([
+            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 29,
                     tracker_label: "charry",
@@ -97,7 +98,7 @@ describe("WritingMode", () => {
                 throw new Error("Event has not been emitted");
             }
 
-            expect(emitted[0][0]).toEqual({ saved_state: true });
+            expect(emitted[0][0]).toStrictEqual({ saved_state: true });
         });
     });
 
@@ -112,7 +113,7 @@ describe("WritingMode", () => {
                 throw new Error("Event has not been emitted");
             }
 
-            expect(emitted[0][0]).toEqual({ saved_state: false });
+            expect(emitted[0][0]).toStrictEqual({ saved_state: false });
         });
     });
 
@@ -120,12 +121,12 @@ describe("WritingMode", () => {
         it("when I remove a tracker, then the writing report will be updated and the errors hidden", async () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
-                { id: 172, label: "undiuretic" } as Project,
-                { id: 61, label: "Dipneumona" } as Tracker
+                { id: 172, label: "undiuretic" } as ProjectInfo,
+                { id: 61, label: "Dipneumona" } as TrackerInfo
             );
             writingCrossTrackerReport.addTracker(
-                { id: 288, label: "defectless" } as Project,
-                { id: 46, label: "knothorn" } as Tracker
+                { id: 288, label: "defectless" } as ProjectInfo,
+                { id: 46, label: "knothorn" } as TrackerInfo
             );
             jest.spyOn(writingCrossTrackerReport, "removeTracker");
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
@@ -136,7 +137,7 @@ describe("WritingMode", () => {
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
-            expect(wrapper.vm.$data.selected_trackers).toEqual([
+            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 61,
                     tracker_label: "Dipneumona",
@@ -151,8 +152,8 @@ describe("WritingMode", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             jest.spyOn(writingCrossTrackerReport, "addTracker");
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
-            const selected_project = { id: 656, label: "ergatogyne" } as Project;
-            const selected_tracker = { id: 53, label: "observingly" } as Tracker;
+            const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
+            const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
             wrapper.findComponent(TrackerSelection).vm.$emit("tracker-added", {
                 selected_project,
@@ -163,7 +164,7 @@ describe("WritingMode", () => {
                 selected_project,
                 selected_tracker
             );
-            expect(wrapper.vm.$data.selected_trackers).toEqual([
+            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 53,
                     tracker_label: "observingly",
@@ -178,8 +179,8 @@ describe("WritingMode", () => {
                 throw new TooManyTrackersSelectedError();
             });
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
-            const selected_project = { id: 656, label: "ergatogyne" } as Project;
-            const selected_tracker = { id: 53, label: "observingly" } as Tracker;
+            const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
+            const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
             wrapper.findComponent(TrackerSelection).vm.$emit("tracker-added", {
                 selected_project,

@@ -30,7 +30,7 @@ import { State, Getter } from "vuex-class";
 @Component
 export default class ErrorMessage extends Vue {
     @State
-    private readonly error_message!: string;
+    readonly error_message!: string;
 
     @Getter
     readonly has_error_message!: boolean;

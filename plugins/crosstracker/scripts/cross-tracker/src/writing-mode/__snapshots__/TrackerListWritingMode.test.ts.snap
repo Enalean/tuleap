@@ -13,7 +13,7 @@ exports[`TrackerListWritingMode renders a list of trackers 1`] = `
         data-test="remove-tracker-1"
       />
       
-            
+            fake_tracker
         
     </span>
      
@@ -35,7 +35,7 @@ exports[`TrackerListWritingMode renders a list of trackers 1`] = `
         data-test="remove-tracker-2"
       />
       
-            
+            bugs
         
     </span>
      

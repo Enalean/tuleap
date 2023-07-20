@@ -18,9 +18,9 @@
  *
  */
 
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import { getSortedProjectsIAmMemberOf as getProjects } from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
-import type { Project } from "../type";
 
 describe("getSortedProjectsIAmMemberOf", () => {
     it("Returns the projects I'm member of", async () => {
@@ -29,9 +29,9 @@ describe("getSortedProjectsIAmMemberOf", () => {
             "getSortedProjectsIAmMemberOf"
         );
 
-        const expected_project_list: Array<Project> = [
-            { id: 101, label: "project A" },
-            { id: 102, label: "project B" },
+        const expected_project_list = [
+            { id: 101, label: "project A", uri: "uri/to/projectA" } as ProjectReference,
+            { id: 102, label: "project B", uri: "uri/to/projectB" } as ProjectReference,
         ];
 
         spyRESTgetSortedProjectsIAmMemberOf.mockImplementation(() =>
@@ -39,6 +39,6 @@ describe("getSortedProjectsIAmMemberOf", () => {
         );
 
         const project_list = await getProjects();
-        expect(expected_project_list).toEqual(project_list);
+        expect(expected_project_list).toStrictEqual(project_list);
     });
 });

@@ -84,7 +84,8 @@ export default class QueryEditor extends Vue {
     readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
 
     private code_mirror_instance: null | TQLCodeMirrorEditor = null;
-    private value: string = this.writingCrossTrackerReport.expert_query;
+
+    value: string = this.writingCrossTrackerReport.expert_query;
 
     created(): void {
         initializeTQLMode(TQL_cross_tracker_mode_definition);

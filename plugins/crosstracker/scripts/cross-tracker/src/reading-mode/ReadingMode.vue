@@ -81,13 +81,13 @@ export default class ReadingMode extends Vue {
     readonly backendCrossTrackerReport!: BackendCrossTrackerReport;
 
     @State
-    private readonly is_report_saved!: boolean;
+    readonly is_report_saved!: boolean;
 
     @State
     private readonly report_id!: number;
 
     @State
-    private readonly is_user_admin!: boolean;
+    readonly is_user_admin!: boolean;
 
     is_loading = false;
 
