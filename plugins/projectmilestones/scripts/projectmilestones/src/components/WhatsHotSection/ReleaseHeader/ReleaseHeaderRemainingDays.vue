@@ -75,7 +75,7 @@ export default class ReleaseHeaderRemainingDays extends Vue {
         typeof this.release_data.number_days_since_start !== "number" ||
         typeof this.release_data.number_days_until_end !== "number";
 
-    formatDate = (date: number): number => (date && date > 0 ? date : 0);
+    formatDate = (date: number | null): number => (date && date > 0 ? date : 0);
 
     get are_dates_correctly_set(): boolean {
         if (

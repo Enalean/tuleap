@@ -72,7 +72,7 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         !this.release_data.initial_effort ||
         this.release_data.initial_effort < this.release_data.remaining_effort;
 
-    formatPoints = (pts: number): number => (pts ? pts : 0);
+    formatPoints = (pts: number | null): number => pts ?? 0;
 
     get are_all_effort_defined(): boolean {
         if (
