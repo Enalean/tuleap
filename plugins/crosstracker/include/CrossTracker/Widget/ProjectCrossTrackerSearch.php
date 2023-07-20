@@ -26,8 +26,9 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
@@ -158,23 +159,28 @@ class ProjectCrossTrackerSearch extends Widget
         return \TrackerFactory::instance();
     }
 
-    public function getJavascriptDependencies(): array
+    public function getJavascriptAssets(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('cross-tracker.js')],
+            new JavascriptViteAsset($this->getAssets(), "src/index.ts"),
         ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'cross-tracker-style')]);
+        return new CssAssetCollection([
+            CssViteAsset::fromFileName(
+                $this->getAssets(),
+                'themes/cross-tracker.scss'
+            ),
+        ]);
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/crosstracker'
+        return new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/cross-tracker/frontend-assets',
+            '/assets/crosstracker/cross-tracker'
         );
     }
 
