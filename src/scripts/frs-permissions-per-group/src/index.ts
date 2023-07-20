@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import FRSPermissions from "./BaseFRSPackagePermissions.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("frs-packages-permissions-per-group");
@@ -35,11 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     Vue.config.language = locale;
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
         (locale: string) =>
             import(
-                /* webpackChunkName: "permissions-per-group-frs-po-" */ "./po/" +
+                /* webpackChunkName: "permissions-per-group-frs-po-" */ "../po/" +
                     getPOFileFromLocale(locale)
             )
     );

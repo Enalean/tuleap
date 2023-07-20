@@ -39,7 +39,7 @@
 import UgroupBadge from "@tuleap/vue-permissions-per-group-badge";
 import Component from "vue-class-component";
 import Vue from "vue";
-import type { PackagePermissionPerGroupReleaseRepresentation } from "./type";
+import type { PackagePermissionPerGroupReleaseRepresentation } from "./types";
 import { Prop } from "vue-property-decorator";
 
 @Component({ components: { UgroupBadge } })

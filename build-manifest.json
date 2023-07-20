@@ -36,8 +36,8 @@
     },
     "gettext-vue": {
         "permissions-per-group-frs": {
-            "src": "src/scripts/main/src/frs/permissions-per-group",
-            "po": "src/scripts/main/src/frs/permissions-per-group/po"
+            "src": "src/scripts/frs-permissions-per-group/src",
+            "po": "src/scripts/frs-permissions-per-group/po"
         },
         "permissions-per-group-news": {
             "src": "src/scripts/main/src/news/permissions-per-group",

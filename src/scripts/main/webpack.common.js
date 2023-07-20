@@ -177,7 +177,6 @@ const webpack_config_for_burning_parrot_code = {
 
 const webpack_config_for_vue = {
     entry: {
-        "frs-permissions": "./src/frs/permissions-per-group/index.ts",
         "news-permissions": "./src/news/permissions-per-group/index.js",
         "site-admin/platform-banner": "./src/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
