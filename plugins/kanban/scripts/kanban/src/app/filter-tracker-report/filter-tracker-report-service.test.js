@@ -134,27 +134,6 @@ describe("FilterTrackerReportService -", () => {
         });
     });
 
-    describe("isWIPUpdated() -", () => {
-        it("Given a selected report, then false will be returned", () => {
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
-        });
-    });
-
     describe("areNotCardsAndWIPUpdated() -", () => {
         it("Given a selected report, then true will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
@@ -191,45 +170,6 @@ describe("FilterTrackerReportService -", () => {
                 },
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
-        });
-    });
-
-    describe("isNotWIPUpdated() -", () => {
-        it("Given a selected report, then true will be returned", () => {
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(true);
-        });
-
-        it("Given no selected report, then false will be returned", () => {
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
         });
     });
 
