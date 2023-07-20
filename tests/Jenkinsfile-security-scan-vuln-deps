@@ -6,7 +6,7 @@ pipeline {
     agent {
         label 'docker'
     }
-    triggers { cron('0 7 * * 1-5') }
+    triggers { cron('H 5 * * 1-5') }
 
     stages {
         stage('Checkout') {
