@@ -1,0 +1,14 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@tuleap/autocomplete-for-select2':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/autocomplete-for-select2
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator

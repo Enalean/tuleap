@@ -15,17 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import App from "./src/components/App.vue";
-import { createStore } from "./src/store";
-import { setUserLocale } from "./src/helpers/user-locale-helper";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import type { TrackerAgileDashboard } from "./src/type";
-import { COUNT, EFFORT } from "./src/type";
+import App from "./components/App.vue";
+import { createStore } from "./store";
+import { setUserLocale } from "./helpers/user-locale-helper";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
+import type { TrackerAgileDashboard } from "./type";
+import { COUNT, EFFORT } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -35,13 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         Vue.config.language = locale;
         setUserLocale(locale.replace("_", "-"));
     }
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "projectmilestones-po-" */ "./po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");

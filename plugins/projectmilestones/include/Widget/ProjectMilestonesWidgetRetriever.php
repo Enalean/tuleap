@@ -30,8 +30,9 @@ use Project;
 use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
@@ -114,22 +115,25 @@ class ProjectMilestonesWidgetRetriever
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('projectmilestones.js')],
+            new JavascriptViteAsset($this->getAssets(), "src/index.ts"),
         ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection(
-            [new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'projectmilestones-style')]
-        );
+        return new CssAssetCollection([
+            CssViteAsset::fromFileName(
+                $this->getAssets(),
+                'themes/style.scss'
+            ),
+        ]);
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/projectmilestones'
+        return new IncludeViteAssets(
+            __DIR__ . '/../../scripts/projectmilestones/frontend-assets',
+            '/assets/projectmilestones/projectmilestones'
         );
     }
 
