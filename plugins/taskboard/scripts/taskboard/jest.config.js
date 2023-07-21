@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { env } from "node:process";
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+
+env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineJestConfiguration();
 export default {

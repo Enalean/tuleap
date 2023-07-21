@@ -29,7 +29,7 @@
         <textarea
             class="tlp-textarea taskboard-card-label-input"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="onInputEmit"
             v-on:keydown.enter="enter"
             v-on:keyup="keyup"
             v-bind:rows="rows"
@@ -83,6 +83,14 @@ export default class LabelEditor extends Vue {
         this.rows = Math.ceil(
             (this.mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
         );
+    }
+
+    onInputEmit($event: Event): void {
+        if (!($event.target instanceof HTMLTextAreaElement)) {
+            return;
+        }
+
+        this.$emit("input", $event.target.value);
     }
 }
 </script>

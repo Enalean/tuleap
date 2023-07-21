@@ -92,8 +92,8 @@ export default class BaseCard extends Vue {
     @fullscreen.State
     readonly is_taskboard_in_fullscreen_mode!: boolean;
 
-    private label = "";
-    private assignees: User[] = [];
+    label = "";
+    assignees: User[] = [];
 
     mounted(): void {
         this.label = this.card.label;

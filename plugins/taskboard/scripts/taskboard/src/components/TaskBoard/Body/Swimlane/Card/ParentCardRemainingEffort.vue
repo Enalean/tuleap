@@ -38,7 +38,7 @@
             v-on:editor-closed="$emit('editor-closed')"
             data-test="edit-remaining-effort"
         />
-        <template v-else>{{ card.remaining_effort.value }}</template>
+        <template v-else>{{ remaining_effort }}</template>
         <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
         <i class="fa" aria-hidden="true" v-bind:class="icon"></i>
     </span>
@@ -57,7 +57,19 @@ export default class ParentCardRemainingEffort extends Vue {
     readonly card!: Card;
 
     get has_remaining_effort(): boolean {
-        return this.card.remaining_effort !== null && this.card.remaining_effort.value !== null;
+        return (
+            this.card &&
+            this.card.remaining_effort !== null &&
+            this.card.remaining_effort.value !== null
+        );
+    }
+
+    get remaining_effort(): string {
+        if (!this.card.remaining_effort?.value) {
+            return "";
+        }
+
+        return String(this.card.remaining_effort.value);
     }
 
     get additional_classes(): string {
@@ -98,8 +110,8 @@ export default class ParentCardRemainingEffort extends Vue {
         return this.card.remaining_effort.is_in_edit_mode;
     }
 
-    get role(): string | undefined {
-        return this.can_update_remaining_effort ? "button" : undefined;
+    get role(): string {
+        return this.can_update_remaining_effort ? "button" : "";
     }
 
     get tabindex(): number {

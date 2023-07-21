@@ -41,7 +41,7 @@ export default class CardsInColumnCount extends Vue {
     readonly is_loading_cards!: boolean;
 
     @swimlane.Getter
-    readonly nb_cards_in_column!: boolean;
+    readonly nb_cards_in_column!: (column: ColumnDefinition) => boolean;
 
     get classes(): string {
         return this.is_loading_cards ? "taskboard-header-count-loading" : "";
