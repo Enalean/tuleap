@@ -33,7 +33,6 @@ import type {
     AdvancedSearchParams,
     CreatedItem,
     CreatedItemFileProperties,
-    FolderProperty,
     Property,
     Uploadable,
     ItemReferencingWikiPageRepresentation,
@@ -49,11 +48,11 @@ import type { Fault } from "@tuleap/fault";
 import { getJSON, uri } from "@tuleap/fetch-result";
 
 export interface RestItem extends Omit<Item, "properties"> {
-    readonly metadata: Array<Property> | Array<FolderProperty>;
+    readonly metadata: Array<Property>;
 }
 
 export interface RestFolder extends Omit<Folder, "properties"> {
-    readonly metadata: Array<FolderProperty>;
+    readonly metadata: Array<Property>;
 }
 
 export interface PostRestItemFile {

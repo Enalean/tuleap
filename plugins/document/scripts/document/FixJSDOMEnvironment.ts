@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import JSDOMEnvironment from "jest-environment-jsdom";
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+// https://github.com/facebook/jest/blob/v29.4.3/website/versioned_docs/version-29.4/Configuration.md#testenvironment-string
+export default class FixJSDOMEnvironment extends JSDOMEnvironment {
+    constructor(...args: ConstructorParameters<typeof JSDOMEnvironment>) {
+        super(...args);
 
-const jest_base_config = defineJestConfiguration();
-module.exports = {
-    ...jest_base_config,
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-    displayName: "document",
-    testEnvironment: "./scripts/document/FixJSDOMEnvironment.ts",
-};
+        // FIXME https://github.com/jsdom/jsdom/issues/3363
+        this.global.structuredClone = structuredClone;
+    }
+}

@@ -230,9 +230,18 @@ describe("UpdateFolderPropertiesModal", () => {
             ],
         };
 
+        const expected_properties = {
+            short_name: "field_1234",
+            list_value: null,
+            type: "list",
+            is_multiple_value_allowed: false,
+            recursion: "none",
+            value: 103,
+        };
+
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.formatted_item_properties).toStrictEqual([properties_to_update]);
+        expect(wrapper.vm.formatted_item_properties).toEqual([expected_properties]);
     });
 
     it("Updates status", () => {

@@ -140,6 +140,7 @@ describe("UpdatePropertiesModal", () => {
         const properties_in_rest_format = {
             short_name: "field_1234",
             list_value: null,
+            recursion: "none",
             type: "list",
             is_multiple_value_allowed: false,
             value: 103,

@@ -147,7 +147,7 @@ export interface Item extends MinimalItem {
     created?: boolean;
     obsolescence_date: null | number;
     updated?: boolean;
-    properties: Array<Property> | Array<FolderProperty>;
+    properties: Array<Property>;
 }
 
 /**
@@ -171,10 +171,7 @@ export interface Property {
     value: number | string | null;
     allowed_list_values: Array<ListValue> | null;
     post_processed_value?: string | null;
-}
-
-export interface FolderProperty extends Property {
-    recursion: string | null;
+    recursion?: string | null;
 }
 
 export interface ListValue {
@@ -233,7 +230,7 @@ export interface Folder extends Item, Uploadable {
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
     type: "folder";
-    properties: Array<FolderProperty>;
+    properties: Array<Property>;
     status: FolderStatus;
 }
 

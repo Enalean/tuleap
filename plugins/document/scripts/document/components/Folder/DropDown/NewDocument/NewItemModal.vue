@@ -306,7 +306,7 @@ export default {
             }
         },
         addParentPropertiesToDefaultItem() {
-            const parent_properties = getCustomProperties(this.parent.properties);
+            const parent_properties = getCustomProperties(this.parent);
 
             const formatted_properties =
                 transformCustomPropertiesForItemCreation(parent_properties);

@@ -176,7 +176,7 @@ describe("rest-querier", () => {
                     offset: 0,
                 },
             });
-            expect(tlpRecursiveGet.mock.calls).toHaveLength(2);
+            expect(tlpRecursiveGet.mock.calls).toHaveLength(1);
             expect(result).toEqual(parents);
         });
     });
