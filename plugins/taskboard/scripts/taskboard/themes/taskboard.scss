@@ -18,7 +18,7 @@
  */
 
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+@use "@tuleap/plugin-agiledashboard-scrum-milestone-header/dist/style.css";
 @use "./includes/header" as taskboard-header;
 @use "./includes/body";
 @use "./includes/card-read";

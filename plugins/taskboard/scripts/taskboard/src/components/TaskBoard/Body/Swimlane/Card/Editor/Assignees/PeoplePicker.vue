@@ -37,7 +37,7 @@ import type {
 } from "tlp";
 import { select2 } from "tlp";
 import $ from "jquery";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import mustache from "mustache";
 import type { UserForPeoplePicker } from "./type";
 
@@ -64,7 +64,7 @@ export default class PeoplePicker extends Vue {
             data: this.users,
             multiple: this.is_multiple,
             placeholder,
-            escapeMarkup: sanitize,
+            escapeMarkup: DOMPurify.sanitize,
             templateResult: this.formatUser,
             templateSelection: this.formatUserWhenSelected,
         };

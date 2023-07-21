@@ -35,7 +35,7 @@ use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -127,9 +127,9 @@ class taskboardPlugin extends Plugin
                 TrackerPresenterCollectionBuilder::build(),
                 Tracker_ArtifactFactory::instance()
             ),
-            new IncludeAssets(
-                __DIR__ . '/../frontend-assets',
-                '/assets/taskboard'
+            new IncludeViteAssets(
+                __DIR__ . '/../scripts/taskboard/frontend-assets',
+                '/assets/taskboard/taskboard'
             ),
             new VisitRecorder(new RecentlyVisitedDao()),
             new HeaderOptionsProvider(
