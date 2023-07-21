@@ -1049,6 +1049,11 @@ msgid "Configure how project creation is controlled by administrators"
 msgstr ""
 "Paramètrage du contrôle de la création de projets par les administrateurs"
 
+msgid "Configure how user creation is controlled by administrators"
+msgstr ""
+"Paramètrage du contrôle de la création des utilisateurs par les "
+"administrateurs"
+
 msgid "Configure services"
 msgstr "Configurer les services"
 
@@ -4447,11 +4452,17 @@ msgstr "Utilisateur ajouté"
 msgid "User and date"
 msgstr "Utilisateur et date"
 
+msgid "User approval settings have been saved"
+msgstr "Les paramètres d'approbation des utilisateurs ont été sauvegardés"
+
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
 msgid "User cannot be found"
 msgstr "L'utilisateur n'a pas été trouvé"
+
+msgid "User creation moderation"
+msgstr "Modération de la création des utilisateurs"
 
 msgid "User does not exist"
 msgstr "L'utilisateur n’existe pas"
@@ -4505,6 +4516,9 @@ msgstr "Les préférences utilisateur ont été mises à jour"
 msgid "User profile"
 msgstr "Profil utilisateur"
 
+msgid "User settings"
+msgstr "Paramètres utilisateurs"
+
 msgid "Username"
 msgstr "Nom utilisateur"
 
@@ -4531,6 +4545,9 @@ msgid "Users must be able to send at least one invitation by day."
 msgstr ""
 "Les utilisateurs doivent être en mesure d'envoyer au moins une invitation "
 "par jour."
+
+msgid "Users must be approved by administrators"
+msgstr "Les utilisateurs doivent être approuvés par les administrateurs"
 
 msgid "Users must first login before going further."
 msgstr ""
