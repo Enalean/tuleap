@@ -22,25 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
 
 final class DBTransactionExecutorWithConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testTransactionIsGivenToTheUnderlyingDB(): void
     {
-        $db_connection = \Mockery::mock(DBConnection::class);
+        $db_connection = $this->createMock(DBConnection::class);
 
         $transaction_executor = new DBTransactionExecutorWithConnection($db_connection);
 
-        $callable = function () {
+        $callable = function (): void {
         };
 
-        $db = \Mockery::mock(EasyDB::class);
-        $db_connection->shouldReceive('getDB')->andReturn($db);
-        $db->shouldReceive('tryFlatTransaction')->with($callable)->once();
+        $db = $this->createMock(EasyDB::class);
+        $db_connection->method('getDB')->willReturn($db);
+        $db->expects(self::once())->method('tryFlatTransaction')->with($callable);
 
         $transaction_executor->execute($callable);
     }

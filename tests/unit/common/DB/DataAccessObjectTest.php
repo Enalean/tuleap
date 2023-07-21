@@ -22,44 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
 
 final class DataAccessObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDBIsAlwaysRetrievedFromTheConnection(): void
     {
-        $connection = \Mockery::mock(DBConnection::class);
+        $connection = $this->createMock(DBConnection::class);
 
-        $dao = new class ($connection) extends DataAccessObject
-        {
+        $dao = new class ($connection) extends DataAccessObject {
             public function getDBPubliclyForTest(): EasyDB
             {
                 return $this->getDB();
             }
         };
 
-        $db1 = \Mockery::mock(EasyDB::class);
-        $db2 = \Mockery::mock(EasyDB::class);
-        $connection->shouldReceive('getDB')->andReturn($db1, $db2);
+        $db1 = $this->createMock(EasyDB::class);
+        $db2 = $this->createMock(EasyDB::class);
+        $connection->method('getDB')->willReturn($db1, $db2);
 
-        $this->assertSame($db1, $dao->getDBPubliclyForTest());
-        $this->assertSame($db2, $dao->getDBPubliclyForTest());
+        self::assertSame($db1, $dao->getDBPubliclyForTest());
+        self::assertSame($db2, $dao->getDBPubliclyForTest());
     }
 
     public function testFoundRowsReturnsAnInteger(): void
     {
-        $connection = \Mockery::mock(DBConnection::class);
+        $connection = $this->createMock(DBConnection::class);
 
         $dao = new class ($connection) extends DataAccessObject {
         };
 
-        $db = \Mockery::mock(EasyDB::class);
-        $connection->shouldReceive('getDB')->andReturn($db);
-        $db->shouldReceive('single')->andReturn('0');
+        $db = $this->createMock(EasyDB::class);
+        $connection->method('getDB')->willReturn($db);
+        $db->method('single')->willReturn('0');
 
-        $this->assertSame(0, $dao->foundRows());
+        self::assertSame(0, $dao->foundRows());
     }
 }

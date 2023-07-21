@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
 
 final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testOnlyOneDBIsCreated(): void
     {
-        $db_creator    = \Mockery::mock(DBCreator::class);
+        $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = \Mockery::mock(EasyDB::class);
+        $db = $this->createMock(EasyDB::class);
 
-        $db_creator->shouldReceive('createDB')->andReturn($db)->once();
-        $this->assertSame($db, $db_connection->getDB());
-        $this->assertSame($db, $db_connection->getDB());
+        $db_creator->expects(self::once())->method('createDB')->willReturn($db);
+        self::assertSame($db, $db_connection->getDB());
+        self::assertSame($db, $db_connection->getDB());
     }
 
     public function testDBIsLazilyCreated(): void
     {
-        $db_creator = \Mockery::mock(DBCreator::class);
-        $db_creator->shouldNotReceive('createDB');
+        $db_creator = $this->createMock(DBCreator::class);
+        $db_creator->expects(self::never())->method('createDB');
 
         $db_connection = new DBConnection($db_creator);
         $db_connection->reconnectAfterALongRunningProcess();
@@ -52,27 +49,27 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExistingDBIsKeptIfConnectionHasNotBeenClosedAfterALongProcess(): void
     {
-        $db_creator    = \Mockery::mock(DBCreator::class);
+        $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = \Mockery::mock(EasyDB::class);
-        $db_creator->shouldReceive('createDB')->andReturn($db)->once();
-        $db->shouldReceive('run');
+        $db = $this->createMock(EasyDB::class);
+        $db_creator->expects(self::once())->method('createDB')->willReturn($db);
+        $db->method('run');
 
         $db_connection->reconnectAfterALongRunningProcess();
-        $this->assertSame($db, $db_connection->getDB());
+        self::assertSame($db, $db_connection->getDB());
     }
 
     public function testNewDBIsCreatedIfTheConnectionHasBeenClosedAfterALongRunningProcess(): void
     {
-        $db_creator    = \Mockery::mock(DBCreator::class);
+        $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db_closed = \Mockery::mock(EasyDB::class);
-        $db        = \Mockery::mock(EasyDB::class);
-        $db_creator->shouldReceive('createDB')->andReturn($db_closed, $db);
+        $db_closed = $this->createMock(EasyDB::class);
+        $db        = $this->createMock(EasyDB::class);
+        $db_creator->method('createDB')->willReturn($db_closed, $db);
 
-        $db_closed->shouldReceive('run')->andReturnUsing(
+        $db_closed->method('run')->willReturnCallback(
             function (): void {
                 trigger_error('MySQL server has gone away', E_USER_WARNING);
                 throw new \PDOException('SQLSTATE[HY000]: General error: 2006 MySQL server has gone away');
@@ -81,20 +78,20 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $db_connection->getDB();
         $db_connection->reconnectAfterALongRunningProcess();
-        $this->assertSame($db, $db_connection->getDB());
+        self::assertSame($db, $db_connection->getDB());
     }
 
     public function testDBCommunicationFailureNotRelatedToAClosedStateAfterALongRunningProcessAreNotHidden(): void
     {
-        $db_creator    = \Mockery::mock(DBCreator::class);
+        $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = \Mockery::mock(EasyDB::class);
-        $db->shouldReceive('run')->andThrow(\PDOException::class);
-        $db_creator->shouldReceive('createDB')->andReturn($db);
+        $db = $this->createMock(EasyDB::class);
+        $db->method('run')->willThrowException(new \PDOException());
+        $db_creator->method('createDB')->willReturn($db);
 
         $db_connection->getDB();
-        $this->expectException(\PDOException::class);
+        self::expectException(\PDOException::class);
         $db_connection->reconnectAfterALongRunningProcess();
     }
 }
