@@ -62,11 +62,11 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
 use TransitionFactory;
+use Tuleap\Kanban\RealTime\KanbanRealtimeStructureMessageSender;
 use Tuleap\Kanban\RealTimeMercure\KanbanStructureRealTimeMercure;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
-use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
@@ -97,7 +97,6 @@ use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\KanbanCumulativeFlowDiagramDao;
-use Tuleap\Kanban\KanbanRightsPresenter;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\Kanban\REST\v1\CumulativeFlowDiagram\DiagramRepresentationBuilder;
@@ -112,7 +111,6 @@ use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -404,26 +402,13 @@ final class KanbanResource extends AuthenticatedResource
                 $this->getProjectIdForKanban($kanban)
             );
 
-            if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-                $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-                if ($tracker === null) {
-                    throw new \RuntimeException('Tracker does not exist');
-                }
-                $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-                $message = new MessageDataPresenter(
-                    $user->getId(),
-                    $_SERVER[self::HTTP_CLIENT_UUID],
-                    $kanban->getId(),
-                    $rights,
-                    'kanban:edit',
-                    $label
-                );
-
-                $this->node_js_client->sendMessage($message);
-                if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                    $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-                }
-            }
+            $kanban_sender = new KanbanRealtimeStructureMessageSender(
+                $this->tracker_factory,
+                $this->structure_realtime_kanban,
+                $this->node_js_client,
+                $this->permissions_serializer
+            );
+            $kanban_sender->sendMessageStructure($kanban, 'kanban:edit', $user, \HTTPRequest::instance(), $label);
         }
 
         if ($collapse_column) {
@@ -1186,26 +1171,13 @@ final class KanbanResource extends AuthenticatedResource
 
         Header::allowOptionsGetPatchDelete();
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                throw new \RuntimeException('Tracker does not exist');
-            }
-            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban:delete',
-                null
-            );
-
-            $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
-        }
+        $kanban_sender = new KanbanRealtimeStructureMessageSender(
+            $this->tracker_factory,
+            $this->structure_realtime_kanban,
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+        $kanban_sender->sendMessageStructure($kanban, 'kanban:delete', $user, \HTTPRequest::instance(), '');
     }
 
     /**
@@ -1295,26 +1267,19 @@ final class KanbanResource extends AuthenticatedResource
 
         $column_representation = new KanbanColumnRepresentation($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                throw new \RuntimeException('Tracker does not exist');
-            }
-            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban_column:create',
-                $column_representation
-            );
-
-            $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
-        }
+        $kanban_sender = new KanbanRealtimeStructureMessageSender(
+            $this->tracker_factory,
+            $this->structure_realtime_kanban,
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+        $kanban_sender->sendMessageStructure(
+            $kanban,
+            'kanban_column:create',
+            $current_user,
+            \HTTPRequest::instance(),
+            $column_representation
+        );
 
         return $column_representation;
     }
@@ -1360,26 +1325,19 @@ final class KanbanResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                throw new \RuntimeException('Tracker does not exist');
-            }
-            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban_column:move',
-                $column_ids
-            );
-
-            $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
-        }
+        $kanban_sender = new KanbanRealtimeStructureMessageSender(
+            $this->tracker_factory,
+            $this->structure_realtime_kanban,
+            $this->node_js_client,
+            $this->permissions_serializer
+        );
+        $kanban_sender->sendMessageStructure(
+            $kanban,
+            'kanban_column:move',
+            $user,
+            \HTTPRequest::instance(),
+            $column_ids
+        );
     }
 
     /**

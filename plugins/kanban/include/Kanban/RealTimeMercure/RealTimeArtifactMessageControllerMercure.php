@@ -25,7 +25,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class RealTimeArtifactMessageControllerMercure
+class RealTimeArtifactMessageControllerMercure
 {
     public const EVENT_NAME_ARTIFACT_CREATED   = 'created';
     public const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';

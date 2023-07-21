@@ -24,7 +24,7 @@ use Tuleap\Kanban\KanbanFactory;
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class RealTimeArtifactMessageController
+class RealTimeArtifactMessageController
 {
     public const EVENT_NAME_ARTIFACT_CREATED   = 'created';
     public const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
