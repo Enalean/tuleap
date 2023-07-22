@@ -20,54 +20,57 @@
 
 namespace Tuleap\Dashboard\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var UserDashboardDao */
-    private $dao;
-
-    /** @var \PFUser */
-    private $user;
-
-    /** @var UserDashboardSaver */
-    private $user_saver;
+    private UserDashboardDao&MockObject $dao;
+    private \PFUser $user;
+    private UserDashboardSaver $user_saver;
 
     protected function setUp(): void
     {
-        $this->dao  = \Mockery::spy(\Tuleap\Dashboard\User\UserDashboardDao::class);
+        $this->dao  = $this->createMock(\Tuleap\Dashboard\User\UserDashboardDao::class);
         $this->user = new \PFUser(['user_id' => 1, 'language_id' => 'en_US']);
 
-        $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'new_dashboard')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar([
-            'id'      => 1,
-            'user_id' => 1,
-            'name'    => 'existing_dashboard',
-        ]));
+        $this->dao->method('searchByUserIdAndName')->willReturnCallback(
+            function (\PFUser $user_param, string $name_param): \Tuleap\FakeDataAccessResult {
+                if ($user_param === $this->user && $name_param === 'new_dashboard') {
+                    return \TestHelper::emptyDar();
+                } elseif ($user_param === $this->user && $name_param === 'existing_dashboard') {
+                    return \TestHelper::arrayToDar([
+                        'id'      => 1,
+                        'user_id' => 1,
+                        'name'    => 'existing_dashboard',
+                    ]);
+                }
+
+                throw new LogicException('must no be here.');
+            }
+        );
 
         $this->user_saver = new UserDashboardSaver($this->dao);
     }
 
-    public function testItSavesDashboard()
+    public function testItSavesDashboard(): void
     {
-        $this->dao->shouldReceive('save')->with($this->user, 'new_dashboard')->once();
+        $this->dao->expects(self::once())->method('save')->with($this->user, 'new_dashboard');
 
         $this->user_saver->save($this->user, 'new_dashboard');
     }
 
-    public function testItThrowsExceptionWhenDashboardExists()
+    public function testItThrowsExceptionWhenDashboardExists(): void
     {
-        $this->dao->shouldReceive('save')->never();
+        $this->dao->expects(self::never())->method('save');
         $this->expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
 
         $this->user_saver->save($this->user, 'existing_dashboard');
     }
 
-    public function testItThrowsExceptionWhenNameDoesNotExist()
+    public function testItThrowsExceptionWhenNameDoesNotExist(): void
     {
-        $this->dao->shouldReceive('save')->never();
+        $this->dao->expects(self::never())->method('save');
         $this->expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
 
         $this->user_saver->save($this->user, '');

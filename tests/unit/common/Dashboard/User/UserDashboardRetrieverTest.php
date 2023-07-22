@@ -20,42 +20,42 @@
 
 namespace Tuleap\Dashboard\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use LogicException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \PFUser */
-    private $user_without_dashboard;
-
-    /** @var \PFUser */
-    private $user_with_a_dashboard;
-
-    /** @var UserDashboardRetriever */
-    private $user_retriever;
+    private \PFUser $user_without_dashboard;
+    private \PFUser $user_with_a_dashboard;
+    private UserDashboardRetriever $user_retriever;
 
     protected function setUp(): void
     {
-        $dao = \Mockery::spy(\Tuleap\Dashboard\User\UserDashboardDao::class);
+        $dao = $this->createMock(\Tuleap\Dashboard\User\UserDashboardDao::class);
 
-        $this->user_with_a_dashboard = \Mockery::spy(\PFUser::class);
-        $this->user_with_a_dashboard->shouldReceive('getId')->andReturns(1);
+        $this->user_with_a_dashboard  = UserTestBuilder::aUser()->withId(1)->build();
+        $this->user_without_dashboard = UserTestBuilder::aUser()->withId(2)->build();
 
-        $this->user_without_dashboard = \Mockery::spy(\PFUser::class);
-        $this->user_without_dashboard->shouldReceive('getId')->andReturns(2);
+        $dao->method('searchAllUserDashboards')->willReturnCallback(
+            function (\PFUser $user_param): \Tuleap\FakeDataAccessResult {
+                if ($user_param === $this->user_without_dashboard) {
+                    return \TestHelper::emptyDar();
+                } elseif ($user_param === $this->user_with_a_dashboard) {
+                    return \TestHelper::arrayToDar([
+                        'id'      => 1,
+                        'user_id' => 1,
+                        'name'    => 'dashboard_one',
+                    ]);
+                }
 
-        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_with_a_dashboard)->andReturns(\TestHelper::arrayToDar([
-            'id'      => 1,
-            'user_id' => 1,
-            'name'    => 'dashboard_one',
-        ]));
-        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_without_dashboard)->andReturns(\TestHelper::emptyDar());
+                throw new LogicException('must no be here.');
+            }
+        );
 
         $this->user_retriever = new UserDashboardRetriever($dao);
     }
 
-    public function testItGetsAllDashboards()
+    public function testItGetsAllDashboards(): void
     {
         $result = $this->user_retriever->getAllUserDashboards($this->user_with_a_dashboard);
 
@@ -63,13 +63,13 @@ class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new UserDashboard(1, 1, 'dashboard_one'),
         ];
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
-    public function testItReturnNothingIfThereAreNoDashboards()
+    public function testItReturnNothingIfThereAreNoDashboards(): void
     {
         $result = $this->user_retriever->getAllUserDashboards($this->user_without_dashboard);
 
-        $this->assertEmpty($result);
+        self::assertEmpty($result);
     }
 }
