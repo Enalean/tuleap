@@ -29,6 +29,10 @@ use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\Projects\JiraBoardProjectsRetrieverFromAPI;
@@ -57,7 +61,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesMultiTrackersInXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesInXmlExporterBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
@@ -75,8 +79,14 @@ use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 
+#[ConfigKeyCategory('Import from Jira')]
 final class CreateProjectFromJira
 {
+    #[FeatureFlagConfigKey('Jira importer will import all issues in a solo tracker')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const FLAG_JIRA_IMPORT_MONO_TRACKER_MODE = 'jira_import_mono_tracker_mode';
+
     public function __construct(
         private UserManager $user_manager,
         private TemplateFactory $template_factory,
@@ -223,6 +233,13 @@ final class CreateProjectFromJira
         }
 
         $board_configuration = null;
+
+        if (\ForgeConfig::getFeatureFlag(self::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
+            //To test mono tracker, do not retrieve board information
+            $board = null;
+            $platform_configuration_collection->setAgileFeaturesAreNotAvailable();
+        }
+
         if ($platform_configuration_collection->areAgileFeaturesAvailable()) {
             $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
                 new JiraEpicFromBoardRetrieverFromAPI(
@@ -296,7 +313,7 @@ final class CreateProjectFromJira
                         $import_user,
                     );
 
-                    $jira_exporter = JiraAllIssuesMultiTrackersInXmlExporter::build(
+                    $jira_exporter = JiraAllIssuesInXmlExporterBuilder::build(
                         $jira_client,
                         $logger,
                         $jira_user_on_tuleap_cache,

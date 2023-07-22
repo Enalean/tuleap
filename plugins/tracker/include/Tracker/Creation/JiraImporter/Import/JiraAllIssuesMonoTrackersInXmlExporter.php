@@ -26,20 +26,19 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\XMLTracker;
 
-class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExporter
+class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExporter
 {
+    public const MONO_TRACKER_NAME = 'Issues';
+
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter $issues_from_issue_type_in_dedicated_tracker_in_xml_exporter,
     ) {
     }
 
@@ -47,17 +46,10 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
      * @throws \RuntimeException
      */
     public static function build(
-        JiraClient $wrapper,
         LoggerInterface $logger,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ): self {
         return new self(
             $logger,
-            JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::build(
-                $wrapper,
-                $logger,
-                $jira_user_on_tuleap_cache,
-            ),
         );
     }
 
@@ -75,26 +67,13 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
     ): void {
-        $this->logger->info("Import is done in multi tracker mode");
-        foreach ($jira_issue_types as $jira_issue_type) {
-            $this->logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
+        $this->logger->info(sprintf("Import all issues in mono tracker %s", self::MONO_TRACKER_NAME));
 
-            $tracker_fullname = $jira_issue_type->getName();
-            $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
+        $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat(self::MONO_TRACKER_NAME);
+        $tracker          = (new XMLTracker("1", $tracker_itemname))->withName(self::MONO_TRACKER_NAME);
 
-            $tracker = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
+        $tracker_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
-            $tracker_xml = $this->issues_from_issue_type_in_dedicated_tracker_in_xml_exporter->exportIssuesToXml(
-                $jira_platform_configuration,
-                $tracker,
-                $jira_base_url,
-                $jira_project_key,
-                $jira_issue_type,
-                $field_id_generator,
-                $linked_issues_collection,
-            );
-
-            JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker_xml);
-        }
+        JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker->exportTracker($tracker_xml));
     }
 }
