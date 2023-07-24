@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+const jest_base_config = defineJestConfiguration();
+export default {
+    ...jest_base_config,
+    displayName: "taskboard",
+    moduleNameMapper: {
+        ...jest_base_config.moduleNameMapper,
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+    },
+};

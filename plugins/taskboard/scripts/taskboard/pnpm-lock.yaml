@@ -3,31 +3,31 @@ lockfileVersion: '6.0'
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
-    version: link:../../src/themes/BurningParrot
+    version: link:../../../../src/themes/BurningParrot
   '@tuleap/drag-and-drop':
     specifier: workspace:*
-    version: link:../../lib/frontend/drag-and-drop
+    version: link:../../../../lib/frontend/drag-and-drop
   '@tuleap/keyboard-shortcuts':
     specifier: workspace:*
-    version: link:../../lib/frontend/keyboard-shortcuts
+    version: link:../../../../lib/frontend/keyboard-shortcuts
   '@tuleap/plugin-agiledashboard-scrum-milestone-header':
     specifier: workspace:*
-    version: link:../agiledashboard/scripts/lib/scrum-milestone-header
+    version: link:../../../agiledashboard/scripts/lib/scrum-milestone-header
   '@tuleap/project-background':
     specifier: workspace:*
-    version: link:../../lib/frontend/project-background
+    version: link:../../../../lib/frontend/project-background
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/scripts/tlp
+    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
+    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-swatch-colors
+    version: link:../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
-    version: link:../../lib/frontend/vue2-gettext-init
+    version: link:../../../../lib/frontend/vue2-gettext-init
   dompurify:
     specifier: ^3.0.0
     version: 3.0.0
@@ -53,16 +53,13 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator':
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
     specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
-    version: link:../../lib/frontend/vuex-store-wrapper-jest
+    version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/dompurify':
     specifier: ^2.4.0
     version: 2.4.0
@@ -75,6 +72,9 @@ devDependencies:
   '@types/mustache':
     specifier: ^4.1.2
     version: 4.1.2
+  '@vitejs/plugin-vue2':
+    specifier: ^2.0.0
+    version: 2.2.0(vue@2.7.8)
   '@vue/test-utils':
     specifier: ^1.3
     version: 1.3.5(vue@2.7.8)
@@ -141,6 +141,16 @@ packages:
 
   /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+    dev: true
+
+  /@vitejs/plugin-vue2@2.2.0(vue@2.7.8):
+    resolution: {integrity: sha512-1km7zEuZ/9QRPvzXSjikbTYGQPG86Mq1baktpC4sXqsXlb02HQKfi+fl8qVS703JM7cgm24Ga9j+RwKmvFn90A==}
+    engines: {node: ^14.18.0 || >= 16.0.0}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+      vue: ^2.7.0-0
+    dependencies:
+      vue: 2.7.8
     dev: true
 
   /@vue/compiler-sfc@2.7.8:

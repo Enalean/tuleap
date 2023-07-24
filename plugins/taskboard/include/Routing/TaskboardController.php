@@ -27,8 +27,9 @@ use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -50,7 +51,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
      */
     private $bread_crumbs_builder;
     /**
-     * @var IncludeAssets
+     * @var IncludeViteAssets
      */
     private $taskboard_assets;
     /**
@@ -71,7 +72,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         TemplateRenderer $renderer,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
         BoardPresenterBuilder $presenter_builder,
-        IncludeAssets $taskboard_assets,
+        IncludeViteAssets $taskboard_assets,
         VisitRecorder $visit_recorder,
         HeaderOptionsProvider $header_options_provider,
     ) {
@@ -105,9 +106,14 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
-        $layout->includeFooterJavascriptFile($this->taskboard_assets->getFileURL('taskboard.js'));
+        $layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                $this->taskboard_assets,
+                'src/index.ts'
+            )
+        );
 
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->taskboard_assets, 'taskboard-style'));
+        $layout->addCssAsset(CssViteAsset::fromFileName($this->taskboard_assets, 'themes/taskboard.scss'));
 
         $service->displayHeader(
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),
