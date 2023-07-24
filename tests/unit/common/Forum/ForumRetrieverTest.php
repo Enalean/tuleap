@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Forum;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsNullIfForumIsNotFound(): void
     {
-        $project = Mockery::mock(\Project::class, ['getID' => 101]);
-        $user    = Mockery::mock(\PFUser::class);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $user    = UserTestBuilder::aUser()->build();
 
-        $dao = Mockery::mock(ForumDao::class, ['searchActiveForum' => null]);
+        $dao = $this->createMock(ForumDao::class);
+        $dao->method('searchActiveForum')->willReturn(null);
 
         $retriever = new ForumRetriever($dao);
 
@@ -43,13 +42,12 @@ class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfForumIsPrivateAndUserIsNotAProjectMember(): void
     {
-        $project = Mockery::mock(\Project::class, ['getID' => 101]);
-        $user    = Mockery::mock(\PFUser::class, ['isMember' => false]);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $user    = $this->createMock(\PFUser::class);
+        $user->method('isMember')->willReturn(false);
 
-        $dao = Mockery::mock(
-            ForumDao::class,
-            ['searchActiveForum' => ['forum_name' => 'Open Discussions', 'is_public' => 0]]
-        );
+        $dao = $this->createMock(ForumDao::class);
+        $dao->method('searchActiveForum')->willReturn(['forum_name' => 'Open Discussions', 'is_public' => 0]);
 
         $retriever = new ForumRetriever($dao);
 
@@ -63,13 +61,12 @@ class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItReturnsTheForumInOtherCases(bool $is_member, int $is_public): void
     {
-        $project = Mockery::mock(\Project::class, ['getID' => 101]);
-        $user    = Mockery::mock(\PFUser::class, ['isMember' => $is_member]);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $user    = $this->createMock(\PFUser::class);
+        $user->method('isMember')->willReturn($is_member);
 
-        $dao = Mockery::mock(
-            ForumDao::class,
-            ['searchActiveForum' => ['forum_name' => 'Open Discussions', 'is_public' => $is_public]]
-        );
+        $dao = $this->createMock(ForumDao::class);
+        $dao->method('searchActiveForum')->willReturn(['forum_name' => 'Open Discussions', 'is_public' => $is_public]);
 
         $retriever = new ForumRetriever($dao);
 
