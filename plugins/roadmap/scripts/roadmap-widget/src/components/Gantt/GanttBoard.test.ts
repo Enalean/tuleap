@@ -37,6 +37,7 @@ import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import type { IterationsState } from "../../store/iterations/type";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
+import * as rows_sorter from "../../helpers/rows-sorter";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -66,6 +67,10 @@ function getRootState(): RootState {
 
 describe("GanttBoard", () => {
     const windowResizeObserver = window.ResizeObserver;
+
+    beforeEach(() => {
+        jest.spyOn(rows_sorter, "sortRows").mockImplementation((rows) => [...rows]);
+    });
 
     afterEach(() => {
         window.ResizeObserver = windowResizeObserver;

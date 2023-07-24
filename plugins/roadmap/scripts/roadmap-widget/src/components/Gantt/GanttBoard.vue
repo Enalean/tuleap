@@ -33,7 +33,7 @@
             v-bind:should_invite_to_come_back="false"
         />
         <div class="roadmap-gantt" v-else>
-            <template v-for="(row, index) in rows">
+            <template v-for="(row, index) in sorted_rows">
                 <subtask-message
                     v-if="isErrorRow(row) || isEmptySubtasksRow(row)"
                     v-bind:key="'message-' + index"
@@ -43,7 +43,7 @@
                 />
             </template>
             <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
-                <template v-for="(row, index) in rows">
+                <template v-for="(row, index) in sorted_rows">
                     <task-header
                         v-if="isTaskRow(row)"
                         v-bind:key="'header-task-' + row.task.id"
@@ -92,7 +92,7 @@
                     v-bind:level="2"
                     v-bind:iterations="lvl2_iterations_to_display"
                 />
-                <template v-for="(row, index) in rows">
+                <template v-for="(row, index) in sorted_rows">
                     <gantt-task
                         v-if="isTaskRow(row)"
                         v-bind:key="'body-task-' + row.task.id"
@@ -131,7 +131,7 @@
                     />
                 </template>
             </scrolling-area>
-            <template v-for="row in rows">
+            <template v-for="row in sorted_rows">
                 <bar-popover
                     v-if="isTaskRow(row)"
                     v-bind:key="'popover-' + row.task.id"
@@ -190,6 +190,7 @@ import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 import ShowClosedControl from "./ShowClosedControl.vue";
 import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
+import { sortRows } from "../../helpers/rows-sorter";
 
 const tasks = namespace("tasks");
 const iterations = namespace("iterations");
@@ -341,6 +342,10 @@ export default class GanttBoard extends Vue {
 
     get dimensions_map(): TaskDimensionMap {
         return getDimensionsMap(this.rows, this.time_period);
+    }
+
+    get sorted_rows(): Row[] {
+        return sortRows(this.rows);
     }
 
     get available_natures(): NaturesLabels {
