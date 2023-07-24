@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerAndProject, Project, Tracker } from "./type";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { TrackerAndProject, TrackerInfo } from "./type";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 
-export interface TrackerForInit extends Tracker {
+export interface TrackerForInit extends TrackerInfo {
     uri: string;
-    project: Project;
+    project: ProjectReference;
 }
 
 export default class BackendCrossTrackerReport {
@@ -43,6 +44,7 @@ export default class BackendCrossTrackerReport {
                 const light_project = {
                     id: tracker_for_init.project.id,
                     label: tracker_for_init.project.label,
+                    uri: tracker_for_init.project.uri,
                 };
                 this.trackers.set(tracker_for_init.id, {
                     project: light_project,

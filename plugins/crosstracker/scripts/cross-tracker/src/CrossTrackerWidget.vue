@@ -88,11 +88,11 @@ export default class CrossTrackerWidget extends Vue {
     readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
 
     @State
-    private readonly reading_mode!: boolean;
+    readonly reading_mode!: boolean;
     @State
     private readonly report_id!: number;
     @State
-    private readonly success_message!: string;
+    readonly success_message!: string;
     @State
     private readonly is_user_admin!: boolean;
 

@@ -22,13 +22,13 @@
         <span
             class="tlp-badge-primary tlp-badge-outline cross-tracker-selected-tracker"
             v-for="tracker of trackers"
-            v-bind:key="tracker.id"
+            v-bind:key="tracker.tracker_id"
         >
             <span>
                 <i
                     class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
                     v-on:click="removeTracker(tracker)"
-                    v-bind:data-test="`remove-tracker-${tracker.id}`"
+                    v-bind:data-test="`remove-tracker-${tracker.tracker_id}`"
                 ></i>
                 {{ tracker.tracker_label }}
             </span>
@@ -42,14 +42,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { Prop, Component } from "vue-property-decorator";
-import type { Tracker } from "../type";
+import type { TrackerToUpdate } from "../type";
 
 @Component
 export default class TrackerListWritingMode extends Vue {
     @Prop({ required: true })
-    readonly trackers!: Array<Tracker>;
+    readonly trackers!: TrackerToUpdate[];
 
-    removeTracker(tracker: Tracker): void {
+    removeTracker(tracker: TrackerToUpdate): void {
         this.$emit("tracker-removed", tracker);
     }
 }

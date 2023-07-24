@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { ProjectProxy } from "./ProjectProxy";
-import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { ArtifactWithStatus, TrackerProject } from "./ArtifactWithStatus";
 
 describe(`ProjectProxy`, () => {
     it.each([
@@ -27,7 +27,7 @@ describe(`ProjectProxy`, () => {
         ["without an icon", { id: 195, icon: "", label: "Hidden Street" }, "Hidden Street"],
     ])(
         `builds from the project %s of an Artifact from the API`,
-        (_condition, project: ProjectReference, expected_label) => {
+        (_condition, project: TrackerProject, expected_label) => {
             const result = ProjectProxy.fromAPIArtifact({
                 tracker: { project },
             } as ArtifactWithStatus);

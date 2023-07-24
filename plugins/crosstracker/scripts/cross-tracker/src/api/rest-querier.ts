@@ -18,7 +18,8 @@
  */
 
 import { get, put, recursiveGet } from "@tuleap/tlp-fetch";
-import type { ArtifactsCollection, Report, Project, Tracker } from "../type";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ArtifactsCollection, Report, TrackerInfo } from "../type";
 
 export async function getReport(report_id: number): Promise<Report> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id);
@@ -83,8 +84,8 @@ export async function updateReport(
     return response.json();
 }
 
-export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
-    const json = await recursiveGet<Array<unknown>, Project>("/api/v1/projects", {
+export async function getSortedProjectsIAmMemberOf(): Promise<ProjectReference[]> {
+    const json = await recursiveGet<unknown[], ProjectReference>("/api/v1/projects", {
         params: {
             limit: 50,
             query: JSON.stringify({ is_member_of: true }),
@@ -96,7 +97,7 @@ export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
     });
 }
 
-export function getTrackersOfProject(project_id: number): Promise<Array<Tracker>> {
+export function getTrackersOfProject(project_id: number): Promise<Array<TrackerInfo>> {
     return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,

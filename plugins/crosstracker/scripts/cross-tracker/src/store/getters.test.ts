@@ -18,12 +18,12 @@
  */
 
 import * as getters from "./getters";
-import type { State, Tracker } from "../type";
+import type { State, TrackerInfo } from "../type";
 
 describe("Store getters", () => {
     describe("shouldDisplayExportButton", () => {
         it("Given that user is not widget administrator, then he should be able to export results", () => {
-            const invalid_trackers: Array<Tracker> = [];
+            const invalid_trackers: Array<TrackerInfo> = [];
             const state: State = {
                 is_user_admin: false,
                 error_message: null,
@@ -36,7 +36,7 @@ describe("Store getters", () => {
         });
 
         it("Given user is widget administrator and no trackers of query are invalid, then he should be able to export results", () => {
-            const invalid_trackers: Array<Tracker> = [];
+            const invalid_trackers: Array<TrackerInfo> = [];
             const state: State = {
                 is_user_admin: true,
                 invalid_trackers: invalid_trackers,
@@ -49,7 +49,7 @@ describe("Store getters", () => {
         });
 
         it("Given user is widget administrator and at least one tracker is invalid, then he should not be able to export results", () => {
-            const invalid_trackers: Array<Tracker> = [
+            const invalid_trackers: Array<TrackerInfo> = [
                 {
                     id: 1,
                     label: "My invalid tracker",

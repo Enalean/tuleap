@@ -33,6 +33,12 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../tracker/scripts/lib/rest-api-types
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

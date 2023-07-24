@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { ArtifactWithStatus, TrackerProject } from "./ArtifactWithStatus";
 import type { Project } from "../../domain/Project";
-import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
-function getLabel(project: ProjectReference): string {
+function getLabel(project: TrackerProject): string {
     if (project.icon) {
         return project.icon + " " + project.label;
     }

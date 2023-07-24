@@ -59,17 +59,11 @@ import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Tracker, Project } from "../type";
+import type { TrackerInfo, TrackerToUpdate, ProjectInfo } from "../type";
 
 interface SelectTrackerAndProject {
-    selected_project: Project;
-    selected_tracker: Tracker;
-}
-
-interface TrackerToUpdate {
-    tracker_id: number;
-    tracker_label: string;
-    project_label: string;
+    selected_project: ProjectInfo;
+    selected_tracker: TrackerInfo;
 }
 
 @Component({
@@ -79,7 +73,7 @@ export default class WritingMode extends Vue {
     @Prop({ required: true })
     readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
 
-    private selected_trackers: TrackerToUpdate[] = [];
+    selected_trackers: TrackerToUpdate[] = [];
 
     mounted(): void {
         this.updateSelectedTrackers();

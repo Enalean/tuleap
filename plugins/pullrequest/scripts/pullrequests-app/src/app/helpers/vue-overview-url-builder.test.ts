@@ -33,6 +33,7 @@ describe("vue-overview-url-builder", () => {
                     id: 105,
                     icon: "",
                     label: "R&D stuff",
+                    uri: "uri/to/project",
                 },
             },
         });
