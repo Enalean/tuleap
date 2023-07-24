@@ -130,8 +130,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"* denotes user groups that may not have access to the tracker (no <a href="
-"\"%s\">tracker permission</a> set)."
+"* denotes user groups that may not have access to the tracker (no <a "
+"href=\"%s\">tracker permission</a> set)."
 msgstr ""
 
 msgid "-"
@@ -160,8 +160,8 @@ msgid ""
 "<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
 "outdated!</h4><p>It appears that your local.inc file contains definitions of "
 "variables that are unused and it may lead to confusion.</p><p>Please edit "
-"<code>%1$s</code> and remove the following variable: <code>"
-"$sys_enable_reply_by_mail</code>.</p>"
+"<code>%1$s</code> and remove the following variable: "
+"<code>$sys_enable_reply_by_mail</code>.</p>"
 msgstr ""
 
 msgid ""
@@ -198,22 +198,22 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<p>The artifacts of this tracker will be described by the field <strong>"
-"%1$s</strong>.</p>"
+"<p>The artifacts of this tracker will be described by the field "
+"<strong>%1$s</strong>.</p>"
 msgstr ""
 
 #, php-format
 msgid ""
-"<p>The artifacts of this tracker will be summarized by the field <strong>"
-"%1$s</strong>.</p>"
+"<p>The artifacts of this tracker will be summarized by the field "
+"<strong>%1$s</strong>.</p>"
 msgstr ""
 
 #, php-format
 msgid ""
-"<strong><span class=\"highlight\">You Are NOT Logged In<br />Please <a href="
-"\"%1$s\">log in,</a> so update notifications can be emailed to you.</span></"
-"strong><br />If you don't have a user account, then enter your email address "
-"instead:"
+"<strong><span class=\"highlight\">You Are NOT Logged In<br />Please <a "
+"href=\"%1$s\">log in,</a> so update notifications can be emailed to you.</"
+"span></strong><br />If you don't have a user account, then enter your email "
+"address instead:"
 msgstr ""
 
 msgid "A"
@@ -1278,8 +1278,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Expected date format is <strong>%1$s</strong>. <a href=\"/account/edition"
-"\">Change import/export date format</a>"
+"Expected date format is <strong>%1$s</strong>. <a href=\"/account/"
+"edition\">Change import/export date format</a>"
 msgstr ""
 
 msgid "Expert mode"
@@ -1705,13 +1705,13 @@ msgid "Manage tooltip"
 msgstr ""
 
 msgid ""
-"Mandatory attribute field_id not found in action with type \"set_field_value"
-"\"."
+"Mandatory attribute field_id not found in action with type "
+"\"set_field_value\"."
 msgstr ""
 
 msgid ""
-"Mandatory attribute field_ids not found in action with type \"frozen_fields"
-"\"."
+"Mandatory attribute field_ids not found in action with type "
+"\"frozen_fields\"."
 msgstr ""
 
 msgid ""
@@ -2176,8 +2176,8 @@ msgid "Project"
 msgstr "Projeto"
 
 msgid ""
-"Project admins can also <a href=\"/project/admin/ugroup.php?group_id=%s"
-"\">create or modify</a> user groups."
+"Project admins can also <a href=\"/project/admin/ugroup.php?"
+"group_id=%s\">create or modify</a> user groups."
 msgstr ""
 
 msgid "Promote %s in the +New dropdown across the project"
@@ -4309,8 +4309,8 @@ msgid "will be set to"
 msgstr ""
 
 msgid ""
-"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} (<a href="
-"\"{{ tuleap_user_profile_url }}\">@{{ tuleap_user_username }}</a>)"
+"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} (<a "
+"href=\"{{ tuleap_user_profile_url }}\">@{{ tuleap_user_username }}</a>)"
 msgstr ""
 
 msgid ""
