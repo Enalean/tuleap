@@ -21,6 +21,8 @@
 declare(strict_types=1);
 
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
@@ -47,7 +49,7 @@ require_once __DIR__ . '/../../projectmilestones/vendor/autoload.php';
 define('TULEAP_PLUGIN_JIRA_IMPORT', '1');
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class jira_importPlugin extends Plugin
+final class jira_importPlugin extends Plugin implements PluginWithConfigKeys
 {
     public function __construct(?int $id)
     {
@@ -66,6 +68,11 @@ final class jira_importPlugin extends Plugin
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard', 'cardwall', 'roadmap', 'projectmilestones'];
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(CreateProjectFromJira::class);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
