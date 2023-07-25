@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
+
 context("Platform notifications", function () {
     let now: number, project: string, project_member: string;
 
@@ -100,5 +102,48 @@ context("Platform notifications", function () {
                     "user ProjectMember has chosen to"
                 );
             });
+    });
+
+    it("sends a notification when a new user is created", function () {
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+        cy.get("[data-test=user-settings-link]").click();
+
+        cy.get("[data-test=user-must-be-approved]").check();
+        cy.get("[data-test=save-settings]").click();
+
+        cy.get("[data-test=feedback]").contains("settings have been saved");
+
+        cy.session([WEB_UI_SESSION, "newUserNotification"], () => {
+            cy.visit("/");
+            // Do not log in
+        });
+
+        cy.visit("/account/register.php");
+
+        cy.get("[data-test=user-login]").type(`user-${now}`);
+        cy.get("[data-test=user-email]").type("user@example.com");
+        cy.get("[data-test=user-pw]").type("welcome0");
+        cy.get("[data-test=user-pw2]").type("welcome0");
+        cy.get("[data-test=user-name]").type(`user-${now}`);
+        cy.get("[data-test=form_register_purpose]").type("My purpose");
+
+        cy.get("[data-test=register-user-button]").click();
+
+        cy.assertUserMessagesReceivedByWithSpecificContent(
+            "codendi-admin@tuleap",
+            "A new user has just registered on Tuleap"
+        );
+
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+
+        cy.get("[data-test=pending-users-link]").click();
+        cy.get("[data-test=activate-user]").click();
+
+        cy.assertUserMessagesReceivedByWithSpecificContent(
+            "user@example.com",
+            "You are now a registered user on Tuleap"
+        );
     });
 });

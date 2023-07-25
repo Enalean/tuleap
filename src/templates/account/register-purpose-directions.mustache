@@ -5,7 +5,7 @@
                 {{# gettext }}Purpose{{/ gettext }}
                 <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
-            <textarea class="tlp-textarea" id="form_register_purpose" name="form_register_purpose" rows="3" required></textarea>
+            <textarea class="tlp-textarea" id="form_register_purpose" data-test="form_register_purpose" name="form_register_purpose" rows="3" required></textarea>
             <p class="tlp-text-info">{{ purpose_directions }}</p>
             {{# has_error }}
                 <p class="tlp-text-danger">{{ error }}</p>
