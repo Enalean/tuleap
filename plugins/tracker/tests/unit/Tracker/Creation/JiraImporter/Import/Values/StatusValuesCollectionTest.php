@@ -30,12 +30,53 @@ use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItInitsCollections(): void
+    public function testItInitsCollectionsForIssueTypeInProject(): void
     {
         $jira_project_key = 'key';
         $jira_issue_type  = '10002';
 
-        $wrapper = new class extends JiraCloudClientStub {
+        $wrapper = $this->buildJiraClientWrapperAndResponse();
+
+        $collection = new StatusValuesCollection(
+            $wrapper,
+            new NullLogger()
+        );
+        $collection->initCollectionForProjectAndIssueType(
+            $jira_project_key,
+            $jira_issue_type,
+            new FieldAndValueIDGenerator(),
+        );
+
+        self::assertCount(3, $collection->getAllValues());
+        self::assertCount(2, $collection->getOpenValues());
+        self::assertCount(1, $collection->getClosedValues());
+        self::assertEquals(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses', $wrapper->url);
+    }
+
+    public function testItInitsCollectionsForProject(): void
+    {
+        $jira_project_key = 'key';
+
+        $wrapper = $this->buildJiraClientWrapperAndResponse();
+
+        $collection = new StatusValuesCollection(
+            $wrapper,
+            new NullLogger()
+        );
+        $collection->initCollectionForProject(
+            $jira_project_key,
+            new FieldAndValueIDGenerator(),
+        );
+
+        self::assertCount(4, $collection->getAllValues());
+        self::assertCount(2, $collection->getOpenValues());
+        self::assertCount(2, $collection->getClosedValues());
+        self::assertEquals(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses', $wrapper->url);
+    }
+
+    private function buildJiraClientWrapperAndResponse(): JiraCloudClientStub
+    {
+        return new class extends JiraCloudClientStub {
             public string $url = '';
 
             public function getUrl(string $url): ?array
@@ -44,21 +85,21 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 return [
                     [
                         'self' => 'URL/rest/api/3/issuetype/10002',
-                        'id' => '10002' ,
-                        'name' => 'bug' ,
+                        'id' => '10002',
+                        'name' => 'bug',
                         'subtask' => false,
                         'statuses' => [
                             [
                                 'self' => 'URL/rest/api/3/status/10000',
-                                'description' => '' ,
-                                'iconUrl' => 'URL/' ,
+                                'description' => '',
+                                'iconUrl' => 'URL/',
                                 'name' => 'To Do',
                                 'untranslatedName' => 'To Do',
                                 'id' => '10000',
                                 'statusCategory' => [
                                     'self' => 'URL/rest/api/3/statuscategory/2',
                                     'id' => 2,
-                                    'key' => 'new' ,
+                                    'key' => 'new',
                                     'colorName' => 'blue-gray',
                                     'name' => 'To Do',
                                 ],
@@ -94,25 +135,32 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                                 ],
                             ],
                         ],
-
+                    ],
+                    [
+                        'self' => 'URL/rest/api/3/issuetype/10003',
+                        'id' => '10003',
+                        'name' => 'story',
+                        'subtask' => false,
+                        'statuses' => [
+                            [
+                                'self' => 'URL/rest/api/3/status/10001',
+                                'description' => '',
+                                'iconUrl' => 'URL/',
+                                'name' => 'Delivered',
+                                'untranslatedName' => 'Delivered',
+                                'id' => '10010',
+                                'statusCategory' => [
+                                    'self' => 'URL/rest/api/3/statuscategory/3',
+                                    'id' => 3,
+                                    'key' => 'done',
+                                    'colorName' => 'green',
+                                    'name' => 'Done',
+                                ],
+                            ],
+                        ],
                     ],
                 ];
             }
         };
-
-        $collection = new StatusValuesCollection(
-            $wrapper,
-            new NullLogger()
-        );
-        $collection->initCollectionForProjectAndIssueType(
-            $jira_project_key,
-            $jira_issue_type,
-            new FieldAndValueIDGenerator(),
-        );
-
-        self::assertCount(3, $collection->getAllValues());
-        self::assertCount(2, $collection->getOpenValues());
-        self::assertCount(1, $collection->getClosedValues());
-        self::assertEquals(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses', $wrapper->url);
     }
 }

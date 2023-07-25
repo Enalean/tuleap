@@ -36,7 +36,10 @@ final class JiraAllIssuesInXmlExporterBuilder
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ): JiraAllIssuesInXmlExporter {
         if (\ForgeConfig::getFeatureFlag(CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
-            return JiraAllIssuesMonoTrackersInXmlExporter::build($logger);
+            return JiraAllIssuesMonoTrackersInXmlExporter::build(
+                $jira_client,
+                $logger,
+            );
         }
 
         return JiraAllIssuesMultiTrackersInXmlExporter::build(
