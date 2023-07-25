@@ -37,7 +37,7 @@ import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
-import type { Swimlane } from "plugins/taskboard/scripts/taskboard/src/type";
+import type { Swimlane } from "../../../../../type";
 
 @Component({
     components: { AddCard },

@@ -84,7 +84,7 @@ describe("ParentCardRemainingEffort", () => {
         } as RemainingEffort);
 
         expect(wrapper.attributes("tabindex")).toBe("-1");
-        expect(wrapper.attributes("role")).toBeUndefined();
+        expect(wrapper.attributes("role")).toBe("");
         wrapper.trigger("click");
         expect(wrapper.props("card").remaining_effort.is_in_edit_mode).toBe(false);
     });

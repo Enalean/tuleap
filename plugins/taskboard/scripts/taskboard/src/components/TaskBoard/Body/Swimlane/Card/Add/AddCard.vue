@@ -71,8 +71,8 @@ export default class AddCard extends Vue {
     @swimlane.State
     readonly is_card_creation_blocked_due_to_ongoing_creation!: boolean;
 
-    private is_in_add_mode = false;
-    private label = "";
+    is_in_add_mode = false;
+    label = "";
 
     @Mutation
     readonly setIsACellAddingInPlace!: () => void;

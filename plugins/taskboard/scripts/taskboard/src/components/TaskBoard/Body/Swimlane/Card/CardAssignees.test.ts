@@ -226,7 +226,7 @@ describe("CardAssignees", () => {
                 wrapper = await getWrapper(card, tracker);
             });
 
-            it("is not a button", () => expect(wrapper.attributes("role")).toBeUndefined());
+            it("is not a button", () => expect(wrapper.attributes("role")).toBe(""));
             it("is not focusable", () => expect(wrapper.attributes("tabindex")).toBe("-1"));
             it("has no aria label", () => expect(wrapper.attributes("aria-label")).toBe(""));
         });

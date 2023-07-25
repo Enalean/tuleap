@@ -83,7 +83,7 @@ export default class CardAssignees extends Vue {
     @swimlane.Getter
     readonly assignable_users!: (tracker: Tracker) => UserForPeoplePicker[];
 
-    private is_in_edit_mode = false;
+    is_in_edit_mode = false;
     private possible_users: UserForPeoplePicker[] = [];
     private is_loading_users = false;
 
@@ -148,8 +148,8 @@ export default class CardAssignees extends Vue {
         return this.$ngettext("Edit assignee", "Edit assignees", number);
     }
 
-    get role(): string | undefined {
-        return this.is_user_edit_displayed ? "button" : undefined;
+    get role(): string {
+        return this.is_user_edit_displayed ? "button" : "";
     }
 
     get tabindex(): number {
