@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
 {
@@ -33,6 +34,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Arti
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $timestamp = strtotime((string) $field_change->value);
         if ($timestamp > 0) {

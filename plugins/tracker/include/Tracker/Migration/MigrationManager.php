@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -197,7 +198,8 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $tracker_xml_config = new TrackerXmlImportConfig(
                 $user,
                 $date,
-                $keep_original_ids
+                MoveImportConfig::buildForRegularImport(),
+                $keep_original_ids,
             );
 
             $xml_import->importFromXML(

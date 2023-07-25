@@ -30,19 +30,8 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\FileToDownload;
 
 class AttachmentForTraditionalUploadCreator implements AttachmentCreator
 {
-    /**
-     * @var AttachmentToFinalPlaceMover
-     */
-    private $mover;
-    /**
-     * @var Rule_File
-     */
-    private $rule_file;
-
-    public function __construct(AttachmentToFinalPlaceMover $mover, Rule_File $rule_file)
+    public function __construct(private readonly AttachmentToFinalPlaceMover $mover, private readonly Rule_File $rule_file)
     {
-        $this->mover     = $mover;
-        $this->rule_file = $rule_file;
     }
 
     public function createAttachment(
@@ -87,6 +76,10 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
             $method = 'copy';
         }
 
+        if ($this->isMoveOfArtifact($submitted_value_info)) {
+            $method = 'rename';
+        }
+
         if (! $this->mover->moveAttachmentToFinalPlace($attachment, $method, $tmp_name)) {
             return null;
         }
@@ -98,6 +91,12 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
     {
         return isset($file_value_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION]) &&
             $file_value_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION];
+    }
+
+    private function isMoveOfArtifact(array $file_value_info): bool
+    {
+        return isset($file_value_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_MOVE_OPTION]) &&
+            $file_value_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_MOVE_OPTION];
     }
 
     protected function save(Tracker_FileInfo $attachment): bool

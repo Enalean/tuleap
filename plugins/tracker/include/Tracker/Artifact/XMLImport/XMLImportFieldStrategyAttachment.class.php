@@ -19,26 +19,16 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
     public const FILE_INFO_COPY_OPTION = 'is_migrated';
+    public const FILE_INFO_MOVE_OPTION = 'is_moved';
 
-    /** @var string */
-    private $extraction_path;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    /** @var Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact */
-    private $files_importer;
-
-    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, \Psr\Log\LoggerInterface $logger)
+    public function __construct(private readonly string $extraction_path, private readonly Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, private readonly \Psr\Log\LoggerInterface $logger)
     {
-        $this->extraction_path = $extraction_path;
-        $this->files_importer  = $files_importer;
-        $this->logger          = $logger;
     }
 
     /**
@@ -53,8 +43,11 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $values = $field_change->value;
+
+        assert($field instanceof Tracker_FormElement_Field_File);
 
         $files_infos = [];
 
@@ -73,7 +66,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                 $file       = $this->files_importer->getFileXML($file_id);
 
                 if (! $this->files_importer->fileIsAlreadyImported($file_id)) {
-                    $files_infos[] = $this->getFileInfoForAttachment($file, $submitted_by);
+                    $files_infos[] = $this->getFileInfoForAttachment($file, $submitted_by, $context, $field);
                     $this->files_importer->markAsImported($file_id);
                 }
             } catch (Tracker_Artifact_XMLImport_Exception_FileNotFoundException $exception) {
@@ -105,22 +98,25 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return count($values) > 0 && count($files_infos) === 0;
     }
 
-    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by)
+    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by, ?PostCreationContext $context, Tracker_FormElement_Field_File $field)
     {
-        $file_path =  $this->extraction_path . '/' . (string) $file_xml->path;
-        if (! is_file($file_path)) {
-            throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);
-        }
+        $file_path = $this->extraction_path . '/' . (string) $file_xml->path;
+
         $fileinfo = [
-            self::FILE_INFO_COPY_OPTION => true,
-            'submitted_by'              => $submitted_by,
-            'name'                      => (string) $file_xml->filename,
-            'type'                      => (string) $file_xml->filetype,
-            'description'               => (string) $file_xml->description,
-            'size'                      => (int) $file_xml->filesize,
-            'tmp_name'                  => $file_path,
-            'error'                     => UPLOAD_ERR_OK,
+            'submitted_by' => $submitted_by,
+            'name' => (string) $file_xml->filename,
+            'type' => (string) $file_xml->filetype,
+            'description' => (string) $file_xml->description,
+            'size' => (int) $file_xml->filesize,
+            'tmp_name' => $file_path,
+            'error' => UPLOAD_ERR_OK,
         ];
+
+        if ($context?->getImportConfig()->getMoveImportConfig()->is_ducktyping_move) {
+            $fileinfo[self::FILE_INFO_MOVE_OPTION] = true;
+        } else {
+            $fileinfo[self::FILE_INFO_COPY_OPTION] = true;
+        }
 
         try {
             $attributes = $file_xml->attributes();
@@ -129,11 +125,45 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                 $fileinfo['previous_fileinfo_id'] = IdForXMLImportExportConvertor::convertXMLIdToFileInfoId(
                     $fileinfo_id
                 );
+
+                $fileinfo['tmp_name'] = $this->getFileInfoTmpName($context, $field, $fileinfo);
             }
         } catch (InvalidArgumentException $exception) {
             // It seems that we don't know this xml id. Just ignore it.
         }
 
+        if (! is_file($fileinfo['tmp_name'])) {
+            throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($fileinfo['tmp_name']);
+        }
+
         return $fileinfo;
+    }
+
+    /**
+     * @param \Tuleap\Tracker\Action\FieldMapping[] $mapping_field
+     */
+    private function findSourceFieldInFieldsMapping(
+        array $mapping_field,
+        int $destination_field_id,
+    ): ?\Tracker_FormElement_Field {
+        foreach ($mapping_field as $field) {
+            if ($field->destination->getId() === $destination_field_id) {
+                return $field->source;
+            }
+        }
+
+        return null;
+    }
+
+    private function getFileInfoTmpName(?PostCreationContext $context, Tracker_FormElement_Field_File $field, array $fileinfo): string
+    {
+        if ($context?->getImportConfig()->getMoveImportConfig()->is_ducktyping_move) {
+            $source_field = $this->findSourceFieldInFieldsMapping($context?->getImportConfig()->getMoveImportConfig()->field_mapping, $field->getId());
+            if (! $source_field) {
+                throw new Tracker_FormElement_InvalidFieldException();
+            }
+            return ForgeConfig::get('sys_data_dir') . '/tracker/' . $source_field->getId() . "/" . $fileinfo['previous_fileinfo_id'];
+        }
+        return $fileinfo['tmp_name'];
     }
 }

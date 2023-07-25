@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
@@ -33,6 +34,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_A
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
+        PostCreationContext $context,
     ) {
         $data = [
             'format'  => (string) $field_change->value['format'],

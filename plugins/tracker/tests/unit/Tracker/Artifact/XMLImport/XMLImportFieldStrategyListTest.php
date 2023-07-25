@@ -28,6 +28,7 @@ use Tracker_Artifact_XMLImport_XMLImportFieldStrategyList;
 use Tracker_FormElement_Field_List;
 use TrackerXmlFieldsMapping;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
@@ -108,7 +109,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml_fields_mapping
         );
 
-        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
     }
 
@@ -144,7 +145,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml_fields_mapping
         );
 
-        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
     }
 
@@ -159,7 +160,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->xml_fields_mapping->shouldReceive("getNewValueId")->with('bug_status_todo')->andReturn('111');
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
     }
 
@@ -182,7 +183,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $data_access_result->shouldReceive("getRow")->andReturn(["id" => "42"]);
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([42], $result);
     }
 
@@ -205,7 +206,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $data_access_result->shouldReceive("getRow")->andReturn(false);
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
         self::assertNull($result[0]);
         self::assertCount(1, $result);
@@ -230,7 +231,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $data_access_result->shouldReceive("getRow")->andReturn(false);
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
         self::assertNull($result[0]);
         self::assertCount(1, $result);
@@ -249,7 +250,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->static_value_dao->shouldReceive("searchValueByLabel")->never();
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
         self::assertNull($result[0]);
         self::assertCount(1, $result);
@@ -266,7 +267,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->xml_fields_mapping->shouldReceive("getNewValueId")->with(104)->andReturn('111');
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);
     }
 
@@ -281,7 +282,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->xml_fields_mapping->shouldReceive("getNewValueId")->never();
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);
         self::assertCount(1, $result);
     }
@@ -297,7 +298,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->xml_fields_mapping->shouldReceive("getNewValueId")->never();
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);
         self::assertCount(1, $result);
     }
@@ -316,7 +317,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->static_value_dao->shouldReceive("getNewValueId")->never();
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
         self::assertNull($result[0]);
     }
@@ -337,7 +338,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_finder->shouldReceive("getUser")->andReturn($user);
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals(104, $result[0]);
     }
 
@@ -353,7 +354,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->static_value_dao->shouldReceive("getUser")->never();
 
-        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
         self::assertNull($result[0]);
     }

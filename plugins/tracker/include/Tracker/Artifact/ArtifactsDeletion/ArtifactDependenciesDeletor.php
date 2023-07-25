@@ -53,6 +53,9 @@ class ArtifactDependenciesDeletor
                 Artifact::REFERENCE_NATURE,
                 $tracker->getGroupId()
             );
+            foreach ($tracker->getFormElementFields() as $form_element) {
+                $form_element->accept($artifact_deletor_visitor);
+            }
         } else {
             $this->cross_reference_manager->deleteReferencesWhenArtifactIsSource(
                 $artifact
@@ -61,10 +64,6 @@ class ArtifactDependenciesDeletor
             if ($context->getSourceProjectId() !== $context->getDestinationProjectId()) {
                 $this->cross_reference_manager->updateReferencesWhenArtifactIsInTarget($artifact, $context);
             }
-        }
-
-        foreach ($tracker->getFormElementFields() as $form_element) {
-            $form_element->accept($artifact_deletor_visitor);
         }
 
         $this->dao->deleteArtifactLinkReference($artifact->getId());

@@ -59,7 +59,7 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
             $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
-            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user)) {
+            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user, $field_collection->mapping_fields)) {
                 throw new MoveArtifactNotDoneException();
             }
 
@@ -100,12 +100,13 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
 
     /**
      * @throws \Tracker_Artifact_Exception_XMLImportException
+     *
      */
-    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user): bool
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user, array $field_mapping): bool
     {
         $tracker->getWorkflow()->disable();
 
-        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user, true, $field_mapping);
 
         if (! $moved_artifact) {
             return false;
