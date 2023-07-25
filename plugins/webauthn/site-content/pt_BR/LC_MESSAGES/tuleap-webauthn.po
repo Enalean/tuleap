@@ -48,6 +48,9 @@ msgstr ""
 msgid "Last use"
 msgstr ""
 
+msgid "Login"
+msgstr ""
+
 msgid "My key"
 msgstr ""
 
@@ -60,7 +63,16 @@ msgstr ""
 msgid "Passkeys"
 msgstr ""
 
+msgid "Passwordless"
+msgstr ""
+
+msgid "Passwordless connection"
+msgstr ""
+
 msgid "Remove"
+msgstr ""
+
+msgid "Username"
 msgstr ""
 
 msgid "WebAuthn"

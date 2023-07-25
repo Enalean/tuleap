@@ -45,22 +45,22 @@ final class WebAuthnPlugin extends Plugin
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 
-    private function getViteAssets(string $application): \Tuleap\Layout\IncludeViteAssets
+    private function getViteAssets(string $application): Tuleap\Layout\IncludeViteAssets
     {
-        return new \Tuleap\Layout\IncludeViteAssets(
+        return new Tuleap\Layout\IncludeViteAssets(
             __DIR__ . "/../scripts/$application/frontend-assets",
             "/assets/webauthn/$application"
         );
     }
 
-    private function getWebAuthnCredentialSourceDao(): \Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao
+    private function getWebAuthnCredentialSourceDao(): Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao
     {
-        return new \Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
+        return new Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
     }
 
-    private function getGetUserAuthenticatorsEventHandler(): \Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler
+    private function getGetUserAuthenticatorsEventHandler(): Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler
     {
-        return new \Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler(
+        return new Tuleap\WebAuthn\GetUserAuthenticatorsEventHandler(
             $this->getWebAuthnCredentialSourceDao()
         );
     }
@@ -75,20 +75,29 @@ final class WebAuthnPlugin extends Plugin
         );
     }
 
+    public function getLogin(): Tuleap\Request\DispatchableWithRequest
+    {
+        return new Tuleap\WebAuthn\Controllers\LoginController(
+            $this->getTemplateRenderer(),
+            $this->getViteAssets('login'),
+        );
+    }
+
     #[Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/account', $this->getRouteHandler('getAccountSettings'));
+            $r->get('/login', $this->getRouteHandler('getLogin'));
         });
     }
 
     #[Tuleap\Plugin\ListeningToEventClass]
-    public function accountTabPresenterCollection(\Tuleap\User\Account\AccountTabPresenterCollection $collection): void
+    public function accountTabPresenterCollection(Tuleap\User\Account\AccountTabPresenterCollection $collection): void
     {
         $collection->add(
-            \Tuleap\User\Account\AccountTabSecuritySection::NAME,
-            new \Tuleap\User\Account\AccountTabPresenter(
+            Tuleap\User\Account\AccountTabSecuritySection::NAME,
+            new Tuleap\User\Account\AccountTabPresenter(
                 dgettext('tuleap-webauthn', 'Passkeys'),
                 $this->getPluginPath() . '/account',
                 $collection->getCurrentHref()
@@ -96,9 +105,18 @@ final class WebAuthnPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function getUserAuthenticatorsEvent(\Tuleap\User\Admin\GetUserAuthenticatorsEvent $event): void
+    #[Tuleap\Plugin\ListeningToEventClass]
+    public function getUserAuthenticatorsEvent(Tuleap\User\Admin\GetUserAuthenticatorsEvent $event): void
     {
         $this->getGetUserAuthenticatorsEventHandler()->handle($event);
+    }
+
+    #[Tuleap\Plugin\ListeningToEventClass]
+    public function additionalConnectorsCollector(Tuleap\User\AdditionalConnectorsCollector $collector): void
+    {
+        $collector->addConnector(Tuleap\WebAuthn\PasswordlessConnectorBuilder::build(
+            $this->getPluginPath(),
+            $collector->return_to
+        ));
     }
 }
