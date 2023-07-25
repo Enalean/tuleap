@@ -19,11 +19,14 @@
  */
 
 use FastRoute\RouteCollector;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -448,7 +451,27 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
             $r->addRoute(['POST'], '/campaign/{campaign_id:\d+}/open', $this->getRouteHandler('routeOpenCampaignController'));
             $r->addRoute(['POST'], '/campaign/{campaign_id:\d+}/close', $this->getRouteHandler('routeCloseCampaignController'));
+            $r->post('/mercure_realtime_token/{campaign_id:\d+}', $this->getRouteHandler('routeJWTController'));
         });
+    }
+
+    public function routeJWTController(): \Tuleap\TestManagement\RealTime\MercureJWTController
+    {
+        $campaign_retriver = new CampaignRetriever(
+            Tracker_ArtifactFactory::instance(),
+            new CampaignDao(),
+            new KeyFactory(),
+        );
+        return new \Tuleap\TestManagement\RealTime\MercureJWTController(
+            $campaign_retriver,
+            $this->getBackendLogger(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH),
+            UserManager::instance(),
+            new \Tuleap\TestManagement\ConfigConformanceValidator(new Config(new Dao(), TrackerFactory::instance())),
+            new SapiEmitter(),
+        );
     }
 
     public function routeOpenCampaignController(): OpenCampaignController
