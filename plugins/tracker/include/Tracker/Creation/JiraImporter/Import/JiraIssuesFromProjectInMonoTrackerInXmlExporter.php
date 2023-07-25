@@ -142,7 +142,6 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
     public function exportIssuesToXml(
         PlatformConfiguration $jira_platform_configuration,
         XMLTracker $xml_tracker,
-        string $jira_base_url,
         string $jira_project_key,
         array $jira_issue_types,
         IDGenerator $field_id_generator,
@@ -256,6 +255,12 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             foreach ($this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator) as $key => $jira_field) {
                 if (! isset($fields[$key])) {
                     $fields[$key] = $jira_field;
+                    continue;
+                }
+
+                // We need to retrieve all the possible issue Type from all queries
+                if ($jira_field->getId() === AlwaysThereFieldsExporter::JIRA_ISSUE_TYPE_NAME) {
+                    $fields[$key] = $fields[$key]->addNewBoundValues($jira_field->getBoundValues());
                 }
             }
         }

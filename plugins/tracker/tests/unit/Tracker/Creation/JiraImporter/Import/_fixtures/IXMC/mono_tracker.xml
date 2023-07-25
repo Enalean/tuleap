@@ -159,6 +159,15 @@
                 </items>
               </bind>
             </formElement>
+            <formElement type="sb" ID="issues_issuetype" rank="1" required="1">
+              <name><![CDATA[issuetype]]></name>
+              <label><![CDATA[Type de ticket]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="Vissues_issuetype_t__che" label="T&#xE2;che"/>
+                </items>
+              </bind>
+            </formElement>
           </formElements>
         </formElement>
       </formElements>
@@ -572,6 +581,9 @@
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_customfield_10701" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_customfield_10701" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_customfield_10701" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

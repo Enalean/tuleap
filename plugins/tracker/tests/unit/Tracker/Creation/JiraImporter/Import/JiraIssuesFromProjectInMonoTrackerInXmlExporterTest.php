@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use DOMDocument;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
@@ -121,6 +122,7 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
         $root = vfsStream::setup();
 
         \ForgeConfig::set('tmp_dir', $root->url());
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE, 1);
 
         $logger = new NullLogger();
 
@@ -211,7 +213,6 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
         $tracker_xml = $exporter->exportIssuesToXml(
             $platform_configuration_collection,
             $tracker_for_export,
-            'https://jira.example.com',
             $jira_client->getJiraProject(),
             [new IssueType($jira_client->getJiraIssueTypeId(), 'Bogue', false)],
             new FieldAndValueIDGenerator(),

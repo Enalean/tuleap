@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -320,6 +321,19 @@ class JiraToTuleapFieldTypeMapper
 
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
+                case AlwaysThereFieldsExporter::JIRA_ISSUE_TYPE_NAME:
+                    if (! \ForgeConfig::getFeatureFlag(CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
+                        break;
+                    }
+
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
+                        ->withLabel($jira_field->getLabel())
+                        ->withRequired($jira_field->isRequired())
+                        ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
+
                 case 'attachment':
                 case 'status':
                 case 'creator':
@@ -388,7 +402,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.pyxis.greenhopper.jira:gh-epic-label':
                 case 'com.pyxis.greenhopper.jira:gh-epic-status':
                 case 'issuerestriction':
-                case 'issuetype':
                     $this->logger->debug(" |_ Field " . $id . " (" . $jira_type . ") ignored ");
                     break;
                 default:

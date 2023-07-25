@@ -107,6 +107,21 @@ class JiraFieldAPIRepresentation
         return $this->bound_values;
     }
 
+    public function addNewBoundValues(array $bound_values): self
+    {
+        return new self(
+            $this->id,
+            $this->label,
+            $this->required,
+            $this->schema,
+            array_merge(
+                $this->bound_values,
+                $bound_values
+            ),
+            $this->is_submit,
+        );
+    }
+
     public function isSubmit(): bool
     {
         return $this->is_submit;
