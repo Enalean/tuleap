@@ -63,16 +63,30 @@ class StatusValuesCollection
         $this->logger      = $logger;
     }
 
+    public function initCollectionForProject(string $jira_project_key, IDGenerator $id_generator): void
+    {
+        $this->logger->debug("Build status collection for project ...");
+
+        $statuses_content = $this->retrieverStatusesContent($jira_project_key);
+        if ($statuses_content === null) {
+            return;
+        }
+
+        foreach ($statuses_content as $statuses_content_per_issue_type) {
+            foreach ($statuses_content_per_issue_type['statuses'] as $status) {
+                $this->addStatusInCollections($status, $id_generator);
+            }
+        }
+
+        $this->logger->debug("Status collection successfully built.");
+    }
+
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): void
     {
         $this->logger->debug("Build status collection ...");
-        $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project_key) . "/statuses";
 
-        $this->logger->debug("  GET " . $statuses_url);
-        $statuses_content = $this->jira_client->getUrl($statuses_url);
-
+        $statuses_content = $this->retrieverStatusesContent($jira_project_key);
         if ($statuses_content === null) {
-            $this->logger->debug("No statuses defined");
             return;
         }
 
@@ -87,6 +101,21 @@ class StatusValuesCollection
         }
 
         $this->logger->debug("Status collection successfully built.");
+    }
+
+    private function retrieverStatusesContent(string $jira_project_key): ?array
+    {
+        $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project_key) . "/statuses";
+
+        $this->logger->debug("  GET " . $statuses_url);
+        $statuses_content = $this->jira_client->getUrl($statuses_url);
+
+        if ($statuses_content === null) {
+            $this->logger->debug("No statuses defined");
+            return null;
+        }
+
+        return $statuses_content;
     }
 
     public function initCollectionWithValues(array $open_values, array $closed_values): void

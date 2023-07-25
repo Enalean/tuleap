@@ -28,6 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
@@ -39,6 +40,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly JiraIssuesFromProjectInMonoTrackerInXmlExporter $issues_from_project_in_mono_tracker_in_xml_exporter,
     ) {
     }
 
@@ -46,10 +48,15 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
      * @throws \RuntimeException
      */
     public static function build(
+        JiraClient $wrapper,
         LoggerInterface $logger,
     ): self {
         return new self(
             $logger,
+            JiraIssuesFromProjectInMonoTrackerInXmlExporter::build(
+                $wrapper,
+                $logger,
+            ),
         );
     }
 
@@ -72,8 +79,16 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat(self::MONO_TRACKER_NAME);
         $tracker          = (new XMLTracker("1", $tracker_itemname))->withName(self::MONO_TRACKER_NAME);
 
-        $tracker_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $tracker_xml = $this->issues_from_project_in_mono_tracker_in_xml_exporter->exportIssuesToXml(
+            $jira_platform_configuration,
+            $tracker,
+            $jira_base_url,
+            $jira_project_key,
+            $jira_issue_types,
+            $field_id_generator,
+            $linked_issues_collection,
+        );
 
-        JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker->exportTracker($tracker_xml));
+        JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker_xml);
     }
 }
