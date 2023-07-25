@@ -103,7 +103,7 @@ class DashboardProjectMilestones extends Widget
         return "fa-map-signs";
     }
 
-    public function getJavascriptDependencies(): array
+    public function getJavascriptAssets(): array
     {
         return $this->project_milestones_widget_retriever->getJavascriptDependencies();
     }

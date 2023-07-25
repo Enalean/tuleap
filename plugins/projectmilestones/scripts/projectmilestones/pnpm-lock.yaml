@@ -1,30 +1,27 @@
 lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/autocomplete-for-select2':
-    specifier: workspace:*
-    version: link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/chart-builder':
     specifier: workspace:*
-    version: link:../../lib/frontend/chart-builder
+    version: link:../../../../lib/frontend/chart-builder
   '@tuleap/date-helper':
     specifier: workspace:*
-    version: link:../../lib/frontend/date-helper
+    version: link:../../../../lib/frontend/date-helper
   '@tuleap/pie-chart':
     specifier: workspace:*
-    version: link:../../lib/frontend/pie-chart
+    version: link:../../../../lib/frontend/pie-chart
   '@tuleap/plugin-agiledashboard-burnup-data-transformer':
     specifier: workspace:*
-    version: link:../agiledashboard/scripts/lib/burnup-data-transformer
+    version: link:../../../agiledashboard/scripts/lib/burnup-data-transformer
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
+    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-swatch-colors
+    version: link:../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
-    version: link:../../lib/frontend/vue2-gettext-init
+    version: link:../../../../lib/frontend/vue2-gettext-init
   d3-array:
     specifier: ^3.0.1
     version: 3.0.1
@@ -50,16 +47,13 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator':
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
     specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
-    version: link:../../lib/frontend/vuex-store-wrapper-jest
+    version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/d3-array':
     specifier: ^2.12.1
     version: 2.12.1
@@ -72,6 +66,9 @@ devDependencies:
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.2
+  '@vitejs/plugin-vue2':
+    specifier: ^2.0.0
+    version: 2.2.0(vue@2.7.8)
   '@vue/test-utils':
     specifier: ^1.3
     version: 1.3.5(vue@2.7.8)
@@ -125,6 +122,16 @@ packages:
 
   /@types/sprintf-js@1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
+    dev: true
+
+  /@vitejs/plugin-vue2@2.2.0(vue@2.7.8):
+    resolution: {integrity: sha512-1km7zEuZ/9QRPvzXSjikbTYGQPG86Mq1baktpC4sXqsXlb02HQKfi+fl8qVS703JM7cgm24Ga9j+RwKmvFn90A==}
+    engines: {node: ^14.18.0 || >= 16.0.0}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+      vue: ^2.7.0-0
+    dependencies:
+      vue: 2.7.8
     dev: true
 
   /@vue/compiler-sfc@2.7.8:

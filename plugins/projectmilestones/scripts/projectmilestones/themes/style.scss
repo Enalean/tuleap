@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../../plugins/tracker/themes/default/css/includes/burndown-chart";
-@use "../../../../plugins/agiledashboard/themes/FlamingParrot/css/burnup-chart";
+@use "../../../../../plugins/tracker/themes/default/css/includes/burndown-chart";
+@use "../../../../../plugins/agiledashboard/themes/FlamingParrot/css/burnup-chart";
 @use "headers";
 @use "release-toggle";
 @use "release-toggle-tracker-artifacts-badges";
@@ -127,8 +127,8 @@
 
 .release-loader {
     height: 100px;
-    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
-        center;
+    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat
+        center center;
 }
 
 .button-backlog-link {

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...defineJestConfiguration(),
-    displayName: "projectmilestones",
-};
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import { viteExternalsPlugin } from "vite-plugin-externals";
+
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [viteExternalsPlugin({ tlp: "tlp" })],
+        build: {
+            rollupOptions: {
+                input: {
+                    "project-milestones-preferences": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+    }
+);

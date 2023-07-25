@@ -19,10 +19,11 @@
  */
 
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\ProjectMilestones\Widget\MyProjectMilestones;
@@ -49,13 +50,16 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
     public function burningParrotGetJavascriptFiles(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/projectmilestones'
+        $assets = new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../scripts/projectmilestones-preferences/frontend-assets',
+                '/assets/projectmilestones/projectmilestones-preferences'
+            ),
+            "src/index.ts"
         );
 
         if ($this->isInDashboard()) {
-            $params['javascript_files'][] = $include_assets->getFileURL('projectmilestones-preferences.js');
+            $params['javascript_files'][] = $assets->getFileURL();
         }
     }
 
