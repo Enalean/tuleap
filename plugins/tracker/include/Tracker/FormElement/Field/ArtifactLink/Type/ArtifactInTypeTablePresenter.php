@@ -37,6 +37,7 @@ class ArtifactInTypeTablePresenter
     public $artifactlink_field_id;
 
     public function __construct(
+        \PFUser $current_user,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         $html_classes,
         Tracker_FormElement_Field_ArtifactLink $field,
@@ -46,7 +47,6 @@ class ArtifactInTypeTablePresenter
         $tracker            = $artifact->getTracker();
         $project            = $tracker->getProject();
         $user_helper        = \UserHelper::instance();
-        $current_user       = \UserManager::instance()->getCurrentUser();
 
         $this->direct_link_to_artifact   = $artifact->fetchDirectLinkToArtifact();
         $this->project_public_name       = $project->getPublicName();
