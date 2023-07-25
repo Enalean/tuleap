@@ -32,9 +32,9 @@ class LDAP_LoginPresenter extends User_LoginPresenter
             $login_presenter->getReturnTo(),
             $login_presenter->getPv(),
             $login_presenter->getFormLoginName(),
-            $login_presenter->additional_connectors(),
             $login_presenter->getCSRFToken(),
             $login_presenter->prompt_parameter,
+            $login_presenter->additional_connectors,
             $login_presenter->getDisplayNewAccountButton(),
             false
         );

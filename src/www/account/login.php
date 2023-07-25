@@ -104,7 +104,7 @@ if ($_cVar['pv'] == 2) {
     $pvMode = true;
 }
 
-$presenter_builder = new User_LoginPresenterBuilder();
+$presenter_builder = new User_LoginPresenterBuilder($em);
 $presenter         = $presenter_builder->build(
     $_rVar['return_to'],
     $_cVar['pv'],

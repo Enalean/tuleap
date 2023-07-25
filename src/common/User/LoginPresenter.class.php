@@ -26,7 +26,6 @@ class User_LoginPresenter
     private $form_loginname;
     private $display_new_account_button;
     private $allow_password_recovery;
-    private $additional_connectors;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -41,9 +40,9 @@ class User_LoginPresenter
         $return_to,
         $pv,
         $form_loginname,
-        $additional_connectors,
         CSRFSynchronizerToken $csrf_token,
         string $prompt_parameter,
+        public readonly \Tuleap\User\AdditionalConnectorsCollector $additional_connectors,
         $display_new_account_button = true,
         $allow_password_recovery = true,
     ) {
@@ -52,7 +51,6 @@ class User_LoginPresenter
         $this->form_loginname             = $form_loginname;
         $this->display_new_account_button = $display_new_account_button;
         $this->allow_password_recovery    = $allow_password_recovery;
-        $this->additional_connectors      = $additional_connectors;
         $this->csrf_token                 = $csrf_token;
         $this->prompt_parameter           = $prompt_parameter;
     }
@@ -165,11 +163,6 @@ class User_LoginPresenter
     public function login_intro()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
-    }
-
-    public function additional_connectors()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return $this->additional_connectors;
     }
 
     /**

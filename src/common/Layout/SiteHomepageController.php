@@ -94,6 +94,11 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $news_collection_builder     = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
         $news_collection             = $news_collection_builder->build();
 
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(
+            new IncludeCoreAssets(),
+            'homepage-style'
+        ));
+
         $layout->header($header_params);
         $this->displayStandardHomepage(
             $registration_guard->isRegistrationPossible(),
@@ -116,7 +121,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             );
         }
 
-        $login_presenter_builder = new User_LoginPresenterBuilder();
+        $login_presenter_builder = new User_LoginPresenterBuilder($this->event_manager);
         $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
         $login_presenter         = $login_presenter_builder->buildForHomepage($login_csrf);
 

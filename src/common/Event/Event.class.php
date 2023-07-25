@@ -530,14 +530,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 
     /**
-     * Allow plugin to add another ways to log in
-     *
-     * Parameters:
-     * 'login_additional_connector' => string
-     */
-    public const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
-
-    /**
      * Get the login, can be used to redirect a non logged user for example
      *
      * Parameters:

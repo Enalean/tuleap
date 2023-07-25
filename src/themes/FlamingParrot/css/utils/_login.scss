@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@use "@tuleap/tlp-swatch-colors";
 
 // stylelint-disable selector-no-qualifying-type, selector-class-pattern
 body.login-page {
@@ -64,4 +65,58 @@ body.login-page {
             color: var(--tlp-main-color);
         }
     }
+}
+
+.additional-connectors-or {
+    display: block;
+    position: relative;
+    height: 100px;
+    color: #bbbbbb;
+    font-size: 12px;
+
+    > span {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        padding: 0 10px;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        white-space: nowrap;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid #f1f1f1;
+    }
+}
+
+.additional-connectors-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 5px;
+
+    > .btn.btn-primary.colored-button {
+        display: block;
+        box-sizing: border-box;
+        padding: 18px 5px;
+        font-size: 16px;
+        line-height: normal;
+
+        > i {
+            margin: 0 3px 0 0;
+            font-size: 18px;
+        }
+    }
+}
+
+.btn:not(.btn-link, .disabled).btn-primary.colored-button {
+    @include tlp-swatch-colors.colored-button-colors;
 }

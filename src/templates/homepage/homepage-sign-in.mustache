@@ -50,7 +50,10 @@
                         tabindex="3"
                     >{{ sign_in_submit }}</button>
 
-                    {{{ additional_connectors }}}
+                    {{# additional_connectors }}
+                        {{> homepage-connectors }}
+                    {{/ additional_connectors }}
+
                 {{/ login }}
             </form>
 
