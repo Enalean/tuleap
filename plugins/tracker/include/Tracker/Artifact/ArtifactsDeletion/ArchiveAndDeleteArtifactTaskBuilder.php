@@ -128,6 +128,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new ComputedFieldDaoCache(new ComputedFieldDao()),
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao(),
+                new ArtifactChangesetValueDeletorDAO()
             ),
             new FieldContentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager),
             new ChangesetCommentIndexer(
