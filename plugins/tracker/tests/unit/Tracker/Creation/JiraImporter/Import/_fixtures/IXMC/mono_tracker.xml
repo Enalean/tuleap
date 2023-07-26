@@ -59,70 +59,19 @@
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V1" label="Ouvert"/>
-                  <item ID="V2" label="Termin&#xE9;"/>
-                  <item ID="V3" label="A planifier"/>
-                  <item ID="V4" label="Planifi&#xE9;"/>
-                  <item ID="V5" label="En cours"/>
-                  <item ID="V6" label="Ferm&#xE9;"/>
-                  <item ID="V7" label="Annul&#xE9;"/>
-                  <item ID="V8" label="En attente du support"/>
-                  <item ID="V9" label="En attente du client"/>
-                  <item ID="V10" label="En attente du support"/>
-                  <item ID="V11" label="En attente du client"/>
-                  <item ID="V12" label="R&#xE9;solu"/>
-                  <item ID="V13" label="En cours"/>
-                  <item ID="V14" label="Annul&#xE9;"/>
-                  <item ID="V15" label="Ferm&#xE9;"/>
-                  <item ID="V16" label="Ouvert"/>
-                  <item ID="V17" label="Termin&#xE9;"/>
-                  <item ID="V18" label="A planifier"/>
-                  <item ID="V19" label="Planifi&#xE9;"/>
-                  <item ID="V20" label="En cours"/>
-                  <item ID="V21" label="Ferm&#xE9;"/>
-                  <item ID="V22" label="Annul&#xE9;"/>
-                  <item ID="V23" label="En attente du support"/>
-                  <item ID="V24" label="En attente du client"/>
-                  <item ID="V25" label="Ouvert"/>
-                  <item ID="V26" label="Ferm&#xE9;"/>
-                  <item ID="V27" label="Annul&#xE9;"/>
-                  <item ID="V28" label="En cours"/>
-                  <item ID="V29" label="Termin&#xE9;"/>
-                  <item ID="V30" label="En attente du support"/>
-                  <item ID="V31" label="En attente du client"/>
-                  <item ID="V32" label="Ouvert"/>
-                  <item ID="V33" label="En attente"/>
-                  <item ID="V34" label="Ferm&#xE9;"/>
-                  <item ID="V35" label="Annul&#xE9;"/>
-                  <item ID="V36" label="&#xC0; l'&#xE9;tude"/>
-                  <item ID="V37" label="En cours"/>
-                  <item ID="V38" label="Termin&#xE9;"/>
                   <item ID="V39" label="Ouvert"/>
-                  <item ID="V40" label="Termin&#xE9;"/>
-                  <item ID="V41" label="A planifier"/>
-                  <item ID="V42" label="Planifi&#xE9;"/>
-                  <item ID="V43" label="En cours"/>
-                  <item ID="V44" label="Ferm&#xE9;"/>
-                  <item ID="V45" label="Annul&#xE9;"/>
-                  <item ID="V46" label="En attente du support"/>
-                  <item ID="V47" label="En attente du client"/>
-                  <item ID="V48" label="En attente du support"/>
-                  <item ID="V49" label="En attente du client"/>
-                  <item ID="V50" label="R&#xE9;solu"/>
-                  <item ID="V51" label="En cours"/>
-                  <item ID="V52" label="En attente d'approbation"/>
-                  <item ID="V53" label="Annul&#xE9;"/>
-                  <item ID="V54" label="Ferm&#xE9;"/>
-                  <item ID="V55" label="En attente"/>
                   <item ID="V56" label="Termin&#xE9;"/>
                   <item ID="V57" label="A planifier"/>
                   <item ID="V58" label="Planifi&#xE9;"/>
                   <item ID="V59" label="En cours"/>
                   <item ID="V60" label="Ferm&#xE9;"/>
                   <item ID="V61" label="Annul&#xE9;"/>
-                  <item ID="V62" label="En attente d'approbation"/>
                   <item ID="V63" label="En attente du support"/>
                   <item ID="V64" label="En attente du client"/>
+                  <item ID="V50" label="R&#xE9;solu"/>
+                  <item ID="V55" label="En attente"/>
+                  <item ID="V36" label="&#xC0; l'&#xE9;tude"/>
+                  <item ID="V62" label="En attente d'approbation"/>
                 </items>
               </bind>
             </formElement>
@@ -251,46 +200,15 @@
       <description>Define the status of an artifact</description>
       <field REF="issues_status"/>
       <open_values>
-        <open_value REF="V1"/>
-        <open_value REF="V3"/>
-        <open_value REF="V4"/>
-        <open_value REF="V5"/>
-        <open_value REF="V8"/>
-        <open_value REF="V9"/>
-        <open_value REF="V10"/>
-        <open_value REF="V11"/>
-        <open_value REF="V13"/>
-        <open_value REF="V16"/>
-        <open_value REF="V18"/>
-        <open_value REF="V19"/>
-        <open_value REF="V20"/>
-        <open_value REF="V23"/>
-        <open_value REF="V24"/>
-        <open_value REF="V25"/>
-        <open_value REF="V28"/>
-        <open_value REF="V30"/>
-        <open_value REF="V31"/>
-        <open_value REF="V32"/>
-        <open_value REF="V33"/>
-        <open_value REF="V36"/>
-        <open_value REF="V37"/>
         <open_value REF="V39"/>
-        <open_value REF="V41"/>
-        <open_value REF="V42"/>
-        <open_value REF="V43"/>
-        <open_value REF="V46"/>
-        <open_value REF="V47"/>
-        <open_value REF="V48"/>
-        <open_value REF="V49"/>
-        <open_value REF="V51"/>
-        <open_value REF="V52"/>
-        <open_value REF="V55"/>
         <open_value REF="V57"/>
         <open_value REF="V58"/>
         <open_value REF="V59"/>
-        <open_value REF="V62"/>
         <open_value REF="V63"/>
         <open_value REF="V64"/>
+        <open_value REF="V55"/>
+        <open_value REF="V36"/>
+        <open_value REF="V62"/>
       </open_values>
     </semantic>
     <semantic type="done">
@@ -298,30 +216,10 @@
       <label><![CDATA[Done]]></label>
       <description><![CDATA[Define the closed status that are considered Done]]></description>
       <closed_values>
-        <closed_value REF="V2"/>
-        <closed_value REF="V6"/>
-        <closed_value REF="V7"/>
-        <closed_value REF="V12"/>
-        <closed_value REF="V14"/>
-        <closed_value REF="V15"/>
-        <closed_value REF="V17"/>
-        <closed_value REF="V21"/>
-        <closed_value REF="V22"/>
-        <closed_value REF="V26"/>
-        <closed_value REF="V27"/>
-        <closed_value REF="V29"/>
-        <closed_value REF="V34"/>
-        <closed_value REF="V35"/>
-        <closed_value REF="V38"/>
-        <closed_value REF="V40"/>
-        <closed_value REF="V44"/>
-        <closed_value REF="V45"/>
-        <closed_value REF="V50"/>
-        <closed_value REF="V53"/>
-        <closed_value REF="V54"/>
         <closed_value REF="V56"/>
         <closed_value REF="V60"/>
         <closed_value REF="V61"/>
+        <closed_value REF="V50"/>
       </closed_values>
     </semantic>
     <semantic type="contributor">
@@ -368,46 +266,15 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V1"/>
-            <selected_value REF="V3"/>
-            <selected_value REF="V4"/>
-            <selected_value REF="V5"/>
-            <selected_value REF="V8"/>
-            <selected_value REF="V9"/>
-            <selected_value REF="V10"/>
-            <selected_value REF="V11"/>
-            <selected_value REF="V13"/>
-            <selected_value REF="V16"/>
-            <selected_value REF="V18"/>
-            <selected_value REF="V19"/>
-            <selected_value REF="V20"/>
-            <selected_value REF="V23"/>
-            <selected_value REF="V24"/>
-            <selected_value REF="V25"/>
-            <selected_value REF="V28"/>
-            <selected_value REF="V30"/>
-            <selected_value REF="V31"/>
-            <selected_value REF="V32"/>
-            <selected_value REF="V33"/>
-            <selected_value REF="V36"/>
-            <selected_value REF="V37"/>
             <selected_value REF="V39"/>
-            <selected_value REF="V41"/>
-            <selected_value REF="V42"/>
-            <selected_value REF="V43"/>
-            <selected_value REF="V46"/>
-            <selected_value REF="V47"/>
-            <selected_value REF="V48"/>
-            <selected_value REF="V49"/>
-            <selected_value REF="V51"/>
-            <selected_value REF="V52"/>
-            <selected_value REF="V55"/>
             <selected_value REF="V57"/>
             <selected_value REF="V58"/>
             <selected_value REF="V59"/>
-            <selected_value REF="V62"/>
             <selected_value REF="V63"/>
             <selected_value REF="V64"/>
+            <selected_value REF="V55"/>
+            <selected_value REF="V36"/>
+            <selected_value REF="V62"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
@@ -439,30 +306,10 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V2"/>
-            <selected_value REF="V6"/>
-            <selected_value REF="V7"/>
-            <selected_value REF="V12"/>
-            <selected_value REF="V14"/>
-            <selected_value REF="V15"/>
-            <selected_value REF="V17"/>
-            <selected_value REF="V21"/>
-            <selected_value REF="V22"/>
-            <selected_value REF="V26"/>
-            <selected_value REF="V27"/>
-            <selected_value REF="V29"/>
-            <selected_value REF="V34"/>
-            <selected_value REF="V35"/>
-            <selected_value REF="V38"/>
-            <selected_value REF="V40"/>
-            <selected_value REF="V44"/>
-            <selected_value REF="V45"/>
-            <selected_value REF="V50"/>
-            <selected_value REF="V53"/>
-            <selected_value REF="V54"/>
             <selected_value REF="V56"/>
             <selected_value REF="V60"/>
             <selected_value REF="V61"/>
+            <selected_value REF="V50"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">

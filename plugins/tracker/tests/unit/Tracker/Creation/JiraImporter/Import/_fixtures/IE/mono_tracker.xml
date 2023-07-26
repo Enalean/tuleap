@@ -59,36 +59,6 @@
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V1" label="To Do"/>
-                  <item ID="V2" label="In Progress"/>
-                  <item ID="V3" label="Done"/>
-                  <item ID="V4" label="col01"/>
-                  <item ID="V5" label="col02"/>
-                  <item ID="V6" label="To Do"/>
-                  <item ID="V7" label="In Progress"/>
-                  <item ID="V8" label="Done"/>
-                  <item ID="V9" label="col01"/>
-                  <item ID="V10" label="col02"/>
-                  <item ID="V11" label="To Do"/>
-                  <item ID="V12" label="In Progress"/>
-                  <item ID="V13" label="Done"/>
-                  <item ID="V14" label="col01"/>
-                  <item ID="V15" label="col02"/>
-                  <item ID="V16" label="To Do"/>
-                  <item ID="V17" label="In Progress"/>
-                  <item ID="V18" label="Done"/>
-                  <item ID="V19" label="col01"/>
-                  <item ID="V20" label="col02"/>
-                  <item ID="V21" label="To Do"/>
-                  <item ID="V22" label="In Progress"/>
-                  <item ID="V23" label="Done"/>
-                  <item ID="V24" label="col01"/>
-                  <item ID="V25" label="col02"/>
-                  <item ID="V26" label="To Do"/>
-                  <item ID="V27" label="In Progress"/>
-                  <item ID="V28" label="Done"/>
-                  <item ID="V29" label="col01"/>
-                  <item ID="V30" label="col02"/>
                   <item ID="V31" label="To Do"/>
                   <item ID="V32" label="In Progress"/>
                   <item ID="V33" label="Done"/>
@@ -324,30 +294,6 @@
       <description>Define the status of an artifact</description>
       <field REF="issues_status"/>
       <open_values>
-        <open_value REF="V1"/>
-        <open_value REF="V2"/>
-        <open_value REF="V4"/>
-        <open_value REF="V5"/>
-        <open_value REF="V6"/>
-        <open_value REF="V7"/>
-        <open_value REF="V9"/>
-        <open_value REF="V10"/>
-        <open_value REF="V11"/>
-        <open_value REF="V12"/>
-        <open_value REF="V14"/>
-        <open_value REF="V15"/>
-        <open_value REF="V16"/>
-        <open_value REF="V17"/>
-        <open_value REF="V19"/>
-        <open_value REF="V20"/>
-        <open_value REF="V21"/>
-        <open_value REF="V22"/>
-        <open_value REF="V24"/>
-        <open_value REF="V25"/>
-        <open_value REF="V26"/>
-        <open_value REF="V27"/>
-        <open_value REF="V29"/>
-        <open_value REF="V30"/>
         <open_value REF="V31"/>
         <open_value REF="V32"/>
         <open_value REF="V34"/>
@@ -359,12 +305,6 @@
       <label><![CDATA[Done]]></label>
       <description><![CDATA[Define the closed status that are considered Done]]></description>
       <closed_values>
-        <closed_value REF="V3"/>
-        <closed_value REF="V8"/>
-        <closed_value REF="V13"/>
-        <closed_value REF="V18"/>
-        <closed_value REF="V23"/>
-        <closed_value REF="V28"/>
         <closed_value REF="V33"/>
       </closed_values>
     </semantic>
@@ -412,30 +352,6 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V1"/>
-            <selected_value REF="V2"/>
-            <selected_value REF="V4"/>
-            <selected_value REF="V5"/>
-            <selected_value REF="V6"/>
-            <selected_value REF="V7"/>
-            <selected_value REF="V9"/>
-            <selected_value REF="V10"/>
-            <selected_value REF="V11"/>
-            <selected_value REF="V12"/>
-            <selected_value REF="V14"/>
-            <selected_value REF="V15"/>
-            <selected_value REF="V16"/>
-            <selected_value REF="V17"/>
-            <selected_value REF="V19"/>
-            <selected_value REF="V20"/>
-            <selected_value REF="V21"/>
-            <selected_value REF="V22"/>
-            <selected_value REF="V24"/>
-            <selected_value REF="V25"/>
-            <selected_value REF="V26"/>
-            <selected_value REF="V27"/>
-            <selected_value REF="V29"/>
-            <selected_value REF="V30"/>
             <selected_value REF="V31"/>
             <selected_value REF="V32"/>
             <selected_value REF="V34"/>
@@ -471,12 +387,6 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V3"/>
-            <selected_value REF="V8"/>
-            <selected_value REF="V13"/>
-            <selected_value REF="V18"/>
-            <selected_value REF="V23"/>
-            <selected_value REF="V28"/>
             <selected_value REF="V33"/>
           </criteria_value>
         </criteria>

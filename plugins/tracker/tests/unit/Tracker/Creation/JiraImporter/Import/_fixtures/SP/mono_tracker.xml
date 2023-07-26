@@ -59,21 +59,6 @@
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V1" label="To Do"/>
-                  <item ID="V2" label="In Progress"/>
-                  <item ID="V3" label="Done"/>
-                  <item ID="V4" label="To Do"/>
-                  <item ID="V5" label="In Progress"/>
-                  <item ID="V6" label="Done"/>
-                  <item ID="V7" label="To Do"/>
-                  <item ID="V8" label="In Progress"/>
-                  <item ID="V9" label="Done"/>
-                  <item ID="V10" label="To Do"/>
-                  <item ID="V11" label="In Progress"/>
-                  <item ID="V12" label="Done"/>
-                  <item ID="V13" label="To Do"/>
-                  <item ID="V14" label="In Progress"/>
-                  <item ID="V15" label="Done"/>
                   <item ID="V16" label="To Do"/>
                   <item ID="V17" label="In Progress"/>
                   <item ID="V18" label="Done"/>
@@ -173,16 +158,6 @@
       <description>Define the status of an artifact</description>
       <field REF="issues_status"/>
       <open_values>
-        <open_value REF="V1"/>
-        <open_value REF="V2"/>
-        <open_value REF="V4"/>
-        <open_value REF="V5"/>
-        <open_value REF="V7"/>
-        <open_value REF="V8"/>
-        <open_value REF="V10"/>
-        <open_value REF="V11"/>
-        <open_value REF="V13"/>
-        <open_value REF="V14"/>
         <open_value REF="V16"/>
         <open_value REF="V17"/>
       </open_values>
@@ -192,11 +167,6 @@
       <label><![CDATA[Done]]></label>
       <description><![CDATA[Define the closed status that are considered Done]]></description>
       <closed_values>
-        <closed_value REF="V3"/>
-        <closed_value REF="V6"/>
-        <closed_value REF="V9"/>
-        <closed_value REF="V12"/>
-        <closed_value REF="V15"/>
         <closed_value REF="V18"/>
       </closed_values>
     </semantic>
@@ -244,16 +214,6 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V1"/>
-            <selected_value REF="V2"/>
-            <selected_value REF="V4"/>
-            <selected_value REF="V5"/>
-            <selected_value REF="V7"/>
-            <selected_value REF="V8"/>
-            <selected_value REF="V10"/>
-            <selected_value REF="V11"/>
-            <selected_value REF="V13"/>
-            <selected_value REF="V14"/>
             <selected_value REF="V16"/>
             <selected_value REF="V17"/>
           </criteria_value>
@@ -287,11 +247,6 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V3"/>
-            <selected_value REF="V6"/>
-            <selected_value REF="V9"/>
-            <selected_value REF="V12"/>
-            <selected_value REF="V15"/>
             <selected_value REF="V18"/>
           </criteria_value>
         </criteria>

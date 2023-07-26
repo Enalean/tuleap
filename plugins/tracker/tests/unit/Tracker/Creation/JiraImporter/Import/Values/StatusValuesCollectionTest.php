@@ -143,6 +143,21 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                         'subtask' => false,
                         'statuses' => [
                             [
+                                'self' => 'URL/rest/api/3/status/10000',
+                                'description' => '',
+                                'iconUrl' => 'URL/',
+                                'name' => 'To Do',
+                                'untranslatedName' => 'To Do',
+                                'id' => '10000',
+                                'statusCategory' => [
+                                    'self' => 'URL/rest/api/3/statuscategory/2',
+                                    'id' => 2,
+                                    'key' => 'new',
+                                    'colorName' => 'blue-gray',
+                                    'name' => 'To Do',
+                                ],
+                            ],
+                            [
                                 'self' => 'URL/rest/api/3/status/10001',
                                 'description' => '',
                                 'iconUrl' => 'URL/',
