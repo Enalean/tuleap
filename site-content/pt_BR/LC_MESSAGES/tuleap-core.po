@@ -42,6 +42,9 @@ msgstr ""
 msgid "\"response\" field is missing from the request body"
 msgstr ""
 
+msgid "\"username\" field is missing from the request body"
+msgstr ""
+
 msgid "## Some notes"
 msgstr "## Algumas notas"
 
@@ -4359,6 +4362,10 @@ msgstr "Usar avatar padrão"
 #, php-format
 msgid "User #%d is not administrator of project #%d"
 msgstr "Usuário #%d não é administrador do projeto #%d"
+
+#, php-format
+msgid "User %s not found"
+msgstr ""
 
 #, php-format
 msgid "User '%s' does not exist"

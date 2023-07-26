@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psl\Json\Exception\DecodeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,15 +31,17 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use function Psl\Json\decode as psl_json_decode;
 
 final class PostAuthenticationChallengeController extends DispatchablePSR15Compatible
 {
     public function __construct(
-        private readonly ProvideCurrentUser $user_manager,
+        private readonly ProvideCurrentUser&RetrieveUserByUserName $user_manager,
         private readonly GetAllCredentialSourceByUserId $source_dao,
         private readonly SaveWebAuthnChallenge $challenge_dao,
         private readonly JSONResponseBuilder $json_response_builder,
@@ -53,12 +56,37 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
     {
         $current_user = $this->user_manager->getCurrentUser();
         if ($current_user->isAnonymous()) {
-            return $this->error_response_builder->build(401);
+            if (empty($body = $request->getBody()->getContents())) {
+                return $this->error_response_builder->build(400, _('Request body is empty'));
+            }
+
+            try {
+                $request_body = psl_json_decode($body);
+            } catch (DecodeException) {
+                return $this->error_response_builder->build(400, _('Request body is not well formed'));
+            }
+            if (! array_key_exists('username', $request_body)) {
+                return $this->error_response_builder->build(400, _('"username" field is missing from the request body'));
+            }
+            $username = $request_body['username'];
+            if (! is_string($username)) {
+                return $this->error_response_builder->build(400, _('Request body is not well formed'));
+            }
+
+            $current_user = $this->user_manager->getUserByUserName($username);
+            if ($current_user === null) {
+                return $this->error_response_builder->build(404, sprintf(_('User %s not found'), $username));
+            }
         }
 
+        return $this->generateResponseForUser($current_user);
+    }
+
+    private function generateResponseForUser(\PFUser $user): ResponseInterface
+    {
         $authenticators = array_map(
             static fn(WebAuthnCredentialSource $source) => $source->getSource()->getPublicKeyCredentialDescriptor(),
-            $this->source_dao->getAllByUserId((int) $current_user->getId())
+            $this->source_dao->getAllByUserId((int) $user->getId())
         );
         if (empty($authenticators)) {
             return $this->error_response_builder->build(403, _('You have to register your passkey before authenticate with it'));
@@ -70,7 +98,7 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
             ->allowCredentials(...$authenticators);
 
         $this->challenge_dao->saveChallenge(
-            (int) $current_user->getId(),
+            (int) $user->getId(),
             $challenge
         );
 

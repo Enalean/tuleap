@@ -37,13 +37,14 @@ use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use Tuleap\User\ProvideUserFromRow;
 use Tuleap\User\RetrieveUserByEmail;
 use Tuleap\User\RetrieveUserById;
+use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, RetrieveUserByUserName, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -179,10 +180,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * @param string the user_name of the user to find
-     * @return PFUser|null
+     * @param string $user_name the user_name of the user to find
      */
-    public function getUserByUserName($user_name)
+    public function getUserByUserName(string $user_name): PFUser|null
     {
         if (! isset($this->_userid_bynames[$user_name])) {
             $row = $this->getDao()->searchByUserName($user_name);
