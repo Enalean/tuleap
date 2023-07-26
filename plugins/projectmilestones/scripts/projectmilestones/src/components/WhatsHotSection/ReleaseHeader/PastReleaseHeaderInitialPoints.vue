@@ -43,6 +43,6 @@ export default class PastReleaseHeaderInitialPoints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 
-    formatPoints = (pts: number): number => (pts ? pts : 0);
+    formatPoints = (pts: number | null): number => pts ?? 0;
 }
 </script>

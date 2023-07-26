@@ -76,7 +76,7 @@ export default class ReleaseHeader extends Vue {
     @Prop()
     readonly isPastRelease!: boolean;
 
-    formatDate = (date: string): string => formatDateYearMonthDay(getUserLocale(), date);
+    formatDate = (date: string | null): string => formatDateYearMonthDay(getUserLocale(), date);
 
     startDateExist(): boolean {
         return this.release_data.start_date !== null;
