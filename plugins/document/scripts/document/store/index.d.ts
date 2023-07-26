@@ -18,13 +18,13 @@
  */
 
 import type { Store } from "vuex";
-import type { State } from "../type";
+import type { RootState, State } from "../type";
 import type { ConfigurationState } from "./configuration";
 
 export let store: Store<State>;
 
-export function createStore(
+export function createInitializedStore(
     user_id: number,
     project_id: number,
     configuration_state: ConfigurationState
-): Store<State>;
+): Store<RootState>;
