@@ -332,6 +332,9 @@
         <criteria rank="4">
           <field REF="issues_priority"/>
         </criteria>
+        <criteria rank="5">
+          <field REF="issues_issuetype"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -341,6 +344,7 @@
             <field REF="issues_status"/>
             <field REF="issues_jira_issue_url"/>
             <field REF="issues_priority"/>
+            <field REF="issues_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -367,6 +371,9 @@
         <criteria rank="3">
           <field REF="issues_priority"/>
         </criteria>
+        <criteria rank="4">
+          <field REF="issues_issuetype"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -376,6 +383,7 @@
             <field REF="issues_status"/>
             <field REF="issues_jira_issue_url"/>
             <field REF="issues_priority"/>
+            <field REF="issues_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -399,6 +407,9 @@
         <criteria rank="3">
           <field REF="issues_priority"/>
         </criteria>
+        <criteria rank="4">
+          <field REF="issues_issuetype"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -408,6 +419,7 @@
             <field REF="issues_status"/>
             <field REF="issues_jira_issue_url"/>
             <field REF="issues_priority"/>
+            <field REF="issues_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -428,6 +440,9 @@
         <criteria rank="3">
           <field REF="issues_created"/>
         </criteria>
+        <criteria rank="4">
+          <field REF="issues_issuetype"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -438,6 +453,7 @@
             <field REF="issues_jira_issue_url"/>
             <field REF="issues_priority"/>
             <field REF="issues_created"/>
+            <field REF="issues_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -458,6 +474,9 @@
         <criteria rank="3">
           <field REF="issues_updated"/>
         </criteria>
+        <criteria rank="4">
+          <field REF="issues_issuetype"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -468,6 +487,7 @@
             <field REF="issues_jira_issue_url"/>
             <field REF="issues_priority"/>
             <field REF="issues_updated"/>
+            <field REF="issues_issuetype"/>
           </columns>
         </renderer>
       </renderers>

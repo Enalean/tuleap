@@ -58,6 +58,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
         ?FieldMapping $updated_field,
+        ?FieldMapping $issue_type_field,
     ): void {
         if (! $status_field) {
             return;
@@ -78,6 +79,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
                 $summary_field,
                 $description_field,
                 $priority_field,
+                $issue_type_field,
             ]
         );
 
@@ -94,6 +96,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
                 $status_field,
                 $link_field,
                 $priority_field,
+                $issue_type_field,
             ]
         );
 

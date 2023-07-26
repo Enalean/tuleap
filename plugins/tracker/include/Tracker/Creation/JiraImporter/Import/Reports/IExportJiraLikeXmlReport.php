@@ -36,5 +36,6 @@ interface IExportJiraLikeXmlReport
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
         ?FieldMapping $updated_field,
+        ?FieldMapping $issue_type_field,
     ): void;
 }

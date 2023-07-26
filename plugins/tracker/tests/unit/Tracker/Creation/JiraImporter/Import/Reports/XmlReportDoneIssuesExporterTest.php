@@ -162,11 +162,12 @@ final class XmlReportDoneIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->priority_field_mapping,
             $this->jira_issue_url_field_mapping,
             null,
-            null
+            null,
+            null,
         );
 
         $reports_node = $this->reports_node;
-        $this->assertEquals(0, $reports_node->count());
+        self::assertEquals(0, $reports_node->count());
     }
 
     public function testItDoesNotExportWhenNoDoneValues(): void
@@ -187,11 +188,12 @@ final class XmlReportDoneIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->priority_field_mapping,
             $this->jira_issue_url_field_mapping,
             null,
-            null
+            null,
+            null,
         );
 
         $reports_node = $this->reports_node;
-        $this->assertEquals(0, $reports_node->count());
+        self::assertEquals(0, $reports_node->count());
     }
 
     public function testItExportReports(): void
@@ -216,72 +218,73 @@ final class XmlReportDoneIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->priority_field_mapping,
             $this->jira_issue_url_field_mapping,
             null,
-            null
+            null,
+            null,
         );
 
         $reports_node = $this->reports_node;
-        $this->assertNotNull($reports_node);
+        self::assertNotNull($reports_node);
 
         $report_node = $reports_node->report;
-        $this->assertNotNull($report_node);
-        $this->assertNull($report_node['is_default']);
+        self::assertNotNull($report_node);
+        self::assertNull($report_node['is_default']);
 
         $report_node_name = $report_node->name;
-        $this->assertEquals("Done issues", $report_node_name);
+        self::assertEquals("Done issues", $report_node_name);
 
         $reports_node_description = $report_node->description;
-        $this->assertEquals('All done issues in this tracker', $reports_node_description);
+        self::assertEquals('All done issues in this tracker', $reports_node_description);
 
         $criterias = $report_node->criterias;
-        $this->assertNotNull($criterias);
-        $this->assertCount(4, $criterias->children());
+        self::assertNotNull($criterias);
+        self::assertCount(4, $criterias->children());
 
         $criterion_01 = $criterias->criteria[0];
 
-        $this->assertSame("Fstatus", (string) $criterion_01->field['REF']);
-        $this->assertSame("1", (string) $criterion_01['is_advanced']);
-        $this->assertEquals(1, $criterion_01->criteria_value->count());
-        $this->assertSame("list", (string) $criterion_01->criteria_value['type']);
-        $this->assertSame("V1", (string) $criterion_01->criteria_value->selected_value[0]['REF']);
+        self::assertSame("Fstatus", (string) $criterion_01->field['REF']);
+        self::assertSame("1", (string) $criterion_01['is_advanced']);
+        self::assertEquals(1, $criterion_01->criteria_value->count());
+        self::assertSame("list", (string) $criterion_01->criteria_value['type']);
+        self::assertSame("V1", (string) $criterion_01->criteria_value->selected_value[0]['REF']);
 
         $criterion_02 = $criterias->criteria[1];
-        $this->assertSame("Fsummary", (string) $criterion_02->field['REF']);
+        self::assertSame("Fsummary", (string) $criterion_02->field['REF']);
 
         $criterion_03 = $criterias->criteria[2];
-        $this->assertSame("Fdescription", (string) $criterion_03->field['REF']);
+        self::assertSame("Fdescription", (string) $criterion_03->field['REF']);
 
         $criterion_04 = $criterias->criteria[3];
-        $this->assertSame("Fpriority", (string) $criterion_04->field['REF']);
+        self::assertSame("Fpriority", (string) $criterion_04->field['REF']);
 
         $renderers_node = $report_node->renderers;
-        $this->assertNotNull($renderers_node);
+        self::assertNotNull($renderers_node);
 
         $renderer_node = $renderers_node->renderer;
-        $this->assertNotNull($renderer_node);
+        self::assertNotNull($renderer_node);
 
-        $this->assertEquals("table", $renderer_node['type']);
-        $this->assertEquals("0", $renderer_node['rank']);
-        $this->assertEquals("15", $renderer_node['chunksz']);
+        self::assertEquals("table", $renderer_node['type']);
+        self::assertEquals("0", $renderer_node['rank']);
+        self::assertEquals("15", $renderer_node['chunksz']);
 
         $renderer_name = $renderer_node->name;
-        $this->assertNotNull($renderer_name);
+        self::assertNotNull($renderer_name);
 
         $columns_node = $renderer_node->columns;
-        $this->assertNotNull($columns_node);
-        $this->assertCount(4, $columns_node->children());
+        self::assertNotNull($columns_node);
+        self::assertCount(4, $columns_node->children());
 
         $field_01 = $columns_node->field[0];
-        $this->assertEquals("Fsummary", (string) $field_01['REF']);
+        self::assertEquals("Fsummary", (string) $field_01['REF']);
 
         $field_02 = $columns_node->field[1];
-        $this->assertEquals("Fstatus", (string) $field_02['REF']);
+        self::assertEquals("Fstatus", (string) $field_02['REF']);
 
         $field_03 = $columns_node->field[2];
-        $this->assertEquals("Fjira_issue_url", (string) $field_03['REF']);
+        self::assertEquals("Fjira_issue_url", (string) $field_03['REF']);
 
         $field_04 = $columns_node->field[3];
-        $this->assertEquals("Fpriority", (string) $field_04['REF']);
+        self::assertEquals("Fpriority", (string) $field_04['REF']);
 
-        $this->assertEquals("Results", (string) $renderer_name);
+        self::assertEquals("Results", (string) $renderer_name);
     }
 }

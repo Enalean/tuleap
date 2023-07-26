@@ -57,6 +57,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
         ?FieldMapping $updated_field,
+        ?FieldMapping $issue_type_field,
     ): void {
         $report_node = (new XMLReport('All issues'))
             ->withDescription('All the issues in this tracker')
@@ -69,6 +70,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
                 $description_field,
                 $status_field,
                 $priority_field,
+                $issue_type_field,
             ]
         );
 
@@ -77,6 +79,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
             $status_field,
             $link_field,
             $priority_field,
+            $issue_type_field,
         ]);
 
         $this->default_criteria_exporter->exportDefaultCriteria(
