@@ -565,7 +565,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                         data-renderer-data="' . Codendi_HTMLPurifier::instance()->purify($json_encoded_data) . '"></div></div>';
             }
 
-            $html .= $this->fetchTypeTables($artifact_links_to_render, $reverse_artifact_links);
+            $html .= $this->fetchTypeTables($current_user, $artifact_links_to_render, $reverse_artifact_links);
         } else {
             $html .= $this->getNoValueLabelForLinks($artifact);
         }
@@ -609,7 +609,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_types, $reverse_artifact_links, false, $from_aid);
     }
 
-    private function fetchTypeTables(ArtifactLinksToRender $artifact_links_to_render, $is_reverse_artifact_links)
+    private function fetchTypeTables(\PFUser $current_user, ArtifactLinksToRender $artifact_links_to_render, $is_reverse_artifact_links): string
     {
         static $type_tables_cache = [];
         if (isset($type_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links])) {
@@ -621,6 +621,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
             $html .= $template_renderer->renderToString(
                 'artifactlink-type-table',
                 new TypeTablePresenter(
+                    $current_user,
                     $artifact_links_per_type->getTypePresenter(),
                     $artifact_links_per_type->getArtifactLinks(),
                     $is_reverse_artifact_links,
@@ -734,7 +735,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                     }
                 }
 
-                $this->appendTypeTable($request, $result, $is_reverse);
+                $this->appendTypeTable($current_user, $request, $result, $is_reverse);
                 if ($result) {
                     $head = [];
                     $rows = [];
@@ -1735,7 +1736,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
     }
 
-    private function appendTypeTable(Codendi_Request $request, array &$result, bool $is_reverse_artifact_links)
+    private function appendTypeTable(PFUser $current_user, Codendi_Request $request, array &$result, bool $is_reverse_artifact_links): void
     {
         if (! $this->getTracker()->isProjectAllowedToUseType()) {
             return;
@@ -1746,39 +1747,43 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
             return;
         }
 
-        $type_presenter        = $this->getTypePresenterFactory()->getFromShortname($type_shortname);
+        $type_presenter = $this->getTypePresenterFactory()->getFromShortname($type_shortname);
+        if ($type_presenter === null) {
+            return;
+        }
         $key                   = "type_$type_shortname";
         $art_factory           = $this->getArtifactFactory();
         $artifact_html_classes = 'additional';
         $type_html             = '';
-        $head_html             = '';
         $ids                   = $request->get('ids');
+        $are_links_deletable   = $this->areLinksDeletable(
+            $type_presenter,
+            $is_reverse_artifact_links,
+        );
 
         foreach (explode(',', $ids) as $id) {
-            $artifact = $art_factory->getArtifactById(trim($id));
+            $artifact = $art_factory->getArtifactByIdUserCanView($current_user, (int) trim($id));
 
-            $are_links_deletable = $this->areLinksDeletable(
-                $type_presenter,
-                $is_reverse_artifact_links,
-            );
-
-            if (! is_null($artifact) && $artifact->getTracker()->isActive()) {
-                $type_html .= $this->getTemplateRenderer()->renderToString(
-                    'artifactlink-type-table-row',
-                    new ArtifactInTypeTablePresenter(
-                        $artifact,
-                        $artifact_html_classes,
-                        $this,
-                        $are_links_deletable,
-                    )
-                );
+            if ($artifact === null) {
+                continue;
             }
+
+            $type_html .= $this->getTemplateRenderer()->renderToString(
+                'artifactlink-type-table-row',
+                new ArtifactInTypeTablePresenter(
+                    $current_user,
+                    $artifact,
+                    $artifact_html_classes,
+                    $this,
+                    $are_links_deletable,
+                )
+            );
         }
 
         if ($type_html !== '') {
             $head_html = $this->getTemplateRenderer()->renderToString(
                 'artifactlink-type-table-head',
-                TypeTablePresenter::buildForHeader($type_presenter, $this, $are_links_deletable)
+                TypeTablePresenter::buildForHeader($current_user, $type_presenter, $this, $are_links_deletable)
             );
 
             $result[$key] = ['head' => $head_html, 'rows' => $type_html];

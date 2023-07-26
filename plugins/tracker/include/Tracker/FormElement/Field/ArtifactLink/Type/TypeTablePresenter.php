@@ -43,6 +43,7 @@ class TypeTablePresenter
     public const TABLE_ID_PREFIX = "tracker_report_table_type_";
 
     public function __construct(
+        \PFUser $current_user,
         TypePresenter $type,
         array $artifact_links,
         bool $is_reverse_artifact_links,
@@ -67,8 +68,12 @@ class TypeTablePresenter
         $this->artifact_links = [];
         $html_classes         = '';
         foreach ($artifact_links as $artifact_link) {
-            $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
+            $artifact = $art_factory->getArtifactByIdUserCanView($current_user, $artifact_link->getArtifactId());
+            if ($artifact === null) {
+                continue;
+            }
             $this->artifact_links[] = new ArtifactInTypeTablePresenter(
+                $current_user,
                 $artifact,
                 $html_classes,
                 $field,
@@ -80,11 +85,13 @@ class TypeTablePresenter
     }
 
     public static function buildForHeader(
+        \PFUser $current_user,
         TypePresenter $type_presenter,
         Tracker_FormElement_Field_ArtifactLink $field,
         bool $are_links_deletable,
     ): TypeTablePresenter {
         return new TypeTablePresenter(
+            $current_user,
             $type_presenter,
             [],
             false,
