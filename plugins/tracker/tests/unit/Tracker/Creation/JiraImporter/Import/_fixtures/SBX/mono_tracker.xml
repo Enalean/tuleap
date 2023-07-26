@@ -141,6 +141,15 @@
                 </items>
               </bind>
             </formElement>
+            <formElement type="sb" ID="issues_issuetype" rank="1" required="1">
+              <name><![CDATA[issuetype]]></name>
+              <label><![CDATA[Type de ticket]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="Vissues_issuetype_bogue" label="Bogue"/>
+                </items>
+              </bind>
+            </formElement>
             <formElement type="sb" ID="issues_priority" rank="6">
               <name><![CDATA[priority]]></name>
               <label><![CDATA[Priority]]></label>
@@ -718,6 +727,9 @@
     <permission scope="field" REF="issues_status" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_status" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_status" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

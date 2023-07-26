@@ -82,7 +82,6 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         $tracker_xml = $this->issues_from_project_in_mono_tracker_in_xml_exporter->exportIssuesToXml(
             $jira_platform_configuration,
             $tracker,
-            $jira_base_url,
             $jira_project_key,
             $jira_issue_types,
             $field_id_generator,

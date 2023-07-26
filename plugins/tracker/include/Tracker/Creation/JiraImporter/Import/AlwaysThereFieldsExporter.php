@@ -57,6 +57,7 @@ class AlwaysThereFieldsExporter
     public const JIRA_ASSIGNEE_NAME          = "assignee";
     public const JIRA_REPORTER_NAME          = "reporter";
     public const JIRA_STORY_POINTS_NAME      = "story_points";
+    public const JIRA_ISSUE_TYPE_NAME        = "issuetype";
 
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";

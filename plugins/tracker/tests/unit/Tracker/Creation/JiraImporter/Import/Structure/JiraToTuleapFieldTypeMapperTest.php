@@ -30,6 +30,8 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -37,11 +39,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
-use function PHPUnit\Framework\assertEmpty;
-use function PHPUnit\Framework\assertEquals;
 
 final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     private LoggerInterface $logger;
     private JiraToTuleapFieldTypeMapper $mapper;
     private XMLTracker $xml_tracker;
@@ -604,6 +606,34 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             },
         ];
 
+        yield 'Jira issuetype is mapped to a select box field' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'issuetype',
+                'Issuetype',
+                false,
+                'issuetype',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10001, 'name' => 'Story'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10002, 'name' => 'Bug'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="issuetype"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Issuetype', $node->label);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('Story', $node->bind->items->item[0]['label']);
+                self::assertEquals('Bug', $node->bind->items->item[1]['label']);
+
+                $mapping = $collection->getMappingFromJiraField('issuetype');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
         yield 'field is available at submit and update' => [
             'jira_field' => new JiraFieldAPIRepresentation(
                 'summary',
@@ -652,6 +682,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     public function testJiraFieldsAreMappedToXMLObjects(JiraFieldAPIRepresentation $jira_field, callable $tests): void
     {
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE, 1);
+
         $xml_tracker = $this->mapper->exportFieldToXml(
             $jira_field,
             $this->xml_tracker,
@@ -685,7 +717,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->field_mapping_collection,
         );
 
-        assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
+        self::assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
     }
 
     public function testStoryPointsFieldIsNotAddedTwiceWhenConfiguredOnTheCreationScreen(): void
@@ -715,6 +747,36 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
         $exported_tracker = $xml_tracker->export($xml);
 
-        assertEmpty($exported_tracker->xpath('//formElement[label="Story points"]'));
+        self::assertEmpty($exported_tracker->xpath('//formElement[label="Story points"]'));
+    }
+
+    public function testIssueTypeFieldIsNotAddedWhenFeatureFlagIsNotSet(): void
+    {
+        $issue_type_jira_field_id = 'issuetype';
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            $issue_type_jira_field_id,
+            'Issuetype',
+            false,
+            $issue_type_jira_field_id,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10001, 'name' => 'Story'], new FieldAndValueIDGenerator()),
+                JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10002, 'name' => 'Bug'], new FieldAndValueIDGenerator()),
+            ],
+            true,
+        );
+
+        $xml_tracker = $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->xml_tracker,
+            $this->id_generator,
+            new PlatformConfiguration(),
+            $this->field_mapping_collection,
+        );
+
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        self::assertEmpty($exported_tracker->xpath('//formElement[label="issuetype"]'));
     }
 }
