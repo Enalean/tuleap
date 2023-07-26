@@ -103,6 +103,10 @@ body.login-page {
     grid-template-rows: auto;
     gap: 5px;
 
+    &.one-column {
+        grid-template-columns: 1fr;
+    }
+
     > .btn.btn-primary.colored-button {
         display: block;
         box-sizing: border-box;

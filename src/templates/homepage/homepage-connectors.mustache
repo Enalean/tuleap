@@ -4,7 +4,7 @@
             <span>{{# gettext }}or login with{{/ gettext }}</span>
         </span>
 
-        <div class="additional-connectors-list">
+        <div class="additional-connectors-list{{# hasOneConnector }} one-column{{/ hasOneConnector }}">
             {{# connectors }}
                 <a href="{{ link }}"
                    class="btn tlp-button-primary tlp-button-large {{# color }}btn-primary {{ color }}{{/ color }} colored-button"

@@ -46,6 +46,11 @@ final class AdditionalConnectorsCollector implements Dispatchable
         return ! empty($this->additional_connectors);
     }
 
+    public function hasOneConnector(): bool
+    {
+        return count($this->additional_connectors) === 1;
+    }
+
     public function connectors(): array
     {
         return $this->additional_connectors;
