@@ -129,16 +129,16 @@ class StatusValuesCollection
     {
         $status_representation = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status, $id_generator);
 
-        $this->all_values[] = $status_representation;
+        $this->all_values[$status_representation->getId()] = $status_representation;
 
         if (! isset($status['statusCategory']['key'])) {
             return;
         }
 
         if ($status['statusCategory']['key'] !== self::DONE_STATUS_CATEGORY) {
-            $this->open_values[] = $status_representation;
+            $this->open_values[$status_representation->getId()] = $status_representation;
         } else {
-            $this->closed_values[] = $status_representation;
+            $this->closed_values[$status_representation->getId()] = $status_representation;
         }
     }
 
