@@ -49,6 +49,7 @@ class XmlReportExporter
         $link_field        = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
         $created_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_CREATED_NAME);
         $updated_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME);
+        $issue_type_field  = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ISSUE_TYPE_NAME);
 
         $xml_report_all_issues_exporter->exportJiraLikeReport(
             $reports_node,
@@ -59,7 +60,8 @@ class XmlReportExporter
             $priority_field,
             $link_field,
             null,
-            null
+            null,
+            $issue_type_field,
         );
 
         $xml_report_open_issues_exporter->exportJiraLikeReport(
@@ -71,7 +73,8 @@ class XmlReportExporter
             $priority_field,
             $link_field,
             null,
-            null
+            null,
+            $issue_type_field,
         );
 
         $xml_report_done_issues_exporter->exportJiraLikeReport(
@@ -83,7 +86,8 @@ class XmlReportExporter
             $priority_field,
             $link_field,
             null,
-            null
+            null,
+            $issue_type_field,
         );
 
         $xml_report_created_recently_exporter->exportJiraLikeReport(
@@ -95,7 +99,8 @@ class XmlReportExporter
             $priority_field,
             $link_field,
             $created_field,
-            null
+            null,
+            $issue_type_field,
         );
 
         $xml_report_updated_recently_exporter->exportJiraLikeReport(
@@ -107,7 +112,8 @@ class XmlReportExporter
             $priority_field,
             $link_field,
             null,
-            $updated_field
+            $updated_field,
+            $issue_type_field,
         );
     }
 }
