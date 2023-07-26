@@ -48,6 +48,9 @@ msgstr "Il est recommandé d'enregistrer au moins 2 clés"
 msgid "Last use"
 msgstr "Dernière utilisation"
 
+msgid "Login"
+msgstr "Se connecter"
+
 msgid "My key"
 msgstr "Ma clé"
 
@@ -60,8 +63,17 @@ msgstr "Aucune clé d'authentification enregistrée"
 msgid "Passkeys"
 msgstr "Clés d'authentification"
 
+msgid "Passwordless"
+msgstr "Sans mot de passe"
+
+msgid "Passwordless connection"
+msgstr "Connexion sans mot de passe"
+
 msgid "Remove"
 msgstr "Supprimer"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
 
 msgid "WebAuthn"
 msgstr "WebAuthn"
