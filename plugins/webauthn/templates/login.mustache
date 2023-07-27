@@ -1,7 +1,8 @@
 <div class="tuleap-sign-in-wrapper">
     <div class="tuleap-sign-in">
         <h2 class="tuleap-sign-in-title">{{# dgettext }} tuleap-webauthn | Passwordless connection {{/ dgettext }}</h2>
-        <form class="tuleap-sign-in-form" id="webauthn-form">
+        <form class="tuleap-sign-in-form" id="webauthn-form" method="post">
+            <div class="tlp-alert-danger webauthn-hidden" id="webauthn-error"></div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="webauthn-username">{{# dgettext }}
                     tuleap-webauthn | Username {{/ dgettext }}</label>
@@ -11,6 +12,8 @@
             <button id="webauthn-button"
                     class="tlp-button-primary tlp-button-large tlp-button-wide tuleap-sign-in-button"
                     disabled>
+                <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden" aria-hidden="true"
+                   id="webauthn-icon"></i>
                 {{# dgettext }} tuleap-webauthn | Login {{/ dgettext }}
             </button>
         </form>

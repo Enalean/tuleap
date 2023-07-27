@@ -6,8 +6,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@simplewebauthn/browser": "^7.2.0",
+    "@simplewebauthn/typescript-types": "^7.0.0",
     "@tuleap/burningparrot-sign-in": "workspace:*",
-    "@tuleap/dom": "workspace:*"
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "neverthrow": "^6.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
