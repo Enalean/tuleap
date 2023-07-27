@@ -42,6 +42,9 @@ msgstr "Il manque le champs \"name\" dans le corps de la requête"
 msgid "\"response\" field is missing from the request body"
 msgstr "Il manque le champs \"response\" dans le corps de la requête"
 
+msgid "\"username\" field is missing from the request body"
+msgstr "Il manque le champs \"username\" dans le corps de la requête"
+
 msgid "## Some notes"
 msgstr "## Du contenu en Markdown"
 
@@ -4426,6 +4429,10 @@ msgstr "Utiliser l'avatar par défaut"
 #, php-format
 msgid "User #%d is not administrator of project #%d"
 msgstr "L'utilisateur #%d n'est pas administrateur du projet #%d"
+
+#, php-format
+msgid "User %s not found"
+msgstr "Utilisateur %s non trouvé"
 
 #, php-format
 msgid "User '%s' does not exist"

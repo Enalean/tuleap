@@ -65,7 +65,7 @@ final class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $where_parameters = [];
 
         if ($value !== '') {
-            $user             = $this->user_manager->getUserByUserName($value);
+            $user             = $this->user_manager->getUserByUserName((string) $value);
             $where_parameters = [$user->getId()];
             $where            = "{$this->alias_field} != ?";
         }

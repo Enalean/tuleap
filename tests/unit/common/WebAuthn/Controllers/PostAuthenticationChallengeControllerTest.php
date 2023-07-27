@@ -31,31 +31,77 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use function Psl\Json\decode as psl_json_decode;
+use function Psl\Json\encode as psl_json_encode;
 
 final class PostAuthenticationChallengeControllerTest extends TestCase
 {
-    public function testItReturns401WhenNoAuth(): void
-    {
+    /**
+     * @dataProvider getTest400Data
+     */
+    public function testItReturnsError400ForAnonymous(
+        string|array $body,
+    ): void {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anAnonymousUser()->build()),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
-            new WebAuthnChallengeDaoStub()
+            new WebAuthnChallengeDaoStub(),
+            $body
         );
 
-        self::assertSame(401, $response->getStatusCode());
+        self::assertSame(400, $response->getStatusCode());
     }
 
-    public function testItReturns403WhenNoRegisteredKey(): void
+    public function testItReturns404WhenUserNotFound(): void
     {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
+            WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
+            new WebAuthnChallengeDaoStub(),
+            ['username' => 'John']
+        );
+
+        self::assertSame(404, $response->getStatusCode());
+    }
+
+    public function testItReturns403WhenNoRegisteredKeyForAnonymous(): void
+    {
+        $user     = UserTestBuilder::anActiveUser()->build();
+        $response = $this->handle(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build())->withUsers([$user]),
+            WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
+            new WebAuthnChallengeDaoStub(),
+            ['username' => $user->getUserName()]
+        );
+
+        self::assertSame(403, $response->getStatusCode());
+    }
+
+    public function testItReturnsOptionsForAnonymousUser(): void
+    {
+        $user     = UserTestBuilder::anActiveUser()->build();
+        $response = $this->handle(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build())->withUsers([$user]),
+            WebAuthnCredentialSourceDaoStub::withCredentialSources('id1'),
+            new WebAuthnChallengeDaoStub(),
+            ['username' => $user->getUserName()]
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $this->checkResponseBody($response);
+    }
+
+    public function testItReturns403WhenNoRegisteredKeyForLoginUser(): void
+    {
+        $response = $this->handle(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anActiveUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
             new WebAuthnChallengeDaoStub()
         );
@@ -63,15 +109,20 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
         self::assertSame(403, $response->getStatusCode());
     }
 
-    public function testItReturnsOptions(): void
+    public function testItReturnsOptionsForLoginUSer(): void
     {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anActiveUser()->build()),
             WebAuthnCredentialSourceDaoStub::withCredentialSources('id1'),
             new WebAuthnChallengeDaoStub()
         );
 
         self::assertSame(200, $response->getStatusCode());
+        $this->checkResponseBody($response);
+    }
+
+    private function checkResponseBody(ResponseInterface $response): void
+    {
         $body = psl_json_decode($response->getBody()->getContents());
         self::assertIsArray($body);
         self::assertArrayHasKey('challenge', $body);
@@ -87,17 +138,24 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
     }
 
     private function handle(
-        ProvideCurrentUser $provide_current_user,
+        ProvideCurrentUser&RetrieveUserByUserName $provide_current_user,
         GetAllCredentialSourceByUserId $source_dao,
         SaveWebAuthnChallenge $challenge_dao,
+        string|array $body = '',
     ): ResponseInterface {
         $controller = $this->getController($provide_current_user, $source_dao, $challenge_dao);
 
-        return $controller->handle(new NullServerRequest());
+        if (is_array($body)) {
+            $body = psl_json_encode($body);
+        }
+
+        return $controller->handle(
+            (new NullServerRequest())->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body))
+        );
     }
 
     private function getController(
-        ProvideCurrentUser $provide_current_user,
+        ProvideCurrentUser&RetrieveUserByUserName $provide_current_user,
         GetAllCredentialSourceByUserId $source_dao,
         SaveWebAuthnChallenge $challenge_dao,
     ): PostAuthenticationChallengeController {
@@ -111,5 +169,23 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
             new RestlerErrorResponseBuilder($json_response_builder),
             new NoopSapiEmitter()
         );
+    }
+
+    public static function getTest400Data(): iterable
+    {
+        yield 'It returns 400 when no body' => [
+            'body' => '',
+        ];
+        yield 'It returns 400 when invalid json body' => [
+            'body' => '{',
+        ];
+        yield 'It returns 400 when missing username' => [
+            'body' => ['my_body'],
+        ];
+        yield 'It returns 400 when username is not string' => [
+            'body' => [
+                'username' => 42,
+            ],
+        ];
     }
 }
