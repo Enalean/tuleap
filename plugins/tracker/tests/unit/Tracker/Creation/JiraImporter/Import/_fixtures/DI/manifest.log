@@ -1,0 +1,12 @@
+https://example.com/rest/api/2/project/DI 2733d6806b26ceb8d2da7e6b8b61c94c8127e43e 200
+https://example.com/rest/api/2/project/DI/statuses 6e941d942d6ee7acec0a42a1f325c9ab94933909 200
+https://example.com/rest/api/2/issue/createmeta?projectKeys=DI&issuetypeIds=10002&expand=projects.issuetypes.fields 1917dd8c54f5fb2d20b95e068170b0f89f65fac8 200
+https://example.com/rest/api/2/search?jql=project%3D%22DI%22+AND+issuetype%3D10002&expand=editmeta&startAt=0&maxResults=1 888d56b2514df84bbcd3aa513ebad62890facb1b 200
+https://example.com/rest/api/2/issue/createmeta?projectKeys=DI&issuetypeIds=10003&expand=projects.issuetypes.fields dc086bc0703f574690ed0b1acef6edba845a29e1 200
+https://example.com/rest/api/2/search?jql=project%3D%22DI%22+AND+issuetype%3D10003&expand=editmeta&startAt=0&maxResults=1 268549d79a3cbbe2783fe7e44a25ec916054ce26 200
+https://example.com/rest/api/2/issue/createmeta?projectKeys=DI&issuetypeIds=10001&expand=projects.issuetypes.fields b732700526f603a52d70c0a781760d6eaaf31c5d 200
+https://example.com/rest/api/2/search?jql=project%3D%22DI%22+AND+issuetype%3D10001&expand=editmeta&startAt=0&maxResults=1 0e38892dde37ffb99bf6b25e650921aa9257a677 200
+https://example.com/rest/api/2/issue/createmeta?projectKeys=DI&issuetypeIds=10004&expand=projects.issuetypes.fields 195a378104887bddab93a28df64da8522e005564 200
+https://example.com/rest/api/2/search?jql=project%3D%22DI%22+AND+issuetype%3D10004&expand=editmeta&startAt=0&maxResults=1 822c09e186887cec180e9ededa114aaacd695734 200
+https://example.com/rest/api/2/issue/createmeta?projectKeys=DI&issuetypeIds=10000&expand=projects.issuetypes.fields b221a609f8ab2bf492489b7a8c406d294f7d7c2c 200
+https://example.com/rest/api/2/search?jql=project%3D%22DI%22+AND+issuetype%3D10000&expand=editmeta&startAt=0&maxResults=1 017b54d3e7462983c3e530948f8ff31664c7436a 200

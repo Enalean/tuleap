@@ -48,7 +48,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerat
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Import\JiraClientMonoTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -58,67 +58,15 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public static function debugTracesProvider(): iterable
+    public function testImportFromDebugTraces(): void
     {
-        yield 'SBX' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SBX',
-            'is_jira_cloud' => false,
-            'jira_major_version' => 8,
-            'users' => [
-                'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
-            ],
+        $fixture_path = __DIR__ . '/_fixtures/DI';
+        $users        = [
+            'user01@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('yannis')->build(),
+            'user02@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('mag')->build(),
+            'user03@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('manon')->build(),
         ];
 
-        yield 'SBXv9' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SBXv9',
-            'is_jira_cloud' => false,
-            'jira_major_version' => 9,
-            'users' => [
-                'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
-            ],
-        ];
-
-        yield 'IXMC' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/IXMC',
-            'is_jira_cloud' => false,
-            'jira_major_version' => 8,
-            'users' => [
-                'user_1@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('user_1')->build(),
-                'user_2@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('user_2')->build(),
-                'user_3@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('user_3')->build(),
-                'user_4@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_4')->build(),
-                'user_5@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_5')->build(),
-            ],
-        ];
-
-        yield 'SP' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/SP',
-            'is_jira_cloud' => true,
-            'jira_major_version' => null,
-            'users' => [
-                'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('manuel_vacelet')->build(),
-                'thomas.cottier@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('thomas_cottier')->build(),
-                'manon.midy@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('manon_midy')->build(),
-                'thomas.gorka@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('thomas_gorka')->build(),
-            ],
-        ];
-
-        yield 'IE' => [
-            'fixtures_path' => __DIR__ . '/_fixtures/IE',
-            'is_jira_cloud' => true,
-            'jira_major_version' => null,
-            'users' => [
-                'marie-ange.garnier@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('marie-ange.garnier')->build(),
-                'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('manuel_vacelet')->build(),
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider debugTracesProvider
-     */
-    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, ?int $jira_major_version, array $users): void
-    {
         $root = vfsStream::setup();
 
         \ForgeConfig::set('tmp_dir', $root->url());
@@ -126,15 +74,7 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
 
         $logger = new NullLogger();
 
-        if ($is_jira_cloud) {
-            $jira_client = JiraClientReplay::buildJiraCloud($fixture_path);
-        } else {
-            if ($jira_major_version !== null && $jira_major_version >= 9) {
-                $jira_client = JiraClientReplay::buildJira9Server($fixture_path);
-            } else {
-                $jira_client = JiraClientReplay::buildJira7And8Server($fixture_path);
-            }
-        }
+        $jira_client = JiraClientMonoTrackerStub::buildJiraCloud($fixture_path);
 
         $error_collector = new ErrorCollector();
 
@@ -214,7 +154,13 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
             $platform_configuration_collection,
             $tracker_for_export,
             $jira_client->getJiraProject(),
-            [new IssueType($jira_client->getJiraIssueTypeId(), 'Bogue', false)],
+            [
+                new IssueType("10002", 'Task', false),
+                new IssueType("10003", 'Sub-task', true),
+                new IssueType("10001", 'Story', false),
+                new IssueType("10004", 'Bug', false),
+                new IssueType("10000", 'EpicEN', false),
+            ],
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
