@@ -14,14 +14,14 @@
           <name><![CDATA[left_column]]></name>
           <label><![CDATA[left_column]]></label>
           <formElements>
+            <formElement type="string" ID="issues_summary" rank="1" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+            </formElement>
             <formElement type="text" ID="issues_description" rank="2">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Description]]></label>
               <properties rows="10" cols="50"/>
-            </formElement>
-            <formElement type="string" ID="issues_summary" rank="1" required="1">
-              <name><![CDATA[summary]]></name>
-              <label><![CDATA[Summary]]></label>
             </formElement>
           </formElements>
         </formElement>
@@ -59,11 +59,9 @@
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V31" label="To Do"/>
-                  <item ID="V32" label="In Progress"/>
-                  <item ID="V33" label="Done"/>
-                  <item ID="V34" label="col01"/>
-                  <item ID="V35" label="col02"/>
+                  <item ID="V13" label="In Progress"/>
+                  <item ID="V14" label="Done"/>
+                  <item ID="V15" label="To Do"/>
                 </items>
               </bind>
             </formElement>
@@ -73,6 +71,19 @@
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="Vissues_issuetype_task" label="Task"/>
+                  <item ID="Vissues_issuetype_sub-task" label="Sub-task"/>
+                  <item ID="Vissues_issuetype_story" label="Story"/>
+                  <item ID="Vissues_issuetype_bug" label="Bug"/>
+                  <item ID="Vissues_issuetype_epicen" label="EpicEN"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="issues_reporter" rank="10" required="1">
+              <name><![CDATA[reporter]]></name>
+              <label><![CDATA[Reporter]]></label>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
                 </items>
               </bind>
             </formElement>
@@ -98,15 +109,6 @@
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="issues_reporter" rank="10" required="1">
-              <name><![CDATA[reporter]]></name>
-              <label><![CDATA[Reporter]]></label>
-              <bind type="users">
-                <items>
-                  <item label="group_members"/>
-                </items>
-              </bind>
-            </formElement>
           </formElements>
         </formElement>
       </formElements>
@@ -115,34 +117,12 @@
       <name><![CDATA[custom_fieldset]]></name>
       <label><![CDATA[Custom Fields]]></label>
       <formElements>
-        <formElement type="msb" ID="issues_customfield_10072" rank="1">
-          <name><![CDATA[customfield_10072]]></name>
-          <label><![CDATA[[mag] verion picker multi]]></label>
+        <formElement type="msb" ID="issues_components" rank="1">
+          <name><![CDATA[components]]></name>
+          <label><![CDATA[Components]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_customfield_10072_release_01" label="Release 01"/>
-              <item ID="Vissues_customfield_10072_release_2_0" label="Release 2.0"/>
-              <item ID="Vissues_customfield_10072_release_3_0" label="Release 3.0"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="sb" ID="issues_customfield_10073" rank="1">
-          <name><![CDATA[customfield_10073]]></name>
-          <label><![CDATA[[mag] version picker single]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vissues_customfield_10073_release_01" label="Release 01"/>
-              <item ID="Vissues_customfield_10073_release_2_0" label="Release 2.0"/>
-              <item ID="Vissues_customfield_10073_release_3_0" label="Release 3.0"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="cb" ID="issues_customfield_10032" rank="1">
-          <name><![CDATA[customfield_10032]]></name>
-          <label><![CDATA[[mag] checkbox]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vissues_customfield_10032_test" label="test"/>
+              <item ID="Vissues_components_car_component" label="Car component"/>
             </items>
           </bind>
         </formElement>
@@ -151,31 +131,8 @@
           <label><![CDATA[Fix versions]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_fixversions_release_01" label="Release 01"/>
-              <item ID="Vissues_fixversions_release_2_0" label="Release 2.0"/>
-              <item ID="Vissues_fixversions_release_3_0" label="Release 3.0"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="date" ID="issues_customfield_10033" rank="4">
-          <name><![CDATA[customfield_10033]]></name>
-          <label><![CDATA[[mag] datepicker]]></label>
-        </formElement>
-        <formElement type="date" ID="issues_customfield_10034" rank="4">
-          <name><![CDATA[customfield_10034]]></name>
-          <label><![CDATA[[mag] datetime]]></label>
-          <properties display_time="1"/>
-        </formElement>
-        <formElement type="float" ID="issues_customfield_10036" rank="3">
-          <name><![CDATA[customfield_10036]]></name>
-          <label><![CDATA[[mag] number]]></label>
-        </formElement>
-        <formElement type="msb" ID="issues_customfield_10069" rank="12">
-          <name><![CDATA[customfield_10069]]></name>
-          <label><![CDATA[[mag] multi user picker]]></label>
-          <bind type="users">
-            <items>
-              <item label="group_members"/>
+              <item ID="Vissues_fixversions_v1" label="v1"/>
+              <item ID="Vissues_fixversions_v2" label="v2"/>
             </items>
           </bind>
         </formElement>
@@ -184,67 +141,25 @@
           <label><![CDATA[Labels]]></label>
           <bind type="static" is_rank_alpha="0"/>
         </formElement>
+        <formElement type="cb" ID="issues_customfield_10032" rank="1">
+          <name><![CDATA[customfield_10032]]></name>
+          <label><![CDATA[[mag] checkbox]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vissues_customfield_10032_test" label="test"/>
+              <item ID="Vissues_customfield_10032_test2" label="test2"/>
+              <item ID="Vissues_customfield_10032_test3" label="test3"/>
+              <item ID="Vissues_customfield_10032_test4" label="test4"/>
+            </items>
+          </bind>
+        </formElement>
         <formElement type="msb" ID="issues_versions" rank="1">
           <name><![CDATA[versions]]></name>
           <label><![CDATA[Affects versions]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_versions_release_01" label="Release 01"/>
-              <item ID="Vissues_versions_release_2_0" label="Release 2.0"/>
-              <item ID="Vissues_versions_release_3_0" label="Release 3.0"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="msb" ID="issues_components" rank="1">
-          <name><![CDATA[components]]></name>
-          <label><![CDATA[Components]]></label>
-          <bind type="static" is_rank_alpha="0"/>
-        </formElement>
-        <formElement type="msb" ID="issues_customfield_10040" rank="6">
-          <name><![CDATA[customfield_10040]]></name>
-          <label><![CDATA[[mag] multi select]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vissues_customfield_10040_mulit1" label="mulit1"/>
-              <item ID="Vissues_customfield_10040_multi2" label="multi2"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="sb" ID="issues_customfield_10041" rank="5">
-          <name><![CDATA[customfield_10041]]></name>
-          <label><![CDATA[[mag] select single]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vissues_customfield_10041_single1" label="single1"/>
-              <item ID="Vissues_customfield_10041_single2" label="single2"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="text" ID="issues_customfield_10044" rank="2" required="1">
-          <name><![CDATA[customfield_10044]]></name>
-          <label><![CDATA[[mag] Text]]></label>
-          <properties rows="10" cols="50"/>
-        </formElement>
-        <formElement type="string" ID="issues_customfield_10045" rank="1" required="1">
-          <name><![CDATA[customfield_10045]]></name>
-          <label><![CDATA[[mag] String]]></label>
-        </formElement>
-        <formElement type="sb" ID="issues_customfield_10048" rank="11">
-          <name><![CDATA[customfield_10048]]></name>
-          <label><![CDATA[[mag] user picker]]></label>
-          <bind type="users">
-            <items>
-              <item label="group_members"/>
-            </items>
-          </bind>
-        </formElement>
-        <formElement type="rb" ID="issues_customfield_10038" rank="5">
-          <name><![CDATA[customfield_10038]]></name>
-          <label><![CDATA[[mag] radio]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vissues_customfield_10038_test" label="test"/>
-              <item ID="Vissues_customfield_10038_test1" label="test1"/>
+              <item ID="Vissues_versions_v1" label="v1"/>
+              <item ID="Vissues_versions_v2" label="v2"/>
             </items>
           </bind>
         </formElement>
@@ -294,10 +209,8 @@
       <description>Define the status of an artifact</description>
       <field REF="issues_status"/>
       <open_values>
-        <open_value REF="V31"/>
-        <open_value REF="V32"/>
-        <open_value REF="V34"/>
-        <open_value REF="V35"/>
+        <open_value REF="V13"/>
+        <open_value REF="V15"/>
       </open_values>
     </semantic>
     <semantic type="done">
@@ -305,7 +218,7 @@
       <label><![CDATA[Done]]></label>
       <description><![CDATA[Define the closed status that are considered Done]]></description>
       <closed_values>
-        <closed_value REF="V33"/>
+        <closed_value REF="V14"/>
       </closed_values>
     </semantic>
     <semantic type="contributor">
@@ -356,10 +269,8 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V31"/>
-            <selected_value REF="V32"/>
-            <selected_value REF="V34"/>
-            <selected_value REF="V35"/>
+            <selected_value REF="V13"/>
+            <selected_value REF="V15"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
@@ -395,7 +306,7 @@
         <criteria rank="0" is_advanced="1">
           <field REF="issues_status"/>
           <criteria_value type="list">
-            <selected_value REF="V33"/>
+            <selected_value REF="V14"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
@@ -494,12 +405,12 @@
     </report>
   </reports>
   <permissions>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_summary" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_summary" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_summary" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_description" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_description" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_description" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_artifact_id" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_jira_issue_url" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_creator" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -520,66 +431,30 @@
     <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_assignee" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10072" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10072" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10072" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10073" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10073" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10073" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10033" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10033" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10033" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10034" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10034" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10034" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10036" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10036" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10036" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10069" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10069" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10069" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_components" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_components" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_components" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10040" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10040" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10040" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10041" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10041" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10041" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10044" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10044" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10044" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10045" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10045" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10045" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10048" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10048" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10048" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10038" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10038" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10038" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_labels" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_labels" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_labels" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issues_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issues_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issues_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="issues_attachment" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="issues_attachment" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_attachment" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
