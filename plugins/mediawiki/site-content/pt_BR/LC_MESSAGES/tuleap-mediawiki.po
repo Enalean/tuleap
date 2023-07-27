@@ -183,8 +183,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"You can find more informations on what MediaWiki groups can do here: <a href="
-"\"%1$s\">Special:User groups rights</a>"
+"You can find more informations on what MediaWiki groups can do here: <a "
+"href=\"%1$s\">Special:User groups rights</a>"
 msgstr ""
 
 msgid ""

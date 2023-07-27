@@ -379,8 +379,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Status semantic is not linked to a field in program tracker <a href='%s'>#"
-"%s</a>:"
+"Status semantic is not linked to a field in program tracker <a "
+"href='%s'>#%s</a>:"
 msgstr ""
 
 #, php-format

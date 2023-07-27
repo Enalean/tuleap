@@ -944,8 +944,8 @@ msgstr ""
 
 msgid ""
 "Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a "
-"href=\"/doc/en/user-guide/code-versioning/git.html?#jenkins-webhooks"
-"\">Hudson Git Plugin</a>."
+"href=\"/doc/en/user-guide/code-versioning/git.html?#jenkins-"
+"webhooks\">Hudson Git Plugin</a>."
 msgstr ""
 
 msgid "Submit"

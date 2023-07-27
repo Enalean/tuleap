@@ -298,8 +298,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"No Scrum has been yet configured by a project administrator. <a href=\"%1$s"
-"\">Get Started!</a>"
+"No Scrum has been yet configured by a project administrator. <a "
+"href=\"%1$s\">Get Started!</a>"
 msgstr ""
 
 msgid "No tracker has been selected."

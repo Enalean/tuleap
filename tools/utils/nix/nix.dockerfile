@@ -1,5 +1,5 @@
 ARG DOCKER_REGISTRY=docker.io
-FROM ${DOCKER_REGISTRY}/nixpkgs/nix-unstable-static@sha256:39eb56c02f5202a7b206a86810261dcc01566fcb0e351467137b7bfc2bacbde7
+FROM ${DOCKER_REGISTRY}/nixpkgs/nix-unstable-static:latest@sha256:c127b0205381f812bf2cc7c5b477d26547709dceef943869ec616ac0f9917324
 COPY . /
 RUN mv /nix-container.conf /etc/nix/nix.conf && \
     cp -a "$(nix-build --no-out-link ./pinned-nixpkgs.nix -A pkgsStatic.nix)"/bin/nix /bin/nix && \

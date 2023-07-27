@@ -1122,9 +1122,9 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Item successfully moved form <a href=\"?group_id=%1$s&amp;action=show&amp;id="
-"%2$s\">%3$s</a> to <a href=\"?group_id=%1$s&amp;action=show&amp;id=%4$s\">"
-"%5$s</a>."
+"Item successfully moved form <a href=\"?group_id=%1$s&amp;action=show&amp;"
+"id=%2$s\">%3$s</a> to <a href=\"?group_id=%1$s&amp;action=show&amp;"
+"id=%4$s\">%5$s</a>."
 msgstr ""
 
 msgid "Item successfully updated"
