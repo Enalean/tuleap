@@ -42,6 +42,9 @@ msgstr ""
 msgid "Deleting a passkey"
 msgstr ""
 
+msgid "Failed to authenticate you"
+msgstr ""
+
 msgid "It's recommended to register at least 2 keys"
 msgstr ""
 
@@ -70,6 +73,13 @@ msgid "Passwordless connection"
 msgstr ""
 
 msgid "Remove"
+msgstr ""
+
+msgid "Submitted form is not valid"
+msgstr ""
+
+#, php-format
+msgid "User %s not found"
 msgstr ""
 
 msgid "Username"

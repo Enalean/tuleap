@@ -77,9 +77,37 @@ final class WebAuthnPlugin extends Plugin
 
     public function getLogin(): Tuleap\Request\DispatchableWithRequest
     {
+        $source_dao                    = new Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
+        $attestation_statement_manager = new Webauthn\AttestationStatement\AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new Webauthn\AttestationStatement\NoneAttestationStatementSupport());
+
         return new Tuleap\WebAuthn\Controllers\LoginController(
             $this->getTemplateRenderer(),
             $this->getViteAssets('login'),
+            new CSRFSynchronizerToken(Tuleap\WebAuthn\Controllers\LoginController::URL),
+            UserManager::instance(),
+            new Tuleap\WebAuthn\Authentication\WebAuthnAuthentication(
+                $source_dao,
+                new Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao(),
+                new Webauthn\PublicKeyCredentialRpEntity(
+                    ForgeConfig::get(Tuleap\Config\ConfigurationVariables::NAME),
+                    Tuleap\ServerHostname::rawHostname()
+                ),
+                new Webauthn\PublicKeyCredentialLoader(
+                    new Webauthn\AttestationStatement\AttestationObjectLoader($attestation_statement_manager)
+                ),
+                new Webauthn\AuthenticatorAssertionResponseValidator(
+                    $source_dao,
+                    null,
+                    new Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler(),
+                    Cose\Algorithm\Manager::create()
+                        ->add(
+                            Cose\Algorithm\Signature\EdDSA\Ed25519::create(),
+                            Cose\Algorithm\Signature\RSA\RS256::create(),
+                            Cose\Algorithm\Signature\ECDSA\ES256::create()
+                        )
+                )
+            )
         );
     }
 
@@ -88,7 +116,7 @@ final class WebAuthnPlugin extends Plugin
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/account', $this->getRouteHandler('getAccountSettings'));
-            $r->get('/login', $this->getRouteHandler('getLogin'));
+            $r->addRoute(['GET', 'POST'], '/login', $this->getRouteHandler('getLogin'));
         });
     }
 
