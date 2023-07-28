@@ -28,6 +28,7 @@ use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
 use Tuleap\DynamicCredentials\Credential\CredentialInvalidUsernameException;
 use Tuleap\DynamicCredentials\Credential\CredentialRemover;
 use Tuleap\DynamicCredentials\Credential\DuplicateCredentialException;
+use Tuleap\DynamicCredentials\Plugin\DynamicCredentialsSettings;
 use Tuleap\REST\Header;
 
 class DynamicCredentialsResource
@@ -114,13 +115,11 @@ class DynamicCredentialsResource
         }
     }
 
-    /**
-     * @return RequestSignatureVerifier
-     */
-    private function getRequestSignatureVerifier()
+    private function getRequestSignatureVerifier(): RequestSignatureVerifier
     {
         $plugin = \PluginFactory::instance()->getPluginByName(\dynamic_credentialsPlugin::NAME);
         assert($plugin instanceof \dynamic_credentialsPlugin);
-        return new RequestSignatureVerifier($plugin->getPluginInfo());
+        $settings = new DynamicCredentialsSettings($plugin->getPluginInfo());
+        return new RequestSignatureVerifier($settings->getSignaturePublicKey());
     }
 }

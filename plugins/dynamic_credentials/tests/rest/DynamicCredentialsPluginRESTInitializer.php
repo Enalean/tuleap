@@ -21,29 +21,20 @@
 namespace Tuleap\DynamicCredentials\REST;
 
 use PluginManager;
+use Tuleap\Config\ConfigDao;
 
-class DynamicCredentialsPluginRESTInitializer
+final class DynamicCredentialsPluginRESTInitializer
 {
     public const PUBLIC_KEY  = 'IpuL6ZHoKzsbGFiFLPuUvD/8dTlZ14t47O5WAyzRpgk=';
     public const PRIVATE_KEY = 'jEaIxuBi/dU3YT/YomtD0Qc/afTSXV4mHVFpuc68EGUim4vpkegrOxsYWIUs+5S8P/x1OVnXi3js7lYDLNGmCQ==';
 
-    public function initialize()
+    public function initialize(): void
     {
         $plugin_manager = PluginManager::instance();
         $plugin_manager->installAndEnable(\dynamic_credentialsPlugin::NAME);
         $plugin = $plugin_manager->getPluginByName(\dynamic_credentialsPlugin::NAME);
 
-        $public_key          = self::PUBLIC_KEY;
-        $config_file_content = <<<EOF
-<?php
-\$signature_public_key = '$public_key';
-EOF;
-
-        file_put_contents(
-            $plugin->getPluginEtcRoot() . DIRECTORY_SEPARATOR . \dynamic_credentialsPlugin::NAME . '.inc',
-            $config_file_content
-        );
-
-        system('chown -R codendiadm:codendiadm ' . escapeshellarg($plugin->getPluginEtcRoot()) . '/../');
+        $config_dao = new ConfigDao();
+        $config_dao->save('dynamic_credentials_signature_public_key', self::PUBLIC_KEY);
     }
 }

@@ -20,10 +20,13 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DynamicCredentials\Credential\CredentialDAO;
 use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
 use Tuleap\DynamicCredentials\Credential\CredentialRemover;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
+use Tuleap\DynamicCredentials\Plugin\DynamicCredentialsSettings;
 use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialIdentifierStorage;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
@@ -34,7 +37,7 @@ use Tuleap\SVNCore\AccessControl\BeforeSVNLogin;
 use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
 
-class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
+class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys // @codingStandardsIgnoreLine
 {
     public const NAME = 'dynamic_credentials';
 
@@ -65,6 +68,11 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook('codendi_daily_start', 'dailyCleanup');
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(DynamicCredentialsSettings::class);
     }
 
     public function restResources(array $params)
@@ -120,12 +128,11 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         $dynamic_session = new DynamicCredentialSession($identifier_storage, $credential_retriever);
-        $user_realname   = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
 
         $support_user_creator = new DynamicUserCreator(
             $dynamic_session,
             UserManager::instance(),
-            $user_realname,
+            $this->getSettings()->getDynamicUserRealname(),
             function () {
                 header('Location: /');
                 exit();
@@ -150,5 +157,10 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
             PasswordHandlerFactory::getPasswordHandler(),
             new CredentialIdentifierExtractor()
         );
+    }
+
+    private function getSettings(): DynamicCredentialsSettings
+    {
+        return new DynamicCredentialsSettings($this->getPluginInfo());
     }
 }
