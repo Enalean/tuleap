@@ -1,0 +1,611 @@
+{
+    "expand": "names,schema",
+    "startAt": 0,
+    "maxResults": 1,
+    "total": 2,
+    "issues": [
+        {
+            "expand": "customfield_10026.requestTypePractice,operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "10211",
+            "self": "https://example.com/rest/api/2/issue/10211",
+            "key": "DI-8",
+            "editmeta": {
+                "fields": {
+                    "summary": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "system": "summary"
+                        },
+                        "name": "Summary",
+                        "key": "summary",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "issuetype": {
+                        "required": true,
+                        "schema": {
+                            "type": "issuetype",
+                            "system": "issuetype"
+                        },
+                        "name": "Issue Type",
+                        "key": "issuetype",
+                        "operations": [],
+                        "allowedValues": [
+                            {
+                                "self": "https://example.com/rest/api/2/issuetype/10002",
+                                "id": "10002",
+                                "description": "A task that needs to be done.",
+                                "iconUrl": "https://example.com/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+                                "name": "Task",
+                                "subtask": false,
+                                "avatarId": 10318,
+                                "hierarchyLevel": 0
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/issuetype/10001",
+                                "id": "10001",
+                                "description": "A user story. Created by Jira Software - do not edit or delete.",
+                                "iconUrl": "https://example.com/images/icons/issuetypes/story.svg",
+                                "name": "Story",
+                                "subtask": false,
+                                "hierarchyLevel": 0
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/issuetype/10004",
+                                "id": "10004",
+                                "description": "A problem which impairs or prevents the functions of the product.",
+                                "iconUrl": "https://example.com/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+                                "name": "Bug",
+                                "subtask": false,
+                                "avatarId": 10303,
+                                "hierarchyLevel": 0
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/issuetype/10000",
+                                "id": "10000",
+                                "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+                                "iconUrl": "https://example.com/images/icons/issuetypes/epic.svg",
+                                "name": "EpicEN",
+                                "subtask": false,
+                                "hierarchyLevel": 1
+                            }
+                        ]
+                    },
+                    "parent": {
+                        "required": true,
+                        "schema": {
+                            "type": "issuelink",
+                            "system": "parent"
+                        },
+                        "name": "Parent",
+                        "key": "parent",
+                        "hasDefaultValue": false,
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "components": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "component",
+                            "system": "components"
+                        },
+                        "name": "Components",
+                        "key": "components",
+                        "operations": [
+                            "add",
+                            "set",
+                            "remove"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://example.com/rest/api/2/component/10003",
+                                "id": "10003",
+                                "name": "Car component"
+                            }
+                        ]
+                    },
+                    "description": {
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "system": "description"
+                        },
+                        "name": "Description",
+                        "key": "description",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "reporter": {
+                        "required": true,
+                        "schema": {
+                            "type": "user",
+                            "system": "reporter"
+                        },
+                        "name": "Reporter",
+                        "key": "reporter",
+                        "autoCompleteUrl": "https://example.com/rest/api/2/user/search?query=",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10010": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "json",
+                            "custom": "com.pyxis.greenhopper.jira:gh-sprint",
+                            "customId": 10010
+                        },
+                        "name": "Sprint",
+                        "key": "customfield_10010",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "fixVersions": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "version",
+                            "system": "fixVersions"
+                        },
+                        "name": "Fix versions",
+                        "key": "fixVersions",
+                        "operations": [
+                            "set",
+                            "add",
+                            "remove"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://example.com/rest/api/2/version/10015",
+                                "id": "10015",
+                                "name": "v1",
+                                "archived": false,
+                                "released": false,
+                                "releaseDate": "2023-05-31",
+                                "overdue": true,
+                                "userReleaseDate": "31/May/23",
+                                "projectId": 10015
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/version/10016",
+                                "id": "10016",
+                                "name": "v2",
+                                "archived": false,
+                                "released": false,
+                                "releaseDate": "2023-07-31",
+                                "overdue": false,
+                                "userReleaseDate": "31/Jul/23",
+                                "projectId": 10015
+                            }
+                        ]
+                    },
+                    "priority": {
+                        "required": false,
+                        "schema": {
+                            "type": "priority",
+                            "system": "priority"
+                        },
+                        "name": "Priority",
+                        "key": "priority",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://example.com/rest/api/2/priority/1",
+                                "iconUrl": "https://example.com/images/icons/priorities/highest.svg",
+                                "name": "Highest",
+                                "id": "1"
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/priority/2",
+                                "iconUrl": "https://example.com/images/icons/priorities/high.svg",
+                                "name": "High",
+                                "id": "2"
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/priority/3",
+                                "iconUrl": "https://example.com/images/icons/priorities/medium.svg",
+                                "name": "Medium",
+                                "id": "3"
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/priority/4",
+                                "iconUrl": "https://example.com/images/icons/priorities/low.svg",
+                                "name": "Low",
+                                "id": "4"
+                            },
+                            {
+                                "self": "https://example.com/rest/api/2/priority/5",
+                                "iconUrl": "https://example.com/images/icons/priorities/lowest.svg",
+                                "name": "Lowest",
+                                "id": "5"
+                            }
+                        ]
+                    },
+                    "labels": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "string",
+                            "system": "labels"
+                        },
+                        "name": "Labels",
+                        "key": "labels",
+                        "autoCompleteUrl": "https://example.com/rest/api/1.0/labels/10211/suggest?query=",
+                        "operations": [
+                            "add",
+                            "set",
+                            "remove"
+                        ]
+                    },
+                    "environment": {
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "system": "environment"
+                        },
+                        "name": "Environment",
+                        "key": "environment",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10008": {
+                        "required": false,
+                        "schema": {
+                            "type": "any",
+                            "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                            "customId": 10008
+                        },
+                        "name": "Epic Link",
+                        "key": "customfield_10008",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "issuelinks": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "issuelinks",
+                            "system": "issuelinks"
+                        },
+                        "name": "Linked Issues",
+                        "key": "issuelinks",
+                        "autoCompleteUrl": "https://example.com/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=DI-8&query=",
+                        "operations": [
+                            "add",
+                            "copy"
+                        ]
+                    },
+                    "assignee": {
+                        "required": false,
+                        "schema": {
+                            "type": "user",
+                            "system": "assignee"
+                        },
+                        "name": "Assignee",
+                        "key": "assignee",
+                        "autoCompleteUrl": "https://example.com/rest/api/2/user/assignable/search?issueKey=DI-8&query=",
+                        "operations": [
+                            "set"
+                        ]
+                    }
+                }
+            },
+            "fields": {
+                "statuscategorychangedate": "2023-05-31T15:07:07.713+0200",
+                "parent": {
+                    "id": "10209",
+                    "key": "DI-6",
+                    "self": "https://example.com/rest/api/2/issue/10209",
+                    "fields": {
+                        "summary": "Add automatic headlight control",
+                        "status": {
+                            "self": "https://example.com/rest/api/2/status/10000",
+                            "description": "",
+                            "iconUrl": "https://example.com/",
+                            "name": "To Do",
+                            "id": "10000",
+                            "statusCategory": {
+                                "self": "https://example.com/rest/api/2/statuscategory/2",
+                                "id": 2,
+                                "key": "new",
+                                "colorName": "blue-gray",
+                                "name": "To Do"
+                            }
+                        },
+                        "priority": {
+                            "self": "https://example.com/rest/api/2/priority/3",
+                            "iconUrl": "https://example.com/images/icons/priorities/medium.svg",
+                            "name": "Medium",
+                            "id": "3"
+                        },
+                        "issuetype": {
+                            "self": "https://example.com/rest/api/2/issuetype/10001",
+                            "id": "10001",
+                            "description": "A user story. Created by Jira Software - do not edit or delete.",
+                            "iconUrl": "https://example.com/images/icons/issuetypes/story.svg",
+                            "name": "Story",
+                            "subtask": false,
+                            "hierarchyLevel": 0
+                        }
+                    }
+                },
+                "customfield_10070": "",
+                "customfield_10071": {
+                    "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                    "accountId": "5d2ece042d76f30c36bf7e96",
+                    "emailAddress": "user03@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                    },
+                    "displayName": "Manon",
+                    "active": true,
+                    "timeZone": "Europe/Paris",
+                    "accountType": "atlassian"
+                },
+                "customfield_10072": null,
+                "customfield_10073": null,
+                "customfield_10074": null,
+                "customfield_10075": null,
+                "customfield_10076": null,
+                "customfield_10077": null,
+                "fixVersions": [],
+                "customfield_10078": null,
+                "resolution": null,
+                "customfield_10079": null,
+                "lastViewed": "2023-06-20T11:27:35.619+0200",
+                "customfield_10060": null,
+                "customfield_10061": "0.0",
+                "customfield_10062": "0.0",
+                "customfield_10063": {
+                    "hasEpicLinkFieldDependency": false,
+                    "showField": false,
+                    "nonEditableReason": {
+                        "reason": "PLUGIN_LICENSE_ERROR",
+                        "message": "The Parent Link is only available to Jira Premium users."
+                    }
+                },
+                "customfield_10064": [
+                    {
+                        "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                        "accountId": "5d2ece042d76f30c36bf7e96",
+                        "emailAddress": "user03@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                        },
+                        "displayName": "Manon",
+                        "active": true,
+                        "timeZone": "Europe/Paris",
+                        "accountType": "atlassian"
+                    },
+                    {
+                        "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                        "accountId": "5a73130451df342493650ea3",
+                        "emailAddress": "user01@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                            "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                            "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                            "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                        },
+                        "displayName": "Yannis",
+                        "active": true,
+                        "timeZone": "Europe/Berlin",
+                        "accountType": "atlassian"
+                    }
+                ],
+                "customfield_10065": null,
+                "priority": {
+                    "self": "https://example.com/rest/api/2/priority/3",
+                    "iconUrl": "https://example.com/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10067": null,
+                "customfield_10068": null,
+                "customfield_10069": null,
+                "labels": [],
+                "aggregatetimeoriginalestimate": null,
+                "timeestimate": null,
+                "versions": [],
+                "issuelinks": [],
+                "assignee": {
+                    "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                    "accountId": "5d2ece042d76f30c36bf7e96",
+                    "emailAddress": "user03@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                    },
+                    "displayName": "Manon",
+                    "active": true,
+                    "timeZone": "Europe/Paris",
+                    "accountType": "atlassian"
+                },
+                "status": {
+                    "self": "https://example.com/rest/api/2/status/10000",
+                    "description": "",
+                    "iconUrl": "https://example.com/",
+                    "name": "To Do",
+                    "id": "10000",
+                    "statusCategory": {
+                        "self": "https://example.com/rest/api/2/statuscategory/2",
+                        "id": 2,
+                        "key": "new",
+                        "colorName": "blue-gray",
+                        "name": "To Do"
+                    }
+                },
+                "components": [],
+                "customfield_10050": null,
+                "customfield_10051": "4838400",
+                "customfield_10052": "enalean.com",
+                "customfield_10053": "enalean.com",
+                "customfield_10054": "1|i000wv:",
+                "customfield_10055": null,
+                "customfield_10056": null,
+                "customfield_10057": "true",
+                "customfield_10058": "2023-05-31 13:07:07.345",
+                "customfield_10059": null,
+                "customfield_10049": null,
+                "aggregatetimeestimate": null,
+                "creator": {
+                    "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                    "accountId": "5a73130451df342493650ea3",
+                    "emailAddress": "user01@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                    },
+                    "displayName": "Yannis",
+                    "active": true,
+                    "timeZone": "Europe/Berlin",
+                    "accountType": "atlassian"
+                },
+                "subtasks": [],
+                "customfield_10040": null,
+                "customfield_10041": null,
+                "customfield_10042": null,
+                "reporter": {
+                    "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                    "accountId": "5a73130451df342493650ea3",
+                    "emailAddress": "user01@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                        "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                    },
+                    "displayName": "Yannis",
+                    "active": true,
+                    "timeZone": "Europe/Berlin",
+                    "accountType": "atlassian"
+                },
+                "customfield_10043": null,
+                "aggregateprogress": {
+                    "progress": 0,
+                    "total": 0
+                },
+                "customfield_10044": null,
+                "customfield_10045": null,
+                "customfield_10047": null,
+                "customfield_10048": null,
+                "customfield_10038": null,
+                "progress": {
+                    "progress": 0,
+                    "total": 0
+                },
+                "votes": {
+                    "self": "https://example.com/rest/api/2/issue/DI-8/votes",
+                    "votes": 0,
+                    "hasVoted": false
+                },
+                "issuetype": {
+                    "self": "https://example.com/rest/api/2/issuetype/10003",
+                    "id": "10003",
+                    "description": "The sub-task of the issue",
+                    "iconUrl": "https://example.com/rest/api/2/universal_avatar/view/type/issuetype/avatar/10316?size=medium",
+                    "name": "Sub-task",
+                    "subtask": true,
+                    "avatarId": 10316,
+                    "hierarchyLevel": -1
+                },
+                "timespent": null,
+                "project": {
+                    "self": "https://example.com/rest/api/2/project/10015",
+                    "id": "10015",
+                    "key": "DI",
+                    "name": "demo-import",
+                    "projectTypeKey": "software",
+                    "simplified": false,
+                    "avatarUrls": {
+                        "48x48": "https://example.com/rest/api/2/universal_avatar/view/type/project/avatar/10425",
+                        "24x24": "https://example.com/rest/api/2/universal_avatar/view/type/project/avatar/10425?size=small",
+                        "16x16": "https://example.com/rest/api/2/universal_avatar/view/type/project/avatar/10425?size=xsmall",
+                        "32x32": "https://example.com/rest/api/2/universal_avatar/view/type/project/avatar/10425?size=medium"
+                    }
+                },
+                "customfield_10032": null,
+                "customfield_10033": null,
+                "aggregatetimespent": null,
+                "customfield_10034": null,
+                "customfield_10035": null,
+                "customfield_10036": null,
+                "customfield_10027": [],
+                "customfield_10028": null,
+                "customfield_10029": null,
+                "resolutiondate": null,
+                "workratio": -1,
+                "watches": {
+                    "self": "https://example.com/rest/api/2/issue/DI-8/watchers",
+                    "watchCount": 1,
+                    "isWatching": true
+                },
+                "created": "2023-05-31T15:07:07.345+0200",
+                "customfield_10025": null,
+                "customfield_10026": null,
+                "customfield_10017": null,
+                "updated": "2023-06-01T09:02:31.142+0200",
+                "timeoriginalestimate": null,
+                "description": null,
+                "customfield_10010": [
+                    {
+                        "id": 28,
+                        "name": "DI Sprint 2",
+                        "state": "future",
+                        "boardId": 19,
+                        "goal": "Sprint 02",
+                        "startDate": "2023-05-31T12:00:00.000Z",
+                        "endDate": "2023-06-30T12:00:00.000Z"
+                    }
+                ],
+                "customfield_10011": "0|i001bz:",
+                "customfield_10012": null,
+                "customfield_10013": null,
+                "security": null,
+                "customfield_10008": null,
+                "customfield_10009": {
+                    "hasEpicLinkFieldDependency": false,
+                    "showField": false,
+                    "nonEditableReason": {
+                        "reason": "PLUGIN_LICENSE_ERROR",
+                        "message": "The Parent Link is only available to Jira Premium users."
+                    }
+                },
+                "summary": "Headlights  at back",
+                "customfield_10080": null,
+                "customfield_10081": null,
+                "customfield_10082": null,
+                "customfield_10083": null,
+                "customfield_10084": null,
+                "customfield_10085": null,
+                "customfield_10086": null,
+                "customfield_10000": "{}",
+                "customfield_10001": null,
+                "customfield_10004": null,
+                "environment": null,
+                "duedate": null
+            }
+        }
+    ]
+}

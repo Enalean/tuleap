@@ -67,7 +67,7 @@ final class JiraClientMonoTrackerStub implements JiraClient
 
     private function getResponse(string $file_path): string
     {
-        $file_contents = file_get_contents($file_path);
+        $file_contents = file_get_contents($file_path . ".json");
 
         $marker_pos = strpos($file_contents, ClientWrapper::DEBUG_MARKER_BODY);
         if ($marker_pos === false) {
