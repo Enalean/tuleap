@@ -31,7 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsInDedicatedTrackerXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentNameGenerator;
@@ -263,7 +263,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),
-            new ArtifactsXMLExporter(
+            new ArtifactsInDedicatedTrackerXMLExporter(
                 $jira_client,
                 $user_manager,
                 new DataChangesetXMLExporter(

@@ -23,15 +23,14 @@ declare(strict_types=1);
 
 namespace Tracker\Creation\JiraImporter\Import\Artifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use ColinODell\PsrTestLogger\TestLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsInDedicatedTrackerXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
@@ -69,29 +68,24 @@ use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ArtifactsInDedicatedTrackerXMLExporter $exporter;
 
     /**
-     * @var ArtifactsXMLExporter
-     */
-    private $exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $wrapper;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
 
     private TestLogger $logger;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AttachmentDownloader
+     * @var \PHPUnit\Framework\MockObject\MockObject&AttachmentDownloader
      */
     private $attachment_downloader;
 
@@ -101,24 +95,22 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->wrapper               = new class extends JiraCloudClientStub {
         };
-        $this->attachment_downloader = Mockery::mock(AttachmentDownloader::class);
-        $this->user_manager          = Mockery::mock(UserManager::class);
+        $this->attachment_downloader = $this->createMock(AttachmentDownloader::class);
+        $this->user_manager          = $this->createMock(UserManager::class);
         $this->logger                = new TestLogger();
 
-        $forge_user = \Mockery::mock(\PFUser::class);
-        $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
-        $forge_user->shouldReceive('getUserName')->andReturn('Tracker Importer');
+        $forge_user = UserTestBuilder::aUser()->withId(TrackerImporterUser::ID)->withUserName('Tracker Importer')->build();
 
         $jira_user_retriever = new JiraUserRetriever(
             $this->logger,
             $this->user_manager,
             new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), $forge_user),
-            Mockery::mock(JiraUserInfoQuerier::class),
+            $this->createMock(JiraUserInfoQuerier::class),
             $forge_user
         );
 
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
-        $this->exporter                      = new ArtifactsXMLExporter(
+        $this->exporter                      = new ArtifactsInDedicatedTrackerXMLExporter(
             $this->wrapper,
             $this->user_manager,
             new DataChangesetXMLExporter(
@@ -203,11 +195,9 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsArtifacts(): void
     {
-        $user = Mockery::mock(TrackerImporterUser::class);
-        $user->shouldReceive('getUserName')->andReturn('forge__user01');
-        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $user = $this->buildForgeUser();
 
-        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
+        $this->user_manager->method('getUserById')->with(91)->willReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -306,18 +296,16 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_issue_name
         );
 
-        $this->assertXMLArtifactsContent($tracker_node);
+        self::assertXMLArtifactsContent($tracker_node);
 
-        $this->assertCount(2, $issue_collection->getIssueRepresentationCollection());
+        self::assertCount(2, $issue_collection->getIssueRepresentationCollection());
     }
 
     public function testItExportsArtifactsPaginated(): void
     {
-        $user = Mockery::mock(TrackerImporterUser::class);
-        $user->shouldReceive('getUserName')->andReturn('forge__user01');
-        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $user = $this->buildForgeUser();
 
-        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
+        $this->user_manager->method('getUserById')->with(91)->willReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -373,15 +361,15 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $john_doe = Mockery::mock(\PFUser::class);
-        $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
-        $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
-        $john_doe->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
-        $john_doe->shouldReceive('getId')->andReturn('105');
+        $john_doe = $this->createMock(\PFUser::class);
+        $john_doe->method('getRealName')->willReturn('John Doe');
+        $john_doe->method('getUserName')->willReturn('jdoe');
+        $john_doe->method('getPublicProfileUrl')->willReturn('/users/jdoe');
+        $john_doe->method('getId')->willReturn('105');
 
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
+        $this->user_manager->method('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
-            ->andReturn([$john_doe]);
+            ->willReturn([$john_doe]);
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
             'startAt'    => 1,
@@ -435,18 +423,16 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_issue_name
         );
 
-        $this->assertXMLArtifactsContent($tracker_node);
+        self::assertXMLArtifactsContent($tracker_node);
 
-        $this->assertCount(2, $issue_collection->getIssueRepresentationCollection());
+        self::assertCount(2, $issue_collection->getIssueRepresentationCollection());
     }
 
     public function testItIgnoresArtifactsThatHaveBeenAlreadyExported(): void
     {
-        $user = Mockery::mock(TrackerImporterUser::class);
-        $user->shouldReceive('getUserName')->andReturn('forge__user01');
-        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $user = $this->buildForgeUser();
 
-        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
+        $this->user_manager->method('getUserById')->with(91)->willReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -502,15 +488,15 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $john_doe = Mockery::mock(\PFUser::class);
-        $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
-        $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
-        $john_doe->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
-        $john_doe->shouldReceive('getId')->andReturn('105');
+        $john_doe = $this->createMock(\PFUser::class);
+        $john_doe->method('getRealName')->willReturn('John Doe');
+        $john_doe->method('getUserName')->willReturn('jdoe');
+        $john_doe->method('getPublicProfileUrl')->willReturn('/users/jdoe');
+        $john_doe->method('getId')->willReturn('105');
 
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
+        $this->user_manager->method('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
-            ->andReturn([$john_doe]);
+            ->willReturn([$john_doe]);
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
             'startAt'    => 1,
@@ -566,17 +552,17 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $artifacts_node = $tracker_node->artifacts;
-        $this->assertNotNull($artifacts_node);
-        $this->assertCount(1, $artifacts_node->children());
+        self::assertNotNull($artifacts_node);
+        self::assertCount(1, $artifacts_node->children());
 
         $artifact_node_01 = $artifacts_node->artifact[0];
-        $this->assertSame("10042", (string) $artifact_node_01['id']);
-        $this->assertNotNull($artifact_node_01->submitted_on);
-        $this->assertNotNull($artifact_node_01->submitted_by);
-        $this->assertNotNull($artifact_node_01->comments);
-        $this->assertCount(1, $artifact_node_01->changeset);
+        self::assertSame("10042", (string) $artifact_node_01['id']);
+        self::assertNotNull($artifact_node_01->submitted_on);
+        self::assertNotNull($artifact_node_01->submitted_by);
+        self::assertNotNull($artifact_node_01->comments);
+        self::assertCount(1, $artifact_node_01->changeset);
 
-        $this->assertCount(1, $issue_collection->getIssueRepresentationCollection());
+        self::assertCount(1, $issue_collection->getIssueRepresentationCollection());
 
         self::assertTrue($this->logger->hasDebugThatMatches("/has already be exported, no need to export it again/"));
     }
@@ -606,37 +592,42 @@ final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private function assertXMLArtifactsContent(SimpleXMLElement $tracker_node): void
     {
         $artifacts_node = $tracker_node->artifacts;
-        $this->assertNotNull($artifacts_node);
-        $this->assertCount(2, $artifacts_node->children());
+        self::assertNotNull($artifacts_node);
+        self::assertCount(2, $artifacts_node->children());
 
         $artifact_node_01 = $artifacts_node->artifact[0];
-        $this->assertSame("10042", (string) $artifact_node_01['id']);
-        $this->assertNotNull($artifact_node_01->submitted_on);
-        $this->assertNotNull($artifact_node_01->submitted_by);
-        $this->assertNotNull($artifact_node_01->comments);
-        $this->assertCount(1, $artifact_node_01->changeset);
+        self::assertSame("10042", (string) $artifact_node_01['id']);
+        self::assertNotNull($artifact_node_01->submitted_on);
+        self::assertNotNull($artifact_node_01->submitted_by);
+        self::assertNotNull($artifact_node_01->comments);
+        self::assertCount(1, $artifact_node_01->changeset);
 
-        $this->assertNotNull($artifact_node_01->changeset[0]);
+        self::assertNotNull($artifact_node_01->changeset[0]);
         $artifact_node_01_field_changes_changeset_01 = $artifact_node_01->changeset[0]->field_change;
-        $this->assertNotNull($artifact_node_01_field_changes_changeset_01);
-        $this->assertCount(2, $artifact_node_01_field_changes_changeset_01);
+        self::assertNotNull($artifact_node_01_field_changes_changeset_01);
+        self::assertCount(2, $artifact_node_01_field_changes_changeset_01);
 
-        $this->assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_01[0]->value);
-        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_01[1]->value);
+        self::assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_01[0]->value);
+        self::assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_01[1]->value);
 
         $artifact_node_02 = $artifacts_node->artifact[1];
-        $this->assertSame("10043", (string) $artifact_node_02['id']);
-        $this->assertNotNull($artifact_node_02->submitted_on);
-        $this->assertNotNull($artifact_node_02->submitted_by);
-        $this->assertNotNull($artifact_node_02->comments);
-        $this->assertCount(1, $artifact_node_02->changeset);
+        self::assertSame("10043", (string) $artifact_node_02['id']);
+        self::assertNotNull($artifact_node_02->submitted_on);
+        self::assertNotNull($artifact_node_02->submitted_by);
+        self::assertNotNull($artifact_node_02->comments);
+        self::assertCount(1, $artifact_node_02->changeset);
 
-        $this->assertNotNull($artifact_node_02->changeset[0]);
+        self::assertNotNull($artifact_node_02->changeset[0]);
         $artifact_node_02_field_changes_changeset_01 = $artifact_node_02->changeset[0]->field_change;
-        $this->assertNotNull($artifact_node_02_field_changes_changeset_01);
-        $this->assertCount(2, $artifact_node_02_field_changes_changeset_01);
+        self::assertNotNull($artifact_node_02_field_changes_changeset_01);
+        self::assertCount(2, $artifact_node_02_field_changes_changeset_01);
 
-        $this->assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_01[0]->value);
-        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_01[1]->value);
+        self::assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_01[0]->value);
+        self::assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_01[1]->value);
+    }
+
+    private function buildForgeUser(): \PFUser
+    {
+        return UserTestBuilder::aUser()->withId(TrackerImporterUser::ID)->withUserName('forge__user01')->build();
     }
 }
