@@ -39,7 +39,10 @@ const config = {
         extensions: [".js", ".ts", ".vue"],
     },
     module: {
-        rules: [webpack_configurator.rule_vue_loader],
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
