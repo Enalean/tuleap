@@ -1,14 +1,45 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@simplewebauthn/browser':
+    specifier: ^7.2.0
+    version: 7.2.0
+  '@simplewebauthn/typescript-types':
+    specifier: ^7.0.0
+    version: 7.0.0
   '@tuleap/burningparrot-sign-in':
     specifier: workspace:*
     version: link:../../../../lib/frontend/burningparrot-sign-in
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+
+packages:
+
+  /@simplewebauthn/browser@7.2.0:
+    resolution: {integrity: sha512-HHIvRPpqKy0UV/BsGAmx4rQRZuZTUFYLLH65FwpSOslqHruiHx3Ql/bq7A75bjWuJ296a+4BIAq3+SPaII01TQ==}
+    dependencies:
+      '@simplewebauthn/typescript-types': 7.0.0
+    dev: false
+
+  /@simplewebauthn/typescript-types@7.0.0:
+    resolution: {integrity: sha512-bV+xACCFTsrLR/23ozHO06ZllHZaxC8LlI5YCo79GvU2BrN+rePDU2yXwZIYndNWcMQwRdndRdAhpafOh9AC/g==}
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
