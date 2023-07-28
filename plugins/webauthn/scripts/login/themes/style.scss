@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.login > #main-container {
-    display: flex;
+@use "@tuleap/burningparrot-sign-in";
+
+#main-container {
     align-items: center;
 }

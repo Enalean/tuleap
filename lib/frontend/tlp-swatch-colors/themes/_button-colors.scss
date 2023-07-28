@@ -21,12 +21,12 @@
 @use "sass:string";
 @use "./swatch-colors";
 
-@function to-snake-case($string) {
+@function -to-snake-case($string) {
     $index: string.index($string, "-");
 
     @if $index {
         @return str-slice($string, 1, $index - 1) + "_" +
-            to-snake-case(str-slice($string, $index + str-length("-")));
+            -to-snake-case(str-slice($string, $index + str-length("-")));
     }
 
     @return $string;
@@ -34,7 +34,7 @@
 
 @mixin colored-button-colors() {
     @each $color-name, $colors in swatch-colors.$color-map {
-        &.#{to-snake-case($color-name)} {
+        &.#{-to-snake-case($color-name)} {
             border-color: map.get($colors, "primary") !important;
             background: map.get($colors, "primary") !important;
 
@@ -47,8 +47,4 @@
             }
         }
     }
-}
-
-.colored-button {
-    @include colored-button-colors;
 }

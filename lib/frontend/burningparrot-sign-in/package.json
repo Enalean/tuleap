@@ -1,0 +1,13 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/burningparrot-sign-in",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "style": "./themes/main.scss",
+  "exports": {
+    ".": {
+      "default": "./themes/main.scss"
+    }
+  }
+}

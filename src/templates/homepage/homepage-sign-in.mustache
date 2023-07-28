@@ -1,21 +1,21 @@
 {{# user_is_anonymous }}
-    <div class="homepage-sign-in">
-        <h2 class="homepage-sign-in-title">{{# gettext }}Login{{/ gettext }}</h2>
+    <div class="tuleap-sign-in">
+        <h2 class="tuleap-sign-in-title">{{# gettext }}Login{{/ gettext }}</h2>
         {{# login_url }}
             <a
                 href="{{ login_url }}"
-                class="tlp-button-primary tlp-button-large tlp-button-wide sign-in-button"
+                class="tlp-button-primary tlp-button-large tlp-button-wide tuleap-sign-in-button"
             >{{ sign_in_submit }}</a>
         {{/login_url}}
 
         {{^ login_url }}
-            <form class="homepage-sign-in-form" action="/account/login.php" method="POST">
+            <form class="tuleap-sign-in-form" action="/account/login.php" method="POST">
                 {{# login }}
                     <div class="tlp-form-element">
                         <label for="form_loginname" class="tlp-label">{{ username_placeholder }}</label>
                         <input
                             type="text"
-                            class="tlp-input tlp-input-large"
+                            class="tlp-input tlp-input-large tuleap-sign-in-input"
                             id="form_loginname"
                             name="form_loginname"
                             data-test="form_loginname"
@@ -28,7 +28,7 @@
                         <label for="form_pw" class="tlp-label">{{ password_placeholder }}</label>
                         <input
                             type="password"
-                            class="tlp-input tlp-input-large"
+                            class="tlp-input tlp-input-large tuleap-sign-in-input"
                             id="form_pw"
                             name="form_pw"
                             data-test="form_pw"
@@ -46,7 +46,7 @@
                     <button
                         type="submit"
                         name="login"
-                        class="tlp-button-primary tlp-button-large tlp-button-wide homepage-sign-in-button"
+                        class="tlp-button-primary tlp-button-large tlp-button-wide tuleap-sign-in-button"
                         tabindex="3"
                     >{{ sign_in_submit }}</button>
 

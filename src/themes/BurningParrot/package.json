@@ -6,6 +6,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/burningparrot-sign-in": "workspace:*",
     "@tuleap/cross-ref-badges": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",

@@ -1,16 +1,15 @@
-
-<div class="homepage-sign-in-wrapper">
-    <div class="homepage-sign-in">
-        <h2 class="homepage-sign-in-title">{{# dgettext }} tuleap-webauthn | Passwordless connection {{/ dgettext }}</h2>
-        <form class="homepage-sign-in-form" id="webauthn-form">
+<div class="tuleap-sign-in-wrapper">
+    <div class="tuleap-sign-in">
+        <h2 class="tuleap-sign-in-title">{{# dgettext }} tuleap-webauthn | Passwordless connection {{/ dgettext }}</h2>
+        <form class="tuleap-sign-in-form" id="webauthn-form">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="webauthn-username">{{# dgettext }}
                     tuleap-webauthn | Username {{/ dgettext }}</label>
-                <input id="webauthn-username" class="tlp-input tlp-input-large" type="text" name="username"
+                <input id="webauthn-username" class="tlp-input tlp-input-large tuleap-sign-in-input" type="text" name="username"
                        placeholder="{{# dgettext }} tuleap-webauthn | Username {{/ dgettext }}" />
             </div>
             <button id="webauthn-button"
-                    class="tlp-button-primary tlp-button-large tlp-button-wide homepage-sign-in-button"
+                    class="tlp-button-primary tlp-button-large tlp-button-wide tuleap-sign-in-button"
                     disabled>
                 {{# dgettext }} tuleap-webauthn | Login {{/ dgettext }}
             </button>

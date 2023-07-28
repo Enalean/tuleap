@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/tlp-swatch-colors";
+
 .additional-connectors-or {
     display: block;
     position: relative;
@@ -52,4 +54,8 @@
     height: 58px;
     margin: 0 auto 10px;
     line-height: 58px;
+}
+
+.colored-button {
+    @include tlp-swatch-colors.colored-button-colors;
 }
