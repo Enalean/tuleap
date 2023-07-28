@@ -302,12 +302,6 @@ describe("Tracker artifacts", function () {
 
             cy.get("[data-test=move-artifact]").click();
 
-            // assert messages of dry run are present
-            cy.get("[data-test=dry-run-message-error]");
-            cy.get("[data-test=dry-run-message-info]");
-
-            cy.get("[data-test=confirm-move-artifact]").click();
-
             cy.get("[data-test=feedback]").contains("has been successfully");
             cy.get('[data-test="tracker-artifact-value-summary"]').contains("move artifact");
             cy.get('[data-test="tracker-artifact-value-status"]').contains("New");
