@@ -20,12 +20,15 @@
 
 namespace Tuleap\Bugzilla;
 
+use Tuleap\Reference\CrossReference;
+use Tuleap\Reference\CrossReferencesDao;
+
 require_once __DIR__ . '/../bootstrap.php';
 
-class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \CrossReferenceDao&\PHPUnit\Framework\MockObject\MockObject
+     * @var CrossReferencesDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $cross_reference_dao;
     /**
@@ -39,7 +42,7 @@ class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->cross_reference_dao = $this->createMock(\CrossReferenceDao::class);
+        $this->cross_reference_dao = $this->createMock(CrossReferencesDao::class);
         $this->rest_reference_dao  = $this->createMock(\Tuleap\Bugzilla\Reference\RESTReferenceCreator::class);
 
         $this->cross_reference_creator = new CrossReferenceCreator(
@@ -55,7 +58,7 @@ class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_reference_dao->expects(self::once())->method('createDbCrossRef');
         $this->rest_reference_dao->expects(self::once())->method('create');
 
-        $cross_reference    = $this->createMock(\CrossReference::class);
+        $cross_reference    = $this->createMock(CrossReference::class);
         $bugzilla_reference = $this->createMock(\Tuleap\Bugzilla\Reference\Reference::class);
 
         $this->cross_reference_creator->create($cross_reference, $bugzilla_reference);
@@ -68,7 +71,7 @@ class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_reference_dao->expects(self::never())->method('createDbCrossRef');
         $this->rest_reference_dao->expects(self::never())->method('create');
 
-        $cross_reference    = $this->createMock(\CrossReference::class);
+        $cross_reference    = $this->createMock(CrossReference::class);
         $bugzilla_reference = $this->createMock(\Tuleap\Bugzilla\Reference\Reference::class);
 
         $this->cross_reference_creator->create($cross_reference, $bugzilla_reference);

@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\CrossReference;
+
 /**
  * I'm responsible of handling what happens in post-revprop-change subversion hook
  */
@@ -81,10 +83,10 @@ class SVN_Hook_PostRevPropset // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             if ($reference) {
                 $cross_reference = new CrossReference(
                     $revision,
-                    $project->getID(),
+                    (int) $project->getID(),
                     ReferenceManager::REFERENCE_NATURE_SVNREVISION,
                     '',
-                    $reference_instance->getValue(),
+                    (int) $reference_instance->getValue(),
                     $reference->getGroupId(),
                     $reference->getNature(),
                     '',

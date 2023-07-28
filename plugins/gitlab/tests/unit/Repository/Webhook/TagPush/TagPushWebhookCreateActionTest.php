@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use CrossReference;
 use DateTimeImmutable;
 use Psr\Log\NullLogger;
 use Reference;
@@ -38,6 +37,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase

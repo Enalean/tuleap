@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
+use Tuleap\Reference\CrossReference;
+
 class CrossReferenceLinkPresenterCollectionBuilder
 {
     /**
-     * @param \CrossReference[] $cross_references
+     * @param CrossReference[] $cross_references
      * @return CrossReferenceLinkPresenter[]
      */
     public function build(
@@ -58,7 +60,7 @@ class CrossReferenceLinkPresenterCollectionBuilder
         return $cross_ref_link_collection;
     }
 
-    private function getParams(\CrossReference $currRef, bool $display_params): ?string
+    private function getParams(CrossReference $currRef, bool $display_params): ?string
     {
         if (! $display_params) {
             return null;
@@ -76,7 +78,7 @@ class CrossReferenceLinkPresenterCollectionBuilder
     }
 
     /**
-     * @param \CrossReference[] $cross_references
+     * @param CrossReference[] $cross_references
      */
     private function displayComma(array $cross_references, int $index): bool
     {

@@ -20,12 +20,12 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
-use CrossReference;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\GotoLink;
 
 class RESTReferenceCreator
@@ -73,7 +73,7 @@ class RESTReferenceCreator
         $message .= "[$source_keyword #$source_id]: " . $this->getLinkToSource($cross_reference);
 
         $base_url              = $this->getBaseUrl($bugzilla);
-        $url                   = $base_url . '/rest/bug/' . urlencode($target_id) . '/comment';
+        $url                   = $base_url . '/rest/bug/' . urlencode((string) $target_id) . '/comment';
         $login                 = $bugzilla->getUsername();
         $api_key               = $bugzilla->getAPIKey();
         $are_follow_up_private = $bugzilla->getAreFollowupPrivate();
@@ -135,7 +135,7 @@ class RESTReferenceCreator
     {
         $link = GotoLink::fromComponents(
             $cross_reference->getRefSourceKey(),
-            $cross_reference->getRefSourceId(),
+            (string) $cross_reference->getRefSourceId(),
             $cross_reference->getRefSourceGid()
         );
         return $link->getFullGotoLink();

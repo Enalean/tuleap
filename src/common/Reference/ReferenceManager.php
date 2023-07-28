@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+use Tuleap\Reference\CrossReference;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -49,11 +51,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
     public $referencesByProject = [];
 
     public $referenceDao;
-
-    /**
-     * @var CrossReferenceDao
-     */
-    public $cross_reference_dao;
+    private ?CrossReferencesDao $cross_reference_dao = null;
 
     private $groupIdByName = [];
 
@@ -527,15 +525,12 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
 
     /**
      * This method updates (rename) reference short name and related cross references
-     * @param int $group_id
-     * @param string $old_short_name
-     * @param string $new_short_name
      */
-    public function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name)
+    public function updateProjectReferenceShortName(int $group_id, string $old_short_name, string $new_short_name): void
     {
         $ref_dao = $this->_getReferenceDao();
         if ($ref_dao->updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) === false) {
-            return false;
+            return;
         }
         $xref_dao = $this->_getCrossReferenceDao();
         $xref_dao->updateTargetKeyword($old_short_name, $new_short_name, $group_id);
@@ -865,10 +860,10 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
             $target_gid  = $reference->getGroupId();
 
             $cross_reference = new CrossReference(
-                $source_id,
+                (int) $source_id,
                 $source_gid,
                 $source_type,
-                $source_key,
+                (string) $source_key,
                 $target_id,
                 $target_gid,
                 $target_type,
@@ -892,7 +887,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
         return true;
     }
 
-    public function insertCrossReference(CrossReference $cross_reference)
+    public function insertCrossReference(CrossReference $cross_reference): bool
     {
         $dao = $this->_getCrossReferenceDao();
         if (! $dao->existInDb($cross_reference)) {
@@ -902,13 +897,13 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
         return true;
     }
 
-    public function removeCrossReference(CrossReference $cross_reference)
+    public function removeCrossReference(CrossReference $cross_reference): bool
     {
         $is_reference_removed = false;
         EventManager::instance()->processEvent(
             Event::REMOVE_CROSS_REFERENCE,
             [
-                'cross_reference'      => $cross_reference,
+                'cross_reference' => $cross_reference,
                 'is_reference_removed' => &$is_reference_removed,
             ]
         );
@@ -1279,8 +1274,8 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
 
     public function _getCrossReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        if (! $this->cross_reference_dao instanceof \CrossReferenceDao) {
-            $this->cross_reference_dao = new CrossReferenceDao();
+        if (! $this->cross_reference_dao instanceof CrossReferencesDao) {
+            $this->cross_reference_dao = new CrossReferencesDao();
         }
         return $this->cross_reference_dao;
     }

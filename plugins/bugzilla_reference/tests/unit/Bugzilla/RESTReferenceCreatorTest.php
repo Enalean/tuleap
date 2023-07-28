@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Bugzilla;
 
-use CrossReference;
 use Http\Mock\Client;
 use Psr\Log\LoggerInterface;
 use Tuleap\Bugzilla\Reference\Reference;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Reference\CrossReference;
 
 final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,11 +48,11 @@ final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $cross_reference    = new CrossReference(
             '1000',
-            '101',
+            101,
             'bz',
             'source_keyword',
             '2000',
-            '101',
+            101,
             'bz',
             'target_keyword',
             '102'

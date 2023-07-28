@@ -24,10 +24,10 @@ namespace Tuleap\Project\Admin\Reference;
 use Actions;
 use ArtifactGroupListDao;
 use CodendiDataAccess;
-use CrossReferenceDao;
 use HTTPRequest;
 use Reference;
 use ReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 
 class ReferenceAdministrationActions extends Actions
 {
@@ -187,12 +187,12 @@ class ReferenceAdministrationActions extends Actions
                 if ($old_keyword != $request->get('keyword')) {
                     //Update table 'cross_reference'
                     $reference_dao = $this->getCrossReferenceDao();
-                    $result        = $reference_dao->updateTargetKeyword(
+                    $reference_dao->updateTargetKeyword(
                         $old_keyword,
                         $request->get('keyword'),
-                        $request->get('group_id')
+                        (int) $request->get('group_id')
                     );
-                    $result2       = $reference_dao->updateSourceKeyword(
+                    $reference_dao->updateSourceKeyword(
                         $old_keyword,
                         $request->get('keyword'),
                         $request->get('group_id')
@@ -272,9 +272,9 @@ class ReferenceAdministrationActions extends Actions
         $csrf_token->check();
     }
 
-    private function getCrossReferenceDao()
+    private function getCrossReferenceDao(): CrossReferencesDao
     {
-        return new CrossReferenceDao(CodendiDataAccess::instance());
+        return new CrossReferencesDao();
     }
 
     private function getArtifactGroupListDao()

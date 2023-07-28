@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Reference\CrossReferencesDao;
+
 require_once __DIR__ . '/../../www/project/admin/permissions.php';
 
 
@@ -26,7 +29,7 @@ class ArtifactType
     /**
      * The Group object.
      *
-     * @var        object    $Group.
+     * @var        object $Group .
      */
     public $Group;
 
@@ -949,14 +952,14 @@ class ArtifactType
                 return false;
             }
 
-           //Update table 'reference'
+            //Update table 'reference'
             $reference_dao = $this->getReferenceDao();
             $result        = $reference_dao->update_keyword($old_item_name, $itemname, $this->Group->getID());
 
-           //Update table 'cross_reference'
+            //Update table 'cross_reference'
             $reference_dao = $this->getCrossReferenceDao();
-            $result        = $reference_dao->updateTargetKeyword($old_item_name, $itemname, $this->Group->getID());
-            $result2       = $reference_dao->updateSourceKeyword($old_item_name, $itemname, $this->Group->getID());
+            $reference_dao->updateTargetKeyword($old_item_name, $itemname, $this->Group->getID());
+            $reference_dao->updateSourceKeyword($old_item_name, $itemname, $this->Group->getID());
         }
 
           //Update table 'artifact_group_list'
@@ -1959,9 +1962,9 @@ class ArtifactType
         return new ReferenceDao(CodendiDataAccess::instance());
     }
 
-    public function getCrossReferenceDao()
+    public function getCrossReferenceDao(): CrossReferencesDao
     {
-        return new CrossReferenceDao(CodendiDataAccess::instance());
+        return new CrossReferencesDao();
     }
 
     public function getArtifactGroupListDao()

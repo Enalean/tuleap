@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
-use CrossReference;
-use CrossReferenceDao;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
@@ -35,7 +33,9 @@ use Tuleap\Gitlab\Repository\Webhook\EmptyBranchNameException;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataBranchNameExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 
 class PostPushWebhookActionBranchHandler
 {
@@ -44,7 +44,7 @@ class PostPushWebhookActionBranchHandler
         private readonly ReferenceManager $reference_manager,
         private readonly TuleapReferenceRetriever $tuleap_reference_retriever,
         private readonly BranchInfoDao $branch_info_dao,
-        private readonly CrossReferenceDao $cross_reference_dao,
+        private readonly CrossReferencesDao $cross_reference_dao,
         private readonly CrossReferenceManager $cross_reference_manager,
         private readonly LoggerInterface $logger,
     ) {

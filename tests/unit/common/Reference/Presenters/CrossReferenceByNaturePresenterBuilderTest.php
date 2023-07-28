@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
+use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferenceCollection;
 
-class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -41,11 +42,11 @@ class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $cross_reference_link_list;
     /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_1;
     /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_2;
     /**
@@ -73,7 +74,7 @@ class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $cross_reference_link_list_3;
     /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_3;
     /**
@@ -93,9 +94,9 @@ class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->cross_ref_collection = \Mockery::mock(CrossReferenceCollection::class);
 
-        $this->cross_ref_target_1 = \Mockery::mock(\CrossReference::class);
-        $this->cross_ref_target_2 = \Mockery::mock(\CrossReference::class);
-        $this->cross_ref_target_3 = \Mockery::mock(\CrossReference::class);
+        $this->cross_ref_target_1 = \Mockery::mock(CrossReference::class);
+        $this->cross_ref_target_2 = \Mockery::mock(CrossReference::class);
+        $this->cross_ref_target_3 = \Mockery::mock(CrossReference::class);
 
         $this->cross_ref_link_1 = \Mockery::mock(CrossReferenceLinkPresenter::class);
         $this->cross_ref_link_2 = \Mockery::mock(CrossReferenceLinkPresenter::class);

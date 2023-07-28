@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
-use CrossReferenceDao;
 use DateTimeImmutable;
 use Psr\Log\NullLogger;
 use Reference;
@@ -32,6 +31,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Reference\CrossReferenceManager;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -51,7 +51,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
      */
     private $branch_info_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferenceDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferencesDao
      */
     private $cross_reference_dao;
     /**
@@ -66,7 +66,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->reference_manager          = $this->createMock(ReferenceManager::class);
         $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);
         $this->branch_info_dao            = $this->createMock(BranchInfoDao::class);
-        $this->cross_reference_dao        = $this->createMock(CrossReferenceDao::class);
+        $this->cross_reference_dao        = $this->createMock(CrossReferencesDao::class);
         $this->cross_reference_manager    = $this->createMock(CrossReferenceManager::class);
 
         $this->handler = new PostPushWebhookActionBranchHandler(

@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\CrossReference;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -43,21 +44,15 @@ class Tracker_ReferenceManager
         $this->artifact_factory  = $artifact_factory;
     }
 
-    /**
-     * Create a cross reference on $source_artifact that point on $target_artifact
-     *
-     *
-     * @return CrossReference
-     */
-    public function getCrossReferenceBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user)
+    public function getCrossReferenceBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user): CrossReference
     {
         return new CrossReference(
             $source_artifact->getId(),
-            $source_artifact->getTracker()->getGroupId(),
+            (int) $source_artifact->getTracker()->getGroupId(),
             Artifact::REFERENCE_NATURE,
             $source_artifact->getTracker()->getItemname(),
             $target_artifact->getId(),
-            $target_artifact->getTracker()->getGroupId(),
+            (int) $target_artifact->getTracker()->getGroupId(),
             Artifact::REFERENCE_NATURE,
             $target_artifact->getTracker()->getItemname(),
             $user->getId()

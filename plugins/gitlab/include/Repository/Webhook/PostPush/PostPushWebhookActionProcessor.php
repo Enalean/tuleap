@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
-use CrossReference;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
@@ -34,6 +33,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranch
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Reference\CrossReference;
 use UserNotExistException;
 
 class PostPushWebhookActionProcessor

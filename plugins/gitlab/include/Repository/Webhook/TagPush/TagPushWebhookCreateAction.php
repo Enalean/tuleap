@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use CrossReference;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\API\Tag\GitlabTag;
@@ -34,6 +33,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Reference\CrossReference;
 
 class TagPushWebhookCreateAction
 {

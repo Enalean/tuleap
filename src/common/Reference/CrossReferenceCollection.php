@@ -33,15 +33,15 @@ class CrossReferenceCollection
      */
     private $label;
     /**
-     * @var \CrossReference[]
+     * @var CrossReference[]
      */
     private $both;
     /**
-     * @var \CrossReference[]
+     * @var CrossReference[]
      */
     private $target;
     /**
-     * @var \CrossReference[]
+     * @var CrossReference[]
      */
     private $source;
     /**
@@ -50,9 +50,9 @@ class CrossReferenceCollection
     private $nature_icon;
 
     /**
-     * @param \CrossReference[] $both
-     * @param \CrossReference[] $target
-     * @param \CrossReference[] $source
+     * @param CrossReference[] $both
+     * @param CrossReference[] $target
+     * @param CrossReference[] $source
      */
     public function __construct(string $nature, string $label, array $both, array $target, array $source, string $nature_icon)
     {
@@ -83,7 +83,7 @@ class CrossReferenceCollection
     }
 
     /**
-     * @return \CrossReference[]
+     * @return CrossReference[]
      */
     public function getCrossReferencesBoth(): array
     {
@@ -91,7 +91,7 @@ class CrossReferenceCollection
     }
 
     /**
-     * @return \CrossReference[]
+     * @return CrossReference[]
      */
     public function getCrossReferencesSource(): array
     {
@@ -99,7 +99,7 @@ class CrossReferenceCollection
     }
 
     /**
-     * @return \CrossReference[]
+     * @return CrossReference[]
      */
     public function getCrossReferencesTarget(): array
     {

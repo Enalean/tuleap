@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Reference\CheckCrossReferenceValidityEvent;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\Presenters\CrossReferenceFieldPresenter;
 use Tuleap\Reference\Presenters\CrossReferenceByNaturePresenterBuilder;
 use Tuleap\Reference\Presenters\CrossReferenceLinkListPresenterBuilder;

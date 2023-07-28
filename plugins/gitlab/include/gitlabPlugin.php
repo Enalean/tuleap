@@ -299,7 +299,7 @@ class gitlabPlugin extends Plugin
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $semantic_status_factory        = Tracker_Semantic_StatusFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
-        $cross_reference_manager        = new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao());
+        $cross_reference_manager        = new CrossReferenceManager(new CrossReferencesDao());
 
         $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -402,7 +402,7 @@ class gitlabPlugin extends Plugin
                         $reference_manager,
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
-                        new CrossReferenceDao(),
+                        new CrossReferencesDao(),
                         $cross_reference_manager,
                         $logger
                     )
@@ -523,7 +523,7 @@ class gitlabPlugin extends Plugin
         $semantic_status_factory        = \Tracker_Semantic_StatusFactory::instance();
         $artifact_factory               = Tracker_ArtifactFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
-        $cross_reference_manager        = new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao());
+        $cross_reference_manager        = new CrossReferenceManager(new CrossReferencesDao());
         $db_transaction_executor        = new DBTransactionExecutorWithConnection(
             DBFactory::getMainTuleapDBConnection()
         );
@@ -631,7 +631,7 @@ class gitlabPlugin extends Plugin
                         $reference_manager,
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
-                        new CrossReferenceDao(),
+                        new CrossReferencesDao(),
                         $cross_reference_manager,
                         $logger
                     )
