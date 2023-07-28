@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,32 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tracker;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 
-final class RetrieveForwardLinksStub implements RetrieveForwardLinks
+final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkField
 {
-    private function __construct(private CollectionOfForwardLinks $links)
+    private function __construct(private readonly Tracker_FormElement_Field_ArtifactLink | null $field)
     {
     }
 
-    public static function withLinks(CollectionOfForwardLinks $links): self
+    public static function withAnArtifactLinkField(Tracker_FormElement_Field_ArtifactLink $field): self
     {
-        return new self($links);
+        return new self($field);
     }
 
-    public static function withoutLinks(): self
+    public static function withoutAnArtifactLinkField(): self
     {
-        return new self(new CollectionOfForwardLinks([]));
+        return new self(null);
     }
 
-    public function retrieve(
-        \PFUser $submitter,
-        Tracker_FormElement_Field_ArtifactLink $link_field,
-        Artifact $artifact,
-    ): CollectionOfForwardLinks {
-        return $this->links;
+    public function getAnArtifactLinkField(\PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink
+    {
+        return $this->field;
     }
 }

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Codendi_HTMLPurifier;
 use EventManager;
 use FeedbackDao;
 use Luracast\Restler\RestException;
@@ -56,20 +57,23 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Action\AreListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\AreTherePermissionsToMigrateVerifier;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\CanPermissionsBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
+use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanUserGroupValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\DryRunDuckTypingFieldCollector;
+use Tuleap\Tracker\Action\DuckTypedMoveArtifactLinksMappingBuilder;
 use Tuleap\Tracker\Action\ExternalFieldsHaveSameTypeVerifier;
 use Tuleap\Tracker\Action\FieldCanBeEasilyMigratedVerifier;
 use Tuleap\Tracker\Action\FieldIsExternalVerifier;
+use Tuleap\Tracker\Action\IsArtifactLinkFieldVerifier;
 use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
 use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
-use Tuleap\Tracker\Action\AreListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
@@ -79,7 +83,6 @@ use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Action\OpenListFieldsCompatibilityVerifier;
 use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
-use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserListFieldVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -156,6 +159,7 @@ use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
+use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\OpenListUserGroupsByDuckTypingUpdater;
@@ -1238,7 +1242,15 @@ class ArtifactsResource extends AuthenticatedResource
                 $this->post_move_action,
                 $this->getMoveDuckTypingAction($user),
                 new NoFeedbackFieldCollector(),
-                $collector
+                $collector,
+                new DuckTypedMoveArtifactLinksMappingBuilder(
+                    $this->formelement_factory,
+                    new ArtifactForwardLinksRetriever(
+                        new ArtifactLinksByChangesetCache(),
+                        new ChangesetValueArtifactLinkDao(),
+                        $this->artifact_factory
+                    )
+                ),
             ),
             new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
             new BeforeMoveChecker($this->event_manager, ProjectStatusVerificator::build()),
@@ -1422,6 +1434,11 @@ class ArtifactsResource extends AuthenticatedResource
         $XML_updater        = new MoveChangesetXMLUpdater();
         $cdata_factory      = new XML_SimpleXMLCDATAFactory();
 
+        $type_presenter_factory = new TypePresenterFactory(
+            new TypeDao(),
+            new ArtifactLinksUsageDao(),
+        );
+
         return new MegaMoverArtifactByDuckTyping(
             new ArtifactsDeletionManager(
                 new ArtifactsDeletionDAO(),
@@ -1448,9 +1465,16 @@ class ArtifactsResource extends AuthenticatedResource
                     $XML_updater,
                     $cdata_factory
                 ),
+                new FieldChangeArtifactLinksUpdater(
+                    $type_presenter_factory,
+                    $type_presenter_factory,
+                    Codendi_HTMLPurifier::instance(),
+                    UserManager::instance()
+                ),
                 new OpenListFieldVerifier(),
                 new UserGroupOpenListFieldVerifier(),
                 new IsPermissionsOnArtifactFieldVerifier(),
+                new IsArtifactLinkFieldVerifier(),
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

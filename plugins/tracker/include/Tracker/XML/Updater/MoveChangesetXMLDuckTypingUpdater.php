@@ -26,6 +26,7 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Action\VerifyIsArtifactLinkField;
 use Tuleap\Tracker\Action\VerifyIsOpenListField;
 use Tuleap\Tracker\Action\VerifyIsPermissionsOnArtifactField;
 use Tuleap\Tracker\Action\VerifyIsUserGroupOpenListField;
@@ -38,9 +39,11 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
         private readonly UpdateBindValueByDuckTyping $duck_typing_updater,
         private readonly UpdatePermissionsByDuckTyping $permissions_by_duck_typing,
         private readonly UpdateOpenListUserGroupsByDuckTyping $update_open_list_user_groups_by_duck_typing,
+        private readonly UpdateArtifactLinkXML $update_artifact_link_XML,
         private readonly VerifyIsOpenListField $verify_is_open_list_field,
         private readonly VerifyIsUserGroupOpenListField $verify_is_user_group_open_list_field,
         private readonly VerifyIsPermissionsOnArtifactField $verify_is_permissions_on_artifact_field,
+        private readonly VerifyIsArtifactLinkField $verify_is_artifact_link_field,
     ) {
     }
 
@@ -202,6 +205,16 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
                 assert($destination_field instanceof \Tracker_FormElement_Field_OpenList);
                 $this->update_open_list_user_groups_by_duck_typing->updateUserGroupsForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
+            }
+
+            if (
+                $this->verify_is_artifact_link_field->isAnArtifactLinkField($source_field)
+                && $this->verify_is_artifact_link_field->isAnArtifactLinkField($destination_field)
+            ) {
+                assert($source_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+                assert($destination_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+
+                $this->update_artifact_link_XML->updateArtifactLinks($changeset_xml, $destination_field, $index);
             }
         }
     }

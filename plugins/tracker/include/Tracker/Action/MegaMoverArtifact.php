@@ -26,6 +26,7 @@ use Tracker;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -122,7 +123,14 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
     {
         $tracker->getWorkflow()->disable();
 
-        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user, false, []);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContentInAMoveContext(
+            $tracker,
+            $artifact_xml,
+            $user,
+            false,
+            [],
+            new Tracker_XML_Importer_ArtifactImportedMapping(),
+        );
 
         if (! $moved_artifact) {
             return false;

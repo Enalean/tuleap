@@ -29,11 +29,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\FieldMapping;
+use Tuleap\Tracker\Action\IsArtifactLinkFieldVerifier;
 use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
@@ -46,6 +48,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByFieldIdAndUserGroupIdStub;
 use Tuleap\Tracker\Test\Stub\SearchUserGroupsValuesByIdStub;
+use Tuleap\Tracker\Test\Stub\UpdateArtifactLinkXMLStub;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
@@ -109,9 +112,11 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 $XML_updater,
                 $cdata_factory,
             ),
+            UpdateArtifactLinkXMLStub::build(),
             new OpenListFieldVerifier(),
             new UserGroupOpenListFieldVerifier(),
             new IsPermissionsOnArtifactFieldVerifier(),
+            new IsArtifactLinkFieldVerifier()
         );
     }
 
@@ -217,6 +222,9 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_external_field      = TrackerExternalFormElementBuilder::anExternalField(13)->withName("external_field")->build();
         $destination_external_field = TrackerExternalFormElementBuilder::anExternalField(23)->withName("external_field")->build();
 
+        $source_artifactlink_field      = ArtifactLinkFieldBuilder::anArtifactLinkField(34)->withLabel("artifact_link")->build();
+        $destination_artifactlink_field = ArtifactLinkFieldBuilder::anArtifactLinkField(35)->withLabel("artifact_link")->build();
+
         $source_not_movable_external_field = TrackerExternalFormElementBuilder::anExternalField(14)->withName("external_field_not_movable")->build();
 
         $destination_title_field                = TrackerFormElementStringFieldBuilder::aStringField(21)->withName("summary")->build();
@@ -252,6 +260,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 $source_open_list_user_group_field,
                 $source_computed_field,
                 $source_external_field,
+                $source_artifactlink_field,
             ],
             [
                 $source_not_existing_field,
@@ -279,6 +288,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 FieldMapping::fromFields($source_open_list_user_field, $destination_open_list_user_field),
                 FieldMapping::fromFields($source_open_list_user_group_field, $destination_open_list_user_group_field),
                 FieldMapping::fromFields($source_external_field, $destination_external_field),
+                FieldMapping::fromFields($source_artifactlink_field, $destination_artifactlink_field),
             ]
         );
 
@@ -294,7 +304,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             $this->source_tracker,
         );
 
-        $this->assertCount(15, $artifact_xml->changeset->field_change);
+        $this->assertCount(16, $artifact_xml->changeset->field_change);
         $this->assertSame($destination_title_field->getName(), (string) $artifact_xml->changeset->field_change[0]->attributes()->field_name);
         $this->assertSame($destination_details_field->getName(), (string) $artifact_xml->changeset->field_change[1]->attributes()->field_name);
         $this->assertSame($destination_status_field->getName(), (string) $artifact_xml->changeset->field_change[2]->attributes()->field_name);

@@ -20,21 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Test\Stub;
 
-use PFUser;
-use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Action\VerifyIsArtifactLinkField;
 
-interface MoveArtifactByDuckTyping
+/**
+ * @psalm-immutable
+ */
+final class VerifyIsArtifactLinkFieldStub implements VerifyIsArtifactLinkField
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    private function __construct(private readonly bool $is_an_artifact_link_field)
+    {
+    }
+
+    public static function withArtifactLikField(): self
+    {
+        return new self(true);
+    }
+
+    public static function withoutArtifactLikField(): self
+    {
+        return new self(false);
+    }
+
+    public function isAnArtifactLinkField(\Tracker_FormElement_Field $field): bool
+    {
+        return $this->is_an_artifact_link_field;
+    }
 }

@@ -3729,6 +3729,11 @@ msgid "The two fields must be different"
 msgstr "Les deux champs doivent être différents"
 
 #, php-format
+msgid "The type \"%s\" of the link to artifact #%s has been set to \"no type\""
+msgstr ""
+"Le type de lien \"%s\" vers l'artéfact #%s a été défini à \"pas de type\""
+
+#, php-format
 msgid "The type %1$s has been successfully created."
 msgstr "La nature %1$s a été créée avec succès."
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tracker_FormElement_Field_ArtifactLink;
 
-interface MoveArtifactByDuckTyping
+interface RetrieveAnArtifactLinkField
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-    ): int;
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink;
 }

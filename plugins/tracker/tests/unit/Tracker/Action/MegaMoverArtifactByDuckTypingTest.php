@@ -33,6 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
+use Tuleap\Tracker\Test\Builders\ArtifactImportedMappingBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\UpdateMoveChangesetXMLDuckTypingStub;
@@ -51,6 +52,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     private \PFUser $user;
     private DuckTypedMoveFieldCollection $fields;
     private \Project $project;
+    private \Tracker_XML_Importer_ArtifactImportedMapping $artifacts_mapping;
 
     protected function setUp(): void
     {
@@ -70,11 +72,12 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
             $this->xml_import,
         );
 
-        $this->user           = UserTestBuilder::anActiveUser()->build();
-        $this->artifact       = ArtifactTestBuilder::anArtifact(1)->submittedBy($this->user)->build();
-        $this->project        = ProjectTestBuilder::aProject()->withId(199)->build();
-        $this->source_tracker = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
-        $this->fields         = DuckTypedMoveFieldCollection::fromFields([], [], [], []);
+        $this->user              = UserTestBuilder::anActiveUser()->build();
+        $this->artifact          = ArtifactTestBuilder::anArtifact(1)->submittedBy($this->user)->build();
+        $this->project           = ProjectTestBuilder::aProject()->withId(199)->build();
+        $this->source_tracker    = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
+        $this->fields            = DuckTypedMoveFieldCollection::fromFields([], [], [], []);
+        $this->artifacts_mapping = ArtifactImportedMappingBuilder::fromSourcesAndDestinations([]);
     }
 
     public function testItThrowsWhenProjectIsNotActive(): void
@@ -84,7 +87,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
 
         $this->expectException(MoveArtifactTargetProjectNotActiveException::class);
 
-        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields);
+        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping);
     }
 
     public function testItThrowsWhenMoveCanNotBeProcessed(): void
@@ -97,13 +100,13 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $target_tracker->method('getWorkflow')->willReturn($workflow);
 
         $this->xml_exporter->expects(self::once())->method('exportFullHistory');
-        $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContent')->willReturn(null);
+        $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContentInAMoveContext')->willReturn(null);
         $this->artifact_priority_manager->expects(self::once())->method('getGlobalRank')->willReturn(86);
         $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation')->willReturn(102);
 
         $this->expectException(MoveArtifactNotDoneException::class);
 
-        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields);
+        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping);
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 
@@ -118,12 +121,12 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $exported_artifact = ArtifactTestBuilder::anArtifact(1)->build();
 
         $this->xml_exporter->expects(self::once())->method('exportFullHistory');
-        $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContent')->willReturn($exported_artifact);
+        $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContentInAMoveContext')->willReturn($exported_artifact);
         $this->artifact_priority_manager->expects(self::once())->method('putArtifactAtAGivenRank');
         $this->artifact_priority_manager->expects(self::once())->method('getGlobalRank')->willReturn(86);
         $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation')->willReturn(102);
 
-        self::assertSame(102, $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields));
+        self::assertSame(102, $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping));
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 }
