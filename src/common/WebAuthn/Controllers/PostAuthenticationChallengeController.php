@@ -30,6 +30,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
@@ -38,7 +39,7 @@ use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use function Psl\Json\decode as psl_json_decode;
 
-final class PostAuthenticationChallengeController extends DispatchablePSR15Compatible
+final class PostAuthenticationChallengeController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
     public function __construct(
         private readonly ProvideCurrentUser&RetrieveUserByUserName $user_manager,
