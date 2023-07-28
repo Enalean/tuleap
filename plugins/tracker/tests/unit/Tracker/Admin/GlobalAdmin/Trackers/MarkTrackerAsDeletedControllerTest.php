@@ -24,8 +24,6 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
 use EventManager;
 use Feedback;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Reference;
@@ -37,64 +35,62 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
-class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
     /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
      */
     private $reference_manager;
     /**
      * @var MarkTrackerAsDeletedController
      */
     private $controller;
+    private PFUser $user;
+    private Project $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var \CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GlobalAdminPermissionsChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&GlobalAdminPermissionsChecker
      */
     private $permissions_checker;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&FieldDao
      */
     private $field_dao;
 
-    private TriggersDao|Mockery\LegacyMockInterface|Mockery\MockInterface $triggers_dao;
+    private TriggersDao&\PHPUnit\Framework\MockObject\MockObject $triggers_dao;
+    private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
     protected function setUp(): void
     {
-        $token_provider            = Mockery::mock(CSRFSynchronizerTokenProvider::class);
-        $this->tracker_factory     = Mockery::mock(TrackerFactory::class);
-        $this->event_manager       = Mockery::mock(EventManager::class);
-        $this->reference_manager   = Mockery::mock(ReferenceManager::class);
-        $this->permissions_checker = Mockery::mock(GlobalAdminPermissionsChecker::class);
-        $this->field_dao           = Mockery::mock(FieldDao::class);
-        $this->triggers_dao        = Mockery::mock(TriggersDao::class);
+        $token_provider            = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $this->tracker_factory     = $this->createMock(TrackerFactory::class);
+        $this->event_manager       = $this->createMock(EventManager::class);
+        $this->reference_manager   = $this->createMock(ReferenceManager::class);
+        $this->permissions_checker = $this->createMock(GlobalAdminPermissionsChecker::class);
+        $this->field_dao           = $this->createMock(FieldDao::class);
+        $this->triggers_dao        = $this->createMock(TriggersDao::class);
+        $this->project_history_dao = $this->createMock(\ProjectHistoryDao::class);
 
         $this->controller = new MarkTrackerAsDeletedController(
             $this->tracker_factory,
@@ -103,264 +99,229 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->event_manager,
             $this->reference_manager,
             $this->field_dao,
-            $this->triggers_dao
+            $this->triggers_dao,
+            $this->project_history_dao,
         );
 
-        $this->user    = Mockery::mock(PFUser::class);
-        $this->project = Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock();
+        $this->user    = UserTestBuilder::aUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->withId(42)->build();
 
-        $this->csrf = Mockery::mock(\CSRFSynchronizerToken::class);
-        $token_provider->shouldReceive('getCSRF')->andReturn($this->csrf);
+        $this->csrf = $this->createMock(\CSRFSynchronizerToken::class);
+        $token_provider->method('getCSRF')->willReturn($this->csrf);
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeFound(): void
     {
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturnNull();
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItThrowsExceptionIfTrackerIsDeleted(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(['isDeleted' => true])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withDeletionDate((new \DateTimeImmutable())->getTimestamp())->build();
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->expectException(NotFoundException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItThrowsExceptionIfUserIsNotAllowedToDeleteTracker(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'isDeleted'  => false,
-                    'getProject' => $this->project,
-                ]
-            )->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeDeletedUsedInAnotherService(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'isDeleted'                                  => false,
-                    'getProject'                                 => $this->project,
-                    'getInformationsFromOtherServicesAboutUsage' => [
-                        'can_be_deleted' => false,
-                        'message'        => 'Boo',
-                    ],
-                ]
-            )->getMock();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('isDeleted')->willReturn(false);
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getInformationsFromOtherServicesAboutUsage')->willReturn(
+            [
+                'can_be_deleted' => false,
+                'message'        => 'Boo',
+            ],
+        );
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects(self::once())
+            ->method('check');
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeDeletedSourceOfSharedField(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                                      => 102,
-                    'getName'                                    => 'User story',
-                    'isDeleted'                                  => false,
-                    'getProject'                                 => $this->project,
-                    'getInformationsFromOtherServicesAboutUsage' => [
-                        'can_be_deleted' => true,
-                    ],
-                ]
-            )->getMock();
+        $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects(self::once())
+            ->method('check');
 
-        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
-            ->once()
+        $this->field_dao
+            ->expects(self::once())
+            ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeDeletedIfItsSourceOrTargetOfTriggers(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                                      => 102,
-                    'getName'                                    => 'User story',
-                    'isDeleted'                                  => false,
-                    'getProject'                                 => $this->project,
-                    'getInformationsFromOtherServicesAboutUsage' => [
-                        'can_be_deleted' => true,
-                    ],
-                ]
-            )->getMock();
+        $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects(self::once())
+            ->method('check');
 
-        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
-            ->once()
+        $this->field_dao
+            ->expects(self::once())
+            ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
-            ->once()
+        $this->triggers_dao
+            ->expects(self::once())
+            ->method('isTrackerImplicatedInTriggers')
             ->with(102)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => '102']
         );
     }
 
     public function testItDisplaysAnErrorMessageIfTrackerCannotBeMarkedAsDeletedInDB(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                                      => 102,
-                    'getName'                                    => 'User story',
-                    'isDeleted'                                  => false,
-                    'getProject'                                 => $this->project,
-                    'getInformationsFromOtherServicesAboutUsage' => [
-                        'can_be_deleted' => true,
-                    ],
-                ]
-            )->getMock();
+        $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects(self::once())
+            ->method('check');
 
-        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
-            ->once()
+        $this->field_dao
+            ->expects(self::once())
+            ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
-            ->once()
+        $this->triggers_dao
+            ->expects(self::once())
+            ->method('isTrackerImplicatedInTriggers')
             ->with(102)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->tracker_factory
-            ->shouldReceive('markAsDeleted')
+            ->expects(self::once())
+            ->method('markAsDeleted')
             ->with(102)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('addFeedback')
-            ->with(Feedback::ERROR, Mockery::type('string'))
-            ->once();
-        $layout->shouldReceive('redirect')->once();
+        $layout = $this->createMock(BaseLayout::class);
+        $layout
+            ->expects(self::once())
+            ->method('addFeedback')
+            ->with(Feedback::ERROR, self::anything());
+
+        $layout->expects(self::once())->method('redirect');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
@@ -371,67 +332,57 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItMaksAsDeletedTheTracker(): void
     {
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                                      => 102,
-                    'getName'                                    => 'User story',
-                    'getItemName'                                => 'Story',
-                    'isDeleted'                                  => false,
-                    'getProject'                                 => $this->project,
-                    'getInformationsFromOtherServicesAboutUsage' => [
-                        'can_be_deleted' => true,
-                    ],
-                ]
-            )->getMock();
+        $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->expects(self::once())
+            ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $this->csrf
-            ->shouldReceive('check')
-            ->once();
+            ->expects(self::once())
+            ->method('check');
 
-        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
-            ->once()
+        $this->field_dao
+            ->expects(self::once())
+            ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
-            ->once()
+        $this->triggers_dao
+            ->expects(self::once())
+            ->method('isTrackerImplicatedInTriggers')
             ->with(102)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->tracker_factory
-            ->shouldReceive('markAsDeleted')
+            ->expects(self::once())
+            ->method('markAsDeleted')
             ->with(102)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->event_manager
-            ->shouldReceive('processEvent')
-            ->with('tracker_event_delete_tracker', ['tracker_id' => 102])
-            ->once();
+            ->expects(self::once())
+            ->method('processEvent')
+            ->with('tracker_event_delete_tracker', ['tracker_id' => 102]);
 
-        $reference = Mockery::mock(Reference::class);
+        $reference = $this->createMock(Reference::class);
         $this->reference_manager
-            ->shouldReceive('loadReferenceFromKeywordAndNumArgs')
+            ->expects(self::once())
+            ->method('loadReferenceFromKeywordAndNumArgs')
             ->with('story', 42, 1)
-            ->once()
-            ->andReturn($reference);
+            ->willReturn($reference);
         $this->reference_manager
-            ->shouldReceive('deleteReference')
+            ->expects(self::once())
+            ->method('deleteReference')
             ->with($reference)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $GLOBALS['Language']
             ->expects(self::once())
@@ -439,22 +390,39 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('project_reference', 't_r_deleted')
             ->willReturn('Corresponding Reference Pattern Deleted');
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('addFeedback')
-            ->with(Feedback::INFO, 'Tracker User story has been successfully deleted')
-            ->once();
-        $layout->shouldReceive('addFeedback')
-            ->with(Feedback::INFO, Mockery::type('string'), \Codendi_HTMLPurifier::CONFIG_LIGHT)
-            ->once();
-        $layout->shouldReceive('addFeedback')
-            ->with(Feedback::INFO, 'Corresponding Reference Pattern Deleted')
-            ->once();
-        $layout->shouldReceive('redirect')->once();
+        $layout = $this->createMock(BaseLayout::class);
+        $layout
+            ->method('addFeedback')
+            ->withConsecutive(
+                [Feedback::INFO, 'Tracker User story has been successfully deleted'],
+                [Feedback::INFO, self::anything(), \Codendi_HTMLPurifier::CONFIG_LIGHT],
+                [Feedback::INFO, 'Corresponding Reference Pattern Deleted'],
+            );
+
+        $layout->expects(self::once())->method('redirect');
+
+        $this->project_history_dao->method('addHistory');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             $layout,
             ['id' => '102']
         );
+    }
+
+    private function buildMockTracker(): Tracker&\PHPUnit\Framework\MockObject\MockObject
+    {
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(102);
+        $tracker->method('getName')->willReturn('User story');
+        $tracker->method('getItemName')->willReturn('Story');
+        $tracker->method('isDeleted')->willReturn(false);
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getInformationsFromOtherServicesAboutUsage')->willReturn(
+            [
+                'can_be_deleted' => true,
+            ],
+        );
+        return $tracker;
     }
 }

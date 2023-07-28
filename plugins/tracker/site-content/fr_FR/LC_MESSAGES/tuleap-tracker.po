@@ -4044,6 +4044,9 @@ msgstr ""
 "Les permissions des configurations de tracker et celles des artéfacts ne "
 "sont pas listées"
 
+msgid "Tracker deleted"
+msgstr "Outil de suivi supprimé"
+
 msgid "Tracker does not exist"
 msgstr "L'outil de suivi n'existe pas."
 
