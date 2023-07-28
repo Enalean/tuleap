@@ -19,12 +19,12 @@
 
 <template>
     <div
-        v-if="is_move_possible || not_migrated_fields_count > 0"
+        v-if="!is_move_possible || not_migrated_fields_count > 0"
         class="alert alert-error"
         data-test="dry-run-message-error"
     >
         <i class="fa fa-exclamation-circle move-artifact-icon move-artifact-error-icon"></i>
-        <translate v-if="!is_move_possible">
+        <translate v-if="!is_move_possible" data-test="move-action-not-possible-error-message">
             This artifact cannot be moved to the selected tracker because none of its fields matches
             with it.
         </translate>
@@ -33,6 +33,7 @@
             v-if="is_move_possible"
             v-bind:translate-n="not_migrated_fields_count"
             translate-plural="%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
+            data-test="not-migrated-field-error-message"
         >
             1 field does not match with the targeted tracker. If you confirm your action, its value
             will be lost forever:
