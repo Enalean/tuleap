@@ -23,7 +23,7 @@
     "@tuleap/focus-navigation": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
-    "hybrids": "8.1.8"
+    "hybrids": "8.2.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

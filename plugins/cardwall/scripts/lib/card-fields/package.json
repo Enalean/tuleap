@@ -19,7 +19,7 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "dompurify": "^3.0.0",
     "escape-string-regexp": "^5.0.0",
-    "hybrids": "^8.2.1"
+    "hybrids": "^8.2.2"
   },
   "peerDependencies": {
     "angular": "^1.8.0",
