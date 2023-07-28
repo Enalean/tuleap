@@ -1,0 +1,45 @@
+<div class="tlp-framed-vertically">
+    <div class="tlp-framed-horizontally">
+        <form action="" method="POST" id="siteadmin-user-creation-moderation">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+             <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa fa-solid fa-users" aria-hidden="true"></i>
+                            {{# gettext }}User creation moderation{{/ gettext}}
+                        </h1>
+                    </div>
+
+                    <section class="tlp-pane-section">
+                        <p class="tlp-text-info">{{# gettext }}Configure how user creation is controlled by administrators{{/ gettext}}</p>
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input
+                                    type="checkbox"
+                                    name="users_must_be_approved"
+                                    data-test="user-must-be-approved"
+                                    value="1"
+                                    {{# user_must_be_approved }}checked{{/ user_must_be_approved }}
+                                >
+                                {{# gettext }}Users must be approved by administrators{{/ gettext}}
+                            </label>
+                        </div>
+
+                        <div class="tlp-pane-section-submit">
+                            <button class="tlp-button-primary" type="submit">
+                                <i class="fa-solid fa-save tlp-button-icon"></i>
+                                {{# gettext }}Save settings{{/ gettext }}
+                            </button>
+                        </div>
+
+                    </section>
+                </div>
+            </section>
+        </form>
+    </div>
+</div>

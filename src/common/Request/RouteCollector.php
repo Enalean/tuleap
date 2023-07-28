@@ -239,6 +239,8 @@ use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\User\SessionManager;
+use Tuleap\User\Settings\UserSettingsController;
+use Tuleap\User\Settings\UserSettingsUpdateController;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
@@ -314,6 +316,19 @@ class RouteCollector
         return new PasswordPolicyUpdateController(
             new PasswordConfigurationSaver(new PasswordConfigurationDAO())
         );
+    }
+
+    public static function getUserSettings(): UserSettingsController
+    {
+        return new UserSettingsController(
+            new AdminPageRenderer(),
+            TemplateRendererFactory::build(),
+        );
+    }
+
+    public static function postUserSettings(): UserSettingsUpdateController
+    {
+        return new UserSettingsUpdateController(new ConfigDao());
     }
 
     public static function getProjectCreationModeration()
@@ -1501,6 +1516,9 @@ class RouteCollector
 
             $r->get('/password_policy/', [self::class, 'getAdminPasswordPolicy']);
             $r->post('/password_policy/', [self::class, 'postAdminPasswordPolicy']);
+
+            $r->get('/user-settings/', [self::class, 'getUserSettings']);
+            $r->post('/user-settings/', [self::class, 'postUserSettings']);
 
             $r->get('/project-creation/moderation', [self::class, 'getProjectCreationModeration']);
             $r->post('/project-creation/moderation', [self::class, 'postProjectCreationModeration']);

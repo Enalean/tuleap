@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKey;
 use Tuleap\CookieManager;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -51,6 +52,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      * etc).
      */
     public const SPECIAL_USERS_LIMIT = 100;
+
+    #[ConfigKey("Should user be approved by site admin (1) or auto approved (0)")]
+    public const CONFIG_USER_APPROVAL = 'sys_user_approval';
 
     /**
      * @psalm-var array<int|string,PFUser|null>
