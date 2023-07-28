@@ -138,6 +138,7 @@ export function initSingleLazybox() {
             lazybox.replaceDropdownContent([matching_items_group, matching_recent_group]);
         },
     };
+    lazybox.id = "lazybox-link-selector";
     lazybox.replaceDropdownContent([items_group, recent_group, loading_group]);
     mount_point.replaceWith(lazybox);
 }
@@ -209,6 +210,7 @@ export function initMultipleLazybox() {
             users_lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
         },
     };
+    users_lazybox.id = "lazybox-users-selector";
     users_lazybox.replaceDropdownContent([users_group]);
     users_lazybox.replaceSelection([users[0]]);
     mount_point.replaceWith(users_lazybox);

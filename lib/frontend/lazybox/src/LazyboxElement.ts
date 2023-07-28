@@ -41,6 +41,7 @@ export type Lazybox = {
 };
 type InternalLazyboxElement = Readonly<Lazybox> & {
     tabindex: 0 | -1;
+    internals: ElementInternals;
     readonly search_input_element: SearchInput & HTMLElement;
     readonly selection_element: SelectionElement & HTMLElement;
     readonly dropdown_element: DropdownElement & HTMLElement;
@@ -246,7 +247,7 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
     return element;
 };
 
-export const LazyboxElement = define<InternalLazyboxElement>({
+const IntermediaryClass = define.compile<InternalLazyboxElement>({
     tag: TAG,
     tabindex: 0,
     options: undefined,
@@ -258,5 +259,14 @@ export const LazyboxElement = define<InternalLazyboxElement>({
     selection_element: { get: getSelectionElement },
     dropdown_element: { get: getDropdownElement },
     scrolling_manager: undefined,
+    internals: { get: (host) => host.attachInternals() },
     content: (host) => html`${host.selection_element}${host.dropdown_element}`,
 });
+
+export class LazyboxElement extends IntermediaryClass {
+    static formAssociated = true;
+}
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, LazyboxElement);
+}
