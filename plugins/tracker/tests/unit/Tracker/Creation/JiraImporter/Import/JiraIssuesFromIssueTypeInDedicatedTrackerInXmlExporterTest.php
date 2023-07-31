@@ -46,6 +46,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraCloudCommen
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraServerCommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAsArtifactXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
@@ -266,80 +267,83 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
             new ArtifactsInDedicatedTrackerXMLExporter(
                 $jira_client,
                 $user_manager,
-                new DataChangesetXMLExporter(
-                    new XML_SimpleXMLCDATAFactory(),
-                    new FieldChangeXMLExporter(
-                        $logger,
-                        new FieldChangeDateBuilder(
-                            new XML_SimpleXMLCDATAFactory()
-                        ),
-                        new FieldChangeStringBuilder(
-                            new XML_SimpleXMLCDATAFactory()
-                        ),
-                        new FieldChangeTextBuilder(
-                            new XML_SimpleXMLCDATAFactory()
-                        ),
-                        new FieldChangeFloatBuilder(
-                            new XML_SimpleXMLCDATAFactory()
-                        ),
-                        new FieldChangeListBuilder(
-                            new XML_SimpleXMLCDATAFactory(),
-                            new UserXMLExporter(
-                                $user_manager,
-                                new UserXMLExportedCollection(
-                                    new XML_RNGValidator(),
-                                    new XML_SimpleXMLCDATAFactory()
+                $logger,
+                new IssueAsArtifactXMLExporter(
+                    new DataChangesetXMLExporter(
+                        new XML_SimpleXMLCDATAFactory(),
+                        new FieldChangeXMLExporter(
+                            $logger,
+                            new FieldChangeDateBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeStringBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeTextBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeFloatBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeListBuilder(
+                                new XML_SimpleXMLCDATAFactory(),
+                                new UserXMLExporter(
+                                    $user_manager,
+                                    new UserXMLExportedCollection(
+                                        new XML_RNGValidator(),
+                                        new XML_SimpleXMLCDATAFactory()
+                                    )
                                 )
-                            )
+                            ),
+                            new FieldChangeFileBuilder(),
+                            new FieldChangeArtifactLinksBuilder(
+                                new XML_SimpleXMLCDATAFactory(),
+                            ),
+                            new ArtifactLinkTypeConverter(
+                                new class implements AllTypesRetriever {
+                                    public function getAllTypes(): array
+                                    {
+                                        return [];
+                                    }
+                                },
+                            ),
                         ),
-                        new FieldChangeFileBuilder(),
-                        new FieldChangeArtifactLinksBuilder(
-                            new XML_SimpleXMLCDATAFactory(),
-                        ),
-                        new ArtifactLinkTypeConverter(
-                            new class implements AllTypesRetriever {
-                                public function getAllTypes(): array
-                                {
-                                    return [];
-                                }
-                            },
-                        ),
-                    ),
-                    new IssueSnapshotCollectionBuilder(
-                        $changelog_entries_builder,
-                        new CurrentSnapshotBuilder(
-                            $logger,
-                            $creation_state_list_value_formatter,
-                            $jira_user_retriever
-                        ),
-                        new InitialSnapshotBuilder(
-                            $logger,
-                            new ListFieldChangeInitialValueRetriever(
+                        new IssueSnapshotCollectionBuilder(
+                            $changelog_entries_builder,
+                            new CurrentSnapshotBuilder(
+                                $logger,
                                 $creation_state_list_value_formatter,
                                 $jira_user_retriever
-                            )
-                        ),
-                        new ChangelogSnapshotBuilder(
-                            $creation_state_list_value_formatter,
+                            ),
+                            new InitialSnapshotBuilder(
+                                $logger,
+                                new ListFieldChangeInitialValueRetriever(
+                                    $creation_state_list_value_formatter,
+                                    $jira_user_retriever
+                                )
+                            ),
+                            new ChangelogSnapshotBuilder(
+                                $creation_state_list_value_formatter,
+                                $logger,
+                                $jira_user_retriever
+                            ),
+                            $comment_values_builder,
                             $logger,
                             $jira_user_retriever
                         ),
-                        $comment_values_builder,
+                        new CommentXMLExporter(
+                            new XML_SimpleXMLCDATAFactory(),
+                            new CommentXMLValueEnhancer()
+                        ),
                         $logger,
-                        $jira_user_retriever
                     ),
-                    new CommentXMLExporter(
-                        new XML_SimpleXMLCDATAFactory(),
-                        new CommentXMLValueEnhancer()
+                    new AttachmentCollectionBuilder(),
+                    new AttachmentXMLExporter(
+                        new AttachmentDownloader($jira_client, $logger, $attachment_name_generator),
+                        new XML_SimpleXMLCDATAFactory()
                     ),
-                    $logger
+                    $logger,
                 ),
-                new AttachmentCollectionBuilder(),
-                new AttachmentXMLExporter(
-                    new AttachmentDownloader($jira_client, $logger, $attachment_name_generator),
-                    new XML_SimpleXMLCDATAFactory()
-                ),
-                $logger
             ),
             new SemanticsXMLExporter(),
             new AlwaysThereFieldsExporter(),
