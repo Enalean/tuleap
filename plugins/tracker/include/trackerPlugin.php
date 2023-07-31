@@ -49,6 +49,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -1148,8 +1149,22 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             'tracker_date_reminder_delete',
             'tracker_date_reminder_sent',
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
-            ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED
+            ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED,
+            MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY,
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        if ($event->getKey() === MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY) {
+            $event->setLabel(
+                dgettext(
+                    'tuleap-tracker',
+                    'Tracker deleted',
+                ),
+            );
+        }
     }
 
     /**
@@ -2178,7 +2193,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             EventManager::instance(),
             ReferenceManager::instance(),
             new FieldDao(),
-            new TriggersDao()
+            new TriggersDao(),
+            new ProjectHistoryDao(),
         );
     }
 

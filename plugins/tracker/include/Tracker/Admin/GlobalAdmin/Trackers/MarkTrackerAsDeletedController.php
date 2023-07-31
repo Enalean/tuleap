@@ -48,48 +48,19 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
      */
     public final const TRACKER_EVENT_DELETE_TRACKER = 'tracker_event_delete_tracker';
 
-    public const DELETION_URL = "delete-tracker";
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var CSRFSynchronizerTokenProvider
-     */
-    private $token_provider;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var GlobalAdminPermissionsChecker
-     */
-    private $permissions_checker;
-
-    /**
-     * @var FieldDao
-     */
-    private $field_dao;
+    public const DELETION_URL                         = "delete-tracker";
+    public const PROJECT_HISTORY_TRACKER_DELETION_KEY = "plugin_tracker_tracker_deletion";
 
     public function __construct(
-        TrackerFactory $tracker_factory,
-        GlobalAdminPermissionsChecker $permissions_checker,
-        CSRFSynchronizerTokenProvider $token_provider,
-        EventManager $event_manager,
-        ReferenceManager $reference_manager,
-        FieldDao $field_dao,
-        private TriggersDao $triggers_dao,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly GlobalAdminPermissionsChecker $permissions_checker,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
+        private readonly EventManager $event_manager,
+        private readonly ReferenceManager $reference_manager,
+        private readonly FieldDao $field_dao,
+        private readonly TriggersDao $triggers_dao,
+        private readonly \ProjectHistoryDao $project_history_dao,
     ) {
-        $this->tracker_factory     = $tracker_factory;
-        $this->token_provider      = $token_provider;
-        $this->event_manager       = $event_manager;
-        $this->reference_manager   = $reference_manager;
-        $this->permissions_checker = $permissions_checker;
-        $this->field_dao           = $field_dao;
     }
 
     public static function getURL(Tracker $tracker): string
@@ -103,7 +74,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         if (
             ! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject(
                 $tracker->getProject(),
-                $request->getCurrentUser()
+                $request->getCurrentUser(),
             )
         ) {
             throw new ForbiddenException();
@@ -130,7 +101,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
             );
         }
 
-        $this->markTrackerAsDeleted($tracker, $layout);
+        $this->markTrackerAsDeleted($project, $tracker, $request->getCurrentUser(), $layout);
 
         $layout->redirect(TrackersDisplayController::getURL($project));
     }
@@ -149,8 +120,12 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         return $tracker;
     }
 
-    private function markTrackerAsDeleted(Tracker $tracker, BaseLayout $layout): void
-    {
+    private function markTrackerAsDeleted(
+        \Project $project,
+        Tracker $tracker,
+        \PFUser $current_user,
+        BaseLayout $layout,
+    ): void {
         if (! $this->tracker_factory->markAsDeleted($tracker->getId())) {
             $layout->addFeedback(
                 Feedback::ERROR,
@@ -185,6 +160,14 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         );
 
         $this->deleteTrackerReference($tracker, $layout);
+
+        $this->project_history_dao->addHistory(
+            $project,
+            $current_user,
+            new \DateTimeImmutable(),
+            self::PROJECT_HISTORY_TRACKER_DELETION_KEY,
+            $tracker->getName() . " (" . $tracker->getItemName() . ")",
+        );
     }
 
     private function deleteTrackerReference(Tracker $tracker, BaseLayout $layout): void
