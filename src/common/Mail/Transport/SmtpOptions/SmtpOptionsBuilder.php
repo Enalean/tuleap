@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Mail\Transport\SmtpOptions;
 
 use Laminas\Mail\Transport\SmtpOptions;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 
 class SmtpOptionsBuilder
 {
@@ -36,10 +37,24 @@ class SmtpOptionsBuilder
         $url_parts = explode(self::PORT_SEPARATOR, $relay_host_config);
         $options   = [
             'host' => $url_parts[0],
+            'connection_config' => [],
         ];
 
         if (isset($url_parts[1]) && strlen($url_parts[1]) > 0) {
             $options['port'] = $url_parts[1];
+        }
+
+        $auth_username = (string) \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_USERNAME);
+        if ($auth_username !== '' && \ForgeConfig::exists(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)) {
+            $options['connection_class']  = \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_AUTH_TYPE);
+            $options['connection_config'] = [
+                'username' => $auth_username,
+                'password' => \ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)->getString(),
+            ];
+        }
+
+        if (\ForgeConfig::getStringAsBool(MailTransportBuilder::RELAYHOST_SMTP_USE_TLS)) {
+            $options['connection_config']['ssl'] = 'tls';
         }
 
         return new SmtpOptions($options);

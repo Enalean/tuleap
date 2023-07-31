@@ -26,10 +26,16 @@ use ForgeConfig;
 use Laminas\Mail;
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\ConfigKeyValueValidator;
 use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
+use Tuleap\Mail\Transport\SmtpOptions\SMTPAuthTypeValidator;
 use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
 
+#[ConfigKeyCategory('Email')]
 class MailTransportBuilder
 {
     #[ConfigKey("Option to define how Tuleap will send emails")]
@@ -38,7 +44,20 @@ class MailTransportBuilder
 
     #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
     #[ConfigKeyString('')]
-    public const RELAYHOST_CONFIG_KEY = 'email_relayhost';
+    public const RELAYHOST_CONFIG_KEY     = 'email_relayhost';
+    #[ConfigKey("Activate the usage of TLS for the SMTP relay host")]
+    #[ConfigKeyInt(0)]
+    public const RELAYHOST_SMTP_USE_TLS   = 'email_relayhost_smtp_use_tls';
+    #[ConfigKey('Username to use to authenticate against the SMTP relay host')]
+    #[ConfigKeyString('')]
+    public const RELAYHOST_SMTP_USERNAME  = 'email_relayhost_smtp_username';
+    #[ConfigKey('Password to use to authenticate against the SMTP relay host')]
+    #[ConfigKeySecret]
+    public const RELAYHOST_SMTP_PASSWORD  = 'email_relayhost_smtp_password';
+    #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain or login)')]
+    #[ConfigKeyString('plain')]
+    #[ConfigKeyValueValidator(SMTPAuthTypeValidator::class)]
+    public const RELAYHOST_SMTP_AUTH_TYPE = 'email_relayhost_smtp_auth_type';
 
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
