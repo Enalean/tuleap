@@ -465,4 +465,700 @@
     <permission scope="field" REF="issues_orgtuleapcrossreferences" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="issues_orgtuleapcrossreferences" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
   </permissions>
+  <artifacts>
+    <artifact id="10236">
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-14T11:31:24+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">manon</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Perform one end-to-end delivery request]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-10]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10235">
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-14T11:30:56+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">manon</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Track lockbox contents using RFID]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-9]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10211">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:07:07+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Headlightsin back]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_sub-task]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-8]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:53:22+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Headlights  back]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:53:42+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Headlights  at back]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T09:02:31+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">manon</value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10210">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:06:58+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_sub-task]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Headlights in front]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-7]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10209">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:02:27+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Add headlights]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="_is_child"><![CDATA[10210]]></value>
+          <value nature="_is_child"><![CDATA[10211]]></value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value format="id"><![CDATA[issues_components_car_component]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:02:31+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:02:37+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+          <value><![CDATA[security]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:49:41+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Add automatic headlight control]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:50:01+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><em>Automatic headlight</em> control is a function that <em>automatically</em> controls <em>headlights</em>, turning them on and off according to the ambient brightness.</p>]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10208">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:01:26+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Add brakes]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value format="id"><![CDATA[issues_fixversions_v1]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="components" type="list" bind="static">
+          <value format="id"><![CDATA[issues_components_car_component]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2023-05-31T15:06:44+02:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-5]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:01:40+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+          <value><![CDATA[security]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:01:53+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">manon</value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:06:44+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[14]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:50:51+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Develop electronic brakes]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10207">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:00:40+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Fix pollution]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[issues_versions_v2]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_bug]]></value>
+        </field_change>
+        <field_change field_name="customfield_10032" type="list" bind="static">
+          <value format="id"><![CDATA[issues_customfield_10032_test]]></value>
+          <value format="id"><![CDATA[issues_customfield_10032_test2]]></value>
+          <value format="id"><![CDATA[issues_customfield_10032_test4]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-4]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:00:52+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:01:02+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">mag</value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:03:00+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:03:23+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+          <value><![CDATA[global_warming]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:55:54+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Measurement error of pollution control ]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:57:15+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="file" field_name="attachment">
+          <value ref="fileinfo_10023"/>
+        </field_change>
+      </changeset>
+      <file id="fileinfo_10023">
+        <filename><![CDATA[41598_2020_79462_Fig1_HTML.webp]]></filename>
+        <path><![CDATA[file_0]]></path>
+        <filesize>50840</filesize>
+        <filetype>image/webp</filetype>
+        <description/>
+      </file>
+    </artifact>
+    <artifact id="10206">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T14:39:23+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Add wheel]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value format="id"><![CDATA[issues_fixversions_v1]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value format="id"><![CDATA[issues_components_car_component]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-3]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T14:59:20+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:47:46+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Define flexible and scalable architecture]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:48:09+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>The Software Defined Vehicle’s flexible and scalable architecture will enable the faster development and integration of new features throughout the vehicle lifecycle, directly into the cloud, that is, in secure online servers accessible from anywhere and anytime.</p>]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:48:25+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">manon</value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T08:48:33+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">mag</value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10205">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T14:38:53+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Add engine]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value><![CDATA[car]]></value>
+          <value><![CDATA[motor]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value><![CDATA[10206]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value format="id"><![CDATA[issues_components_car_component]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-2]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:06:40+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[13]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:52:04+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[Create engine system]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-15T10:58:54+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="file" field_name="attachment">
+          <value ref="fileinfo_10025"/>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-15T11:01:28+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<ul>
+	<li><b>Infotainment systems</b>: These systems provide the driver and passengers with entertainment and information, such as navigation, music, and connectivity to mobile devices.</li>
+	<li><b>Advanced driver assistance systems (ADAS)</b>: ADAS software is designed to enhance the safety of drivers and passengers. <em>Examples include lane departure warnings, automatic emergency braking,</em> and adaptive cruise control.</li>
+	<li><b>Engine management systems</b>: These systems control the performance of the engine, including fuel injection, ignition timing, and emissions control.</li>
+	<li><b>Telematics:</b> Telematics software provides real-time data about the vehicle’s location, speed, and other parameters. This information is used for navigation, remote diagnostics, and fleet management.</li>
+	<li><b>Autonomous driving software</b>: This software enables <em>self-driving cars</em>, which can operate without human intervention.</li>
+	<li><b>Diagnostic software:</b> Diagnostic software is used to troubleshoot problems with the vehicle’s systems and components. It is typically used by mechanics and technicians.</li>
+	<li><b>Firmware</b>: Firmware is low-level software that controls the operation of hardware components, such as the engine control unit (ECU) or the transmission control module (TCM).</li>
+	<li><b>Over-the-air (OTA) updates</b>: OTA updates allow the software to be updated remotely without requiring the car to be taken to a dealership or service center.</li>
+</ul>
+]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-15T11:01:57+02:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2023-06-15T11:01:57+02:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Add informations about the different types of automotive software development </p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+      <file id="fileinfo_10025">
+        <filename><![CDATA[engine-systems.png]]></filename>
+        <path><![CDATA[file_1]]></path>
+        <filesize>24962</filesize>
+        <filetype>image/png</filetype>
+        <description/>
+      </file>
+    </artifact>
+    <artifact id="10204">
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T14:09:27+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[This is an epic to help building a car]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[issues_priority_medium]]></value>
+        </field_change>
+        <field_change field_name="labels" type="open_list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[15]]></value>
+        </field_change>
+        <field_change field_name="components" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">yannis</value>
+        </field_change>
+        <field_change field_name="issuetype" type="list" bind="static">
+          <value format="id"><![CDATA[issues_issuetype_epicen]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://example.com/browse/DI-1]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[yannis]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-05-31T15:11:07+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="file" field_name="attachment">
+          <value ref="fileinfo_10022"/>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T09:00:22+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="file" field_name="attachment">
+          <value ref="fileinfo_10024"/>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T09:00:44+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[First epic to help building a car]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T09:00:51+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[First epic to build a car]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2023-06-01T09:01:27+02:00]]></submitted_on>
+        <comments/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>The Software Defined Vehicle (SDV) is the technological key that opens the field to give vehicles the possibility to evolve during their life: enhanced navigation and connectivity, upgrade applications in real time, enhanced safety and sustainability, etc. All for an improved driving experience. As cars are already becoming increasingly intelligent and connected, software will play an increasingly important role in both their design and evolution.</p>]]></value>
+        </field_change>
+      </changeset>
+      <file id="fileinfo_10024">
+        <filename><![CDATA[software-defined-vehicle-1440.webp]]></filename>
+        <path><![CDATA[file_2]]></path>
+        <filesize>91598</filesize>
+        <filetype>image/webp</filetype>
+        <description/>
+      </file>
+      <file id="fileinfo_10022">
+        <filename><![CDATA[tuleap-round-black-sticker.png]]></filename>
+        <path><![CDATA[file_3]]></path>
+        <filesize>53996</filesize>
+        <filetype>image/png</filetype>
+        <description/>
+      </file>
+    </artifact>
+  </artifacts>
 </tracker>

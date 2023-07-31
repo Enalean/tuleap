@@ -1,0 +1,250 @@
+{
+    "self": "https://example.com/rest/api/2/issue/DI-6/changelog?maxResults=100&startAt=0",
+    "maxResults": 100,
+    "startAt": 0,
+    "total": 8,
+    "isLast": true,
+    "values": [
+        {
+            "id": "12137",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:02:31.411+0200",
+            "items": [
+                {
+                    "field": "assignee",
+                    "fieldtype": "jira",
+                    "fieldId": "assignee",
+                    "from": null,
+                    "fromString": null,
+                    "to": "5a73130451df342493650ea3",
+                    "toString": "Yannis",
+                    "tmpFromAccountId": null,
+                    "tmpToAccountId": "5a73130451df342493650ea3"
+                }
+            ]
+        },
+        {
+            "id": "12138",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:02:37.521+0200",
+            "items": [
+                {
+                    "field": "labels",
+                    "fieldtype": "jira",
+                    "fieldId": "labels",
+                    "from": null,
+                    "fromString": "",
+                    "to": null,
+                    "toString": "car security"
+                }
+            ]
+        },
+        {
+            "id": "12139",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:02:42.166+0200",
+            "items": [
+                {
+                    "field": "IssueParentAssociation",
+                    "fieldtype": "jira",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10204",
+                    "toString": "DI-1"
+                }
+            ]
+        },
+        {
+            "id": "12141",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:02:42.175+0200",
+            "items": [
+                {
+                    "field": "Epic Link",
+                    "fieldtype": "custom",
+                    "fieldId": "customfield_10008",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10204",
+                    "toString": "DI-1"
+                }
+            ]
+        },
+        {
+            "id": "12142",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:02:45.162+0200",
+            "items": [
+                {
+                    "field": "Component",
+                    "fieldtype": "jira",
+                    "fieldId": "components",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10003",
+                    "toString": "Car component"
+                }
+            ]
+        },
+        {
+            "id": "12164",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:49:41.443+0200",
+            "items": [
+                {
+                    "field": "summary",
+                    "fieldtype": "jira",
+                    "fieldId": "summary",
+                    "from": null,
+                    "fromString": "Add headlights",
+                    "to": null,
+                    "toString": "Add automatic headlight control"
+                }
+            ]
+        },
+        {
+            "id": "12165",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:50:01.729+0200",
+            "items": [
+                {
+                    "field": "description",
+                    "fieldtype": "jira",
+                    "fieldId": "description",
+                    "from": null,
+                    "fromString": null,
+                    "to": null,
+                    "toString": "_Automatic headlight_ control is a function that _automatically_ controls _headlights_, turning them on and off according to the ambient brightness."
+                }
+            ]
+        },
+        {
+            "id": "12240",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-15T10:19:26.019+0200",
+            "items": [
+                {
+                    "field": "Story Points",
+                    "fieldtype": "custom",
+                    "fieldId": "customfield_10014",
+                    "from": null,
+                    "fromString": null,
+                    "to": null,
+                    "toString": "12"
+                }
+            ]
+        }
+    ]
+}

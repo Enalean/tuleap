@@ -268,7 +268,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
             ),
             new XmlReportCreatedRecentlyExporter($tql_report_exporter),
             new XmlReportUpdatedRecentlyExporter($tql_report_exporter),
-            EventManager::instance()
+            EventManager::instance(),
         );
     }
 

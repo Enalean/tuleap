@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
@@ -50,12 +51,14 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
     public static function build(
         JiraClient $wrapper,
         LoggerInterface $logger,
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ): self {
         return new self(
             $logger,
             JiraIssuesFromProjectInMonoTrackerInXmlExporter::build(
                 $wrapper,
                 $logger,
+                $jira_user_on_tuleap_cache,
             ),
         );
     }
@@ -82,6 +85,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         $tracker_xml = $this->issues_from_project_in_mono_tracker_in_xml_exporter->exportIssuesToXml(
             $jira_platform_configuration,
             $tracker,
+            $jira_base_url,
             $jira_project_key,
             $jira_issue_types,
             $field_id_generator,
