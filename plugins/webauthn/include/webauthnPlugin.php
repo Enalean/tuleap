@@ -80,6 +80,23 @@ final class WebAuthnPlugin extends Plugin
         $source_dao                    = new Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
         $attestation_statement_manager = new Webauthn\AttestationStatement\AttestationStatementSupportManager();
         $attestation_statement_manager->add(new Webauthn\AttestationStatement\NoneAttestationStatementSupport());
+        $logger            = BackendLogger::getDefaultLogger();
+        $credential_loader = new Webauthn\PublicKeyCredentialLoader(
+            new Webauthn\AttestationStatement\AttestationObjectLoader($attestation_statement_manager)
+        );
+        $credential_loader->setLogger($logger);
+        $assertion_validator = new Webauthn\AuthenticatorAssertionResponseValidator(
+            $source_dao,
+            null,
+            new Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler(),
+            Cose\Algorithm\Manager::create()
+                ->add(
+                    Cose\Algorithm\Signature\EdDSA\Ed25519::create(),
+                    Cose\Algorithm\Signature\RSA\RS256::create(),
+                    Cose\Algorithm\Signature\ECDSA\ES256::create()
+                )
+        );
+        $assertion_validator->setLogger($logger);
 
         return new Tuleap\WebAuthn\Controllers\LoginController(
             $this->getTemplateRenderer(),
@@ -93,20 +110,8 @@ final class WebAuthnPlugin extends Plugin
                     ForgeConfig::get(Tuleap\Config\ConfigurationVariables::NAME),
                     Tuleap\ServerHostname::rawHostname()
                 ),
-                new Webauthn\PublicKeyCredentialLoader(
-                    new Webauthn\AttestationStatement\AttestationObjectLoader($attestation_statement_manager)
-                ),
-                new Webauthn\AuthenticatorAssertionResponseValidator(
-                    $source_dao,
-                    null,
-                    new Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler(),
-                    Cose\Algorithm\Manager::create()
-                        ->add(
-                            Cose\Algorithm\Signature\EdDSA\Ed25519::create(),
-                            Cose\Algorithm\Signature\RSA\RS256::create(),
-                            Cose\Algorithm\Signature\ECDSA\ES256::create()
-                        )
-                )
+                $credential_loader,
+                $assertion_validator,
             )
         );
     }
