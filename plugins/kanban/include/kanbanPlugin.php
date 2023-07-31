@@ -66,9 +66,13 @@ use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
+use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
@@ -267,6 +271,29 @@ final class KanbanPlugin extends Plugin
             $r->get('/{id:[0-9]+}', $this->getRouteHandler('routeShowKanban'));
             $r->post('/{kanban_id:\d+}/mercure-realtime-token', $this->getRouteHandler('routeGetJWT'));
         });
+        $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name:[A-z0-9-]+}/kanban', $this->getRouteHandler('routeGetProject'));
+        });
+    }
+
+    public function routeGetProject(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new \Tuleap\Kanban\Home\KanbanHomeController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new KanbanFactory(TrackerFactory::instance(), new KanbanDao()),
+            new KanbanItemDao(),
+            TemplateRendererFactory::build(),
+            new SapiEmitter(),
+            new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new ProjectAccessCheckerMiddleware(
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                UserManager::instance(),
+            )
+        );
     }
 
     public function routeShowKanban(): \Tuleap\Request\DispatchableWithRequest

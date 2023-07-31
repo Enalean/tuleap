@@ -41,8 +41,9 @@ class KanbanFactory
         $kanbans = [];
 
         foreach ($rows as $kanban_data) {
-            if ($this->isUserAllowedToAccessKanban($user, $kanban_data['tracker_id'])) {
-                $kanbans[] = $this->instantiateFromRow($kanban_data);
+            $kanban = $this->instantiateFromRow($kanban_data);
+            if ($this->isUserAllowedToAccessKanban($user, $kanban)) {
+                $kanbans[] = $kanban;
             }
         }
 
@@ -61,11 +62,12 @@ class KanbanFactory
             throw new KanbanNotFoundException();
         }
 
-        if (! $this->isUserAllowedToAccessKanban($user, $row['tracker_id'])) {
+        $kanban = $this->instantiateFromRow($row);
+        if (! $this->isUserAllowedToAccessKanban($user, $kanban)) {
             throw new KanbanCannotAccessException();
         }
 
-        return $this->instantiateFromRow($row);
+        return $kanban;
     }
 
     public function getKanbanForXmlImport(int $kanban_id): Kanban
@@ -116,20 +118,20 @@ class KanbanFactory
      */
     private function instantiateFromRow(array $kanban_data): Kanban
     {
-        return new Kanban(
-            $kanban_data['id'],
-            $kanban_data['tracker_id'],
-            $kanban_data['name']
-        );
-    }
-
-    private function isUserAllowedToAccessKanban(PFUser $user, int $tracker_id): bool
-    {
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($kanban_data['tracker_id']);
         if (! $tracker) {
             throw new KanbanNotFoundException();
         }
 
-        return $tracker->userCanView($user);
+        return new Kanban(
+            $kanban_data['id'],
+            $tracker,
+            $kanban_data['name']
+        );
+    }
+
+    private function isUserAllowedToAccessKanban(PFUser $user, Kanban $kanban): bool
+    {
+        return $kanban->tracker->userCanView($user);
     }
 }

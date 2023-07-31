@@ -24,6 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanActivatorStub;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -310,7 +311,9 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = $this->createMock(\TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(new \Tuleap\Kanban\Kanban(11221, -1, ''));
+        $this->kanban_factory
+            ->shouldReceive('getKanbanForXmlImport')
+            ->andReturns(new \Tuleap\Kanban\Kanban(11221, TrackerTestBuilder::aTracker()->build(), ''));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\Tuleap\Kanban\KanbanColumn::class));

@@ -25,8 +25,9 @@ use Tuleap\Kanban\KanbanItemDao;
 
 final class KanbanSummaryPresenter
 {
-    public int $count_open_kanban_items;
-    public int $count_closed_kanban_items;
+    public readonly int $count_open_kanban_items;
+    public readonly int $count_closed_kanban_items;
+    public readonly string $color;
 
     public function __construct(
         private readonly Kanban $kanban,
@@ -39,6 +40,7 @@ final class KanbanSummaryPresenter
         $this->count_closed_kanban_items = count($kanban_item_dao->getKanbanArchiveItemIds(
             $this->kanban->getTrackerId()
         ));
+        $this->color                     = $this->kanban->tracker->getColor()->getName();
     }
 
     public function name(): string

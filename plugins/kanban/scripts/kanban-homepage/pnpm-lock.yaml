@@ -1,0 +1,18 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../../../src/themes/BurningParrot
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/project-background
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
