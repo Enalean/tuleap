@@ -26,7 +26,8 @@ export interface ClassifierType {
     classify(content: string): ReadonlyArray<HighlightedText>;
 }
 
-export const Classifier = (search: string): ClassifierType => {
+export const Classifier = (search_input: string): ClassifierType => {
+    const search = search_input.trim();
     let regexp = new RegExp("");
     if (search !== "") {
         const regexp_escaped_search = escapeStringRegexp(search);
