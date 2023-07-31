@@ -513,6 +513,23 @@ class RouteCollector
         $source_dao                    = new WebAuthnCredentialSourceDao();
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $logger            = \BackendLogger::getDefaultLogger();
+        $credential_loader = new PublicKeyCredentialLoader(
+            new AttestationObjectLoader($attestation_statement_manager)
+        );
+        $credential_loader->setLogger($logger);
+        $assertion_validator = new AuthenticatorAssertionResponseValidator(
+            $source_dao,
+            null,
+            new ExtensionOutputCheckerHandler(),
+            Manager::create()
+                ->add(
+                    Ed25519::create(),
+                    RS256::create(),
+                    ES256::create()
+                )
+        );
+        $assertion_validator->setLogger($logger);
 
         return new SSHKeyCreateController(
             DisplayKeysTokensController::getCSRFToken(),
@@ -524,20 +541,8 @@ class RouteCollector
                     \ForgeConfig::get(ConfigurationVariables::NAME),
                     ServerHostname::rawHostname()
                 ),
-                new PublicKeyCredentialLoader(
-                    new AttestationObjectLoader($attestation_statement_manager)
-                ),
-                new AuthenticatorAssertionResponseValidator(
-                    $source_dao,
-                    null,
-                    new ExtensionOutputCheckerHandler(),
-                    Manager::create()
-                        ->add(
-                            Ed25519::create(),
-                            RS256::create(),
-                            ES256::create()
-                        )
-                ),
+                $credential_loader,
+                $assertion_validator,
             ),
         );
     }
@@ -552,6 +557,23 @@ class RouteCollector
         $source_dao                    = new WebAuthnCredentialSourceDao();
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $logger            = \BackendLogger::getDefaultLogger();
+        $credential_loader = new PublicKeyCredentialLoader(
+            new AttestationObjectLoader($attestation_statement_manager)
+        );
+        $credential_loader->setLogger($logger);
+        $assertion_validator = new AuthenticatorAssertionResponseValidator(
+            $source_dao,
+            null,
+            new ExtensionOutputCheckerHandler(),
+            Manager::create()
+                ->add(
+                    Ed25519::create(),
+                    RS256::create(),
+                    ES256::create()
+                )
+        );
+        $assertion_validator->setLogger($logger);
 
         return new AccessKeyCreationController(
             DisplayKeysTokensController::getCSRFToken(),
@@ -562,20 +584,8 @@ class RouteCollector
                     \ForgeConfig::get(ConfigurationVariables::NAME),
                     ServerHostname::rawHostname()
                 ),
-                new PublicKeyCredentialLoader(
-                    new AttestationObjectLoader($attestation_statement_manager)
-                ),
-                new AuthenticatorAssertionResponseValidator(
-                    $source_dao,
-                    null,
-                    new ExtensionOutputCheckerHandler(),
-                    Manager::create()
-                        ->add(
-                            Ed25519::create(),
-                            RS256::create(),
-                            ES256::create()
-                        )
-                ),
+                $credential_loader,
+                $assertion_validator,
             ),
         );
     }
@@ -1394,6 +1404,18 @@ class RouteCollector
         $source_dao            = new WebAuthnCredentialSourceDao();
         $response_factory      = HTTPFactoryBuilder::responseFactory();
         $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
+        $logger                = \BackendLogger::getDefaultLogger();
+        $credential_loader     = new PublicKeyCredentialLoader(
+            new AttestationObjectLoader($attestation_statement_manager)
+        );
+        $credential_loader->setLogger($logger);
+        $attestation_validator = new AuthenticatorAttestationResponseValidator(
+            $attestation_statement_manager,
+            $source_dao,
+            null,
+            new ExtensionOutputCheckerHandler()
+        );
+        $attestation_validator->setLogger($logger);
 
         return new PostRegistrationController(
             \UserManager::instance(),
@@ -1404,15 +1426,8 @@ class RouteCollector
                 ServerHostname::rawHostname()
             ),
             WebAuthnRegistration::getCredentialParameters(),
-            new PublicKeyCredentialLoader(
-                new AttestationObjectLoader($attestation_statement_manager)
-            ),
-            new AuthenticatorAttestationResponseValidator(
-                $attestation_statement_manager,
-                $source_dao,
-                null,
-                new ExtensionOutputCheckerHandler()
-            ),
+            $credential_loader,
+            $attestation_validator,
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
             new FeedbackSerializer(new \FeedbackDao()),
