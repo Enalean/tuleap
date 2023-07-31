@@ -22,19 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use Feedback;
 use HTTPRequest;
 use TemplateRenderer;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 
 final class LoginController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
+    public const URL = '/plugins/webauthn/login';
+
     public function __construct(
         private readonly TemplateRenderer $renderer,
         private readonly IncludeViteAssets $assets,
+        private readonly CSRFSynchronizerTokenInterface $synchronizer_token,
+        private readonly \UserManager $user_manager,
+        private readonly WebAuthnAuthentication $authentication,
     ) {
     }
 
@@ -45,13 +55,45 @@ final class LoginController implements DispatchableWithRequestNoAuthz, Dispatcha
             $layout->redirect($request->get('return_to') ?? '');
         }
 
+        if ($request->isPost()) {
+            $this->handlePost($request, $layout);
+        }
+
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'src/login.ts'));
 
         $layout->header([
             'title' => dgettext('tuleap-webauthn', 'Passwordless connection'),
             'body_class' => ['login'],
         ]);
-        $this->renderer->renderToPage('login', []);
+        $this->renderer->renderToPage('login', [
+            'csrf_token' => CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(self::URL)),
+        ]);
         $layout->footer([]);
+    }
+
+    private function handlePost(HTTPRequest $request, BaseLayout $layout): void
+    {
+        $this->synchronizer_token->check(self::URL, $request);
+
+        $username   = $request->get('username');
+        $key_result = $request->get('webauthn_result');
+        if (! is_string($username) || ! is_string($key_result)) {
+            $layout->addFeedback(Feedback::ERROR, dgettext('tuleap-webauthn', 'Submitted form is not valid'));
+            return;
+        }
+
+        $user = $this->user_manager->getUserByUserName($username);
+        if ($user === null) {
+            $layout->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-webauthn', 'User %s not found'), $username));
+            return;
+        }
+
+        $authentication_result = $this->authentication->checkKeyResult($user, $key_result);
+        if (Result::isOk($authentication_result)) {
+            $this->user_manager->openSessionForUser($user);
+            $layout->redirect($request->get('return_to') ?? '');
+        } else {
+            $layout->addFeedback(Feedback::ERROR, dgettext('tuleap-webauthn', 'Failed to authenticate you'));
+        }
     }
 }

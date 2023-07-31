@@ -9,6 +9,9 @@
                 <input id="webauthn-username" class="tlp-input tlp-input-large tuleap-sign-in-input" type="text" name="username"
                        placeholder="{{# dgettext }} tuleap-webauthn | Username {{/ dgettext }}" />
             </div>
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <button id="webauthn-button"
                     class="tlp-button-primary tlp-button-large tlp-button-wide tuleap-sign-in-button"
                     disabled>
