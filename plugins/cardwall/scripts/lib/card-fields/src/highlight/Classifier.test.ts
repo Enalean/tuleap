@@ -134,4 +134,21 @@ describe(`Classifier`, () => {
         expect(HighlightedText.isHighlight(third_highlight)).toBe(true);
         expect(third_highlight.content).toBe("first");
     });
+
+    it(`given a search string ending with a space it should not highlight everything`, () => {
+        const classifier = Classifier("search ");
+
+        const result = classifier.classify("researcher");
+
+        expect(result).toHaveLength(3);
+        const [start, highlight, end] = result;
+        expect(HighlightedText.isHighlight(start)).toBe(false);
+        expect(start.content).toBe("re");
+
+        expect(HighlightedText.isHighlight(highlight)).toBe(true);
+        expect(highlight.content).toBe("search");
+
+        expect(HighlightedText.isHighlight(end)).toBe(false);
+        expect(end.content).toBe("er");
+    });
 });
