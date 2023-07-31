@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@floating-ui/dom':
     specifier: 1.2.7
@@ -17,8 +21,8 @@ dependencies:
     specifier: workspace:*
     version: link:../tlp-badge
   hybrids:
-    specifier: 8.1.8
-    version: 8.1.8
+    specifier: 8.2.2
+    version: 8.2.2
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -40,7 +44,8 @@ packages:
       '@floating-ui/core': 1.2.6
     dev: false
 
-  /hybrids@8.1.8:
-    resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
+  /hybrids@8.2.2:
+    resolution: {integrity: sha512-xCangE3oItxeWMNKHLa0yn0MHi0MHBtGLIz0Ty7PwdcBBN2sQ0mrBvVSf4lLMyBFNO7x47/2lO13FSJB/SkPyw==}
+    engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false
