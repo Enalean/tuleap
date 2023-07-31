@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", (): void => {
 
         prepareRegistration();
         prepareRemove();
+        prepareEnablePasswordlessOnly();
     } else {
         const disabled_section = document.querySelector("#webauthn-disabled-section");
         if (disabled_section instanceof HTMLElement) {
@@ -143,5 +144,16 @@ function prepareRemove(): void {
                 error.classList.remove(HIDDEN);
             }
         );
+    });
+}
+
+function prepareEnablePasswordlessOnly(): void {
+    const toggle = document.querySelector("#passwordless-only-toggle");
+    if (!(toggle instanceof HTMLInputElement)) {
+        return;
+    }
+
+    toggle.addEventListener("input", () => {
+        toggle.form?.submit();
     });
 }

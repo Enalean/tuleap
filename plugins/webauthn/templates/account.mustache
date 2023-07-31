@@ -94,6 +94,35 @@
                     </div>
                 </div>
             </section>
+
+            {{# has_authenticators }}
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <div class="tlp-pane-header">
+                            <h1 class="tlp-pane-title">
+                                {{# dgettext }} tuleap-webauthn | Passwordless connection {{/ dgettext }}
+                            </h1>
+                        </div>
+
+                        <div class="tlp-pane-section">
+                            <form method="post">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="passwordless-only-toggle">
+                                        {{# dgettext }}
+                                            tuleap-webauthn | Disable password authentication {{/ dgettext }}
+                                    </label>
+                                    <div class="tlp-switch">
+                                        <input type="checkbox" id="passwordless-only-toggle"
+                                               class="tlp-switch-checkbox" disabled>
+                                        <label for="passwordless-only-toggle" class="tlp-switch-button"
+                                               aria-hidden="true"></label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            {{/ has_authenticators }}
         </div>
     </div>
 </div>
