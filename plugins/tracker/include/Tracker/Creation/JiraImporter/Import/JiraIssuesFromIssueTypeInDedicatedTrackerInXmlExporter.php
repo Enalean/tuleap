@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsInDedicatedTrackerXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
@@ -99,7 +99,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
         private readonly JiraToTuleapFieldTypeMapper $field_type_mapper,
         private readonly JiraUserRetriever $jira_user_retriever,
         private readonly XmlReportExporter $report_exporter,
-        private readonly ArtifactsXMLExporter $artifacts_xml_exporter,
+        private readonly ArtifactsInDedicatedTrackerXMLExporter $artifacts_xml_exporter,
         private readonly SemanticsXMLExporter $semantics_xml_exporter,
         private readonly AlwaysThereFieldsExporter $always_there_fields_exporter,
         private readonly StoryPointFieldExporter $story_point_field_exporter,
@@ -175,7 +175,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),
-            new ArtifactsXMLExporter(
+            new ArtifactsInDedicatedTrackerXMLExporter(
                 $wrapper,
                 $user_manager,
                 new DataChangesetXMLExporter(

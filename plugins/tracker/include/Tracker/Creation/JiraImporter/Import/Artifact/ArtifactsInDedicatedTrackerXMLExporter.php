@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
+use LogicException;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -35,7 +36,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 
-class ArtifactsXMLExporter
+class ArtifactsInDedicatedTrackerXMLExporter
 {
     /**
      * @var JiraClient
@@ -99,7 +100,11 @@ class ArtifactsXMLExporter
             return;
         }
 
-        $artifacts_node             = $tracker_node->addChild('artifacts');
+        $artifacts_node = $tracker_node->addChild('artifacts');
+        if ($artifacts_node === null) {
+            throw new LogicException('must not be here.');
+        }
+
         $already_seen_artifacts_ids = [];
 
         $iterator = JiraCollectionBuilder::iterateUntilTotal(
@@ -163,6 +168,10 @@ class ArtifactsXMLExporter
         $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
 
         $artifact_node = $artifacts_node->addChild('artifact');
+        if ($artifact_node === null) {
+            throw new LogicException('must not be here.');
+        }
+
         $artifact_node->addAttribute('id', (string) $issue_id);
 
         $attachment_collection = $this->attachment_collection_builder->buildCollectionOfAttachment(
