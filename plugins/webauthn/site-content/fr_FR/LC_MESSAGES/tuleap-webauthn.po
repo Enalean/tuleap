@@ -42,6 +42,9 @@ msgstr "Créée le"
 msgid "Deleting a passkey"
 msgstr "Suppression d'une clé d'authentification"
 
+msgid "Disable password authentication"
+msgstr "Désactiver l'authentification avec mot de passe"
+
 msgid "Failed to authenticate you"
 msgstr "Votre authentification a échoué"
 

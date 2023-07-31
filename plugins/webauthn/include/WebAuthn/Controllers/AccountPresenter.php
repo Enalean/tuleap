@@ -29,6 +29,7 @@ use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 final class AccountPresenter
 {
     public readonly bool $need_more_authenticators;
+    public readonly bool $has_authenticators;
 
     /**
      * @param AuthenticatorPresenter[] $authenticators
@@ -40,5 +41,6 @@ final class AccountPresenter
         public readonly CSRFSynchronizerTokenPresenter $csrf_token_del,
     ) {
         $this->need_more_authenticators = count($this->authenticators) < 2;
+        $this->has_authenticators       = ! empty($this->authenticators);
     }
 }

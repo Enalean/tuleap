@@ -42,6 +42,9 @@ msgstr ""
 msgid "Deleting a passkey"
 msgstr ""
 
+msgid "Disable password authentication"
+msgstr ""
+
 msgid "Failed to authenticate you"
 msgstr ""
 
