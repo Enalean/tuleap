@@ -105,15 +105,18 @@
                         </div>
 
                         <div class="tlp-pane-section">
-                            <form method="post">
+                            <form method="post" action="/webauthn/switch-passwordless">
                                 <div class="tlp-form-element">
                                     <label class="tlp-label" for="passwordless-only-toggle">
                                         {{# dgettext }}
                                             tuleap-webauthn | Disable password authentication {{/ dgettext }}
                                     </label>
+                                    {{# csrf_token_switch }}
+                                        {{> csrf_token_input }}
+                                    {{/ csrf_token_switch }}
                                     <div class="tlp-switch">
                                         <input type="checkbox" id="passwordless-only-toggle"
-                                               class="tlp-switch-checkbox" disabled>
+                                               name="passwordless-only-toggle" class="tlp-switch-checkbox">
                                         <label for="passwordless-only-toggle" class="tlp-switch-button"
                                                aria-hidden="true"></label>
                                     </div>

@@ -39,6 +39,9 @@ msgstr "Il manque le champs \"key_id\" dans le corps de la requête"
 msgid "\"name\" field is missing from the request body"
 msgstr "Il manque le champs \"name\" dans le corps de la requête"
 
+msgid "\"passwordless-only-toggle\" field is missing from the form"
+msgstr "Il manque le champs \"passwordless-only-toggle\" dans le formulaire"
+
 msgid "\"response\" field is missing from the request body"
 msgstr "Il manque le champs \"response\" dans le corps de la requête"
 
@@ -2507,6 +2510,10 @@ msgstr "Non catégorisé"
 
 msgid "Not found"
 msgstr "Page non trouvée"
+
+#, php-format
+msgid "Not implemented: switch passwordless only to %s"
+msgstr "Non implémenté: passer authentification sans mot de passe à %s"
 
 msgid "Note"
 msgstr "Note"

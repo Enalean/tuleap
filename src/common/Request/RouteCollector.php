@@ -250,6 +250,7 @@ use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationChallengeController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationController;
+use Tuleap\WebAuthn\Controllers\PostSwitchPasswordlessAuthenticationController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 use Tuleap\WebAuthn\WebAuthnRegistration;
 use Tuleap\Widget\WidgetFactory;
@@ -1466,6 +1467,14 @@ class RouteCollector
         );
     }
 
+    public static function postSwitchPasswordlessAuthentication(): DispatchableWithRequest
+    {
+        return new PostSwitchPasswordlessAuthenticationController(
+            \UserManager::instance(),
+            new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL),
+        );
+    }
+
     public static function getFeatureFlag(): FeatureFlagController
     {
         return new FeatureFlagController(
@@ -1664,6 +1673,8 @@ class RouteCollector
             $r->post('/authentication-challenge', [self::class, 'postWebAuthnAuthenticationChallenge']);
 
             $r->post('/key/delete', [self::class, 'deleteWebAuthnSource']);
+
+            $r->post('/switch-passwordless', [self::class, 'postSwitchPasswordlessAuthentication']);
         });
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');
