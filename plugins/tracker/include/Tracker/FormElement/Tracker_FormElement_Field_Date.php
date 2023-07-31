@@ -278,7 +278,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         //Only filter query if criteria is valuated
         $criteria_value = $this->getCriteriaValue($criteria);
 
-        if ($criteria_value === '' || $criteria_value === null || count($criteria_value) === 0) {
+        if (count($criteria_value) === 0) {
             return Option::nothing(ParametrizedFromWhere::class);
         }
 
@@ -313,9 +313,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      /**
      * Search in the db the criteria value used to search against this field.
      * @param Tracker_Report_Criteria $criteria
-     * @return mixed
      */
-    public function getCriteriaValue($criteria)
+    public function getCriteriaValue($criteria): array
     {
         if (! isset($this->criteria_value)) {
             $this->criteria_value = [];

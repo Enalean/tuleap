@@ -499,7 +499,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $date_field
             ->method('getCriteriaValue')
             ->with($criterion_date)
-            ->willReturn('');
+            ->willReturn([]);
 
         return $criterion_date;
     }

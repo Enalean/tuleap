@@ -50,7 +50,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         $criteria_value = $this->getCriteriaValue($criteria);
-        if (! $criteria_value) {
+        if (count($criteria_value) === 0) {
             return Option::nothing(ParametrizedFromWhere::class);
         }
 
