@@ -22,6 +22,7 @@ use std::collections::HashMap;
 #[derive(Debug, Deserialize)]
 pub struct HookData {
     pub updated_references: HashMap<String, UpdatedReferences>,
+    pub repository_path: String,
 }
 
 #[derive(Debug, Deserialize)]
