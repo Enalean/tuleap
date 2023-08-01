@@ -29,7 +29,18 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [POGettextPlugin.vite(), vue(), viteExternalsPlugin({ jquery: "jQuery" })],
+        plugins: [
+            POGettextPlugin.vite(),
+            vue({
+                template: {
+                    compilerOptions: {
+                        isCustomElement: (tag) =>
+                            tag.startsWith("tuleap-pullrequest-") && tag.includes("-comment"),
+                    },
+                },
+            }),
+            viteExternalsPlugin({ jquery: "jQuery" }),
+        ],
         build: {
             rollupOptions: {
                 external: ["jquery"],

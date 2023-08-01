@@ -69,6 +69,6 @@ describe("OverviewNewCommentForm", () => {
         });
 
         const component = wrapper.find("[data-test=pull-request-new-global-comment-component]");
-        expect(component.attributes("controller")).toBeDefined();
+        expect(component.exists()).toBe(true);
     });
 });
