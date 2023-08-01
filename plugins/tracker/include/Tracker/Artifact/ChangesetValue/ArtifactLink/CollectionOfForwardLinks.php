@@ -83,10 +83,31 @@ final class CollectionOfForwardLinks
         return new self($values_not_present_here);
     }
 
+    public function differenceByIdAndType(self $other_links): self
+    {
+        $values_not_present_here = [];
+        foreach ($other_links->artifact_links as $link) {
+            if (! $this->containsWithType($link)) {
+                $values_not_present_here[] = $link;
+            }
+        }
+        return new self($values_not_present_here);
+    }
+
     private function contains(ForwardLink $link): bool
     {
         foreach ($this->artifact_links as $our_link) {
             if ($our_link->getTargetArtifactId() === $link->getTargetArtifactId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function containsWithType(ForwardLink $link): bool
+    {
+        foreach ($this->artifact_links as $our_link) {
+            if ($our_link->getTargetArtifactId() === $link->getTargetArtifactId() && $our_link->getType() === $link->getType()) {
                 return true;
             }
         }

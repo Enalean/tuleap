@@ -41,12 +41,12 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * I'm responsible for link an artifact to another using artifact link field
  */
-final class ArtifactLinker
+class ArtifactLinker
 {
     public function __construct(
-        private RetrieveUsedArtifactLinkFields $form_element_factory,
-        private CreateNewChangeset $changeset_creator,
-        private RetrieveForwardLinks $forward_links_retriever,
+        private readonly RetrieveUsedArtifactLinkFields $form_element_factory,
+        private readonly CreateNewChangeset $changeset_creator,
+        private readonly RetrieveForwardLinks $forward_links_retriever,
     ) {
     }
 
@@ -77,7 +77,7 @@ final class ArtifactLinker
         $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
         $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
             $artifact_link_field->getId(),
-            $existing_links->differenceById($forward_links),
+            $existing_links->differenceByIdAndType($forward_links),
         );
         $container           = new ChangesetValuesContainer([], $new_changeset_value);
 
