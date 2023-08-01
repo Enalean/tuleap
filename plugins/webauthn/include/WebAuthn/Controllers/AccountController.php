@@ -35,6 +35,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
+use Tuleap\User\RetrievePasswordlessOnlyState;
 use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
@@ -48,6 +49,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
         private readonly EventDispatcherInterface $dispatcher,
         private readonly IncludeViteAssets $vite_assets,
         private readonly WebAuthnCredentialSourceDao $source_dao,
+        private readonly RetrievePasswordlessOnlyState $passwordless_only_state,
     ) {
     }
 
@@ -68,6 +70,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
                 fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $user),
                 $sources
             ),
+            $this->passwordless_only_state->isPasswordlessOnly($user),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL)),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(DeleteSourceController::URL)),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL))

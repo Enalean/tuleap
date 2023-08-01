@@ -1471,6 +1471,7 @@ class RouteCollector
     {
         return new PostSwitchPasswordlessAuthenticationController(
             \UserManager::instance(),
+            \UserManager::instance(),
             new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL),
         );
     }

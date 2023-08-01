@@ -36,16 +36,18 @@ use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use Tuleap\User\ProvideUserFromRow;
+use Tuleap\User\RetrievePasswordlessOnlyState;
 use Tuleap\User\RetrieveUserByEmail;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
+use Tuleap\User\SwitchPasswordlessOnlyState;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, RetrieveUserByUserName, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, RetrieveUserByUserName, ProvideUserFromRow, ICreateAccount, LogUser, SwitchPasswordlessOnlyState, RetrievePasswordlessOnlyState // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -1097,5 +1099,15 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     {
         $dao = $this->getDao();
         $dao->removeConfirmHash($confirm_hash);
+    }
+
+    public function switchPasswordlessOnly(PFUser $user, bool $passwordless_only): void
+    {
+        $this->getDao()->switchPasswordlessOnlyAuth((int) $user->getId(), $passwordless_only);
+    }
+
+    public function isPasswordlessOnly(PFUser $user): bool
+    {
+        return $this->getDao()->isPasswordlessOnlyAuth((int) $user->getId());
     }
 }

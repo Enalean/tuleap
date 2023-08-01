@@ -28,6 +28,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\SwitchPasswordlessOnlyState;
 
 final class PostSwitchPasswordlessAuthenticationController implements DispatchableWithRequest
 {
@@ -35,14 +36,15 @@ final class PostSwitchPasswordlessAuthenticationController implements Dispatchab
     private const REDIRECT_URL = '/plugins/webauthn/account';
 
     public function __construct(
-        private readonly ProvideCurrentUser $user_manager,
+        private readonly ProvideCurrentUser $provide_current_user,
+        private readonly SwitchPasswordlessOnlyState $passwordless_only_state,
         private readonly CSRFSynchronizerTokenInterface $synchronizer_token,
     ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $current_user = $this->user_manager->getCurrentUser();
+        $current_user = $this->provide_current_user->getCurrentUser();
         if ($current_user->isAnonymous()) {
             throw new ForbiddenException();
         }
@@ -54,11 +56,11 @@ final class PostSwitchPasswordlessAuthenticationController implements Dispatchab
 
         $switch = $request->get('passwordless-only-toggle');
         if (! is_string($switch)) {
-            $layout->addFeedback(\Feedback::ERROR, _('"passwordless-only-toggle" field is missing from the form'));
-            $layout->redirect(self::REDIRECT_URL);
+            $switch = 'off';
         }
 
-        $layout->addFeedback(\Feedback::ERROR, sprintf(_('Not implemented: switch passwordless only to %s'), $switch));
+        $this->passwordless_only_state->switchPasswordlessOnly($current_user, $switch === 'on');
+        $layout->addFeedback(\Feedback::SUCCESS, sprintf(_('Switch passwordless only to %s'), $switch));
 
         $layout->redirect(self::REDIRECT_URL);
     }

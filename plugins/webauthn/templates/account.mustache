@@ -116,7 +116,8 @@
                                     {{/ csrf_token_switch }}
                                     <div class="tlp-switch">
                                         <input type="checkbox" id="passwordless-only-toggle"
-                                               name="passwordless-only-toggle" class="tlp-switch-checkbox">
+                                               name="passwordless-only-toggle" class="tlp-switch-checkbox"
+                                               {{# passwordless_only }}checked{{/ passwordless_only }}>
                                         <label for="passwordless-only-toggle" class="tlp-switch-button"
                                                aria-hidden="true"></label>
                                     </div>
