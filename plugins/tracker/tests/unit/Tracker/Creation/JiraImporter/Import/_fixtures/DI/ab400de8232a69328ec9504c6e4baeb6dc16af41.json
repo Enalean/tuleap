@@ -1,0 +1,47 @@
+{
+    "startAt": 0,
+    "maxResults": 5000,
+    "total": 1,
+    "worklogs": [
+        {
+            "self": "https://example.com/rest/api/2/issue/10205/worklog/10027",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "updateAuthor": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-16T09:19:02.121+0200",
+            "updated": "2023-06-16T09:19:02.121+0200",
+            "started": "2023-06-16T04:18:50.315+0200",
+            "timeSpent": "5h",
+            "timeSpentSeconds": 18000,
+            "id": "10027",
+            "issueId": "10205"
+        }
+    ]
+}

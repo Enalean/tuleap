@@ -23,9 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
+use EventManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsInMonoTrackerXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraServerChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraCloudCommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraServerCommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAsArtifactXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportAllIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
@@ -39,9 +63,21 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaAPI;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaServer9API;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -50,6 +86,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\XML\XMLTracker;
 use UserManager;
+use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
 class JiraIssuesFromProjectInMonoTrackerInXmlExporter
@@ -60,7 +97,9 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         private readonly ErrorCollector $error_collector,
         private readonly JiraFieldRetriever $jira_field_retriever,
         private readonly JiraToTuleapFieldTypeMapper $field_type_mapper,
+        private readonly JiraUserRetriever $jira_user_retriever,
         private readonly XmlReportExporter $report_exporter,
+        private readonly ArtifactsInMonoTrackerXMLExporter $artifacts_in_mono_tracker_xml_exporter,
         private readonly SemanticsXMLExporter $semantics_xml_exporter,
         private readonly AlwaysThereFieldsExporter $always_there_fields_exporter,
         private readonly XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
@@ -68,6 +107,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         private readonly XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
         private readonly XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
         private readonly XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -77,6 +117,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
     public static function build(
         JiraClient $wrapper,
         LoggerInterface $logger,
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ): self {
         $error_collector = new ErrorCollector();
 
@@ -92,18 +133,36 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             $report_table_exporter
         );
 
-        $user_manager = UserManager::instance();
-        $forge_user   = $user_manager->getUserById(TrackerImporterUser::ID);
+        $creation_state_list_value_formatter = new CreationStateListValueFormatter();
+        $user_manager                        = UserManager::instance();
+        $forge_user                          = $user_manager->getUserById(TrackerImporterUser::ID);
 
         if ($forge_user === null) {
             throw new \RuntimeException("Unable to find TrackerImporterUser");
         }
 
+        $jira_user_retriever = new JiraUserRetriever(
+            $logger,
+            $user_manager,
+            $jira_user_on_tuleap_cache,
+            new JiraUserInfoQuerier(
+                $wrapper,
+                $logger
+            ),
+            $forge_user
+        );
+
         if ($wrapper->isJiraCloud()) {
+            $changelog_entries_builder = new JiraCloudChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraCloudCommentValuesBuilder($wrapper, $logger);
             $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($wrapper, $logger);
         } elseif ($wrapper->isJiraServer9()) {
+            $changelog_entries_builder = new JiraServerChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraServerCommentValuesBuilder($wrapper, $logger);
             $append_fields_from_create = new AppendFieldsFromCreateMetaServer9API($wrapper, $logger);
         } else {
+            $changelog_entries_builder = new JiraServerChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraServerCommentValuesBuilder($wrapper, $logger);
             $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($wrapper, $logger);
         }
 
@@ -113,7 +172,81 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             $error_collector,
             new JiraFieldRetriever($wrapper, $logger, $append_fields_from_create),
             $jira_field_mapper,
+            $jira_user_retriever,
             new XmlReportExporter(),
+            new ArtifactsInMonoTrackerXMLExporter(
+                $wrapper,
+                $user_manager,
+                $logger,
+                new IssueAsArtifactXMLExporter(
+                    new DataChangesetXMLExporter(
+                        new XML_SimpleXMLCDATAFactory(),
+                        new FieldChangeXMLExporter(
+                            $logger,
+                            new FieldChangeDateBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeStringBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeTextBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeFloatBuilder(
+                                new XML_SimpleXMLCDATAFactory()
+                            ),
+                            new FieldChangeListBuilder(
+                                new XML_SimpleXMLCDATAFactory(),
+                                UserXMLExporter::build()
+                            ),
+                            new FieldChangeFileBuilder(),
+                            new FieldChangeArtifactLinksBuilder(
+                                new XML_SimpleXMLCDATAFactory(),
+                            ),
+                            new ArtifactLinkTypeConverter(
+                                new TypePresenterFactory(
+                                    new TypeDao(),
+                                    new ArtifactLinksUsageDao()
+                                ),
+                            ),
+                        ),
+                        new IssueSnapshotCollectionBuilder(
+                            $changelog_entries_builder,
+                            new CurrentSnapshotBuilder(
+                                $logger,
+                                $creation_state_list_value_formatter,
+                                $jira_user_retriever
+                            ),
+                            new InitialSnapshotBuilder(
+                                $logger,
+                                new ListFieldChangeInitialValueRetriever(
+                                    $creation_state_list_value_formatter,
+                                    $jira_user_retriever
+                                )
+                            ),
+                            new ChangelogSnapshotBuilder(
+                                $creation_state_list_value_formatter,
+                                $logger,
+                                $jira_user_retriever
+                            ),
+                            $comment_value_builder,
+                            $logger,
+                            $jira_user_retriever
+                        ),
+                        new CommentXMLExporter(
+                            new XML_SimpleXMLCDATAFactory(),
+                            new CommentXMLValueEnhancer()
+                        ),
+                        $logger,
+                    ),
+                    new AttachmentCollectionBuilder(),
+                    new AttachmentXMLExporter(
+                        AttachmentDownloader::build($wrapper, $logger),
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    $logger,
+                ),
+            ),
             new SemanticsXMLExporter(),
             new AlwaysThereFieldsExporter(),
             new XmlReportAllIssuesExporter(
@@ -130,6 +263,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             ),
             new XmlReportCreatedRecentlyExporter($tql_report_exporter),
             new XmlReportUpdatedRecentlyExporter($tql_report_exporter),
+            EventManager::instance(),
         );
     }
 
@@ -142,6 +276,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
     public function exportIssuesToXml(
         PlatformConfiguration $jira_platform_configuration,
         XMLTracker $xml_tracker,
+        string $jira_base_url,
         string $jira_project_key,
         array $jira_issue_types,
         IDGenerator $field_id_generator,
@@ -201,6 +336,31 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         );
 
         $node_tracker = JiraXMLNodeBuilder::buildTrackerXMLNode($xml_tracker, $tracker_for_semantic_xml, $tracker_for_reports_xml);
+
+        $this->logger->debug("Export artifacts");
+        $issue_representation_collection = new IssueAPIRepresentationCollection();
+        $this->artifacts_in_mono_tracker_xml_exporter->exportArtifacts(
+            $node_tracker,
+            $jira_field_mapping_collection,
+            $issue_representation_collection,
+            $linked_issues_collection,
+            $jira_base_url,
+            $jira_project_key,
+            $jira_issue_types,
+        );
+
+        $this->logger->debug("Ask external plugin for other artifacts' data");
+        $this->event_dispatcher->dispatch(
+            new JiraImporterExternalPluginsEvent(
+                $node_tracker,
+                $jira_platform_configuration,
+                $issue_representation_collection,
+                $this->jira_user_retriever,
+                $this->wrapper,
+                $this->logger,
+                $jira_field_mapping_collection
+            )
+        );
 
         if ($this->error_collector->hasError()) {
             foreach ($this->error_collector->getErrors() as $error) {

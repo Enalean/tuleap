@@ -39,6 +39,7 @@ final class JiraAllIssuesInXmlExporterBuilder
             return JiraAllIssuesMonoTrackersInXmlExporter::build(
                 $jira_client,
                 $logger,
+                $jira_user_on_tuleap_cache,
             );
         }
 

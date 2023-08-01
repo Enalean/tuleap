@@ -1,0 +1,46 @@
+{
+    "startAt": 0,
+    "maxResults": 5000,
+    "total": 1,
+    "comments": [
+        {
+            "self": "https://example.com/rest/api/2/issue/10205/comment/10134",
+            "id": "10134",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "body": "Add informations about the different types of automotive software development ",
+            "renderedBody": "<p>Add informations about the different types of automotive software development </p>",
+            "updateAuthor": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-15T11:01:57.136+0200",
+            "updated": "2023-06-15T11:01:57.136+0200",
+            "jsdPublic": true
+        }
+    ]
+}

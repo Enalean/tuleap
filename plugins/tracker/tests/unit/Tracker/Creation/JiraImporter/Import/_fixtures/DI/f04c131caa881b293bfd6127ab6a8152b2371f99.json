@@ -1,0 +1,371 @@
+{
+    "self": "https://example.com/rest/api/2/issue/DI-3/changelog?maxResults=100&startAt=0",
+    "maxResults": 100,
+    "startAt": 0,
+    "total": 12,
+    "isLast": true,
+    "values": [
+        {
+            "id": "12120",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T14:59:20.417+0200",
+            "items": [
+                {
+                    "field": "labels",
+                    "fieldtype": "jira",
+                    "fieldId": "labels",
+                    "from": null,
+                    "fromString": "",
+                    "to": null,
+                    "toString": "car"
+                }
+            ]
+        },
+        {
+            "id": "12121",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T14:59:26.235+0200",
+            "items": [
+                {
+                    "field": "IssueParentAssociation",
+                    "fieldtype": "jira",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10204",
+                    "toString": "DI-1"
+                }
+            ]
+        },
+        {
+            "id": "12123",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T14:59:26.245+0200",
+            "items": [
+                {
+                    "field": "Epic Link",
+                    "fieldtype": "custom",
+                    "fieldId": "customfield_10008",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10204",
+                    "toString": "DI-1"
+                }
+            ]
+        },
+        {
+            "id": "12124",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:00:14.993+0200",
+            "items": [
+                {
+                    "field": "Component",
+                    "fieldtype": "jira",
+                    "fieldId": "components",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10003",
+                    "toString": "Car component"
+                }
+            ]
+        },
+        {
+            "id": "12146",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:04:50.399+0200",
+            "items": [
+                {
+                    "field": "Link",
+                    "fieldtype": "jira",
+                    "from": null,
+                    "fromString": null,
+                    "to": "DI-2",
+                    "toString": "This issue is blocked by DI-2"
+                }
+            ]
+        },
+        {
+            "id": "12147",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:05:28.466+0200",
+            "items": [
+                {
+                    "field": "Fix Version",
+                    "fieldtype": "jira",
+                    "fieldId": "fixVersions",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10015",
+                    "toString": "v1"
+                }
+            ]
+        },
+        {
+            "id": "12160",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:47:46.235+0200",
+            "items": [
+                {
+                    "field": "summary",
+                    "fieldtype": "jira",
+                    "fieldId": "summary",
+                    "from": null,
+                    "fromString": "Add wheel",
+                    "to": null,
+                    "toString": "Define flexible and scalable architecture"
+                }
+            ]
+        },
+        {
+            "id": "12161",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:48:09.646+0200",
+            "items": [
+                {
+                    "field": "description",
+                    "fieldtype": "jira",
+                    "fieldId": "description",
+                    "from": null,
+                    "fromString": null,
+                    "to": null,
+                    "toString": "The Software Defined Vehicle’s flexible and scalable architecture will enable the faster development and integration of new features throughout the vehicle lifecycle, directly into the cloud, that is, in secure online servers accessible from anywhere and anytime."
+                }
+            ]
+        },
+        {
+            "id": "12162",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:48:25.287+0200",
+            "items": [
+                {
+                    "field": "assignee",
+                    "fieldtype": "jira",
+                    "fieldId": "assignee",
+                    "from": null,
+                    "fromString": null,
+                    "to": "5d2ece042d76f30c36bf7e96",
+                    "toString": "Manon",
+                    "tmpFromAccountId": null,
+                    "tmpToAccountId": "5d2ece042d76f30c36bf7e96"
+                }
+            ]
+        },
+        {
+            "id": "12163",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:48:33.595+0200",
+            "items": [
+                {
+                    "field": "assignee",
+                    "fieldtype": "jira",
+                    "fieldId": "assignee",
+                    "from": "5d2ece042d76f30c36bf7e96",
+                    "fromString": "Manon",
+                    "to": "5e7341739858860c3eb126f0",
+                    "toString": "marie",
+                    "tmpFromAccountId": "5d2ece042d76f30c36bf7e96",
+                    "tmpToAccountId": "5e7341739858860c3eb126f0"
+                }
+            ]
+        },
+        {
+            "id": "12238",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-15T10:19:10.944+0200",
+            "items": [
+                {
+                    "field": "Story Points",
+                    "fieldtype": "custom",
+                    "fieldId": "customfield_10014",
+                    "from": null,
+                    "fromString": null,
+                    "to": null,
+                    "toString": "8"
+                }
+            ]
+        },
+        {
+            "id": "12247",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-16T09:20:05.632+0200",
+            "items": [
+                {
+                    "field": "Story Points",
+                    "fieldtype": "custom",
+                    "fieldId": "customfield_10014",
+                    "from": null,
+                    "fromString": "8",
+                    "to": null,
+                    "toString": "7"
+                }
+            ]
+        }
+    ]
+}

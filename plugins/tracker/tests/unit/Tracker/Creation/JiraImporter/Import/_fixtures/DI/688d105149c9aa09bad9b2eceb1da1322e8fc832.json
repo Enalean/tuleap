@@ -1,0 +1,159 @@
+{
+    "self": "https://example.com/rest/api/2/issue/DI-8/changelog?maxResults=100&startAt=0",
+    "maxResults": 100,
+    "startAt": 0,
+    "total": 5,
+    "isLast": true,
+    "values": [
+        {
+            "id": "12156",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:07:07.766+0200",
+            "items": [
+                {
+                    "field": "IssueParentAssociation",
+                    "fieldtype": "jira",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10209",
+                    "toString": "DI-6"
+                }
+            ]
+        },
+        {
+            "id": "12157",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5a73130451df342493650ea3",
+                "accountId": "5a73130451df342493650ea3",
+                "emailAddress": "user01@example.com",
+                "avatarUrls": {
+                    "48x48": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "24x24": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "16x16": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png",
+                    "32x32": "https://secure.gravatar.com/avatar/88e4be5aabfb4bf8cc8fea8661ccf091?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FY-5.png"
+                },
+                "displayName": "Yannis",
+                "active": true,
+                "timeZone": "Europe/Berlin",
+                "accountType": "atlassian"
+            },
+            "created": "2023-05-31T15:07:07.839+0200",
+            "items": [
+                {
+                    "field": "Parent",
+                    "fieldtype": "jira",
+                    "from": null,
+                    "fromString": null,
+                    "to": "10209",
+                    "toString": "DI-6"
+                }
+            ]
+        },
+        {
+            "id": "12167",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:53:22.989+0200",
+            "items": [
+                {
+                    "field": "summary",
+                    "fieldtype": "jira",
+                    "fieldId": "summary",
+                    "from": null,
+                    "fromString": "Headlightsin back",
+                    "to": null,
+                    "toString": "Headlights  back"
+                }
+            ]
+        },
+        {
+            "id": "12168",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T08:53:42.925+0200",
+            "items": [
+                {
+                    "field": "summary",
+                    "fieldtype": "jira",
+                    "fieldId": "summary",
+                    "from": null,
+                    "fromString": "Headlights  back",
+                    "to": null,
+                    "toString": "Headlights  at back"
+                }
+            ]
+        },
+        {
+            "id": "12176",
+            "author": {
+                "self": "https://example.com/rest/api/2/user?accountId=5d2ece042d76f30c36bf7e96",
+                "accountId": "5d2ece042d76f30c36bf7e96",
+                "emailAddress": "user03@example.com",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d2ece042d76f30c36bf7e96/0c3c4ee5-5a81-451e-be84-df7b0e80aa86/32"
+                },
+                "displayName": "Manon",
+                "active": true,
+                "timeZone": "Europe/Paris",
+                "accountType": "atlassian"
+            },
+            "created": "2023-06-01T09:02:31.149+0200",
+            "items": [
+                {
+                    "field": "assignee",
+                    "fieldtype": "jira",
+                    "fieldId": "assignee",
+                    "from": null,
+                    "fromString": null,
+                    "to": "5d2ece042d76f30c36bf7e96",
+                    "toString": "Manon",
+                    "tmpFromAccountId": null,
+                    "tmpToAccountId": "5d2ece042d76f30c36bf7e96"
+                }
+            ]
+        }
+    ]
+}
