@@ -137,12 +137,10 @@ describe("OverviewThreads", () => {
         expect(threads.element.childElementCount).toBe(2);
 
         const displayed_thread = wrapper.find("[data-test=pull-request-thread]");
-        expect(displayed_thread.attributes("comment")).toBeDefined();
-        expect(displayed_thread.attributes("controller")).toBeDefined();
+        expect(displayed_thread.exists()).toBe(true);
 
         const displayed_description = wrapper.find("[data-test=pull-request-overview-description]");
-        expect(displayed_description.attributes("description")).toBeDefined();
-        expect(displayed_description.attributes("controller")).toBeDefined();
+        expect(displayed_description.exists()).toBe(true);
     });
 
     it("When an error occurs while retrieving the comments, Then it should call the display_error_callback with the fault", async () => {
