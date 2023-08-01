@@ -1,5 +1,33 @@
 <div class="kanban-homepage">
-    <h1 class="kanban-homepage-title">{{# dgettext }} tuleap-kanban | Kanban {{/ dgettext }}</h1>
+    <h1 class="kanban-homepage-title">
+        {{# dgettext }} tuleap-kanban | Kanban {{/ dgettext }}
+
+        {{# is_admin }}
+            {{# has_at_least_one_kanban }}
+                {{# are_trackers_available }}
+                    <button
+                        type="button"
+                        class="kanban-homepage-title-action tlp-button-primary kanban-create-kanban-button"
+                        data-target-modal-id="add-kanban-modal"
+                    >
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                    </button>
+                {{/ are_trackers_available }}
+                {{^ are_trackers_available }}
+                    <button
+                        type="button"
+                        class="kanban-homepage-title-action tlp-button-primary tlp-tooltip tlp-tooltip-bottom"
+                        disabled
+                        data-tlp-tooltip="{{# dgettext }}tuleap-kanban | No tracker is available{{/ dgettext }}"
+                    >
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                    </button>
+                {{/ are_trackers_available }}
+            {{/ has_at_least_one_kanban }}
+        {{/ is_admin }}
+    </h1>
     {{^ has_at_least_one_kanban }}
         <section class="empty-state-page">
             <div class="empty-state-illustration">
@@ -9,10 +37,27 @@
                 {{# dgettext }}tuleap-kanban | No Kanban has been configured yet.{{/ dgettext }}
             </h1>
             {{# is_admin }}
-                <button type="button" class="empty-state-action tlp-button-primary tlp-button-large">
-                    <i class="fa-solid fa-plus tlp-button-icon"></i>
-                    {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
-                </button>
+                {{# are_trackers_available }}
+                    <button
+                        type="button"
+                        class="empty-state-action tlp-button-primary tlp-button-large kanban-create-kanban-button"
+                        data-target-modal-id="add-kanban-modal"
+                    >
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                    </button>
+                {{/ are_trackers_available }}
+                {{^ are_trackers_available }}
+                    <button
+                        type="button"
+                        class="empty-state-action tlp-button-primary tlp-button-large tlp-tooltip tlp-tooltip-bottom"
+                        disabled
+                        data-tlp-tooltip="{{# dgettext }}tuleap-kanban | No tracker is available{{/ dgettext }}"
+                    >
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                    </button>
+                {{/ are_trackers_available }}
             {{/ is_admin }}
             {{^ is_admin }}
                 <p class="empty-state-text">
@@ -51,3 +96,70 @@
         </div>
     {{/ has_at_least_one_kanban }}
 </div>
+{{# is_admin }}
+    <form
+        id="add-kanban-modal"
+        action="{{ create_kanban_url }}" method="post"
+        class="tlp-modal"
+        role="dialog"
+        aria-labelledby="add-kanban-modal-title"
+    >
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="add-kanban-modal-title">
+                {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+            </h1>
+            <button
+                class="tlp-modal-close"
+                type="button"
+                data-dismiss="modal"
+                aria-label="{{# dgettext }}tuleap-kanban | Close{{/ dgettext }}"
+            >
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="kanban-name">
+                    {{# dgettext }}tuleap-kanban | Kanban name{{/ dgettext }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input type="text" class="tlp-input" id="kanban-name" name="kanban-name" placeholder="Name" required>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="tracker-kanban">
+                    {{# dgettext }}tuleap-kanban | Source tracker{{/ dgettext }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <select class="tlp-select" id="tracker-kanban" name="tracker-kanban" required>
+                    <option value="" selected disabled>
+                        {{# dgettext }}tuleap-kanban | Choose a tracker{{/ dgettext }}
+                    </option>
+                    {{# trackers }}
+                        <option value="{{ id }}" {{# used }} disabled {{/ used }}> {{ name }} </option>
+                    {{/ trackers }}
+                </select>
+            </div>
+        </div>
+
+        <div class="tlp-modal-footer">
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
+                {{# dgettext }}tuleap-kanban | Cancel{{/ dgettext }}
+            </button>
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+            >
+                {{# dgettext }}tuleap-kanban | Create Kanban{{/ dgettext }}
+            </button>
+        </div>
+    </form>
+{{/ is_admin }}

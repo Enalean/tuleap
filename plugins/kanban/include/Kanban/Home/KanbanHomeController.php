@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
+use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\SplittedKanbanConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -43,6 +44,7 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
     public function __construct(
         private readonly ResponseFactoryInterface $response_factory,
         private readonly StreamFactoryInterface $stream_factory,
+        private readonly KanbanManager $kanban_manager,
         private readonly KanbanFactory $kanban_factory,
         private readonly KanbanItemDao $kanban_item_dao,
         private readonly \TemplateRendererFactory $renderer_factory,
@@ -97,6 +99,11 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         $presenter = new KanbanHomePresenter(
             $this->getKanbanSummaryPresenters($user, $project),
             $user->isAdmin((int) $project->getID()),
+            $this->kanban_manager->getTrackersWithKanbanUsage((int) $project->getID(), $user),
+            CreateKanbanController::getUrl($project),
+            \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(
+                (new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider())->getCSRF($project),
+            ),
         );
         $this->renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/')

@@ -51,6 +51,9 @@ class KanbanManager
         $this->dao->duplicateKanbans($tracker_mapping, $field_mapping, $report_mapping);
     }
 
+    /**
+     * @return list<array{id: int, name: string, used: bool}>
+     */
     public function getTrackersWithKanbanUsage(int $project_id, PFUser $user): array
     {
         $trackers     = [];

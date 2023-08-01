@@ -28,14 +28,31 @@ namespace Tuleap\Kanban\Home;
 final class KanbanHomePresenter
 {
     public readonly bool $has_at_least_one_kanban;
+    public readonly bool $are_trackers_available;
 
     /**
      * @param KanbanSummaryPresenter[] $kanban_summary_presenters
+     * @param list<array{id: int, name: string, used: bool}> $trackers
      */
     public function __construct(
         public readonly array $kanban_summary_presenters,
         public readonly bool $is_admin,
+        public readonly array $trackers,
+        public readonly string $create_kanban_url,
+        public readonly \Tuleap\CSRFSynchronizerTokenPresenter $csrf_token,
     ) {
         $this->has_at_least_one_kanban = count($this->kanban_summary_presenters) > 0;
+        $this->are_trackers_available  = $this->areTrackersAvailable();
+    }
+
+    private function areTrackersAvailable(): bool
+    {
+        foreach ($this->trackers as $tracker) {
+            if ($tracker['used'] === false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

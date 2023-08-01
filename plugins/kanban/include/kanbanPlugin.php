@@ -308,10 +308,14 @@ final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConf
 
     public function routeGetProject(): \Tuleap\Request\DispatchableWithRequest
     {
+        $dao             = new KanbanDao();
+        $tracker_factory = TrackerFactory::instance();
+
         return new \Tuleap\Kanban\Home\KanbanHomeController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            new KanbanFactory(TrackerFactory::instance(), new KanbanDao()),
+            new KanbanManager($dao, $tracker_factory),
+            new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
             new SapiEmitter(),
