@@ -69,7 +69,8 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
                 $sources
             ),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL)),
-            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(DeleteSourceController::URL))
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(DeleteSourceController::URL)),
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL))
         );
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));

@@ -39,6 +39,9 @@ msgstr ""
 msgid "\"name\" field is missing from the request body"
 msgstr ""
 
+msgid "\"passwordless-only-toggle\" field is missing from the form"
+msgstr ""
+
 msgid "\"response\" field is missing from the request body"
 msgstr ""
 
@@ -2471,6 +2474,10 @@ msgstr "Não categorizado"
 
 msgid "Not found"
 msgstr "Não encontrado"
+
+#, php-format
+msgid "Not implemented: switch passwordless only to %s"
+msgstr ""
 
 msgid "Note"
 msgstr "Nota"
