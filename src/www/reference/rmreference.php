@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\CrossReference;
+
 require_once __DIR__ . '/../include/pre.php';
 
 $target_id   = $request->get('target_id');
@@ -50,7 +52,7 @@ if ($project_admin) {
         $target_gid,
         $target_type,
         $target_key,
-        $user->getId()
+        (int) $user->getId()
     );
     $reference_manager = new ReferenceManager();
     $reference_manager->removeCrossReference($cross_reference);

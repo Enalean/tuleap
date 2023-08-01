@@ -22,6 +22,7 @@ namespace unit\Tracker\Reference;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Reference\CheckCrossReferenceValidityEvent;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -40,7 +41,7 @@ final class CrossReferenceValidatorTest extends TestCase
 
     public function testItExtractInvalidCrossReferences(): void
     {
-        $valid_cross_ref                       = new \CrossReference(
+        $valid_cross_ref                       = new CrossReference(
             1,
             108,
             "plugin_tracker_artifact",
@@ -51,7 +52,7 @@ final class CrossReferenceValidatorTest extends TestCase
             "rev",
             102
         );
-        $not_artifact_cross_reference          = new \CrossReference(
+        $not_artifact_cross_reference          = new CrossReference(
             11,
             108,
             "banana",
@@ -62,7 +63,7 @@ final class CrossReferenceValidatorTest extends TestCase
             "rev",
             102
         );
-        $artifact_not_existing_cross_reference = new \CrossReference(
+        $artifact_not_existing_cross_reference = new CrossReference(
             3,
             108,
             "plugin_tracker_artifact",
@@ -73,7 +74,7 @@ final class CrossReferenceValidatorTest extends TestCase
             "rev",
             102
         );
-        $user_cant_view_cross_reference        = new \CrossReference(
+        $user_cant_view_cross_reference        = new CrossReference(
             4,
             108,
             "plugin_tracker_artifact",
@@ -84,7 +85,7 @@ final class CrossReferenceValidatorTest extends TestCase
             "rev",
             102
         );
-        $invalid_target_cross_reference        = new \CrossReference(
+        $invalid_target_cross_reference        = new CrossReference(
             1,
             108,
             "plugin_tracker_artifact",

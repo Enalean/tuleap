@@ -19,44 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Reference;
+
 require_once __DIR__ . '/../../www/include/utils.php';
 
 class CrossReference
 {
-    public $id;
-    public $userId;
-    public $createdAt;
+    private $sourceUrl              = '';
+    private $targetUrl              = '';
+    public string $sourceKey        = '';
+    public string $insertSourceType = '';
+    public string $targetKey        = '';
+    public string $insertTargetType = '';
 
-    public $refSourceId;
-    public $refSourceGid;
-    public $refSourceType;
-    public $sourceUrl;
-    public $sourceKey;
-
-    public $refTargetId;
-    public $refTargetGid;
-    public $refTargetType;
-    public $targetUrl;
-    public $targetKey;
-    public $insertTargetType;
-    public $insertSourceType;
-
-    /**
-     * Constructor
-     *
-     */
-    public function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId)
-    {
-        $this->refSourceId   = $refSourceId;
-        $this->refSourceGid  = $refSourceGid;
-        $this->refSourceType = $refSourceType;
-        $this->refTargetId   = $refTargetId;
-        $this->refTargetGid  = $refTargetGid;
-        $this->refTargetType = $refTargetType;
-        $this->userId        = $userId;
-        $this->sourceUrl     = '';
-        $this->targetUrl     = '';
-
+    public function __construct(
+        public readonly int|string $refSourceId,
+        public readonly int $refSourceGid,
+        public readonly string $refSourceType,
+        public readonly string $refSourceKey,
+        public readonly int|string $refTargetId,
+        public readonly int $refTargetGid,
+        public readonly string $refTargetType,
+        public readonly string $refTargetKey,
+        public readonly int|string $userId,
+    ) {
         $this->sourceKey        = $refSourceKey;
         $this->insertSourceType = $refSourceType;
         $this->targetKey        = $refTargetKey;
@@ -66,104 +52,93 @@ class CrossReference
     }
 
     /** Accessors */
-    public function getRefSourceId()
+    public function getRefSourceId(): int|string
     {
         return $this->refSourceId;
     }
 
-    public function getRefSourceGid()
+    public function getRefSourceGid(): int
     {
         return $this->refSourceGid;
     }
 
-    public function getRefSourceType()
+    public function getRefSourceType(): string
     {
         return $this->refSourceType;
     }
 
-    public function getRefTargetId()
+    public function getRefTargetId(): int|string
     {
         return $this->refTargetId;
     }
 
-    public function getRefTargetGid()
+    public function getRefTargetGid(): int
     {
         return $this->refTargetGid;
     }
 
-    public function getRefTargetType()
+    public function getRefTargetType(): string
     {
         return $this->refTargetType;
     }
 
-    public function getUserId()
+    public function getUserId(): int|string
     {
         return $this->userId;
     }
 
-    public function getRefTargetUrl()
+    public function getRefTargetUrl(): string
     {
         return $this->targetUrl;
     }
 
-    public function getRefSourceUrl()
+    public function getRefSourceUrl(): string
     {
         return $this->sourceUrl;
     }
 
-    public function getRefSourceKey()
+    public function getRefSourceKey(): string
     {
         return $this->sourceKey;
     }
 
-    public function getRefTargetKey()
+    public function getRefTargetKey(): string
     {
         return $this->targetKey;
     }
 
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function getInsertSourceType()
+    public function getInsertSourceType(): string
     {
         return $this->insertSourceType;
     }
 
-    public function getInsertTargetType()
+    public function getInsertTargetType(): string
     {
         return $this->insertTargetType;
     }
 
-    /**
-     * Return true if current CrossReference is really "cross referenced" with $crossref
-     *
-     * @param CrossReference $crossref
-     * @return bool true if current CrossReference is really "cross referenced" with $crossref
-     */
-    public function isCrossReferenceWith($crossref)
+    public function isCrossReferenceWith(CrossReference $crossref): bool
     {
-        return $this->getRefSourceId() == $crossref->getRefTargetId() &&
-               $this->getRefSourceGid() == $crossref->getRefTargetGid() &&
-               $this->getRefSourceType() == $crossref->getRefTargetType() &&
-               $crossref->getRefSourceId() == $this->getRefTargetId() &&
-               $crossref->getRefSourceGid() == $this->getRefTargetGid() &&
-               $crossref->getRefSourceType() == $this->getRefTargetType();
+        return $this->getRefSourceId() === $crossref->getRefTargetId() &&
+            $this->getRefSourceGid() === $crossref->getRefTargetGid() &&
+            $this->getRefSourceType() === $crossref->getRefTargetType() &&
+            $crossref->getRefSourceId() === $this->getRefTargetId() &&
+            $crossref->getRefSourceGid() === $this->getRefTargetGid() &&
+            $crossref->getRefSourceType() === $this->getRefTargetType();
     }
 
-    public function computeUrls()
+    public function computeUrls(): void
     {
         $server_url  = \Tuleap\ServerHostname::HTTPSUrl();
         $group_param = '';
-        if ($this->refTargetGid != 100) {
+        if ($this->refTargetGid !== 100) {
             $group_param = "&group_id=" . $this->refTargetGid;
         }
-        $this->targetUrl = $server_url . "/goto?key=" . urlencode($this->targetKey) . "&val=" . urlencode($this->refTargetId) . $group_param;
+        $this->targetUrl = $server_url . "/goto?key=" . urlencode($this->targetKey) . "&val=" . urlencode((string) $this->refTargetId) . $group_param;
         $group_param     = '';
-        if ($this->refSourceGid != 100) {
+        if ($this->refSourceGid !== 100) {
             $group_param = "&group_id=" . $this->refSourceGid;
         }
-        $this->sourceUrl = $server_url . "/goto?key=" . urlencode($this->sourceKey) . "&val=" . urlencode($this->refSourceId) . $group_param;
+        $this->sourceUrl = $server_url . "/goto?key=" . urlencode($this->sourceKey) . "&val=" . urlencode((string) $this->refSourceId) . $group_param;
     }
 }

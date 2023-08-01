@@ -27,14 +27,14 @@ final class CheckCrossReferenceValidityEvent implements Dispatchable
     public const NAME = "checkCrossReferenceValidityEvent";
 
     /**
-     * @param \CrossReference[] $cross_references
+     * @param CrossReference[] $cross_references
      */
     public function __construct(private array $cross_references, private \PFUser $user)
     {
     }
 
     /**
-     * @return \CrossReference[]
+     * @return CrossReference[]
      */
     public function getCrossReferences(): array
     {

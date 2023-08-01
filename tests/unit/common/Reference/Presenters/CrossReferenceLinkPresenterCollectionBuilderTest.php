@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
+use Tuleap\Reference\CrossReference;
 
 class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -32,11 +33,11 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
      */
     private $builder;
     /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_1;
     /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_2;
 
@@ -156,8 +157,8 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
         int $ref_source_id,
         string $ref_source_url,
         string $ref_source_type,
-    ): \CrossReference {
-        $cross_ref = \Mockery::mock(\CrossReference::class);
+    ): CrossReference {
+        $cross_ref = \Mockery::mock(CrossReference::class);
         $cross_ref->shouldReceive('getRefTargetKey')->andReturn($ref_target_key);
         $cross_ref->shouldReceive('getRefTargetId')->andReturn($ref_target_id);
         $cross_ref->shouldReceive('getRefTargetGid')->andReturn(101);

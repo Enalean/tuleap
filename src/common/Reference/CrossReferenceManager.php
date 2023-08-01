@@ -20,14 +20,13 @@
 
 namespace Tuleap\Reference;
 
-use CrossReferenceDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class CrossReferenceManager
 {
-    public function __construct(private readonly CrossReferenceDao $legacy_dao, private readonly CrossReferencesDao $cross_references_dao,)
+    public function __construct(private readonly CrossReferencesDao $cross_references_dao,)
     {
     }
 
@@ -36,9 +35,9 @@ class CrossReferenceManager
      *
      * To be used when entity is deleted
      */
-    public function deleteEntity(string $id, string $nature, int $project_id): bool
+    public function deleteEntity(string $id, string $nature, int $project_id): void
     {
-        return $this->legacy_dao->deleteEntity($id, $nature, $project_id);
+        $this->cross_references_dao->deleteEntity($id, $nature, $project_id);
     }
 
     public function deleteReferencesWhenArtifactIsSource(Artifact $artifact): void

@@ -202,7 +202,7 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateProjectReferenceShortName(): void
     {
         $ref_dao   = \Mockery::spy(\ReferenceDao::class);
-        $cross_dao = \Mockery::spy(\CrossReferenceDao::class);
+        $cross_dao = \Mockery::spy(CrossReferenceDao::class);
 
         $this->rm->shouldReceive('_getReferenceDao')->andReturn($ref_dao);
         $this->rm->shouldReceive('_getCrossReferenceDao')->andReturn($cross_dao);

@@ -20,29 +20,18 @@
 
 namespace Tuleap\Bugzilla;
 
-use CrossReference;
-use CrossReferenceDao;
 use Tuleap\Bugzilla\Reference\Reference;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
+use Tuleap\Reference\CrossReference;
+use Tuleap\Reference\CrossReferencesDao;
 
 class CrossReferenceCreator
 {
-    /**
-     * @var CrossReferenceDao
-     */
-    private $dao;
-    /**
-     * @var RESTReferenceCreator
-     */
-    private $rest_reference_creator;
-
-    public function __construct(CrossReferenceDao $dao, RESTReferenceCreator $rest_reference_creator)
+    public function __construct(private readonly CrossReferencesDao $dao, private readonly RESTReferenceCreator $rest_reference_creator)
     {
-        $this->dao                    = $dao;
-        $this->rest_reference_creator = $rest_reference_creator;
     }
 
-    public function create(CrossReference $cross_reference, Reference $bugzilla_reference)
+    public function create(CrossReference $cross_reference, Reference $bugzilla_reference): void
     {
         if (! $this->dao->fullReferenceExistInDb($cross_reference)) {
             $this->dao->createDbCrossRef($cross_reference);

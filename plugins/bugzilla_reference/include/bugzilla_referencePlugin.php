@@ -33,6 +33,8 @@ use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Reference\CrossReference;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceValidator;
 use Tuleap\Reference\ReservedKeywordsRetriever;
@@ -160,9 +162,9 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         $this->getCrossReferenceCreator()->create($cross_reference, $bugzilla);
     }
 
-    private function getCrossReferenceCreator()
+    private function getCrossReferenceCreator(): CrossReferenceCreator
     {
-        return new CrossReferenceCreator(new CrossReferenceDao(), $this->getRESTReferenceCreator());
+        return new CrossReferenceCreator(new CrossReferencesDao(), $this->getRESTReferenceCreator());
     }
 
     private function getRESTReferenceCreator(): RESTReferenceCreator
@@ -186,7 +188,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
             return;
         }
 
-        $dao                            = new CrossReferenceDao();
+        $dao                            = new \Tuleap\Reference\CrossReferencesDao();
         $params['is_reference_removed'] = $dao->deleteFullCrossReference($cross_reference);
     }
 

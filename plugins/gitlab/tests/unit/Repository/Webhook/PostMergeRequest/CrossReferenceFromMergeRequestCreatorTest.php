@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Reference\CrossReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -276,14 +277,14 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             ->expects(self::exactly(2))
             ->method('insertCrossReference')
             ->willReturnCallback(
-                fn (\CrossReference $cross_reference): bool => match (true) {
+                fn(CrossReference $cross_reference): bool => match (true) {
                     $cross_reference->getRefSourceId() === 'root/repo01/2'
-                        && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
-                        && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                        && $cross_reference->getRefSourceGid() === 101
-                        && $cross_reference->getRefTargetId() === 42
-                        && $cross_reference->getRefTargetGid() === 110,
-                    $cross_reference->getRefSourceId() === 'root/repo01/2'
+                    && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
+                    && $cross_reference->getRefSourceKey() === 'gitlab_mr'
+                    && $cross_reference->getRefSourceGid() === 101
+                    && $cross_reference->getRefTargetId() === 42
+                    && $cross_reference->getRefTargetGid() === 110,
+                        $cross_reference->getRefSourceId() === 'root/repo01/2'
                         && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
                         && $cross_reference->getRefSourceKey() === 'gitlab_mr'
                         && $cross_reference->getRefSourceGid() === 101

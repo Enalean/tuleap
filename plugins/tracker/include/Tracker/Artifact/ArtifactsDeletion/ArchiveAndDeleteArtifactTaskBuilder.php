@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use CrossReferenceDao;
 use EventManager;
 use ForgeConfig;
 use PermissionsDao;
@@ -117,7 +116,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
             ),
             new ArtifactDependenciesDeletor(
                 new PermissionsManager(new PermissionsDao()),
-                new CrossReferenceManager(new CrossReferenceDao(), new CrossReferencesDao()),
+                new CrossReferenceManager(new CrossReferencesDao()),
                 new Tracker_Artifact_PriorityManager(
                     new Tracker_Artifact_PriorityDao(),
                     new Tracker_Artifact_PriorityHistoryDao(),

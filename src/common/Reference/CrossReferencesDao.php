@@ -64,4 +64,198 @@ class CrossReferencesDao extends DataAccessObject
             $project_id
         );
     }
+
+    public function updateTargetKeyword(string $old_keyword, string $keyword, int $group_id): void
+    {
+        $this->getDB()->run(
+            "UPDATE cross_references SET target_keyword=? WHERE target_keyword=? and target_gid=?",
+            $keyword,
+            $old_keyword,
+            $group_id
+        );
+    }
+
+    public function updateSourceKeyword(string $old_keyword, string $keyword, int $group_id): void
+    {
+        $this->getDB()->run(
+            "UPDATE cross_references SET source_keyword=? WHERE source_keyword=? and source_gid=?",
+            $keyword,
+            $old_keyword,
+            $group_id
+        );
+    }
+
+    public function deleteEntity(string $id, string $nature, int $group_id): void
+    {
+        $this->getDB()->run(
+            "DELETE FROM cross_references
+                WHERE (source_type = ? AND source_id = ? AND source_gid = ? )
+                   OR (target_type = ? AND target_id = ? AND target_gid = ? )",
+            $nature,
+            $id,
+            $group_id,
+            $nature,
+            $id,
+            $group_id
+        );
+    }
+
+    public function createDbCrossRef(CrossReference $cross_ref): bool
+    {
+        $this->getDB()->insert(
+            'cross_references',
+            [
+                'created_at' => time(),
+                'user_id' => (int) $cross_ref->userId,
+                'source_type' => $cross_ref->insertSourceType,
+                'source_keyword' => $cross_ref->sourceKey,
+                'source_id' => $cross_ref->refSourceId,
+                'source_gid' => $cross_ref->refSourceGid,
+                'target_type' => $cross_ref->insertTargetType,
+                'target_keyword' => $cross_ref->targetKey,
+                'target_id' => $cross_ref->refTargetId,
+                'target_gid' => $cross_ref->refTargetGid,
+            ]
+        );
+        return true;
+    }
+
+    public function fullReferenceExistInDb(CrossReference $cross_ref): bool
+    {
+        return $this->getDB()->exists(
+            "SELECT * FROM cross_references WHERE source_id=? AND
+                          target_id=? AND
+                          source_gid=? AND
+                          target_gid=? AND
+                          source_type=? AND
+                          target_keyword=? AND
+                          target_type=?",
+            $cross_ref->refSourceId,
+            $cross_ref->refTargetId,
+            $cross_ref->refSourceGid,
+            $cross_ref->refTargetGid,
+            $cross_ref->insertSourceType,
+            $cross_ref->targetKey,
+            $cross_ref->insertTargetType
+        );
+    }
+
+    public function existInDb(CrossReference $cross_ref): bool
+    {
+        return $this->getDB()->exists(
+            "SELECT * from cross_references WHERE
+                        source_id=? AND
+                        target_id=? AND
+                        source_gid=? AND
+                        target_gid=? AND
+                        source_type=? AND
+                        target_type=?",
+            $cross_ref->refSourceId,
+            $cross_ref->refTargetId,
+            $cross_ref->refSourceGid,
+            $cross_ref->refTargetGid,
+            $cross_ref->insertSourceType,
+            $cross_ref->insertTargetType
+        );
+    }
+
+    public function deleteCrossReference(CrossReference $cross_ref): bool
+    {
+        $sql = "DELETE FROM cross_references WHERE
+                ( ( target_gid  = ? AND
+                    target_id   = ? AND
+                    target_type = ?
+                  )
+                  AND
+                  ( source_gid  = ? AND
+                    source_id   = ? AND
+                    source_type = ?
+                  )
+                )
+                OR
+                ( ( target_gid  = ? AND
+                    target_id   = ? AND
+                    target_type = ?
+                  )
+                  AND
+                  ( source_gid  = ? AND
+                    source_id   = ? AND
+                    source_type = ?
+                  )
+                )";
+
+        $this->getDB()->run(
+            $sql,
+            $cross_ref->refTargetGid,
+            $cross_ref->refTargetId,
+            $cross_ref->getInsertTargetType(),
+            $cross_ref->refSourceGid,
+            $cross_ref->refSourceId,
+            $cross_ref->getInsertSourceType(),
+            $cross_ref->refTargetGid,
+            $cross_ref->refTargetId,
+            $cross_ref->getInsertTargetType(),
+            $cross_ref->refSourceGid,
+            $cross_ref->refSourceId,
+            $cross_ref->getInsertSourceType()
+        );
+
+        return true;
+    }
+
+    public function deleteFullCrossReference(CrossReference $cross_ref): bool
+    {
+        $sql = "DELETE FROM cross_references WHERE
+                ( ( target_gid     = ? AND
+                    target_id      = ? AND
+                    target_type    = ? AND
+                    target_keyword = ?
+                  )
+                  AND
+                  ( source_gid  = ? AND
+                    source_id   = ? AND
+                    source_type = ?
+                  )
+                )
+                OR
+                ( ( target_gid     = ? AND
+                    target_id      = ? AND
+                    target_type    = ? AND
+                    target_keyword = ?
+                  )
+                  AND
+                  ( source_gid  = ? AND
+                    source_id   = ? AND
+                    source_type = ?
+                  )
+                )";
+        $this->getDB()->run(
+            $sql,
+            $cross_ref->refTargetGid,
+            $cross_ref->refTargetId,
+            $cross_ref->getInsertTargetType(),
+            $cross_ref->targetKey,
+            $cross_ref->refSourceGid,
+            $cross_ref->refSourceId,
+            $cross_ref->getInsertSourceType(),
+            $cross_ref->refTargetGid,
+            $cross_ref->refTargetId,
+            $cross_ref->getInsertTargetType(),
+            $cross_ref->targetKey,
+            $cross_ref->refSourceGid,
+            $cross_ref->refSourceId,
+            $cross_ref->getInsertSourceType()
+        );
+
+        return true;
+    }
+
+    public function getReferenceByKeyword(string $keyword): array
+    {
+        $sql = "SELECT *
+            FROM cross_references
+            WHERE source_keyword = ?";
+
+        return $this->getDB()->row($sql, $keyword);
+    }
 }

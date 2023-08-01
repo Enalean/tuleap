@@ -263,7 +263,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     protected function getValueDao()
     {
-        return new CrossReferenceDao();
+        return new CrossReferencesDao();
     }
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
