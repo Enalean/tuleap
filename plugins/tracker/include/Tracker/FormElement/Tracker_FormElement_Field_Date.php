@@ -332,6 +332,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->criteria_value[$criteria->report->id];
     }
 
+    public function setCriteriaValue(mixed $criteria_value, mixed $report_id): void
+    {
+        // Only exist to clean invalid values in tracker report session
+        // Can be removed after some time once sessions have expired
+        if ($criteria_value === '') {
+            $criteria_value = [];
+        }
+        parent::setCriteriaValue($criteria_value, $report_id);
+    }
+
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
     {
         return;
@@ -341,13 +351,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *
      * @param mixed $value The criteria value submitted by the user
-     *
-     * @return mixed
      */
-    public function getFormattedCriteriaValue($value)
+    public function getFormattedCriteriaValue($value): array
     {
         if (empty($value['to_date']) && empty($value['from_date'])) {
-            return '';
+            return [];
         } else {
             //from date
             if (empty($value['from_date'])) {
