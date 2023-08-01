@@ -1,30 +1,53 @@
 <div class="kanban-homepage">
     <h1 class="kanban-homepage-title">{{# dgettext }} tuleap-kanban | Kanban {{/ dgettext }}</h1>
-    <div class="kanban-homepage-kanban-container">
-        {{# kanban_summary_presenters }}
-            <a href="/kanban/{{ id }}" class="tlp-card tlp-card-selectable kanban-homepage-kanban tlp-swatch-{{ color }}">
-                <span class="kanban-homepage-kanban-title-container">
-                    <span class="kanban-homepage-kanban-title">{{ name }}</span>
-                    <span class="kanban-homepage-kanban-spacer"></span>
-                    <span class="kanban-homepage-kanban-badge tlp-badge-{{ color }} tlp-badge-outline">
-                        {{# dngettext }}
-                            tuleap-kanban |
-                            %s open |
-                            %s open |
-                            {{ count_open_kanban_items }} |
-                            {{ count_open_kanban_items }}
-                        {{/ dngettext }}
-                        /
-                        {{# dngettext }}
-                            tuleap-kanban |
-                            %s closed |
-                            %s closed |
-                            {{ count_closed_kanban_items }} |
-                            {{ count_closed_kanban_items }}
-                        {{/ dngettext }}
+    {{^ has_at_least_one_kanban }}
+        <section class="empty-state-page">
+            <div class="empty-state-illustration">
+                {{> svg-empty-state-tumbleweed }}
+            </div>
+            <h1 class="empty-state-title">
+                {{# dgettext }}tuleap-kanban | No Kanban has been configured yet.{{/ dgettext }}
+            </h1>
+            {{# is_admin }}
+                <button type="button" class="empty-state-action tlp-button-primary tlp-button-large">
+                    <i class="fa-solid fa-plus tlp-button-icon"></i>
+                    {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                </button>
+            {{/ is_admin }}
+            {{^ is_admin }}
+                <p class="empty-state-text">
+                    {{# dgettext }}tuleap-kanban | Please come back later.{{/ dgettext }}
+                </p>
+            {{/ is_admin }}
+        </section>
+    {{/ has_at_least_one_kanban }}
+    {{# has_at_least_one_kanban }}
+        <div class="kanban-homepage-kanban-container">
+            {{# kanban_summary_presenters }}
+                <a href="/kanban/{{ id }}" class="tlp-card tlp-card-selectable kanban-homepage-kanban tlp-swatch-{{ color }}">
+                    <span class="kanban-homepage-kanban-title-container">
+                        <span class="kanban-homepage-kanban-title">{{ name }}</span>
+                        <span class="kanban-homepage-kanban-spacer"></span>
+                        <span class="kanban-homepage-kanban-badge tlp-badge-{{ color }} tlp-badge-outline">
+                            {{# dngettext }}
+                                tuleap-kanban |
+                                %s open |
+                                %s open |
+                                {{ count_open_kanban_items }} |
+                                {{ count_open_kanban_items }}
+                            {{/ dngettext }}
+                            /
+                            {{# dngettext }}
+                                tuleap-kanban |
+                                %s closed |
+                                %s closed |
+                                {{ count_closed_kanban_items }} |
+                                {{ count_closed_kanban_items }}
+                            {{/ dngettext }}
+                        </span>
                     </span>
-                </span>
-            </a>
-        {{/ kanban_summary_presenters }}
-    </div>
+                </a>
+            {{/ kanban_summary_presenters }}
+        </div>
+    {{/ has_at_least_one_kanban }}
 </div>

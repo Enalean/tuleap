@@ -22,13 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\Home;
 
+/**
+ * @psalm-immutable
+ */
 final class KanbanHomePresenter
 {
+    public readonly bool $has_at_least_one_kanban;
+
     /**
      * @param KanbanSummaryPresenter[] $kanban_summary_presenters
      */
     public function __construct(
         public readonly array $kanban_summary_presenters,
+        public readonly bool $is_admin,
     ) {
+        $this->has_at_least_one_kanban = count($this->kanban_summary_presenters) > 0;
     }
 }
