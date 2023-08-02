@@ -397,15 +397,15 @@ final class CreateProjectFromJira
                             $jira_issue_types,
                             $jira_epic_issue_type
                         );
-
-                        $xml_element = $this->addWidgetOnDashboard(
-                            $xml_element,
-                            $board,
-                            $jira_issue_types,
-                            $jira_epic_issue_type,
-                            $logger
-                        );
                     }
+
+                    $xml_element = $this->addWidgetOnDashboard(
+                        $xml_element,
+                        $board,
+                        $jira_issue_types,
+                        $jira_epic_issue_type,
+                        $logger
+                    );
 
                     return Result::ok($xml_element);
                 }
