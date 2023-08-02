@@ -22,26 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\DynamicCredentials\REST;
 
-use Tuleap\Cryptography\Exception\InvalidKeyException;
-use Tuleap\DynamicCredentials\Plugin\PluginInfo;
+use Tuleap\Cryptography\Asymmetric\SignaturePublicKey;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Option\Option;
 
 final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use \Tuleap\ForgeConfigSandbox;
+
     public const PUBLIC_KEY  = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
     public const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
     public const USED_DOMAIN = 'example.com';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        \ForgeConfig::store();
         \ForgeConfig::set('sys_default_domain', self::USED_DOMAIN);
-    }
-
-    public function tearDown(): void
-    {
-        \ForgeConfig::restore();
-        parent::tearDown();
     }
 
     /**
@@ -49,10 +45,9 @@ final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testSignatureIsValid(string $signature, string $parameter, bool $expected_result): void
     {
-        $plugin_info = $this->createMock(PluginInfo::class);
-        $plugin_info->method('getPropertyValueForName')->willReturn(self::PUBLIC_KEY);
-
-        $request_signature_verifier = new RequestSignatureVerifier($plugin_info);
+        $request_signature_verifier = new RequestSignatureVerifier(
+            Option::fromValue(new SignaturePublicKey(new ConcealedString(base64_decode(self::PUBLIC_KEY))))
+        );
 
         self::assertEquals($expected_result, $request_signature_verifier->isSignatureValid($signature, $parameter));
     }
@@ -74,13 +69,9 @@ final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         return base64_encode(sodium_crypto_sign_detached(self::USED_DOMAIN . $parameter, $secret_key_decoded));
     }
 
-    public function testRejectionWhenInvalidPublicKeyIsGiven(): void
+    public function testRejectionWhenNoPublicIsGiven(): void
     {
-        $plugin_info = $this->createMock(PluginInfo::class);
-        $plugin_info->method('getPropertyValueForName')->willReturn('invalid_public_key');
-
-        $this->expectException(InvalidKeyException::class);
-
-        new RequestSignatureVerifier($plugin_info);
+        $request_signature_verifier = new RequestSignatureVerifier(Option::nothing(SignaturePublicKey::class));
+        self::assertFalse($request_signature_verifier->isSignatureValid(self::getSignature('param'), 'param'));
     }
 }

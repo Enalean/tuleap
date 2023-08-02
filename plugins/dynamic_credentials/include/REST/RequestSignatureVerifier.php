@@ -18,48 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\REST;
 
 use Tuleap\Cryptography\Asymmetric\AsymmetricCrypto;
 use Tuleap\Cryptography\Asymmetric\SignaturePublicKey;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
-use Tuleap\DynamicCredentials\Plugin\PluginInfo;
+use Tuleap\Option\Option;
 use Tuleap\ServerHostname;
 
 class RequestSignatureVerifier
 {
     /**
-     * @var SignaturePublicKey
+     * @psalm-param Option<SignaturePublicKey> $signature_public_key
      */
-    private $signature_public_key;
-
-    /**
-     * @throws \Tuleap\Cryptography\Exception\InvalidKeyException
-     */
-    public function __construct(PluginInfo $plugin_information)
-    {
-        $this->signature_public_key = new SignaturePublicKey(
-            new ConcealedString(
-                base64_decode($plugin_information->getPropertyValueForName('signature_public_key'))
-            )
-        );
+    public function __construct(
+        private readonly Option $signature_public_key,
+    ) {
     }
 
-    public function isSignatureValid($signature, ...$request_parameters)
+    public function isSignatureValid($signature, ...$request_parameters): bool
     {
-        $message_to_verify = ServerHostname::hostnameWithHTTPSPort() . implode('', $request_parameters);
+        return $this->signature_public_key->mapOr(
+            function (SignaturePublicKey $signature_public_key) use ($signature, $request_parameters): bool {
+                $message_to_verify = ServerHostname::hostnameWithHTTPSPort() . implode('', $request_parameters);
 
-        $decoded_signature = base64_decode($signature, true);
-        if ($decoded_signature === false) {
-            return false;
-        }
-        try {
-            $is_signature_valid = AsymmetricCrypto::verify($message_to_verify, $this->signature_public_key, $decoded_signature);
-        } catch (InvalidSignatureException $ex) {
-            return false;
-        }
+                $decoded_signature = base64_decode($signature, true);
+                if ($decoded_signature === false) {
+                    return false;
+                }
+                try {
+                    $is_signature_valid = AsymmetricCrypto::verify($message_to_verify, $signature_public_key, $decoded_signature);
+                } catch (InvalidSignatureException $ex) {
+                    return false;
+                }
 
-        return $is_signature_valid;
+                return $is_signature_valid;
+            },
+            false
+        );
     }
 }
