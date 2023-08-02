@@ -35,7 +35,9 @@ use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\SwitchPasswordlessOnlyState;
 use Tuleap\WebAuthn\Source\DeleteCredentialSource;
+use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\GetCredentialSourceById;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use function Psl\Json\decode as psl_json_decode;
@@ -45,8 +47,11 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
     public const URL = '/webauthn/key/delete';
 
     public function __construct(
-        private readonly ProvideCurrentUser $user_manager,
-        private readonly GetCredentialSourceById&DeleteCredentialSource $source_dao,
+        private readonly ProvideCurrentUser $provide_current_user,
+        private readonly SwitchPasswordlessOnlyState $passwordless_only_state,
+        private readonly GetCredentialSourceById $source_dao,
+        private readonly DeleteCredentialSource $delete_credential_source,
+        private readonly GetAllCredentialSourceByUserId $credential_source_by_user_id,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
         private readonly ResponseFactoryInterface $response_factory,
         private readonly ISerializeFeedback $serialize_feedback,
@@ -59,7 +64,7 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $current_user = $this->user_manager->getCurrentUser();
+        $current_user = $this->provide_current_user->getCurrentUser();
         if ($current_user->isAnonymous()) {
             return $this->error_response_builder->build(401);
         }
@@ -102,7 +107,10 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
                         return $this->response_factory->createResponse(200);
                     }
 
-                    $this->source_dao->deleteCredentialSource($key_id);
+                    $this->delete_credential_source->deleteCredentialSource($key_id);
+                    if (empty($this->credential_source_by_user_id->getAllByUserId($source->getUserId()))) {
+                        $this->passwordless_only_state->switchPasswordlessOnly(new \PFUser(['user_id' => $source->getUserId()]), false);
+                    }
 
                     $this->serialize_feedback->serialize(
                         $current_user,
