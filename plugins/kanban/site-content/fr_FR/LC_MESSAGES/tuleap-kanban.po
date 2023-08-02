@@ -39,6 +39,9 @@ msgstr "Activer Kanban"
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
 
+msgid "Add a Kanban"
+msgstr "Ajouter un Kanban"
+
 msgid "Add to dashboard"
 msgstr "Ajouter au tableau de bord"
 
@@ -79,8 +82,14 @@ msgstr "Kanban n'est actuellement pas actif."
 msgid "Kanban not found."
 msgstr "Le Kanban requis n'a pas pu être trouvé."
 
+msgid "No Kanban has been configured yet."
+msgstr "Aucun Kanban n'a été configuré."
+
 msgid "None"
 msgstr "Aucun"
+
+msgid "Please come back later."
+msgstr "Merci de revenir plus tard."
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -91,7 +100,7 @@ msgstr "Il n’y a aucun élément visible"
 #, php-format
 msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
 msgstr ""
-"Une <a href=\"%1$s\">première instance de kanban</a> a été créée pour vous."
+"Une <a href=\"%1$s\">première instance de kanban</a> a été créée pour vous !"
 
 #, php-format
 msgid ""

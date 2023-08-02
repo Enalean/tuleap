@@ -85,6 +85,7 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         );
         $presenter = new KanbanHomePresenter(
             $this->getKanbanSummaryPresenters($user, $project),
+            $user->isAdmin((int) $project->getID()),
         );
         $this->renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/')
