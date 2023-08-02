@@ -599,6 +599,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $login_manager               = new User_LoginManager(
                 EventManager::instance(),
                 $this,
+                $this,
                 new \Tuleap\User\PasswordVerifier($password_handler),
                 $password_expiration_checker,
                 $password_handler

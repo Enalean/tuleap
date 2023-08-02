@@ -21,6 +21,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\PasswordVerifier;
+use Tuleap\User\RetrievePasswordlessOnlyState;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -42,6 +43,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
         UserManager $user_manager,
+        private readonly RetrievePasswordlessOnlyState $passwordless_only_state,
         PasswordVerifier $password_verifier,
         User_PasswordExpirationChecker $password_expiration_checker,
         PasswordHandler $password_handler,
@@ -85,6 +87,11 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         ?callable $before_login_event_builder = null,
         ?callable $after_local_login_event_builder = null,
     ): PFUser {
+        $user = $this->user_manager->getUserByUserName($name);
+        if ($user !== null && $this->passwordless_only_state->isPasswordlessOnly($user)) {
+            throw new User_InvalidPasswordWithUserException($user, _('Password authentication is disabled, please use your passkey instead'));
+        }
+
         if ($before_login_event_builder === null) {
             $before_login_event_builder = fn (string $name, ConcealedString $password): BeforeStandardLogin => new BeforeStandardLogin($name, $password);
         }

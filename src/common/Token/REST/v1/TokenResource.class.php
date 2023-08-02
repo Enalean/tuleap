@@ -74,6 +74,7 @@ class TokenResource
             $user_login       = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager,
+                $this->user_manager,
                 new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
                 $password_handler

@@ -127,6 +127,7 @@ final class OAuth2ServerRoutes
                 new User_LoginManager(
                     $event_manager,
                     $user_manager,
+                    $user_manager,
                     new \Tuleap\User\PasswordVerifier($password_handler),
                     new User_PasswordExpirationChecker(),
                     $password_handler

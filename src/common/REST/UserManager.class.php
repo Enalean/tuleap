@@ -135,6 +135,7 @@ class UserManager
             new User_LoginManager(
                 $event_manager,
                 $user_manager,
+                $user_manager,
                 new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
                 $password_handler

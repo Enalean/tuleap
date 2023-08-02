@@ -54,6 +54,7 @@ class BasicAuthentication implements iAuthenticate
         $this->login_manager = new \User_LoginManager(
             \EventManager::instance(),
             $this->user_manager,
+            $this->user_manager,
             new \Tuleap\User\PasswordVerifier($password_handler),
             new \User_PasswordExpirationChecker(),
             $password_handler

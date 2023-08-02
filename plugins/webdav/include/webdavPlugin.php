@@ -133,6 +133,7 @@ class WebDAVPlugin extends Plugin
             new User_LoginManager(
                 EventManager::instance(),
                 $user_manager,
+                $user_manager,
                 new \Tuleap\User\PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
                 $password_handler

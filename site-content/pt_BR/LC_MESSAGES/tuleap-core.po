@@ -2550,6 +2550,9 @@ msgstr "Projeto Pai"
 msgid "Password"
 msgstr "Senha"
 
+msgid "Password authentication is disabled, please use your passkey instead"
+msgstr ""
+
 msgid "Password policy"
 msgstr "Políticas de senhas"
 
