@@ -52,7 +52,7 @@
         <h3> {{ add_kanban_modal_title }}</h3>
     </div>
 
-    <form action="?group_id={{ group_id }}&action=createKanban" method="post" class="form-horizontal">
+    <form action="{{ create_kanban_url }}" method="post" class="form-horizontal">
         <div class="modal-body">
             <ol>
                 <li class="kanban-modal-element">
@@ -76,6 +76,9 @@
                     </div>
                 </li>
             </ol>
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
         </div>
 
         <div class="modal-footer">

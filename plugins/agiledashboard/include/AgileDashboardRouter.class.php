@@ -339,9 +339,6 @@ class AgileDashboardRouter
             case 'updateConfiguration':
                 $this->executeAction($this->buildController($request), 'updateConfiguration');
                 break;
-            case 'createKanban':
-                $this->executeAction($this->buildController($request), 'createKanban');
-                break;
             case 'showKanban':
                 $GLOBALS['Response']->permanentRedirect('/kanban/' . urlencode((string) $request->get('id')));
                 break;
