@@ -632,4 +632,26 @@ class UserDao extends \Tuleap\DB\DataAccessObject
             $user_id
         );
     }
+
+    public function switchPasswordlessOnlyAuth(int $user_id, bool $passwordless_only): void
+    {
+        $this->getDB()->run(
+            'UPDATE user
+            SET passwordless_only = ?
+            WHERE user_id = ?',
+            $passwordless_only,
+            $user_id
+        );
+    }
+
+    public function isPasswordlessOnlyAuth(int $user_id): bool
+    {
+        $row = $this->getDB()->row('SELECT passwordless_only FROM user WHERE user_id = ?', $user_id);
+
+        if ($row) {
+            return $row['passwordless_only'];
+        }
+
+        return false;
+    }
 }

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -38,9 +38,6 @@ msgstr "Il manque le champs \"key_id\" dans le corps de la requête"
 
 msgid "\"name\" field is missing from the request body"
 msgstr "Il manque le champs \"name\" dans le corps de la requête"
-
-msgid "\"passwordless-only-toggle\" field is missing from the form"
-msgstr "Il manque le champs \"passwordless-only-toggle\" dans le formulaire"
 
 msgid "\"response\" field is missing from the request body"
 msgstr "Il manque le champs \"response\" dans le corps de la requête"
@@ -2511,10 +2508,6 @@ msgstr "Non catégorisé"
 msgid "Not found"
 msgstr "Page non trouvée"
 
-#, php-format
-msgid "Not implemented: switch passwordless only to %s"
-msgstr "Non implémenté: passer authentification sans mot de passe à %s"
-
 msgid "Note"
 msgstr "Note"
 
@@ -3628,6 +3621,10 @@ msgstr "Résumé"
 
 msgid "Suspended"
 msgstr "Suspendu"
+
+#, php-format
+msgid "Switch passwordless only to %s"
+msgstr "L'authentification sans mot de passe est sur %s"
 
 msgid "Switch to…"
 msgstr "Accéder à…"

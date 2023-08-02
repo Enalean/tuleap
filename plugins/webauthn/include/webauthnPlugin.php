@@ -71,7 +71,8 @@ final class WebAuthnPlugin extends Plugin
             $this->getTemplateRenderer(),
             EventManager::instance(),
             $this->getViteAssets('account'),
-            $this->getWebAuthnCredentialSourceDao()
+            $this->getWebAuthnCredentialSourceDao(),
+            UserManager::instance()
         );
     }
 

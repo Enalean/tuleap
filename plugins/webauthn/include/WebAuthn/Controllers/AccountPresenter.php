@@ -37,6 +37,7 @@ final class AccountPresenter
     public function __construct(
         public readonly AccountTabPresenterCollection $tabs,
         public readonly array $authenticators,
+        public readonly bool $passwordless_only,
         public readonly CSRFSynchronizerTokenPresenter $csrf_token_add,
         public readonly CSRFSynchronizerTokenPresenter $csrf_token_del,
         public readonly CSRFSynchronizerTokenPresenter $csrf_token_switch,
