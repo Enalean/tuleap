@@ -23,51 +23,31 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use PermissionsManager;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
-use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 
-class ArtifactDependenciesDeletor
+class ArtifactDependenciesCleaner
 {
     public function __construct(
         private readonly PermissionsManager $permissions_manager,
-        private readonly CrossReferenceManager $cross_reference_manager,
         private readonly Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
         private readonly Tracker_ArtifactDao $dao,
         private readonly ComputedFieldDaoCache $computed_dao_cache,
         private readonly RecentlyVisitedDao $recently_visited_dao,
         private readonly PendingArtifactRemovalDao $artifact_removal,
         private readonly ArtifactChangesetValueDeletorDAO $changeset_value_deletor_DAO,
+        private readonly PostArtifactMoveReferencesCleaner $post_artifact_move_references_cleaner,
+        private readonly PostArtifactDeletionCleaner $artifact_deletion_cleaner,
     ) {
     }
 
-    public function cleanDependencies(Artifact $artifact, DeletionContext $context): void
+    public function cleanDependencies(Artifact $artifact, DeletionContext $context, \PFUser $user): void
     {
-        $artifact_deletor_visitor = new ArtifactFilesDeletorVisitor($artifact);
-        $this->permissions_manager->clearPermission(Artifact::PERMISSION_ACCESS, $artifact->getId());
-        $tracker = $artifact->getTracker();
+        $this->permissions_manager->clearPermission(Artifact::PERMISSION_ACCESS, (string) $artifact->getId());
 
-        if (! $context->isAnArtifactMove()) {
-            $this->cross_reference_manager->deleteEntity(
-                (string) $artifact->getId(),
-                Artifact::REFERENCE_NATURE,
-                $tracker->getGroupId()
-            );
-            foreach ($tracker->getFormElementFields() as $form_element) {
-                $form_element->accept($artifact_deletor_visitor);
-            }
-        } else {
-            $this->cross_reference_manager->deleteReferencesWhenArtifactIsSource(
-                $artifact
-            );
+        $this->cleanReferences($artifact, $context, $user);
 
-            if ($context->getSourceProjectId() !== $context->getDestinationProjectId()) {
-                $this->cross_reference_manager->updateReferencesWhenArtifactIsInTarget($artifact, $context);
-            }
-        }
-
-        $this->dao->deleteArtifactLinkReference($artifact->getId());
         $this->changeset_value_deletor_DAO->cleanAllChangesetValueInTransaction($artifact);
         $this->dao->deleteUnsubscribeNotificationForArtifact($artifact->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
@@ -75,5 +55,16 @@ class ArtifactDependenciesDeletor
         $this->computed_dao_cache->deleteAllArtifactCacheValues($artifact);
         $this->recently_visited_dao->deleteVisitByArtifactId($artifact->getId());
         $this->artifact_removal->removeArtifact($artifact->getId());
+    }
+
+    private function cleanReferences(Artifact $artifact, DeletionContext $context, \PFUser $user): void
+    {
+        if ($context->isAnArtifactMove()) {
+            $this->post_artifact_move_references_cleaner->cleanReferencesAfterArtifactMove($artifact, $context, $user);
+
+            return;
+        }
+
+        $this->artifact_deletion_cleaner->cleanReferencesAfterSimpleArtifactDeletion($artifact);
     }
 }

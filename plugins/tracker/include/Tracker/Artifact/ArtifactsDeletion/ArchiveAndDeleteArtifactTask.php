@@ -34,7 +34,7 @@ class ArchiveAndDeleteArtifactTask
 {
     public function __construct(
         private readonly ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
-        private readonly ArtifactDependenciesDeletor $dependencies_deletor,
+        private readonly ArtifactDependenciesCleaner $dependencies_cleaner,
         private readonly FieldContentIndexer $field_content_indexer,
         private readonly ChangesetCommentIndexer $changeset_comment_indexer,
         private readonly EventManager $event_manager,
@@ -46,7 +46,7 @@ class ArchiveAndDeleteArtifactTask
     public function archive(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user, DeletionContext $context): void
     {
         $this->tryToArchiveArtifact($artifact, $user);
-        $this->dependencies_deletor->cleanDependencies($artifact, $context);
+        $this->dependencies_cleaner->cleanDependencies($artifact, $context, $user);
         $this->field_content_indexer->askForDeletionOfIndexedFieldsFromArtifact($artifact);
         $this->changeset_comment_indexer->askForDeletionOfIndexedCommentsFromArtifact($artifact);
     }

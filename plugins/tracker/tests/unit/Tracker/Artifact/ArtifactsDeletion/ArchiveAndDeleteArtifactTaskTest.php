@@ -39,7 +39,7 @@ final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testDBReconnection(): void
     {
         $artifact_exporter     = \Mockery::mock(ArtifactWithTrackerStructureExporter::class);
-        $artifact_deletor      = \Mockery::mock(ArtifactDependenciesDeletor::class);
+        $artifact_deletor      = \Mockery::mock(ArtifactDependenciesCleaner::class);
         $field_content_indexer = $this->createStub(FieldContentIndexer::class);
         $comments_indexer      = $this->createStub(ChangesetCommentIndexer::class);
         $event_manager         = \Mockery::mock(\EventManager::class);
