@@ -22,15 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 
 import { TYPE_FILE, TYPE_FOLDER } from "../../constants";
-import type {
-    FileProperties,
-    Folder,
-    FolderProperty,
-    Item,
-    ItemFile,
-    Property,
-    User,
-} from "../../type";
+import type { FileProperties, Folder, Item, ItemFile, Property, User } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookDocumentProperties", () => {
@@ -97,7 +89,7 @@ describe("QuickLookDocumentProperties", () => {
             owner: {
                 id: 102,
             } as User,
-            properties: [{ name: "title document", short_name: "title" } as FolderProperty],
+            properties: [{ name: "title document", short_name: "title" } as Property],
             creation_date: "2019-06-25T16:56:22+04:00",
             last_update_date: "2019-06-25T16:56:22+04:00",
         } as Folder;

@@ -18,28 +18,33 @@
  */
 
 import { getCustomProperties } from "./custom-properties-helper";
-import type { Property } from "../../type";
+import type { Property, ItemFile } from "../../type";
 
-describe("getCustomProperties", () => {
-    it("only returns custom properties", () => {
-        const properties = [
-            { short_name: "title" } as Property,
-            { short_name: "description" } as Property,
-            { short_name: "owner" } as Property,
-            { short_name: "create_date" } as Property,
-            { short_name: "update_date" } as Property,
-            { short_name: "field_1" } as Property,
-            { short_name: "field_2" } as Property,
-            { short_name: "field_3" } as Property,
-        ];
+describe("custom-properties-helper", () => {
+    describe("getCustomProperties", () => {
+        it("only returns custom properties", () => {
+            const properties = [
+                { short_name: "title" } as Property,
+                { short_name: "description" } as Property,
+                { short_name: "owner" } as Property,
+                { short_name: "create_date" } as Property,
+                { short_name: "update_date" } as Property,
+                { short_name: "field_1" } as Property,
+                { short_name: "field_2" } as Property,
+                { short_name: "field_3" } as Property,
+            ];
 
-        expect(getCustomProperties(properties)).toEqual([
-            { short_name: "field_1" },
-            { short_name: "field_2" },
-            { short_name: "field_3" },
-        ]);
-    });
-    it("Returns empty array if properties is not defined", () => {
-        expect(getCustomProperties(null)).toEqual([]);
+            const item = { type: "file", properties } as ItemFile;
+
+            expect(getCustomProperties(item)).toEqual([
+                { short_name: "field_1", recursion: "none" },
+                { short_name: "field_2", recursion: "none" },
+                { short_name: "field_3", recursion: "none" },
+            ]);
+        });
+        it("Returns empty array if properties is not defined", () => {
+            const item = { type: "file" } as ItemFile;
+            expect(getCustomProperties(item)).toStrictEqual([]);
+        });
     });
 });

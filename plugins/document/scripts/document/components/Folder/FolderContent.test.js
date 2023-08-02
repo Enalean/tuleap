@@ -143,10 +143,6 @@ describe("FolderContent", () => {
             };
             await wrapper.vm.toggleQuickLook(event);
 
-            expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
-                expect.anything(),
-                item
-            );
             expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), false);
         });
     });

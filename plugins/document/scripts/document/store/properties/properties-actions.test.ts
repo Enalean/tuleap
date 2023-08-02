@@ -36,7 +36,6 @@ import {
 } from "../../constants";
 import type { ActionContext } from "vuex";
 import type {
-    FolderProperty,
     Embedded,
     Empty,
     Folder,
@@ -455,10 +454,10 @@ describe("Properties actions", () => {
                         id: 103,
                     } as ListValue,
                 ];
-                const folder_properties: FolderProperty = {
+                const folder_properties: Property = {
                     short_name: "status",
                     list_value: list_values,
-                } as FolderProperty;
+                } as Property;
                 const properties: Array<Property> = [folder_properties];
                 const item_to_update = {
                     id: 123,
@@ -536,10 +535,10 @@ describe("Properties actions", () => {
                         id: 103,
                     } as ListValue,
                 ];
-                const folder_properties: FolderProperty = {
+                const folder_properties: Property = {
                     short_name: "status",
                     list_value: list_values,
-                } as FolderProperty;
+                } as Property;
                 const properties: Array<Property> = [folder_properties];
                 const item_to_update = {
                     id: 123,
@@ -612,10 +611,10 @@ describe("Properties actions", () => {
                     id: 103,
                 } as ListValue,
             ];
-            const folder_properties: FolderProperty = {
+            const folder_properties: Property = {
                 short_name: "status",
                 list_value: list_values,
-            } as FolderProperty;
+            } as Property;
             const properties: Array<Property> = [folder_properties];
             const item_to_update = {
                 id: 123,

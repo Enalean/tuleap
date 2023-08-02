@@ -184,15 +184,13 @@ describe("FileVersionHistory", () => {
         expect(version_history_spy).not.toHaveBeenCalled();
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
-    it("displays the skeleton during the loading of the history", async () => {
+
+    it("displays the skeleton during the loading of the history", () => {
         const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
         version_history_spy.mockResolvedValue([] as ReadonlyArray<FileHistory>);
 
         const is_loading = true;
         const wrapper = createWrapper(false, true, is_loading);
-
-        await nextTick();
-        await nextTick();
 
         expect(wrapper.vm.versions).toHaveLength(0);
         expect(wrapper.vm.are_versions_loading).toBe(true);

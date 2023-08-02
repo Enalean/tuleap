@@ -23,7 +23,7 @@ import {
     transformDocumentPropertiesForUpdate,
     transformFolderPropertiesForRecursionAtUpdate,
 } from "./update-data-transformatter-helper";
-import type { Folder, ItemFile, Property, FolderProperty, ListValue } from "../../type";
+import type { Folder, ItemFile, Property, ListValue } from "../../type";
 
 describe("transformFolderPropertiesForRecursionAtUpdate", () => {
     it("Given an existing folder, then we add specific status update key for update", () => {
@@ -384,11 +384,11 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 describe("formatCustomPropertiesForFolderUpdate", () => {
     it(`Given an item with properties to update, a list of properties short name and a recursion option ,
         then each property of the item to update has a recursion option`, () => {
-        const parent_properties: Array<FolderProperty> = [
-            { short_name: "field_1" } as FolderProperty,
-            { short_name: "field_2" } as FolderProperty,
-            { short_name: "field_3" } as FolderProperty,
-            { short_name: "field_4" } as FolderProperty,
+        const parent_properties: Array<Property> = [
+            { short_name: "field_1" } as Property,
+            { short_name: "field_2" } as Property,
+            { short_name: "field_3" } as Property,
+            { short_name: "field_4" } as Property,
         ];
         const item_to_update: Folder = {
             id: 1,
