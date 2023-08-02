@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Move;
 
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -97,7 +98,7 @@ final class RestArtifactMoverTest extends TestCase
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
         $user           = UserTestBuilder::anActiveUser()->build();
-        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, false);
+        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, false, new NullLogger());
 
         self::assertSame(1, $this->move_action->getCallCount());
         self::assertSame(0, $this->post_move_action->getCallCount());
@@ -112,7 +113,7 @@ final class RestArtifactMoverTest extends TestCase
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
         $user           = UserTestBuilder::anActiveUser()->build();
-        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true);
+        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true, new NullLogger());
 
         self::assertSame(1, $this->move_action->getCallCount());
         self::assertSame(1, $this->post_move_action->getCallCount());
@@ -125,7 +126,7 @@ final class RestArtifactMoverTest extends TestCase
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
         $user           = UserTestBuilder::anActiveUser()->build();
-        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, false);
+        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, false, new NullLogger());
 
         self::assertSame(0, $this->move_action->getCallCount());
         self::assertSame(0, $this->post_move_action->getCallCount());
@@ -138,7 +139,7 @@ final class RestArtifactMoverTest extends TestCase
         $target_tracker = TrackerTestBuilder::aTracker()->build();
         $artifact       = ArtifactTestBuilder::anArtifact(1)->inTracker($source_tracker)->build();
         $user           = UserTestBuilder::anActiveUser()->build();
-        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true);
+        $this->artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true, new NullLogger());
 
         self::assertSame(0, $this->move_action->getCallCount());
         self::assertSame(1, $this->post_move_action->getCallCount());
@@ -168,7 +169,7 @@ final class RestArtifactMoverTest extends TestCase
             )
         );
 
-        $artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true);
+        $artifact_move->move($source_tracker, $target_tracker, $artifact, $user, true, new NullLogger());
 
         self::assertSame(0, $this->move_action->getCallCount());
         self::assertSame(1, $this->post_move_action->getCallCount());

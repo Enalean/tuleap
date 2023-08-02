@@ -1259,7 +1259,7 @@ class ArtifactsResource extends AuthenticatedResource
         );
 
         $artifact = $this->getArtifactById($user, $id);
-        return $move_patch_action->patchMove($patch, $user, $artifact);
+        return $move_patch_action->patchMove($patch, $user, $artifact, \BackendLogger::getDefaultLogger());
     }
 
     private function getMegaMoverArtifact(PFUser $user): MegaMoverArtifact

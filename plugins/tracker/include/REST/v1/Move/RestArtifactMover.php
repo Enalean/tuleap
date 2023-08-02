@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Move;
 
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMove;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
@@ -57,12 +58,12 @@ final class RestArtifactMover implements MoveRestArtifact
      * @throws ArtifactsDeletionLimitReachedException
      * @throws MoveArtifactNoValuesToProcessException
      */
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
+    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
     {
         if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
-            return $this->perfomMoveBasedOnSemantic($artifact, $target_tracker, $user, $should_populate_feedback_on_success, $source_tracker);
+            return $this->perfomMoveBasedOnSemantic($artifact, $target_tracker, $user, $should_populate_feedback_on_success, $source_tracker, $logger);
         }
-        return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success);
+        return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success, $logger);
     }
 
     /**
@@ -72,9 +73,9 @@ final class RestArtifactMover implements MoveRestArtifact
      * @throws MoveArtifactSemanticsException
      * @throws MoveArtifactTargetProjectNotActiveException
      */
-    private function perfomMoveBasedOnSemantic(Artifact $artifact, Tracker $target_tracker, \PFUser $user, bool $should_populate_feedback_on_success, Tracker $source_tracker): int
+    private function perfomMoveBasedOnSemantic(Artifact $artifact, Tracker $target_tracker, \PFUser $user, bool $should_populate_feedback_on_success, Tracker $source_tracker, LoggerInterface $logger): int
     {
-        $remaining_deletions = $this->move_action->move($artifact, $target_tracker, $user, $this->feedback_collector);
+        $remaining_deletions = $this->move_action->move($artifact, $target_tracker, $user, $this->feedback_collector, $logger);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);
 
         return $remaining_deletions;
@@ -83,16 +84,16 @@ final class RestArtifactMover implements MoveRestArtifact
     /**
      * @throws MoveArtifactNoValuesToProcessException
      */
-    private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int
+    private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
     {
-        $field_collection           = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user);
+        $field_collection           = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user, $logger);
         $artifacts_links_collection = $this->collect_artifact_links_for_duck_typed_move->buildMapping($source_tracker, $artifact, $user);
 
         if (empty($field_collection->mapping_fields)) {
             throw new MoveArtifactNoValuesToProcessException();
         }
 
-        $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection, $artifacts_links_collection);
+        $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection, $artifacts_links_collection, $logger);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);
         return $remaining_deletions;
     }

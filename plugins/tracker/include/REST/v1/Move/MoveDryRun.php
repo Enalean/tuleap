@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
@@ -34,5 +35,6 @@ interface MoveDryRun
         Tracker $destination_tracker,
         Artifact $artifact,
         PFUser $user,
+        LoggerInterface $logger,
     ): ArtifactPatchResponseRepresentation;
 }

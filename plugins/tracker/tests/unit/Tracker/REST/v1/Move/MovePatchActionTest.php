@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use Luracast\Restler\RestException;
 use PHPUnit\Framework\MockObject\Stub;
 use Project;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -33,6 +34,7 @@ use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation;
 use Tuleap\Tracker\REST\v1\MoveRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckBeforeMoveStub;
 use Tuleap\Tracker\Test\Stub\ConfigurationArtifactsDeletionStub;
@@ -55,12 +57,10 @@ final class MovePatchActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $tracker_id    = 1234;
-        $this->project = ProjectTestBuilder::aProject()->build();
-        $this->tracker = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($this->project)->build();
-
-        $this->artifact = $this->createStub(Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $tracker_id     = 1234;
+        $this->project  = ProjectTestBuilder::aProject()->build();
+        $this->tracker  = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($this->project)->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
         $this->user = UserTestBuilder::anActiveUser()->build();
 
@@ -94,7 +94,7 @@ final class MovePatchActionTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testHeadersAreSentWithLimitAtZeroWhenArtifactDeletionIsNotAllowed(): void
@@ -116,7 +116,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with("0", 0);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testHeadersAreSentWithLimitAtZeroWhenArtifactDeletionIsReached(): void
@@ -138,7 +138,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 0);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testRethrowsMoveArtifactNotDoneException(): void
@@ -162,7 +162,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testRethrowsMoveSemanticException(): void
@@ -186,7 +186,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testRethrowsTargetProjectIsNotActiveException(): void
@@ -210,7 +210,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testItThrowsWhenThereAreNoFieldsToMove(): void
@@ -234,7 +234,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
     }
 
     public function testItReturnsARepresentationWitDryRunWhenMoveIsComplete(): void
@@ -253,7 +253,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 10);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
 
         $this->assertSame(1, $this->dry_run_move->getCallCount());
         $this->assertSame(0, $move_rest_artifact->getCallCount());
@@ -277,7 +277,7 @@ final class MovePatchActionTest extends TestCase
             $this->artifact_deletion_config
         );
         $this->header_for_move_sender->expects(self::once())->method('sendHeader')->with(10, 9);
-        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact);
+        $move_patch_action->patchMove($this->patch_representation, $this->user, $this->artifact, new NullLogger());
 
         $this->assertSame(0, $this->dry_run_move->getCallCount());
         $this->assertSame(1, $move_rest_artifact->getCallCount());

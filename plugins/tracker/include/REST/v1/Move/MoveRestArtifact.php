@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Move;
 
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
@@ -41,5 +42,5 @@ interface MoveRestArtifact
      * @throws ArtifactsDeletionLimitReachedException
      * @throws MoveArtifactNoValuesToProcessException
      */
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success): int;
+    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int;
 }

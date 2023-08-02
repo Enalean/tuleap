@@ -53,6 +53,8 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     private ReverseLinkStub $first_parent_reverse_link;
     private ReverseLinkStub $second_parent_reverse_link;
     private RetrieveReverseLinksStub $retrieve_reverse_links;
+    private Artifact $moved_artifact;
+    private \PFUser $user;
 
     protected function setUp(): void
     {

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
@@ -44,7 +45,7 @@ final class MoveDryRunStub implements MoveDryRun
         return new self();
     }
 
-    public function move(Tracker $source_tracker, Tracker $destination_tracker, Artifact $artifact, PFUser $user): ArtifactPatchResponseRepresentation
+    public function move(Tracker $source_tracker, Tracker $destination_tracker, Artifact $artifact, PFUser $user, LoggerInterface $logger): ArtifactPatchResponseRepresentation
     {
         $this->call_count++;
         return ArtifactPatchResponseRepresentation::withoutDryRun();

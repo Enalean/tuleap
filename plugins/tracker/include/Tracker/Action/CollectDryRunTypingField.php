@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 
 interface CollectDryRunTypingField
 {
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user): DuckTypedMoveFieldCollection;
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection;
 }

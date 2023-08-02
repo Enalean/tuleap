@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use Luracast\Restler\RestException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -38,6 +39,7 @@ use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
+use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 final class MovePatchAction
 {
@@ -57,7 +59,7 @@ final class MovePatchAction
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessException
      */
-    public function patchMove(ArtifactPatchRepresentation $patch, \PFUser $user, Artifact $artifact): ArtifactPatchResponseRepresentation
+    public function patchMove(ArtifactPatchRepresentation $patch, \PFUser $user, Artifact $artifact, LoggerInterface $logger): ArtifactPatchResponseRepresentation
     {
         $limit = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
 
@@ -75,12 +77,17 @@ final class MovePatchAction
             $this->before_move_checker->check($source_tracker, $target_tracker, $user, $artifact, $event);
 
             if ($patch->move->dry_run) {
-                return $this->dry_run_move->move($source_tracker, $target_tracker, $artifact, $user);
+                $logger->debug(sprintf("Dry run move of artifact #%d in tracker #%d (#%s)", $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
+                return $this->dry_run_move->move($source_tracker, $target_tracker, $artifact, $user, $logger);
             }
 
+            $mode = MoveArtifactSemanticFeatureFlag::isEnabled() ? "semantic" : "duck typing";
+            $logger->debug(sprintf("Move is done in %s mode", $mode));
+            $logger->debug(sprintf("Move of artifact #%d in tracker #%d (#%s)", $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
             $remaining_deletions = $this->move_rest_artifact
-                ->move($source_tracker, $target_tracker, $artifact, $user, $patch->move->should_populate_feedback_on_success);
+                ->move($source_tracker, $target_tracker, $artifact, $user, $patch->move->should_populate_feedback_on_success, $logger);
 
+            $logger->debug("Move is ok");
             return ArtifactPatchResponseRepresentation::withoutDryRun();
         } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
             $limit = $remaining_deletions = 0;
