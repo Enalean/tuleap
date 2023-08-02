@@ -24,6 +24,7 @@ namespace Tuleap\Kanban;
 
 use Mockery;
 use PFUser;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -33,10 +34,6 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var int
      */
     private $kanban_id;
-    /**
-     * @var int
-     */
-    private $tracker_id;
     /**
      * @var int
      */
@@ -72,10 +69,9 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->kanban_id  = 2;
-        $this->tracker_id = 4;
-        $this->column_id  = 456;
-        $this->wip_limit  = 12;
+        $this->kanban_id = 2;
+        $this->column_id = 456;
+        $this->wip_limit = 12;
 
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getUserName')->andReturn('user name');
@@ -84,7 +80,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->column_dao             = \Mockery::spy(\Tuleap\Kanban\KanbanColumnDao::class);
         $this->kanban_actions_checker = \Mockery::spy(\Tuleap\Kanban\KanbanActionsChecker::class);
 
-        $this->kanban                = new Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
+        $this->kanban                = new Kanban($this->kanban_id, TrackerTestBuilder::aTracker()->build(), "My Kanban");
         $this->kanban_column_manager = new KanbanColumnManager(
             $this->column_dao,
             \Mockery::spy(

@@ -27,6 +27,7 @@ use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,8 +52,8 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $kanban1 = new Kanban(10, 1, 'Alice task');
-        $kanban2 = new Kanban(20, 2, 'Bob task');
+        $kanban1 = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), 'Alice task');
+        $kanban2 = new Kanban(20, TrackerTestBuilder::aTracker()->withId(2)->build(), 'Bob task');
 
         $kanban_factory = $this->createMock(KanbanFactory::class);
         $kanban_factory->method('getKanbanTrackerIds')->willReturn([1, 2]);

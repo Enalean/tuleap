@@ -22,6 +22,7 @@ namespace Tuleap\Kanban;
 
 use Mockery;
 use PFUser;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
 final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -44,7 +45,7 @@ final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = Mockery::spy(\PFUser::class);
 
         $this->user_preferences = new KanbanUserPreferences();
-        $this->kanban           = new Kanban(1, 1, 'My first kanban');
+        $this->kanban           = new Kanban(1, TrackerTestBuilder::aTracker()->build(), 'My first kanban');
     }
 
     public function testDefaultBehavior(): void

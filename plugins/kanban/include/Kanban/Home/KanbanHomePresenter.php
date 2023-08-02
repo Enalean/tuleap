@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,37 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Kanban;
+namespace Tuleap\Kanban\Home;
 
-use Tracker;
-
-class Kanban
+final class KanbanHomePresenter
 {
+    /**
+     * @param KanbanSummaryPresenter[] $kanban_summary_presenters
+     */
     public function __construct(
-        private readonly int $id,
-        public readonly Tracker $tracker,
-        private readonly string $name,
+        public readonly array $kanban_summary_presenters,
     ) {
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getTrackerId(): int
-    {
-        return $this->tracker->getId();
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 }

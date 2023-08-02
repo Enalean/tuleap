@@ -121,7 +121,11 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresKanbanOfUnknownTracker(): void
     {
-        $kanban = new \Tuleap\Kanban\Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
+        $kanban = new \Tuleap\Kanban\Kanban(
+            self::FIRST_KANBAN_ID,
+            TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build(),
+            self::FIRST_KANBAN_NAME,
+        );
 
         $this->dao->method('searchVisitByUserId')
             ->with(self::USER_ID, self::MAX_LENGTH)
@@ -141,8 +145,16 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildEntries(): void
     {
-        $kanban_1 = new \Tuleap\Kanban\Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
-        $kanban_2 = new \Tuleap\Kanban\Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, self::SECOND_KANBAN_NAME);
+        $kanban_1 = new \Tuleap\Kanban\Kanban(
+            self::FIRST_KANBAN_ID,
+            TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build(),
+            self::FIRST_KANBAN_NAME,
+        );
+        $kanban_2 = new \Tuleap\Kanban\Kanban(
+            self::SECOND_KANBAN_ID,
+            TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build(),
+            self::SECOND_KANBAN_NAME,
+        );
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 

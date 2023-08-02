@@ -22,6 +22,7 @@
 namespace Tuleap\Kanban\Widget;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Mockery;
 use Tuleap\XML\MappingsRegistry;
@@ -41,7 +42,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $kanban = new \Tuleap\Kanban\Kanban(
             20001,
-            101,
+            TrackerTestBuilder::aTracker()->build(),
             'Kanban name'
         );
 

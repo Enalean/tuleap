@@ -16,6 +16,16 @@ msgstr ""
 msgid "%s Kanban"
 msgstr "Kanban %s"
 
+msgid "%s closed"
+msgid_plural "%s closed"
+msgstr[0] "%s fermée"
+msgstr[1] "%s fermées"
+
+msgid "%s open"
+msgid_plural "%s open"
+msgstr[0] "%s ouverte"
+msgstr[1] "%s ouvertes"
+
 msgid ""
 "A first Kanban will be created during the activation. This operation can "
 "take a few seconds."
