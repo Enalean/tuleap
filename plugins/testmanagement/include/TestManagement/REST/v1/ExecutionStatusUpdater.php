@@ -87,7 +87,7 @@ class ExecutionStatusUpdater
                     $execution_artifact,
                     $new_status,
                     $previous_status,
-                    $previous_user
+                    $previous_user,
                 );
             }
         } catch (Tracker_FormElement_InvalidFieldException $exception) {

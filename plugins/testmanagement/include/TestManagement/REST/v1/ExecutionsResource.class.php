@@ -43,6 +43,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
@@ -93,6 +94,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
@@ -104,6 +106,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -221,24 +224,29 @@ class ExecutionsResource
             ),
         );
 
-        $node_js_client          = new NodeJSClient(
+        $node_js_client                  = new NodeJSClient(
             HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger(),
         );
-        $permissions_serializer  = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer          = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
-        $artifact_message_sender = new RealTimeArtifactMessageSender(
+        $artifact_message_sender         = new RealTimeArtifactMessageSender(
             $node_js_client,
             $permissions_serializer
         );
-
-        $this->realtime_message_sender = new RealTimeMessageSender(
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_artifact_message_sender = new RealTimeMercureArtifactMessageSender(
+            $mercure_client
+        );
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $this->realtime_message_sender   = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,
-            $artifact_message_sender
+            $artifact_message_sender,
+            $mercure_artifact_message_sender
         );
 
         $usage_dao        = new ArtifactLinksUsageDao();
@@ -621,7 +629,7 @@ class ExecutionsResource
 
         $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
         if ($campaign) {
-            $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from);
+            $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
         }
 
         $this->optionsPresences($id);
@@ -676,7 +684,9 @@ class ExecutionsResource
                 $user,
                 $campaign,
                 $execution_artifact,
-                $issue_artifact
+                $issue_artifact,
+                $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID],
+                MinimalTrackerRepresentation::build($issue_artifact->getTracker())
             );
         }
 

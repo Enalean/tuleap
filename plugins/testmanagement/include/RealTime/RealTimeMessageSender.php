@@ -24,10 +24,12 @@ use PFUser;
 use Tracker_Permission_PermissionsSerializer;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\TestManagement\REST\v1\BugRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\ArtifactRightsPresenter;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -41,59 +43,64 @@ class RealTimeMessageSender
     public const EVENT_NAME_CAMPAIGN_UPDATED  = 'testmanagement_campaign:update';
     public const EVENT_NAME_USER_PRESENCE     = 'testmanagement_user:presence';
 
-    /** @var  NodeJSClient */
-    private $node_js_client;
-    /**
-     * @var Tracker_Permission_PermissionsSerializer
-     */
-    private $permissions_serializer;
-    /**
-     * @var RealTimeArtifactMessageSender
-     */
-    private $artifact_message_sender;
+    public const TEST_MANAGEMENT_TOPIC = 'TestManagement';
 
     public function __construct(
-        NodeJSClient $node_js_client,
-        Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        RealTimeArtifactMessageSender $artifact_message_sender,
+        private readonly NodeJSClient $node_js_client,
+        private readonly Tracker_Permission_PermissionsSerializer $permissions_serializer,
+        private readonly RealTimeArtifactMessageSender $artifact_message_sender,
+        private readonly RealTimeMercureArtifactMessageSender $mercure_artifact_message_sender,
     ) {
-        $this->node_js_client          = $node_js_client;
-        $this->permissions_serializer  = $permissions_serializer;
-        $this->artifact_message_sender = $artifact_message_sender;
     }
 
     public function sendExecutionCreated(
         PFUser $user,
         Artifact $campaign,
         Artifact $artifact,
+        ?string $client_uuid,
     ): void {
-        if ($this->doesNotHaveHTTPClientUUID()) {
+        if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
-
-        $user_representation = UserRepresentation::build($user);
-        $data                = [
-            'artifact_id' => $artifact->getId(),
-            'user'        => $user_representation,
-        ];
-        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_CREATED, $data);
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
+            $data = [
+                'cmd' => self::EVENT_NAME_EXECUTION_CREATED,
+                'artifact_id' => $artifact->getId(),
+            ];
+            $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($campaign));
+        } else {
+            $user_representation = UserRepresentation::build($user);
+            $data                = [
+                'artifact_id' => $artifact->getId(),
+                'user'        => $user_representation,
+            ];
+            $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_CREATED, $data);
+        }
     }
 
     public function sendExecutionDeleted(
         PFUser $user,
         Artifact $campaign,
         Artifact $artifact,
+        ?string $client_uuid,
     ): void {
-        if ($this->doesNotHaveHTTPClientUUID()) {
+        if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
-
-        $user_representation = UserRepresentation::build($user);
-        $data                = [
-            'artifact_id' => $artifact->getId(),
-            'user'        => $user_representation,
-        ];
-        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_DELETED, $data);
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
+            $data = [
+                'cmd' => self::EVENT_NAME_EXECUTION_DELETED,
+                'artifact_id' => $artifact->getId(),
+            ];
+            $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($campaign));
+        } else {
+            $user_representation = UserRepresentation::build($user);
+            $data                = [
+                'artifact_id' => $artifact->getId(),
+                'user'        => $user_representation,
+            ];
+            $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_DELETED, $data);
+        }
     }
 
     public function sendExecutionUpdated(
@@ -104,15 +111,24 @@ class RealTimeMessageSender
         ?string $previous_status,
         ?UserRepresentation $previous_user,
     ): void {
-        $user_representation = UserRepresentation::build($user);
-        $data                = [
-            'artifact_id'     => $artifact->getId(),
-            'status'          => $status,
-            'previous_status' => $previous_status,
-            'user'            => $user_representation,
-            'previous_user'   => $previous_user,
-        ];
-        $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_UPDATED, $data);
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
+            $data = [
+                'cmd' => self::EVENT_NAME_EXECUTION_UPDATED,
+                'artifact_id' => $artifact->getId(),
+                'status' => $status,
+            ];
+            $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($campaign));
+        } else {
+            $user_representation = UserRepresentation::build($user);
+            $data                = [
+                'artifact_id'     => $artifact->getId(),
+                'status'          => $status,
+                'previous_status' => $previous_status,
+                'user'            => $user_representation,
+                'previous_user'   => $previous_user,
+            ];
+            $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_UPDATED, $data);
+        }
     }
 
     public function sendArtifactLinkAdded(
@@ -120,45 +136,64 @@ class RealTimeMessageSender
         Artifact $campaign,
         Artifact $execution_artifact,
         Artifact $linked_artifact,
+        ?string $client_uuid,
+        MinimalTrackerRepresentation $tracker_representation,
     ): void {
-        if ($this->doesNotHaveHTTPClientUUID()) {
+        if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
 
-        $data = [
-            'artifact_id'         => $execution_artifact->getId(),
-            'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact),
-        ];
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
+            $data = [
+                'cmd' => self::EVENT_NAME_ARTIFACT_LINKED,
+                'artifact_id'         => $execution_artifact->getId(),
+                'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact, $tracker_representation),
+            ];
+            $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($execution_artifact));
+        } else {
+            $data = [
+                'artifact_id'         => $execution_artifact->getId(),
+                'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact, $tracker_representation),
+            ];
 
-        $this->artifact_message_sender->sendMessage(
-            $user,
-            $linked_artifact,
-            $data,
-            self::EVENT_NAME_ARTIFACT_LINKED,
-            'testmanagement_' . $campaign->getId()
-        );
+            $this->artifact_message_sender->sendMessage(
+                $user,
+                $linked_artifact,
+                $data,
+                self::EVENT_NAME_ARTIFACT_LINKED,
+                'testmanagement_' . $campaign->getId()
+            );
+        }
     }
 
     public function sendCampaignUpdated(
         PFUser $user,
         Artifact $artifact,
+        ?string $client_uuid,
     ): void {
-        if ($this->doesNotHaveHTTPClientUUID()) {
+        if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
 
-        $user_representation = UserRepresentation::build($user);
-        $data                = [
-            'artifact_id' => $artifact->getId(),
-            'user'        => $user_representation,
-        ];
-        $this->artifact_message_sender->sendMessage(
-            $user,
-            $artifact,
-            $data,
-            self::EVENT_NAME_CAMPAIGN_UPDATED,
-            'testmanagement_' . $artifact->getId()
-        );
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
+            $data = [
+                'cmd' => self::EVENT_NAME_CAMPAIGN_UPDATED,
+            ];
+            $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($artifact));
+        } else {
+            $user_representation = UserRepresentation::build($user);
+            $data                = [
+                'artifact_id' => $artifact->getId(),
+                'user'        => $user_representation,
+            ];
+            $this->artifact_message_sender->sendMessage(
+                $user,
+                $artifact,
+                $data,
+                self::EVENT_NAME_CAMPAIGN_UPDATED,
+                'testmanagement_' . $artifact->getId()
+            );
+        }
     }
 
     public function sendPresences(
@@ -167,8 +202,9 @@ class RealTimeMessageSender
         PFUser $user,
         string $uuid,
         string $remove_from,
+        ?string $uuid_http,
     ): void {
-        if ($this->doesNotHaveHTTPClientUUID()) {
+        if ($this->doesNotHaveHTTPClientUUID($uuid_http)) {
             return;
         }
 
@@ -194,10 +230,8 @@ class RealTimeMessageSender
         $this->node_js_client->sendMessage($message);
     }
 
-    private function buildArtifactLinkRepresentation(Artifact $artifact_link): BugRepresentation
+    private function buildArtifactLinkRepresentation(Artifact $artifact_link, MinimalTrackerRepresentation $tracker_representation): BugRepresentation
     {
-        $tracker_representation = MinimalTrackerRepresentation::build($artifact_link->getTracker());
-
         $artifact_link_representation = new BugRepresentation();
         $artifact_link_representation->build($artifact_link, $tracker_representation);
 
@@ -220,8 +254,13 @@ class RealTimeMessageSender
         );
     }
 
-    private function doesNotHaveHTTPClientUUID(): bool
+    private function doesNotHaveHTTPClientUUID(?string $client_uuid): bool
     {
-        return ! isset($_SERVER[self::HTTP_CLIENT_UUID]) || ! $_SERVER[self::HTTP_CLIENT_UUID];
+        return ! isset($client_uuid) || ! $client_uuid;
+    }
+
+    public static function topicHelper(Artifact $artifact): string
+    {
+        return self::TEST_MANAGEMENT_TOPIC . '/' . $artifact->getId();
     }
 }
