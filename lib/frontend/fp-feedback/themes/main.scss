@@ -2,6 +2,7 @@
 .feedback_error,
 .feedback_warning,
 .feedback_info,
+.feedback_success,
 .feedback_debug {
     margin: 10px 0;
     padding: 20px;
@@ -32,6 +33,13 @@
     background: var(--tlp-alert-info-background);
     box-shadow: var(--tlp-alert-info-shadow);
     color: var(--tlp-alert-info-color);
+}
+
+.feedback_success {
+    border-left: var(--tlp-alert-success-border);
+    background: var(--tlp-alert-success-background);
+    box-shadow: var(--tlp-alert-success-shadow);
+    color: var(--tlp-alert-success-color);
 }
 
 .feedback_debug {

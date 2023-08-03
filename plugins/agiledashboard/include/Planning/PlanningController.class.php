@@ -190,12 +190,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
         $this->redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled();
 
+        $project = $this->getProjectFromRequest();
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($configuration->getPlannings()),
             $this->group_id,
             $this->getLastLevelMilestonesPresenters($configuration->getLastPlannings(), $user),
             $this->request->get('period'),
-            $this->getProjectFromRequest()->getPublicName(),
+            $project->getPublicName(),
             $kanban_is_activated,
             $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id, $user),
             $this->getKanbanSummaryPresenters(),
@@ -204,7 +206,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->config_manager->getScrumTitle($this->group_id),
             $this->isUserAdmin(),
             $this->isScrumMonoMilestoneEnabled(),
-            $this->isPlanningManagementDelegated()
+            $this->isPlanningManagementDelegated(),
+            \Tuleap\Kanban\Home\CreateKanbanController::getUrl($project),
+            \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(
+                (new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider())->getCSRF($project),
+            ),
         );
         return $this->renderToString('home', $presenter);
     }

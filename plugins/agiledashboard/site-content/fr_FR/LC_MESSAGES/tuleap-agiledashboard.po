@@ -215,10 +215,6 @@ msgstr "Éditer le planning : %s"
 msgid "Enable Scrum V2"
 msgstr "Activer Scrum V2"
 
-#, php-format
-msgid "Error while creating Kanban %1$s."
-msgstr "Erreur pendant la création du Kanban %1$s."
-
 msgid "Explicit backlog actions"
 msgstr "Actions de planification générale explicite"
 
@@ -285,10 +281,6 @@ msgstr "L'élément n'est pas lié à ce jalon"
 msgid "Kanban"
 msgstr "Kanban"
 
-#, php-format
-msgid "Kanban %1$s successfully created."
-msgstr "Kanban %1$s créé avec succès."
-
 msgid "Kanban Administration of Agile Dashboard"
 msgstr "Administration Kanban du dashboard agile"
 
@@ -343,9 +335,6 @@ msgid ""
 msgstr ""
 "Aucune configuration Scrum n'a encore été mise en place par un "
 "administrateur du projet. <a href=\"%1$s\">Démarrer!</a>"
-
-msgid "No tracker has been selected."
-msgstr "Aucun tracker n'a été sélectionné."
 
 msgid "No tracker is available."
 msgstr "Aucun tracker n'est disponible."
@@ -619,9 +608,6 @@ msgid ""
 msgstr ""
 "L'outil de suivi %s ne peut être défini en tant qu'enfant de l'outil de "
 "suivi %s car ils font partis de la même planification (%s)"
-
-msgid "Tracker already used by another Kanban."
-msgstr "Le tracker est déjà utilisé par un autre Kanban."
 
 msgid "Unable to export the configuration"
 msgstr "Impossible d'exporter la configuration"

@@ -308,68 +308,6 @@ class AdminController extends BaseController
         $updater->updateConfiguration();
     }
 
-    public function createKanban()
-    {
-        $kanban_name = $this->request->get('kanban-name');
-        $tracker_id  = $this->request->get('tracker-kanban');
-        $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
-        $user        = $this->request->getCurrentUser();
-
-        if (! $user->isAdmin($this->group_id)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('global', 'perm_denied')
-            );
-
-            return;
-        }
-
-        if (! $tracker_id || $tracker === null) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'No tracker has been selected.')
-            );
-
-            $this->redirectToHome();
-
-            return;
-        }
-
-        if ($this->kanban_manager->doesKanbanExistForTracker($tracker)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'Tracker already used by another Kanban.')
-            );
-
-            $this->redirectToHome();
-
-            return;
-        }
-
-        if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                sprintf(dgettext('tuleap-agiledashboard', 'Kanban %1$s successfully created.'), $kanban_name)
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                sprintf(dgettext('tuleap-agiledashboard', 'Error while creating Kanban %1$s.'), $kanban_name)
-            );
-        }
-
-        $this->redirectToHome();
-    }
-
-    private function redirectToHome()
-    {
-        $this->redirect(
-            [
-                'group_id' => $this->group_id,
-            ]
-        );
-    }
-
     private function isScrumAccessible(): bool
     {
         $block_access_scrum = new BlockScrumAccess($this->project);

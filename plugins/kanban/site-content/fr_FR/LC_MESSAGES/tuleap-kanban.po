@@ -61,6 +61,10 @@ msgstr ""
 "Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
 "Veuillez aller sur un kanban pour l’ajouter."
 
+#, php-format
+msgid "Error while creating Kanban %1$s."
+msgstr "Erreur pendant la création du Kanban %1$s."
+
 msgid "Filter:"
 msgstr "Filtre :"
 
@@ -69,6 +73,10 @@ msgstr "Options générales"
 
 msgid "Kanban"
 msgstr "Kanban"
+
+#, php-format
+msgid "Kanban %1$s successfully created."
+msgstr "Kanban %1$s créé avec succès."
 
 msgid "Kanban cards"
 msgstr "Cartes de Kanban"
@@ -85,6 +93,9 @@ msgstr "Le Kanban requis n'a pas pu être trouvé."
 msgid "No Kanban has been configured yet."
 msgstr "Aucun Kanban n'a été configuré."
 
+msgid "No tracker has been selected."
+msgstr "Aucun tracker n'a été sélectionné."
+
 msgid "None"
 msgstr "Aucun"
 
@@ -96,6 +107,9 @@ msgstr "Sauvegarder"
 
 msgid "There is no content you can see"
 msgstr "Il n’y a aucun élément visible"
+
+msgid "Tracker already used by another Kanban."
+msgstr "Le tracker est déjà utilisé par un autre Kanban."
 
 #, php-format
 msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"

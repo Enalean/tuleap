@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\HierarchyChecker;
@@ -65,8 +66,10 @@ use Tuleap\Kanban\XML\KanbanXmlImporter;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\RealTime\NodeJSClient;
@@ -272,8 +275,35 @@ final class KanbanPlugin extends Plugin
             $r->post('/{kanban_id:\d+}/mercure-realtime-token', $this->getRouteHandler('routeGetJWT'));
         });
         $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
+            $r->post('/{project_name:[A-z0-9-]+}/kanban/create', $this->getRouteHandler('routeCreateKanban'));
             $r->get('/{project_name:[A-z0-9-]+}/kanban', $this->getRouteHandler('routeGetProject'));
         });
+    }
+
+    public function routeCreateKanban(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $tracker_factory = TrackerFactory::instance();
+        $user_manager    = UserManager::instance();
+
+        return new \Tuleap\Kanban\Home\CreateKanbanController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao()),
+            ),
+            new KanbanManager(new KanbanDao(), $tracker_factory),
+            $tracker_factory,
+            new SapiEmitter(),
+            new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new ProjectAccessCheckerMiddleware(
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                $user_manager,
+            ),
+            new CheckProjectCSRFMiddleware(new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider()),
+            new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware($user_manager, new ProjectAdministratorChecker()),
+        );
     }
 
     public function routeGetProject(): \Tuleap\Request\DispatchableWithRequest

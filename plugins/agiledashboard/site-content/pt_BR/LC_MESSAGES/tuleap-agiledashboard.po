@@ -186,10 +186,6 @@ msgstr ""
 msgid "Enable Scrum V2"
 msgstr ""
 
-#, php-format
-msgid "Error while creating Kanban %1$s."
-msgstr ""
-
 msgid "Explicit backlog actions"
 msgstr ""
 
@@ -251,10 +247,6 @@ msgstr ""
 msgid "Kanban"
 msgstr "Kanban"
 
-#, php-format
-msgid "Kanban %1$s successfully created."
-msgstr ""
-
 msgid "Kanban Administration of Agile Dashboard"
 msgstr ""
 
@@ -300,9 +292,6 @@ msgstr ""
 msgid ""
 "No Scrum has been yet configured by a project administrator. <a "
 "href=\"%1$s\">Get Started!</a>"
-msgstr ""
-
-msgid "No tracker has been selected."
 msgstr ""
 
 msgid "No tracker is available."
@@ -535,9 +524,6 @@ msgstr ""
 msgid ""
 "Tracker %s cannot be defined as child of tracker %s because they are part of "
 "the same backlog (%s)"
-msgstr ""
-
-msgid "Tracker already used by another Kanban."
 msgstr ""
 
 msgid "Unable to export the configuration"
