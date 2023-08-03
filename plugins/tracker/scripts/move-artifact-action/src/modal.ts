@@ -17,29 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ColorName } from "@tuleap/core-constants";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
 import Vue from "vue";
 import Vuex from "vuex";
 import MoveModal from "./components/MoveModal.vue";
-import { setFromTracker } from "./from-tracker-presenter.ts";
+import { setFromTracker } from "./from-tracker-presenter";
 import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store/index.ts";
+import { createStore } from "./store";
 
-export async function init(vue_mount_point) {
+const getTlpColorName = (color_name: string): color_name is ColorName => true;
+
+export async function init(vue_mount_point: HTMLElement): Promise<void> {
     Vue.config.language = document.body.dataset.userLocale ?? "en_US";
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import("../po/" + getPOFileFromLocale(locale))
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import("../po/" + getPOFileFromLocale(locale))
     );
 
     const RootComponent = Vue.extend(MoveModal);
 
-    const { trackerId, trackerName, trackerColor, artifactId, projectId } = vue_mount_point.dataset;
+    const color_name = getDatasetItemOrThrow(vue_mount_point, "trackerColor");
+    if (!getTlpColorName(color_name)) {
+        return;
+    }
 
     setFromTracker(
-        Number.parseInt(trackerId, 10),
-        trackerName,
-        trackerColor,
-        artifactId,
-        projectId
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "trackerId"), 10),
+        getDatasetItemOrThrow(vue_mount_point, "trackerName"),
+        color_name,
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "artifactId"), 10),
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10)
     );
 
     Vue.use(Vuex);

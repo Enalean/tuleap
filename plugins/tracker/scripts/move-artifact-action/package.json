@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
     "@tuleap/fp-feedback": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

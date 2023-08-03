@@ -17,26 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
 import { addFeedback } from "@tuleap/fp-feedback";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const move_link = document.getElementById("tracker-action-button-move");
-    const vue_mount_point = document.getElementById("move-artifact-modal");
-    const move_dropdown_icon = document.getElementById("tracker-artifact-action-icon");
-
-    if (!move_link || !vue_mount_point || !move_dropdown_icon) {
-        return;
-    }
+    const move_link = selectOrThrow(document, "#tracker-action-button-move");
+    const vue_mount_point = selectOrThrow(document, "#move-artifact-modal");
+    const move_dropdown_icon = selectOrThrow(document, "#tracker-artifact-action-icon");
 
     move_link.addEventListener("click", async () => {
-        if (move_link.classList.contains("disabled") === true) {
+        if (move_link.classList.contains("disabled")) {
             return;
         }
 
         move_dropdown_icon.classList.add("fa-spin", "fa-spinner");
         move_link.classList.add("disabled");
         try {
-            const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal.js");
+            const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal");
 
             await init(vue_mount_point);
         } catch (e) {

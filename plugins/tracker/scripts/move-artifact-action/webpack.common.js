@@ -26,7 +26,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const config = {
-    entry: { MoveArtifactModal: "./src/index.js" },
+    entry: { MoveArtifactModal: "./src/index.ts" },
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
@@ -36,7 +36,7 @@ const config = {
         jquery: "jQuery",
     },
     resolve: {
-        extensions: [".js", ".ts", ".vue"],
+        extensions: [".ts", ".vue"],
     },
     module: {
         rules: [

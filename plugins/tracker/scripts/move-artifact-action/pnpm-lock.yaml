@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
   '@tuleap/fp-feedback':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fp-feedback
