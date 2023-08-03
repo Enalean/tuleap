@@ -19,7 +19,11 @@
 
 <template>
     <div class="move-artifact-tracker-selector-section">
-        <label for="move-artifact-tracker-selector" v-bind:title="selector_title">
+        <label
+            data-test="tracker-selector-label"
+            for="move-artifact-tracker-selector"
+            v-bind:title="selector_title"
+        >
             <translate>Destination tracker</translate>
             <span class="highlight">*</span>
         </label>
@@ -27,7 +31,7 @@
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
-            v-model="selected_tracker.tracker_id"
+            v-model="selected_tracker"
             ref="move_artifact_tracker_selector"
         >
             <option
@@ -63,7 +67,7 @@ export default {
                 return this.$store.state.selected_tracker;
             },
             set(tracker_id) {
-                this.$store.commit("saveSelectedTracker", { tracker_id });
+                this.$store.commit("saveSelectedTrackerId", tracker_id);
             },
         },
         selector_title() {

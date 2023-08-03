@@ -21,14 +21,14 @@
     <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
         <i class="fa fa-share"></i>
         <translate class="modal-move-artifact-icon-title">Move</translate>
-        <span v-bind:class="artifact_badge_class">
+        <span v-bind:class="artifact_badge_class" data-test="artifact-xref">
             {{ artifact_badge_tracker_name }} #{{ artifact_badge_artifact_id }}
         </span>
     </h3>
 </template>
 
 <script>
-import { getTrackerName, getTrackerColor, getArtifactId } from "../from-tracker-presenter.js";
+import { getTrackerName, getTrackerColor, getArtifactId } from "../from-tracker-presenter";
 export default {
     name: "MoveModalTitle",
     computed: {

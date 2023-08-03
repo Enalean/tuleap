@@ -38,7 +38,7 @@
             1 field does not match with the targeted tracker. If you confirm your action, its value
             will be lost forever:
         </translate>
-        <field-error-message
+        <fields-list-displayer
             v-if="is_move_possible"
             v-bind:fields="not_migrated_fields"
             v-bind:type="'not-migrated'"
@@ -48,12 +48,12 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import FieldErrorMessage from "./FieldErrorMessage.vue";
+import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
 export default {
     name: "DryRunNotMigratedFieldState",
     components: {
-        FieldErrorMessage,
+        FieldsListDisplayer,
     },
     computed: {
         ...mapState({

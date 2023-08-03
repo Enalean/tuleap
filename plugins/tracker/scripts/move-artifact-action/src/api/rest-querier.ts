@@ -18,10 +18,9 @@
  */
 
 import { patch, recursiveGet } from "@tuleap/tlp-fetch";
+import type { Tracker, Project } from "../store/types";
 
-export { getProjectList, getTrackerList, moveDryRunArtifact, moveArtifact };
-
-function getProjectList() {
+export function getProjectList(): Promise<Project[]> {
     return recursiveGet("/api/projects", {
         params: {
             query: JSON.stringify({
@@ -33,7 +32,7 @@ function getProjectList() {
     });
 }
 
-function getTrackerList(project_id) {
+export function getTrackerList(project_id: number): Promise<Tracker[]> {
     return recursiveGet("/api/projects/" + project_id + "/trackers/", {
         params: {
             query: JSON.stringify({
@@ -44,21 +43,26 @@ function getTrackerList(project_id) {
     });
 }
 
-function moveDryRunArtifact(artifact_id, tracker_id) {
+export function moveDryRunArtifact(artifact_id: number, tracker_id: number): Promise<Response> {
     return processMove(artifact_id, tracker_id, true, false);
 }
 
-function moveArtifact(artifact_id, tracker_id) {
+export function moveArtifact(artifact_id: number, tracker_id: number): Promise<Response> {
     return processMove(artifact_id, tracker_id, false, true);
 }
 
-function processMove(artifact_id, tracker_id, dry_run, should_populate_feedback_on_success) {
+function processMove(
+    artifact_id: number,
+    tracker_id: number,
+    is_dry_run_move: boolean,
+    should_populate_feedback_on_success: boolean
+): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
 
     const body = JSON.stringify({
-        move: { tracker_id, dry_run, should_populate_feedback_on_success },
+        move: { tracker_id, dry_run: is_dry_run_move, should_populate_feedback_on_success },
     });
 
     return patch("/api/artifacts/" + artifact_id, {

@@ -17,15 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type ArtifactField = {
+import type { ActionContext } from "vuex";
+
+export type Context = ActionContext<RootState, RootState>;
+
+export type ArtifactField = {
     readonly field_id: number;
     readonly label: string;
     readonly name: string;
 };
 
-export type State = {
-    dry_run_fields: {
-        fields_not_migrated: Array<ArtifactField>;
-    };
+export type DryRunState = {
+    readonly fields_not_migrated: ArtifactField[];
+    readonly fields_partially_migrated: ArtifactField[];
+    readonly fields_migrated: ArtifactField[];
+};
+
+export type Tracker = {
+    readonly id: number;
+    readonly label: string;
+    disabled: boolean;
+};
+
+export type Project = {
+    readonly id: number;
+    readonly label: string;
+};
+
+export type RootState = {
+    dry_run_fields: DryRunState;
+    is_loading_initial: boolean;
+    is_processing_move: boolean;
     is_move_possible: boolean;
+    are_trackers_loading: boolean;
+    has_processed_dry_run: boolean;
+    error_message: string;
+    projects: Project[];
+    trackers: Tracker[];
+    selected_tracker_id: number | null;
+    selected_project_id: number | null;
 };

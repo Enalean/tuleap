@@ -17,6 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function redirectTo(new_href) {
-    window.location.href = new_href;
-}
+import type { RootState } from "./types";
+
+export const default_state: RootState = {
+    is_loading_initial: true,
+    are_trackers_loading: false,
+    projects: [],
+    trackers: [],
+    error_message: "",
+    selected_tracker_id: null,
+    selected_project_id: null,
+    dry_run_fields: {
+        fields_not_migrated: [],
+        fields_partially_migrated: [],
+        fields_migrated: [],
+    },
+    has_processed_dry_run: false,
+    is_processing_move: false,
+    is_move_possible: true,
+};

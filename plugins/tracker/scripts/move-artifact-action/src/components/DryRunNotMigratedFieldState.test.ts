@@ -18,29 +18,34 @@
  */
 
 import type { Wrapper } from "@vue/test-utils";
-import type { State } from "../store/types";
+import type { ArtifactField } from "../store/types";
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
 import DryRunNotMigratedFieldState from "./DryRunNotMigratedFieldState.vue";
-import FieldErrorMessage from "./FieldErrorMessage.vue";
+import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-const getWrapper = async (state: State): Promise<Wrapper<DryRunNotMigratedFieldState>> => {
-    const store_options = {
-        state: state,
-        getters: {
-            not_migrated_fields_count: state.dry_run_fields.fields_not_migrated.length,
-        },
-    };
-
-    return shallowMount(DryRunNotMigratedFieldState, {
+const getWrapper = async (
+    fields_not_migrated: ArtifactField[],
+    is_move_possible: boolean
+): Promise<Wrapper<DryRunNotMigratedFieldState>> =>
+    shallowMount(DryRunNotMigratedFieldState, {
         localVue: await createMoveModalLocalVue(),
         mocks: {
-            $store: createStoreMock(store_options),
+            $store: createStoreMock({
+                state: {
+                    dry_run_fields: {
+                        fields_not_migrated,
+                    },
+                    is_move_possible,
+                },
+                getters: {
+                    not_migrated_fields_count: fields_not_migrated.length,
+                },
+            }),
         },
     });
-};
 
 const field_not_migrated = {
     field_id: 123,
@@ -50,45 +55,30 @@ const field_not_migrated = {
 
 describe("DryRunNotMigratedFieldState", () => {
     it("should not display an error when there is no field which cannot be moved, and the move action is possible", async () => {
-        const wrapper = await getWrapper({
-            dry_run_fields: {
-                fields_not_migrated: [],
-            },
-            is_move_possible: true,
-        });
+        const wrapper = await getWrapper([], true);
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(false);
     });
 
     it("should display the list of fields which cannot be moved", async () => {
-        const wrapper = await getWrapper({
-            dry_run_fields: {
-                fields_not_migrated: [field_not_migrated],
-            },
-            is_move_possible: true,
-        });
+        const wrapper = await getWrapper([field_not_migrated], true);
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(true);
         expect(wrapper.find("[data-test=not-migrated-field-error-message]").exists()).toBe(true);
-        expect(wrapper.findComponent(FieldErrorMessage).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=move-action-not-possible-error-message]").exists()).toBe(
             false
         );
     });
 
     it('should display the "move action not possible" error', async () => {
-        const wrapper = await getWrapper({
-            dry_run_fields: {
-                fields_not_migrated: [field_not_migrated],
-            },
-            is_move_possible: false,
-        });
+        const wrapper = await getWrapper([field_not_migrated], false);
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(true);
         expect(wrapper.find("[data-test=move-action-not-possible-error-message]").exists()).toBe(
             true
         );
         expect(wrapper.find("[data-test=not-migrated-field-error-message]").exists()).toBe(false);
-        expect(wrapper.findComponent(FieldErrorMessage).exists()).toBe(false);
+        expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(false);
     });
 });

@@ -18,18 +18,13 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import {
-    getProjectList,
-    getTrackerList,
-    moveArtifact,
-    moveDryRunArtifact,
-} from "./rest-querier.js";
+import { getProjectList, getTrackerList, moveArtifact, moveDryRunArtifact } from "./rest-querier";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 jest.mock("@tuleap/tlp-fetch");
 
 describe("API querier", () => {
-    let recursiveGet, patch;
+    let recursiveGet: jest.SpyInstance, patch: jest.SpyInstance;
     beforeEach(() => {
         recursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
 
@@ -38,14 +33,14 @@ describe("API querier", () => {
 
     describe("getProjectList", () => {
         it("will get all project user is tracker admin of", async () => {
-            const return_json = [
-                {
-                    id: 102,
-                    label: "Project name",
-                },
-            ];
-
-            mockFetchSuccess(recursiveGet, { return_json });
+            mockFetchSuccess(recursiveGet, {
+                return_json: [
+                    {
+                        id: 102,
+                        label: "Project name",
+                    },
+                ],
+            });
             await expect(getProjectList()).resolves.toBeDefined();
 
             expect(recursiveGet).toHaveBeenCalledWith("/api/projects", {
@@ -60,14 +55,14 @@ describe("API querier", () => {
 
     describe("getTrackerList", () => {
         it("Given a project id, then it will get all trackers user is admin of", async () => {
-            const return_json = [
-                {
-                    id: 10,
-                    label: "Tracker name",
-                },
-            ];
-
-            mockFetchSuccess(recursiveGet, { return_json });
+            mockFetchSuccess(recursiveGet, {
+                return_json: [
+                    {
+                        id: 10,
+                        label: "Tracker name",
+                    },
+                ],
+            });
             const project_id = 5;
 
             await expect(getTrackerList(project_id)).resolves.toBeDefined();

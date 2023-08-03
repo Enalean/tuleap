@@ -20,7 +20,11 @@
 <template>
     <div>
         <ul class="move-artifact-display-more-fields-message">
-            <li v-for="field in fields_to_display" v-bind:key="field.field_id">
+            <li
+                v-for="field in fields_to_display"
+                v-bind:key="field.field_id"
+                data-test="field-label"
+            >
                 {{ field.label }}
             </li>
         </ul>
@@ -28,6 +32,7 @@
             v-on:click="is_minimal_display = false"
             v-if="is_minimal_display && fields.length > 5"
             v-bind:class="show_more_class"
+            data-test="show-more-fields-button"
         >
             <translate>Show more</translate>
         </button>
@@ -36,10 +41,19 @@
 
 <script>
 export default {
-    name: "FieldErrorMessage",
+    name: "FieldsListDisplayer",
     props: {
-        fields: Array,
-        type: String,
+        fields: {
+            type: Array,
+            required: true,
+        },
+        type: {
+            type: String,
+            required: true,
+            validator: function (value) {
+                return ["fully-migrated", "partially-migrated", "not-migrated"].includes(value);
+            },
+        },
     },
     data() {
         return { is_minimal_display: true };
