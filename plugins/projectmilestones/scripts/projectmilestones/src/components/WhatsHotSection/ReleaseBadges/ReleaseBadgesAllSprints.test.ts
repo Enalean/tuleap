@@ -20,9 +20,10 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions, TrackerProjectLabel } from "../../../type";
+import type { MilestoneData, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
@@ -32,27 +33,24 @@ const component_options: ShallowMountOptions<ReleaseBadgesAllSprints> = {};
 const project_id = 102;
 
 describe("ReleaseBadgesAllSprints", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        user_can_view_sub_milestones_planning: boolean,
     ): Promise<Wrapper<ReleaseBadgesAllSprints>> {
-        store = createStoreMock(store_options);
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id: project_id,
+                user_can_view_sub_milestones_planning,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesAllSprints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         release_data = {
             id: 2,
             total_sprint,
@@ -75,8 +73,7 @@ describe("ReleaseBadgesAllSprints", () => {
 
     describe("Display number of sprint", () => {
         it("When there is a tracker, Then number of sprint is displayed", async () => {
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(true);
 
             expect(wrapper.get("[data-test=badge-sprint]").text()).toBe("10 Sprint1");
         });
@@ -98,15 +95,13 @@ describe("ReleaseBadgesAllSprints", () => {
             component_options.propsData = {
                 release_data,
             };
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(true);
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
 
         it("When the user can't see the tracker, Then number of sprint is not displayed", async () => {
-            store_options.state.user_can_view_sub_milestones_planning = false;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(false);
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });

@@ -20,32 +20,20 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, Pane, StoreOptions } from "../../../type";
+import type { MilestoneData, Pane } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<PastReleaseHeaderTestsDisplayer>;
 
 describe("PastReleaseHeaderTestsDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<PastReleaseHeaderTestsDisplayer>> {
-        store = createStoreMock(store_options);
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<PastReleaseHeaderTestsDisplayer>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(PastReleaseHeaderTestsDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             label: "mile",
             initial_effort: 10,
@@ -63,7 +51,7 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
 
     describe("Display number of test", () => {
         it("When testplan is disabled, Then the number is not displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.find("[data-test=number-tests]").exists()).toBe(false);
         });
 
@@ -77,7 +65,7 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
                 },
             ];
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.find("[data-test=number-tests]").text()).toBe("0");
         });
 
@@ -98,7 +86,7 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
                 nb_of_failed: 4,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.find("[data-test=number-tests]").text()).toBe("19");
         });
     });

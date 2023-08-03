@@ -36,22 +36,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { MilestoneData, TestManagementCampaign } from "../../../../type";
-import { Action, State } from "vuex-class";
+import type { MilestoneData } from "../../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
+import { useStore } from "../../../../stores/root";
 
 @Component({
     components: { TestManagement },
 })
 export default class TestManagementDisplayer extends Vue {
+    public root_store = useStore();
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly project_id!: number;
-    @Action
-    getTestManagementCampaigns!: (release_data: MilestoneData) => Promise<TestManagementCampaign>;
 
     is_loading = true;
     message_error_rest: string | null = null;
@@ -63,7 +60,7 @@ export default class TestManagementDisplayer extends Vue {
     async created(): Promise<void> {
         if (!this.release_data.campaign) {
             try {
-                this.release_data.campaign = await this.getTestManagementCampaigns(
+                this.release_data.campaign = await this.root_store.getTestManagementCampaigns(
                     this.release_data,
                 );
             } catch (rest_error) {

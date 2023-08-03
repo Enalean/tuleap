@@ -20,18 +20,14 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type {
-    MilestoneData,
-    MilestoneResourcesData,
-    StoreOptions,
-    TrackerProjectLabel,
-} from "../../../type";
+import type { MilestoneData, MilestoneResourcesData, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const total_sprint = 10;
@@ -40,27 +36,23 @@ const component_options: ShallowMountOptions<ReleaseBadgesDisplayerIfOpenSprints
 const project_id = 102;
 
 describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        user_can_view_sub_milestones_planning = true,
     ): Promise<Wrapper<ReleaseBadgesDisplayerIfOpenSprints>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id: project_id,
+                user_can_view_sub_milestones_planning,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesDisplayerIfOpenSprints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         release_data = {
             id: 2,
             total_sprint,
@@ -83,7 +75,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     });
 
     it("When the component is rendered, Then ReleaseBasgesOthersSprints is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);
     });
@@ -100,7 +92,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
@@ -116,7 +108,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
@@ -150,9 +142,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data,
             };
 
-            store_options.state.user_can_view_sub_milestones_planning = true;
-
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(true);
         });
@@ -175,7 +165,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
@@ -206,26 +196,23 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data,
             };
 
-            store_options.state.user_can_view_sub_milestones_planning = false;
-
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(false);
 
             expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
     });
 
     it("When the user clicked on sprints, Then a line is displayed", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         wrapper.setData({ open_sprints_details: true });
         expect(wrapper.find("[data-test=line-displayed]").exists()).toBe(true);
     });
 
     it("When the user clicked on sprints, Then ReleaseBadgesClosedSprints is rendered", async () => {
-        store_options.state.user_can_view_sub_milestones_planning = true;
         component_options.propsData = { release_data, isOpen: false };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
         wrapper.setData({ open_sprints_details: true });
@@ -234,7 +221,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     });
 
     it("When sprints details is open, Then there is button to close sprint details", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         wrapper.setData({ open_sprints_details: true });
         expect(wrapper.find("[data-test=button-to-close]").exists()).toBe(true);
@@ -272,9 +259,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             isOpen: true,
         };
 
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
     });
@@ -309,9 +294,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             isOpen: false,
         };
 
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
     });
@@ -346,9 +329,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             isOpen: false,
         };
 
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
         expect(wrapper.findComponent(ReleaseBadgesAllSprints).exists()).toBe(true);
@@ -386,9 +367,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             isOpen: false,
         };
 
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
     });
@@ -423,9 +402,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             isOpen: false,
         };
 
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
         expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);

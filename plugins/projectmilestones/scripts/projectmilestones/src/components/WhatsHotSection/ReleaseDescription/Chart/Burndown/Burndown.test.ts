@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { MilestoneData, StoreOptions } from "../../../../../type";
+import type { MilestoneData } from "../../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import Burndown from "./Burndown.vue";
 
@@ -28,25 +27,13 @@ const component_options: ShallowMountOptions<Burndown> = {};
 let release_data: MilestoneData;
 
 describe("Burndown", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<Burndown>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Burndown>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(Burndown, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             id: 2,
         } as MilestoneData;
@@ -55,11 +42,11 @@ describe("Burndown", () => {
             release_data,
         };
 
-        getPersonalWidgetInstance(store_options);
+        getPersonalWidgetInstance();
     });
 
     it("When component is renderer, Then there is a svg element with id of release", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.element).toMatchSnapshot();
     });
 });

@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StoreOptions } from "../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import ChartError from "./ChartError.vue";
 
@@ -31,25 +29,13 @@ const message_error_under_calculation =
     "Burndown is under calculation. It will be available in a few minutes.";
 
 describe("ChartError", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ChartError>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ChartError>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ChartError, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         component_options.propsData = {
             has_error_duration: true,
             has_error_start_date: true,
@@ -59,11 +45,11 @@ describe("ChartError", () => {
             message_error_under_calculation,
         };
 
-        getPersonalWidgetInstance(store_options);
+        getPersonalWidgetInstance();
     });
 
     it("When there are 3 errors, Then error caused by 'under calculation' is not displayed", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
@@ -79,7 +65,7 @@ describe("ChartError", () => {
             message_error_start_date,
             message_error_under_calculation,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
@@ -96,7 +82,7 @@ describe("ChartError", () => {
             message_error_under_calculation,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
@@ -112,7 +98,7 @@ describe("ChartError", () => {
             message_error_start_date,
             message_error_under_calculation,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
@@ -128,7 +114,7 @@ describe("ChartError", () => {
             message_error_start_date,
             message_error_under_calculation,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(true);
@@ -144,7 +130,7 @@ describe("ChartError", () => {
             message_error_start_date,
             message_error_under_calculation,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
@@ -160,7 +146,7 @@ describe("ChartError", () => {
             message_error_start_date,
             message_error_under_calculation,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
         expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);

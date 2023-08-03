@@ -17,46 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ActionContext } from "vuex";
-import * as actions from "./actions";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type {
     TrackerAgileDashboard,
     MilestoneData,
     TrackerProjectLabel,
-    State,
     TestManagementCampaign,
+    Artifact,
+    Tracker,
+    Project,
 } from "../type";
 import * as rest_querier from "../api/rest-querier";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { setActivePinia, createPinia } from "pinia";
+import { useStore } from "./root";
 
 describe("Store actions", () => {
-    let context: ActionContext<State, State>;
-
     beforeEach(() => {
-        context = {
-            commit: jest.fn(),
-            state: {
-                project_id: 102,
-                nb_backlog_items: 0,
-                nb_upcoming_releases: 0,
-                offset: 0,
-                limit: 50,
-                current_milestones: [] as MilestoneData[],
-                error_message: null,
-                is_loading: false,
-                trackers_agile_dashboard: [] as TrackerAgileDashboard[],
-                label_tracker_planning: "Release",
-                is_timeframe_duration: true,
-                label_start_date: "start date",
-                label_timeframe: "duration",
-            } as State,
-        } as unknown as ActionContext<State, State>;
+        setActivePinia(createPinia());
     });
 
     describe("getMilestones - rest", () => {
         describe("getMilestones - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the error message is set.", async () => {
+                const store = useStore();
                 mockFetchError(jest.spyOn(rest_querier, "getCurrentMilestones"), {
                     error_json: {
                         error: {
@@ -69,44 +53,14 @@ describe("Store actions", () => {
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
                 jest.spyOn(rest_querier, "getLastRelease");
 
-                await actions.getMilestones(context);
-                expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
-                expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+                await store.getMilestones();
+                expect(store.is_loading).toBe(false);
+                expect(store.error_message).toBe("403 Forbidden");
             });
         });
         describe("getMilestones - success", () => {
             it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
-                const trackers: TrackerAgileDashboard[] = [
-                    {
-                        id: 1,
-                        label: "one",
-                        color_name: "red_fiesta",
-                    },
-                    {
-                        id: 2,
-                        label: "two",
-                        color_name: "lake_placid_blue",
-                    },
-                ];
-
-                context.state = {
-                    project_id: 102,
-                    nb_backlog_items: 0,
-                    nb_upcoming_releases: 0,
-                    error_message: null,
-                    is_loading: false,
-                    current_milestones: [] as MilestoneData[],
-                    offset: 0,
-                    limit: 50,
-                    trackers_agile_dashboard: trackers,
-                    label_tracker_planning: "Release",
-                    is_timeframe_duration: true,
-                    label_start_date: "start date",
-                    label_timeframe: "duration",
-                    last_release: null,
-                } as State;
+                const store = useStore();
 
                 const milestones: MilestoneData[] = [
                     {
@@ -130,46 +84,16 @@ describe("Store actions", () => {
 
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
 
-                await actions.getMilestones(context);
-                expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-                expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
-                expect(context.commit).toHaveBeenCalledWith("setNbPastReleases", 10);
-                expect(context.commit).toHaveBeenCalledWith("setLastRelease", last_release[0]);
-                expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+                await store.getMilestones();
+                expect(store.current_milestones).toBe(milestones);
+                expect(store.nb_past_releases).toBe(10);
+                expect(store.last_release).toBe(last_release[0]);
+                expect(store.is_loading).toBe(false);
             });
         });
 
         it("When totals of backlog and upcoming releases are received, Then releases are sorted by id", async () => {
-            const trackers: TrackerAgileDashboard[] = [
-                {
-                    id: 1,
-                    label: "one",
-                    color_name: "red_fiesta",
-                },
-                {
-                    id: 2,
-                    label: "two",
-                    color_name: "lake_placid_blue",
-                },
-            ];
-
-            context.state = {
-                project_id: 102,
-                nb_backlog_items: 0,
-                nb_upcoming_releases: 0,
-                error_message: null,
-                is_loading: false,
-                current_milestones: [] as MilestoneData[],
-                offset: 0,
-                limit: 50,
-                trackers_agile_dashboard: trackers,
-                label_tracker_planning: "Release",
-                is_timeframe_duration: true,
-                label_start_date: "start date",
-                label_timeframe: "duration",
-                last_release: null,
-            } as State;
-
+            const store = useStore();
             const milestones: MilestoneData[] = [
                 {
                     id: 3,
@@ -210,17 +134,17 @@ describe("Store actions", () => {
 
             jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
 
-            await actions.getMilestones(context);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-            expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones_sorted);
-            expect(context.commit).toHaveBeenCalledWith("setNbPastReleases", 10);
-            expect(context.commit).toHaveBeenCalledWith("setLastRelease", last_release[0]);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+            await store.getMilestones();
+            expect(store.current_milestones).toEqual(milestones_sorted);
+            expect(store.nb_past_releases).toBe(10);
+            expect(store.last_release).toBe(last_release[0]);
+            expect(store.is_loading).toBe(false);
         });
     });
 
     describe("getEnhancedMilestones()", () => {
         it("When there is no error in API, Then enriched milestone returned", async () => {
+            const store = useStore();
             const trackers: TrackerAgileDashboard[] = [
                 {
                     id: 1,
@@ -234,21 +158,7 @@ describe("Store actions", () => {
                 },
             ];
 
-            context.state = {
-                project_id: 102,
-                nb_backlog_items: 0,
-                nb_upcoming_releases: 0,
-                error_message: null,
-                is_loading: false,
-                current_milestones: [] as MilestoneData[],
-                offset: 0,
-                limit: 50,
-                trackers_agile_dashboard: trackers,
-                label_tracker_planning: "Release",
-                is_timeframe_duration: true,
-                label_start_date: "start date",
-                label_timeframe: "duration",
-            } as State;
+            store.trackers_agile_dashboard = trackers;
 
             const milestone: MilestoneData = {
                 id: 1,
@@ -372,18 +282,23 @@ describe("Store actions", () => {
                 Promise.resolve(item_in_sprint),
             );
 
-            const enriched_milestones_received = await actions.getEnhancedMilestones(
-                context,
-                milestone,
-            );
+            const enriched_milestones_received = await store.getEnhancedMilestones(milestone);
             expect(enriched_milestones_received).toEqual(enriched_milestones);
         });
     });
 
     describe("getTestManagementCampaigns", () => {
         it("When there is a project id, Then all campaigns are returned", async () => {
+            const store = useStore();
             const milestone: MilestoneData = {
                 id: 101,
+                artifact: {
+                    tracker: {
+                        project: {
+                            id: 102,
+                        } as Project,
+                    } as Tracker,
+                } as Artifact,
             } as MilestoneData;
 
             const campaigns: TestManagementCampaign[] = [
@@ -412,15 +327,15 @@ describe("Store actions", () => {
                 Promise.resolve(campaigns),
             );
 
-            const campaign = await actions.getTestManagementCampaigns(context, milestone);
-            expect(campaign).toEqual(expected_campaign);
+            const campaign = await store.getTestManagementCampaigns(milestone);
+            expect(campaign).toStrictEqual(expected_campaign);
         });
     });
 
     describe("handleErrorMessage - error", () => {
         it("Given an error, When it can't parse the error, Then the error message is empty.", async () => {
-            await actions.handleErrorMessage(
-                context,
+            const store = useStore();
+            await store.handleErrorMessage(
                 new FetchWrapperError("error", {
                     json(): Promise<void> {
                         throw new Error();
@@ -428,7 +343,7 @@ describe("Store actions", () => {
                 } as Response),
             );
 
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
+            expect(store.error_message).toBe("");
         });
     });
 });

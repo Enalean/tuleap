@@ -20,8 +20,7 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeader from "./ReleaseHeader.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, Pane, StoreOptions } from "../../../type";
+import type { MilestoneData, Pane } from "../../../type";
 import { setUserLocale } from "../../../helpers/user-locale-helper";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
@@ -33,24 +32,13 @@ let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
 
 describe("ReleaseHeader", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseHeader>> {
-        store = createStoreMock(store_options);
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseHeader>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseHeader, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             label: "mile",
             id: 2,
@@ -72,7 +60,7 @@ describe("ReleaseHeader", () => {
         it("When there are a start date and end date, Then an arrow is displayed", async () => {
             setUserLocale("en-US");
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=display-arrow]").exists()).toBe(true);
         });
@@ -87,7 +75,7 @@ describe("ReleaseHeader", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.find("[data-test=display-arrow]").exists()).toBe(false);
         });
     });
@@ -102,7 +90,7 @@ describe("ReleaseHeader", () => {
             isLoading: true,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=display-skeleton]").exists()).toBe(true);
     });
 
@@ -117,7 +105,7 @@ describe("ReleaseHeader", () => {
             isLoading: true,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.get("[data-test=title-release]").text()).toBe("1 > 2");
     });
 
@@ -128,7 +116,7 @@ describe("ReleaseHeader", () => {
                 isPastRelease: false,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(true);
             expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(true);
             expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(false);
@@ -140,7 +128,7 @@ describe("ReleaseHeader", () => {
                 isPastRelease: true,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(false);
             expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(true);
@@ -161,7 +149,7 @@ describe("ReleaseHeader", () => {
                 isPastRelease: true,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(false);
             expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(true);

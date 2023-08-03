@@ -122,7 +122,7 @@ msgstr "Récemment fermé(e)"
 msgid "Roadmap"
 msgstr "Roadmap"
 
-msgid "Start Planning"
+msgid "Start planning"
 msgstr "Démarrez la planification"
 
 msgid "Tests Results"

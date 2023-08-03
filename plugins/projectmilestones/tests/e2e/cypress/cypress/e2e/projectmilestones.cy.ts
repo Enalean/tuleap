@@ -33,7 +33,7 @@ describe("Project Milestones Widget", function () {
                 "ProjectMilestones Widget Milestones",
             );
 
-            cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
+            cy.get("[data-test=start-planning-button]").contains("Start planning");
         });
     });
 
@@ -61,7 +61,7 @@ describe("Project Milestones Widget", function () {
                 "ProjectMilestones Widget Milestones",
             );
 
-            cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
+            cy.get("[data-test=start-planning-button]").contains("Start planning");
         });
     });
 });

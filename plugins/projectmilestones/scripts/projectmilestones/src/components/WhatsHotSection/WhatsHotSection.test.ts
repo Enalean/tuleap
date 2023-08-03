@@ -20,21 +20,28 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../type";
+import type { MilestoneData } from "../../type";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 const project_id = 102;
 
 async function getPersonalWidgetInstance(
-    store_options: StoreOptions,
+    current_milestones: Array<MilestoneData>,
 ): Promise<Wrapper<WhatsHotSection>> {
-    const store = createStoreMock(store_options);
+    const useStore = defineStore("root", {
+        state: () => ({
+            current_milestones,
+        }),
+    });
+    const pinia = createTestingPinia();
+    useStore(pinia);
+
     const component_options = {
         propsData: {
             project_id,
         },
-        mocks: { $store: store },
         localVue: await createReleaseWidgetLocalVue(),
     };
 
@@ -42,25 +49,8 @@ async function getPersonalWidgetInstance(
 }
 
 describe("What'sHotSection", () => {
-    let store_options: StoreOptions = {
-        state: {},
-        getters: {},
-    };
-
-    beforeEach(() => {
-        store_options = {
-            state: {
-                is_loading: false,
-                current_milestones: [],
-            },
-            getters: {
-                has_rest_error: false,
-            },
-        };
-    });
-
     it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance([]);
 
         expect(wrapper.find("[data-test=current-milestones-test]").exists()).toBe(false);
     });
@@ -76,8 +66,7 @@ describe("What'sHotSection", () => {
             id: 2,
         } as MilestoneData;
 
-        store_options.state.current_milestones = [release1, release2];
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance([release1, release2]);
 
         expect(
             wrapper.find("[data-test=current-milestones-test-" + release1.label + "]").exists(),

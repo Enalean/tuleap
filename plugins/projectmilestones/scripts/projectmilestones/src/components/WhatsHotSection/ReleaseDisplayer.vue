@@ -54,11 +54,11 @@ import ReleaseBadgesDisplayer from "./ReleaseBadges/ReleaseBadgesDisplayer.vue";
 import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
-import type { MilestoneData, TestManagementCampaign } from "../../type";
+import type { MilestoneData } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
-import { Action } from "vuex-class";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../helpers/test-management-helper";
+import { useStore } from "../../stores/root";
 
 @Component({
     components: {
@@ -68,16 +68,14 @@ import { is_testplan_activated } from "../../helpers/test-management-helper";
     },
 })
 export default class ReleaseDisplayer extends Vue {
+    public root_store = useStore();
+
     @Prop()
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isOpen!: boolean;
     @Prop()
     isPastRelease!: boolean;
-    @Action
-    getEnhancedMilestones!: (release_data: MilestoneData) => Promise<MilestoneData>;
-    @Action
-    getTestManagementCampaigns!: (release_data: MilestoneData) => Promise<TestManagementCampaign>;
 
     is_open = false;
     is_loading = true;
@@ -94,12 +92,13 @@ export default class ReleaseDisplayer extends Vue {
 
     async created(): Promise<void> {
         try {
-            this.release_data_enhanced = await this.getEnhancedMilestones(this.release_data);
+            this.release_data_enhanced = await this.root_store.getEnhancedMilestones(
+                this.release_data,
+            );
             this.is_open = this.isOpen;
             if (this.isPastRelease && this.is_testplan_activated) {
-                this.release_data_enhanced.campaign = await this.getTestManagementCampaigns(
-                    this.release_data_enhanced,
-                );
+                this.release_data_enhanced.campaign =
+                    await this.root_store.getTestManagementCampaigns(this.release_data_enhanced);
             }
         } catch (rest_error) {
             await this.handle_error(rest_error);

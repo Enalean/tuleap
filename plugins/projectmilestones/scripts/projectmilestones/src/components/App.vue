@@ -20,10 +20,14 @@
 
 <template>
     <section>
-        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
+        <div
+            v-if="root_store.has_rest_error"
+            class="tlp-alert-danger"
+            data-test="show-error-message"
+        >
             {{ error }}
         </div>
-        <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
+        <div v-else-if="root_store.is_loading" class="release-loader" data-test="is-loading"></div>
         <div v-else>
             <div
                 class="project-release-widget-content"
@@ -33,9 +37,13 @@
                     <roadmap-empty-state-section />
                 </div>
                 <div v-else>
-                    <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
+                    <roadmap-section
+                        v-bind:label_tracker_planning="root_store.label_tracker_planning"
+                    />
                     <whats-hot-section />
-                    <past-section v-bind:label_tracker_planning="label_tracker_planning" />
+                    <past-section
+                        v-bind:label_tracker_planning="root_store.label_tracker_planning"
+                    />
                 </div>
             </div>
         </div>
@@ -47,54 +55,30 @@ import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Action, Getter, State } from "vuex-class";
-import type { MilestoneData, TrackerAgileDashboard } from "../type";
 import PastSection from "./PastSection/PastSection.vue";
 import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
+import { useStore } from "../stores/root";
 
 @Component({
     components: { RoadmapEmptyStateSection, PastSection, WhatsHotSection, RoadmapSection },
 })
 export default class App extends Vue {
-    @State
-    readonly label_tracker_planning!: string;
-    @State
-    readonly project_id!: number;
-    @State
-    readonly nb_upcoming_releases!: number;
-    @State
-    readonly nb_backlog_items!: number;
-    @State
-    readonly trackers_agile_dashboard!: TrackerAgileDashboard[];
-    @State
-    readonly is_loading!: boolean;
-    @State
-    readonly error_message!: string;
-    @State
-    readonly current_milestones!: MilestoneData[];
-    @State
-    readonly nb_past_releases!: number;
-    @Getter
-    has_rest_error!: boolean;
-    @Action
-    getMilestones!: () => void;
+    public root_store = useStore();
 
     created(): void {
-        this.getMilestones();
+        this.root_store.getMilestones();
     }
 
     get error(): string {
-        return this.error_message === ""
-            ? this.$gettext("Oops, an error occurred!")
-            : this.error_message;
+        return this.root_store.error_message || this.$gettext("Oops, an error occurred!");
     }
 
     get display_empty_state(): boolean {
         return (
-            this.nb_backlog_items === 0 &&
-            this.nb_upcoming_releases === 0 &&
-            this.current_milestones.length === 0 &&
-            this.nb_past_releases === 0
+            this.root_store.nb_backlog_items === 0 &&
+            this.root_store.nb_upcoming_releases === 0 &&
+            this.root_store.current_milestones.length === 0 &&
+            this.root_store.nb_past_releases === 0
         );
     }
 }

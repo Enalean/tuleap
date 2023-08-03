@@ -20,35 +20,33 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
-import type { MilestoneData, StoreOptions } from "../../type";
+import type { MilestoneData } from "../../type";
 import type { DefaultData } from "vue/types/options";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseDisplayer>;
 
 describe("ReleaseDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseDisplayer>> {
+        const useStore = defineStore("root", {
+            state: () => ({}),
+            actions: {
+                getEnhancedMilestones: jest.fn(),
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseDisplayer>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             label: "mile",
             id: 2,
@@ -81,7 +79,7 @@ describe("ReleaseDisplayer", () => {
                 error_message: "404",
             };
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(true);
     });
 
@@ -94,7 +92,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
     });
@@ -115,7 +113,7 @@ describe("ReleaseDisplayer", () => {
             },
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });
 
@@ -128,7 +126,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
 
         wrapper.findComponent(ReleaseHeader).vm.$emit("toggle-release-details");
@@ -145,7 +143,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         wrapper.setData({ is_loading: true });
         expect(wrapper.attributes("data-tlp-tooltip")).toBe("Loading data...");
     });
@@ -159,7 +157,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=display-release-data]").exists()).toBe(true);
     });
 });

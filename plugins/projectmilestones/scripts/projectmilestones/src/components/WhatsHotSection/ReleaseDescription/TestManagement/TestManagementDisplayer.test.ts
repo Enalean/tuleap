@@ -20,39 +20,36 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TestManagementDisplayer from "./TestManagementDisplayer.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../../type";
+import type { MilestoneData } from "../../../../type";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import TestManagement from "./TestManagement.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<TestManagementDisplayer> = {};
 const project_id = 100;
 
 describe("TestManagementDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<TestManagementDisplayer>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<TestManagementDisplayer>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                label_tracker_planning: "Releases",
+                project_id,
+            }),
+            actions: {
+                getTestManagementCampaigns: jest.fn(),
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(TestManagementDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                label_tracker_planning: "Releases",
-                project_id,
-            },
-        };
-
         release_data = {
             id: 2,
             planning: {
@@ -84,7 +81,7 @@ describe("TestManagementDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         wrapper.setData({ is_loading: true });
 
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
@@ -98,7 +95,7 @@ describe("TestManagementDisplayer", () => {
             };
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=error-rest]").text()).toBe("404 Error");
     });
@@ -122,7 +119,7 @@ describe("TestManagementDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagement).exists()).toBe(true);
     });
 
@@ -145,7 +142,7 @@ describe("TestManagementDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagement).exists()).toBe(false);
     });
 });

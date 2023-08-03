@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@pinia/testing':
+    specifier: ^0.1.3
+    version: 0.1.3(pinia@2.0.21)(vue@2.7.8)
   '@tuleap/chart-builder':
     specifier: workspace:*
     version: link:../../../../lib/frontend/chart-builder
@@ -35,15 +38,15 @@ dependencies:
   d3-shape:
     specifier: ^3.0.1
     version: 3.0.1
+  pinia:
+    specifier: ^2.0.21
+    version: 2.0.21(vue@2.7.8)
   vue:
     specifier: ^2.7.8
     version: 2.7.8
   vue-dompurify-html:
     specifier: ^4.0.0
     version: 4.0.0(vue@2.7.8)
-  vuex:
-    specifier: ^3.6.2
-    version: 3.6.2(vue@2.7.8)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -52,9 +55,6 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin
-  '@tuleap/vuex-store-wrapper-jest':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/d3-array':
     specifier: ^2.12.1
     version: 2.12.1
@@ -79,9 +79,6 @@ devDependencies:
   vue-property-decorator:
     specifier: ^9.1.2
     version: 9.1.2(vue-class-component@7.2.6)(vue@2.7.8)
-  vuex-class:
-    specifier: ^0.3.2
-    version: 0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2)
 
 packages:
 
@@ -102,6 +99,18 @@ packages:
     dependencies:
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
+
+  /@pinia/testing@0.1.3(pinia@2.0.21)(vue@2.7.8):
+    resolution: {integrity: sha512-D2Ds2s69kKFaRf2KCcP1NhNZEg5+we59aRyQalwRm7ygWfLM25nDH66267U3hNvRUOTx8ofL24GzodZkOmB5xw==}
+    peerDependencies:
+      pinia: '>=2.1.5'
+    dependencies:
+      pinia: 2.0.21(vue@2.7.8)
+      vue-demi: 0.14.5(vue@2.7.8)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
 
   /@types/d3-array@2.12.1:
     resolution: {integrity: sha512-kVHqB3kfLpU0WYEmx5Y2hi3LRhUGIEIQXFdGazNNWQhyhzHx8xrgLtpAOKYzpfS3a+GjFMdKsI82QUH4q5dACQ==}
@@ -141,6 +150,10 @@ packages:
       '@babel/parser': 7.18.9
       postcss: 8.4.14
       source-map: 0.6.1
+
+  /@vue/devtools-api@6.5.0:
+    resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
+    dev: false
 
   /@vue/test-utils@1.3.5(vue@2.7.8):
     resolution: {integrity: sha512-ezdlDNoxi5m/eP5Chg34AjnmNplrik4fyzB2DB9Yqa32OpywV8IvHqK9eCf+nIVsHFBejjV00agPFYRH2/D3Hg==}
@@ -347,6 +360,23 @@ packages:
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
+  /pinia@2.0.21(vue@2.7.8):
+    resolution: {integrity: sha512-6ol04PtL29O0Z6JHI47O3JUSoyOJ7Og0rstXrHVMZSP4zAldsQBXJCNF0i/H7m8vp/Hjd/CSmuPl7C5QAwpeWQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.5.0
+      vue: 2.7.8
+      vue-demi: 0.13.11(vue@2.7.8)
+    dev: false
+
   /postcss@8.4.14:
     resolution: {integrity: sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==}
     engines: {node: ^10 || ^12 || >=14}
@@ -416,6 +446,21 @@ packages:
       vue: 2.7.8
     dev: false
 
+  /vue-demi@0.14.5(vue@2.7.8):
+    resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 2.7.8
+    dev: false
+
   /vue-dompurify-html@4.0.0(vue@2.7.8):
     resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
     peerDependencies:
@@ -443,25 +488,6 @@ packages:
     dependencies:
       '@vue/compiler-sfc': 2.7.8
       csstype: 3.1.0
-
-  /vuex-class@0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2):
-    resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
-    peerDependencies:
-      vue: ^2.5.0
-      vue-class-component: ^6.0.0 || ^7.0.0
-      vuex: ^3.0.0
-    dependencies:
-      vue: 2.7.8
-      vue-class-component: 7.2.6(vue@2.7.8)
-      vuex: 3.6.2(vue@2.7.8)
-    dev: true
-
-  /vuex@3.6.2(vue@2.7.8):
-    resolution: {integrity: sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==}
-    peerDependencies:
-      vue: ^2.0.0
-    dependencies:
-      vue: 2.7.8
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}

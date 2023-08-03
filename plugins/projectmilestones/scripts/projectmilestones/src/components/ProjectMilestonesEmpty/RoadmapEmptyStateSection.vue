@@ -28,8 +28,8 @@
                 class="button-backlog-link empty-state-action"
                 data-test="backlog-link"
             >
-                <button type="button" class="tlp-button-primary">
-                    {{ $gettext("Start Planning") }}
+                <button type="button" class="tlp-button-primary" data-test="start-planning-button">
+                    {{ $gettext("Start planning") }}
                     <i
                         class="tlp-button-icon-right fas fa-long-arrow-alt-right"
                         data-test="display-arrow"
@@ -43,21 +43,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
 import SVGProjectMilestonesEmptyState from "./SVGProjectMilestonesEmptyState.vue";
+import { useStore } from "../../stores/root";
 @Component({
     components: { SVGProjectMilestonesEmptyState },
 })
 export default class RoadmapEmptyStateSection extends Vue {
-    @State
-    readonly project_name!: string;
-    @State
-    readonly project_id!: number;
+    public root_store = useStore();
 
     get backlog_link(): string {
         return (
             "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&pane=topplanning-v2"
         );
     }
@@ -65,7 +62,7 @@ export default class RoadmapEmptyStateSection extends Vue {
     get empty_state_label(): string {
         return this.$gettextInterpolate(
             this.$gettext("There is no item nor milestone in the %{ name } backlog yet."),
-            { name: this.project_name },
+            { name: this.root_store.project_name },
         );
     }
 }

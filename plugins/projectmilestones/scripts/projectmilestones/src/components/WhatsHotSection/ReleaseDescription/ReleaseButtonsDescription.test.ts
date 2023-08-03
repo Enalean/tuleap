@@ -20,36 +20,30 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, Pane, StoreOptions } from "../../../type";
+import type { MilestoneData, Pane } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const component_options: ShallowMountOptions<ReleaseButtonsDescription> = {};
 const project_id = 102;
 
 describe("ReleaseButtonsDescription", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseButtonsDescription>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseButtonsDescription>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseButtonsDescription, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                label_tracker_planning: "Releases",
-            },
-        };
-
         release_data = {
             id: 2,
             planning: {
@@ -88,14 +82,10 @@ describe("ReleaseButtonsDescription", () => {
         component_options.propsData = {
             release_data,
         };
-
-        store_options.state.user_can_view_sub_milestones_planning = true;
     });
 
     it("Given user display widget, Then a good link to TestPlan is renderer", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const ttm_element = wrapper.get("[data-test=pane-link-testplan]");
         expect(ttm_element.attributes("href")).toBe("/testplan/project/6");
         expect(ttm_element.attributes("data-tlp-tooltip")).toBe("Tests");
@@ -103,9 +93,7 @@ describe("ReleaseButtonsDescription", () => {
     });
 
     it("Given user display widget, Then a good link to taskboard is renderer", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const taskboard_element = wrapper.get("[data-test=pane-link-taskboard]");
         expect(taskboard_element.attributes("href")).toBe("/taskboard/project/6");
         expect(taskboard_element.attributes("data-tlp-tooltip")).toBe("Taskboard");
@@ -115,9 +103,7 @@ describe("ReleaseButtonsDescription", () => {
     });
 
     it("Given user display widget, Then a good link to overview is renderer", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.get("[data-test=overview-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
@@ -130,9 +116,7 @@ describe("ReleaseButtonsDescription", () => {
     });
 
     it("Given user display widget, Then a good link to cardwall is renderer", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.get("[data-test=cardwall-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
@@ -176,7 +160,7 @@ describe("ReleaseButtonsDescription", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=taskboard-link]").exists()).toBe(false);
     });
 
@@ -205,7 +189,7 @@ describe("ReleaseButtonsDescription", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=cardwall-link]").exists()).toBe(false);
     });
 });

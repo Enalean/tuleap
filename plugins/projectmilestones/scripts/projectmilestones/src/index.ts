@@ -20,17 +20,19 @@
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
-import { createStore } from "./store";
 import { setUserLocale } from "./helpers/user-locale-helper";
 import {
     getPOFileFromLocaleWithoutExtension,
     initVueGettextFromPoGettextPlugin,
 } from "@tuleap/vue2-gettext-init";
-import type { TrackerAgileDashboard } from "./type";
+import type { BurnupMode, State, TrackerAgileDashboard } from "./type";
 import { COUNT, EFFORT } from "./type";
+import { createPinia, PiniaVuePlugin } from "pinia";
+import { useStore } from "./stores/root";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
+    Vue.use(PiniaVuePlugin);
 
     const locale = document.body.dataset.userLocale;
     if (locale !== undefined) {
@@ -45,6 +47,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");
 
     for (const widget of widgets) {
+        const pinia = createPinia();
+
         const project_id_dataset = widget.dataset.projectId;
         const project_name = widget.dataset.projectName;
         const nb_upcoming_releases_dataset = widget.dataset.nbUpcomingReleases;
@@ -56,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const label_timeframe = widget.dataset.labelTimeframe;
         const user_can_view_sub_milestones_planning_dataset =
             widget.dataset.userCanViewSubMilestonesPlanning;
-        const burnup_mode = widget.dataset.burnupMode;
+        const burnup_mode: BurnupMode = widget.dataset.burnupMode === "count" ? COUNT : EFFORT;
 
         if (!project_id_dataset) {
             throw new Error("Project Id is missing.");
@@ -107,20 +111,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const AppComponent = Vue.extend(App);
 
+        const root_state: State = {
+            project_id,
+            project_name,
+            nb_upcoming_releases,
+            nb_backlog_items,
+            trackers_agile_dashboard,
+            label_tracker_planning,
+            is_timeframe_duration,
+            label_start_date,
+            label_timeframe,
+            user_can_view_sub_milestones_planning,
+            burnup_mode,
+            error_message: null,
+            offset: 0,
+            limit: 50,
+            is_loading: false,
+            current_milestones: [],
+            nb_past_releases: 0,
+            last_release: null,
+        };
+
+        const store = useStore(pinia);
+        store.$patch(root_state);
+
         new AppComponent({
-            store: createStore(
-                project_id,
-                project_name,
-                nb_upcoming_releases,
-                nb_backlog_items,
-                trackers_agile_dashboard,
-                label_tracker_planning,
-                is_timeframe_duration,
-                label_start_date,
-                label_timeframe,
-                user_can_view_sub_milestones_planning,
-                burnup_mode === "count" ? COUNT : EFFORT,
-            ),
+            pinia,
         }).$mount(widget);
     }
 });

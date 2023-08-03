@@ -40,23 +40,25 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { MilestoneData } from "../../../type";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
-import { State } from "vuex-class";
+import { useStore } from "../../../stores/root";
 
 @Component
 export default class ReleaseBadgesAllSprints extends Vue {
+    public root_store = useStore();
     @Prop()
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isPastRelease!: boolean;
-    @State
-    readonly user_can_view_sub_milestones_planning!: boolean;
 
     get tracker_submilestone_label(): string {
         return getTrackerSubmilestoneLabel(this.release_data);
     }
 
     get display_sprint_badge(): boolean {
-        return this.tracker_submilestone_label !== "" && this.user_can_view_sub_milestones_planning;
+        return (
+            this.tracker_submilestone_label !== "" &&
+            this.root_store.user_can_view_sub_milestones_planning
+        );
     }
 }
 </script>

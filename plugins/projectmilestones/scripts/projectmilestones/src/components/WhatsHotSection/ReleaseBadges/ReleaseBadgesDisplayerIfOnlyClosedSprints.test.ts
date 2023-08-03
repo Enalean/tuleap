@@ -20,11 +20,12 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseBadgesDisplayerIfOnlyClosedSprints> = {};
@@ -32,27 +33,23 @@ const component_options: ShallowMountOptions<ReleaseBadgesDisplayerIfOnlyClosedS
 const project_id = 102;
 
 describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        user_can_view_sub_milestones_planning: boolean,
     ): Promise<Wrapper<ReleaseBadgesDisplayerIfOnlyClosedSprints>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id: project_id,
+                user_can_view_sub_milestones_planning,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesDisplayerIfOnlyClosedSprints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         release_data = {
             id: 2,
         } as MilestoneData;
@@ -62,15 +59,13 @@ describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
 
     describe("Display closed sprints and others badges", () => {
         it("When the component is rendered, Then ReleaseBadgesClosedSprints and ReleaseOthersBadges are rendered", async () => {
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(true);
 
             expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(true);
             expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);
         });
         it("If the user can't see sprints' tracker, Then ReleaseBadgesClosedSprints is not rendered", async () => {
-            store_options.state.user_can_view_sub_milestones_planning = false;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(false);
 
             expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);

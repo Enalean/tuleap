@@ -20,49 +20,40 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastSection from "./PastSection.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../type";
+import type { MilestoneData } from "../../type";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 const project_id = 102;
 const component_options: ShallowMountOptions<PastSection> = {};
 
 async function getPersonalWidgetInstance(
-    store_options: StoreOptions,
+    last_release: MilestoneData | null = null,
 ): Promise<Wrapper<PastSection>> {
-    const store = createStoreMock(store_options);
+    const useStore = defineStore("root", {
+        state: () => ({
+            project_id: project_id,
+            last_release,
+            nb_past_releases: 10,
+        }),
+    });
+    const pinia = createTestingPinia();
+    useStore(pinia);
 
     component_options.propsData = {
         label_tracker_planning: "sprint",
     };
 
-    component_options.mocks = { $store: store };
     component_options.localVue = await createReleaseWidgetLocalVue();
 
     return shallowMount(PastSection, component_options);
 }
 
 describe("PastSection", () => {
-    let store_options: StoreOptions;
-    beforeEach(() => {
-        store_options = {
-            state: {
-                is_loading: false,
-                current_milestones: [],
-                project_id: project_id,
-                nb_past_releases: 4,
-            },
-            getters: {
-                has_rest_error: false,
-            },
-        };
-
-        getPersonalWidgetInstance(store_options);
-    });
-
     it("Given user display widget, Then a good link to done releases of the project is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.get("[data-test=past-releases-link]").attributes("href")).toContain(
             "/plugins/agiledashboard/?action=show-top&group_id=" +
@@ -72,17 +63,16 @@ describe("PastSection", () => {
     });
 
     it("When there is no last_milestone, then ReleaseDisplayer Component is not displayed", async () => {
-        store_options.state.last_release = null;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(null);
 
         expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(false);
     });
 
     it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", async () => {
-        store_options.state.last_release = {
+        const last_release = {
             id: 1,
         } as MilestoneData;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(last_release);
 
         expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(true);
     });

@@ -20,33 +20,20 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeaderRemainingDays>;
 
 describe("ReleaseHeaderRemainingDays", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseHeaderRemainingDays>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseHeaderRemainingDays>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseHeaderRemainingDays, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         component_options = {
             propsData: {
                 release_data,
@@ -66,7 +53,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -89,7 +76,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -113,7 +100,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -138,7 +125,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -163,7 +150,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -191,7 +178,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -215,7 +202,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -239,7 +226,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
@@ -263,7 +250,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");

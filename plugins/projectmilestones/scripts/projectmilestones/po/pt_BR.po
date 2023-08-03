@@ -112,7 +112,7 @@ msgstr ""
 msgid "Roadmap"
 msgstr ""
 
-msgid "Start Planning"
+msgid "Start planning"
 msgstr ""
 
 msgid "Tests Results"

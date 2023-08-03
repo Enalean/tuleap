@@ -44,6 +44,27 @@ export interface MilestoneData {
     resources: MilestoneResourcesData;
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
     campaign: TestManagementCampaign | null;
+    artifact: Artifact;
+}
+
+export interface Artifact {
+    id: number;
+    tracker: Tracker;
+    uri: string;
+}
+
+export interface Tracker {
+    id: number;
+    label: string;
+    project: Project;
+    uri: string;
+}
+
+export interface Project {
+    id: number;
+    icon: string;
+    label: string;
+    uri: string;
 }
 
 export interface MilestoneResourcesData {
@@ -99,32 +120,8 @@ export interface MilestoneContent {
         };
     };
 }
-
-export interface StoreOptions {
-    state: {
-        project_id?: number;
-        is_loading?: boolean;
-        current_milestones?: Array<MilestoneData>;
-        error_message?: string;
-        label_tracker_planning?: string;
-        is_timeframe_duration?: boolean;
-        label_start_date?: string;
-        label_timeframe?: string;
-        user_can_view_sub_milestones_planning?: boolean;
-        burnup_mode?: string;
-        last_release?: MilestoneData | null;
-        nb_backlog_items?: number;
-        nb_upcoming_releases?: number;
-        nb_past_releases?: number;
-        project_name?: string;
-    };
-    getters?: {
-        has_rest_error?: boolean;
-    };
-}
-
 export interface State {
-    project_id: number | null;
+    project_id: number;
     project_name: string;
     nb_backlog_items: number;
     nb_upcoming_releases: number;

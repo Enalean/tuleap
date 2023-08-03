@@ -18,7 +18,6 @@
  */
 
 import type { Vue } from "vue/types/vue";
-import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
@@ -28,7 +27,6 @@ export async function createReleaseWidgetLocalVue(): Promise<typeof Vue> {
     await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
-    local_vue.use(Vuex);
     local_vue.use(VueDOMPurifyHTML);
 
     return local_vue;

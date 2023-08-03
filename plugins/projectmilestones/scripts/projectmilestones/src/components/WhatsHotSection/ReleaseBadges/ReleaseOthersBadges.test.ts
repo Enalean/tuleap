@@ -20,9 +20,10 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, Pane, StoreOptions, TrackerProjectLabel } from "../../../type";
+import type { MilestoneData, Pane, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
@@ -32,27 +33,24 @@ const component_options: ShallowMountOptions<ReleaseOthersBadges> = {};
 const project_id = 102;
 
 describe("ReleaseOthersBadges", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        user_can_view_sub_milestones_planning = false,
     ): Promise<Wrapper<ReleaseOthersBadges>> {
-        store = createStoreMock(store_options);
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id: project_id,
+                user_can_view_sub_milestones_planning,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseOthersBadges, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         release_data = {
             id: 2,
             capacity: 10,
@@ -96,7 +94,7 @@ describe("ReleaseOthersBadges", () => {
 
     describe("Display points of initial effort", () => {
         it("When there is an initial effort, Then the points of initial effort are displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=initial-effort-not-empty]").exists()).toBe(true);
             expect(wrapper.find("[data-test=initial-effort-empty]").exists()).toBe(false);
@@ -111,7 +109,7 @@ describe("ReleaseOthersBadges", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=initial-effort-not-empty]").exists()).toBe(false);
             expect(wrapper.find("[data-test=initial-effort-empty]").exists()).toBe(true);
@@ -120,7 +118,7 @@ describe("ReleaseOthersBadges", () => {
 
     describe("Display points of capacity", () => {
         it("When there are points of capacity, Then the points of capacity are displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(true);
             expect(wrapper.find("[data-test=capacity-empty]").exists()).toBe(false);
@@ -138,7 +136,7 @@ describe("ReleaseOthersBadges", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(false);
             expect(wrapper.find("[data-test=capacity-empty]").exists()).toBe(true);
@@ -156,7 +154,7 @@ describe("ReleaseOthersBadges", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
                 "tlp-badge-warning",
@@ -175,7 +173,7 @@ describe("ReleaseOthersBadges", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
                 "tlp-badge-primary",
@@ -184,10 +182,7 @@ describe("ReleaseOthersBadges", () => {
     });
 
     it("Given user display widget, Then a good link to sprint planning is renderer", async () => {
-        store_options.state.project_id = project_id;
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(true);
         expect(wrapper.get("[data-test=planning-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
@@ -200,15 +195,11 @@ describe("ReleaseOthersBadges", () => {
     });
 
     it("When the user can't see the subplanning, Then he can't see the planning link", async () => {
-        store_options.state.user_can_view_sub_milestones_planning = false;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(false);
         expect(wrapper.find("[data-test=planning-link]").exists()).toBe(false);
     });
 
     it("When there isn't sub-planning, Then there isn't any link to sub-planning", async () => {
-        store_options.state.user_can_view_sub_milestones_planning = true;
-
         release_data = {
             id: 2,
             planning: {
@@ -228,7 +219,7 @@ describe("ReleaseOthersBadges", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=planning-link]").exists()).toBe(false);
     });
 });

@@ -20,17 +20,25 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import RoadmapEmptyStateSection from "./RoadmapEmptyStateSection.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { StoreOptions } from "../../type";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 const project_id = 102;
-async function getPersonalWidgetInstance(
-    store_options: StoreOptions,
-): Promise<Wrapper<RoadmapEmptyStateSection>> {
-    const store = createStoreMock(store_options);
+
+async function getPersonalWidgetInstance(): Promise<Wrapper<RoadmapEmptyStateSection>> {
+    const useStore = defineStore("root", {
+        state: () => ({
+            is_loading: false,
+            current_milestones: [],
+            project_id: project_id,
+            project_name: "My project",
+        }),
+    });
+    const pinia = createTestingPinia();
+    useStore(pinia);
+
     const component_options = {
-        mocks: { $store: store },
         localVue: await createReleaseWidgetLocalVue(),
     };
 
@@ -38,23 +46,8 @@ async function getPersonalWidgetInstance(
 }
 
 describe("RoadmapEmptyStateSection", () => {
-    let store_options: StoreOptions;
-    beforeEach(() => {
-        store_options = {
-            state: {
-                is_loading: false,
-                current_milestones: [],
-                project_id: project_id,
-                project_name: "my project",
-            },
-            getters: {
-                has_rest_error: false,
-            },
-        };
-    });
-
     it("Given user display widget, Then a good link to top planning of the project is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.element).toMatchSnapshot();
     });

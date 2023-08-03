@@ -55,15 +55,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
 import type { MilestoneData } from "../../../type";
 
 @Component
 export default class ReleaseHeaderRemainingDays extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly project_id!: number;
 
     disabled_date =
         typeof this.release_data.number_days_since_start !== "number" ||
