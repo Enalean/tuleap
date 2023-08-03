@@ -163,7 +163,6 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 junit: TEST_OUTPUT_DIRECTORY + "/junit.xml",
             },
             coverage: test_coverage,
-            threads: !test_coverage.enabled,
         },
     });
 }
