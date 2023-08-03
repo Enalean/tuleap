@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Action\VerifyUserGroupValuesCanBeFullyMoved;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -41,7 +42,7 @@ final class VerifyUserGroupValuesCanBeFullyMovedStub implements VerifyUserGroupV
         return new self(true);
     }
 
-    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact): bool
+    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         return $this->is_fully_moved;
     }

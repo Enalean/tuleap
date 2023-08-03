@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\User\UserGroup\NameTranslator;
 
 final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupValuesCanBeFullyMoved
 {
-    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact): bool
+    public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
+            $logger->error(sprintf("Last changeset value is not a list for field #%d", $source_field->getId()));
             return false;
         }
 
@@ -42,6 +44,7 @@ final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupVal
             $user_group_name = NameTranslator::getUserGroupDisplayName($value->getUGroupName());
 
             if (! in_array($user_group_name, $destinations_values_labels, true)) {
+                $logger->debug(sprintf("User group %s not found in field #%d (%s)", $user_group_name, $destination_field->getId(), $destination_field->getName()));
                 return false;
             }
         }

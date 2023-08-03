@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Action\VerifyStaticFieldValuesCanBeFullyMoved;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -41,7 +42,7 @@ final class VerifyStaticFieldValuesCanBeFullyMovedStub implements VerifyStaticFi
         return new self(false);
     }
 
-    public function canAllStaticFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact,): bool
+    public function canAllStaticFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         return $this->can_be_fully_moved;
     }

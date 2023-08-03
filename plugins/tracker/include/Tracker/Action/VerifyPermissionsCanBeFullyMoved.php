@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -29,5 +30,6 @@ interface VerifyPermissionsCanBeFullyMoved
         Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
         Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): bool;
 }
