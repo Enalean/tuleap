@@ -99,7 +99,7 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class KanbanPlugin extends Plugin
+final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConfigKeys
 {
     public function __construct(?int $id)
     {
@@ -685,5 +685,10 @@ final class KanbanPlugin extends Plugin
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger();
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\Tuleap\Kanban\SplittedKanbanConfiguration::class);
     }
 }

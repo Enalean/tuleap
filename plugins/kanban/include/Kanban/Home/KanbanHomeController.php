@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
+use Tuleap\Kanban\SplittedKanbanConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -58,6 +59,16 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
 
         $project = $request->getAttribute(Project::class);
         assert($project instanceof Project);
+
+        $list_of_project_ids_without_splitted_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplittedKanbanConfiguration::FEATURE_FLAG);
+        if (
+            $list_of_project_ids_without_splitted_kanban &&
+            in_array((int) $project->getID(), $list_of_project_ids_without_splitted_kanban, true)
+        ) {
+            return $this->response_factory
+                ->createResponse(302)
+                ->withHeader('Location', self::getLegacyHomeUrl($project));
+        }
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
@@ -116,7 +127,7 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         return $kanban_presenters;
     }
 
-    public static function getHomeUrl(Project $project): string
+    public static function getLegacyHomeUrl(Project $project): string
     {
         return '/plugins/agiledashboard/?' . http_build_query(['group_id' => $project->getID()]);
     }

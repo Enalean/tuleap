@@ -198,6 +198,24 @@ class ForgeConfig
         return $default;
     }
 
+    /**
+     * @return int[]
+     */
+    private static function getArrayOfInt(string $name): array
+    {
+        if (self::exists($name)) {
+            return array_values(
+                array_filter(
+                    array_map(
+                        static fn(string $value): int => (int) $value,
+                        explode(',', self::$conf_stack[0][$name]),
+                    ),
+                ),
+            );
+        }
+        return [];
+    }
+
     public static function getStringAsBool(string $name): bool
     {
         return self::$conf_stack[0][$name] === \Tuleap\Config\ConfigKeyLegacyBool::TRUE;
@@ -328,6 +346,14 @@ class ForgeConfig
     public static function getFeatureFlag(string $key): mixed
     {
         return self::get(self::FEATURE_FLAG_PREFIX . $key);
+    }
+
+    /**
+     * @return int[]
+     */
+    public static function getFeatureFlagArrayOfInt(string $key): array
+    {
+        return self::getArrayOfInt(self::FEATURE_FLAG_PREFIX . $key);
     }
 
     public static function setFeatureFlag(string $name, mixed $value): void

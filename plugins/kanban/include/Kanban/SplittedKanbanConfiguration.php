@@ -20,15 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Kanban\Home;
+namespace Tuleap\Kanban;
 
-use Tuleap\Project\Routing\ProjectCSRFSynchronizerTokenProvider;
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
 
-final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
+#[ConfigKeyCategory('Kanban')]
+final class SplittedKanbanConfiguration
 {
-    public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
-    {
-        return new \CSRFSynchronizerToken(KanbanHomeController::getLegacyHomeUrl($project));
-    }
+    #[FeatureFlagConfigKey('Should we display kanban homepage back in A.D homepage for some projects? Comma separated list of project ids like 123,234. Default to 0 (no projects deactivate splitted kanban) ⚠️  This flag is temporary, please get in touch with Enalean Team if you are using it.')]
+    #[ConfigKeyString('0')]
+    public const FEATURE_FLAG = 'temporarily_deactivate_splitted_kanban_for_project';
 }
