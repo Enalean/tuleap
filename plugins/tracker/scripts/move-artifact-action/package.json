@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:^",
     "@vue/test-utils": "^1.3",

@@ -43,7 +43,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { getProjectId } from "../from-tracker-presenter.js";
+import { getProjectId } from "../from-tracker-presenter";
 import { createListPicker } from "@tuleap/list-picker";
 
 export default {
@@ -66,7 +66,7 @@ export default {
     },
     created() {
         this.$store.commit("saveSelectedProjectId", getProjectId());
-        this.$store.dispatch("loadTrackerList", this.selected_project_id);
+        this.$store.dispatch("loadTrackerList", getProjectId());
     },
     mounted() {
         this.list_picker = createListPicker(this.$refs.move_artifact_project_selector, {

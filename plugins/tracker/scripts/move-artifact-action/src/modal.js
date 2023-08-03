@@ -18,9 +18,11 @@
  */
 
 import Vue from "vue";
+import Vuex from "vuex";
 import MoveModal from "./components/MoveModal.vue";
-import { setFromTracker } from "./from-tracker-presenter.js";
+import { setFromTracker } from "./from-tracker-presenter.ts";
 import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { createStore } from "./store/index.ts";
 
 export async function init(vue_mount_point) {
     Vue.config.language = document.body.dataset.userLocale ?? "en_US";
@@ -40,5 +42,9 @@ export async function init(vue_mount_point) {
         projectId
     );
 
-    new RootComponent({}).$mount(vue_mount_point);
+    Vue.use(Vuex);
+
+    new RootComponent({
+        store: createStore(),
+    }).$mount(vue_mount_point);
 }

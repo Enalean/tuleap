@@ -35,10 +35,15 @@
                 </div>
                 <div class="modal-body move-artifact-modal-body">
                     <div
+                        data-test="modal-loader"
                         v-if="is_loading_initial || is_processing_move"
                         class="move-artifact-loader"
                     ></div>
-                    <div v-if="has_error" class="alert alert-error move-artifact-error">
+                    <div
+                        data-test="modal-error-message"
+                        v-if="error_message.length > 0"
+                        class="alert alert-error move-artifact-error"
+                    >
                         {{ error_message }}
                     </div>
                     <move-modal-selectors v-show="!is_processing_move" />
@@ -76,17 +81,15 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import $ from "jquery";
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import DryRunPreview from "./DryRunPreview.vue";
-import store from "../store/index.js";
-import { getArtifactId } from "../from-tracker-presenter.js";
+import { getArtifactId } from "../from-tracker-presenter";
 
 export default {
     name: "MoveModal",
-    store,
     components: {
         DryRunPreview,
         MoveModalTitle,
@@ -95,15 +98,14 @@ export default {
     computed: {
         ...mapState([
             "is_loading_initial",
-            "error_message",
-            "has_processed_dry_run",
-            "selected_tracker",
             "is_processing_move",
             "is_move_possible",
+            "has_processed_dry_run",
+            "error_message",
+            "selected_tracker_id",
         ]),
-        ...mapGetters(["has_error"]),
         has_no_selected_tracker() {
-            return this.selected_tracker.tracker_id === null;
+            return this.selected_tracker_id === null;
         },
     },
     mounted() {

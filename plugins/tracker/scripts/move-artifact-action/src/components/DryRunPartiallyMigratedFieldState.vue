@@ -32,7 +32,7 @@
             been found in targeted tracker, if you confirm your action, this value will be lost
             forever:
         </translate>
-        <field-error-message
+        <fields-list-displayer
             v-bind:fields="partially_migrated_fields"
             v-bind:type="'partially-migrated'"
         />
@@ -41,12 +41,12 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import FieldErrorMessage from "./FieldErrorMessage.vue";
+import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
 export default {
     name: "DryRunPartiallyMigratedFieldState",
     components: {
-        FieldErrorMessage,
+        FieldsListDisplayer,
     },
     computed: {
         ...mapState({

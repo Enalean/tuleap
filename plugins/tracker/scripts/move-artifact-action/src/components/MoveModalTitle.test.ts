@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { shallowMount } from "@vue/test-utils";
+import type { ColorName } from "@tuleap/core-constants";
+import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
+import { setFromTracker } from "../from-tracker-presenter";
+import MoveModalTitle from "./MoveModalTitle.vue";
+
+describe("MoveModalTitle", () => {
+    it("should display the artifact id with its tracker name and color", async () => {
+        const tracker_color: ColorName = "red-wine";
+        const tracker_name = "Tasks";
+        const artifact_id = 126;
+
+        setFromTracker(10, tracker_name, tracker_color, artifact_id, 101);
+
+        const wrapper = await shallowMount(MoveModalTitle, {
+            localVue: await createMoveModalLocalVue(),
+        });
+
+        const artifact_xref = wrapper.find("[data-test=artifact-xref]");
+        expect(artifact_xref.classes()).toStrictEqual([tracker_color, "xref-in-title"]);
+        expect(artifact_xref.element.textContent?.trim()).toBe("Tasks #126");
+    });
+});

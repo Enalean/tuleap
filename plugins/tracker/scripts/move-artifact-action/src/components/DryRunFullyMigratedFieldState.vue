@@ -30,18 +30,21 @@
         >
             1 field will be fully migrated:
         </translate>
-        <field-error-message v-bind:fields="fully_migrated_fields" v-bind:type="'fully-migrated'" />
+        <fields-list-displayer
+            v-bind:fields="fully_migrated_fields"
+            v-bind:type="'fully-migrated'"
+        />
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import FieldErrorMessage from "./FieldErrorMessage.vue";
+import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
 export default {
     name: "DryRunFullyMigratedFieldState",
     components: {
-        FieldErrorMessage,
+        FieldsListDisplayer,
     },
     computed: {
         ...mapState({

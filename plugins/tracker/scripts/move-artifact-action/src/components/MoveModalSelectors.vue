@@ -18,9 +18,21 @@
   -->
 
 <template>
-    <div v-bind:class="selector_class">
+    <div
+        data-test="move-modal-selectors"
+        v-bind:class="{
+            'move-artifact-selectors': true,
+            'move-artifact-selectors-preview': has_processed_dry_run,
+        }"
+    >
         <project-selector v-if="!is_loading_initial" />
-        <div v-bind:class="spinner_class"></div>
+        <div
+            data-test="move-modal-selectors-spinner"
+            v-bind:class="{
+                'move-artifact-tracker-loader': true,
+                'move-artifact-tracker-loader-spinner': are_trackers_loading,
+            }"
+        ></div>
         <tracker-selector v-if="!is_loading_initial" />
     </div>
 </template>
@@ -38,19 +50,6 @@ export default {
     },
     computed: {
         ...mapState(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]),
-        spinner_class() {
-            if (this.are_trackers_loading) {
-                return "move-artifact-tracker-loader move-artifact-tracker-loader-spinner";
-            }
-            return "move-artifact-tracker-loader";
-        },
-        selector_class() {
-            if (this.has_processed_dry_run) {
-                return "move-artifact-selectors move-artifact-selectors-preview";
-            }
-
-            return "move-artifact-selectors";
-        },
     },
 };
 </script>

@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: "",
-    selected_tracker: {
-        tracker_id: null,
-    },
-    selected_project_id: null,
-    dry_run_fields: {
-        fields_not_migrated: [],
-        fields_partially_migrated: [],
-        fields_migrated: [],
-    },
-    has_processed_dry_run: false,
-    is_processing_move: false,
-    is_move_possible: true,
-};
+import Vue from "vue";
+import Vuex from "vuex";
+import type { Store } from "vuex";
+import { default_state } from "./state";
+import * as actions from "./actions";
+import * as mutations from "./mutations";
+import * as getters from "./getters";
+import type { RootState } from "./types";
+
+Vue.use(Vuex);
+
+export function createStore(): Store<RootState> {
+    return new Vuex.Store({
+        state: { ...default_state },
+        actions,
+        mutations,
+        getters,
+    });
+}
