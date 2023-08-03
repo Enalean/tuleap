@@ -1455,10 +1455,14 @@ class RouteCollector
     {
         $response_factory      = HTTPFactoryBuilder::responseFactory();
         $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
+        $source_dao            = new WebAuthnCredentialSourceDao();
 
         return new DeleteSourceController(
             \UserManager::instance(),
-            new WebAuthnCredentialSourceDao(),
+            \UserManager::instance(),
+            $source_dao,
+            $source_dao,
+            $source_dao,
             new RestlerErrorResponseBuilder($json_response_builder),
             $response_factory,
             new FeedbackSerializer(new \FeedbackDao()),

@@ -33,11 +33,13 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
-use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Test\Stubs\ProvideAndPasswordlessUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\SwitchPasswordlessOnlyState;
 use Tuleap\WebAuthn\Source\DeleteCredentialSource;
+use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\GetCredentialSourceById;
 use function Psl\Json\encode as psl_json_encode;
 
@@ -53,7 +55,7 @@ final class DeleteSourceControllerTest extends TestCase
     public function testItReturns401WhenNoAuth(): void
     {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anAnonymousUser()->build()),
+            ProvideAndPasswordlessUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
@@ -67,7 +69,7 @@ final class DeleteSourceControllerTest extends TestCase
         string|array $body,
     ): void {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            ProvideAndPasswordlessUserStub::build(UserTestBuilder::anActiveUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
             $body
         );
@@ -78,7 +80,7 @@ final class DeleteSourceControllerTest extends TestCase
     public function testItReturns200WhenSourceNotFound(): void
     {
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            ProvideAndPasswordlessUserStub::build(UserTestBuilder::anActiveUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
             [
                 'key_id' => Base64UrlSafe::encode('unknown source'),
@@ -93,7 +95,7 @@ final class DeleteSourceControllerTest extends TestCase
     {
         $source_id = 'source_1';
         $response  = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            ProvideAndPasswordlessUserStub::build(UserTestBuilder::anActiveUser()->build()),
             WebAuthnCredentialSourceDaoStub::withCredentialSources($source_id),
             [
                 'key_id' => Base64UrlSafe::encode($source_id),
@@ -107,7 +109,7 @@ final class DeleteSourceControllerTest extends TestCase
     public function testItReturns200(): void
     {
         $user_id      = 105;
-        $user_manager = ProvideCurrentUserStub::buildWithUser(UserTestBuilder::buildWithId($user_id));
+        $user_manager = ProvideAndPasswordlessUserStub::build(UserTestBuilder::buildWithId($user_id));
         $source       = (new PasskeyStub())->getCredentialSource((string) $user_id);
 
         $response = $this->handle(
@@ -126,7 +128,7 @@ final class DeleteSourceControllerTest extends TestCase
     public function testItReturns200WithSuperUser(): void
     {
         $user         = UserTestBuilder::buildSiteAdministrator();
-        $user_manager = ProvideCurrentUserStub::buildWithUser($user);
+        $user_manager = ProvideAndPasswordlessUserStub::build($user);
         $source       = (new PasskeyStub())->getCredentialSource('106');
 
         $response = $this->handle(
@@ -142,16 +144,39 @@ final class DeleteSourceControllerTest extends TestCase
         self::assertCount(1, $this->serializer->getCapturedFeedbacks());
     }
 
+    public function testItSwitchPasswordlessOnlyState(): void
+    {
+        $user         = UserTestBuilder::buildWithId(106);
+        $user_manager = ProvideAndPasswordlessUserStub::build($user, true);
+        $source       = (new PasskeyStub())->getCredentialSource('106');
+
+        self::assertTrue($user_manager->isPasswordlessOnly($user));
+
+        $this->handle(
+            $user_manager,
+            WebAuthnCredentialSourceDaoStub::withoutCredentialSources()->withRealSource($source),
+            [
+                'key_id' => Base64UrlSafe::encode($source->getPublicKeyCredentialId()),
+                'csrf_token' => 'some token',
+            ]
+        );
+
+        self::assertFalse($user_manager->isPasswordlessOnly($user));
+    }
+
     private function handle(
-        ProvideCurrentUser $provide_current_user,
-        GetCredentialSourceById&DeleteCredentialSource $source_dao,
+        ProvideCurrentUser&SwitchPasswordlessOnlyState $user_manager,
+        GetCredentialSourceById&DeleteCredentialSource&GetAllCredentialSourceByUserId $source_dao,
         array|string $body = '',
     ): ResponseInterface {
         $response_factory      = HTTPFactoryBuilder::responseFactory();
         $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
 
         $controller = new DeleteSourceController(
-            $provide_current_user,
+            $user_manager,
+            $user_manager,
+            $source_dao,
+            $source_dao,
             $source_dao,
             new RestlerErrorResponseBuilder($json_response_builder),
             $response_factory,
