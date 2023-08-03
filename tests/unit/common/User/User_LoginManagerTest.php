@@ -63,6 +63,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->login_manager               = new User_LoginManager(
             $this->event_manager,
             $this->user_manager,
+            $this->user_manager,
             $this->password_verifier,
             $this->password_expiration_checker,
             $this->password_handler
@@ -97,7 +98,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $this->addListeners($plugin);
 
-        $this->user_manager->shouldNotReceive('getUserByUserName');
+        $this->user_manager->shouldReceive('getUserByUserName')->once();
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
 
@@ -111,7 +112,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin = $this->getCatchEventsPlugin();
 
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('john')->once()->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
+        $this->user_manager->shouldReceive('getUserByUserName')->with('john')->times(2)->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
 
@@ -285,6 +286,15 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->addListener(UserAuthenticationSucceeded::NAME, $plugin2, UserAuthenticationSucceeded::NAME, false);
 
         $this->expectException(\User_InvalidPasswordWithUserException::class);
+
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
+    }
+
+    public function testItRaisesAnExceptionIfUserHasEnablePasswordlessOnly(): void
+    {
+        $this->user_manager->shouldReceive('getUserByUserName')->once()->andReturns(UserTestBuilder::aUser()->build());
+        $this->user_manager->shouldReceive('isPasswordlessOnly')->andReturns(true);
+        self::expectException(User_InvalidPasswordWithUserException::class);
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }

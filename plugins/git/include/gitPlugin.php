@@ -2456,6 +2456,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new \User_LoginManager(
                 \EventManager::instance(),
                 \UserManager::instance(),
+                \UserManager::instance(),
                 new PasswordVerifier($password_handler),
                 new \User_PasswordExpirationChecker(),
                 $password_handler
