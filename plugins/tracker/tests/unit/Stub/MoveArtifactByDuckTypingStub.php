@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
@@ -49,6 +50,7 @@ final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
         PFUser $user,
         DuckTypedMoveFieldCollection $field_collection,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
+        LoggerInterface $logger,
     ): int {
         $this->call_count++;
 

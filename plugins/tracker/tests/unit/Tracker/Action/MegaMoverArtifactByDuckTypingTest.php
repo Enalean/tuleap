@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
@@ -87,7 +88,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
 
         $this->expectException(MoveArtifactTargetProjectNotActiveException::class);
 
-        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping);
+        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger());
     }
 
     public function testItThrowsWhenMoveCanNotBeProcessed(): void
@@ -106,7 +107,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
 
         $this->expectException(MoveArtifactNotDoneException::class);
 
-        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping);
+        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger());
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 
@@ -126,7 +127,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->artifact_priority_manager->expects(self::once())->method('getGlobalRank')->willReturn(86);
         $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation')->willReturn(102);
 
-        self::assertSame(102, $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping));
+        self::assertSame(102, $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger()));
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -47,5 +48,6 @@ interface MoveArtifact
         Tracker $destination_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector,
+        LoggerInterface $logger,
     ): int;
 }

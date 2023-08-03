@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
@@ -67,7 +68,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     ) {
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user): DuckTypedMoveFieldCollection
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
         foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
             $destination_field = $this->retrieve_destination_tracker_used_fields->getUsedFieldByName($destination_tracker->getId(), $source_field->getName());
@@ -148,6 +149,9 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             $this->addFieldToNotMigrateableList($source_field);
         }
 
+        $logger->debug(sprintf("Fields totally migratable: %s", implode(',', array_column($this->migrateable_fields, 'label', 'id'))));
+        $logger->debug(sprintf("Fields partially migratable: %s", implode(',', array_column($this->partially_migrated_fields, 'label', 'id'))));
+        $logger->debug(sprintf("Fields not migratable: %s", implode(',', array_column($this->not_migrateable_fields, 'label', 'id'))));
         return DuckTypedMoveFieldCollection::fromFields($this->migrateable_fields, $this->not_migrateable_fields, $this->partially_migrated_fields, $this->fields_mapping);
     }
 

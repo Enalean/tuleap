@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -73,7 +74,7 @@ final class DryRunMoverTest extends TestCase
             CollectDryRunTypingFieldStub::withNoExpectedCalls(),
         );
 
-        $fields_collection = $dry_run->move($this->source_tracker, $this->target_tracker, $this->artifact, $this->user);
+        $fields_collection = $dry_run->move($this->source_tracker, $this->target_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertCount(1, $fields_collection->dry_run->fields->fields_migrated);
         self::assertEquals(new MinimalFieldRepresentation($migrated_fields[0]), $fields_collection->dry_run->fields->fields_migrated[0]);
@@ -111,7 +112,7 @@ final class DryRunMoverTest extends TestCase
             ),
         );
 
-        $fields_collection = $dry_run->move($this->source_tracker, $this->target_tracker, $this->artifact, $this->user);
+        $fields_collection = $dry_run->move($this->source_tracker, $this->target_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertCount(1, $fields_collection->dry_run->fields->fields_migrated);
         self::assertEquals(new MinimalFieldRepresentation($migrated_fields[0]), $fields_collection->dry_run->fields->fields_migrated[0]);

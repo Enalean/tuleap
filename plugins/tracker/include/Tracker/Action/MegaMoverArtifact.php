@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_PriorityManager;
@@ -69,12 +70,13 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
         Tracker $destination_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector,
+        LoggerInterface $logger,
     ): int {
         if (! $destination_tracker->getProject()->isActive()) {
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        return $this->transaction_executor->execute(function () use ($artifact, $destination_tracker, $user, $feedback_field_collector) {
+        return $this->transaction_executor->execute(function () use ($artifact, $destination_tracker, $user, $feedback_field_collector, $logger) {
             $this->checkMoveIsPossible($artifact, $destination_tracker, $user, $feedback_field_collector);
 
             $xml_artifacts = $this->getUpdatedXML($artifact, $destination_tracker, $user, $feedback_field_collector);
@@ -82,7 +84,7 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
             $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
-            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, $global_rank, $user)) {
+            if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, $global_rank, $user, $logger)) {
                 throw new MoveArtifactNotDoneException();
             }
 
@@ -119,7 +121,7 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
         return $xml_artifacts;
     }
 
-    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user): bool
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, int $global_rank, PFUser $user, LoggerInterface $logger): bool
     {
         $tracker->getWorkflow()->disable();
 
@@ -130,6 +132,7 @@ final class MegaMoverArtifact implements MoveArtifact, CheckMoveArtifact
             false,
             [],
             new Tracker_XML_Importer_ArtifactImportedMapping(),
+            $logger
         );
 
         if (! $moved_artifact) {

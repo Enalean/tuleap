@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Action\CheckMoveArtifact;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
@@ -49,10 +50,11 @@ final class DryRunMover implements MoveDryRun
         Tracker $destination_tracker,
         Artifact $artifact,
         PFUser $user,
+        LoggerInterface $logger,
     ): ArtifactPatchResponseRepresentation {
         if (! MoveArtifactSemanticFeatureFlag::isEnabled()) {
             return ArtifactPatchResponseRepresentation::fromDuckTypedCollection(
-                $this->collect_dry_run_typing_field->collect($source_tracker, $destination_tracker, $artifact, $user)
+                $this->collect_dry_run_typing_field->collect($source_tracker, $destination_tracker, $artifact, $user, $logger)
             );
         }
 

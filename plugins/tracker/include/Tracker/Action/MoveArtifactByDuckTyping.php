@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -36,5 +37,6 @@ interface MoveArtifactByDuckTyping
         PFUser $user,
         DuckTypedMoveFieldCollection $field_collection,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
+        LoggerInterface $logger,
     ): int;
 }

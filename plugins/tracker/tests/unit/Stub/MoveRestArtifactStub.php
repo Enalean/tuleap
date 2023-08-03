@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
@@ -72,7 +73,7 @@ final class MoveRestArtifactStub implements MoveRestArtifact
         return new self(10, false, false, false, true);
     }
 
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success): int
+    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
     {
         if ($this->move_artifact_not_done) {
             throw new MoveArtifactNotDoneException();

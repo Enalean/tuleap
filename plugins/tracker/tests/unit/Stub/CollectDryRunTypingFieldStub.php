@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -47,7 +48,7 @@ final class CollectDryRunTypingFieldStub implements CollectDryRunTypingField
         return new self(true, DuckTypedMoveFieldCollection::fromFields([], [], [], []));
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user): DuckTypedMoveFieldCollection
+    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
         if ($this->should_throw_when_collect_is_called) {
             throw new \Exception("Attempted to collect fields in a dry run context while it was not expected");

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Action\MoveArtifact;
@@ -44,7 +45,7 @@ final class MoveArtifactStub implements MoveArtifact
         return new self(random_int(1, 1000));
     }
 
-    public function move(Artifact $artifact, Tracker $destination_tracker, PFUser $user, FeedbackFieldCollectorInterface $feedback_field_collector,): int
+    public function move(Artifact $artifact, Tracker $destination_tracker, PFUser $user, FeedbackFieldCollectorInterface $feedback_field_collector, LoggerInterface $logger): int
     {
         $this->call_count++;
         return $this->remaining_deletions;

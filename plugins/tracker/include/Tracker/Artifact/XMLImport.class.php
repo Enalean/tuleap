@@ -709,11 +709,13 @@ class Tracker_Artifact_XMLImport
         bool $is_ducktyping_move,
         array $field_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
+        \Psr\Log\LoggerInterface $logger,
     ): ?Artifact {
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
             $first_changeset = count($changesets) ? $changesets[0] : null;
             if ($first_changeset === null) {
+                $logger->debug("First changeset not found");
                 return null;
             }
             $artifact = $this->artifact_creator->createBareWithAllData(
@@ -746,6 +748,8 @@ class Tracker_Artifact_XMLImport
                 );
                 return $artifact;
             }
+
+            $logger->debug("Artifact has not been created");
         }
 
         return null;

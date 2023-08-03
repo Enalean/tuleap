@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_String;
@@ -102,7 +103,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -113,6 +114,8 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillNotBeMigratedWhenUserCanNotUpdateField(): void
     {
         $source_string_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_string_field->method("getId")->willReturn(12);
+        $source_string_field->method("getLabel")->willReturn("string_field");
         $source_string_field->method("getName")->willReturn("string_field");
         $source_string_field->method("userCanUpdate")->willReturn(false);
         $source_tracker_used_fields = [$source_string_field];
@@ -158,7 +161,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $user = $this->createStub(\PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $user, new NullLogger());
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -169,8 +172,10 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testFieldWillBeMigratedForReadOnlyField(): void
     {
         $source_string_field = $this->createStub(\Tracker_FormElement_Field_Burndown::class);
+        $source_string_field->method("getLabel")->willReturn("string_field");
         $source_string_field->method("getName")->willReturn("string_field");
         $source_string_field->method("userCanUpdate")->willReturn(false);
+        $source_string_field->method("getId")->willReturn(12);
         $source_tracker_used_fields = [$source_string_field];
 
         $destination_tracker_used_fields = [
@@ -214,7 +219,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $user = $this->createStub(\PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertContains($source_string_field, $collection->migrateable_field_list);
@@ -264,7 +269,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_string_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -301,7 +306,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
@@ -340,7 +345,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
@@ -379,7 +384,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -416,7 +421,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -453,7 +458,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -491,7 +496,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -528,7 +533,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -566,7 +571,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
@@ -604,7 +609,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -641,7 +646,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -679,7 +684,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertEmpty($collection->not_migrateable_field_list);
         self::assertEmpty($collection->partially_migrated_fields);
@@ -691,7 +696,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field->method("getLabel")->willReturn("permissions");
         $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_permissions_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_permissions_field];
 
@@ -720,7 +727,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_permissions_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -730,11 +737,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillNotBeMigratedIfThereIsNoPermissionToMigrate(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field->method("getLabel")->willReturn("permissions");
         $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_permissions_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_permissions_field];
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getLabel")->willReturn("permissions");
         $destination_permissions_field->method("getName")->willReturn("permissions");
         $destination_permissions_field->method("userCanUpdate")->willReturn(true);
         $destination_permissions_field->method("isUpdateable")->willReturn(true);
@@ -762,7 +772,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_permissions_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -772,11 +782,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillBePartiallyMigratedWhenDestinationFieldDoesNotContainAllSourceValues(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field->method("getLabel")->willReturn("permissions");
         $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_permissions_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_permissions_field];
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getLabel")->willReturn("permissions");
         $destination_permissions_field->method("getName")->willReturn("permissions");
         $destination_permissions_field->method("userCanUpdate")->willReturn(true);
         $destination_permissions_field->method("isUpdateable")->willReturn(true);
@@ -804,7 +817,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_permissions_field, $collection->partially_migrated_fields);
         self::assertSame($source_permissions_field, $collection->mapping_fields[0]->source);
@@ -816,11 +829,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testPermissionsFieldWillBeFullyMigratedWhenAllValuesAreAvailableInDestinationField(): void
     {
         $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field->method("getLabel")->willReturn("permissions");
         $source_permissions_field->method("getName")->willReturn("permissions");
+        $source_permissions_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_permissions_field];
 
         $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field->method("getLabel")->willReturn("permissions");
         $destination_permissions_field->method("getName")->willReturn("permissions");
         $destination_permissions_field->method("userCanUpdate")->willReturn(true);
         $destination_permissions_field->method("isUpdateable")->willReturn(true);
@@ -848,7 +864,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_permissions_field, $collection->migrateable_field_list);
         self::assertSame($source_permissions_field, $collection->mapping_fields[0]->source);
@@ -860,7 +876,9 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testOpenListFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
         $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_open_list_field->method("getLabel")->willReturn("open_list");
         $source_open_list_field->method("getName")->willReturn("open_list");
+        $source_open_list_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_open_list_field];
 
@@ -889,7 +907,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_open_list_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -899,11 +917,14 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     public function testOpenListCanBeMigrated(): void
     {
         $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_open_list_field->method("getLabel")->willReturn("open_list");
         $source_open_list_field->method("getName")->willReturn("open_list");
+        $source_open_list_field->method("getId")->willReturn(12);
 
         $source_tracker_used_fields = [$source_open_list_field];
 
         $destination_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $destination_open_list_field->method("getLabel")->willReturn("open_list");
         $destination_open_list_field->method("getName")->willReturn("open_list");
         $destination_open_list_field->method("userCanUpdate")->willReturn(true);
         $destination_open_list_field->method("isUpdateable")->willReturn(true);
@@ -931,7 +952,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_open_list_field, $collection->migrateable_field_list);
         self::assertSame($source_open_list_field, $collection->mapping_fields[0]->source);
@@ -971,7 +992,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withoutSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_external_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -1014,7 +1035,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_external_field, $collection->not_migrateable_field_list);
         self::assertEmpty($collection->migrateable_field_list);
@@ -1057,7 +1078,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             VerifyExternalFieldsHaveSameTypeStub::withSameType(),
         );
 
-        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user);
+        $collection = $collector->collect($this->source_tracker, $this->destination_tracker, $this->artifact, $this->user, new NullLogger());
 
         self::assertContains($source_external_field, $collection->migrateable_field_list);
         self::assertSame($source_external_field, $collection->mapping_fields[0]->source);
