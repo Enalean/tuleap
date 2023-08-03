@@ -22,11 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Mail\Transport\SmtpOptions;
 
+use org\bovigo\vfs\vfsStream;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class SmtpOptionsBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private const DEFAULT_PORT = 25;
+
+    protected function setUp(): void
+    {
+        \ForgeConfig::set('email_relayhost_smtp_use_tls', '0');
+    }
 
     public function testItBuildsSmtpOptionsWithHostAndPortFromConfig(): void
     {
@@ -50,5 +60,20 @@ final class SmtpOptionsBuilderTest extends TestCase
 
         self::assertSame("url", $smtp_options->getHost());
         self::assertSame(self::DEFAULT_PORT, $smtp_options->getPort());
+    }
+
+    public function testSetupSMTPAuthWithTLS(): void
+    {
+        \ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+
+        \ForgeConfig::set('email_relayhost_smtp_use_tls', '1');
+        \ForgeConfig::set('email_relayhost_smtp_auth_type', 'login');
+        \ForgeConfig::set('email_relayhost_smtp_username', 'username');
+        \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
+
+        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig("smtp.example.com");
+
+        self::assertSame(['username' => 'username', 'password' => 'password', 'ssl' => 'tls'], $smtp_options->getConnectionConfig());
+        self::assertSame('login', $smtp_options->getConnectionClass());
     }
 }

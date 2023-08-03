@@ -32,6 +32,11 @@ final class MailTransportBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    protected function setUp(): void
+    {
+        \ForgeConfig::set('email_relayhost_smtp_use_tls', '0');
+    }
+
     public function testItReturnsSendmailIfNoOptionSet(): void
     {
         self::assertInstanceOf(
