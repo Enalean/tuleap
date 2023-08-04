@@ -54,6 +54,7 @@ export const saveSelectedTrackerId = (state: RootState, tracker_id: number): voi
     state.selected_tracker_id = tracker_id;
     state.has_processed_dry_run = false;
     state.error_message = "";
+    state.is_move_possible = true;
 };
 
 export const hasProcessedDryRun = (state: RootState, dry_run_state: DryRunState): void => {
