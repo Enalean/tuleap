@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
 
 devDependencies:
   '@tuleap/build-system-configurator':

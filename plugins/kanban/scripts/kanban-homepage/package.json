@@ -6,7 +6,8 @@
   "private": true,
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
-    "@tuleap/project-background": "workspace:*"
+    "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

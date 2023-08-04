@@ -54,6 +54,18 @@ msgstr "Ajouter au tableau de bord du projet"
 msgid "Agile dashboard"
 msgstr "Tableau de bord agile"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Choose a tracker"
+msgstr "Choisissez un tracker"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Create Kanban"
+msgstr "Créer un Kanban"
+
 msgid ""
 "Displays a board to see the tasks to do, in progress, done etc. Please go on "
 "a kanban to add it."
@@ -87,6 +99,9 @@ msgstr "Kanban est actuellement actif."
 msgid "Kanban is not currently active."
 msgstr "Kanban n'est actuellement pas actif."
 
+msgid "Kanban name"
+msgstr "Nom du Kanban"
+
 msgid "Kanban not found."
 msgstr "Le Kanban requis n'a pas pu être trouvé."
 
@@ -96,6 +111,9 @@ msgstr "Aucun Kanban n'a été configuré."
 msgid "No tracker has been selected."
 msgstr "Aucun tracker n'a été sélectionné."
 
+msgid "No tracker is available"
+msgstr "Aucun tracker n'est disponible"
+
 msgid "None"
 msgstr "Aucun"
 
@@ -104,6 +122,9 @@ msgstr "Merci de revenir plus tard."
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Source tracker"
+msgstr "Tracker source"
 
 msgid "There is no content you can see"
 msgstr "Il n’y a aucun élément visible"

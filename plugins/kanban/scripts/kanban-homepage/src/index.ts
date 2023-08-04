@@ -18,3 +18,9 @@
  */
 
 import "../themes/kanban-homepage.scss";
+
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+
+document.addEventListener("DOMContentLoaded", () => {
+    openAllTargetModalsOnClick(document, ".kanban-create-kanban-button");
+});

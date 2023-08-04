@@ -49,6 +49,10 @@ body {
     margin: var(--tlp-medium-spacing);
 }
 
+.kanban-homepage-title-action {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 .kanban-homepage-kanban-container {
     display: grid;
     gap: var(--tlp-medium-spacing);
