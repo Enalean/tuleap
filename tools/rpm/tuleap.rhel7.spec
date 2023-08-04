@@ -60,6 +60,7 @@ Requires: rh-mysql80-mysql
 %endif
 
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
+Requires: perl(File::Copy)
 Requires: highlight, nginx, logrotate
 Requires: tuleap-realtime = @@VERSION@@
 Requires: tuleap-mercure = @@VERSION@@
