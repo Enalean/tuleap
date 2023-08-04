@@ -250,7 +250,7 @@ class CrossReferencesDao extends DataAccessObject
         return true;
     }
 
-    public function getReferenceByKeyword(string $keyword): array
+    public function getReferenceByKeyword(string $keyword): ?array
     {
         $sql = "SELECT *
             FROM cross_references
