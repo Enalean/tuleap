@@ -166,6 +166,7 @@ final class ReplayImportCommand extends Command
             new IssueType($jira_issue_type_id, 'undefined', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
         );
 
         return JiraXMLNodeBuilder::buildProjectSimpleXmlElement($tracker_xml);

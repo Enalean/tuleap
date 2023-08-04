@@ -29,10 +29,6 @@ use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyHidden;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\Projects\JiraBoardProjectsRetrieverFromAPI;
@@ -79,14 +75,8 @@ use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 
-#[ConfigKeyCategory('Import from Jira')]
 final class CreateProjectFromJira
 {
-    #[FeatureFlagConfigKey('Jira importer will import all issues in a solo tracker')]
-    #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FLAG_JIRA_IMPORT_MONO_TRACKER_MODE = 'jira_import_mono_tracker_mode';
-
     public function __construct(
         private UserManager $user_manager,
         private TemplateFactory $template_factory,
@@ -114,6 +104,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $project_visibility,
+        string $import_mode,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
     ): Ok|Err {
@@ -129,6 +120,7 @@ final class CreateProjectFromJira
             $shortname,
             $fullname,
             $project_visibility,
+            $import_mode,
             $jira_epic_issue_type,
             $jira_board_id,
         )->andThen(function (SimpleXMLElement $xml_element) use ($logger) {
@@ -149,6 +141,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $project_visibility,
+        string $import_mode,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
         string $archive_path,
@@ -161,8 +154,9 @@ final class CreateProjectFromJira
             $shortname,
             $fullname,
             $project_visibility,
+            $import_mode,
             $jira_epic_issue_type,
-            $jira_board_id
+            $jira_board_id,
         )->andThen(
             /**
              * @return Ok<true>|Err<Fault>
@@ -186,6 +180,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $project_visibility,
+        string $import_mode,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
     ): Ok|Err {
@@ -234,7 +229,7 @@ final class CreateProjectFromJira
 
         $board_configuration = null;
 
-        if (\ForgeConfig::getFeatureFlag(self::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
+        if ($import_mode === CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE) {
             //To test mono tracker, do not retrieve board information
             $board = null;
             $platform_configuration_collection->setAgileFeaturesAreNotAvailable();
@@ -307,6 +302,7 @@ final class CreateProjectFromJira
                     $board,
                     $board_configuration,
                     $jira_epic_issue_type,
+                    $import_mode,
                 ) {
                     $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
                         new JiraTuleapUsersMapping(),
@@ -317,6 +313,7 @@ final class CreateProjectFromJira
                         $jira_client,
                         $logger,
                         $jira_user_on_tuleap_cache,
+                        $import_mode,
                     );
 
                     $xml_element['unix-name'] = $shortname;
@@ -368,6 +365,7 @@ final class CreateProjectFromJira
                         $jira_issue_types,
                         $field_id_generator,
                         $linked_issues_collection,
+                        $import_mode,
                     );
 
                     if ($board && $board_configuration) {

@@ -213,7 +213,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_client,
             'Jira project',
             'Story',
-            Mockery::mock(\PFUser::class)
+            UserTestBuilder::aUser()->build(),
         );
     }
 }

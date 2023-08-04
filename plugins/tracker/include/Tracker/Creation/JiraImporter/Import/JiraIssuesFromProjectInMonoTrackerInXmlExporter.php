@@ -281,6 +281,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         array $jira_issue_types,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
+        string $import_mode,
     ): \SimpleXMLElement {
         $this->logger->debug("Start export Jira issues from project $jira_project_key in mono tracker to XML.");
 
@@ -311,6 +312,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
             $jira_issue_types,
             $jira_platform_configuration,
             $jira_field_mapping_collection,
+            $import_mode,
         );
 
         $this->logger->debug("Export semantics");
@@ -381,6 +383,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
         array $jira_issue_types,
         PlatformConfiguration $platform_configuration,
         FieldMappingCollection $field_mapping_collection,
+        string $import_mode,
     ): XMLTracker {
         $this->logger->debug("Start exporting jira field structure (custom fields) ...");
         $fields = $this->mergeAllProjectFields(
@@ -396,6 +399,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
                 $id_generator,
                 $platform_configuration,
                 $field_mapping_collection,
+                $import_mode,
             );
         }
         $this->logger->debug("Field structure exported successfully");

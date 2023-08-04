@@ -76,6 +76,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         array $jira_issue_types,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
+        string $import_mode,
     ): void {
         $this->logger->info(sprintf("Import all issues in mono tracker %s", self::MONO_TRACKER_NAME));
 
@@ -90,6 +91,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
             $jira_issue_types,
             $field_id_generator,
             $linked_issues_collection,
+            $import_mode,
         );
 
         JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker_xml);

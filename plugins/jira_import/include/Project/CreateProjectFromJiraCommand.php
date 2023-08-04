@@ -61,29 +61,17 @@ final class CreateProjectFromJiraCommand extends Command
     private const OPT_VISIBILITY           = 'visibility';
     private const OPT_OUTPUT               = 'output';
     private const OPT_DEBUG                = 'debug';
+    private const OPT_IMPORT_MODE          = 'import-mode';
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var JiraProjectBuilder
-     */
-    private $jira_project_builder;
-    /**
-     * @var CreateProjectFromJira
-     */
-    private $create_project_from_jira;
+    public const OPT_IMPORT_MODE_MONO_TRACKER_VALUE   = 'mono-tracker';
+    public const OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE = 'multi-trackers';
 
     public function __construct(
-        UserManager $user_manager,
-        JiraProjectBuilder $jira_project_builder,
-        CreateProjectFromJira $create_project_from_jira,
+        private readonly UserManager $user_manager,
+        private readonly JiraProjectBuilder $jira_project_builder,
+        private readonly CreateProjectFromJira $create_project_from_jira,
     ) {
         parent::__construct(self::NAME);
-        $this->user_manager             = $user_manager;
-        $this->jira_project_builder     = $jira_project_builder;
-        $this->create_project_from_jira = $create_project_from_jira;
     }
 
     protected function configure(): void
@@ -104,6 +92,13 @@ final class CreateProjectFromJiraCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'The visibility of the Tuleap project to create. It can be "private", "public", "private-wo-restr" or "unrestricted" (regarding your platform configuration)',
                 Project::ACCESS_PRIVATE,
+            )
+            ->addOption(
+                self::OPT_IMPORT_MODE,
+                '',
+                InputOption::VALUE_REQUIRED,
+                'Choose the mode of the import. To possible choices: "multi-trackers" (each issueTypes in his dedicated tracker) and "mono-tracker" (all issueTypes in one Issues tracker). Default value is "multi-trackers".',
+                self::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
             )
             ->addOption(self::OPT_OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'Generate the project archive without actually importing it')
             ->addOption(self::OPT_DEBUG, 'd', InputOption::VALUE_REQUIRED, 'Turn on debug mode, will dump content in provided directory');
@@ -206,6 +201,17 @@ final class CreateProjectFromJiraCommand extends Command
             throw new InvalidArgumentException('invalid project visibility.');
         }
 
+        $import_mode = $input->getOption(self::OPT_IMPORT_MODE);
+        if (
+            ! in_array(
+                $import_mode,
+                [self::OPT_IMPORT_MODE_MONO_TRACKER_VALUE, self::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE],
+                true,
+            )
+        ) {
+            throw new InvalidArgumentException('invalid import mode.');
+        }
+
         $output->writeln(sprintf("Create project %s", $shortname));
 
         try {
@@ -218,6 +224,7 @@ final class CreateProjectFromJiraCommand extends Command
                     $shortname,
                     $fullname,
                     $project_visibility,
+                    $import_mode,
                     $jira_epic_issue_type,
                     $jira_board_id,
                     $archive_path,
@@ -242,6 +249,7 @@ final class CreateProjectFromJiraCommand extends Command
                     $shortname,
                     $fullname,
                     $project_visibility,
+                    $import_mode,
                     $jira_epic_issue_type,
                     $jira_board_id,
                 )->match(

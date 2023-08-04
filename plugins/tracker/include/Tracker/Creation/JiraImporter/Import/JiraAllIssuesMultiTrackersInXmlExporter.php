@@ -74,6 +74,7 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
         array $jira_issue_types,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
+        string $import_mode,
     ): void {
         $this->logger->info("Import is done in multi tracker mode");
         foreach ($jira_issue_types as $jira_issue_type) {
@@ -92,6 +93,7 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
                 $jira_issue_type,
                 $field_id_generator,
                 $linked_issues_collection,
+                $import_mode,
             );
 
             JiraXMLNodeBuilder::appendTrackerXML($trackers_xml, $tracker_xml);

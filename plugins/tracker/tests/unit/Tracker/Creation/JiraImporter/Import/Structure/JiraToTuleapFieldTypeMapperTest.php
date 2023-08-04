@@ -30,8 +30,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
-use Tuleap\ForgeConfigSandbox;
-use Tuleap\JiraImport\Project\CreateProjectFromJira;
+use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -42,8 +41,6 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
-
     private LoggerInterface $logger;
     private JiraToTuleapFieldTypeMapper $mapper;
     private XMLTracker $xml_tracker;
@@ -682,14 +679,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     public function testJiraFieldsAreMappedToXMLObjects(JiraFieldAPIRepresentation $jira_field, callable $tests): void
     {
-        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE, 1);
-
         $xml_tracker = $this->mapper->exportFieldToXml(
             $jira_field,
             $this->xml_tracker,
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE,
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -715,6 +711,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
         );
 
         self::assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
@@ -742,6 +739,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             $platform_configuration,
             $this->field_mapping_collection,
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE,
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -750,7 +748,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertEmpty($exported_tracker->xpath('//formElement[label="Story points"]'));
     }
 
-    public function testIssueTypeFieldIsNotAddedWhenFeatureFlagIsNotSet(): void
+    public function testIssueTypeFieldIsNotAddedWhenImportModeIsNotMonoTracker(): void
     {
         $issue_type_jira_field_id = 'issuetype';
 
@@ -772,6 +770,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');

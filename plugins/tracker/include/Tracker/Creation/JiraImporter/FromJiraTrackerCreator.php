@@ -58,16 +58,17 @@ use XMLImportHelper;
 
 class FromJiraTrackerCreator
 {
-    private const LOG_IDENTIFIER = "jira_import_syslog";
+    private const LOG_IDENTIFIER      = "jira_import_syslog";
+    private const DEFAULT_IMPORT_MODE = "multi-trackers";
 
     public function __construct(
-        private TrackerXmlImport $tracker_xml_import,
-        private TrackerFactory $tracker_factory,
-        private TrackerCreationDataChecker $creation_data_checker,
-        private LoggerInterface $logger,
-        private JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
-        private PlatformConfigurationRetriever $platform_configuration_retriever,
-        private UserRolesCheckerInterface $user_roles_checker,
+        private readonly TrackerXmlImport $tracker_xml_import,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly TrackerCreationDataChecker $creation_data_checker,
+        private readonly LoggerInterface $logger,
+        private readonly JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
+        private readonly PlatformConfigurationRetriever $platform_configuration_retriever,
+        private readonly UserRolesCheckerInterface $user_roles_checker,
     ) {
     }
 
@@ -159,6 +160,7 @@ class FromJiraTrackerCreator
             $issue_type,
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
+            self::DEFAULT_IMPORT_MODE,
         );
 
         $xml = JiraXMLNodeBuilder::buildProjectSimpleXmlElement($tracker_xml);
@@ -170,7 +172,7 @@ class FromJiraTrackerCreator
                 $xml,
                 new MappingsRegistry(),
                 ForgeConfig::get('tmp_dir') . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/',
-                $user
+                $user,
             );
         } catch (
             TrackerFromXmlException |
