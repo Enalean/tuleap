@@ -350,7 +350,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
-        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(WorkerEvent::NAME);
@@ -432,7 +431,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }

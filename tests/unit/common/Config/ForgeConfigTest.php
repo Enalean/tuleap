@@ -459,6 +459,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'Multiple values' => ['123,456,789', [123, 456, 789]],
             'Multiple values with spaces' => ['123 , 456 , 789', [123, 456, 789]],
             'Non int are silently ignored' => ['123,whatever,456', [123, 456]],
+            'Extra commas are ignored' => [',123,,456,,', [123, 456]],
         ];
     }
 }

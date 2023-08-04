@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Kanban\Legacy;
+namespace Tuleap\Kanban;
 
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
 
-final class BreadCrumbForKanbanEvent implements \Tuleap\Event\Dispatchable
+#[ConfigKeyCategory('Kanban')]
+final class SplitKanbanConfiguration
 {
-    public function __construct(
-        public readonly \PFUser $user,
-        public readonly \Project $project,
-        public readonly BreadCrumbCollection $breadcrumbs,
-    ) {
-    }
+    #[FeatureFlagConfigKey('Should we display kanban homepage back in A.D homepage for some projects? Comma separated list of project ids like 123,234. Default to 0 (no projects deactivate split kanban) ⚠️  This flag is temporary, please get in touch with Enalean Team if you are using it.')]
+    #[ConfigKeyString('0')]
+    public const FEATURE_FLAG = 'temporarily_deactivate_split_kanban_for_project';
 }

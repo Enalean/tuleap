@@ -55,7 +55,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         return array('tracker');
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return 'plugin_tracker_encryption';
     }

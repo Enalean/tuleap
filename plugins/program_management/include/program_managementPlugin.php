@@ -1562,7 +1562,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

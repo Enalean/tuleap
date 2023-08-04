@@ -69,7 +69,10 @@
     {{# has_at_least_one_kanban }}
         <div class="kanban-homepage-kanban-container">
             {{# kanban_summary_presenters }}
-                <a href="/kanban/{{ id }}" class="tlp-card tlp-card-selectable kanban-homepage-kanban tlp-swatch-{{ color }}">
+                <a href="/kanban/{{ id }}"
+                    class="tlp-card tlp-card-selectable kanban-homepage-kanban tlp-swatch-{{ color }}"
+                    data-test="go-to-kanban"
+                >
                     <span class="kanban-homepage-kanban-title-container">
                         <span class="kanban-homepage-kanban-title">{{ name }}</span>
                         <span class="kanban-homepage-kanban-spacer"></span>

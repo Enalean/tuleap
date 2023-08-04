@@ -25,12 +25,15 @@ use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use TrackerFactory;
-use Tuleap\Kanban\Legacy\BreadCrumbForKanbanEvent;
+use Tuleap\Kanban\Home\KanbanHomeController;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -47,14 +50,19 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
         private readonly NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
+        private readonly SplitKanbanConfigurationChecker $configuration_checker,
     ) {
     }
 
     public function getBreadcrumbs(\PFUser $user, Project $project, Kanban $kanban): BreadCrumbCollection
     {
         $breadcrumbs = new BreadCrumbCollection();
-        $this->dispatcher->dispatch(new BreadCrumbForKanbanEvent($user, $project, $breadcrumbs));
-
+        $breadcrumbs->addBreadCrumb(new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext('tuleap-kanban', 'Kanban'),
+                KanbanHomeController::getHomeUrl($project),
+            )
+        ));
         $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban));
 
         return $breadcrumbs;
@@ -139,9 +147,19 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
             throw new NotFoundException();
         }
 
-        return $this->dispatcher
+        $kanban_service = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        if ($kanban_service && $this->configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            return $kanban_service;
+        }
+
+        $fallback = $this->dispatcher
             ->dispatch(new ServiceForKanbanEvent($project))
-            ->service
-            ->unwrapOr($tracker_service);
+            ->service;
+
+        if ($fallback === null) {
+            throw new NotFoundException();
+        }
+
+        return $fallback;
     }
 }

@@ -344,8 +344,7 @@ function KanbanService(
             label: escaper.html(SharedPropertiesService.getKanban().label),
         });
         $window.sessionStorage.setItem("tuleap_feedback", message);
-        $window.location.href =
-            "/plugins/agiledashboard/?group_id=" + SharedPropertiesService.getProjectId();
+        $window.location.href = SharedPropertiesService.getKanbanHomepageUrl();
     }
 
     function augmentQueryParamsWithFilterTrackerReport(query_params) {

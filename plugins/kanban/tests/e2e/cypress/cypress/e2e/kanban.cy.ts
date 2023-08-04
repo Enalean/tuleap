@@ -19,7 +19,7 @@
 
 const now = Date.now();
 
-describe("Kanban for the Agile Dashboard service", () => {
+describe("Kanban service", () => {
     before(function () {
         cy.projectAdministratorSession();
         cy.createNewPublicProject(`kanban-${now}`, "kanban").then((project_id) => {
@@ -63,7 +63,7 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.projectAdministratorSession();
 
             cy.log("administrator can reorder column");
-            cy.visitProjectService(`kanban-${now}`, "Agile Dashboard");
+            cy.visitProjectService(`kanban-${now}`, "Kanban");
             cy.get('[data-test="go-to-kanban"]').click();
             cy.get("[data-test=kanban-header-edit-button]").click();
             cy.dragAndDrop(
@@ -107,7 +107,7 @@ describe("Kanban for the Agile Dashboard service", () => {
 
         it(`I can use the kanban`, function () {
             cy.projectMemberSession();
-            cy.visitProjectService(`kanban-${now}`, "Agile Dashboard");
+            cy.visitProjectService(`kanban-${now}`, "Kanban");
 
             cy.get('[data-test="go-to-kanban"]').click();
 
@@ -204,12 +204,6 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-column-review]").within(() => {
                 cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
             });
-        });
-
-        it("can not access to administration page", function () {
-            cy.projectMemberSession();
-            cy.visit("/plugins/agiledashboard/?group_id=" + this.project_id + "&action=admin");
-            cy.get("[data-test=main-content]").contains("Kanban");
         });
     });
 });

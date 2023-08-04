@@ -325,7 +325,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             'project'  => Mockery::mock(Project::class),
             'services' => &$services,
         ];
-        $plugin->services_allowed_for_project($params);
+        $plugin->servicesAllowedForProject($params);
 
         $this->assertEquals(['fooservice'], $services);
     }
@@ -340,7 +340,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services,
         ];
-        $plugin->services_allowed_for_project($params);
+        $plugin->servicesAllowedForProject($params);
 
         $this->assertEquals(['fooservice'], $services);
     }
@@ -356,7 +356,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services,
         ];
-        $plugin->services_allowed_for_project($params);
+        $plugin->servicesAllowedForProject($params);
 
         $this->assertEquals(['fooservice'], $services);
     }
@@ -371,7 +371,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services,
         ];
-        $plugin->services_allowed_for_project($params);
+        $plugin->servicesAllowedForProject($params);
 
         $this->assertEquals([], $services);
     }
@@ -424,6 +424,10 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             }
 
             public function addMissingService(AddMissingService $event): void
+            {
+            }
+
+            public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
             {
             }
         };

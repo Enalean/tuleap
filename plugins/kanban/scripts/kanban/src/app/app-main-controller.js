@@ -33,12 +33,12 @@ function MainCtrl(
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
         const widget_id = Number.parseInt(kanban_init_data.widgetId, 10);
         SharedPropertiesService.setWidgetId(widget_id);
-        const project_id = kanban_init_data.projectId;
-        SharedPropertiesService.setProjectId(project_id);
         const view_mode = kanban_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
         const kanban_url = kanban_init_data.kanbanUrl;
         SharedPropertiesService.setKanbanUrl(kanban_url);
+        const kanban_homepage_url = kanban_init_data.kanbanHomepageUrl;
+        SharedPropertiesService.setKanbanHomepageUrl(kanban_homepage_url);
         const mercure_enabled = kanban_init_data.kanbanMercureEnabled;
         SharedPropertiesService.setMercureEnabled(mercure_enabled);
         const tracker_reports = Object.values(JSON.parse(kanban_init_data.trackerReports));

@@ -31,6 +31,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 
 /**
  * Plugin
@@ -105,7 +106,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
      * You just need to add $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT)
      * to your plugin to automatically manage presence of service in projects
      */
-    public function services_allowed_for_project(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function servicesAllowedForProject(array $params): void
     {
         $this->addServiceForProject($params['project'], $params['services']);
     }
@@ -166,6 +167,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
             $this->addHookIfNotAlreadyListened(ProjectServiceBeforeActivation::NAME);
             $this->addHookIfNotAlreadyListened(ServiceDisabledCollector::NAME);
             $this->addHookIfNotAlreadyListened(AddMissingService::NAME);
+            $this->addHookIfNotAlreadyListened(ServiceEnableForXmlImportRetriever::NAME);
         }
     }
 
@@ -435,10 +437,8 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
 
     /**
      * Return the name of the service that is managed by this plugin
-     *
-     * @return string
      */
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return '';
     }

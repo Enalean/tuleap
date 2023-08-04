@@ -80,7 +80,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return 'hudson';
     }
@@ -475,5 +475,9 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
     {
         $hudson_organizer = new HudsonCrossReferenceOrganizer(ProjectManager::instance());
         $hudson_organizer->organizeHudsonReferences($organizer);
+    }
+
+    public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
+    {
     }
 }

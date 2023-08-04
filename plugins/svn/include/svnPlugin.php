@@ -54,6 +54,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -229,7 +230,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
@@ -1324,5 +1325,9 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         if ($event->getKey() === 'svn_core_removal') {
             $event->setLabel(dgettext('tuleap-svn', 'Subversion (legacy) service was deleted at platform upgrade'));
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
+    {
     }
 }

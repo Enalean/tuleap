@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -50,6 +51,7 @@ use Tuleap\Kanban\RealTimeMercure\RealTimeArtifactMessageControllerMercure;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\Kanban\REST\ResourcesInjector;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\Widget\MyKanban;
@@ -72,6 +74,8 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
@@ -99,7 +103,7 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConfigKeys
+final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
     public function __construct(?int $id)
     {
@@ -318,6 +322,8 @@ final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConf
             new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
+            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
+            EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
             new ProjectAccessCheckerMiddleware(
@@ -351,7 +357,8 @@ final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConf
                     Tracker_FormElementFactory::instance(),
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )
-            )
+            ),
+            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
         );
     }
 
@@ -693,6 +700,54 @@ final class KanbanPlugin extends Plugin implements \Tuleap\Config\PluginWithConf
 
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
-        $event->addConfigClass(\Tuleap\Kanban\SplittedKanbanConfiguration::class);
+        $event->addConfigClass(\Tuleap\Kanban\SplitKanbanConfiguration::class);
+    }
+
+    public function getServiceShortname(): string
+    {
+        return KanbanService::SERVICE_SHORTNAME;
+    }
+
+    /**
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
+    {
+        $params['classnames'][KanbanService::SERVICE_SHORTNAME] = KanbanService::class;
+    }
+
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for kanban
+    }
+
+    public function projectServiceBeforeActivation(\Tuleap\Project\Event\ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for kanban
+    }
+
+    public function serviceDisabledCollector(\Tuleap\Project\Service\ServiceDisabledCollector $event): void
+    {
+        // nothing to do for kanban
+    }
+
+    protected function isServiceAllowedForProject(\Project $project): bool
+    {
+        $configuration_checker = new \Tuleap\Kanban\SplitKanbanConfigurationChecker();
+        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            return false;
+        }
+
+        return parent::isServiceAllowedForProject($project);
+    }
+
+    public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
+    {
+        // nothing to do for kanban
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
+    {
+        $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 }

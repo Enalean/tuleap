@@ -139,6 +139,7 @@ use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\EnqueueTask;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -860,5 +861,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                 DisplayMigrationController::URL,
             )
         );
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
+    {
     }
 }

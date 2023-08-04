@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
-
-#[ConfigKeyCategory('Kanban')]
-final class SplittedKanbanConfiguration
+final class SplitKanbanConfigurationChecker
 {
-    #[FeatureFlagConfigKey('Should we display kanban homepage back in A.D homepage for some projects? Comma separated list of project ids like 123,234. Default to 0 (no projects deactivate splitted kanban) ⚠️  This flag is temporary, please get in touch with Enalean Team if you are using it.')]
-    #[ConfigKeyString('0')]
-    public const FEATURE_FLAG = 'temporarily_deactivate_splitted_kanban_for_project';
+    public function isProjectAllowedToUseSplitKanban(\Project $project): bool
+    {
+        $list_of_project_ids_without_split_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplitKanbanConfiguration::FEATURE_FLAG);
+
+        if (! $list_of_project_ids_without_split_kanban) {
+            return true;
+        }
+
+        $is_deactivated = in_array((int) $project->getID(), $list_of_project_ids_without_split_kanban, true);
+
+        return ! $is_deactivated;
+    }
 }

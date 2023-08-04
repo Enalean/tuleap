@@ -62,6 +62,7 @@ final class CreateKanbanControllerTest extends TestCase
                 ]));
 
         self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/projects/TestProject/kanban', $response->getHeader('Location')[0]);
         self::assertEquals(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
     }
 

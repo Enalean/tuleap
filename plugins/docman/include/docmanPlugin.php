@@ -212,7 +212,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
