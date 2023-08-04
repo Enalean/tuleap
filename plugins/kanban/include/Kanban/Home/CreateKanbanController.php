@@ -108,7 +108,7 @@ final class CreateKanbanController extends DispatchablePSR15Compatible
 
     private function redirectToHome(PFUser $user, Project $project, NewFeedback $feedback): ResponseInterface
     {
-        $homeurl = KanbanHomeController::getHomeUrl($project);
+        $homeurl = KanbanHomeController::getLegacyHomeUrl($project);
 
         return $this->redirect_with_feedback_factory->createResponseForUser($user, $homeurl, $feedback);
     }

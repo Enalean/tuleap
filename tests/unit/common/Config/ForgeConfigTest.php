@@ -438,4 +438,27 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(3306, ForgeConfig::get(DBConfig::CONF_PORT));
         self::assertSame('0', ForgeConfig::get(DBConfig::CONF_ENABLE_SSL));
     }
+
+    /**
+     * @param int[] $expected
+     * @dataProvider dataProviderArrayOfInt
+     */
+    public function testArrayOfInt(string $value, array $expected): void
+    {
+        ForgeConfig::setFeatureFlag('comma-separated', $value);
+
+        self::assertSame($expected, ForgeConfig::getFeatureFlagArrayOfInt('comma-separated'));
+    }
+
+    public static function dataProviderArrayOfInt(): array
+    {
+        return [
+            'Nothing' => ['', []],
+            '0 means nothing' => ['0', []],
+            'One value' => ['123', [123]],
+            'Multiple values' => ['123,456,789', [123, 456, 789]],
+            'Multiple values with spaces' => ['123 , 456 , 789', [123, 456, 789]],
+            'Non int are silently ignored' => ['123,whatever,456', [123, 456]],
+        ];
+    }
 }
