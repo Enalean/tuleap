@@ -29,6 +29,7 @@ describe("DescriptionCommentPresenterBuilder", () => {
             raw_description: "This commit fixes bug #123",
             creation_date: "2023-03-13T15:13:00Z",
             user_can_merge: true,
+            user_can_update_title_and_description: true,
         } as PullRequest;
 
         const author = {
@@ -46,7 +47,7 @@ describe("DescriptionCommentPresenterBuilder", () => {
             content: pull_request.description,
             raw_content: pull_request.raw_description,
             post_date: pull_request.creation_date,
-            can_user_update_description: pull_request.user_can_merge,
+            can_user_update_description: pull_request.user_can_update_title_and_description,
         });
     });
 });

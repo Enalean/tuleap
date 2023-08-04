@@ -135,18 +135,20 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      * @var PullRequestStatusInfoRepresentation | null {@type PullRequestStatusInfoRepresentation | null}
      */
     public ?PullRequestStatusInfoRepresentation $status_info;
+    public bool $user_can_update_title_and_description;
 
     public function build(
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
         GitPullRequestReference $git_reference,
-        $user_can_merge,
-        $user_can_abandon,
+        bool $user_can_merge,
+        bool $user_can_abandon,
         bool $user_can_reopen,
-        $user_can_update_labels,
+        bool $user_can_update_labels,
         $last_build_status_name,
         $last_build_date,
+        \PFUser $user,
         PullRequestShortStatRepresentation $pr_short_stat_representation,
         ?PullRequestStatusInfoRepresentation $status_info_representation,
     ) {
@@ -164,11 +166,12 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->last_build_status = $last_build_status_name;
         $this->last_build_date   = JsonCast::toDate($last_build_date);
 
-        $this->user_can_update_labels = $user_can_update_labels;
-        $this->user_can_merge         = $user_can_merge;
-        $this->user_can_abandon       = $user_can_abandon;
-        $this->user_can_reopen        = $user_can_reopen;
-        $this->merge_status           = $this->expandMergeStatusName($pull_request->getMergeStatus());
+        $this->user_can_update_labels                = $user_can_update_labels;
+        $this->user_can_update_title_and_description = $user_can_merge || $pull_request->getUserId() === $user->getId();
+        $this->user_can_merge                        = $user_can_merge;
+        $this->user_can_abandon                      = $user_can_abandon;
+        $this->user_can_reopen                       = $user_can_reopen;
+        $this->merge_status                          = $this->expandMergeStatusName($pull_request->getMergeStatus());
 
         $this->short_stat  = $pr_short_stat_representation;
         $this->status_info = $status_info_representation;

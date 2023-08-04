@@ -69,7 +69,7 @@ describe("PullRequestEditTitleModal", () => {
                     id: pull_request_id,
                     title: "My Pr title <a href='https://example.com'>https://example.com</a>",
                     raw_title: "My Pr title https://example.com",
-                    user_can_merge: true,
+                    user_can_update_title_and_description: true,
                     ...pull_request_data,
                 } as PullRequest,
             },
@@ -110,7 +110,7 @@ describe("PullRequestEditTitleModal", () => {
 
     it("When the user cannot edit the title, Then the component should not be rendered", () => {
         const wrapper = getWrapper({
-            user_can_merge: false,
+            user_can_update_title_and_description: false,
         });
 
         expect(wrapper.element.children).toBeUndefined();

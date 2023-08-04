@@ -25,7 +25,6 @@ use EventManager;
 use Git_GitRepositoryUrlManager;
 use GitDao;
 use GitPlugin;
-use GitRepoNotFoundException;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
@@ -59,7 +58,6 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
-use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
@@ -107,6 +105,8 @@ use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
+use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
+use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
@@ -926,7 +926,8 @@ class PullRequestsResource extends AuthenticatedResource
         if ($status !== null) {
             $this->patchStatus($user, $pull_request, $status);
         } else {
-            $this->patchInfo(
+            $patch_info_updater = new PullRequestInfoUpdater($this->pull_request_factory, $this->getPullRequestIsMergeableChecker());
+            $patch_info_updater->patchInfo(
                 $user,
                 $pull_request,
                 (int) $repository_src->getProjectId(),
@@ -989,41 +990,6 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $status_patcher->patchStatus($user, $pull_request, $status);
-    }
-
-    /**
-     * @throws RestException 400
-     * @throws RestException 403
-     */
-    private function patchInfo(
-        PFUser $user,
-        PullRequest $pull_request,
-        int $project_id,
-        PullRequestPATCHRepresentation $body,
-    ) {
-        $this->checkUserCanMerge($pull_request, $user);
-
-        if ($body->title !== null && trim($body->title) === "") {
-            throw new RestException(400, 'Title cannot be empty');
-        }
-
-        if ($body->title !== null) {
-            $this->pull_request_factory->updateTitle(
-                $user,
-                $pull_request,
-                $project_id,
-                $body->title
-            );
-        }
-
-        if ($body->description) {
-            $this->pull_request_factory->updateDescription(
-                $user,
-                $pull_request,
-                $project_id,
-                $body->description
-            );
-        }
     }
 
     /**
@@ -1268,16 +1234,15 @@ class PullRequestsResource extends AuthenticatedResource
 
     /**
      * @param $id
-     * @return PullRequestWithGitReference
      */
-    private function getWritablePullRequestWithGitReference($id)
+    private function getWritablePullRequestWithGitReference($id): PullRequestWithGitReference
     {
         $pull_request_with_git_reference = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
 
         $current_user = $this->user_manager->getCurrentUser();
 
-        $this->checkUserCanMerge($pull_request, $current_user);
+        $this->getPullRequestIsMergeableChecker()->checkUserCanMerge($pull_request, $current_user);
 
         return $pull_request_with_git_reference;
     }
@@ -1368,21 +1333,6 @@ class PullRequestsResource extends AuthenticatedResource
         }
     }
 
-    /**
-     * @throws RestException 403
-     * @throws RestException 404
-     */
-    private function checkUserCanMerge(PullRequest $pull_request, PFUser $user): void
-    {
-        try {
-            $this->permission_checker->checkPullRequestIsMergeableByUser($pull_request, $user);
-        } catch (UserCannotMergePullRequestException $e) {
-            throw new RestException(403, 'User is not able to WRITE the git repository');
-        } catch (GitRepoNotFoundException $e) {
-            throw new RestException(404, 'Git repository not found');
-        }
-    }
-
     private function sendLocationHeader($uri)
     {
         $uri_with_api_version = '/api/v1/' . $uri;
@@ -1434,5 +1384,10 @@ class PullRequestsResource extends AuthenticatedResource
     private function getGitoliteAccessURLGenerator()
     {
         return new GitoliteAccessURLGenerator($this->git_plugin->getPluginInfo());
+    }
+
+    private function getPullRequestIsMergeableChecker(): PullRequestIsMergeableChecker
+    {
+        return new PullRequestIsMergeableChecker($this->permission_checker);
     }
 }
