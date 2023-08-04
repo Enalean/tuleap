@@ -93,12 +93,14 @@ describe("mutations", () => {
             selected_tracker_id: null,
             has_processed_dry_run: true,
             error_message: "Oh snap!",
+            is_move_possible: false,
         } as RootState;
 
         mutations.saveSelectedTrackerId(state, tracker_id);
 
         expect(state.selected_tracker_id).toBe(tracker_id);
         expect(state.has_processed_dry_run).toBe(false);
+        expect(state.is_move_possible).toBe(true);
         expect(state.error_message).toBe("");
     });
 
