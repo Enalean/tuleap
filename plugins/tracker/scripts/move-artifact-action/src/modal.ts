@@ -17,42 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ColorName } from "@tuleap/core-constants";
+import { createApp } from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
-import Vue from "vue";
-import Vuex from "vuex";
 import MoveModal from "./components/MoveModal.vue";
-import { setFromTracker } from "./from-tracker-presenter";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
-
-const getTlpColorName = (color_name: string): color_name is ColorName => true;
+import { createInitializedStore } from "./store";
+import {
+    ARTIFACT_ID,
+    PROJECT_ID,
+    TRACKER_COLOR,
+    TRACKER_ID,
+    TRACKER_NAME,
+} from "./injection-symbols";
 
 export async function init(vue_mount_point: HTMLElement): Promise<void> {
-    Vue.config.language = document.body.dataset.userLocale ?? "en_US";
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) => import("../po/" + getPOFileFromLocale(locale))
-    );
-
-    const RootComponent = Vue.extend(MoveModal);
-
-    const color_name = getDatasetItemOrThrow(vue_mount_point, "trackerColor");
-    if (!getTlpColorName(color_name)) {
-        return;
-    }
-
-    setFromTracker(
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "trackerId"), 10),
-        getDatasetItemOrThrow(vue_mount_point, "trackerName"),
-        color_name,
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "artifactId"), 10),
-        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10)
-    );
-
-    Vue.use(Vuex);
-
-    new RootComponent({
-        store: createStore(),
-    }).$mount(vue_mount_point);
+    createApp(MoveModal)
+        .provide(
+            TRACKER_ID,
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "trackerId"), 10)
+        )
+        .provide(TRACKER_NAME, getDatasetItemOrThrow(vue_mount_point, "trackerName"))
+        .provide(TRACKER_COLOR, getDatasetItemOrThrow(vue_mount_point, "trackerColor"))
+        .provide(
+            ARTIFACT_ID,
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "artifactId"), 10)
+        )
+        .provide(
+            PROJECT_ID,
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10)
+        )
+        .use(
+            await initVueGettext(createGettext, (locale: string) => {
+                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+            })
+        )
+        .use(createInitializedStore())
+        .mount(vue_mount_point);
 }

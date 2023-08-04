@@ -28,6 +28,13 @@ import { redirectTo } from "../window-helper";
 import type { Context } from "./types";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
+export type RootActions = {
+    loadTrackerList(context: Context, project_id: number): Promise<void>;
+    loadProjectList(context: Context): Promise<void>;
+    moveDryRun(context: Context, artifact_id: number): Promise<void>;
+    move(context: Context, artifact_id: number): Promise<void>;
+};
+
 export async function loadTrackerList(context: Context, project_id: number): Promise<void> {
     try {
         context.commit("loadingTrackersAfterProjectSelected", project_id);

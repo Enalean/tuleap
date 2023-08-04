@@ -22,6 +22,23 @@ import type { RootState, DryRunState, Tracker, Project } from "./types";
 
 const initial_state = { ...default_state };
 
+export type RootMutations = {
+    resetProjectLoading(state: RootState): void;
+    saveSelectedProjectId(state: RootState, project_id: number): void;
+    loadingTrackersAfterProjectSelected(state: RootState, project_id: number): void;
+    resetTrackersLoading(state: RootState): void;
+    saveProjects(state: RootState, projects: Project[]): void;
+    saveTrackers(state: RootState, trackers: Tracker[]): void;
+    saveSelectedTrackerId(state: RootState, tracker_id: number | null): void;
+    hasProcessedDryRun(state: RootState, dry_run_state: DryRunState): void;
+    resetError(state: RootState): void;
+    setErrorMessage(state: RootState, error_message: string): void;
+    switchToProcessingMove(state: RootState): void;
+    resetProcessingMove(state: RootState): void;
+    resetState(state: RootState): void;
+    blockArtifactMove(state: RootState): void;
+};
+
 export const resetProjectLoading = (state: RootState): void => {
     state.is_loading_initial = false;
 };
@@ -50,7 +67,7 @@ export const saveTrackers = (state: RootState, trackers: Tracker[]): void => {
     state.trackers = trackers;
 };
 
-export const saveSelectedTrackerId = (state: RootState, tracker_id: number): void => {
+export const saveSelectedTrackerId = (state: RootState, tracker_id: number | null): void => {
     state.selected_tracker_id = tracker_id;
     state.has_processed_dry_run = false;
     state.error_message = "";

@@ -25,17 +25,8 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import DryRunNotMigratedFieldState from "./DryRunNotMigratedFieldState.vue";
 import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
 import DryRunFullyMigratedFieldState from "./DryRunFullyMigratedFieldState.vue";
-
-export default {
-    name: "DryRunPreview",
-    components: {
-        DryRunNotMigratedFieldState,
-        DryRunPartiallyMigratedFieldState,
-        DryRunFullyMigratedFieldState,
-    },
-};
 </script>

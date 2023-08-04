@@ -21,6 +21,11 @@ import type { ActionContext } from "vuex";
 
 export type Context = ActionContext<RootState, RootState>;
 
+export type DryRunStateType = "fully-migrated" | "partially-migrated" | "not-migrated";
+export const TYPE_FULLY_MIGRATED: DryRunStateType = "fully-migrated";
+export const TYPE_PARTIALLY_MIGRATED: DryRunStateType = "partially-migrated";
+export const TYPE_NOT_MIGRATED: DryRunStateType = "not-migrated";
+
 export type ArtifactField = {
     readonly field_id: number;
     readonly label: string;
@@ -36,7 +41,6 @@ export type DryRunState = {
 export type Tracker = {
     readonly id: number;
     readonly label: string;
-    disabled: boolean;
 };
 
 export type Project = {

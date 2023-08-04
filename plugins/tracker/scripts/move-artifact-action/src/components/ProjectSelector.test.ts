@@ -17,25 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import { vi, describe, beforeEach, it, expect } from "vitest";
+import type { SpyInstance } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { ActionTree, MutationTree } from "vuex";
 import * as list_picker from "@tuleap/list-picker";
-import type { ListPicker } from "@tuleap/list-picker/src";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
-import { setFromTracker } from "../from-tracker-presenter";
-
+import type { ListPicker } from "@tuleap/list-picker";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { getGlobalTestOptionsWithMockedStore } from "../../tests/global-options-for-tests";
+import { PROJECT_ID } from "../injection-symbols";
 import ProjectSelector from "./ProjectSelector.vue";
+import type { RootState } from "../store/types";
 
-const getWrapper = async (store: Store): Promise<Wrapper<ProjectSelector>> =>
-    shallowMount(ProjectSelector, {
-        localVue: await createMoveModalLocalVue(),
-        mocks: {
-            $store: store,
-        },
-    });
+vi.mock("@tuleap/vue-strict-inject");
 
+const current_project_id = 217;
 const sorted_projects = [
     {
         id: 101,
@@ -47,43 +44,62 @@ const sorted_projects = [
     },
 ];
 
-const current_project_id = 217;
-
 describe("ProjectSelector", () => {
-    let store: Store, createListPicker: jest.SpyInstance, list_picker_instance: ListPicker;
+    let createListPicker: SpyInstance,
+        list_picker_instance: ListPicker,
+        loadTrackerList: SpyInstance,
+        saveSelectedProjectId: SpyInstance;
+
+    const getWrapper = (): VueWrapper => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            if (key !== PROJECT_ID) {
+                throw new Error(`Tried to inject ${key} while it was not mocked.`);
+            }
+
+            return current_project_id;
+        });
+
+        return shallowMount(ProjectSelector, {
+            global: {
+                ...getGlobalTestOptionsWithMockedStore({
+                    state: {
+                        projects: sorted_projects,
+                    } as RootState,
+                    actions: { loadTrackerList } as unknown as ActionTree<RootState, RootState>,
+                    mutations: { saveSelectedProjectId } as unknown as MutationTree<RootState>,
+                }),
+            },
+        });
+    };
 
     beforeEach(() => {
-        setFromTracker(10, "Tasks", "red-wine", 12, current_project_id);
-
         list_picker_instance = {
-            destroy: jest.fn(),
+            destroy: vi.fn(),
         };
-        createListPicker = jest
+
+        createListPicker = vi
             .spyOn(list_picker, "createListPicker")
             .mockReturnValue(list_picker_instance);
 
-        store = createStoreMock({
-            getters: {
-                sorted_projects,
-            },
-        });
+        loadTrackerList = vi.fn();
+        saveSelectedProjectId = vi.fn();
     });
 
-    it("should commit the current project id and load its trackers once created", async () => {
-        await getWrapper(store);
+    it("should commit the current project id and load its trackers once created", () => {
+        getWrapper();
 
-        expect(store.commit).toHaveBeenCalledWith("saveSelectedProjectId", current_project_id);
-        expect(store.dispatch).toHaveBeenCalledWith("loadTrackerList", current_project_id);
+        expect(saveSelectedProjectId).toHaveBeenCalledWith(expect.any(Object), current_project_id);
+        expect(loadTrackerList).toHaveBeenCalledWith(expect.any(Object), current_project_id);
     });
 
-    it("should create a list-picker on its <select> input once mounted", async () => {
-        await getWrapper(store);
+    it("should create a list-picker on its <select> input once mounted", () => {
+        getWrapper();
 
         expect(createListPicker).toHaveBeenCalledTimes(1);
     });
 
-    it("the <select> should display the projects", async () => {
-        const wrapper = await getWrapper(store);
+    it("the <select> should display the projects", () => {
+        const wrapper = getWrapper();
         const select = wrapper.find<HTMLSelectElement>(
             "[data-test=move-artifact-project-selector]"
         ).element;
@@ -99,8 +115,8 @@ describe("ProjectSelector", () => {
         expect(select_options[1].label).toBe(sorted_projects[1].label);
     });
 
-    it("When a project is selected, then a loadTrackerList event should be dispatched with the selected project's id", async () => {
-        const wrapper = await getWrapper(store);
+    it("When a project is selected, then a loadTrackerList event should be dispatched with the selected project's id", () => {
+        const wrapper = getWrapper();
 
         const select_wrapper = wrapper.find<HTMLSelectElement>(
             "[data-test=move-artifact-project-selector]"
@@ -109,13 +125,13 @@ describe("ProjectSelector", () => {
         select_wrapper.element.selectedIndex = 1;
         select_wrapper.trigger("change");
 
-        expect(store.dispatch).toHaveBeenCalledWith("loadTrackerList", sorted_projects[1].id);
+        expect(loadTrackerList).toHaveBeenCalledWith(expect.any(Object), sorted_projects[1].id);
     });
 
-    it("When the component is about to be destroyed, then the list picker instance should be destroyed.", async () => {
-        const wrapper = await getWrapper(store);
+    it("When the component is about to be destroyed, then the list picker instance should be destroyed.", () => {
+        const wrapper = getWrapper();
 
-        wrapper.destroy();
+        wrapper.unmount();
 
         expect(list_picker_instance.destroy).toHaveBeenCalled();
     });

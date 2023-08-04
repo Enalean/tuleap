@@ -24,14 +24,7 @@
         data-test="dry-run-message-warning"
     >
         <i class="fa fa-exclamation-circle move-artifact-icon"></i>
-        <translate
-            v-bind:translate-n="partially_migrated_fields_count"
-            translate-plural="%{ partially_migrated_fields_count } fields do not fully match with the targeted tracker. One value of the fields has not been found in targeted tracker, if you confirm your action, this value will be lost forever:"
-        >
-            1 field does not fully match with the targeted tracker. One value of the field has not
-            been found in targeted tracker, if you confirm your action, this value will be lost
-            forever:
-        </translate>
+        <span>{{ message }}</span>
         <fields-list-displayer
             v-bind:fields="partially_migrated_fields"
             v-bind:type="'partially-migrated'"
@@ -39,20 +32,33 @@
     </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import { useState } from "vuex-composition-helpers";
+import type { ArtifactField, RootState } from "../store/types";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-export default {
-    name: "DryRunPartiallyMigratedFieldState",
-    components: {
-        FieldsListDisplayer,
-    },
-    computed: {
-        ...mapState({
-            partially_migrated_fields: (state) => state.dry_run_fields.fields_partially_migrated,
-        }),
-        ...mapGetters(["partially_migrated_fields_count"]),
-    },
-};
+const { interpolate, $ngettext } = useGettext();
+
+const { dry_run_fields } = useState<Pick<RootState, "dry_run_fields">>(["dry_run_fields"]);
+
+const partially_migrated_fields = computed(
+    (): ArtifactField[] => dry_run_fields.value.fields_partially_migrated
+);
+
+const partially_migrated_fields_count = computed(
+    (): number => dry_run_fields.value.fields_partially_migrated.length
+);
+
+const message = computed((): string => {
+    return interpolate(
+        $ngettext(
+            "1 field does not fully match with the targeted tracker. One value of the field has not been found in targeted tracker, if you confirm your action, this value will be lost forever:",
+            "%{ partially_migrated_fields_count } fields do not fully match with the targeted tracker. One value of the fields has not been found in targeted tracker, if you confirm your action, this value will be lost forever:",
+            partially_migrated_fields_count.value
+        ),
+        { partially_migrated_fields_count: partially_migrated_fields_count.value }
+    );
+});
 </script>

@@ -24,12 +24,7 @@
         data-test="dry-run-message-info"
     >
         <i class="fa fa-info-circle move-artifact-icon"></i>
-        <translate
-            v-bind:translate-n="fully_migrated_fields_count"
-            translate-plural="%{ fully_migrated_fields_count } fields will be fully migrated:"
-        >
-            1 field will be fully migrated:
-        </translate>
+        <span>{{ message }}</span>
         <fields-list-displayer
             v-bind:fields="fully_migrated_fields"
             v-bind:type="'fully-migrated'"
@@ -37,20 +32,32 @@
     </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import { useState } from "vuex-composition-helpers";
+import type { ArtifactField, RootState } from "../store/types";
+
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-export default {
-    name: "DryRunFullyMigratedFieldState",
-    components: {
-        FieldsListDisplayer,
-    },
-    computed: {
-        ...mapState({
-            fully_migrated_fields: (state) => state.dry_run_fields.fields_migrated,
-        }),
-        ...mapGetters(["fully_migrated_fields_count"]),
-    },
-};
+const { interpolate, $ngettext } = useGettext();
+
+const { dry_run_fields } = useState<Pick<RootState, "dry_run_fields">>(["dry_run_fields"]);
+
+const fully_migrated_fields = computed((): ArtifactField[] => dry_run_fields.value.fields_migrated);
+
+const fully_migrated_fields_count = computed(
+    (): number => dry_run_fields.value.fields_migrated.length
+);
+
+const message = computed((): string => {
+    return interpolate(
+        $ngettext(
+            "1 field will be fully migrated:",
+            "%{ fully_migrated_fields_count } fields will be fully migrated:",
+            fully_migrated_fields_count.value
+        ),
+        { fully_migrated_fields_count: fully_migrated_fields_count.value }
+    );
+});
 </script>

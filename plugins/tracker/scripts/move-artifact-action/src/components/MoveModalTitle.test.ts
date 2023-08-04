@@ -17,22 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { vi, describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { ColorName } from "@tuleap/core-constants";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
-import { setFromTracker } from "../from-tracker-presenter";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { ARTIFACT_ID, TRACKER_COLOR, TRACKER_NAME } from "../injection-symbols";
 import MoveModalTitle from "./MoveModalTitle.vue";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("MoveModalTitle", () => {
-    it("should display the artifact id with its tracker name and color", async () => {
+    it("should display the artifact id with its tracker name and color", () => {
         const tracker_color: ColorName = "red-wine";
         const tracker_name = "Tasks";
         const artifact_id = 126;
 
-        setFromTracker(10, tracker_name, tracker_color, artifact_id, 101);
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            switch (key) {
+                case TRACKER_NAME:
+                    return tracker_name;
+                case TRACKER_COLOR:
+                    return tracker_color;
+                case ARTIFACT_ID:
+                    return artifact_id;
+                default:
+                    throw new Error(`Tried to inject ${key} while it was not mocked.`);
+            }
+        });
 
-        const wrapper = await shallowMount(MoveModalTitle, {
-            localVue: await createMoveModalLocalVue(),
+        const wrapper = shallowMount(MoveModalTitle, {
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
 
         const artifact_xref = wrapper.find("[data-test=artifact-xref]");

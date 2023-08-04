@@ -20,7 +20,7 @@
 <template>
     <div class="move-artifact-project-selector-section">
         <label for="move-artifact-project-selector">
-            <translate>Destination project</translate>
+            {{ $gettext("Destination project") }}
             <span class="highlight">*</span>
         </label>
 
@@ -29,6 +29,7 @@
             name="move-artifact-project-selector"
             data-test="move-artifact-project-selector"
             v-model="selected_project_id"
+            v-on:change="loadTrackerList(selected_project_id)"
             ref="move_artifact_project_selector"
         >
             <option
@@ -41,42 +42,49 @@
         </select>
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
-import { getProjectId } from "../from-tracker-presenter";
+<script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import { useState, useMutations, useActions } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { createListPicker } from "@tuleap/list-picker";
+import type { ListPicker } from "@tuleap/list-picker";
+import type { RootState } from "../store/types";
+import type { RootActions } from "../store/actions";
+import type { RootMutations } from "../store/mutations";
+import { PROJECT_ID } from "../injection-symbols";
+import { ProjectsSorter } from "../helpers/ProjectsSorter";
 
-export default {
-    name: "ProjectSelector",
-    data() {
-        return {
-            list_picker: null,
-        };
-    },
-    computed: {
-        ...mapGetters(["sorted_projects"]),
-        selected_project_id: {
-            get() {
-                return this.$store.state.selected_project_id;
-            },
-            set(project_id) {
-                this.$store.dispatch("loadTrackerList", project_id);
-            },
-        },
-    },
-    created() {
-        this.$store.commit("saveSelectedProjectId", getProjectId());
-        this.$store.dispatch("loadTrackerList", getProjectId());
-    },
-    mounted() {
-        this.list_picker = createListPicker(this.$refs.move_artifact_project_selector, {
-            locale: document.body.dataset.userLocale,
-            is_filterable: true,
-            placeholder: this.$gettext("Choose project..."),
-        });
-    },
-    beforeDestroy() {
-        this.list_picker.destroy();
-    },
-};
+const { $gettext } = useGettext();
+
+const { saveSelectedProjectId } = useMutations<Pick<RootMutations, "saveSelectedProjectId">>([
+    "saveSelectedProjectId",
+]);
+const { loadTrackerList } = useActions<Pick<RootActions, "loadTrackerList">>(["loadTrackerList"]);
+const { projects } = useState<Pick<RootState, "projects">>(["projects"]);
+
+const sorted_projects = ProjectsSorter.sortProjectsAlphabetically(projects.value);
+const current_project_id = strictInject(PROJECT_ID);
+const selected_project_id = ref(current_project_id);
+const list_picker = ref<ListPicker | undefined>();
+const move_artifact_project_selector = ref<HTMLSelectElement>();
+
+saveSelectedProjectId(current_project_id);
+loadTrackerList(current_project_id);
+
+onMounted(() => {
+    if (!(move_artifact_project_selector.value instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    list_picker.value = createListPicker(move_artifact_project_selector.value, {
+        locale: document.body.dataset.userLocale,
+        is_filterable: true,
+        placeholder: $gettext("Choose project..."),
+    });
+});
+
+onBeforeUnmount(() => {
+    list_picker.value?.destroy();
+});
 </script>

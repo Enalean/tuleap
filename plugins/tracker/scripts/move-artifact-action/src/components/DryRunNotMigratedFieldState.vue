@@ -24,20 +24,17 @@
         data-test="dry-run-message-error"
     >
         <i class="fa fa-exclamation-circle move-artifact-icon move-artifact-error-icon"></i>
-        <translate v-if="!is_move_possible" data-test="move-action-not-possible-error-message">
-            This artifact cannot be moved to the selected tracker because none of its fields matches
-            with it.
-        </translate>
+        <span v-if="!is_move_possible" data-test="move-action-not-possible-error-message">
+            {{
+                $gettext(
+                    "This artifact cannot be moved to the selected tracker because none of its fields matches with it."
+                )
+            }}
+        </span>
 
-        <translate
-            v-if="is_move_possible"
-            v-bind:translate-n="not_migrated_fields_count"
-            translate-plural="%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
-            data-test="not-migrated-field-error-message"
-        >
-            1 field does not match with the targeted tracker. If you confirm your action, its value
-            will be lost forever:
-        </translate>
+        <span v-if="is_move_possible" data-test="not-migrated-field-error-message">
+            {{ message }}
+        </span>
         <fields-list-displayer
             v-if="is_move_possible"
             v-bind:fields="not_migrated_fields"
@@ -45,22 +42,35 @@
         />
     </div>
 </template>
-
-<script>
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import { useState } from "vuex-composition-helpers";
+import type { ArtifactField, RootState } from "../store/types";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-export default {
-    name: "DryRunNotMigratedFieldState",
-    components: {
-        FieldsListDisplayer,
-    },
-    computed: {
-        ...mapState({
-            not_migrated_fields: (state) => state.dry_run_fields.fields_not_migrated,
-            is_move_possible: (state) => state.is_move_possible,
-        }),
-        ...mapGetters(["not_migrated_fields_count"]),
-    },
-};
+const { interpolate, $ngettext, $gettext } = useGettext();
+
+const { dry_run_fields, is_move_possible } = useState<
+    Pick<RootState, "dry_run_fields" | "is_move_possible">
+>(["dry_run_fields", "is_move_possible"]);
+
+const not_migrated_fields = computed(
+    (): ArtifactField[] => dry_run_fields.value.fields_not_migrated
+);
+
+const not_migrated_fields_count = computed(
+    (): number => dry_run_fields.value.fields_not_migrated.length
+);
+
+const message = computed((): string => {
+    return interpolate(
+        $ngettext(
+            "1 field does not match with the targeted tracker. If you confirm your action, its value will be lost forever:",
+            "%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:",
+            not_migrated_fields_count.value
+        ),
+        { not_migrated_fields_count: not_migrated_fields_count.value }
+    );
+});
 </script>

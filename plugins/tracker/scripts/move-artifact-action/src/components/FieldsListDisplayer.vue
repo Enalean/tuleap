@@ -31,46 +31,31 @@
         <button
             v-on:click="is_minimal_display = false"
             v-if="is_minimal_display && fields.length > 5"
-            v-bind:class="show_more_class"
+            v-bind:class="show_more_classes"
             data-test="show-more-fields-button"
         >
-            <translate>Show more</translate>
+            {{ $gettext("Show more") }}
         </button>
     </div>
 </template>
 
-<script>
-export default {
-    name: "FieldsListDisplayer",
-    props: {
-        fields: {
-            type: Array,
-            required: true,
-        },
-        type: {
-            type: String,
-            required: true,
-            validator: function (value) {
-                return ["fully-migrated", "partially-migrated", "not-migrated"].includes(value);
-            },
-        },
-    },
-    data() {
-        return { is_minimal_display: true };
-    },
-    computed: {
-        fields_to_display() {
-            if (this.is_minimal_display) {
-                return this.fields.slice(0, 5);
-            }
-            return this.fields;
-        },
-        show_more_class() {
-            return (
-                "btn btn-link move-artifact-display-more-field move-artifact-display-more-field-" +
-                this.type
-            );
-        },
-    },
-};
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import type { ArtifactField, DryRunStateType } from "../store/types";
+
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    readonly fields: ArtifactField[];
+    readonly type: DryRunStateType;
+}>();
+
+const is_minimal_display = ref(true);
+const fields_to_display = computed((): ArtifactField[] =>
+    is_minimal_display.value === true ? props.fields.slice(0, 5) : props.fields
+);
+const show_more_classes = ref(
+    `btn btn-link move-artifact-display-more-field move-artifact-display-more-field-${props.type}`
+);
 </script>

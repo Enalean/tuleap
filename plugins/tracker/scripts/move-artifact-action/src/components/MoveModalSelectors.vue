@@ -37,19 +37,14 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
+import type { RootState } from "../store/types.js";
+
 import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
-import { mapState } from "vuex";
 
-export default {
-    name: "MoveModalSelectors",
-    components: {
-        ProjectSelector,
-        TrackerSelector,
-    },
-    computed: {
-        ...mapState(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]),
-    },
-};
+const { is_loading_initial, are_trackers_loading, has_processed_dry_run } = useState<
+    Pick<RootState, "is_loading_initial" | "are_trackers_loading" | "has_processed_dry_run">
+>(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]);
 </script>
