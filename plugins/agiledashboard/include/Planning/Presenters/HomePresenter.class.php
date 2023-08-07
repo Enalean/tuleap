@@ -69,6 +69,8 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         bool $is_planning_management_delegated,
         public readonly string $create_kanban_url,
         public readonly \Tuleap\CSRFSynchronizerTokenPresenter $csrf_token,
+        public readonly bool $is_using_kanban_service,
+        public readonly ?string $kanban_service_url,
     ) {
         parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled, $is_planning_management_delegated);
         $this->milestone_presenters            = $milestone_access_presenters;
