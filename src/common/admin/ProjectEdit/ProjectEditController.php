@@ -136,7 +136,7 @@ class ProjectEditController
             return;
         }
 
-        if ($this->hasStatusChanged($project, $form_status) && $project->getGroupId() !== Project::ADMIN_PROJECT_ID) {
+        if ($this->hasStatusChanged($project, $form_status) && $project->getGroupId() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             $old_status_label = $this->getStatusLabel($project->getStatus());
             $new_status_label = $this->getStatusLabel($form_status);
             $this->project_history_dao->groupAddHistory('status', $old_status_label . " :: " . $new_status_label, $project->group_id);
@@ -219,7 +219,7 @@ class ProjectEditController
 
     private function getProjectStatus(HTTPRequest $request, Project $project)
     {
-        if ($project->getGroupId() !== Project::ADMIN_PROJECT_ID) {
+        if ($project->getGroupId() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             return $request->getValidated('form_status', 'string', $project->getStatus());
         }
 

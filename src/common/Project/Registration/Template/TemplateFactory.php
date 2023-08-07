@@ -174,7 +174,7 @@ class TemplateFactory
         $project_templates = $this->project_manager->getSiteTemplates();
 
         foreach ($project_templates as $project_template) {
-            if ((int) $project_template->getGroupId() === \Project::ADMIN_PROJECT_ID || ! $this->userCanAccessTemplate($project_template)) {
+            if ((int) $project_template->getGroupId() === \Project::DEFAULT_TEMPLATE_PROJECT_ID || ! $this->userCanAccessTemplate($project_template)) {
                 continue;
             }
             $company_templates[] = new CompanyTemplate($project_template, $this->glyph_finder);

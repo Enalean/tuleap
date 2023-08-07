@@ -91,7 +91,7 @@ class CrossReferencePresenterFactory
             'val' => $id,
         ];
 
-        if ($project_id !== \Project::ADMIN_PROJECT_ID) {
+        if ($project_id !== \Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             $parameters['group_id'] = $project_id;
         }
 

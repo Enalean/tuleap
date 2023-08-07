@@ -999,7 +999,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
         }
 
         if (! $ref_gid) {
-            $ref_gid = Project::ADMIN_PROJECT_ID;
+            $ref_gid = Project::DEFAULT_TEMPLATE_PROJECT_ID;
         }
 
         return $ref_gid;

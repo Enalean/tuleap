@@ -279,7 +279,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
             ->with(\Mockery::on(
                 static function (Project $project): bool {
-                    return $project->getID() === Project::ADMIN_PROJECT_ID;
+                    return $project->getID() === Project::DEFAULT_TEMPLATE_PROJECT_ID;
                 }
             ))
             ->andReturns($services);
