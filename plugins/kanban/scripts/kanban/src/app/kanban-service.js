@@ -18,6 +18,7 @@
  */
 
 import { get, head, patch, del, post, put } from "@tuleap/tlp-fetch";
+import { escaper } from "@tuleap/html-escaper";
 
 export default KanbanService;
 
@@ -339,8 +340,8 @@ function KanbanService(
     }
 
     function removeKanban() {
-        var message = gettextCatalog.getString("Kanban {{ label }} successfuly deleted", {
-            label: SharedPropertiesService.getKanban().label,
+        const message = gettextCatalog.getString("Kanban {{ label }} successfully deleted", {
+            label: escaper.html(SharedPropertiesService.getKanban().label),
         });
         $window.sessionStorage.setItem("tuleap_feedback", message);
         $window.location.href =
