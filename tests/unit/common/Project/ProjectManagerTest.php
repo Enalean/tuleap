@@ -36,6 +36,8 @@ use TestHelper;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Project\Status\SwitchingBackToPendingException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserManager;
 
 final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -111,8 +113,8 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $projects = $paginated_projects->getProjects();
 
-        $this->assertCount(1, $projects);
-        $this->assertEquals(102, $projects[0]->getID());
+        self::assertCount(1, $projects);
+        self::assertEquals(102, $projects[0]->getID());
     }
 
     public function testGetProject(): void
@@ -132,8 +134,8 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $o2 = $p->getProject(1);
         $o3 = $p->getProject(2);
 
-        $this->assertSame($o1, $o2);
-        $this->assertNotEquals($o1, $o3);
+        self::assertSame($o1, $o2);
+        self::assertNotEquals($o1, $o3);
     }
 
     public function testClear(): void
@@ -172,8 +174,8 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_dao->shouldReceive('renameProject')->with($p1, 'TestProj')->andReturns(true);
         $pm->shouldReceive('_getDao')->andReturns($this->project_dao);
 
-        $this->assertTrue($pm->renameProject($p1, 'TestProj'));
-        $this->assertFalse($pm->isCached($p1->getId()));
+        self::assertTrue($pm->renameProject($p1, 'TestProj'));
+        self::assertFalse($pm->isCached($p1->getId()));
     }
 
     public function testGetActiveProjectsForUserExcludesProjectsARestrictedUserDontHaveAccessTo(): void
@@ -196,14 +198,12 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $projects = $this->project_manager_test_version->getActiveProjectsForUser($user);
 
-        $this->assertCount(3, $projects);
+        self::assertCount(3, $projects);
     }
 
     public function testUpdateStatus(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getStatus')->andReturn('S');
-        $project->shouldReceive('getID')->andReturn(111);
+        $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
         $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
         $this->project_dao->shouldReceive("updateStatus")->andReturn(true)->once();
@@ -215,9 +215,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateStatusReturnFeedbackWhenUpdateDidntWork(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getStatus')->andReturn('S');
-        $project->shouldReceive('getID')->andReturn(111);
+        $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
         $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
         $this->project_dao->shouldReceive("updateStatus")->andReturn(false)->once();
@@ -229,16 +227,25 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager_test_version->shouldReceive('removeProjectFromCache')->never();
     }
 
-    public function testUpdateStatusTrowExceptionWhenProjectIsDeleted(): void
+    public function testUpdateStatusThrowsExceptionWhenProjectIsDeleted(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getStatus')->andReturn('D');
-        $project->shouldReceive('getID')->andReturn(111);
+        $project = ProjectTestBuilder::aProject()->withId(111)->withStatusDeleted()->build();
 
         $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
         $this->project_dao->shouldReceive("updateStatus")->never();
 
         $this->expectException(DeletedProjectStatusChangeException::class);
         $this->project_manager_test_version->updateStatus($project, 'A');
+    }
+
+    public function testUpdateStatusThrowsExceptionWhenProjectSwitchesBackToPending(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->withStatusActive()->build();
+
+        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->shouldReceive("updateStatus")->never();
+
+        $this->expectException(SwitchingBackToPendingException::class);
+        $this->project_manager_test_version->updateStatus($project, 'P');
     }
 }
