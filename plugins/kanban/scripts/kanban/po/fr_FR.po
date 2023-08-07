@@ -110,7 +110,7 @@ msgstr "Dans la colonne depuis :"
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
 
-msgid "Kanban {{ label }} successfuly deleted"
+msgid "Kanban {{ label }} successfully deleted"
 msgstr "Le Kanban {{ label }} a été supprimé"
 
 msgid "Last 3 months"
