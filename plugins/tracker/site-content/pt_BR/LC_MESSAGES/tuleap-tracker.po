@@ -1173,6 +1173,9 @@ msgstr "Editar"
 msgid "Edit children of %1$s"
 msgstr ""
 
+msgid "Edit field"
+msgstr ""
+
 msgid "Edit permissions of this field"
 msgstr ""
 
@@ -1184,9 +1187,6 @@ msgid "Edit type"
 msgstr ""
 
 msgid "Edit webhook"
-msgstr ""
-
-msgid "Editer le champ"
 msgstr ""
 
 msgid "Editing system types is disallowed."
