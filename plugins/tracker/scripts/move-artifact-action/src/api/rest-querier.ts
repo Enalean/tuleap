@@ -17,23 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch, recursiveGet } from "@tuleap/tlp-fetch";
-import type { Tracker, Project } from "../store/types";
+import type { ResultAsync } from "neverthrow";
+import { uri, patchJSON, getAllJSON } from "@tuleap/fetch-result";
+import type { Fault } from "@tuleap/fault";
+import type { Tracker, Project, DryRunState } from "../store/types";
 
-export function getProjectList(): Promise<Project[]> {
-    return recursiveGet("/api/projects", {
-        params: {
-            query: JSON.stringify({
-                is_tracker_admin: "true",
-            }),
-            limit: 50,
-            offset: 0,
-        },
-    });
-}
-
-export function getTrackerList(project_id: number): Promise<Tracker[]> {
-    return recursiveGet("/api/projects/" + project_id + "/trackers/", {
+export function getProjectList(): ResultAsync<ReadonlyArray<Project>, Fault> {
+    return getAllJSON<Project>(uri`/api/projects`, {
         params: {
             query: JSON.stringify({
                 is_tracker_admin: "true",
@@ -43,30 +33,34 @@ export function getTrackerList(project_id: number): Promise<Tracker[]> {
     });
 }
 
-export function moveDryRunArtifact(artifact_id: number, tracker_id: number): Promise<Response> {
-    return processMove(artifact_id, tracker_id, true, false);
+export function getTrackerList(project_id: number): ResultAsync<ReadonlyArray<Tracker>, Fault> {
+    return getAllJSON<Tracker>(uri`/api/projects/${project_id}/trackers/`, {
+        params: {
+            query: JSON.stringify({
+                is_tracker_admin: "true",
+            }),
+            limit: 50,
+        },
+    });
 }
 
-export function moveArtifact(artifact_id: number, tracker_id: number): Promise<Response> {
-    return processMove(artifact_id, tracker_id, false, true);
-}
-
-function processMove(
-    artifact_id: number,
-    tracker_id: number,
-    is_dry_run_move: boolean,
-    should_populate_feedback_on_success: boolean
-): Promise<Response> {
-    const headers = {
-        "content-type": "application/json",
+type DryRunResultPayload = {
+    dry_run: {
+        fields: DryRunState;
     };
+};
 
-    const body = JSON.stringify({
-        move: { tracker_id, dry_run: is_dry_run_move, should_populate_feedback_on_success },
+export function moveDryRunArtifact(
+    artifact_id: number,
+    tracker_id: number
+): ResultAsync<DryRunResultPayload, Fault> {
+    return patchJSON<DryRunResultPayload>(uri`/api/artifacts/${artifact_id}`, {
+        move: { tracker_id, dry_run: true },
     });
+}
 
-    return patch("/api/artifacts/" + artifact_id, {
-        headers,
-        body,
+export function moveArtifact(artifact_id: number, tracker_id: number): ResultAsync<never, Fault> {
+    return patchJSON(uri`/api/artifacts/${artifact_id}`, {
+        move: { tracker_id, should_populate_feedback_on_success: true },
     });
 }

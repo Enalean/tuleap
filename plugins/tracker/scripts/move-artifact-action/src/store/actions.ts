@@ -26,7 +26,6 @@ import {
 import { redirectTo } from "../window-helper";
 
 import type { Context } from "./types";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export type RootActions = {
     loadTrackerList(context: Context, project_id: number): Promise<void>;
@@ -35,83 +34,83 @@ export type RootActions = {
     move(context: Context, artifact_id: number): Promise<void>;
 };
 
-export async function loadTrackerList(context: Context, project_id: number): Promise<void> {
-    try {
-        context.commit("loadingTrackersAfterProjectSelected", project_id);
-        const tracker_list = await getTrackerList(project_id);
-        context.commit("saveTrackers", tracker_list);
-    } catch (e: FetchWrapperError | unknown) {
-        return handleError(context, e);
-    } finally {
-        context.commit("resetTrackersLoading");
-    }
+export function loadTrackerList(context: Context, project_id: number): Promise<void> {
+    context.commit("loadingTrackersAfterProjectSelected", project_id);
+
+    return getTrackerList(project_id)
+        .match(
+            (tracker_list) => {
+                context.commit("saveTrackers", tracker_list);
+            },
+            (fault) => {
+                context.commit("setErrorMessage", fault);
+            }
+        )
+        .finally(() => context.commit("resetTrackersLoading"));
 }
 
-export async function loadProjectList(context: Context): Promise<void> {
-    try {
-        const project_list = await getProjectList();
-        context.commit("saveProjects", project_list);
-    } catch (e: FetchWrapperError | unknown) {
-        return handleError(context, e);
-    } finally {
-        context.commit("resetProjectLoading");
-    }
+export function loadProjectList(context: Context): Promise<void> {
+    return getProjectList()
+        .match(
+            (project_list) => {
+                context.commit("saveProjects", project_list);
+            },
+            (fault) => {
+                context.commit("setErrorMessage", fault);
+            }
+        )
+        .finally(() => context.commit("resetProjectLoading"));
 }
 
-export async function moveDryRun(context: Context, artifact_id: number): Promise<void> {
+export function moveDryRun(context: Context, artifact_id: number): Promise<void> {
     const selected_tracker_id = context.state.selected_tracker_id;
     if (!selected_tracker_id) {
-        return;
+        return Promise.reject("Expected a tracker to be selected before calling MoveDryRun");
     }
 
     context.commit("switchToProcessingMove");
 
-    try {
-        const response = await moveDryRunArtifact(artifact_id, selected_tracker_id);
-        const result = await response.json();
+    return moveDryRunArtifact(artifact_id, selected_tracker_id)
+        .match(
+            (result) => {
+                const { fields_migrated, fields_partially_migrated, fields_not_migrated } =
+                    result.dry_run.fields;
 
-        const { fields_migrated, fields_partially_migrated, fields_not_migrated } =
-            result.dry_run.fields;
+                if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
+                    move(context, artifact_id);
 
-        if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
-            return await move(context, artifact_id);
-        }
+                    return;
+                }
 
-        if (fields_migrated.length === 0 && fields_partially_migrated.length === 0) {
-            context.commit("blockArtifactMove");
-        }
+                if (fields_migrated.length === 0 && fields_partially_migrated.length === 0) {
+                    context.commit("blockArtifactMove");
+                }
 
-        context.commit("hasProcessedDryRun", result.dry_run.fields);
-    } catch (e) {
-        return handleError(context, e);
-    } finally {
-        context.commit("resetProcessingMove");
-    }
+                context.commit("hasProcessedDryRun", result.dry_run.fields);
+            },
+            (fault) => {
+                context.commit("setErrorMessage", fault);
+            }
+        )
+        .finally(() => {
+            context.commit("resetProcessingMove");
+        });
 }
 
-export async function move(context: Context, artifact_id: number): Promise<void> {
+export function move(context: Context, artifact_id: number): Promise<void> {
     const selected_tracker_id = context.state.selected_tracker_id;
     if (!selected_tracker_id) {
-        return;
+        return Promise.reject("Expected a tracker to be selected before calling move");
     }
 
     context.commit("switchToProcessingMove");
 
-    try {
-        await moveArtifact(artifact_id, selected_tracker_id);
-        redirectTo("/plugins/tracker/?aid=" + artifact_id);
-    } catch (e: FetchWrapperError | unknown) {
-        context.commit("resetProcessingMove");
-        return handleError(context, e);
-    }
-}
-
-async function handleError(context: Context, e: FetchWrapperError | unknown): Promise<void> {
-    if (!(e instanceof FetchWrapperError)) {
-        context.commit("setErrorMessage", "Unknown error");
-        return;
-    }
-
-    const { error } = await e.response.json();
-    context.commit("setErrorMessage", error.message);
+    return moveArtifact(artifact_id, selected_tracker_id).match(
+        () => {
+            redirectTo(`/plugins/tracker/?aid=${artifact_id}`);
+        },
+        (fault) => {
+            context.commit("setErrorMessage", fault);
+        }
+    );
 }

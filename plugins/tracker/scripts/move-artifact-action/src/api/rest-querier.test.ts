@@ -19,37 +19,45 @@
 
 import { vi, describe, beforeEach, it, expect } from "vitest";
 import type { SpyInstance } from "vitest";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { getProjectList, getTrackerList, moveArtifact, moveDryRunArtifact } from "./rest-querier";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
+import type { Result } from "neverthrow";
+import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
+import { uri } from "@tuleap/fetch-result";
+import type { Fault } from "@tuleap/fault";
 
-vi.mock("@tuleap/tlp-fetch");
+import { getProjectList, getTrackerList, moveArtifact, moveDryRunArtifact } from "./rest-querier";
+
+function expectOkResult(result: Result<unknown, Fault>): void {
+    if (!result.isOk()) {
+        throw new Error("Expected an Ok");
+    }
+}
 
 describe("API querier", () => {
-    let recursiveGet: SpyInstance, patch: SpyInstance;
-    beforeEach(() => {
-        recursiveGet = vi.spyOn(tlp_fetch, "recursiveGet");
+    let getAllJSON: SpyInstance, patchJSON: SpyInstance;
 
-        patch = vi.spyOn(tlp_fetch, "patch");
+    beforeEach(() => {
+        getAllJSON = vi.spyOn(fetch_result, "getAllJSON");
+        patchJSON = vi.spyOn(fetch_result, "patchJSON");
     });
 
     describe("getProjectList", () => {
         it("will get all project user is tracker admin of", async () => {
-            mockFetchSuccess(recursiveGet, {
-                return_json: [
+            getAllJSON.mockReturnValue(
+                okAsync([
                     {
                         id: 102,
                         label: "Project name",
                     },
-                ],
-            });
-            await expect(getProjectList()).resolves.toBeDefined();
+                ])
+            );
 
-            expect(recursiveGet).toHaveBeenCalledWith("/api/projects", {
+            expectOkResult(await getProjectList());
+
+            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects`, {
                 params: {
                     query: '{"is_tracker_admin":"true"}',
                     limit: 50,
-                    offset: 0,
                 },
             });
         });
@@ -57,19 +65,20 @@ describe("API querier", () => {
 
     describe("getTrackerList", () => {
         it("Given a project id, then it will get all trackers user is admin of", async () => {
-            mockFetchSuccess(recursiveGet, {
-                return_json: [
+            const project_id = 5;
+
+            getAllJSON.mockReturnValue(
+                okAsync([
                     {
                         id: 10,
                         label: "Tracker name",
                     },
-                ],
-            });
-            const project_id = 5;
+                ])
+            );
 
-            await expect(getTrackerList(project_id)).resolves.toBeDefined();
+            expectOkResult(await getTrackerList(project_id));
 
-            expect(recursiveGet).toHaveBeenCalledWith("/api/projects/5/trackers/", {
+            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects/${project_id}/trackers/`, {
                 params: {
                     query: '{"is_tracker_admin":"true"}',
                     limit: 50,
@@ -83,13 +92,15 @@ describe("API querier", () => {
             const artifact_id = 101;
             const tracker_id = 5;
 
-            mockFetchSuccess(patch);
+            patchJSON.mockReturnValue(okAsync({}));
 
-            await expect(moveArtifact(artifact_id, tracker_id)).resolves.toBeDefined();
+            expectOkResult(await moveArtifact(artifact_id, tracker_id));
 
-            expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
-                headers: { "content-type": "application/json" },
-                body: `{"move":{"tracker_id":${tracker_id},"dry_run":false,"should_populate_feedback_on_success":true}}`,
+            expect(patchJSON).toHaveBeenCalledWith(uri`/api/artifacts/${artifact_id}`, {
+                move: {
+                    tracker_id,
+                    should_populate_feedback_on_success: true,
+                },
             });
         });
     });
@@ -99,13 +110,15 @@ describe("API querier", () => {
             const artifact_id = 101;
             const tracker_id = 5;
 
-            mockFetchSuccess(patch);
+            patchJSON.mockReturnValue(okAsync({}));
 
-            await expect(moveDryRunArtifact(artifact_id, tracker_id)).resolves.toBeDefined();
+            expectOkResult(await moveDryRunArtifact(artifact_id, tracker_id));
 
-            expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
-                headers: { "content-type": "application/json" },
-                body: `{"move":{"tracker_id":${tracker_id},"dry_run":true,"should_populate_feedback_on_success":false}}`,
+            expect(patchJSON).toHaveBeenCalledWith(uri`/api/artifacts/${artifact_id}`, {
+                move: {
+                    tracker_id,
+                    dry_run: true,
+                },
             });
         });
     });
