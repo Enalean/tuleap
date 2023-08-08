@@ -31,6 +31,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Kanban\KanbanManager;
+use Tuleap\Kanban\Service\KanbanServiceHomepageUrlBuilder;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
@@ -108,7 +109,7 @@ final class CreateKanbanController extends DispatchablePSR15Compatible
 
     private function redirectToHome(PFUser $user, Project $project, NewFeedback $feedback): ResponseInterface
     {
-        $homeurl = KanbanHomeController::getHomeUrl($project);
+        $homeurl = KanbanServiceHomepageUrlBuilder::getUrl($project);
 
         return $this->redirect_with_feedback_factory->createResponseForUser($user, $homeurl, $feedback);
     }

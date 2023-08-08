@@ -29,7 +29,7 @@ use ProjectManager;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use TrackerFactory;
-use Tuleap\Kanban\Home\KanbanHomeController;
+use Tuleap\Kanban\Service\KanbanServiceHomepageUrlBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
@@ -131,7 +131,7 @@ final class KanbanPresenter
             'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
         );
         $this->kanban_url                        = '/kanban/' . urlencode((string) $kanban->getId());
-        $this->kanban_homepage_url               = KanbanHomeController::getHomeUrl($project);
+        $this->kanban_homepage_url               = KanbanServiceHomepageUrlBuilder::getUrl($project);
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->mercure_enabled                   = ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) === "1";
     }

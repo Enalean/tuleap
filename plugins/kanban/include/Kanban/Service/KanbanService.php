@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\Service;
 
-use Tuleap\Kanban\Home\KanbanHomeController;
 
 final class KanbanService extends \Service
 {
@@ -64,6 +63,6 @@ final class KanbanService extends \Service
 
     public function getUrl(?string $url = null): string
     {
-        return KanbanHomeController::getHomeUrl($this->project);
+        return KanbanServiceHomepageUrlBuilder::getUrl($this->project);
     }
 }
