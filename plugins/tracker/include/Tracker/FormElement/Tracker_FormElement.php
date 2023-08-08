@@ -494,7 +494,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html   .= '<tr><td>';
         $html   .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html   .= '</td><td>';
-        $html   .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Editer le champ') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $html   .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Edit field') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         $confirm = dgettext('tuleap-tracker', 'Delete permanently the field') . ' ' . $this->getLabel() . '?';
         $query   = http_build_query(
             [

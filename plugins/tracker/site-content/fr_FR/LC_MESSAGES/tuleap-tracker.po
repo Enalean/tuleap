@@ -1340,6 +1340,9 @@ msgstr "Éditer"
 msgid "Edit children of %1$s"
 msgstr "Modifier les enfants de %1$s"
 
+msgid "Edit field"
+msgstr "Éditer le champ"
+
 msgid "Edit permissions of this field"
 msgstr "Editer les permissions du champ"
 
@@ -1352,9 +1355,6 @@ msgstr "Éditer la nature"
 
 msgid "Edit webhook"
 msgstr "Éditer un webhook"
-
-msgid "Editer le champ"
-msgstr "Editer le champ"
 
 msgid "Editing system types is disallowed."
 msgstr "L'édition des natures de liens systèmes n'est pas autorisée."
