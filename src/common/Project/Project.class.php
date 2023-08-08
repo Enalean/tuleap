@@ -57,8 +57,8 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public const STATUS_SYSTEM       = 's';
     public const STATUS_SYSTEM_LABEL = 'system';
 
-    public const SITE_NEWS_PROJECT_ID = 46;
-    public const ADMIN_PROJECT_ID     = 100;
+    public const SITE_NEWS_PROJECT_ID        = 46;
+    public const DEFAULT_TEMPLATE_PROJECT_ID = 100;
 
     public const ACCESS_PRIVATE               = 'private';
     public const ACCESS_PRIVATE_WO_RESTRICTED = 'private-wo-restr';
@@ -556,7 +556,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      */
     public function isLegacyDefaultTemplate()
     {
-        return (int) $this->getID() === self::ADMIN_PROJECT_ID;
+        return (int) $this->getID() === self::DEFAULT_TEMPLATE_PROJECT_ID;
     }
 
     public function isSuspended()

@@ -54,7 +54,7 @@ if ($request->exist('project')) {
     }
 }
 if (! $project) {
-    $project = $project_manager->getProject(Project::ADMIN_PROJECT_ID);
+    $project = $project_manager->getProject(Project::DEFAULT_TEMPLATE_PROJECT_ID);
 }
 $group_id = $project->getID();
 

@@ -96,7 +96,7 @@ class TemplateFromProjectForCreation
 
     public static function fromGlobalProjectAdminTemplate(): self
     {
-        return new self(new Project(['group_id' => Project::ADMIN_PROJECT_ID, 'status' => Project::STATUS_SYSTEM]));
+        return new self(new Project(['group_id' => Project::DEFAULT_TEMPLATE_PROJECT_ID, 'status' => Project::STATUS_SYSTEM]));
     }
 
     private static function doesProjectStatusAllowUsageAsTemplate(Project $project): bool

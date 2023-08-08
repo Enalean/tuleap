@@ -117,7 +117,7 @@ class DeleteController implements DispatchableWithRequest
 
     private function deleteFromAllProjects(HTTPRequest $request, BaseLayout $response, Project $project, Service $service): void
     {
-        if ((int) $project->getID() !== Project::ADMIN_PROJECT_ID) {
+        if ((int) $project->getID() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             return;
         }
 

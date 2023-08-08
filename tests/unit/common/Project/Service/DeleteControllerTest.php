@@ -84,9 +84,9 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
             ->with($project_admin, $this->project);
 
-        $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::ADMIN_PROJECT_ID]);
+        $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
         $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with((string) Project::ADMIN_PROJECT_ID)
+            ->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID)
             ->andReturn($this->default_template_project);
         $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
             ->with($project_admin, $this->default_template_project);
@@ -131,13 +131,13 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new Service($this->default_template_project, ['service_id' => $this->service_id, 'short_name' => 'homepage', 'scope' => Service::SCOPE_PROJECT])
         );
 
-        $this->service_dao->shouldReceive('delete')->with((string) Project::ADMIN_PROJECT_ID, $this->service_id)->andReturnTrue();
+        $this->service_dao->shouldReceive('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id)->andReturnTrue();
         $this->service_dao->shouldReceive('deleteFromAllProjects')->with('homepage')->once()->andReturnTrue();
 
         $this->layout->shouldReceive('addFeedback')->with(Feedback::INFO, M::any())->twice();
         $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::ADMIN_PROJECT_ID]);
+        $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
     }
 
     public function testItDoesNotAllowToDeleteSystemServices(): void

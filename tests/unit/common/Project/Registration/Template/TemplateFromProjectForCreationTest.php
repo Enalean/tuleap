@@ -85,7 +85,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationFromGlobalProjectTemplate(): void
     {
-        self::assertEquals(Project::ADMIN_PROJECT_ID, TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate()->getProject()->getID());
+        self::assertEquals(Project::DEFAULT_TEMPLATE_PROJECT_ID, TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate()->getProject()->getID());
     }
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateDoesNotExist(): void

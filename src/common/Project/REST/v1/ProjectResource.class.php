@@ -830,7 +830,7 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(403, 'You are not allowed to change the status of a project');
         }
 
-        if ($id > 0 && $id <= Project::ADMIN_PROJECT_ID) {
+        if ($id > 0 && $id <= Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             throw new RestException(403, 'You are not allowed to change the status of a system project.');
         }
 

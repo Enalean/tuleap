@@ -455,7 +455,10 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
         $webhook_emitter->emit($project_created_payload, ...$webhooks);
     }
 
-    public function updateStatus(Project $project, $status)
+    /**
+     * @throws DeletedProjectStatusChangeException
+     */
+    public function updateStatus(Project $project, string $status): void
     {
         if ($project->getStatus() === Project::STATUS_DELETED) {
             throw new DeletedProjectStatusChangeException();
@@ -468,7 +471,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
         $this->removeProjectFromCache($project);
     }
 
-    public function removeProjectFromCache(Project $project)
+    public function removeProjectFromCache(Project $project): void
     {
         $project_id = $project->getID();
 
