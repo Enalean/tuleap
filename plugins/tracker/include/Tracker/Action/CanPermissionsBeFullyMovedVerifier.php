@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -31,9 +32,11 @@ final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBe
         Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
         Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_PermissionsOnArtifact) {
+            $logger->debug(sprintf("Last changeset value is not a permission on artifact for field #%d (%s)", $source_field->getId(), $source_field->getName()));
             return false;
         }
 
@@ -42,6 +45,7 @@ final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBe
 
         foreach ($selected_user_groups as $selected_user_group) {
             if (! in_array($selected_user_group, $destination_user_groups, true)) {
+                $logger->debug(sprintf("User group %s is not a possible value of field #%d (%s)", $selected_user_group, $destination_field->getId(), $destination_field->getName()));
                 return false;
             }
         }

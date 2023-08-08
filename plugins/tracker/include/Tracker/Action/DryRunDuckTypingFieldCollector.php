@@ -78,6 +78,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             }
 
             if ($destination_field->isUpdateable() && ! $destination_field->userCanUpdate($user)) {
+                $logger->debug(sprintf("User #%d (%s) can not update field #%d (%s) of project #%d", $user->getId(), $user->getUserName(), $destination_field->getId(), $destination_field->getName(), $destination_tracker->getGroupId()));
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
             }
@@ -102,7 +103,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
                 assert($destination_field instanceof \Tracker_FormElement_Field_OpenList);
-                $this->collectOpenListFields($source_field, $destination_field);
+                $this->collectOpenListFields($source_field, $destination_field, $logger);
                 continue;
             }
 
@@ -112,7 +113,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($destination_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectStaticFields($source_field, $destination_field, $artifact);
+                $this->collectStaticFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
 
@@ -122,7 +123,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($destination_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserBoundFields($source_field, $destination_field, $artifact);
+                $this->collectUserBoundFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
 
@@ -132,7 +133,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_List);
                 assert($destination_field instanceof \Tracker_FormElement_Field_List);
-                $this->collectUserGroupBoundFields($source_field, $destination_field, $artifact);
+                $this->collectUserGroupBoundFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
 
@@ -142,7 +143,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
             ) {
                 assert($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
                 assert($destination_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
-                $this->collectPermissionsOnArtifactFields($source_field, $destination_field, $artifact);
+                $this->collectPermissionsOnArtifactFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
 
@@ -159,13 +160,15 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
+            $logger->debug(sprintf("Static source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_static_field_values_can_be_fully_moved->canAllStaticFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+        if (! $this->verify_static_field_values_can_be_fully_moved->canAllStaticFieldValuesBeMoved($source_field, $destination_field, $artifact, $logger)) {
             $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
@@ -177,13 +180,15 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
+            $logger->debug(sprintf("User source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_user_field_values_can_be_fully_moved->canAllUserFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+        if (! $this->verify_user_field_values_can_be_fully_moved->canAllUserFieldValuesBeMoved($source_field, $destination_field, $artifact, $logger)) {
             $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
@@ -195,13 +200,15 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): void {
         if (! $this->verify_list_fields_are_compatible->areListFieldsCompatible($source_field, $destination_field)) {
+            $logger->debug(sprintf("UGroup source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_user_group_field_values_can_be_fully_moved->canAllUserGroupFieldValuesBeMoved($source_field, $destination_field, $artifact)) {
+        if (! $this->verify_user_group_field_values_can_be_fully_moved->canAllUserGroupFieldValuesBeMoved($source_field, $destination_field, $artifact, $logger)) {
             $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
@@ -213,13 +220,15 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         \Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
         \Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): void {
         if (! $this->verify_are_permissions_to_migrate->areTherePermissionsToMigrate($source_field, $artifact)) {
+            $logger->debug("There is no permission on artifact to migrate");
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }
 
-        if (! $this->verify_permissions_can_be_fully_moved->canAllPermissionsBeFullyMoved($source_field, $destination_field, $artifact)) {
+        if (! $this->verify_permissions_can_be_fully_moved->canAllPermissionsBeFullyMoved($source_field, $destination_field, $artifact, $logger)) {
             $this->addFieldToPartiallyMigratedList($source_field, $destination_field);
             return;
         }
@@ -230,8 +239,10 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     private function collectOpenListFields(
         \Tracker_FormElement_Field_OpenList $source_field,
         \Tracker_FormElement_Field_OpenList $destination_field,
+        LoggerInterface $logger,
     ): void {
         if (! $this->verify_open_list_fields_are_compatible->areOpenListFieldsCompatible($source_field, $destination_field)) {
+            $logger->debug(sprintf("Open list source field #%d (%s) and destination #%d (%s) does not have the same bound type", $source_field->getId(), $source_field->getName(), $destination_field->getId(), $destination_field->getName()));
             $this->addFieldToNotMigrateableList($source_field);
             return;
         }

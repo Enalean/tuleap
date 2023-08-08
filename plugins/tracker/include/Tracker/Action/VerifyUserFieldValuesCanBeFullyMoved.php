@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 
 interface VerifyUserFieldValuesCanBeFullyMoved
@@ -28,5 +29,6 @@ interface VerifyUserFieldValuesCanBeFullyMoved
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): bool;
 }

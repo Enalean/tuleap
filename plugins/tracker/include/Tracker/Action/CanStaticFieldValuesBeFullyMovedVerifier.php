@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
+use Psr\Log\LoggerInterface;
+use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingBindValueByDuckTyping;
 
@@ -35,21 +37,25 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
         \Tracker_FormElement_Field_List $source_field,
         \Tracker_FormElement_Field_List $destination_field,
         Artifact $artifact,
+        LoggerInterface $logger,
     ): bool {
         $last_changeset_value = $source_field->getLastChangesetValue($artifact);
         if (! $last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
+            $logger->error(sprintf("Last changeset value is not a list for field #%d", $source_field->getId()));
             return false;
         }
 
         $list_field_values = array_values($last_changeset_value->getListValues());
 
         foreach ($list_field_values as $value) {
+            assert($value instanceof Tracker_FormElement_Field_List_BindValue);
             $list_bind_value = $this->retrieve_matching_bind_value_by_duck_typing->getMatchingBindValueByDuckTyping(
                 $value,
                 $destination_field
             );
 
             if ($list_bind_value === null) {
+                $logger->debug(sprintf("Value %s not found in destination field #%d (%s)", $value->getId(), $destination_field->getId(), $destination_field->getName()));
                 return false;
             }
         }

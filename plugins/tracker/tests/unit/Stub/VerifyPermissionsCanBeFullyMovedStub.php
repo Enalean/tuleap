@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Action\VerifyPermissionsCanBeFullyMoved;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,7 +43,7 @@ final class VerifyPermissionsCanBeFullyMovedStub implements VerifyPermissionsCan
         return new self(true);
     }
 
-    public function canAllPermissionsBeFullyMoved(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Tracker_FormElement_Field_PermissionsOnArtifact $destination_field, Artifact $artifact): bool
+    public function canAllPermissionsBeFullyMoved(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Tracker_FormElement_Field_PermissionsOnArtifact $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         return $this->will_be_fully_moved;
     }

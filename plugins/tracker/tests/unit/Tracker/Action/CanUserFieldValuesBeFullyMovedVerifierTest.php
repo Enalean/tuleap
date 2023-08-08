@@ -21,6 +21,7 @@
 namespace Tuleap\Document\Tests\Action;
 
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -38,9 +39,13 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
 
     protected function setUp(): void
     {
-        $this->user              = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
-        $this->source_field      = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
+        $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->source_field->method('getId')->willReturn("123");
+        $this->source_field->method('getName')->willReturn("User");
         $this->destination_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->destination_field->method('getId')->willReturn("456");
+        $this->destination_field->method('getName')->willReturn("User");
 
         $this->changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $this->artifact        = $this->createStub(Artifact::class);
@@ -60,7 +65,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->build());
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
     }
 
     public function testUserCanNotBeMovedWhenUserIsNotFound(): void
@@ -72,7 +77,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
         ]);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
     }
 
     public function testUserCanNotBeMovedWhenUserIsAnonymous(): void
@@ -84,7 +89,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
             new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
         ]);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
     }
 
     public function testUserCanNotBeMovedWhenUserDoesNotExistsInTarget(): void
@@ -97,7 +102,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         ]);
         $this->destination_field->method('checkValueExists')->willReturn(false);
 
-        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
+        $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
     }
 
     public function testUserCanBeMoved(): void
@@ -110,6 +115,6 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         ]);
         $this->destination_field->method('checkValueExists')->willReturn(true);
 
-        $this->assertTrue($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact));
+        $this->assertTrue($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
     }
 }
