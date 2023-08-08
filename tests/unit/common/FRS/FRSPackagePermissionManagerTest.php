@@ -24,25 +24,26 @@ namespace Tuleap\FRS;
 
 use FRSPackage;
 use FRSPackageFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+class FRSPackagePermissionManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var FRSPermissionManager
+     * @var MockObject&FRSPermissionManager
      */
     private $permission_manager;
 
     /**
-     * @var \FRSPackageFactory
+     * @var MockObject&FRSPackageFactory
      */
     private $package_factory;
 
     /**
-     * @var \FRSPackage
+     * @var MockObject&FRSPackage
      */
     private $package;
 
@@ -52,35 +53,35 @@ class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $package_permission_manager;
 
     /**
-     * @var \PFUser
+     * @var PFUser
      */
     private $user;
 
     /**
-     * @var \Project
+     * @var Project
      */
     private $project;
 
     public function setUp(): void
     {
-        $this->permission_manager = \Mockery::mock(FRSPermissionManager::class);
-        $this->package_factory    = \Mockery::mock(FRSPackageFactory::class);
+        $this->permission_manager = $this->createMock(FRSPermissionManager::class);
+        $this->package_factory    = $this->createMock(FRSPackageFactory::class);
 
         $this->package_permission_manager = new PackagePermissionManager(
             $this->permission_manager,
             $this->package_factory
         );
 
-        $this->user    = \Mockery::mock(PFUser::class);
-        $this->project = new \Project(['group_id' => 101]);
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $this->project = new Project(['group_id' => 101]);
     }
 
     public function testItReturnsTrueWhenPackageIsHiddenAndUserIsFrsAdmin(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
-        $this->package_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getId())->andReturnTrue();
+        $this->package_factory->method('userCanAdmin')->with($this->user, $this->project->getId())->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
         );
     }
@@ -88,9 +89,9 @@ class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenPackageIsHiddenAndUserDoesntHaveAdminPermissions(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
-        $this->package_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getId())->andReturnFalse();
+        $this->package_factory->method('userCanAdmin')->with($this->user, $this->project->getId())->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
         );
     }
@@ -98,9 +99,9 @@ class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWhenPackageIsActiveAndUserCanAccessFrsService(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturnTrue();
+        $this->permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
         );
     }
@@ -108,9 +109,9 @@ class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenPackageIsActiveAndUserCannotAccessFrsService(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturnFalse();
+        $this->permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
         );
     }
