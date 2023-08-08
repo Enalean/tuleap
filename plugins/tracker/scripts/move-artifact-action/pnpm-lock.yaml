@@ -8,21 +8,27 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/fp-feedback':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fp-feedback
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../lib/frontend/list-picker
-  '@tuleap/tlp-fetch':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/vue-strict-inject':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
   vue:
     specifier: ^3.3.4
     version: 3.3.4
@@ -514,6 +520,10 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
 
   /nopt@6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}

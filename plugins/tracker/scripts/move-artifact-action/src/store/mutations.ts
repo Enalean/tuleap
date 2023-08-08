@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Fault } from "@tuleap/fault";
 import { default_state } from "./state";
 import type { RootState, DryRunState, Tracker, Project } from "./types";
 
@@ -83,8 +84,8 @@ export const resetError = (state: RootState): void => {
     state.error_message = "";
 };
 
-export const setErrorMessage = (state: RootState, error_message: string): void => {
-    state.error_message = error_message;
+export const setErrorMessage = (state: RootState, fault: Fault): void => {
+    state.error_message = String(fault);
 };
 
 export const switchToProcessingMove = (state: RootState): void => {

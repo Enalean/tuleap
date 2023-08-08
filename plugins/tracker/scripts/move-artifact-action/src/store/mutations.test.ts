@@ -18,6 +18,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { Fault } from "@tuleap/fault";
 import * as mutations from "./mutations";
 import type { ArtifactField, DryRunState, Project, RootState, Tracker } from "./types";
 import { default_state } from "./state";
@@ -137,7 +138,7 @@ describe("mutations", () => {
     it("setErrorMessage() should store the given error message", () => {
         const state = { error_message: "" } as RootState;
 
-        mutations.setErrorMessage(state, "Oh snap!");
+        mutations.setErrorMessage(state, Fault.fromMessage("Oh snap!"));
 
         expect(state.error_message).toBe("Oh snap!");
     });

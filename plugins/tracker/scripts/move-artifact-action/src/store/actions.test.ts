@@ -19,31 +19,17 @@
 
 import { vi, describe, beforeEach, it, expect } from "vitest";
 import type { SpyInstance } from "vitest";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions";
 import * as rest_querier from "../api/rest-querier";
 import * as window_helper from "../window-helper";
 
 import type { Context, RootState, Project, Tracker, DryRunState } from "./types";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const artifact_id = 101,
     tracker_id = 5,
     project_id = 106;
-
-function buildFetchWrapperError(): FetchWrapperError {
-    return new FetchWrapperError("", {
-        ok: false,
-        status: 403,
-        statusText: "",
-        json: () =>
-            Promise.resolve({
-                error: {
-                    code: "403",
-                    message: "error",
-                },
-            }),
-    } as Response);
-}
 
 describe("Store actions", () => {
     let context: Context, redirectTo: SpyInstance;
@@ -72,7 +58,7 @@ describe("Store actions", () => {
                 },
             ];
 
-            getProjectList.mockReturnValue(Promise.resolve(projects));
+            getProjectList.mockReturnValue(okAsync(projects));
 
             await loadProjectList(context);
 
@@ -81,10 +67,11 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            getProjectList.mockReturnValue(Promise.reject(buildFetchWrapperError()));
+            const api_error = Fault.fromMessage("error");
+            getProjectList.mockReturnValue(errAsync(api_error));
 
             await loadProjectList(context);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
         });
     });
 
@@ -105,7 +92,7 @@ describe("Store actions", () => {
                 },
             ];
 
-            getTrackerList.mockReturnValue(Promise.resolve(trackers));
+            getTrackerList.mockReturnValue(okAsync(trackers));
 
             await loadTrackerList(context, project_id);
 
@@ -118,10 +105,11 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            getTrackerList.mockReturnValue(Promise.reject(buildFetchWrapperError()));
+            const api_error = Fault.fromMessage("error");
+            getTrackerList.mockReturnValue(errAsync(api_error));
 
             await loadTrackerList(context, 10);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
         });
     });
 
@@ -132,7 +120,7 @@ describe("Store actions", () => {
         });
 
         it("When I want to process the move, Then it should process move.", async () => {
-            moveArtifact.mockReturnValue(Promise.resolve());
+            moveArtifact.mockReturnValue(okAsync({}));
             context.state.selected_tracker_id = tracker_id;
 
             await move(context, artifact_id);
@@ -141,12 +129,13 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            moveArtifact.mockReturnValue(Promise.reject(buildFetchWrapperError()));
+            const api_error = Fault.fromMessage("error");
+            moveArtifact.mockReturnValue(errAsync(api_error));
 
             context.state.selected_tracker_id = tracker_id;
 
             await move(context, artifact_id);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
             expect(redirectTo).not.toHaveBeenCalled();
         });
     });
@@ -186,7 +175,9 @@ describe("Store actions", () => {
             };
 
             moveDryRunArtifact.mockReturnValue(
-                Promise.resolve({ json: () => ({ dry_run: { fields } }) })
+                okAsync({
+                    dry_run: { fields },
+                })
             );
 
             context.state.selected_tracker_id = tracker_id;
@@ -210,13 +201,12 @@ describe("Store actions", () => {
                 fields_partially_migrated: [],
                 fields_migrated: [],
             };
-            const return_json = {
-                dry_run: {
-                    fields,
-                },
-            };
 
-            moveDryRunArtifact.mockReturnValue(Promise.resolve({ json: () => return_json }));
+            moveDryRunArtifact.mockReturnValue(
+                okAsync({
+                    dry_run: { fields },
+                })
+            );
 
             context.state.selected_tracker_id = 5;
 
@@ -245,8 +235,8 @@ describe("Store actions", () => {
                 },
             };
 
-            moveDryRunArtifact.mockReturnValue(Promise.resolve({ json: () => return_json }));
-            moveArtifact.mockReturnValue(Promise.resolve());
+            moveDryRunArtifact.mockReturnValue(okAsync(return_json));
+            moveArtifact.mockReturnValue(okAsync({}));
 
             context.state.selected_tracker_id = tracker_id;
 
@@ -255,7 +245,7 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
             expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
             expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
-            expect(redirectTo).toHaveBeenCalledWith("/plugins/tracker/?aid=" + artifact_id);
+            expect(redirectTo).toHaveBeenCalledWith(`/plugins/tracker/?aid=${artifact_id}`);
         });
     });
 });
