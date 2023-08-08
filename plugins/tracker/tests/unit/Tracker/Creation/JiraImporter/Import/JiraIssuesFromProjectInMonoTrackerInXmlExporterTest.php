@@ -27,7 +27,7 @@ use DOMDocument;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\JiraImport\Project\CreateProjectFromJira;
+use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
@@ -104,7 +104,6 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
         $root = vfsStream::setup();
 
         \ForgeConfig::set('tmp_dir', $root->url());
-        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE, 1);
 
         $logger = new NullLogger();
 
@@ -312,6 +311,7 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
             ],
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
+            CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE,
         );
 
         // Uncomment below to update the fixture

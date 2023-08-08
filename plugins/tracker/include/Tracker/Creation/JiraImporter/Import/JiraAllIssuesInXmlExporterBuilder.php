@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\JiraImport\Project\CreateProjectFromJira;
+use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
@@ -34,8 +34,9 @@ final class JiraAllIssuesInXmlExporterBuilder
         JiraClient $jira_client,
         LoggerInterface $logger,
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
+        string $import_mode,
     ): JiraAllIssuesInXmlExporter {
-        if (\ForgeConfig::getFeatureFlag(CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
+        if ($import_mode === CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE) {
             return JiraAllIssuesMonoTrackersInXmlExporter::build(
                 $jira_client,
                 $logger,

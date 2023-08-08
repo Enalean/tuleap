@@ -122,6 +122,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
                 $tuleap_project_name,
                 $tuleap_project_name,
                 $project_visibility,
+                CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE,
                 $input->getOption('epic-name'),
                 $jira_board_id,
             )->match(

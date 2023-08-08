@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\JiraImport\Project\CreateProjectFromJira;
+use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -64,6 +64,7 @@ class JiraToTuleapFieldTypeMapper
         IDGenerator $id_generator,
         PlatformConfiguration $platform_configuration,
         FieldMappingCollection $jira_field_mapping_collection,
+        string $import_mode,
     ): XMLTracker {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
@@ -322,7 +323,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case AlwaysThereFieldsExporter::JIRA_ISSUE_TYPE_NAME:
-                    if (! \ForgeConfig::getFeatureFlag(CreateProjectFromJira::FLAG_JIRA_IMPORT_MONO_TRACKER_MODE)) {
+                    if ($import_mode !== CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE) {
                         break;
                     }
 

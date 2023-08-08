@@ -44,5 +44,6 @@ interface JiraAllIssuesInXmlExporter
         array $jira_issue_types,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
+        string $import_mode,
     ): void;
 }
