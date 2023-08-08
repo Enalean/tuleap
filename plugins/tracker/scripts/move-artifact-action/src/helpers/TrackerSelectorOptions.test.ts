@@ -18,18 +18,27 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { shallowMount } from "@vue/test-utils";
-import DryRunPreview from "./DryRunPreview.vue";
-import DryRunNotMigratedFieldState from "./DryRunNotMigratedFieldState.vue";
-import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
-import DryRunFullyMigratedFieldState from "./DryRunFullyMigratedFieldState.vue";
+import type { Tracker } from "../store/types";
+import { TrackerSelectorOptions } from "./TrackerSelectorOptions";
 
-describe("DryRunPreview", () => {
-    it("should display the dry run preview", () => {
-        const wrapper = shallowMount(DryRunPreview);
+describe("TrackerSelectorOptions", () => {
+    it("should return a list of trackers select options with the current one disabled", () => {
+        const current_tracker_id = 11;
+        const trackers: Tracker[] = [
+            {
+                id: 10,
+                label: "Tasks",
+            },
+            {
+                id: current_tracker_id,
+                label: "User stories",
+            },
+        ];
 
-        expect(wrapper.findComponent(DryRunNotMigratedFieldState).exists()).toBe(true);
-        expect(wrapper.findComponent(DryRunPartiallyMigratedFieldState).exists()).toBe(true);
-        expect(wrapper.findComponent(DryRunFullyMigratedFieldState).exists()).toBe(true);
+        const options = TrackerSelectorOptions.fromTrackers(trackers, current_tracker_id);
+
+        expect(options).toHaveLength(trackers.length);
+        expect(options[0].disabled).toBe(false);
+        expect(options[1].disabled).toBe(true);
     });
 });

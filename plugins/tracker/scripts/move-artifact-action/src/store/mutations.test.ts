@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import * as mutations from "./mutations";
 import type { ArtifactField, DryRunState, Project, RootState, Tracker } from "./types";
 import { default_state } from "./state";
@@ -80,7 +81,6 @@ describe("mutations", () => {
         const tracker: Tracker = {
             id: 10,
             label: "Tasks",
-            disabled: false,
         };
 
         mutations.saveTrackers(state, [tracker]);

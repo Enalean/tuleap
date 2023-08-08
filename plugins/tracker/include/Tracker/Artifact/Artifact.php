@@ -92,6 +92,7 @@ use Tuleap;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\TooltipJSON;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -578,12 +579,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this, $action_buttons_fetcher);
 
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
+        $include_assets = new Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../../../scripts/move-artifact-action/frontend-assets',
             '/assets/trackers/move-artifact-action'
         );
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
+
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, "src/modal.ts"));
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
             $GLOBALS['HTML']->addJavascriptAsset($additional_action->asset);
         }

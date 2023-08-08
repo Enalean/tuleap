@@ -20,27 +20,21 @@
 <template>
     <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
         <i class="fa fa-share"></i>
-        <translate class="modal-move-artifact-icon-title">Move</translate>
-        <span v-bind:class="artifact_badge_class" data-test="artifact-xref">
-            {{ artifact_badge_tracker_name }} #{{ artifact_badge_artifact_id }}
+        <span class="modal-move-artifact-icon-title">{{ $gettext("Move") }}</span>
+        <span v-bind:class="`${tracker_color} xref-in-title`" data-test="artifact-xref">
+            {{ tracker_name }} #{{ artifact_id }}
         </span>
     </h3>
 </template>
 
-<script>
-import { getTrackerName, getTrackerColor, getArtifactId } from "../from-tracker-presenter";
-export default {
-    name: "MoveModalTitle",
-    computed: {
-        artifact_badge_class() {
-            return getTrackerColor() + " xref-in-title";
-        },
-        artifact_badge_tracker_name() {
-            return getTrackerName();
-        },
-        artifact_badge_artifact_id() {
-            return getArtifactId();
-        },
-    },
-};
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { ARTIFACT_ID, TRACKER_COLOR, TRACKER_NAME } from "../injection-symbols";
+
+const { $gettext } = useGettext();
+
+const artifact_id: number = strictInject(ARTIFACT_ID);
+const tracker_name: string = strictInject(TRACKER_NAME);
+const tracker_color: string = strictInject(TRACKER_COLOR);
 </script>

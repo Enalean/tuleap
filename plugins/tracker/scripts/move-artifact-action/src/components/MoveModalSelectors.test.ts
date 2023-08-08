@@ -17,21 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import type { RootState } from "../store/types";
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
 
-const getWrapper = (state: RootState): Wrapper<MoveModalSelectors> =>
+const getWrapper = (state: RootState): VueWrapper =>
     shallowMount(MoveModalSelectors, {
-        mocks: {
-            $store: createStoreMock({
-                state: state,
-            }),
+        global: {
+            ...getGlobalTestOptions(state),
         },
     });
 

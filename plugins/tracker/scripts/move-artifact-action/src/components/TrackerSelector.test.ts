@@ -17,67 +17,79 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import { vi, describe, beforeEach, it, expect } from "vitest";
+import type { SpyInstance } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { MutationTree } from "vuex";
 import * as list_picker from "@tuleap/list-picker";
-import type { ListPicker } from "@tuleap/list-picker/src";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
-import type { Tracker } from "../store/types";
-
+import type { ListPicker } from "@tuleap/list-picker";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { getGlobalTestOptionsWithMockedStore } from "../../tests/global-options-for-tests";
+import type { RootState, Tracker } from "../store/types";
 import TrackerSelector from "./TrackerSelector.vue";
+import { TRACKER_ID } from "../injection-symbols";
 
-const getWrapper = async (store: Store): Promise<Wrapper<TrackerSelector>> =>
-    shallowMount(TrackerSelector, {
-        localVue: await createMoveModalLocalVue(),
-        mocks: {
-            $store: store,
-        },
-    });
-
-const disabled_tracker: Tracker = {
-    id: 10,
-    label: "Tasks",
-    disabled: true,
-};
-
-const tracker_list_with_disabled_from: Tracker[] = [
-    disabled_tracker,
+const current_tracker_id = 10;
+const trackers: Tracker[] = [
+    {
+        id: current_tracker_id,
+        label: "Tasks",
+    },
     {
         id: 11,
         label: "Epics",
-        disabled: false,
     },
 ];
 
+vi.mock("@tuleap/vue-strict-inject");
+
 describe("TrackerSelector", () => {
-    let store: Store, createListPicker: jest.SpyInstance, list_picker_instance: ListPicker;
+    let createListPicker: SpyInstance,
+        list_picker_instance: ListPicker,
+        saveSelectedTrackerId: SpyInstance;
+
+    const getWrapper = (tracker_id: number): VueWrapper => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            if (key !== TRACKER_ID) {
+                throw new Error(`Tried to inject ${key} while it was not mocked.`);
+            }
+
+            return tracker_id;
+        });
+
+        return shallowMount(TrackerSelector, {
+            global: {
+                ...getGlobalTestOptionsWithMockedStore({
+                    state: {
+                        trackers,
+                    } as RootState,
+                    mutations: { saveSelectedTrackerId } as unknown as MutationTree<RootState>,
+                }),
+            },
+        });
+    };
 
     beforeEach(() => {
         list_picker_instance = {
-            destroy: jest.fn(),
+            destroy: vi.fn(),
         };
-        createListPicker = jest
+        createListPicker = vi
             .spyOn(list_picker, "createListPicker")
             .mockReturnValue(list_picker_instance);
 
-        store = createStoreMock({
-            getters: {
-                tracker_list_with_disabled_from,
-            },
-        });
+        saveSelectedTrackerId = vi.fn();
     });
 
-    it("should create a list-picker on its <select> input once mounted", async () => {
-        await getWrapper(store);
+    it("should create a list-picker on its <select> input once mounted", () => {
+        getWrapper(current_tracker_id);
 
         expect(createListPicker).toHaveBeenCalledTimes(1);
     });
 
     it(`Given that the displayed trackers come from the same project as the artifact to move
-        Then the <select>'s label should have a title containing a warning`, async () => {
-        const wrapper = await getWrapper(store);
+        Then the <select>'s label should have a title containing a warning`, () => {
+        const wrapper = getWrapper(current_tracker_id);
 
         expect(wrapper.find("[data-test=tracker-selector-label]").attributes("title")).toBe(
             "An artifact cannot be moved in the same tracker"
@@ -85,35 +97,33 @@ describe("TrackerSelector", () => {
     });
 
     it(`Given that the displayed trackers come from a different project than the artifact to move
-        Then the <select>'s label should not have a title containing a warning`, async () => {
-        disabled_tracker.disabled = false;
-
-        const wrapper = await getWrapper(store);
+        Then the <select>'s label should not have a title containing a warning`, () => {
+        const wrapper = getWrapper(current_tracker_id + 10);
 
         expect(wrapper.find("[data-test=tracker-selector-label]").attributes("title")).toBe("");
     });
 
-    it("the <select> should display the trackers", async () => {
-        const wrapper = await getWrapper(store);
+    it("the <select> should display the trackers", () => {
+        const wrapper = getWrapper(current_tracker_id);
         const select = wrapper.find<HTMLSelectElement>(
             "[data-test=move-artifact-tracker-selector]"
         ).element;
 
-        expect(select.options).toHaveLength(tracker_list_with_disabled_from.length);
+        expect(select.options).toHaveLength(trackers.length);
 
         const select_options = Array.from(select.options);
 
-        expect(select_options[0].value).toBe(String(tracker_list_with_disabled_from[0].id));
-        expect(select_options[0].label).toBe(tracker_list_with_disabled_from[0].label);
-        expect(select_options[0].disabled).toBe(tracker_list_with_disabled_from[0].disabled);
+        expect(select_options[0].value).toBe(String(trackers[0].id));
+        expect(select_options[0].label).toBe(trackers[0].label);
+        expect(select_options[0].disabled).toBe(true);
 
-        expect(select_options[1].value).toBe(String(tracker_list_with_disabled_from[1].id));
-        expect(select_options[1].label).toBe(tracker_list_with_disabled_from[1].label);
-        expect(select_options[1].disabled).toBe(tracker_list_with_disabled_from[1].disabled);
+        expect(select_options[1].value).toBe(String(trackers[1].id));
+        expect(select_options[1].label).toBe(trackers[1].label);
+        expect(select_options[1].disabled).toBe(false);
     });
 
-    it("When a tracker is selected, then the selected tracker's id should be commited", async () => {
-        const wrapper = await getWrapper(store);
+    it("When a tracker is selected, then the selected tracker's id should be commited", () => {
+        const wrapper = getWrapper(current_tracker_id);
         const select_wrapper = wrapper.find<HTMLSelectElement>(
             "[data-test=move-artifact-tracker-selector]"
         );
@@ -121,16 +131,13 @@ describe("TrackerSelector", () => {
         select_wrapper.element.selectedIndex = 1;
         select_wrapper.trigger("change");
 
-        expect(store.commit).toHaveBeenCalledWith(
-            "saveSelectedTrackerId",
-            tracker_list_with_disabled_from[1].id
-        );
+        expect(saveSelectedTrackerId).toHaveBeenCalledWith(expect.any(Object), trackers[1].id);
     });
 
-    it("When the component is about to be destroyed, then the list picker instance should be destroyed.", async () => {
-        const wrapper = await getWrapper(store);
+    it("When the component is about to be destroyed, then the list picker instance should be destroyed.", () => {
+        const wrapper = getWrapper(current_tracker_id);
 
-        wrapper.destroy();
+        wrapper.unmount();
 
         expect(list_picker_instance.destroy).toHaveBeenCalled();
     });

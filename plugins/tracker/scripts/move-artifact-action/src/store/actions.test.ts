@@ -17,34 +17,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { vi, describe, beforeEach, it, expect } from "vitest";
+import type { SpyInstance } from "vitest";
 import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions";
 import * as rest_querier from "../api/rest-querier";
 import * as window_helper from "../window-helper";
 
 import type { Context, RootState, Project, Tracker, DryRunState } from "./types";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const artifact_id = 101,
     tracker_id = 5,
     project_id = 106;
 
+function buildFetchWrapperError(): FetchWrapperError {
+    return new FetchWrapperError("", {
+        ok: false,
+        status: 403,
+        statusText: "",
+        json: () =>
+            Promise.resolve({
+                error: {
+                    code: "403",
+                    message: "error",
+                },
+            }),
+    } as Response);
+}
+
 describe("Store actions", () => {
-    let context: Context, redirectTo: jest.SpyInstance;
+    let context: Context, redirectTo: SpyInstance;
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
+            commit: vi.fn(),
             state: {} as RootState,
         } as unknown as Context;
-        redirectTo = jest.spyOn(window_helper, "redirectTo").mockImplementation((): void => {
+        redirectTo = vi.spyOn(window_helper, "redirectTo").mockImplementation((): void => {
             // Do nothing
         });
     });
 
     describe("loadProjectList", () => {
-        let getProjectList: jest.SpyInstance;
+        let getProjectList: SpyInstance;
 
         beforeEach(() => {
-            getProjectList = jest.spyOn(rest_querier, "getProjectList");
+            getProjectList = vi.spyOn(rest_querier, "getProjectList");
         });
 
         it("When I want to load the project, Then it should fetch them asynchronously and put them in the store.", async () => {
@@ -64,13 +81,7 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            const error_json = {
-                error: {
-                    code: "403",
-                    message: "error",
-                },
-            };
-            mockFetchError(getProjectList, { error_json });
+            getProjectList.mockReturnValue(Promise.reject(buildFetchWrapperError()));
 
             await loadProjectList(context);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
@@ -78,9 +89,9 @@ describe("Store actions", () => {
     });
 
     describe("loadTrackerList", () => {
-        let getTrackerList: jest.SpyInstance;
+        let getTrackerList: SpyInstance;
         beforeEach(() => {
-            getTrackerList = jest.spyOn(rest_querier, "getTrackerList");
+            getTrackerList = vi.spyOn(rest_querier, "getTrackerList");
             context.state = {
                 selected_project_id: 101,
             } as RootState;
@@ -91,7 +102,6 @@ describe("Store actions", () => {
                 {
                     id: 10,
                     label: "Tracker name",
-                    disabled: false,
                 },
             ];
 
@@ -108,14 +118,7 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            mockFetchError(getTrackerList, {
-                error_json: {
-                    error: {
-                        code: "403",
-                        message: "error",
-                    },
-                },
-            });
+            getTrackerList.mockReturnValue(Promise.reject(buildFetchWrapperError()));
 
             await loadTrackerList(context, 10);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
@@ -123,9 +126,9 @@ describe("Store actions", () => {
     });
 
     describe("move", () => {
-        let moveArtifact: jest.SpyInstance;
+        let moveArtifact: SpyInstance;
         beforeEach(() => {
-            moveArtifact = jest.spyOn(rest_querier, "moveArtifact");
+            moveArtifact = vi.spyOn(rest_querier, "moveArtifact");
         });
 
         it("When I want to process the move, Then it should process move.", async () => {
@@ -138,14 +141,7 @@ describe("Store actions", () => {
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            mockFetchError(moveArtifact, {
-                error_json: {
-                    error: {
-                        code: "403",
-                        message: "error",
-                    },
-                },
-            });
+            moveArtifact.mockReturnValue(Promise.reject(buildFetchWrapperError()));
 
             context.state.selected_tracker_id = tracker_id;
 
@@ -156,12 +152,12 @@ describe("Store actions", () => {
     });
 
     describe("move dry run", () => {
-        let moveDryRunArtifact: jest.SpyInstance, moveArtifact: jest.SpyInstance;
+        let moveDryRunArtifact: SpyInstance, moveArtifact: SpyInstance;
 
         beforeEach(() => {
-            moveDryRunArtifact = jest.spyOn(rest_querier, "moveDryRunArtifact");
+            moveDryRunArtifact = vi.spyOn(rest_querier, "moveDryRunArtifact");
 
-            moveArtifact = jest.spyOn(rest_querier, "moveArtifact");
+            moveArtifact = vi.spyOn(rest_querier, "moveArtifact");
         });
 
         it("When I process move in Dry run, if at least one field has en error, I store dry run has been processed in store", async () => {
@@ -189,13 +185,9 @@ describe("Store actions", () => {
                 ],
             };
 
-            mockFetchSuccess(moveDryRunArtifact, {
-                return_json: {
-                    dry_run: {
-                        fields,
-                    },
-                },
-            });
+            moveDryRunArtifact.mockReturnValue(
+                Promise.resolve({ json: () => ({ dry_run: { fields } }) })
+            );
 
             context.state.selected_tracker_id = tracker_id;
 
@@ -224,7 +216,7 @@ describe("Store actions", () => {
                 },
             };
 
-            mockFetchSuccess(moveDryRunArtifact, { return_json });
+            moveDryRunArtifact.mockReturnValue(Promise.resolve({ json: () => return_json }));
 
             context.state.selected_tracker_id = 5;
 
@@ -253,7 +245,7 @@ describe("Store actions", () => {
                 },
             };
 
-            mockFetchSuccess(moveDryRunArtifact, { return_json });
+            moveDryRunArtifact.mockReturnValue(Promise.resolve({ json: () => return_json }));
             moveArtifact.mockReturnValue(Promise.resolve());
 
             context.state.selected_tracker_id = tracker_id;

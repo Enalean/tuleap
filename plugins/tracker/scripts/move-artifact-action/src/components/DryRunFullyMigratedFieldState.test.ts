@@ -17,43 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import type { ArtifactField } from "../store/types";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ArtifactField, DryRunState, RootState } from "../store/types";
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import DryRunFullyMigratedFieldState from "./DryRunFullyMigratedFieldState.vue";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-const getWrapper = async (
-    fields_migrated: ArtifactField[]
-): Promise<Wrapper<DryRunFullyMigratedFieldState>> =>
+const getWrapper = (fields_migrated: ArtifactField[]): VueWrapper =>
     shallowMount(DryRunFullyMigratedFieldState, {
-        localVue: await createMoveModalLocalVue(),
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    dry_run_fields: {
-                        fields_migrated,
-                    },
-                },
-                getters: {
-                    fully_migrated_fields_count: fields_migrated.length,
-                },
-            }),
+        global: {
+            ...getGlobalTestOptions({
+                dry_run_fields: {
+                    fields_migrated,
+                } as DryRunState,
+            } as RootState),
         },
     });
 
 describe("DryRunFullyMigratedFieldState", () => {
-    it("should not display anything when there are no fully migrated fields.", async () => {
-        const wrapper = await getWrapper([]);
+    it("should not display anything when there are no fully migrated fields.", () => {
+        const wrapper = getWrapper([]);
 
         expect(wrapper.find("[data-test=dry-run-message-info]").exists()).toBe(false);
     });
 
-    it("should display the list of the fully migrated fields when there are some.", async () => {
-        const wrapper = await getWrapper([
+    it("should display the list of the fully migrated fields when there are some.", () => {
+        const wrapper = getWrapper([
             {
                 field_id: 123,
                 label: "A field",

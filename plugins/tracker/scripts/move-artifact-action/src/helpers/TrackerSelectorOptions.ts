@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import common from "./webpack.common.js";
-import { webpack_configurator } from "@tuleap/build-system-configurator";
+import type { Tracker } from "../store/types";
 
-export default webpack_configurator.extendDevConfiguration(common);
+export type TrackerSelectorOption = Tracker & {
+    disabled: boolean;
+};
+
+export const TrackerSelectorOptions = {
+    fromTrackers(trackers: Tracker[], current_tracker_id: number): TrackerSelectorOption[] {
+        return trackers.map((tracker: Tracker) => ({
+            ...tracker,
+            disabled: tracker.id === current_tracker_id,
+        }));
+    },
+};

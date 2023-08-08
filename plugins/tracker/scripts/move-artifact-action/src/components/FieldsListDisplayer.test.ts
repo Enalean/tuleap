@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import type { ArtifactField } from "../store/types";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ArtifactField, DryRunStateType } from "../store/types";
 
 import { shallowMount } from "@vue/test-utils";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import { TYPE_FULLY_MIGRATED, TYPE_NOT_MIGRATED, TYPE_PARTIALLY_MIGRATED } from "../store/types";
 
 const getFields = (count: number): ArtifactField[] => {
     const fields: ArtifactField[] = [];
@@ -40,37 +42,36 @@ const getFields = (count: number): ArtifactField[] => {
     return fields;
 };
 
-const getWrapper = async (
-    fields: ArtifactField[],
-    type: string
-): Promise<Wrapper<FieldsListDisplayer>> =>
+const getWrapper = (fields: ArtifactField[], type: DryRunStateType): VueWrapper =>
     shallowMount(FieldsListDisplayer, {
-        localVue: await createMoveModalLocalVue(),
-        propsData: {
+        global: {
+            ...getGlobalTestOptions(),
+        },
+        props: {
             fields,
             type,
         },
     });
 
 describe("FieldsListDisplayer", () => {
-    it("should only display the list of fields if there are 5 of them or less", async () => {
-        const wrapper = await getWrapper(getFields(5), "fully-migrated");
+    it("should only display the list of fields if there are 5 of them or less", () => {
+        const wrapper = getWrapper(getFields(5), "fully-migrated");
 
         expect(wrapper.findAll("[data-test=field-label]")).toHaveLength(5);
         expect(wrapper.find("[data-test=show-more-fields-button]").exists()).toBe(false);
     });
 
-    it("When there are more than 5 fields, then it should display only 5 fields and a [Show more] button", async () => {
-        const wrapper = await getWrapper(getFields(10), "fully-migrated");
+    it("When there are more than 5 fields, then it should display only 5 fields and a [Show more] button", () => {
+        const wrapper = getWrapper(getFields(10), "fully-migrated");
 
         expect(wrapper.findAll("[data-test=field-label]")).toHaveLength(5);
         expect(wrapper.find("[data-test=show-more-fields-button]").exists()).toBe(true);
     });
 
-    it.each([["fully-migrated"], ["partially-migrated"], ["not-migrated"]])(
+    it.each([[TYPE_FULLY_MIGRATED], [TYPE_PARTIALLY_MIGRATED], [TYPE_NOT_MIGRATED]])(
         "When the type of the fields %s, then [Show more] button classes should adapt",
-        async (type: string) => {
-            const wrapper = await getWrapper(getFields(6), type);
+        (type) => {
+            const wrapper = getWrapper(getFields(6), type);
 
             expect(wrapper.find("[data-test=show-more-fields-button]").classes()).toContain(
                 `move-artifact-display-more-field-${type}`
@@ -79,7 +80,7 @@ describe("FieldsListDisplayer", () => {
     );
 
     it("When the user clicks on [Show more], then all the fields are shown and the button disappears", async () => {
-        const wrapper = await getWrapper(getFields(10), "fully-migrated");
+        const wrapper = getWrapper(getFields(10), "fully-migrated");
 
         const show_more_button = wrapper.find("[data-test=show-more-fields-button]");
 

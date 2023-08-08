@@ -24,6 +24,7 @@
         role="dialog"
         aria-labelledby="modal-move-artifact-choose-trackers"
         aria-hidden="true"
+        ref="move_artifact_modal"
     >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -51,81 +52,111 @@
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal">
-                        <translate>Close</translate>
+                        {{ $gettext("Close") }}
                     </button>
                     <button
                         type="button"
                         class="btn btn-primary"
-                        v-on:click="moveDryRunArtifact()"
+                        v-on:click="moveDryRun(artifact_id)"
                         v-bind:disabled="has_no_selected_tracker || is_processing_move"
                         v-show="!has_processed_dry_run"
                         data-test="move-artifact"
                     >
                         <i class="fa fa-share"></i>
-                        <translate>Move artifact</translate>
+                        {{ $gettext("Move artifact") }}
                     </button>
                     <button
                         type="button"
                         class="btn btn-primary"
-                        v-on:click="moveArtifact()"
+                        v-on:click="move(artifact_id)"
                         v-bind:disabled="is_processing_move || !is_move_possible"
                         v-show="has_processed_dry_run"
                         data-test="confirm-move-artifact"
                     >
                         <i class="fa fa-check"></i>
-                        <translate>Confirm</translate>
+                        {{ $gettext("Confirm") }}
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import { useState, useMutations, useActions } from "vuex-composition-helpers";
 import $ from "jquery";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import DryRunPreview from "./DryRunPreview.vue";
-import { getArtifactId } from "../from-tracker-presenter";
+import type { RootState } from "../store/types";
+import type { RootActions } from "../store/actions";
+import type { RootMutations } from "../store/mutations";
+import { ARTIFACT_ID } from "../injection-symbols";
 
-export default {
-    name: "MoveModal",
-    components: {
-        DryRunPreview,
-        MoveModalTitle,
-        MoveModalSelectors,
-    },
-    computed: {
-        ...mapState([
-            "is_loading_initial",
-            "is_processing_move",
-            "is_move_possible",
-            "has_processed_dry_run",
-            "error_message",
-            "selected_tracker_id",
-        ]),
-        has_no_selected_tracker() {
-            return this.selected_tracker_id === null;
-        },
-    },
-    mounted() {
-        const $modal = $(this.$el);
-        $modal.on("show", () => {
-            this.$store.dispatch("loadProjectList");
-        });
-        $modal.on("hidden", () => {
-            this.$store.commit("resetState");
-            this.$el.remove();
-        });
-        $modal.modal();
-    },
-    methods: {
-        moveDryRunArtifact() {
-            return this.$store.dispatch("moveDryRun", getArtifactId());
-        },
-        moveArtifact() {
-            return this.$store.dispatch("move", getArtifactId());
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const artifact_id = strictInject(ARTIFACT_ID);
+const { resetState } = useMutations<Pick<RootMutations, "resetState">>(["resetState"]);
+const { moveDryRun, move, loadProjectList } = useActions<
+    Pick<RootActions, "moveDryRun" | "move" | "loadProjectList">
+>(["moveDryRun", "move", "loadProjectList"]);
+const {
+    is_loading_initial,
+    is_processing_move,
+    is_move_possible,
+    has_processed_dry_run,
+    error_message,
+    selected_tracker_id,
+} = useState<
+    Pick<
+        RootState,
+        | "is_loading_initial"
+        | "is_processing_move"
+        | "is_move_possible"
+        | "has_processed_dry_run"
+        | "error_message"
+        | "selected_tracker_id"
+    >
+>([
+    "is_loading_initial",
+    "is_processing_move",
+    "is_move_possible",
+    "has_processed_dry_run",
+    "error_message",
+    "selected_tracker_id",
+]);
+
+const move_artifact_modal = ref<HTMLElement>();
+const has_no_selected_tracker = computed(() => {
+    return selected_tracker_id.value === null;
+});
+
+const isAnHTMLElement = (element: unknown): element is HTMLElement =>
+    element instanceof HTMLElement;
+
+onMounted(() => {
+    if (!isAnHTMLElement(move_artifact_modal.value)) {
+        return;
+    }
+    const $modal = $(move_artifact_modal.value);
+
+    $modal.on("show", () => {
+        loadProjectList();
+    });
+    $modal.on("hidden", () => {
+        resetState();
+
+        if (!isAnHTMLElement(move_artifact_modal.value)) {
+            return;
+        }
+
+        move_artifact_modal.value.remove();
+    });
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    $modal.modal();
+});
 </script>

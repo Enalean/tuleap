@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { vi, describe, beforeEach, it, expect } from "vitest";
+import type { SpyInstance } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getProjectList, getTrackerList, moveArtifact, moveDryRunArtifact } from "./rest-querier";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
-jest.mock("@tuleap/tlp-fetch");
+vi.mock("@tuleap/tlp-fetch");
 
 describe("API querier", () => {
-    let recursiveGet: jest.SpyInstance, patch: jest.SpyInstance;
+    let recursiveGet: SpyInstance, patch: SpyInstance;
     beforeEach(() => {
-        recursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
+        recursiveGet = vi.spyOn(tlp_fetch, "recursiveGet");
 
-        patch = jest.spyOn(tlp_fetch, "patch");
+        patch = vi.spyOn(tlp_fetch, "patch");
     });
 
     describe("getProjectList", () => {

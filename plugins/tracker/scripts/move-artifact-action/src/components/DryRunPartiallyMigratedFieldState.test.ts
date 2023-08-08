@@ -17,43 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import type { ArtifactField } from "../store/types";
+import { describe, it, expect } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ArtifactField, DryRunState, RootState } from "../store/types";
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-const getWrapper = async (
-    fields_partially_migrated: ArtifactField[]
-): Promise<Wrapper<DryRunPartiallyMigratedFieldState>> =>
+const getWrapper = (fields_partially_migrated: ArtifactField[]): VueWrapper =>
     shallowMount(DryRunPartiallyMigratedFieldState, {
-        localVue: await createMoveModalLocalVue(),
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    dry_run_fields: {
-                        fields_partially_migrated,
-                    },
-                },
-                getters: {
-                    partially_migrated_fields_count: fields_partially_migrated.length,
-                },
-            }),
+        global: {
+            ...getGlobalTestOptions({
+                dry_run_fields: {
+                    fields_partially_migrated,
+                } as DryRunState,
+            } as RootState),
         },
     });
 
 describe("DryRunPartiallyMigratedFieldState", () => {
-    it("should not display anything when there are no partially migrated fields.", async () => {
-        const wrapper = await getWrapper([]);
+    it("should not display anything when there are no partially migrated fields.", () => {
+        const wrapper = getWrapper([]);
 
         expect(wrapper.find("[data-test=dry-run-message-warning]").exists()).toBe(false);
     });
 
-    it("should display the list of the partially migrated fields when there are some.", async () => {
-        const wrapper = await getWrapper([
+    it("should display the list of the partially migrated fields when there are some.", () => {
+        const wrapper = getWrapper([
             {
                 field_id: 123,
                 label: "A field",

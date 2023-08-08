@@ -16,54 +16,76 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { vi, describe, beforeEach, it, expect } from "vitest";
 
-import type { Wrapper } from "@vue/test-utils";
+import type { SpyInstance } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import { createMoveModalLocalVue } from "../../tests/local-vue-for-tests";
+import type { ActionTree } from "vuex";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { getGlobalTestOptionsWithMockedStore } from "../../tests/global-options-for-tests";
 import type { RootState } from "../store/types";
-import { setFromTracker } from "../from-tracker-presenter";
+import { ARTIFACT_ID } from "../injection-symbols";
+
 import MoveModal from "./MoveModal.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import DryRunPreview from "./DryRunPreview.vue";
 
-const mocked_jquery: { on: jest.SpyInstance; modal: jest.SpyInstance } = {
-    on: jest.fn(),
-    modal: jest.fn(),
+const artifact_id = 126;
+
+type MockedJquery = { on: SpyInstance; modal: SpyInstance };
+const mocked_jquery: MockedJquery = {
+    on: vi.fn(),
+    modal: vi.fn(),
 };
 
-jest.mock("jquery", () => {
-    return (): Record<string, jest.SpyInstance> => mocked_jquery;
-});
+vi.mock("jquery", () => ({
+    default: (): MockedJquery => mocked_jquery,
+}));
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("MoveModal", () => {
-    let store: Store;
+    let moveDryRun: SpyInstance, move: SpyInstance;
 
-    const getWrapper = async (state: Partial<RootState> = {}): Promise<Wrapper<MoveModal>> => {
-        store = createStoreMock({
-            state: {
-                is_loading_initial: false,
-                is_processing_move: false,
-                is_move_possible: false,
-                has_processed_dry_run: false,
-                error_message: "",
-                selected_tracker_id: null,
-                ...state,
-            },
-        });
-
+    const getWrapper = (state: Partial<RootState> = {}): VueWrapper => {
         return shallowMount(MoveModal, {
-            localVue: await createMoveModalLocalVue(),
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptionsWithMockedStore({
+                    state: {
+                        is_loading_initial: false,
+                        is_processing_move: false,
+                        is_move_possible: false,
+                        has_processed_dry_run: false,
+                        error_message: "",
+                        selected_tracker_id: null,
+                        ...state,
+                    } as RootState,
+                    actions: {
+                        moveDryRun,
+                        move,
+                    } as unknown as ActionTree<RootState, RootState>,
+                }),
             },
         });
     };
 
+    beforeEach(() => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            if (key !== ARTIFACT_ID) {
+                throw new Error(`Tried to inject ${key} while it was not mocked.`);
+            }
+
+            return artifact_id;
+        });
+
+        moveDryRun = vi.fn();
+        move = vi.fn();
+    });
+
     describe("mounted()", () => {
-        it("should create a modal", async () => {
-            await getWrapper();
+        it("should create a modal", () => {
+            getWrapper();
 
             expect(mocked_jquery.modal).toHaveBeenCalledTimes(1);
         });
@@ -74,37 +96,29 @@ describe("MoveModal", () => {
             it.each([
                 ["the modal is loading after opening", true, false],
                 ["the modal is processing the artifact move", false, true],
-            ])(
-                "should show a loader when %s",
-                async (when, is_loading_initial, is_processing_move) => {
-                    const wrapper = await getWrapper({
-                        is_loading_initial,
-                        is_processing_move,
-                    });
+            ])("should show a loader when %s", (when, is_loading_initial, is_processing_move) => {
+                const wrapper = getWrapper({
+                    is_loading_initial,
+                    is_processing_move,
+                });
 
-                    expect(wrapper.find("[data-test=modal-loader]").exists()).toBe(true);
-                }
-            );
+                expect(wrapper.find("[data-test=modal-loader]").exists()).toBe(true);
+            });
         });
 
         describe("Error message", () => {
-            it("should be displayed when there is one to display", async () => {
+            it("should be displayed when there is one to display", () => {
                 const error_message = "Oh snap!";
-                const wrapper = await getWrapper({ error_message });
+                const wrapper = getWrapper({ error_message });
                 const error = wrapper.find("[data-test=modal-error-message]");
-
-                await wrapper.vm.$nextTick();
-                await wrapper.vm.$nextTick();
-                await wrapper.vm.$nextTick();
-                await wrapper.vm.$nextTick();
 
                 expect(error.exists()).toBe(true);
                 expect(error.text()).toBe(error_message);
             });
 
-            it("should not be displayed when there is no error to display", async () => {
+            it("should not be displayed when there is no error to display", () => {
                 const error_message = "";
-                const wrapper = await getWrapper({ error_message });
+                const wrapper = getWrapper({ error_message });
                 const error = wrapper.find("[data-test=modal-error-message]");
 
                 expect(error.exists()).toBe(false);
@@ -112,22 +126,22 @@ describe("MoveModal", () => {
         });
 
         describe("Selectors", () => {
-            it("should be visible when the move is not being processed", async () => {
-                const wrapper = await getWrapper({ is_processing_move: false });
+            it("should be visible when the move is not being processed", () => {
+                const wrapper = getWrapper({ is_processing_move: false });
 
                 expect(wrapper.findComponent(MoveModalSelectors).isVisible()).toBe(true);
             });
 
-            it("should not be visible when the move is being processed", async () => {
-                const wrapper = await getWrapper({ is_processing_move: true });
+            it("should not be visible when the move is being processed", () => {
+                const wrapper = getWrapper({ is_processing_move: true });
 
                 expect(wrapper.findComponent(MoveModalSelectors).isVisible()).toBe(false);
             });
         });
 
         describe("Dry run preview", () => {
-            it("should not be displayed if the dry run has not been processed", async () => {
-                const wrapper = await getWrapper({
+            it("should not be displayed if the dry run has not been processed", () => {
+                const wrapper = getWrapper({
                     has_processed_dry_run: false,
                     is_processing_move: false,
                 });
@@ -135,8 +149,8 @@ describe("MoveModal", () => {
                 expect(wrapper.findComponent(DryRunPreview).exists()).toBe(false);
             });
 
-            it("should not be displayed when the move is being processed", async () => {
-                const wrapper = await getWrapper({
+            it("should not be displayed when the move is being processed", () => {
+                const wrapper = getWrapper({
                     has_processed_dry_run: true,
                     is_processing_move: true,
                 });
@@ -144,8 +158,8 @@ describe("MoveModal", () => {
                 expect(wrapper.findComponent(DryRunPreview).exists()).toBe(false);
             });
 
-            it("should be displayed when the dry run has been processed", async () => {
-                const wrapper = await getWrapper({
+            it("should be displayed when the dry run has been processed", () => {
+                const wrapper = getWrapper({
                     has_processed_dry_run: true,
                     is_processing_move: false,
                 });
@@ -155,8 +169,8 @@ describe("MoveModal", () => {
         });
 
         describe("Buttons", () => {
-            it("When the dry run has not been run, then only the [Move artifact] button is shown", async () => {
-                const wrapper = await getWrapper({
+            it("When the dry run has not been run, then only the [Move artifact] button is shown", () => {
+                const wrapper = getWrapper({
                     has_processed_dry_run: false,
                 });
 
@@ -176,8 +190,8 @@ describe("MoveModal", () => {
                 ],
             ])(
                 "The [Move artifact] button should %s when %s",
-                async (what, when, selected_tracker_id, is_processing_move, is_disabled) => {
-                    const wrapper = await getWrapper({
+                (what, when, selected_tracker_id, is_processing_move, is_disabled) => {
+                    const wrapper = getWrapper({
                         selected_tracker_id,
                         is_processing_move,
                     });
@@ -189,8 +203,8 @@ describe("MoveModal", () => {
                 }
             );
 
-            it("When the dry run has been run, then only the [Confirm] button is shown", async () => {
-                const wrapper = await getWrapper({
+            it("When the dry run has been run, then only the [Confirm] button is shown", () => {
+                const wrapper = getWrapper({
                     has_processed_dry_run: true,
                 });
 
@@ -210,8 +224,8 @@ describe("MoveModal", () => {
                 ],
             ])(
                 "The [Confirm] button should %s when %s",
-                async (what, when, is_move_possible, is_processing_move, is_disabled) => {
-                    const wrapper = await getWrapper({
+                (what, when, is_move_possible, is_processing_move, is_disabled) => {
+                    const wrapper = getWrapper({
                         is_move_possible,
                         is_processing_move,
                     });
@@ -226,34 +240,28 @@ describe("MoveModal", () => {
     });
 
     describe("Submit", () => {
-        const artifact_id = 126;
-
-        beforeEach(() => {
-            setFromTracker(10, "Tasks", "red-wine", artifact_id, 102);
-        });
-
-        it("When the [Move artifact] button is clicked, then a moveDryRun event should be dispatched", async () => {
-            const wrapper = await getWrapper({
+        it("When the [Move artifact] button is clicked, then a moveDryRun event should be dispatched", () => {
+            const wrapper = getWrapper({
                 selected_tracker_id: 12,
                 is_processing_move: false,
             });
 
             wrapper.find("[data-test=move-artifact]").trigger("click");
 
-            expect(store.dispatch).toHaveBeenCalledTimes(1);
-            expect(store.dispatch).toHaveBeenCalledWith("moveDryRun", artifact_id);
+            expect(moveDryRun).toHaveBeenCalledTimes(1);
+            expect(moveDryRun).toHaveBeenCalledWith(expect.any(Object), artifact_id);
         });
 
-        it("When the [Confirm] button is clicked, then a move event should be dispatched", async () => {
-            const wrapper = await getWrapper({
+        it("When the [Confirm] button is clicked, then a move event should be dispatched", () => {
+            const wrapper = getWrapper({
                 is_move_possible: true,
                 is_processing_move: false,
             });
 
             wrapper.find("[data-test=confirm-move-artifact]").trigger("click");
 
-            expect(store.dispatch).toHaveBeenCalledTimes(1);
-            expect(store.dispatch).toHaveBeenCalledWith("move", artifact_id);
+            expect(move).toHaveBeenCalledTimes(1);
+            expect(move).toHaveBeenCalledWith(expect.any(Object), artifact_id);
         });
     });
 });

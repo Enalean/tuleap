@@ -24,18 +24,19 @@
             for="move-artifact-tracker-selector"
             v-bind:title="selector_title"
         >
-            <translate>Destination tracker</translate>
+            {{ $gettext("Destination tracker") }}
             <span class="highlight">*</span>
         </label>
         <select
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
-            v-model="selected_tracker"
+            v-model="tracker_id"
+            v-on:change="saveSelectedTrackerId(tracker_id)"
             ref="move_artifact_tracker_selector"
         >
             <option
-                v-for="tracker of tracker_list_with_disabled_from"
+                v-for="tracker of tracker_options"
                 v-bind:key="tracker.id"
                 v-bind:value="tracker.id"
                 v-bind:disabled="tracker.disabled"
@@ -46,45 +47,53 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-import { createListPicker } from "@tuleap/list-picker";
+<script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref, computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "TrackerSelector",
-    data() {
-        return {
-            list_picker: null,
-        };
-    },
-    computed: {
-        ...mapGetters(["tracker_list_with_disabled_from"]),
-        does_tracker_list_contain_from_tracker() {
-            return this.tracker_list_with_disabled_from.some(({ disabled }) => disabled === true);
-        },
-        selected_tracker: {
-            get() {
-                return this.$store.state.selected_tracker;
-            },
-            set(tracker_id) {
-                this.$store.commit("saveSelectedTrackerId", tracker_id);
-            },
-        },
-        selector_title() {
-            return this.does_tracker_list_contain_from_tracker
-                ? this.$gettext("An artifact cannot be moved in the same tracker")
-                : "";
-        },
-    },
-    mounted() {
-        this.list_picker = createListPicker(this.$refs.move_artifact_tracker_selector, {
-            locale: document.body.dataset.userLocale,
-            is_filterable: true,
-            placeholder: this.$gettext("Choose tracker..."),
-        });
-    },
-    beforeDestroy() {
-        this.list_picker.destroy();
-    },
-};
+import { useState, useMutations } from "vuex-composition-helpers";
+import { createListPicker } from "@tuleap/list-picker";
+import type { ListPicker } from "@tuleap/list-picker";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import type { RootState } from "../store/types";
+import type { RootMutations } from "../store/mutations";
+import { TrackerSelectorOptions } from "../helpers/TrackerSelectorOptions";
+import type { TrackerSelectorOption } from "../helpers/TrackerSelectorOptions";
+import { TRACKER_ID } from "../injection-symbols";
+
+const { $gettext } = useGettext();
+
+const { saveSelectedTrackerId } = useMutations<Pick<RootMutations, "saveSelectedTrackerId">>([
+    "saveSelectedTrackerId",
+]);
+const { trackers } = useState<Pick<RootState, "trackers">>(["trackers"]);
+
+const tracker_options = computed((): TrackerSelectorOption[] =>
+    TrackerSelectorOptions.fromTrackers(trackers.value, strictInject(TRACKER_ID))
+);
+const tracker_id = ref(null);
+const list_picker = ref<ListPicker | undefined>();
+const move_artifact_tracker_selector = ref<HTMLSelectElement>();
+
+const selector_title = computed(() =>
+    tracker_options.value.some(({ disabled }) => disabled)
+        ? $gettext("An artifact cannot be moved in the same tracker")
+        : ""
+);
+
+onMounted(() => {
+    if (!(move_artifact_tracker_selector.value instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    list_picker.value = createListPicker(move_artifact_tracker_selector.value, {
+        locale: document.body.dataset.userLocale,
+        is_filterable: true,
+        placeholder: $gettext("Choose tracker..."),
+    });
+});
+
+onBeforeUnmount(() => {
+    list_picker.value?.destroy();
+});
 </script>

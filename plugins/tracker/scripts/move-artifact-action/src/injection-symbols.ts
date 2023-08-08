@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { ColorName } from "@tuleap/core-constants";
 
-export default {
-    ...defineJestConfiguration(),
-    displayName: "plugin-tracker-move-artifact-action",
-};
+export const TRACKER_ID: StrictInjectionKey<number> = Symbol("tracker_id");
+export const TRACKER_NAME: StrictInjectionKey<string> = Symbol("tracker_name");
+export const TRACKER_COLOR: StrictInjectionKey<ColorName> = Symbol("tracker_color");
+export const ARTIFACT_ID: StrictInjectionKey<number> = Symbol("artifact_id");
+export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
