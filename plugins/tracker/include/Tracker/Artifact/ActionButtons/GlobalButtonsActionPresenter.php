@@ -112,4 +112,9 @@ class GlobalButtonsActionPresenter
             $artifact_original_email_button_presenter !== null
         );
     }
+
+    public function shouldLoadMoveArtifactModal(): bool
+    {
+        return $this->should_load_modal;
+    }
 }

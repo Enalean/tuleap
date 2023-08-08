@@ -579,13 +579,15 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this, $action_buttons_fetcher);
 
-        $include_assets = new Tuleap\Layout\IncludeViteAssets(
-            __DIR__ . '/../../../scripts/move-artifact-action/frontend-assets',
-            '/assets/trackers/move-artifact-action'
-        );
+        if ($action_buttons_presenters->shouldLoadMoveArtifactModal()) {
+            $include_assets = new Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../../../scripts/move-artifact-action/frontend-assets',
+                '/assets/trackers/move-artifact-action'
+            );
 
+            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, "src/modal.ts"));
+        }
 
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, "src/modal.ts"));
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
             $GLOBALS['HTML']->addJavascriptAsset($additional_action->asset);
         }
