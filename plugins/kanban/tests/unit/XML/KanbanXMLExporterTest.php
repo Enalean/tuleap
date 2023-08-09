@@ -28,6 +28,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use XML_RNGValidator;
 
 final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,12 +37,13 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
-                 <kanban_list />';
+                 <project></project>';
         $xml_element = new \SimpleXMLElement($xml_data);
 
         $kanban_export = new KanbanXMLExporter(
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $this->createMock(KanbanFactory::class),
+            $this->createMock(XML_RNGValidator::class),
         );
         $kanban_export->export($xml_element, $project);
 
@@ -65,25 +67,55 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
-                 <kanban_list />';
+                 <project></project>';
         $xml_element = new \SimpleXMLElement($xml_data);
+
+        $xml_validator = $this->createMock(XML_RNGValidator::class);
+        $xml_validator->expects(self::once())->method('validate');
 
         $kanban_export = new KanbanXMLExporter(
             LegacyKanbanRetrieverStub::withActivatedKanban(),
             $kanban_factory,
+            $xml_validator,
         );
         $kanban_export->export($xml_element, $project);
 
-        $kanban_list_node = KanbanXMLExporter::NODE_KANBAN_LST;
-
-        $kanban1_attributes = $xml_element->$kanban_list_node->kanban[0]->attributes();
+        $kanban1_attributes = $xml_element->agiledashboard->kanban_list->kanban[0]->attributes();
         $this->assertEquals('T1', (string) $kanban1_attributes->tracker_id);
         $this->assertEquals('Alice task', (string) $kanban1_attributes->name);
         $this->assertEquals('K10', (string) $kanban1_attributes->ID);
 
-        $kanban2_attributes = $xml_element->$kanban_list_node->kanban[1]->attributes();
+        $kanban2_attributes = $xml_element->agiledashboard->kanban_list->kanban[1]->attributes();
         $this->assertEquals('T2', (string) $kanban2_attributes->tracker_id);
         $this->assertEquals('Bob task', (string) $kanban2_attributes->name);
         $this->assertEquals('K20', (string) $kanban2_attributes->ID);
+    }
+
+    public function testItUsesAlreadyCreatedAgiledashboardNode(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $kanban = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), 'Alice task');
+
+        $kanban_factory = $this->createMock(KanbanFactory::class);
+        $kanban_factory->method('getKanbanTrackerIds')->willReturn([1]);
+        $kanban_factory->method('getKanbanByTrackerId')->willReturn($kanban);
+
+        $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
+                 <project><agiledashboard /></project>';
+        $xml_element = new \SimpleXMLElement($xml_data);
+
+        $xml_validator = $this->createMock(XML_RNGValidator::class);
+        $xml_validator->expects(self::once())->method('validate');
+
+        $kanban_export = new KanbanXMLExporter(
+            LegacyKanbanRetrieverStub::withActivatedKanban(),
+            $kanban_factory,
+            $xml_validator,
+        );
+        $kanban_export->export($xml_element, $project);
+
+        self::assertCount(1, $xml_element->agiledashboard);
+        self::assertCount(1, $xml_element->agiledashboard->kanban_list->kanban);
     }
 }

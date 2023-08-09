@@ -1,100 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="agiledashboard">
-    <optional>
-      <element name="admin">
-        <element name="scrum">
-          <element name="explicit_backlog">
-            <attribute name="is_used">
-              <data type="boolean"/>
-            </attribute>
-          </element>
-        </element>
-      </element>
-    </optional>
-    <optional>
-      <element name="top_backlog">
-        <oneOrMore>
-          <element name="artifact">
-            <attribute name="artifact_id">
-              <data type="long"/>
-            </attribute>
-          </element>
-        </oneOrMore>
-      </element>
-    </optional>
-    <element name="plannings">
-      <zeroOrMore>
-        <element name="planning">
-          <attribute name="name">
-            <data type="string"/>
-          </attribute>
-          <attribute name="plan_title">
-            <data type="string"/>
-          </attribute>
-          <attribute name="planning_tracker_id">
-            <data type="string"/>
-          </attribute>
-          <attribute name="backlog_title">
-            <data type="string"/>
-          </attribute>
-          <element name="backlogs">
-            <oneOrMore>
-              <element name="backlog">
-                <data type="string"/>
-              </element>
-            </oneOrMore>
-          </element>
-          <optional>
-            <element name="permissions">
-              <oneOrMore>
-                <element name="permission">
-                  <attribute name="ugroup">
-                    <data type="string"/>
-                  </attribute>
-                  <attribute name="type">
-                    <data type="string"/>
-                  </attribute>
-                </element>
-              </oneOrMore>
+    <interleave>
+      <optional>
+        <element name="admin">
+          <element name="scrum">
+            <element name="explicit_backlog">
+              <attribute name="is_used">
+                <data type="boolean"/>
+              </attribute>
             </element>
-          </optional>
-        </element>
-      </zeroOrMore>
-    </element>
-    <optional>
-      <element name="kanban_list">
-        <optional>
-          <attribute name="title">
-            <data type="string"/>
-          </attribute>
-        </optional>
-        <zeroOrMore>
-          <element name="kanban">
-            <attribute name="ID">
-              <data type="ID"/>
-            </attribute>
-            <attribute name="tracker_id">
-              <data type="string"/>
-            </attribute>
-            <attribute name="name">
-              <data type="string"/>
-            </attribute>
-            <zeroOrMore>
-              <element name="column">
-                <attribute name="REF">
-                  <data type="IDREF"/>
-                </attribute>
-                <optional>
-                  <attribute name="wip">
-                    <data type="long"/>
-                  </attribute>
-                </optional>
-              </element>
-            </zeroOrMore>
           </element>
-        </zeroOrMore>
-      </element>
-    </optional>
+        </element>
+      </optional>
+      <optional>
+        <element name="top_backlog">
+          <oneOrMore>
+            <element name="artifact">
+              <attribute name="artifact_id">
+                <data type="long"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="plannings">
+          <zeroOrMore>
+            <element name="planning">
+              <attribute name="name">
+                <data type="string"/>
+              </attribute>
+              <attribute name="plan_title">
+                <data type="string"/>
+              </attribute>
+              <attribute name="planning_tracker_id">
+                <data type="string"/>
+              </attribute>
+              <attribute name="backlog_title">
+                <data type="string"/>
+              </attribute>
+              <element name="backlogs">
+                <oneOrMore>
+                  <element name="backlog">
+                    <data type="string"/>
+                  </element>
+                </oneOrMore>
+              </element>
+              <optional>
+                <element name="permissions">
+                  <oneOrMore>
+                    <element name="permission">
+                      <attribute name="ugroup">
+                        <data type="string"/>
+                      </attribute>
+                      <attribute name="type">
+                        <data type="string"/>
+                      </attribute>
+                    </element>
+                  </oneOrMore>
+                </element>
+              </optional>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="kanban_list">
+          <optional>
+            <attribute name="title">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <zeroOrMore>
+            <element name="kanban">
+              <attribute name="ID">
+                <data type="ID"/>
+              </attribute>
+              <attribute name="tracker_id">
+                <data type="string"/>
+              </attribute>
+              <attribute name="name">
+                <data type="string"/>
+              </attribute>
+              <zeroOrMore>
+                <element name="column">
+                  <attribute name="REF">
+                    <data type="IDREF"/>
+                  </attribute>
+                  <optional>
+                    <attribute name="wip">
+                      <data type="long"/>
+                    </attribute>
+                  </optional>
+                </element>
+              </zeroOrMore>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+    </interleave>
   </define>
 </grammar>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="kanban_list">
+    <optional>
+      <attribute name="title">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <zeroOrMore>
+      <element name="kanban">
+        <attribute name="ID">
+          <data type="ID"/>
+        </attribute>
+        <attribute name="tracker_id">
+          <data type="string"/>
+        </attribute>
+        <attribute name="name">
+          <data type="string"/>
+        </attribute>
+        <zeroOrMore>
+          <element name="column">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+            <optional>
+              <attribute name="wip">
+                <data type="long"/>
+              </attribute>
+            </optional>
+          </element>
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
+  </define>
+</grammar>

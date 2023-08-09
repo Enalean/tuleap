@@ -4,12 +4,12 @@ agiledashboard = element admin {
             attribute is_used { xsd:boolean }
         }
     }
-}?,
+}? &
 element top_backlog {
     element artifact {
         attribute artifact_id { xsd:long }
     }+
-}?,
+}? &
 element plannings  {
     element planning {
         attribute name { xsd:string },
@@ -28,7 +28,7 @@ element plannings  {
             }+
         }?
     }*
-},
+}? &
 element kanban_list {
     attribute title { xsd:string }?,
     element kanban {

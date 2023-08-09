@@ -75,6 +75,7 @@ rnc2rng-exec: src/common/xml/resources/project/project.rng \
 	 plugins/tracker/resources/trackers.rng \
 	 plugins/tracker/resources/artifacts.rng \
 	 plugins/agiledashboard/resources/xml_project_agiledashboard.rng \
+	 plugins/kanban/resources/kanban.rng \
 	 plugins/cardwall/resources/xml_project_cardwall.rng \
 	 plugins/testmanagement/resources/testmanagement.rng \
 	 plugins/testmanagement/resources/testmanagement_external_changeset.rng \

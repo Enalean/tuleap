@@ -27,11 +27,12 @@ use Tuleap\Kanban\KanbanFactory;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Kanban\Legacy\LegacyKanbanRetriever;
+use XML_RNGValidator;
 
 class KanbanXMLExporter
 {
-    public const NODE_KANBAN_LST = "kanban_list";
-    public const NODE_KANBAN     = "kanban";
+    private const NODE_KANBAN_LST = "kanban_list";
+    private const NODE_KANBAN     = "kanban";
 
     public const TRACKER_ID_PREFIX = 'T';
     public const KANBAN_ID_PREFIX  = 'K';
@@ -39,6 +40,7 @@ class KanbanXMLExporter
     public function __construct(
         private readonly LegacyKanbanRetriever $configuration_dao,
         private readonly KanbanFactory $kanban_factory,
+        private readonly XML_RNGValidator $xml_validator,
     ) {
     }
 
@@ -51,7 +53,9 @@ class KanbanXMLExporter
             return;
         }
 
-        $kanban_list_node = $xml_element->addChild(self::NODE_KANBAN_LST);
+        $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
+
+        $kanban_list_node = $agiledashboard_node->addChild(self::NODE_KANBAN_LST);
         if ($kanban_list_node === null) {
             throw new \Exception("Unable to create kanban_list node");
         }
@@ -72,6 +76,24 @@ class KanbanXMLExporter
             $kanban_node->addAttribute('name', $kanban->getName());
             $kanban_node->addAttribute('ID', $this->getFormattedKanbanId($kanban->getId()));
         }
+
+        $rng_path = realpath(__DIR__ . '/../../../resources/kanban.rng');
+        $this->xml_validator->validate($kanban_list_node, $rng_path);
+    }
+
+    private function getAgiledashboardNode(SimpleXMLElement $xml_element): SimpleXMLElement
+    {
+        $existing_agiledashboard_node = $xml_element->agiledashboard;
+        if ($existing_agiledashboard_node) {
+            return $existing_agiledashboard_node;
+        }
+
+        $agiledashboard_node = $xml_element->addChild('agiledashboard');
+        if ($agiledashboard_node === null) {
+            throw new \Exception('Unable to create agiledashboard node');
+        }
+
+        return $agiledashboard_node;
     }
 
     private function getFormattedTrackerId(int $tracker_id): string
