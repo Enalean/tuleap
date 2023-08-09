@@ -23,7 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Mockery;
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ServiceFile;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -33,86 +38,73 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SaveLicenseAgreementControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private SaveLicenseAgreementController $controller;
     /**
-     * @var SaveLicenseAgreementController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var MockObject&ProjectRetriever
      */
     private $project_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
+     * @var MockObject&Project
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ServiceFile
+     * @var MockObject&ServiceFile
      */
     private $service_file;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FRSPermissionManager
+     * @var MockObject&FRSPermissionManager
      */
     private $permissions_manager;
+    private HTTPRequest $request;
+    private PFUser $current_user;
     /**
-     * @var \HTTPRequest
-     */
-    private $request;
-    /**
-     * @var \PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementFactory
+     * @var MockObject&LicenseAgreementFactory
      */
     private $factory;
     /**
-     * @var \CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var MockObject&CSRFSynchronizerToken
      */
     private $csrf_token;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     * @var MockObject&LicenseAgreementControllersHelper
      */
     private $helper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var MockObject&BaseLayout
      */
     private $layout;
 
     protected function setUp(): void
     {
-        $this->layout = Mockery::mock(BaseLayout::class);
+        $this->layout = $this->createMock(BaseLayout::class);
 
-        $this->current_user = new \PFUser(['language_id' => 'en_US']);
+        $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->request = new \HTTPRequest();
+        $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
-        $this->project      = Mockery::mock(\Project::class, ['getID' => '101']);
-        $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
-        $this->project_retriever = Mockery::mock(ProjectRetriever::class)
-            ->shouldReceive('getProjectFromId')
+        $this->service_file = $this->createConfiguredMock(ServiceFile::class, ['displayFRSHeader' => 'foo']);
+        $this->project      = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->project->method('getFileService')->willReturn($this->service_file);
+        $this->project_retriever = $this->createMock(ProjectRetriever::class);
+        $this->project_retriever->expects(self::once())->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($this->project)
-            ->getMock();
+            ->willReturn($this->project);
 
-        $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue(
-        )->byDefault();
+        $this->permissions_manager = $this->createMock(FRSPermissionManager::class);
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
 
-        $this->factory = Mockery::mock(LicenseAgreementFactory::class);
+        $this->factory = $this->createMock(LicenseAgreementFactory::class);
 
-        $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
+        $this->csrf_token->method('check');
 
-        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
-        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->controller = new SaveLicenseAgreementController(
             $this->project_retriever,
@@ -129,15 +121,15 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('content', 'updated content');
         $this->request->set('save', '');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn(new LicenseAgreement(1, 'some title', 'some content'));
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(new LicenseAgreement(1, 'some title', 'some content'));
 
-        $this->factory->shouldReceive('save')->with($this->project, Mockery::on(function (LicenseAgreement $agreement) {
+        $this->factory->expects(self::once())->method('save')->with($this->project, self::callback(function (LicenseAgreement $agreement) {
             return $agreement->getId() === 1 &&
                 $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
-        }))->once();
+        }));
 
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -148,12 +140,12 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('content', 'updated content');
         $this->request->set('save', '');
 
-        $this->factory->shouldReceive('save')->with($this->project, Mockery::on(function (LicenseAgreementInterface $agreement) {
+        $this->factory->expects(self::once())->method('save')->with($this->project, self::callback(function (LicenseAgreementInterface $agreement) {
             return $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
-        }))->once();
+        }));
 
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -165,13 +157,13 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('content', 'updated content');
         $this->request->set('save', '');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
-        $this->factory->shouldNotReceive('save');
+        $this->factory->expects(self::never())->method('save');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItAbortsWhenLicenseIsSiteDefault(): void
@@ -181,13 +173,13 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('content', 'updated content');
         $this->request->set('save', '');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 0)->andReturn(new DefaultLicenseAgreement());
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 0)->willReturn(new DefaultLicenseAgreement());
 
-        $this->factory->shouldNotReceive('save');
+        $this->factory->expects(self::never())->method('save');
 
-        $this->expectException(ForbiddenException::class);
+        self::expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItDeletesAnUnusedCustomLicenseAgreement(): void
@@ -196,11 +188,11 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('delete', '');
 
         $license = new LicenseAgreement(1, 'title', 'content');
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn($license);
-        $this->factory->shouldReceive('delete')->with($this->project, $license)->once();
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
+        $this->factory->expects(self::once())->method('delete')->with($this->project, $license);
 
-        $this->layout->shouldReceive('redirect')->once();
-        $this->layout->shouldReceive('addFeedback')->once();
+        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects(self::once())->method('addFeedback');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -210,9 +202,9 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('id', '1');
         $this->request->set('delete', '');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -222,7 +214,7 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->request->set('id', '');
         $this->request->set('delete', '');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

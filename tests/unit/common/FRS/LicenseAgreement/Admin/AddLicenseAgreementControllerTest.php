@@ -22,46 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class AddLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AddLicenseAgreementControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var AddLicenseAgreementController */
-    private $controller;
+    private AddLicenseAgreementController $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
+     * @var MockObject&ProjectRetriever
      */
     private $project_retriever;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|LicenseAgreementControllersHelper
+     * @var MockObject&LicenseAgreementControllersHelper
      */
     private $helper;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer
+     * @var MockObject&TemplateRenderer
      */
     private $renderer;
     /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var MockObject&CSRFSynchronizerToken
      */
     private $csrf_token;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|IncludeAssets
+     * @var MockObject&IncludeAssets
      */
     private $assets;
 
     protected function setUp(): void
     {
-        $this->project_retriever = M::mock(ProjectRetriever::class);
-        $this->helper            = M::mock(LicenseAgreementControllersHelper::class);
-        $this->renderer          = M::mock(\TemplateRenderer::class);
-        $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
-        $this->assets            = M::mock(IncludeAssets::class);
+        $this->project_retriever = $this->createMock(ProjectRetriever::class);
+        $this->helper            = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->renderer          = $this->createMock(TemplateRenderer::class);
+        $this->csrf_token        = $this->createMock(CSRFSynchronizerToken::class);
+        $this->assets            = $this->createMock(IncludeAssets::class);
         $this->controller        = new AddLicenseAgreementController(
             $this->project_retriever,
             $this->helper,
@@ -73,34 +75,20 @@ final class AddLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testProcessRenders(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with('102')
-            ->once()
-            ->andReturn($project);
-        $current_user = M::mock(\PFUser::class);
-        $request      = M::mock(\HTTPRequest::class)->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user)
-            ->getMock();
-        $layout       = M::mock(BaseLayout::class);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(102);
+        $this->project_retriever->expects(self::once())->method('getProjectFromId')->with('102')->willReturn($project);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $request      = $this->createMock(HTTPRequest::class);
+        $request->expects(self::once())->method('getCurrentUser')->willReturn($current_user);
+        $layout = $this->createMock(BaseLayout::class);
 
-        $this->helper->shouldReceive('assertCanAccess')
-            ->with($project, $current_user)
-            ->once();
-        $this->assets->shouldReceive('getFileURL')
-            ->with('frs-admin-license-agreement.js')
-            ->once();
-        $layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->helper->shouldReceive('renderHeader')
-            ->with($project)
-            ->once();
-        $this->renderer->shouldReceive('renderToPage')
-            ->with('edit-license-agreement', M::type(EditLicenseAgreementPresenter::class))
-            ->once();
-        $layout->shouldReceive('footer')->once();
+        $this->helper->expects(self::once())->method('assertCanAccess')->with($project, $current_user);
+        $this->assets->expects(self::once())->method('getFileURL')->with('frs-admin-license-agreement.js');
+        $layout->expects(self::once())->method('includeFooterJavascriptFile');
+        $this->helper->expects(self::once())->method('renderHeader')->with($project);
+        $this->renderer->expects(self::once())->method('renderToPage')->with('edit-license-agreement', self::isInstanceOf(EditLicenseAgreementPresenter::class));
+        $layout->expects(self::once())->method('footer');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }

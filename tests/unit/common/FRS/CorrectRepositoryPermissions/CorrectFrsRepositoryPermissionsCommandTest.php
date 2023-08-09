@@ -22,46 +22,38 @@
 namespace Tuleap\FRS;
 
 use DirectoryIterator;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\TestCase
+class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private string $directory;
 
     /**
-     * @var DirectoryIterator
-     */
-    private $directory;
-
-    /**
-     * @var \ProjectManager|\Mockery\MockInterface
+     * @var MockObject&ProjectManager
      */
     private $project_manager;
 
-    /**
-     * @var CorrectFrsRepositoryPermissionsCommand
-     */
-    private $correct_command;
+    private CorrectFrsRepositoryPermissionsCommand $correct_command;
+
+    private string $base;
 
     /**
-     * @var string
-     */
-    private $base;
-
-    /**
-     * @var \Project|\Mockery\MockInterface
+     * @var MockObject&Project
      */
     private $project_1;
 
     /**
-     * @var \Project|\Mockery\MockInterface
+     * @var MockObject&Project
      */
     private $project_2;
 
     /**
-     * @var \Project|\Mockery\MockInterface
+     * @var MockObject&Project
      */
     private $project_3;
 
@@ -69,7 +61,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
     {
         vfsStream::setup('slash');
         $this->base            = vfsStream::url('slash');
-        $this->project_manager = \Mockery::mock(\ProjectManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->initFiles();
 
@@ -96,30 +88,31 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
 
     private function initProjects(): void
     {
-        $this->project_1 = \Mockery::mock(\Project::class);
-        $this->project_2 = \Mockery::mock(\Project::class);
-        $this->project_3 = \Mockery::mock(\Project::class);
+        $this->project_1 = $this->createMock(Project::class);
+        $this->project_2 = $this->createMock(Project::class);
+        $this->project_3 = $this->createMock(Project::class);
 
-        $this->project_1->shouldReceive('getUnixGID')->andReturn(1);
-        $this->project_2->shouldReceive('getUnixGID')->andReturn(2);
+        $this->project_1->method('getUnixGID')->willReturn(1);
+        $this->project_2->method('getUnixGID')->willReturn(2);
 
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet'])->andReturn(
-            $this->project_1
+        $this->project_manager->method('getProjectByUnixName')->withConsecutive(
+            ['leprojet'],
+            ['leprojet2'],
+            ['leprojet3'],
+            ['DELETED']
+        )->willReturnOnConsecutiveCalls(
+            $this->project_1,
+            $this->project_2,
+            $this->project_3,
+            null
         );
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet2'])->andReturn(
-            $this->project_2
-        );
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet3'])->andReturn(
-            $this->project_3
-        );
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['DELETED'])->andReturn(null);
     }
 
     public function testChangeGroupSuccess()
     {
         $this->initProjects();
 
-        $this->project_3->shouldReceive('getUnixGID')->andReturn(3);
+        $this->project_3->method('getUnixGID')->willReturn(3);
 
         $command_tester = new CommandTester($this->correct_command);
         $command_tester->execute([]);
@@ -130,16 +123,16 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
                 continue;
             }
 
-            $this->assertEquals($file->getGroup(), $i);
+            self::assertEquals($file->getGroup(), $i);
             $i++;
         }
 
         $text_table = $command_tester->getDisplay();
 
-        $this->assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
-        $this->assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
-        $this->assertStringContainsString("Project permissions of leprojet3 has been changed.", $text_table);
-        $this->assertStringContainsString("3 permissions has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of leprojet3 has been changed.", $text_table);
+        self::assertStringContainsString("3 permissions has been changed.", $text_table);
     }
 
     public function testNoChangeGroupWhenTheirAreCorrectlySet()
@@ -150,7 +143,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
         chgrp($this->base . '/tuleap/ftp/tuleap/leprojet2', 2);
         chgrp($this->base . '/tuleap/ftp/tuleap/leprojet3', 3);
 
-        $this->project_3->shouldReceive('getUnixGID')->andReturn(3);
+        $this->project_3->method('getUnixGID')->willReturn(3);
 
         $command_tester = new CommandTester($this->correct_command);
         $command_tester->execute([]);
@@ -161,38 +154,40 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
                 continue;
             }
 
-            $this->assertEquals($file->getGroup(), $i);
+            self::assertEquals($file->getGroup(), $i);
             $i++;
         }
 
         $text_table = $command_tester->getDisplay();
 
-        $this->assertStringContainsString("No permissions has been changed.", $text_table);
+        self::assertStringContainsString("No permissions has been changed.", $text_table);
     }
 
     public function testChangeGroupWithOneWrongGroup()
     {
         $this->initProjects();
 
-        $this->project_3->shouldReceive('getUnixGID')->andReturn('wrong_perm');
+        $this->project_3->method('getUnixGID')->willReturn('wrong_perm');
 
         $command_tester = new CommandTester($this->correct_command);
         $command_tester->execute([]);
 
         $text_table = $command_tester->getDisplay();
 
-        $this->assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
-        $this->assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
-        $this->assertStringContainsString("Wrong permissions of leprojet3 has not been changed.", $text_table);
-        $this->assertStringContainsString("2 permissions has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of leprojet has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of leprojet2 has been changed.", $text_table);
+        self::assertStringContainsString("Wrong permissions of leprojet3 has not been changed.", $text_table);
+        self::assertStringContainsString("2 permissions has been changed.", $text_table);
     }
 
     public function testChangeGroupWithDeleted()
     {
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet'])->andReturn(null);
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet2'])->andReturn(null);
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['leprojet3'])->andReturn(null);
-        $this->project_manager->shouldReceive('getProjectByUnixName')->withArgs(['DELETED'])->andReturn(null);
+        $this->project_manager->method('getProjectByUnixName')->withConsecutive(
+            ['leprojet'],
+            ['leprojet2'],
+            ['leprojet3'],
+            ['DELETED']
+        )->willReturn(null);
 
         chgrp($this->base . '/tuleap/ftp/tuleap/DELETED', 0);
 
@@ -201,7 +196,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\Te
 
         $text_table = $command_tester->getDisplay();
 
-        $this->assertStringContainsString("Project permissions of DELETED has been changed.", $text_table);
-        $this->assertStringContainsString("1 permissions has been changed.", $text_table);
+        self::assertStringContainsString("Project permissions of DELETED has been changed.", $text_table);
+        self::assertStringContainsString("1 permissions has been changed.", $text_table);
     }
 }

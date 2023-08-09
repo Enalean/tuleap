@@ -23,101 +23,93 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Mockery;
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ProjectRetriever;
-use Tuleap\Templating\Mustache\MustacheEngine;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ListLicenseAgreementsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ListLicenseAgreementsControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private ListLicenseAgreementsController $controller;
     /**
-     * @var ListLicenseAgreementsController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
+     * @var MockObject&ProjectRetriever
      */
     private $project_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
+     * @var MockObject&Project
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRendererFactory
+     * @var MockObject&TemplateRendererFactory
      */
     private $renderer_factory;
+    private HTTPRequest $request;
+    private PFUser $current_user;
     /**
-     * @var \HTTPRequest
-     */
-    private $request;
-    /**
-     * @var \PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementFactory
+     * @var MockObject&LicenseAgreementFactory
      */
     private $factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var MockObject&BaseLayout
      */
     private $layout;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     * @var MockObject&LicenseAgreementControllersHelper
      */
     private $helper;
 
     protected function setUp(): void
     {
-        $this->layout       = Mockery::mock(BaseLayout::class);
-        $this->current_user = new \PFUser(['language_id' => 'en_US']);
+        $this->layout       = $this->createMock(BaseLayout::class);
+        $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->request = new \HTTPRequest();
+        $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project           = Mockery::mock(\Project::class, ['getID' => '101']);
-        $this->project_retriever = Mockery::mock(ProjectRetriever::class)
-            ->shouldReceive('getProjectFromId')
+        $this->project           = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->project_retriever = $this->createMock(ProjectRetriever::class);
+        $this->project_retriever->expects(self::once())->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($this->project)
-            ->getMock();
+            ->willReturn($this->project);
 
-        $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
 
-        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
-        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
 
-        $this->factory = Mockery::mock(LicenseAgreementFactory::class);
+        $this->factory = $this->createMock(LicenseAgreementFactory::class);
 
         $this->controller = new ListLicenseAgreementsController(
             $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,
-            Mockery::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(CSRFSynchronizerToken::class),
         );
     }
 
     public function testItRendersThePageHeader(): void
     {
-        $this->helper->shouldReceive('renderHeader')->with($this->project);
+        $this->helper->method('renderHeader')->with($this->project);
 
-        $content_renderer = Mockery::mock(MustacheEngine::class);
-        $content_renderer->shouldReceive('renderToPage')->with('list-license-agreements', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
+        $content_renderer = $this->createMock(TemplateRenderer::class);
+        $content_renderer->expects(self::once())->method('renderToPage')->with('list-license-agreements', self::anything());
+        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
-        }))->andReturn($content_renderer);
+        }))->willReturn($content_renderer);
 
-        $this->layout->shouldReceive('footer');
+        $this->layout->method('footer');
 
-        $this->factory->shouldReceive('getDefaultLicenseAgreementForProject')->andReturns(new NoLicenseToApprove());
-        $this->factory->shouldReceive('getProjectLicenseAgreements')->with($this->project)->andReturn([]);
+        $this->factory->method('getDefaultLicenseAgreementForProject')->willReturn(new NoLicenseToApprove());
+        $this->factory->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
