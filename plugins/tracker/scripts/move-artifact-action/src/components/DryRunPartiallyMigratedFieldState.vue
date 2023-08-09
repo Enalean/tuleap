@@ -27,7 +27,7 @@
         <span>{{ message }}</span>
         <fields-list-displayer
             v-bind:fields="partially_migrated_fields"
-            v-bind:type="'partially-migrated'"
+            v-bind:type="TYPE_PARTIALLY_MIGRATED"
         />
     </div>
 </template>
@@ -35,20 +35,21 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
-import { useState } from "vuex-composition-helpers";
-import type { ArtifactField, RootState } from "../store/types";
+import { useDryRunStore } from "../stores/dry-run";
+import type { ArtifactField } from "../api/types";
+import { TYPE_PARTIALLY_MIGRATED } from "../types";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
 const { interpolate, $ngettext } = useGettext();
 
-const { dry_run_fields } = useState<Pick<RootState, "dry_run_fields">>(["dry_run_fields"]);
+const dry_run_store = useDryRunStore();
 
 const partially_migrated_fields = computed(
-    (): ArtifactField[] => dry_run_fields.value.fields_partially_migrated
+    (): ArtifactField[] => dry_run_store.fields_partially_migrated
 );
 
 const partially_migrated_fields_count = computed(
-    (): number => dry_run_fields.value.fields_partially_migrated.length
+    (): number => dry_run_store.fields_partially_migrated.length
 );
 
 const message = computed((): string => {

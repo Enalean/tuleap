@@ -17,29 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
-import type { Project } from "../store/types";
-import { ProjectsSorter } from "./ProjectsSorter";
-
-describe("ProjectsSorter", () => {
-    it("sorted_projects should return the projects alphabetically sorted", () => {
-        const projects: Project[] = [
-            {
-                id: 105,
-                label: "Scrum",
-            },
-            {
-                id: 106,
-                label: "Git",
-            },
-            {
-                id: 107,
-                label: "Kanban",
-            },
-        ];
-
-        expect(
-            ProjectsSorter.sortProjectsAlphabetically(projects).map(({ id }) => id)
-        ).toStrictEqual([106, 107, 105]);
-    });
-});
+export type DryRunFieldsType = "fully-migrated" | "partially-migrated" | "not-migrated";
+export const TYPE_FULLY_MIGRATED: DryRunFieldsType = "fully-migrated";
+export const TYPE_PARTIALLY_MIGRATED: DryRunFieldsType = "partially-migrated";
+export const TYPE_NOT_MIGRATED: DryRunFieldsType = "not-migrated";

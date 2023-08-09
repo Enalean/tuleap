@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,125 +17,85 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi, describe, beforeEach, it, expect } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { setActivePinia, createPinia } from "pinia";
 import type { SpyInstance } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions";
 import * as rest_querier from "../api/rest-querier";
+import type { DryRunState } from "../api/types";
 import * as window_helper from "../window-helper";
-
-import type { Context, RootState, Project, Tracker, DryRunState } from "./types";
+import { useModalStore } from "./modal";
+import { useSelectorsStore } from "./selectors";
+import { useDryRunStore } from "./dry-run";
 
 const artifact_id = 101,
-    tracker_id = 5,
-    project_id = 106;
+    tracker_id = 5;
 
-describe("Store actions", () => {
-    let context: Context, redirectTo: SpyInstance;
+describe("modal store", () => {
+    let redirectTo: SpyInstance;
+
     beforeEach(() => {
-        context = {
-            commit: vi.fn(),
-            state: {} as RootState,
-        } as unknown as Context;
+        setActivePinia(createPinia());
+
         redirectTo = vi.spyOn(window_helper, "redirectTo").mockImplementation((): void => {
             // Do nothing
         });
     });
 
-    describe("loadProjectList", () => {
-        let getProjectList: SpyInstance;
+    it("setErrorMessage should store the error message provided in the given Fault", () => {
+        const error_message = "Oh snap!";
+        const modal_store = useModalStore();
 
-        beforeEach(() => {
-            getProjectList = vi.spyOn(rest_querier, "getProjectList");
-        });
+        modal_store.setErrorMessage(Fault.fromMessage(error_message));
 
-        it("When I want to load the project, Then it should fetch them asynchronously and put them in the store.", async () => {
-            const projects: Project[] = [
-                {
-                    id: 102,
-                    label: "Project name",
-                },
-            ];
-
-            getProjectList.mockReturnValue(okAsync(projects));
-
-            await loadProjectList(context);
-
-            expect(context.commit).toHaveBeenCalledWith("saveProjects", projects);
-            expect(context.commit).toHaveBeenCalledWith("resetProjectLoading");
-        });
-
-        it("When the server responds with an error the error message is stored", async () => {
-            const api_error = Fault.fromMessage("error");
-            getProjectList.mockReturnValue(errAsync(api_error));
-
-            await loadProjectList(context);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
-        });
+        expect(modal_store.error_message).toBe(error_message);
     });
 
-    describe("loadTrackerList", () => {
-        let getTrackerList: SpyInstance;
-        beforeEach(() => {
-            getTrackerList = vi.spyOn(rest_querier, "getTrackerList");
-            context.state = {
-                selected_project_id: 101,
-            } as RootState;
-        });
+    it("resetError should reset the error message", () => {
+        const modal_store = useModalStore();
 
-        it("When I want to load the tracker, Then it should fetch them asynchronously and put them in the store.", async () => {
-            const trackers: Tracker[] = [
-                {
-                    id: 10,
-                    label: "Tracker name",
-                },
-            ];
+        modal_store.setErrorMessage(Fault.fromMessage("Oh snap!"));
+        modal_store.resetError();
 
-            getTrackerList.mockReturnValue(okAsync(trackers));
+        expect(modal_store.error_message).toBe("");
+    });
 
-            await loadTrackerList(context, project_id);
+    it("startProcessingMove() sets is_processing_move to true, stopProcessingMove() sets it to false", () => {
+        const modal_store = useModalStore();
+        expect(modal_store.is_processing_move).toBe(false);
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "loadingTrackersAfterProjectSelected",
-                project_id
-            );
-            expect(context.commit).toHaveBeenCalledWith("saveTrackers", trackers);
-            expect(context.commit).toHaveBeenCalledWith("resetTrackersLoading");
-        });
+        modal_store.startProcessingMove();
+        expect(modal_store.is_processing_move).toBe(true);
 
-        it("When the server responds with an error the error message is stored", async () => {
-            const api_error = Fault.fromMessage("error");
-            getTrackerList.mockReturnValue(errAsync(api_error));
-
-            await loadTrackerList(context, 10);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
-        });
+        modal_store.stopProcessingMove();
+        expect(modal_store.is_processing_move).toBe(false);
     });
 
     describe("move", () => {
         let moveArtifact: SpyInstance;
         beforeEach(() => {
             moveArtifact = vi.spyOn(rest_querier, "moveArtifact");
+
+            useSelectorsStore().saveSelectedTrackerId(tracker_id);
         });
 
         it("When I want to process the move, Then it should process move.", async () => {
             moveArtifact.mockReturnValue(okAsync({}));
-            context.state.selected_tracker_id = tracker_id;
 
-            await move(context, artifact_id);
+            await useModalStore().move(artifact_id);
             expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
-            expect(redirectTo).toHaveBeenCalledWith("/plugins/tracker/?aid=" + artifact_id);
+            expect(redirectTo).toHaveBeenCalledWith(`/plugins/tracker/?aid=${artifact_id}`);
         });
 
         it("When the server responds with an error the error message is stored", async () => {
-            const api_error = Fault.fromMessage("error");
-            moveArtifact.mockReturnValue(errAsync(api_error));
+            const modal_store = useModalStore();
+            const error_message = "Oh snap!";
 
-            context.state.selected_tracker_id = tracker_id;
+            moveArtifact.mockReturnValue(errAsync(Fault.fromMessage(error_message)));
 
-            await move(context, artifact_id);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", api_error);
+            await modal_store.move(artifact_id);
+            expect(modal_store.error_message).toBe(error_message);
             expect(redirectTo).not.toHaveBeenCalled();
         });
     });
@@ -145,8 +105,9 @@ describe("Store actions", () => {
 
         beforeEach(() => {
             moveDryRunArtifact = vi.spyOn(rest_querier, "moveDryRunArtifact");
-
             moveArtifact = vi.spyOn(rest_querier, "moveArtifact");
+
+            useSelectorsStore().saveSelectedTrackerId(tracker_id);
         });
 
         it("When I process move in Dry run, if at least one field has en error, I store dry run has been processed in store", async () => {
@@ -180,12 +141,24 @@ describe("Store actions", () => {
                 })
             );
 
-            context.state.selected_tracker_id = tracker_id;
+            const modal_store = useModalStore();
+            const dry_run_store = useDryRunStore();
 
-            await moveDryRun(context, artifact_id);
-            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
-            expect(context.commit).toHaveBeenCalledWith("hasProcessedDryRun", fields);
-            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
+            vi.spyOn(modal_store, "startProcessingMove");
+            vi.spyOn(modal_store, "stopProcessingMove");
+
+            await modal_store.moveDryRun(artifact_id);
+
+            expect(modal_store.startProcessingMove).toHaveBeenCalledOnce();
+            expect(modal_store.stopProcessingMove).toHaveBeenCalledOnce();
+
+            expect(dry_run_store.has_processed_dry_run).toBe(true);
+            expect(dry_run_store.fields_not_migrated).toStrictEqual(fields.fields_not_migrated);
+            expect(dry_run_store.fields_partially_migrated).toStrictEqual(
+                fields.fields_partially_migrated
+            );
+            expect(dry_run_store.fields_migrated).toStrictEqual(fields.fields_migrated);
+
             expect(redirectTo).not.toHaveBeenCalled();
         });
 
@@ -208,13 +181,26 @@ describe("Store actions", () => {
                 })
             );
 
-            context.state.selected_tracker_id = 5;
+            const modal_store = useModalStore();
+            const dry_run_store = useDryRunStore();
 
-            await moveDryRun(context, artifact_id);
-            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
-            expect(context.commit).toHaveBeenCalledWith("hasProcessedDryRun", fields);
-            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
-            expect(context.commit).toHaveBeenCalledWith("blockArtifactMove");
+            vi.spyOn(modal_store, "startProcessingMove");
+            vi.spyOn(modal_store, "stopProcessingMove");
+
+            await modal_store.moveDryRun(artifact_id);
+
+            expect(modal_store.startProcessingMove).toHaveBeenCalledOnce();
+            expect(modal_store.stopProcessingMove).toHaveBeenCalledOnce();
+
+            expect(dry_run_store.has_processed_dry_run).toBe(true);
+            expect(dry_run_store.fields_not_migrated).toStrictEqual(fields.fields_not_migrated);
+            expect(dry_run_store.fields_partially_migrated).toStrictEqual(
+                fields.fields_partially_migrated
+            );
+            expect(dry_run_store.fields_migrated).toStrictEqual(fields.fields_migrated);
+
+            expect(dry_run_store.is_move_possible).toBe(false);
+
             expect(redirectTo).not.toHaveBeenCalled();
         });
 
@@ -238,13 +224,16 @@ describe("Store actions", () => {
             moveDryRunArtifact.mockReturnValue(okAsync(return_json));
             moveArtifact.mockReturnValue(okAsync({}));
 
-            context.state.selected_tracker_id = tracker_id;
+            const modal_store = useModalStore();
 
-            await moveDryRun(context, artifact_id);
+            vi.spyOn(modal_store, "startProcessingMove");
+            vi.spyOn(modal_store, "stopProcessingMove");
 
-            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
+            await modal_store.moveDryRun(artifact_id);
+
+            expect(modal_store.startProcessingMove).toHaveBeenCalled();
+            expect(modal_store.stopProcessingMove).toHaveBeenCalled();
             expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
-            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
             expect(redirectTo).toHaveBeenCalledWith(`/plugins/tracker/?aid=${artifact_id}`);
         });
     });

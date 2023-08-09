@@ -21,12 +21,12 @@ import { vi, describe, beforeEach, it, expect } from "vitest";
 import type { SpyInstance } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { MutationTree } from "vuex";
 import * as list_picker from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import { getGlobalTestOptionsWithMockedStore } from "../../tests/global-options-for-tests";
-import type { RootState, Tracker } from "../store/types";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { useSelectorsStore } from "../stores/selectors";
+import type { Tracker } from "../api/types";
 import TrackerSelector from "./TrackerSelector.vue";
 import { TRACKER_ID } from "../injection-symbols";
 
@@ -45,9 +45,7 @@ const trackers: Tracker[] = [
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("TrackerSelector", () => {
-    let createListPicker: SpyInstance,
-        list_picker_instance: ListPicker,
-        saveSelectedTrackerId: SpyInstance;
+    let createListPicker: SpyInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (tracker_id: number): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
@@ -60,11 +58,12 @@ describe("TrackerSelector", () => {
 
         return shallowMount(TrackerSelector, {
             global: {
-                ...getGlobalTestOptionsWithMockedStore({
-                    state: {
-                        trackers,
-                    } as RootState,
-                    mutations: { saveSelectedTrackerId } as unknown as MutationTree<RootState>,
+                ...getGlobalTestOptions({
+                    initialState: {
+                        selectors: {
+                            trackers,
+                        },
+                    },
                 }),
             },
         });
@@ -77,8 +76,6 @@ describe("TrackerSelector", () => {
         createListPicker = vi
             .spyOn(list_picker, "createListPicker")
             .mockReturnValue(list_picker_instance);
-
-        saveSelectedTrackerId = vi.fn();
     });
 
     it("should create a list-picker on its <select> input once mounted", () => {
@@ -131,7 +128,7 @@ describe("TrackerSelector", () => {
         select_wrapper.element.selectedIndex = 1;
         select_wrapper.trigger("change");
 
-        expect(saveSelectedTrackerId).toHaveBeenCalledWith(expect.any(Object), trackers[1].id);
+        expect(useSelectorsStore().saveSelectedTrackerId).toHaveBeenCalledWith(trackers[1].id);
     });
 
     it("When the component is about to be destroyed, then the list picker instance should be destroyed.", () => {

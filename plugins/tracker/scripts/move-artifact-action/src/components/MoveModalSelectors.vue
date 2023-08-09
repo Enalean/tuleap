@@ -22,29 +22,27 @@
         data-test="move-modal-selectors"
         v-bind:class="{
             'move-artifact-selectors': true,
-            'move-artifact-selectors-preview': has_processed_dry_run,
+            'move-artifact-selectors-preview': dry_run_store.has_processed_dry_run,
         }"
     >
-        <project-selector v-if="!is_loading_initial" />
+        <project-selector v-if="!selectors_store.are_projects_loading" />
         <div
             data-test="move-modal-selectors-spinner"
             v-bind:class="{
                 'move-artifact-tracker-loader': true,
-                'move-artifact-tracker-loader-spinner': are_trackers_loading,
+                'move-artifact-tracker-loader-spinner': selectors_store.are_trackers_loading,
             }"
         ></div>
-        <tracker-selector v-if="!is_loading_initial" />
+        <tracker-selector v-if="!selectors_store.are_projects_loading" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
-import type { RootState } from "../store/types.js";
-
+import { useDryRunStore } from "../stores/dry-run";
+import { useSelectorsStore } from "../stores/selectors";
 import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
 
-const { is_loading_initial, are_trackers_loading, has_processed_dry_run } = useState<
-    Pick<RootState, "is_loading_initial" | "are_trackers_loading" | "has_processed_dry_run">
->(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]);
+const dry_run_store = useDryRunStore();
+const selectors_store = useSelectorsStore();
 </script>

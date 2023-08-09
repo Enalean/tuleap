@@ -19,39 +19,42 @@
 
 import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import type { ArtifactField, DryRunState, RootState } from "../store/types";
-
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { useDryRunStore } from "../stores/dry-run";
 import DryRunFullyMigratedFieldState from "./DryRunFullyMigratedFieldState.vue";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-const getWrapper = (fields_migrated: ArtifactField[]): VueWrapper =>
+const getWrapper = (): VueWrapper =>
     shallowMount(DryRunFullyMigratedFieldState, {
         global: {
-            ...getGlobalTestOptions({
-                dry_run_fields: {
-                    fields_migrated,
-                } as DryRunState,
-            } as RootState),
+            ...getGlobalTestOptions(),
         },
     });
 
 describe("DryRunFullyMigratedFieldState", () => {
-    it("should not display anything when there are no fully migrated fields.", () => {
-        const wrapper = getWrapper([]);
+    it("should not display anything when there are no fully migrated fields.", async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_migrated: [],
+        });
 
         expect(wrapper.find("[data-test=dry-run-message-info]").exists()).toBe(false);
     });
 
-    it("should display the list of the fully migrated fields when there are some.", () => {
-        const wrapper = getWrapper([
-            {
-                field_id: 123,
-                label: "A field",
-                name: "a_field",
-            },
-        ]);
+    it("should display the list of the fully migrated fields when there are some.", async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_migrated: [
+                {
+                    field_id: 123,
+                    label: "A field",
+                    name: "a_field",
+                },
+            ],
+        });
 
         expect(wrapper.find("[data-test=dry-run-message-info]").exists()).toBe(true);
         expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(true);

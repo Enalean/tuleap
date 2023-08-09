@@ -19,18 +19,18 @@
 
 import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import type { RootState } from "../store/types";
-
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { useSelectorsStore } from "../stores/selectors";
+import { useDryRunStore } from "../stores/dry-run";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
 
-const getWrapper = (state: RootState): VueWrapper =>
+const getWrapper = (): VueWrapper =>
     shallowMount(MoveModalSelectors, {
         global: {
-            ...getGlobalTestOptions(state),
+            ...getGlobalTestOptions(),
         },
     });
 
@@ -39,13 +39,14 @@ describe("MoveModalSelectors", () => {
         ["should not", true, false],
         ["should", false, true],
     ])(
-        "%s display the selectors when is_loading_initial is %s.",
-        (what, is_loading_initial, expected) => {
-            const wrapper = getWrapper({
-                is_loading_initial,
+        "%s display the selectors when are_projects_loading is %s.",
+        async (what, are_projects_loading, expected) => {
+            const wrapper = getWrapper();
+
+            await useSelectorsStore().$patch({
+                are_projects_loading,
                 are_trackers_loading: false,
-                has_processed_dry_run: false,
-            } as RootState);
+            });
 
             expect(wrapper.findComponent(ProjectSelector).exists()).toBe(expected);
             expect(wrapper.findComponent(TrackerSelector).exists()).toBe(expected);
@@ -55,34 +56,46 @@ describe("MoveModalSelectors", () => {
     it.each([
         ["should", true],
         ["should not", false],
-    ])("%s display the spinner when are_trackers_loading is %s.", (what, are_trackers_loading) => {
-        const wrapper = getWrapper({
-            is_loading_initial: false,
-            are_trackers_loading,
-            has_processed_dry_run: false,
-        } as RootState);
+    ])(
+        "%s display the spinner when are_trackers_loading is %s.",
+        async (what, are_trackers_loading) => {
+            const wrapper = getWrapper();
 
-        expect(
-            wrapper
-                .find("[data-test=move-modal-selectors-spinner]")
-                .classes("move-artifact-tracker-loader-spinner")
-        ).toBe(are_trackers_loading);
-    });
+            await useSelectorsStore().$patch({
+                are_projects_loading: false,
+                are_trackers_loading,
+            });
+
+            expect(
+                wrapper
+                    .find("[data-test=move-modal-selectors-spinner]")
+                    .classes("move-artifact-tracker-loader-spinner")
+            ).toBe(are_trackers_loading);
+        }
+    );
 
     it.each([
         ["The selectors container should have", true],
         ["The selectors container should not have", false],
-    ])("%s the preview class when has_processed_dry_run is %s", (what, has_processed_dry_run) => {
-        const wrapper = getWrapper({
-            is_loading_initial: false,
-            are_trackers_loading: false,
-            has_processed_dry_run,
-        } as RootState);
+    ])(
+        "%s the preview class when has_processed_dry_run is %s",
+        async (what, has_processed_dry_run) => {
+            const wrapper = getWrapper();
 
-        expect(
-            wrapper
-                .find("[data-test=move-modal-selectors]")
-                .classes("move-artifact-selectors-preview")
-        ).toBe(has_processed_dry_run);
-    });
+            await useSelectorsStore().$patch({
+                are_projects_loading: false,
+                are_trackers_loading: false,
+            });
+
+            await useDryRunStore().$patch({
+                has_processed_dry_run,
+            });
+
+            expect(
+                wrapper
+                    .find("[data-test=move-modal-selectors]")
+                    .classes("move-artifact-selectors-preview")
+            ).toBe(has_processed_dry_run);
+        }
+    );
 });

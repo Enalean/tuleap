@@ -20,7 +20,7 @@
 import type { ResultAsync } from "neverthrow";
 import { uri, patchJSON, getAllJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
-import type { Tracker, Project, DryRunState } from "../store/types";
+import type { Tracker, Project, DryRunResultPayload } from "./types";
 
 export function getProjectList(): ResultAsync<ReadonlyArray<Project>, Fault> {
     return getAllJSON<Project>(uri`/api/projects`, {
@@ -43,12 +43,6 @@ export function getTrackerList(project_id: number): ResultAsync<ReadonlyArray<Tr
         },
     });
 }
-
-type DryRunResultPayload = {
-    dry_run: {
-        fields: DryRunState;
-    };
-};
 
 export function moveDryRunArtifact(
     artifact_id: number,

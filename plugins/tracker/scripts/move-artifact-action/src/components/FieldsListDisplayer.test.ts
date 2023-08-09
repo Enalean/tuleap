@@ -18,13 +18,13 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { VueWrapper } from "@vue/test-utils";
-import type { ArtifactField, DryRunStateType } from "../store/types";
-
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import type { ArtifactField } from "../api/types";
+import type { DryRunFieldsType } from "../types";
+import { TYPE_FULLY_MIGRATED, TYPE_NOT_MIGRATED, TYPE_PARTIALLY_MIGRATED } from "../types";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
-import { TYPE_FULLY_MIGRATED, TYPE_NOT_MIGRATED, TYPE_PARTIALLY_MIGRATED } from "../store/types";
 
 const getFields = (count: number): ArtifactField[] => {
     const fields: ArtifactField[] = [];
@@ -42,7 +42,7 @@ const getFields = (count: number): ArtifactField[] => {
     return fields;
 };
 
-const getWrapper = (fields: ArtifactField[], type: DryRunStateType): VueWrapper =>
+const getWrapper = (fields: ArtifactField[], type: DryRunFieldsType): VueWrapper =>
     shallowMount(FieldsListDisplayer, {
         global: {
             ...getGlobalTestOptions(),
@@ -55,14 +55,14 @@ const getWrapper = (fields: ArtifactField[], type: DryRunStateType): VueWrapper 
 
 describe("FieldsListDisplayer", () => {
     it("should only display the list of fields if there are 5 of them or less", () => {
-        const wrapper = getWrapper(getFields(5), "fully-migrated");
+        const wrapper = getWrapper(getFields(5), TYPE_FULLY_MIGRATED);
 
         expect(wrapper.findAll("[data-test=field-label]")).toHaveLength(5);
         expect(wrapper.find("[data-test=show-more-fields-button]").exists()).toBe(false);
     });
 
     it("When there are more than 5 fields, then it should display only 5 fields and a [Show more] button", () => {
-        const wrapper = getWrapper(getFields(10), "fully-migrated");
+        const wrapper = getWrapper(getFields(10), TYPE_FULLY_MIGRATED);
 
         expect(wrapper.findAll("[data-test=field-label]")).toHaveLength(5);
         expect(wrapper.find("[data-test=show-more-fields-button]").exists()).toBe(true);
@@ -80,7 +80,7 @@ describe("FieldsListDisplayer", () => {
     );
 
     it("When the user clicks on [Show more], then all the fields are shown and the button disappears", async () => {
-        const wrapper = getWrapper(getFields(10), "fully-migrated");
+        const wrapper = getWrapper(getFields(10), TYPE_FULLY_MIGRATED);
 
         const show_more_button = wrapper.find("[data-test=show-more-fields-button]");
 

@@ -18,11 +18,11 @@
  */
 
 import { createApp } from "vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { createPinia } from "pinia";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import MoveModal from "./components/MoveModal.vue";
-import { createInitializedStore } from "./store";
 import {
     ARTIFACT_ID,
     PROJECT_ID,
@@ -52,6 +52,6 @@ export async function init(vue_mount_point: HTMLElement): Promise<void> {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             })
         )
-        .use(createInitializedStore())
+        .use(createPinia())
         .mount(vue_mount_point);
 }
