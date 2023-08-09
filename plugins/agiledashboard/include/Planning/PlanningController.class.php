@@ -45,6 +45,7 @@ use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\Home\KanbanSummaryPresenter;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\NeverThrow\Err;
@@ -192,6 +193,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
         $project = $this->getProjectFromRequest();
 
+        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service = $service !== null;
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($configuration->getPlannings()),
             $this->group_id,
@@ -211,6 +215,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(
                 (new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider())->getCSRF($project),
             ),
+            $is_using_kanban_service,
+            $service?->getUrl(),
         );
         return $this->renderToString('home', $presenter);
     }

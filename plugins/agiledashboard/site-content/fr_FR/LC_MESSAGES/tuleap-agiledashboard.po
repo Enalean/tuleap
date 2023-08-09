@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "\"AddToTopBacklog\" post action cannot be used because the project does not "
@@ -179,7 +179,7 @@ msgid "Create a new planning"
 msgstr "Créer un nouveau planning"
 
 msgid "Define the initial effort of an artifact."
-msgstr "Définir l'effort estimé d'un artéfact"
+msgstr "Définir l'effort estimé d'un artéfact."
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -338,6 +338,9 @@ msgstr ""
 
 msgid "No tracker is available."
 msgstr "Aucun tracker n'est disponible."
+
+msgid "Note: kanban is being moved to its %s dedicated page%s."
+msgstr "Note : kanban est déplacé dans sa %s page dédiée%s."
 
 msgid ""
 "Note:<br>Importing a template will create new trackers. The import will not "
@@ -509,6 +512,13 @@ msgstr "La configuration a été importée !"
 msgid "The field you submitted is not a numeric field"
 msgstr "Le champ soumis n'est pas un champ numérique"
 
+msgid ""
+"The information below are displayed for information purpose and will be "
+"removed soon."
+msgstr ""
+"Les informations ci-dessous sont affichées à titre d'information et seront "
+"supprimées prochainement."
+
 #, php-format
 msgid "The initial effort is now: %1$s"
 msgstr "L'effort estimé est maintenant : %1$s"
@@ -640,7 +650,7 @@ msgid "View Planning"
 msgstr "Vue du Planning"
 
 msgid "We created an initial scrum configuration for you. Enjoy!"
-msgstr "La configuration initiale de scrum a été effectuée pour vous."
+msgstr "La configuration initiale de scrum a été effectuée pour vous !"
 
 #, php-format
 msgid ""

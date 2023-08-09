@@ -21,6 +21,24 @@
     </div>
 
     <div class="kanban-home-ad">
+        {{# is_using_kanban_service }}
+            <div class="alert alert-info">
+                <p>
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Note: kanban is being moved to its %s dedicated page%s. |
+                        <a href="{{ kanban_service_url }}"> |
+                        </a>
+                    {{/ dgettext }}
+                </p>
+                <p>
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        The information below are displayed for information purpose and will be removed soon.
+                    {{/ dgettext }}
+                </p>
+            </div>
+        {{/ is_using_kanban_service }}
         {{# kanban_summary_presenters }}
         <div class="milestone">
             <div class="header">
