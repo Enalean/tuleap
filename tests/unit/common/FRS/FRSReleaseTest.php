@@ -19,11 +19,19 @@
  *
  */
 
-class FRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+namespace Tuleap\FRS;
+
+use FRSPackage;
+use FRSPackageDao;
+use FRSPackageFactory;
+use FRSRelease;
+use Project;
+use ProjectManager;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class FRSReleaseTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testIsActive()
+    public function testIsActive(): void
     {
         $active_value  = 1;
         $deleted_value = 2;
@@ -31,16 +39,16 @@ class FRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.
 
         $r = new FRSRelease();
         $r->setStatusId($active_value);
-        $this->assertTrue($r->isActive());
+        self::assertTrue($r->isActive());
 
         $r->setStatusId($hidden_value);
-        $this->assertFalse($r->isActive());
+        self::assertFalse($r->isActive());
 
         $r->setStatusId($deleted_value);
-        $this->assertFalse($r->isActive());
+        self::assertFalse($r->isActive());
     }
 
-    public function testIsHidden()
+    public function testIsHidden(): void
     {
         $active_value  = 1;
         $deleted_value = 2;
@@ -48,16 +56,16 @@ class FRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.
 
         $r = new FRSRelease();
         $r->setStatusId($hidden_value);
-        $this->assertTrue($r->isHidden());
+        self::assertTrue($r->isHidden());
 
         $r->setStatusId($active_value);
-        $this->assertFalse($r->isHidden());
+        self::assertFalse($r->isHidden());
 
         $r->setStatusId($deleted_value);
-        $this->assertFalse($r->isHidden());
+        self::assertFalse($r->isHidden());
     }
 
-    public function testIsDeleted()
+    public function testIsDeleted(): void
     {
         $active_value  = 1;
         $deleted_value = 2;
@@ -65,81 +73,88 @@ class FRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.
 
         $r = new FRSRelease();
         $r->setStatusId($deleted_value);
-        $this->assertTrue($r->isDeleted());
+        self::assertTrue($r->isDeleted());
 
         $r->setStatusId($hidden_value);
-        $this->assertFalse($r->isDeleted());
+        self::assertFalse($r->isDeleted());
 
         $r->setStatusId($active_value);
-        $this->assertFalse($r->isDeleted());
+        self::assertFalse($r->isDeleted());
     }
 
-    public function testGetProjectWithProjectSet()
+    public function testGetProjectWithProjectSet(): void
     {
         $r = new FRSRelease();
 
         $p = new Project(['group_id' => 101]);
         $r->setProject($p);
 
-        $this->assertSame($p, $r->getProject());
+        self::assertSame($p, $r->getProject());
     }
 
-    public function testGetProjectWithGroupIdSet()
+    public function testGetProjectWithGroupIdSet(): void
     {
-        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r = $this->createPartialMock(FRSRelease::class, [
+            '_getProjectManager',
+        ]);
         $r->setGroupID(123);
 
         $p = new Project(['group_id' => 101]);
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
+        $pm = $this->createMock(ProjectManager::class);
+        $pm->expects(self::once())->method('getProject')->with(123)->willReturn($p);
 
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $r->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertSame($p, $r->getProject());
+        self::assertSame($p, $r->getProject());
     }
 
-    public function testGetProjectWithNeitherProjectNorGroupID()
+    public function testGetProjectWithNeitherProjectNorGroupID(): void
     {
-        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r = $this->createPartialMock(FRSRelease::class, [
+            '_getFRSPackageFactory',
+            '_getProjectManager',
+        ]);
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(['group_id' => 123]);
 
-        $pf = \Mockery::spy(\FRSPackageFactory::class);
-        $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
-        $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
+        $pf = $this->createMock(FRSPackageFactory::class);
+        $pf->expects(self::once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
+        $r->method('_getFRSPackageFactory')->willReturn($pf);
 
         $p  = new Project(['group_id' => 101]);
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $pm = $this->createMock(ProjectManager::class);
+        $pm->expects(self::once())->method('getProject')->with(123)->willReturn($p);
+        $r->method('_getProjectManager')->willReturn($pm);
 
-        $this->assertSame($p, $r->getProject());
+        self::assertSame($p, $r->getProject());
     }
 
-    public function testGetGroupIdWithoutProjectSet()
+    public function testGetGroupIdWithoutProjectSet(): void
     {
-        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r = $this->createPartialMock(FRSRelease::class, [
+            '_getFRSPackageFactory',
+        ]);
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(['group_id' => 123]);
 
-        $pf = \Mockery::spy(\FRSPackageFactory::class);
-        $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
-        $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
+        $pf = $this->createMock(FRSPackageFactory::class);
+        $pf->expects(self::once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
+        $r->method('_getFRSPackageFactory')->willReturn($pf);
 
-        $this->assertSame($r->getGroupID(), 123);
+        self::assertSame($r->getGroupID(), 123);
     }
 
-    public function testGetGroupIdWithProjectSet()
+    public function testGetGroupIdWithProjectSet(): void
     {
         $r = new FRSRelease();
 
-        $p = \Mockery::spy(\Project::class);
-        $p->shouldReceive('getID')->andReturns(123);
+        $p = $this->createMock(Project::class);
+        $p->method('getID')->willReturn(123);
         $r->setProject($p);
 
-        $this->assertSame($r->getGroupID(), 123);
+        self::assertSame($r->getGroupID(), 123);
     }
 }

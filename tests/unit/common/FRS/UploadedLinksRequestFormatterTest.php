@@ -21,18 +21,24 @@
 
 namespace Tuleap\FRS;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use HTTPRequest;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UploadedLinksRequestFormatterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItExtractsOneArrayFromLinksProvidedInRequest(): void
     {
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test', '']);
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['http://example.com', 'ftp://example.com']);
-        $request->shouldReceive('validArray')->andReturns(true);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('get')->withConsecutive(
+            ['uploaded-link-name'],
+            ['uploaded-link'],
+            ['uploaded-link']
+        )->willReturnOnConsecutiveCalls(
+            ['test', ''],
+            ['http://example.com', 'ftp://example.com'],
+            ['http://example.com', 'ftp://example.com']
+        );
+        $request->method('validArray')->willReturn(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = [
@@ -40,44 +46,65 @@ final class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestC
             ['link' => 'ftp://example.com', 'name' => ''],
         ];
 
-        $this->assertSame($expected_links, $formatter->formatFromRequest($request));
+        self::assertSame($expected_links, $formatter->formatFromRequest($request));
     }
 
     public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput(): void
     {
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test']);
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['http://example.com', 'https://example.com']);
-        $request->shouldReceive('validArray')->andReturns(true);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('get')->withConsecutive(
+            ['uploaded-link-name'],
+            ['uploaded-link'],
+            ['uploaded-link']
+        )->willReturnOnConsecutiveCalls(
+            ['test'],
+            ['http://example.com', 'https://example.com'],
+            ['http://example.com', 'https://example.com']
+        );
+        $request->method('validArray')->willReturn(true);
 
-        $this->expectException('Tuleap\FRS\UploadedLinksInvalidFormException');
+        self::expectException(UploadedLinksInvalidFormException::class);
         $formatter = new UploadedLinksRequestFormatter();
         $formatter->formatFromRequest($request);
     }
 
     public function testItDoesNotAcceptInvalidLinks(): void
     {
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['invalid']);
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['example.com']);
-        $request->shouldReceive('validArray')->andReturns(true);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('get')->withConsecutive(
+            ['uploaded-link-name'],
+            ['uploaded-link'],
+            ['uploaded-link']
+        )->willReturnOnConsecutiveCalls(
+            ['invalid'],
+            ['example.com'],
+            ['example.com']
+        );
+        $request->method('validArray')->willReturn(true);
 
         $formatter = new UploadedLinksRequestFormatter();
 
-        $this->expectException('Tuleap\FRS\UploadedLinksInvalidFormException');
+        self::expectException(UploadedLinksInvalidFormException::class);
         $formatter->formatFromRequest($request);
     }
 
     public function testItDoesNotEmptyLinks(): void
     {
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns([""]);
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns([""]);
-        $request->shouldReceive('validArray')->andReturns(true);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('get')->withConsecutive(
+            ['uploaded-link-name'],
+            ['uploaded-link'],
+            ['uploaded-link']
+        )->willReturnOnConsecutiveCalls(
+            [""],
+            [""],
+            [""]
+        );
+        $request->method('validArray')->willReturn(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = [];
 
-        $this->assertSame($expected_links, $formatter->formatFromRequest($request));
+        self::assertSame($expected_links, $formatter->formatFromRequest($request));
     }
 }
