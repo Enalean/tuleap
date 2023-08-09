@@ -116,6 +116,7 @@ export interface StoreOptions {
         nb_backlog_items?: number;
         nb_upcoming_releases?: number;
         nb_past_releases?: number;
+        project_name?: string;
     };
     getters?: {
         has_rest_error?: boolean;

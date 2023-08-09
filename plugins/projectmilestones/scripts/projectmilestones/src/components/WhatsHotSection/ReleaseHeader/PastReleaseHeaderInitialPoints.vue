@@ -23,13 +23,7 @@
         <span class="release-remaining-value" data-test="points-initial-value">
             {{ formatPoints(release_data.initial_effort) }}
         </span>
-        <translate
-            class="release-remaining-text"
-            v-bind:translate-n="release_data.initial_effort"
-            translate-plural="pts done"
-        >
-            pt done
-        </translate>
+        <span class="release-remaining-text">{{ pts_done }}</span>
     </div>
 </template>
 
@@ -44,5 +38,10 @@ export default class PastReleaseHeaderInitialPoints extends Vue {
     readonly release_data!: MilestoneData;
 
     formatPoints = (pts: number | null): number => pts ?? 0;
+
+    get pts_done(): string {
+        const initial_effort = this.release_data.initial_effort ?? 0;
+        return this.$ngettext("pt done", "pts done", initial_effort);
+    }
 }
 </script>

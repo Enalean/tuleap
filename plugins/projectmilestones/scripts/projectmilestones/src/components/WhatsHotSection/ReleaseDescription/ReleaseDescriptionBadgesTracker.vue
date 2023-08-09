@@ -19,7 +19,7 @@
 
 <template>
     <div v-if="display_badges_trackers_section" class="release-number-artifact">
-        <h2 class="tlp-pane-subtitle" data-test="subtitle-tracker" v-translate>Content</h2>
+        <h2 class="tlp-pane-subtitle" data-test="subtitle-tracker">{{ $gettext("Content") }}</h2>
         <div class="release-number-artifact-container">
             <div
                 v-for="tracker in trackers_to_display"

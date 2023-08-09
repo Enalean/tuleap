@@ -19,7 +19,9 @@
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label" v-if="last_release" v-translate>Recently closed</span>
+        <span class="project-release-label" v-if="last_release">{{
+            $gettext("Recently closed")
+        }}</span>
         <release-displayer
             v-if="last_release"
             v-bind:key="last_release.id"
@@ -27,22 +29,13 @@
             v-bind:is-past-release="true"
             v-bind:is-open="false"
         />
-        <span class="project-release-label" v-translate>Past</span>
+        <span class="project-release-label"> {{ $gettext("Past") }} </span>
         <div class="project-other-releases">
             <div class="project-release-time-stripe-icon">
                 <i class="fa fa-angle-double-down"></i>
             </div>
             <a class="releases-link" v-bind:href="past_release_link" data-test="past-releases-link">
-                <translate
-                    v-bind:translate-params="{
-                        nb_past: nb_past_releases,
-                        label_tracker: label_tracker_planning,
-                    }"
-                    v-bind:translate-n="nb_past_releases"
-                    translate-plural="%{nb_past} past %{label_tracker}"
-                >
-                    %{nb_past} past %{label_tracker}
-                </translate>
+                {{ past_releases }}
             </a>
         </div>
     </div>
@@ -76,6 +69,19 @@ export default class PastSection extends Vue {
             encodeURIComponent(this.project_id) +
             "&period=past"
         );
+    }
+
+    get past_releases(): string {
+        const translated = this.$ngettext(
+            "%{nb_past} past %{label_tracker}",
+            "%{nb_past} past %{label_tracker}",
+            this.nb_past_releases
+        );
+
+        return this.$gettextInterpolate(translated, {
+            nb_past: this.nb_past_releases,
+            label_tracker: this.label_tracker_planning,
+        });
     }
 }
 </script>

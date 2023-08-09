@@ -45,6 +45,7 @@ describe("RoadmapEmptyStateSection", () => {
                 is_loading: false,
                 current_milestones: [],
                 project_id: project_id,
+                project_name: "my project",
             },
             getters: {
                 has_rest_error: false,

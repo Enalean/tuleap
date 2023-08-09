@@ -20,28 +20,20 @@
 <template>
     <div class="project-release-badges-capacity-effort">
         <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
-            <translate
-                v-if="capacity_exists"
-                v-bind:translate-params="{ capacity: release_data.capacity }"
-                data-test="capacity-not-empty"
-            >
-                Capacity: %{capacity}
-            </translate>
-            <translate v-else data-test="capacity-empty">Capacity: N/A</translate>
+            <span v-if="capacity_exists" data-test="capacity-not-empty">{{ capacity_label }}</span>
+            <span v-else data-test="capacity-empty">{{ $gettext("Capacity: N/A") }}</span>
         </div>
         <div
             class="project-release-info-badge tlp-badge-outline"
             v-bind:class="initial_effort_badge_class"
             data-test="initial_effort_badge"
         >
-            <translate
-                v-if="initial_effort_exists"
-                v-bind:translate-params="{ initialEffort: release_data.initial_effort }"
-                data-test="initial-effort-not-empty"
-            >
-                Initial effort: %{initialEffort}
-            </translate>
-            <translate v-else data-test="initial-effort-empty">Initial effort: N/A</translate>
+            <span v-if="initial_effort_exists" data-test="initial-effort-not-empty">
+                {{ initial_effort_label }}
+            </span>
+            <span v-else data-test="initial-effort-empty">{{
+                $gettext("Initial effort: N/A")
+            }}</span>
         </div>
         <release-buttons-description v-bind:release_data="release_data">
             <a
@@ -131,6 +123,18 @@ export default class ReleaseOthersBadges extends Vue {
 
         return this.$gettextInterpolate(this.$gettext("%{label_submilestone} Planning"), {
             label_submilestone: label,
+        });
+    }
+
+    get capacity_label(): string {
+        return this.$gettextInterpolate(this.$gettext("Capacity: %{capacity}"), {
+            capacity: this.release_data.capacity,
+        });
+    }
+
+    get initial_effort_label(): string {
+        return this.$gettextInterpolate(this.$gettext("Initial effort: %{initialEffort}"), {
+            initialEffort: this.release_data.initial_effort,
         });
     }
 }

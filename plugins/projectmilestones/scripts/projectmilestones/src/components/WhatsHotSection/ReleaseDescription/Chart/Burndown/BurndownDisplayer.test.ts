@@ -55,6 +55,8 @@ describe("BurndownDisplayer", () => {
             state: {
                 project_id,
                 is_timeframe_duration: true,
+                label_timeframe: "timeframe",
+                label_start_date: "start_date",
             },
         };
 

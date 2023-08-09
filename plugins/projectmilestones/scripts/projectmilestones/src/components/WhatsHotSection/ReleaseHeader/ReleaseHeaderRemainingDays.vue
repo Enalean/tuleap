@@ -35,13 +35,7 @@
             >
                 {{ formatDate(release_data.number_days_until_end) }}
             </span>
-            <translate
-                class="release-remaining-text"
-                v-bind:translate-n="release_data.number_days_until_end"
-                translate-plural="days to go"
-            >
-                day to go
-            </translate>
+            <span class="release-remaining-text">{{ days_to_go_label }}</span>
         </div>
         <div class="release-remaining-progress">
             <div
@@ -127,6 +121,11 @@ export default class ReleaseHeaderRemainingDays extends Vue {
         }
 
         return this.dates_progress.toFixed(2).toString() + "%";
+    }
+
+    get days_to_go_label(): string {
+        const days_to_go = this.release_data.number_days_until_end ?? 0;
+        return this.$ngettext("day to go", "days to go", days_to_go);
     }
 }
 </script>

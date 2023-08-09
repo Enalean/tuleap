@@ -41,7 +41,6 @@ import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import Burndown from "./Burndown.vue";
 import { State } from "vuex-class";
-import { sprintf } from "sprintf-js";
 @Component({
     components: { ChartError, Burndown },
 })
@@ -56,11 +55,17 @@ export default class BurndownDisplayer extends Vue {
     readonly label_timeframe!: string;
 
     get message_error_duration(): string {
-        return sprintf(this.$gettext("'%s' field is empty or invalid."), this.label_timeframe);
+        return this.$gettextInterpolate(
+            this.$gettext("'%{field_name}' field is empty or invalid."),
+            { field_name: this.label_timeframe }
+        );
     }
 
     get message_error_start_date(): string {
-        return sprintf(this.$gettext("'%s' field is empty or invalid."), this.label_start_date);
+        return this.$gettextInterpolate(
+            this.$gettext("'%{field_name}' field is empty or invalid."),
+            { field_name: this.label_start_date }
+        );
     }
 
     get has_error_duration(): boolean {

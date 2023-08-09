@@ -21,7 +21,7 @@
     <div v-if="is_testmanagement_available" class="container-chart-ttm">
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
         <div v-else-if="has_rest_error || are_some_tests_to_display" class="release-ttm-section">
-            <h2 class="tlp-pane-subtitle" v-translate>Tests Results</h2>
+            <h2 class="tlp-pane-subtitle">{{ $gettext("Tests Results") }}</h2>
             <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
                 {{ message_error_rest }}
             </div>

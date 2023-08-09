@@ -24,16 +24,7 @@
         data-test="total-closed-sprints"
     >
         <i class="fa fa-map-signs tlp-badge-icon"></i>
-        <translate
-            v-bind:translate-params="{
-                total_closed_sprint: release_data.total_closed_sprint,
-                tracker_label: tracker_submilestone_label,
-            }"
-            v-bind:translate-n="release_data.total_closed_sprint"
-            translate-plural="%{ total_closed_sprint } closed %{tracker_label}"
-        >
-            %{total_closed_sprint} closed %{tracker_label}
-        </translate>
+        {{ closed_sprints_label }}
     </div>
 </template>
 
@@ -68,6 +59,20 @@ export default class ReleaseBadgesClosedSprints extends Vue {
             typeof this.release_data.total_closed_sprint === "number" &&
             this.user_can_view_sub_milestones_planning
         );
+    }
+
+    get closed_sprints_label(): string {
+        const closed_sprints = this.release_data.total_closed_sprint ?? 0;
+        const translated = this.$ngettext(
+            "%{total_closed_sprint} closed %{tracker_label}",
+            "%{total_closed_sprint} closed %{tracker_label}",
+            closed_sprints
+        );
+
+        return this.$gettextInterpolate(translated, {
+            total_closed_sprint: this.release_data.total_closed_sprint,
+            tracker_label: this.tracker_submilestone_label,
+        });
     }
 }
 </script>

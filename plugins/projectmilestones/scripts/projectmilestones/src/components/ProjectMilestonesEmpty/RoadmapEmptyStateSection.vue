@@ -19,19 +19,17 @@
 
 <template>
     <div class="project-release-timeframe">
-        <translate class="project-release-label">Roadmap</translate>
+        <span class="project-release-label">{{ $gettext("Roadmap") }}</span>
         <div class="empty-state-pane" data-test="project-milestone-empty-state">
             <s-v-g-project-milestones-empty-state />
-            <translate class="empty-state-text" v-bind:translate-params="{ name: project_name }">
-                There is no item nor milestone in the %{ name } backlog yet.
-            </translate>
+            <span class="empty-state-text">{{ empty_state_label }}</span>
             <a
                 v-bind:href="backlog_link"
                 class="button-backlog-link empty-state-action"
                 data-test="backlog-link"
             >
                 <button type="button" class="tlp-button-primary">
-                    <translate>Start Planning</translate>
+                    {{ $gettext("Start Planning") }}
                     <i
                         class="tlp-button-icon-right fas fa-long-arrow-alt-right"
                         data-test="display-arrow"
@@ -61,6 +59,13 @@ export default class RoadmapEmptyStateSection extends Vue {
             "/plugins/agiledashboard/?action=show-top&group_id=" +
             encodeURIComponent(this.project_id) +
             "&pane=topplanning-v2"
+        );
+    }
+
+    get empty_state_label(): string {
+        return this.$gettextInterpolate(
+            this.$gettext("There is no item nor milestone in the %{ name } backlog yet."),
+            { name: this.project_name }
         );
     }
 }

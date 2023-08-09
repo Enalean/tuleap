@@ -29,9 +29,13 @@ async function getPersonalWidgetInstance(
     store_options: StoreOptions
 ): Promise<Wrapper<RoadmapSection>> {
     const store = createStoreMock(store_options);
+
     const component_options = {
         mocks: { $store: store },
         localVue: await createReleaseWidgetLocalVue(),
+        propsData: {
+            label_tracker_planning: "sprint",
+        },
     };
 
     return shallowMount(RoadmapSection, component_options);
@@ -45,6 +49,8 @@ describe("RoadmapSection", () => {
                 is_loading: false,
                 current_milestones: [],
                 project_id: project_id,
+                nb_backlog_items: 2,
+                nb_upcoming_releases: 1,
             },
             getters: {
                 has_rest_error: false,
