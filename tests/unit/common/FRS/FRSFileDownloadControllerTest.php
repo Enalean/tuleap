@@ -24,76 +24,71 @@ namespace Tuleap\FRS;
 
 use FRSFile;
 use FRSFileFactory;
-use Mockery;
 use org\bovigo\vfs\vfsStream;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Project_AccessException;
-use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use URLVerification;
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FRSFileDownloadControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\MockInterface|URLVerification
+     * @var MockObject&URLVerification
      */
     private $url_verification;
     /**
-     * @var FRSFileFactory|Mockery\MockInterface
+     * @var MockObject&FRSFileFactory
      */
     private $file_factory;
 
     protected function setUp(): void
     {
-        $this->url_verification = Mockery::mock(URLVerification::class);
-        $this->file_factory     = Mockery::mock(FRSFileFactory::class);
+        $this->url_verification = $this->createMock(URLVerification::class);
+        $this->file_factory     = $this->createMock(FRSFileFactory::class);
     }
 
     public function testFileCanBeDownloaded(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
+        $current_user = UserTestBuilder::aUser()->withId(102)->build();
 
         $controller = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub($current_user),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user->shouldReceive('getId')->andReturn(102);
-        $server_request->shouldReceive('getHeaderLine')->with('Range')->andReturn('');
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12')->withHeader('Range', '');
 
-        $frs_file = Mockery::mock(FRSFile::class);
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
-        $frs_file->shouldReceive('getGroup')->andReturn(Mockery::mock(Project::class));
-        $frs_file->shouldReceive('userCanDownload')->andReturn(true);
-        $frs_file->shouldReceive('isActive')->andReturn(true);
-        $frs_file->shouldReceive('fileExists')->andReturn(true);
+        $frs_file = $this->createMock(FRSFile::class);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
+        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('userCanDownload')->willReturn(true);
+        $frs_file->method('isActive')->willReturn(true);
+        $frs_file->method('fileExists')->willReturn(true);
         $filepath  = vfsStream::setup()->url() . '/file';
         $file_data = 'ABCDE';
         file_put_contents($filepath, $file_data);
-        $frs_file->shouldReceive('getFileLocation')->andReturn($filepath);
-        $frs_file->shouldReceive('getFileName')->andReturn('my_file');
+        $frs_file->method('getFileLocation')->willReturn($filepath);
+        $frs_file->method('getFileName')->willReturn('my_file');
 
-        $this->url_verification->shouldReceive('userCanAccessProject');
+        $this->url_verification->method('userCanAccessProject');
 
-        $frs_file->shouldReceive('LogDownload')->once();
+        $frs_file->expects(self::once())->method('LogDownload');
 
         $response = $controller->handle($server_request);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($file_data, $response->getBody()->getContents());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals($file_data, $response->getBody()->getContents());
     }
 
     public function testNonExistingFileRequestIsRejected(): void
@@ -102,99 +97,91 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn(null);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn(null);
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheUserCanNotAccessTheProject(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
+        $current_user = UserTestBuilder::aUser()->withId(102)->build();
         $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub($current_user),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(102);
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = Mockery::mock(FRSFile::class);
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
-        $frs_file->shouldReceive('getGroup')->andReturn(Mockery::mock(Project::class));
+        $frs_file = $this->createMock(FRSFile::class);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
+        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
 
-        $this->url_verification->shouldReceive('userCanAccessProject')
-            ->andThrow(Mockery::mock(Project_AccessException::class));
+        $this->url_verification->method('userCanAccessProject')
+            ->willThrowException($this->createMock(Project_AccessException::class));
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheFileIsNotActive(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
+        $current_user = UserTestBuilder::aUser()->withId(102)->build();
         $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub($current_user),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user->shouldReceive('getId')->andReturn(102);
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = Mockery::mock(FRSFile::class);
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
-        $frs_file->shouldReceive('getGroup')->andReturn(Mockery::mock(Project::class));
-        $frs_file->shouldReceive('userCanDownload')->andReturn(true);
-        $frs_file->shouldReceive('isActive')->andReturn(false);
+        $frs_file = $this->createMock(FRSFile::class);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
+        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('userCanDownload')->willReturn(true);
+        $frs_file->method('isActive')->willReturn(false);
 
-        $this->url_verification->shouldReceive('userCanAccessProject');
+        $this->url_verification->method('userCanAccessProject');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheFileIsNotReadableByTheUser(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
+        $current_user = UserTestBuilder::aUser()->withId(102)->build();
         $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub($current_user),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user->shouldReceive('getId')->andReturn(102);
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = Mockery::mock(FRSFile::class);
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
-        $frs_file->shouldReceive('getGroup')->andReturn(Mockery::mock(Project::class));
-        $frs_file->shouldReceive('userCanDownload')->andReturn(true);
-        $frs_file->shouldReceive('isActive')->andReturn(true);
-        $frs_file->shouldReceive('fileExists')->andReturn(false);
-        $frs_file->shouldReceive('getFileID')->andReturn(12);
+        $frs_file = $this->createMock(FRSFile::class);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
+        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('userCanDownload')->willReturn(true);
+        $frs_file->method('isActive')->willReturn(true);
+        $frs_file->method('fileExists')->willReturn(false);
+        $frs_file->method('getFileID')->willReturn(12);
 
-        $this->url_verification->shouldReceive('userCanAccessProject');
+        $this->url_verification->method('userCanAccessProject');
 
-        $this->expectException(FRSFileNotPresentInStorage::class);
+        self::expectException(FRSFileNotPresentInStorage::class);
         $controller->handle($server_request);
     }
 
@@ -204,17 +191,16 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class),
+            new NoopSapiEmitter(),
             new CurrentRequestUserProviderStub(null),
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
         $frs_file = $this->createStub(FRSFile::class);
-        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
+        $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 }

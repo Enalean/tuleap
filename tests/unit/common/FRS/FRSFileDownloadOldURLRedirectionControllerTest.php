@@ -22,28 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
-use Mockery;
-use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Http\HTTPFactoryBuilder;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class FRSFileDownloadOldURLRedirectionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FRSFileDownloadOldURLRedirectionControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testOldURLsAreRedirectedToTheNewURL(): void
     {
         $controller = new FRSFileDownloadOldURLRedirectionController(
             HTTPFactoryBuilder::responseFactory(),
-            Mockery::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
 
-        $server_request = Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
+        $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
         $response = $controller->handle($server_request);
 
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('/file/download/12', $response->getHeaderLine('Location'));
+        self::assertEquals(301, $response->getStatusCode());
+        self::assertEquals('/file/download/12', $response->getHeaderLine('Location'));
     }
 }
