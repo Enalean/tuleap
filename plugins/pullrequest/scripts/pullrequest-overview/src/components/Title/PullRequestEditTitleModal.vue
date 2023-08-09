@@ -108,7 +108,9 @@ const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const postPullRequestUpdateCallback = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
 
 const can_user_edit_title = computed(
-    (): boolean => props.pull_request_info !== null && props.pull_request_info.user_can_merge
+    (): boolean =>
+        props.pull_request_info !== null &&
+        props.pull_request_info.user_can_update_title_and_description
 );
 
 watch(

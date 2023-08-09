@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+
 /**
  * @psalm-immutable
  */
@@ -39,4 +40,14 @@ class PullRequestPATCHRepresentation
      * @var string {@type string} {@required false}
      */
     public $description;
+
+    public function __construct(
+        string $status,
+        string $title,
+        string $description,
+    ) {
+        $this->status      = $status;
+        $this->title       = $title;
+        $this->description = $description;
+    }
 }

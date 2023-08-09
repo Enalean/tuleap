@@ -60,6 +60,7 @@ interface CommonPullRequest {
     readonly user_can_reopen: boolean;
     readonly user_can_abandon: boolean;
     readonly user_can_update_labels: boolean;
+    readonly user_can_update_title_and_description: boolean;
     readonly status: PullRequestStatusType;
     readonly merge_status: PullRequestMergeStatusType;
     readonly status_info: PullRequestStatusInfo | null;

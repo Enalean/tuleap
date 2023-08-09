@@ -35,10 +35,10 @@ class PullRequestRepresentationFactory
     public const BUILD_STATUS_PENDING = 'pending';
 
     public function __construct(
-        private AccessControlVerifier $access_control_verifier,
-        private CommitStatusRetriever $commit_status_retriever,
-        private GitoliteAccessURLGenerator $gitolite_access_URL_generator,
-        private PullRequestStatusInfoRepresentationBuilder $status_info_representation_builder,
+        private readonly AccessControlVerifier $access_control_verifier,
+        private readonly CommitStatusRetriever $commit_status_retriever,
+        private readonly GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        private readonly PullRequestStatusInfoRepresentationBuilder $status_info_representation_builder,
     ) {
     }
 
@@ -86,6 +86,7 @@ class PullRequestRepresentationFactory
             $user_can_update_labels,
             $last_build_status_name,
             $last_build_date,
+            $user,
             $short_stat_repres,
             $this->status_info_representation_builder->buildPullRequestStatusInfoRepresentation($pull_request)
         );
