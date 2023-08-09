@@ -302,4 +302,8 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
             )
         );
     }
+
+    public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
+    {
+    }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Service;
 
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 
 /**
  * Plugins that implements this interface will automatically be able to register a new Service
@@ -50,4 +51,8 @@ interface PluginWithService
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void;
 
     public function addMissingService(AddMissingService $event): void;
+
+    public function servicesAllowedForProject(array $params): void;
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void;
 }

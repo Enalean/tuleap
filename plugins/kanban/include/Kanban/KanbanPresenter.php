@@ -29,6 +29,7 @@ use ProjectManager;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use TrackerFactory;
+use Tuleap\Kanban\Home\KanbanHomeController;
 use Tuleap\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
@@ -52,7 +53,6 @@ final class KanbanPresenter
     /** @var string json of Tuleap\Kanban\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
     public string $dashboard_dropdown_representation;
     public int $user_is_kanban_admin;
-    public int $project_id;
     public int $user_id;
     public string $view_mode;
     public int $widget_id;
@@ -64,6 +64,7 @@ final class KanbanPresenter
     public bool $user_accessibility_mode;
 
     public bool $mercure_enabled;
+    public readonly string $kanban_homepage_url;
 
     public function __construct(
         Kanban $kanban,
@@ -114,8 +115,9 @@ final class KanbanPresenter
             $kanban_representation_builder->build($kanban, $user),
             JSON_THROW_ON_ERROR,
         );
+        $project                                 = $project_manager->getProject($project_id);
         $this->dashboard_dropdown_representation = json_encode(
-            $widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)),
+            $widget_dropdown_builder->build($kanban, $user, $project),
             JSON_THROW_ON_ERROR
         );
         $this->tracker_reports                   = json_encode(
@@ -124,12 +126,12 @@ final class KanbanPresenter
         );
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
-        $this->project_id                        = $project_id;
         $this->user_id                           = (int) $user->getId();
         $this->view_mode                         = (string) $user->getPreference(
             'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
         );
         $this->kanban_url                        = '/kanban/' . urlencode((string) $kanban->getId());
+        $this->kanban_homepage_url               = KanbanHomeController::getHomeUrl($project);
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->mercure_enabled                   = ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) === "1";
     }

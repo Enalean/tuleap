@@ -80,7 +80,6 @@ use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Kanban\Legacy\BreadCrumbForKanbanEvent;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -224,7 +223,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
             $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
-            $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
             $this->addHook(TrackerReportProcessAdditionalQuery::NAME);
             $this->addHook(GetExternalSubFactoriesEvent::NAME);
             $this->addHook(WorkflowDeletionEvent::NAME);
@@ -263,7 +261,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return ['kanban', 'tracker', 'cardwall'];
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::PLUGIN_SHORTNAME;
     }
@@ -543,19 +541,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceForKanbanEvent(ServiceForKanbanEvent $event): void
     {
-        $service = $event->project->getService($this->getServiceShortname());
-        if ($service) {
-            $event->service = \Tuleap\Option\Option::fromValue($service);
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function breadCrumbForKanbanEvent(BreadCrumbForKanbanEvent $event): void
-    {
-        $agile_dashboard_crumb_builder = new AgileDashboardCrumbBuilder($this->getPluginPath());
-        $event->breadcrumbs->addBreadCrumb(
-            $agile_dashboard_crumb_builder->build($event->user, $event->project),
-        );
+        $event->service = $event->project->getService($this->getServiceShortname());
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

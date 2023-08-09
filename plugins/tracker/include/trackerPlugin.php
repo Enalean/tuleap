@@ -401,7 +401,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
-        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(NewDropdownProjectLinksCollector::NAME);
 
@@ -624,7 +623,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }

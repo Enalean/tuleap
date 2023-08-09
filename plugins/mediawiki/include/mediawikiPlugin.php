@@ -144,7 +144,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
@@ -895,5 +895,9 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
             $rank_in_project = $service->getRank();
             $event->addPane($content, $rank_in_project);
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
+    {
     }
 }

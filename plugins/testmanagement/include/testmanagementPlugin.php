@@ -160,7 +160,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return ['tracker'];
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
@@ -881,7 +881,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         $checker->checkPostActions($event);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

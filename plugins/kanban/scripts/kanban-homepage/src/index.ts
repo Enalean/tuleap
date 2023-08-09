@@ -23,4 +23,16 @@ import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
     openAllTargetModalsOnClick(document, ".kanban-create-kanban-button");
+
+    const key = "tuleap_feedback";
+    if (sessionStorage[key]) {
+        const feedback = document.getElementById("feedback");
+        if (feedback) {
+            const success = document.createElement("div");
+            success.classList.add("tlp-alert-success");
+            success.textContent = sessionStorage[key];
+            feedback.appendChild(success);
+        }
+        delete sessionStorage[key];
+    }
 });

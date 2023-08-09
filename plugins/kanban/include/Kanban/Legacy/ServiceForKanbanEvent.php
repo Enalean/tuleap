@@ -22,18 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\Legacy;
 
-use Tuleap\Option\Option;
-
 final class ServiceForKanbanEvent implements \Tuleap\Event\Dispatchable
 {
-    /**
-     * @var Option<\Service>
-     */
-    public Option $service;
+    public ?\Service $service = null;
 
     public function __construct(
         public readonly \Project $project,
     ) {
-        $this->service = Option::nothing(\Service::class);
     }
 }

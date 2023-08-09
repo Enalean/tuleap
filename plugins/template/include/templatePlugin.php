@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/autoload.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class templatePlugin extends Plugin
 {
     public function __construct($id)
@@ -39,7 +40,7 @@ class templatePlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return 'plugin_template';
     }

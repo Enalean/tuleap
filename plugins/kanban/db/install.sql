@@ -52,3 +52,8 @@ CREATE TABLE plugin_agiledashboard_kanban_recently_visited (
     PRIMARY KEY(user_id, kanban_id),
     INDEX idx_user_visit_time(user_id, created_on)
 ) ENGINE=InnoDB;
+
+INSERT INTO service(`group_id`, `label`, `description`, `short_name`, `link`, `is_active`, `is_used`, `scope`, `rank`)
+SELECT DISTINCT service.group_id,'label','','plugin_kanban',NULL,1,0,'system',154
+FROM service
+WHERE short_name != 'plugin_kanban';

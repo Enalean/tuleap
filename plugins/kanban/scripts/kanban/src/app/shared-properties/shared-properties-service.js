@@ -8,13 +8,13 @@ function SharedPropertiesService() {
         kanban: undefined,
         view_mode: undefined,
         user_is_admin: false,
-        project_id: undefined,
         is_node_server_connected: false,
         nodejs_server_version: undefined,
         uuid: undefined,
         dashboard_dropdown: undefined,
         widget_id: 0,
         kanban_url: "",
+        kanban_homepage_url: "",
         mercure_enabled: false,
         is_mercure_server_connected: false,
     };
@@ -51,12 +51,6 @@ function SharedPropertiesService() {
         },
         setUserIsAdmin(user_is_admin) {
             property.user_is_admin = user_is_admin;
-        },
-        setProjectId(project_id) {
-            property.project_id = project_id;
-        },
-        getProjectId() {
-            return property.project_id;
         },
         setIsNodeServerConnected(is_node_server_connected) {
             property.is_node_server_connected = is_node_server_connected;
@@ -102,6 +96,12 @@ function SharedPropertiesService() {
         },
         setKanbanUrl(kanban_url) {
             property.kanban_url = kanban_url;
+        },
+        getKanbanHomepageUrl() {
+            return property.kanban_homepage_url;
+        },
+        setKanbanHomepageUrl(kanban_homepage_url) {
+            property.kanban_homepage_url = kanban_homepage_url;
         },
         setSelectedTrackerReportId(report_id) {
             property.selected_tracker_report_id = report_id;

@@ -484,13 +484,15 @@ describe("KanbanService", () => {
             const kanban = { label: "Tasks" };
             jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
 
-            jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(103);
+            jest.spyOn(SharedPropertiesService, "getKanbanHomepageUrl").mockReturnValue(
+                "/projects/acme/kanban"
+            );
             const setItem = jest.spyOn(Storage.prototype, "setItem");
 
             KanbanService.removeKanban();
 
             expect(setItem).toHaveBeenCalledWith("tuleap_feedback", expect.any(String));
-            expect($window.location.href).toBe("/plugins/agiledashboard/?group_id=103");
+            expect($window.location.href).toBe("/projects/acme/kanban");
         });
     });
 

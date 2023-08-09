@@ -29,6 +29,6 @@ final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerToke
 {
     public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
-        return new \CSRFSynchronizerToken(KanbanHomeController::getLegacyHomeUrl($project));
+        return new \CSRFSynchronizerToken(KanbanHomeController::getHomeUrl($project));
     }
 }

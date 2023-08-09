@@ -45,6 +45,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)
@@ -87,12 +88,12 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return 'plugin_botmattermost_git';
     }
 
-    public function git_additional_notifications(array $params)
+    public function git_additional_notifications(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $render            = $this->getController($params['request'])->render($params['repository']);
@@ -124,7 +125,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function pullrequest_hook_create_pull_request(GetCreatePullRequest $event)
+    public function pullrequest_hook_create_pull_request(GetCreatePullRequest $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $pull_request           = $event->getPullRequest();
         $creator                = $event->getCreator();
@@ -161,7 +162,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function javascript_file(array $params): void
+    public function javascript_file(array $params): void  //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
@@ -175,7 +176,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function botmattermost_bot_deleted(BotMattermostDeleted $event)
+    public function botmattermost_bot_deleted(BotMattermostDeleted $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }

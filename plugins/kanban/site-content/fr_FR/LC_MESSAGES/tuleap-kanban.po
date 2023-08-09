@@ -90,6 +90,9 @@ msgstr "Kanban"
 msgid "Kanban %1$s successfully created."
 msgstr "Kanban %1$s créé avec succès."
 
+msgid "Kanban boards"
+msgstr "Tableaux Kanban"
+
 msgid "Kanban cards"
 msgstr "Cartes de Kanban"
 

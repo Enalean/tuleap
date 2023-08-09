@@ -155,7 +155,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
         }
     }
 
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return 'plugin_pullrequest';
     }
