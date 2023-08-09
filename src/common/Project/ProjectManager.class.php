@@ -24,11 +24,16 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Status\SwitchingBackToPendingException;
+use Tuleap\Project\Status\SwitchingBackToPendingFault;
+use Tuleap\Project\Status\UpdateAlreadyDeletedProjectFault;
+use Tuleap\Project\Status\UpdateStatusChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipProjectVisibilityToggler;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
@@ -457,18 +462,26 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
 
     /**
      * @throws DeletedProjectStatusChangeException
+     * @throws SwitchingBackToPendingException
      */
     public function updateStatus(Project $project, string $status): void
     {
-        if ($project->getStatus() === Project::STATUS_DELETED) {
-            throw new DeletedProjectStatusChangeException();
-        }
+        UpdateStatusChecker::checkProjectStatusCanBeUpdated($project, $status)->match(
+            function () use ($project, $status): void {
+                if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
+                }
 
-        if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
-        }
-
-        $this->removeProjectFromCache($project);
+                $this->removeProjectFromCache($project);
+            },
+            function (Fault $fault): void {
+                if ($fault instanceof UpdateAlreadyDeletedProjectFault) {
+                    throw new DeletedProjectStatusChangeException();
+                } elseif ($fault instanceof SwitchingBackToPendingFault) {
+                    throw new SwitchingBackToPendingException();
+                }
+            }
+        );
     }
 
     public function removeProjectFromCache(Project $project): void

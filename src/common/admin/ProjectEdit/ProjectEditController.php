@@ -30,8 +30,10 @@ use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectName;
 use SystemEventManager;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 use Tuleap\Project\Admin\ProjectRenameChecker;
+use Tuleap\Project\Status\UpdateStatusChecker;
 
 class ProjectEditController
 {
@@ -228,19 +230,19 @@ class ProjectEditController
 
     private function checkIfStatusCanBeChanged(Project $project, string $form_status): bool
     {
-        if ($this->hasStatusChanged($project, $form_status)) {
-            if ($form_status === Project::STATUS_PENDING) {
-                $feedback_message = _('Switching the project status back to "pending" is not possible.');
-                $this->sendErrorFeedbackAndRedirect($project->getID(), $feedback_message);
-                return false;
-            }
-            if ($project->getStatus() === Project::STATUS_DELETED) {
-                $feedback_message = _('A deleted project can not be restored.');
-                $this->sendErrorFeedbackAndRedirect($project->getID(), $feedback_message);
-                return false;
-            }
+        if (! $this->hasStatusChanged($project, $form_status)) {
+            return true;
         }
-        return true;
+
+        return UpdateStatusChecker::checkProjectStatusCanBeUpdated($project, $form_status)->match(
+            function () use ($project, $form_status): bool {
+                return true;
+            },
+            function (Fault $fault) use ($project, $form_status): bool {
+                $this->sendErrorFeedbackAndRedirect($project->getID(), $fault->__toString());
+                return false;
+            }
+        );
     }
 
     private function sendErrorFeedbackAndRedirect(int $project_id, string $message): void
