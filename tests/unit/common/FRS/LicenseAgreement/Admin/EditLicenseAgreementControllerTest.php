@@ -23,7 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Mockery;
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ServiceFile;
+use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -32,128 +38,118 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
-use Tuleap\Templating\Mustache\MustacheEngine;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class EditLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EditLicenseAgreementControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private EditLicenseAgreementController $controller;
     /**
-     * @var EditLicenseAgreementController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
+     * @var MockObject&Project
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ServiceFile
+     * @var MockObject&ServiceFile
      */
     private $service_file;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRendererFactory
+     * @var MockObject&TemplateRendererFactory
      */
     private $renderer_factory;
+    private HTTPRequest $request;
+    private PFUser $current_user;
     /**
-     * @var \HTTPRequest
-     */
-    private $request;
-    /**
-     * @var \PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementFactory
+     * @var MockObject&LicenseAgreementFactory
      */
     private $factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var MockObject&BaseLayout
      */
     private $layout;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     * @var MockObject&LicenseAgreementControllersHelper
      */
     private $helper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
+     * @var MockObject&ProjectRetriever
      */
     private $project_retriever;
 
     protected function setUp(): void
     {
-        $this->layout = Mockery::mock(BaseLayout::class);
+        $this->layout = $this->createMock(BaseLayout::class);
 
-        $this->current_user = new \PFUser(['language_id' => 'en_US']);
+        $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->request = new \HTTPRequest();
+        $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project = Mockery::mock(\Project::class, ['getID' => '101']);
-        $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
+        $this->project = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->project->method('getFileService')->willReturn($this->service_file);
 
-        $this->project_retriever = \Mockery::mock(ProjectRetriever::class);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever = $this->createMock(ProjectRetriever::class);
+        $this->project_retriever->expects(self::once())->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
 
-        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
-        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
-        $this->helper->shouldReceive('renderHeader')->with($this->project);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper->method('renderHeader')->with($this->project);
 
-        $this->factory = Mockery::mock(LicenseAgreementFactory::class);
+        $this->factory = $this->createMock(LicenseAgreementFactory::class);
 
+        $assets = $this->createMock(IncludeAssets::class);
+        $assets->method('getFileURL');
         $this->controller = new EditLicenseAgreementController(
             $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,
-            Mockery::mock(\CSRFSynchronizerToken::class),
-            Mockery::spy(IncludeAssets::class),
+            $this->createMock(CSRFSynchronizerToken::class),
+            $assets,
         );
     }
 
     public function testItRendersThePageWithCustomLicenseAgreement(): void
     {
-        $content_renderer = Mockery::mock(MustacheEngine::class);
-        $content_renderer->shouldReceive('renderToPage')->with('edit-license-agreement', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
+        $content_renderer = $this->createMock(TemplateRenderer::class);
+        $content_renderer->expects(self::once())->method('renderToPage')->with('edit-license-agreement', self::anything());
+        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
-        }))->andReturn($content_renderer);
+        }))->willReturn($content_renderer);
 
-        $this->layout->shouldReceive('includeFooterJavascriptFile');
-        $this->layout->shouldReceive('footer');
+        $this->layout->method('includeFooterJavascriptFile');
+        $this->layout->method('footer');
 
         $license = new LicenseAgreement(1, 'some title', 'some content');
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn($license);
-        $this->factory->shouldReceive('canBeDeleted')->with($this->project, $license)->andReturn(true)->once();
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
+        $this->factory->expects(self::once())->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }
 
     public function testItRendersTheDefaultSiteAgreementInReadOnly(): void
     {
-        $content_renderer = Mockery::mock(MustacheEngine::class);
-        $content_renderer->shouldReceive('renderToPage')->with('view-default-license-agreement', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
+        $content_renderer = $this->createMock(TemplateRenderer::class);
+        $content_renderer->expects(self::once())->method('renderToPage')->with('view-default-license-agreement', self::anything());
+        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
-        }))->andReturn($content_renderer);
+        }))->willReturn($content_renderer);
 
-        $this->layout->shouldReceive('includeFooterJavascriptFile');
-        $this->layout->shouldReceive('footer');
+        $this->layout->method('includeFooterJavascriptFile');
+        $this->layout->method('footer');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 0)->andReturn(new DefaultLicenseAgreement());
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 0)->willReturn(new DefaultLicenseAgreement());
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '0']);
     }
 
     public function testItThrowAnExceptionWhenTryingToRenderAnInvalidLicense(): void
     {
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
+        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }

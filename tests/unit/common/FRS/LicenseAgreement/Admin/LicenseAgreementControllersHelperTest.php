@@ -23,83 +23,79 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Mockery;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ServiceFile;
+use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Templating\Mustache\MustacheEngine;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class LicenseAgreementControllersHelperTest extends \Tuleap\Test\PHPUnit\TestCase
+class LicenseAgreementControllersHelperTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ServiceFile
+     * @var MockObject&ServiceFile
      */
     private $service_file;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
+     * @var MockObject&Project
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRendererFactory
+     * @var MockObject&TemplateRendererFactory
      */
     private $renderer_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FRSPermissionManager
+     * @var MockObject&FRSPermissionManager
      */
     private $permissions_manager;
-    /**
-     * @var \PFUser
-     */
-    private $current_user;
-    /**
-     * @var LicenseAgreementControllersHelper
-     */
-    private $helper;
+    private PFUser $current_user;
+    private LicenseAgreementControllersHelper $helper;
 
     protected function setUp(): void
     {
-        $this->current_user = new \PFUser(['language_id' => 'en_US']);
+        $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
-        $this->project      = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
-        $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
+        $this->service_file = $this->createConfiguredMock(ServiceFile::class, ['displayFRSHeader' => 'foo']);
+        $this->project      = $this->createConfiguredMock(Project::class, ['isError' => false, 'getID' => '101']);
 
-        $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
 
-        $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue()->byDefault();
+        $this->permissions_manager = $this->createMock(FRSPermissionManager::class);
 
         $this->helper = new LicenseAgreementControllersHelper($this->permissions_manager, $this->renderer_factory);
     }
 
     public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
     {
-        $this->project->shouldReceive('getFileService')->andReturnNull();
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
+        $this->project->method('getFileService')->willReturn(null);
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
 
         $this->helper->assertCanAccess($this->project, $this->current_user);
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
     {
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnFalse();
+        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(false);
 
-        $this->expectException(ForbiddenException::class);
+        self::expectException(ForbiddenException::class);
 
         $this->helper->assertCanAccess($this->project, $this->current_user);
     }
 
     public function testItRendersFrsAdminHeader(): void
     {
-        $header_renderer = Mockery::mock(MustacheEngine::class);
-        $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
+        $this->project->method('getFileService')->willReturn($this->service_file);
+        $header_renderer = $this->createMock(TemplateRenderer::class);
+        $header_renderer->expects(self::once())->method('renderToPage')->with('toolbar-presenter', self::anything());
+        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
-        }))->andReturn($header_renderer);
+        }))->willReturn($header_renderer);
 
         $this->helper->renderHeader($this->project);
     }
