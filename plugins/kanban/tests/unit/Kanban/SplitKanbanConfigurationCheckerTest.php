@@ -30,16 +30,16 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testTrueWhenFeatureFlagIsNotSetAtAll(): void
+    public function testFalseWhenFeatureFlagIsNotSetAtAll(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
         $checker = new SplitKanbanConfigurationChecker();
 
-        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
+        self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
 
-    public function testTrueWhenFeatureFlagIsSetTo0(): void
+    public function testFalseWhenFeatureFlagIsSetTo0(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -47,10 +47,10 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         $checker = new SplitKanbanConfigurationChecker();
 
-        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
+        self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
 
-    public function testTrueWhenProjectIdIsNotPartOfFeatureFlag(): void
+    public function testFalseWhenProjectIdIsNotPartOfFeatureFlag(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -58,10 +58,10 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         $checker = new SplitKanbanConfigurationChecker();
 
-        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
+        self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
 
-    public function testFalseWhenProjectIdIsPartOfFeatureFlag(): void
+    public function testTrueWhenProjectIdIsPartOfFeatureFlag(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(123)->build();
 
@@ -69,6 +69,17 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         $checker = new SplitKanbanConfigurationChecker();
 
-        self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
+        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
+    }
+
+    public function testTrueWhenFeatureFlagIsSetForAllProjects(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(123)->build();
+
+        \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '1');
+
+        $checker = new SplitKanbanConfigurationChecker();
+
+        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
 }

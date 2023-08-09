@@ -26,14 +26,18 @@ final class SplitKanbanConfigurationChecker
 {
     public function isProjectAllowedToUseSplitKanban(\Project $project): bool
     {
-        $list_of_project_ids_without_split_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplitKanbanConfiguration::FEATURE_FLAG);
+        $list_of_project_ids_with_split_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplitKanbanConfiguration::FEATURE_FLAG);
 
-        if (! $list_of_project_ids_without_split_kanban) {
+        if (! $list_of_project_ids_with_split_kanban) {
+            return false;
+        }
+
+        if ($list_of_project_ids_with_split_kanban === [1]) {
             return true;
         }
 
-        $is_deactivated = in_array((int) $project->getID(), $list_of_project_ids_without_split_kanban, true);
+        $is_activated = in_array((int) $project->getID(), $list_of_project_ids_with_split_kanban, true);
 
-        return ! $is_deactivated;
+        return $is_activated;
     }
 }
