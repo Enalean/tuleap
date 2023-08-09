@@ -25,7 +25,6 @@ use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use TrackerFactory;
-use Tuleap\Kanban\Home\KanbanHomeController;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
@@ -60,7 +59,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         $breadcrumbs->addBreadCrumb(new BreadCrumb(
             new BreadCrumbLink(
                 dgettext('tuleap-kanban', 'Kanban'),
-                KanbanHomeController::getHomeUrl($project),
+                Service\KanbanServiceHomepageUrlBuilder::getUrl($project),
             )
         ));
         $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban));

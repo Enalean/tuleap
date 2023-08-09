@@ -133,9 +133,4 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
 
         return $kanban_presenters;
     }
-
-    public static function getHomeUrl(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameMixedCase()) . '/kanban';
-    }
 }

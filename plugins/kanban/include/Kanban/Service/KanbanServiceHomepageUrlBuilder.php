@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Kanban\Home;
+namespace Tuleap\Kanban\Service;
 
-use Tuleap\Kanban\Service\KanbanServiceHomepageUrlBuilder;
-use Tuleap\Project\Routing\ProjectCSRFSynchronizerTokenProvider;
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Project;
 
-final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
+final class KanbanServiceHomepageUrlBuilder
 {
-    public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
+    public static function getUrl(Project $project): string
     {
-        return new \CSRFSynchronizerToken(KanbanServiceHomepageUrlBuilder::getUrl($project));
+        return '/projects/' . urlencode($project->getUnixNameMixedCase()) . '/kanban';
     }
 }
