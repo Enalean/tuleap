@@ -29,14 +29,16 @@ interface PullRequestWithProjectAndRepository {
 
 export function buildVueOverviewURL(
     location: Location,
-    pull_request: PullRequestWithProjectAndRepository
+    pull_request: PullRequestWithProjectAndRepository,
+    current_project_id: number,
+    current_repository_id: number
 ): URL {
     const url = new URL("/plugins/git/", location.origin);
     url.searchParams.set("action", "pull-requests");
-    url.searchParams.set("repo_id", encodeURIComponent(pull_request.repository.id));
-    url.searchParams.set("group_id", encodeURIComponent(pull_request.repository.project.id));
+    url.searchParams.set("repo_id", encodeURIComponent(current_repository_id));
+    url.searchParams.set("group_id", encodeURIComponent(current_project_id));
     url.searchParams.set("tab", "overview");
-    url.hash = `#/pull-requests/${pull_request.id}/overview`;
+    url.hash = `#/pull-requests/${encodeURIComponent(pull_request.id)}/overview`;
 
     return url;
 }

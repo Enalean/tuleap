@@ -19,7 +19,12 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
                 return "";
             }
 
-            return buildVueOverviewURL(window.location, pull_request).toString();
+            return buildVueOverviewURL(
+                window.location,
+                pull_request,
+                SharedPropertiesService.getProjectId(),
+                SharedPropertiesService.getRepositoryId()
+            ).toString();
         },
     });
 

@@ -25,21 +25,26 @@ describe("vue-overview-url-builder", () => {
             origin: "https://www.example.com",
         } as unknown as Location;
 
-        const url = buildVueOverviewURL(location, {
-            id: 15,
-            repository: {
-                id: 2,
-                project: {
-                    id: 105,
-                    icon: "",
-                    label: "R&D stuff",
-                    uri: "uri/to/project",
+        const url = buildVueOverviewURL(
+            location,
+            {
+                id: 15,
+                repository: {
+                    id: 2,
+                    project: {
+                        id: 105,
+                        icon: "",
+                        label: "R&D stuff",
+                        uri: "uri/to/project",
+                    },
                 },
             },
-        });
+            101,
+            1
+        );
 
         expect(url.toString()).toBe(
-            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=2&group_id=105&tab=overview#/pull-requests/15/overview"
+            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=1&group_id=101&tab=overview#/pull-requests/15/overview"
         );
     });
 });
