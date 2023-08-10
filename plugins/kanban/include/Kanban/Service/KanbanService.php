@@ -28,7 +28,8 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 final class KanbanService extends \Service
 {
-    public const SERVICE_SHORTNAME = 'plugin_kanban';
+    public const SERVICE_SHORTNAME    = 'plugin_kanban';
+    public const INSTRUMENTATION_NAME = 'kanban';
 
     public function getIconName(): string
     {
