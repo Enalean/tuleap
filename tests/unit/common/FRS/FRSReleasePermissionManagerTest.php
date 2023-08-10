@@ -21,105 +21,113 @@
 
 namespace Tuleap\FRS;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use FrsRelease;
+use FRSReleaseFactory;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class FRSReleasePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+class FRSReleasePermissionManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var FRSPermissionManager
+     * @var MockObject&FRSPermissionManager
      */
     private $frs_service_permission_manager;
 
     /**
-     * @var \FRSReleaseFactory
+     * @var MockObject&FRSReleaseFactory
      */
     private $release_factory;
 
-    /**
-     * @var ReleasePermissionManager
-     */
-    private $release_permission_manager;
+    private ReleasePermissionManager $release_permission_manager;
 
     /**
-     * @var \PFUser
+     * @var MockObject&PFUser
      */
     private $user;
 
     /**
-     * @var \Project
+     * @var MockObject&Project
      */
     private $project;
 
     /**
-     * @var \FrsRelease
+     * @var MockObject&FrsRelease
      */
     private $release;
 
     protected function setUp(): void
     {
-        $this->frs_service_permission_manager = \Mockery::spy(\Tuleap\FRS\FRSPermissionManager::class);
-        $this->release_factory                = \Mockery::spy(\FRSReleaseFactory::class);
+        $this->frs_service_permission_manager = $this->createMock(FRSPermissionManager::class);
+        $this->release_factory                = $this->createMock(FRSReleaseFactory::class);
 
         $this->release_permission_manager = new ReleasePermissionManager(
             $this->frs_service_permission_manager,
             $this->release_factory
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 100, 'getUserName' => false, 'isPublic' => false]);
-        $this->user    = \Mockery::spy(\PFUser::class);
-        $this->release = \Mockery::spy(\FRSRelease::class);
+        $this->project = $this->createConfiguredMock(Project::class, ['getID' => 100, 'isPublic' => false]);
+        $this->user    = $this->createMock(PFUser::class);
+        $this->release = $this->createMock(FRSRelease::class);
     }
 
     public function testItReturnsTrueWhenReleaseIsHiddenAndUserIsFrsAdmin()
     {
-        $this->release->shouldReceive('isHidden')->andReturns(true);
-        $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(true);
+        $this->release->method('isHidden')->willReturn(true);
+        $this->release->method('isActive');
+        $this->release_factory->method('userCanAdmin')->with($this->user, $this->project->getID())->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
         );
     }
 
     public function testItReturnsFalseWhenReleaseIsHiddenAndUserDoesntHaveAdminPermissions()
     {
-        $this->release->shouldReceive('isHidden')->andReturns(true);
-        $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(false);
+        $this->release->method('isHidden')->willReturn(true);
+        $this->release->method('isActive');
+        $this->release_factory->method('userCanAdmin')->with($this->user, $this->project->getID())->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
         );
     }
 
     public function testItReturnsTrueWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanAccessRelease()
     {
-        $this->release->shouldReceive('isActive')->andReturns(true);
-        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);
-        $this->release_factory->shouldReceive('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->andReturns(true);
+        $this->release->method('isActive')->willReturn(true);
+        $this->release->method('getPackageID');
+        $this->release->method('getReleaseID');
+        $this->frs_service_permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(true);
+        $this->release_factory->method('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
         );
     }
 
     public function testItReturnsFalseWhenReleaseIsActiveAndUserCannotAccessFrsService()
     {
-        $this->release->shouldReceive('isActive')->andReturns(true);
-        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(false);
+        $this->release->method('isActive')->willReturn(true);
+        $this->release->method('isHidden');
+        $this->frs_service_permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
         );
     }
 
     public function testItReturnsFalseWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanNotAccessRelease()
     {
-        $this->release->shouldReceive('isActive')->andReturns(true);
-        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);
-        $this->release_factory->shouldReceive('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->andReturns(false);
+        $this->release->method('isActive')->willReturn(true);
+        $this->release->method('getPackageID');
+        $this->release->method('getReleaseID');
+        $this->release->method('isHidden');
+        $this->frs_service_permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(true);
+        $this->release_factory->method('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
         );
     }
