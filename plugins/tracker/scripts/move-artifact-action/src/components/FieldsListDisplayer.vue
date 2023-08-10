@@ -42,13 +42,14 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { ArtifactField, DryRunStateType } from "../store/types";
+import type { ArtifactField } from "../api/types";
+import type { DryRunFieldsType } from "../types";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     readonly fields: ArtifactField[];
-    readonly type: DryRunStateType;
+    readonly type: DryRunFieldsType;
 }>();
 
 const is_minimal_display = ref(true);

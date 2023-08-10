@@ -19,40 +19,46 @@
 
 import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import type { ArtifactField, DryRunState, RootState } from "../store/types";
-
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { useDryRunStore } from "../stores/dry-run";
 import DryRunNotMigratedFieldState from "./DryRunNotMigratedFieldState.vue";
 import FieldsListDisplayer from "./FieldsListDisplayer.vue";
 
-const getWrapper = (fields_not_migrated: ArtifactField[], is_move_possible: boolean): VueWrapper =>
+const getWrapper = (): VueWrapper =>
     shallowMount(DryRunNotMigratedFieldState, {
         global: {
-            ...getGlobalTestOptions({
-                dry_run_fields: {
-                    fields_not_migrated,
-                } as DryRunState,
-                is_move_possible,
-            } as RootState),
+            ...getGlobalTestOptions(),
         },
     });
 
-const field_not_migrated = {
+const field = {
     field_id: 123,
     label: "A field",
     name: "a_field",
 };
 
 describe("DryRunNotMigratedFieldState", () => {
-    it("should not display an error when there is no field which cannot be moved, and the move action is possible", () => {
-        const wrapper = getWrapper([], true);
+    it("should not display an error when there is no field which cannot be moved, and the move action is possible", async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_not_migrated: [],
+            fields_partially_migrated: [],
+            fields_migrated: [field],
+        });
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(false);
     });
 
-    it("should display the list of fields which cannot be moved", () => {
-        const wrapper = getWrapper([field_not_migrated], true);
+    it("should display the list of fields which cannot be moved", async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_not_migrated: [field],
+            fields_partially_migrated: [],
+            fields_migrated: [field],
+        });
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(true);
         expect(wrapper.find("[data-test=not-migrated-field-error-message]").exists()).toBe(true);
@@ -62,8 +68,12 @@ describe("DryRunNotMigratedFieldState", () => {
         );
     });
 
-    it('should display the "move action not possible" error', () => {
-        const wrapper = getWrapper([field_not_migrated], false);
+    it('should display the "move action not possible" error', async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_not_migrated: [field],
+        });
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(true);
         expect(wrapper.find("[data-test=move-action-not-possible-error-message]").exists()).toBe(

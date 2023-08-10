@@ -21,19 +21,18 @@ import { vi, describe, beforeEach, it, expect } from "vitest";
 import type { SpyInstance } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { ActionTree, MutationTree } from "vuex";
 import * as list_picker from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import { getGlobalTestOptionsWithMockedStore } from "../../tests/global-options-for-tests";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { useSelectorsStore } from "../stores/selectors";
 import { PROJECT_ID } from "../injection-symbols";
 import ProjectSelector from "./ProjectSelector.vue";
-import type { RootState } from "../store/types";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 const current_project_id = 217;
-const sorted_projects = [
+const projects = [
     {
         id: 101,
         label: "Project 1",
@@ -45,10 +44,7 @@ const sorted_projects = [
 ];
 
 describe("ProjectSelector", () => {
-    let createListPicker: SpyInstance,
-        list_picker_instance: ListPicker,
-        loadTrackerList: SpyInstance,
-        saveSelectedProjectId: SpyInstance;
+    let createListPicker: SpyInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
@@ -61,12 +57,12 @@ describe("ProjectSelector", () => {
 
         return shallowMount(ProjectSelector, {
             global: {
-                ...getGlobalTestOptionsWithMockedStore({
-                    state: {
-                        projects: sorted_projects,
-                    } as RootState,
-                    actions: { loadTrackerList } as unknown as ActionTree<RootState, RootState>,
-                    mutations: { saveSelectedProjectId } as unknown as MutationTree<RootState>,
+                ...getGlobalTestOptions({
+                    initialState: {
+                        selectors: {
+                            projects,
+                        },
+                    },
                 }),
             },
         });
@@ -80,16 +76,15 @@ describe("ProjectSelector", () => {
         createListPicker = vi
             .spyOn(list_picker, "createListPicker")
             .mockReturnValue(list_picker_instance);
-
-        loadTrackerList = vi.fn();
-        saveSelectedProjectId = vi.fn();
     });
 
     it("should commit the current project id and load its trackers once created", () => {
         getWrapper();
 
-        expect(saveSelectedProjectId).toHaveBeenCalledWith(expect.any(Object), current_project_id);
-        expect(loadTrackerList).toHaveBeenCalledWith(expect.any(Object), current_project_id);
+        const selectors_store = useSelectorsStore();
+
+        expect(selectors_store.saveSelectedProjectId).toHaveBeenCalledWith(current_project_id);
+        expect(selectors_store.loadTrackerList).toHaveBeenCalledWith(current_project_id);
     });
 
     it("should create a list-picker on its <select> input once mounted", () => {
@@ -104,15 +99,15 @@ describe("ProjectSelector", () => {
             "[data-test=move-artifact-project-selector]"
         ).element;
 
-        expect(select.options).toHaveLength(sorted_projects.length);
+        expect(select.options).toHaveLength(projects.length);
 
         const select_options = Array.from(select.options);
 
-        expect(select_options[0].value).toBe(String(sorted_projects[0].id));
-        expect(select_options[0].label).toBe(sorted_projects[0].label);
+        expect(select_options[0].value).toBe(String(projects[0].id));
+        expect(select_options[0].label).toBe(projects[0].label);
 
-        expect(select_options[1].value).toBe(String(sorted_projects[1].id));
-        expect(select_options[1].label).toBe(sorted_projects[1].label);
+        expect(select_options[1].value).toBe(String(projects[1].id));
+        expect(select_options[1].label).toBe(projects[1].label);
     });
 
     it("When a project is selected, then a loadTrackerList event should be dispatched with the selected project's id", () => {
@@ -125,7 +120,7 @@ describe("ProjectSelector", () => {
         select_wrapper.element.selectedIndex = 1;
         select_wrapper.trigger("change");
 
-        expect(loadTrackerList).toHaveBeenCalledWith(expect.any(Object), sorted_projects[1].id);
+        expect(useSelectorsStore().loadTrackerList).toHaveBeenCalledWith(projects[1].id);
     });
 
     it("When the component is about to be destroyed, then the list picker instance should be destroyed.", () => {

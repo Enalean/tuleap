@@ -29,14 +29,10 @@
             name="move-artifact-project-selector"
             data-test="move-artifact-project-selector"
             v-model="selected_project_id"
-            v-on:change="loadTrackerList(selected_project_id)"
+            v-on:change="selectors_store.loadTrackerList(selected_project_id)"
             ref="move_artifact_project_selector"
         >
-            <option
-                v-for="project in sorted_projects"
-                v-bind:key="project.id"
-                v-bind:value="project.id"
-            >
+            <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
                 {{ project.label }}
             </option>
         </select>
@@ -45,32 +41,25 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { useState, useMutations, useActions } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
-import type { RootState } from "../store/types";
-import type { RootActions } from "../store/actions";
-import type { RootMutations } from "../store/mutations";
+import { useSelectorsStore } from "../stores/selectors";
 import { PROJECT_ID } from "../injection-symbols";
-import { ProjectsSorter } from "../helpers/ProjectsSorter";
 
 const { $gettext } = useGettext();
 
-const { saveSelectedProjectId } = useMutations<Pick<RootMutations, "saveSelectedProjectId">>([
-    "saveSelectedProjectId",
-]);
-const { loadTrackerList } = useActions<Pick<RootActions, "loadTrackerList">>(["loadTrackerList"]);
-const { projects } = useState<Pick<RootState, "projects">>(["projects"]);
+const selectors_store = useSelectorsStore();
 
-const sorted_projects = ProjectsSorter.sortProjectsAlphabetically(projects.value);
+const projects = selectors_store.projects;
+
 const current_project_id = strictInject(PROJECT_ID);
 const selected_project_id = ref(current_project_id);
 const list_picker = ref<ListPicker | undefined>();
 const move_artifact_project_selector = ref<HTMLSelectElement>();
 
-saveSelectedProjectId(current_project_id);
-loadTrackerList(current_project_id);
+selectors_store.saveSelectedProjectId(current_project_id);
+selectors_store.loadTrackerList(current_project_id);
 
 onMounted(() => {
     if (!(move_artifact_project_selector.value instanceof HTMLSelectElement)) {

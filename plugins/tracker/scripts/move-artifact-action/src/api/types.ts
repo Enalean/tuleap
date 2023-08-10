@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RootState } from "./types";
+export type ArtifactField = {
+    readonly field_id: number;
+    readonly label: string;
+    readonly name: string;
+};
 
-export const default_state: RootState = {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: "",
-    selected_tracker_id: null,
-    selected_project_id: null,
-    dry_run_fields: {
-        fields_not_migrated: [],
-        fields_partially_migrated: [],
-        fields_migrated: [],
-    },
-    has_processed_dry_run: false,
-    is_processing_move: false,
-    is_move_possible: true,
+export type DryRunState = {
+    readonly fields_not_migrated: ArtifactField[];
+    readonly fields_partially_migrated: ArtifactField[];
+    readonly fields_migrated: ArtifactField[];
+};
+
+export type DryRunResultPayload = {
+    dry_run: {
+        fields: DryRunState;
+    };
+};
+
+export type Project = {
+    readonly id: number;
+    readonly label: string;
+};
+
+export type Tracker = {
+    readonly id: number;
+    readonly label: string;
 };

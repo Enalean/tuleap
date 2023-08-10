@@ -32,7 +32,7 @@
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
             v-model="tracker_id"
-            v-on:change="saveSelectedTrackerId(tracker_id)"
+            v-on:change="selectors_store.saveSelectedTrackerId(tracker_id)"
             ref="move_artifact_tracker_selector"
         >
             <option
@@ -51,25 +51,25 @@
 import { onMounted, onBeforeUnmount, ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
-import { useState, useMutations } from "vuex-composition-helpers";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { RootState } from "../store/types";
-import type { RootMutations } from "../store/mutations";
-import { TrackerSelectorOptions } from "../helpers/TrackerSelectorOptions";
-import type { TrackerSelectorOption } from "../helpers/TrackerSelectorOptions";
+import { useSelectorsStore } from "../stores/selectors";
+import type { Tracker } from "../api/types";
 import { TRACKER_ID } from "../injection-symbols";
-
 const { $gettext } = useGettext();
 
-const { saveSelectedTrackerId } = useMutations<Pick<RootMutations, "saveSelectedTrackerId">>([
-    "saveSelectedTrackerId",
-]);
-const { trackers } = useState<Pick<RootState, "trackers">>(["trackers"]);
+const selectors_store = useSelectorsStore();
+
+type TrackerSelectorOption = Tracker & {
+    disabled: boolean;
+};
 
 const tracker_options = computed((): TrackerSelectorOption[] =>
-    TrackerSelectorOptions.fromTrackers(trackers.value, strictInject(TRACKER_ID))
+    selectors_store.trackers.map((tracker: Tracker) => ({
+        ...tracker,
+        disabled: tracker.id === strictInject(TRACKER_ID),
+    }))
 );
 const tracker_id = ref(null);
 const list_picker = ref<ListPicker | undefined>();

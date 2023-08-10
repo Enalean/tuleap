@@ -17,29 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { vi } from "vitest";
 import type { MountingOptions } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import { createStore } from "vuex";
-import type { StoreOptions } from "vuex";
-import type { RootState } from "../src/store/types";
+import { createTestingPinia } from "@pinia/testing";
 
-export function getGlobalTestOptions(state?: RootState): MountingOptions<unknown>["global"] {
+export function getGlobalTestOptions(initial_state = {}): MountingOptions<unknown>["global"] {
     return {
-        plugins: [createGettext({ silent: true }), createStore({ state })],
-    };
-}
-
-/**
- * Allows us to pass a StoreOptions object containing mocks for actions and mutations.
- *
- * Since we now use Vitest instead of jest, we cannot use @tuleap/vuex-store-wrapper-jest anymore.
- *
- * Will be removed during the replacement of Vuex with Pinia in the next migration step.
- */
-export function getGlobalTestOptionsWithMockedStore(
-    store: StoreOptions<RootState> = {}
-): MountingOptions<unknown>["global"] {
-    return {
-        plugins: [createGettext({ silent: true }), createStore(store)],
+        plugins: [
+            createGettext({ silent: true }),
+            createTestingPinia({
+                createSpy: vi.fn,
+                ...initial_state,
+            }),
+        ],
     };
 }
