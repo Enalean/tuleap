@@ -546,6 +546,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-enalean-licensemanager
 %{summary}.
 
+%package plugin-webauthn
+Summary: WebAuthn plugin
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-webauthn
+Allow users to register and use passkeys with WebAuthn protocol
+
 %endif
 
 %if %{with experimental}
@@ -601,7 +608,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 
 %if %{with enterprise}
@@ -629,6 +635,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %endif
 
 %if "%{?dist}" == ".el9"
