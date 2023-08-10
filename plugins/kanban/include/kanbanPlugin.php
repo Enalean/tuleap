@@ -39,6 +39,7 @@ use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
 use Tuleap\Kanban\KanbanUserPreferences;
+use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Plugin\KanbanPluginInfo;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
@@ -64,6 +65,7 @@ use Tuleap\Kanban\Widget\WidgetKanbanDao;
 use Tuleap\Kanban\Widget\WidgetKanbanDeletor;
 use Tuleap\Kanban\Widget\WidgetKanbanRetriever;
 use Tuleap\Kanban\Widget\WidgetKanbanXMLImporter;
+use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\Kanban\XML\KanbanXmlImporter;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -94,6 +96,8 @@ use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
@@ -749,5 +753,37 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    #[ListeningToEventClass]
+    public function trackerEventExportStructureXML(TrackerEventExportStructureXML $event): void
+    {
+        (new KanbanXMLExporter(
+            new LegacyConfigurationDao(),
+            new KanbanFactory(
+                TrackerFactory::instance(),
+                new KanbanDao()
+            ),
+            new XML_RNGValidator(),
+        ))->export(
+            $event->getXmlElement(),
+            $event->getProject(),
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
+    {
+        (new KanbanXMLExporter(
+            new LegacyConfigurationDao(),
+            new KanbanFactory(
+                TrackerFactory::instance(),
+                new KanbanDao()
+            ),
+            new XML_RNGValidator(),
+        ))->export(
+            $event->getXmlElement(),
+            $event->getProject(),
+        );
     }
 }

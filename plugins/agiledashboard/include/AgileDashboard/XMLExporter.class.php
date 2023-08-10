@@ -21,19 +21,13 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
-use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
-use Tuleap\Kanban\KanbanDao;
 
 class AgileDashboard_XMLExporter
 {
     /**  @var XML_RNGValidator */
     private $xml_validator;
-
-    public const NODE_AGILEDASHBOARD = 'agiledashboard';
 
     /**
      * @var ExplicitBacklogXMLExporter
@@ -44,19 +38,13 @@ class AgileDashboard_XMLExporter
      * @var PlanningXMLExporter
      */
     private $planning_xml_exporter;
-    /**
-     * @var KanbanXMLExporter
-     */
-    private $kanban_XML_exporter;
 
     public function __construct(
         XML_RNGValidator $xml_validator,
         PlanningXMLExporter $planning_xml_exporter,
-        KanbanXMLExporter $kanban_XML_exporter,
         ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter,
     ) {
         $this->xml_validator                 = $xml_validator;
-        $this->kanban_XML_exporter           = $kanban_XML_exporter;
         $this->explicit_backlog_xml_exporter = $explicit_backlog_xml_exporter;
         $this->planning_xml_exporter         = $planning_xml_exporter;
     }
@@ -68,13 +56,6 @@ class AgileDashboard_XMLExporter
         return new AgileDashboard_XMLExporter(
             new XML_RNGValidator(),
             new PlanningXMLExporter(new PlanningPermissionsManager()),
-            new KanbanXMLExporter(
-                new LegacyConfigurationDao(),
-                new KanbanFactory(
-                    $tracker_factory,
-                    new KanbanDao()
-                )
-            ),
             new ExplicitBacklogXMLExporter(
                 new ExplicitBacklogDao(),
                 new ArtifactsInExplicitBacklogDao()
@@ -89,12 +70,10 @@ class AgileDashboard_XMLExporter
      */
     public function export(Project $project, SimpleXMLElement $xml_element, array $plannings): void
     {
-        $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
+        $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
 
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
         $this->planning_xml_exporter->exportPlannings($agiledashboard_node, $plannings);
-
-        $this->kanban_XML_exporter->export($agiledashboard_node, $project);
 
         $this->validateXML($agiledashboard_node);
     }
@@ -106,13 +85,11 @@ class AgileDashboard_XMLExporter
      */
     public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings)
     {
-        $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
+        $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
 
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogContent($project, $agiledashboard_node);
         $this->planning_xml_exporter->exportPlannings($agiledashboard_node, $plannings);
-
-        $this->kanban_XML_exporter->export($agiledashboard_node, $project);
 
         $this->validateXML($agiledashboard_node);
     }
@@ -124,5 +101,20 @@ class AgileDashboard_XMLExporter
     {
         $rng_path = realpath(__DIR__ . '/../../resources/xml_project_agiledashboard.rng');
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
+    }
+
+    private function getAgiledashboardNode(SimpleXMLElement $xml_element): SimpleXMLElement
+    {
+        $existing_agiledashboard_node = $xml_element->agiledashboard;
+        if ($existing_agiledashboard_node) {
+            return $existing_agiledashboard_node;
+        }
+
+        $agiledashboard_node = $xml_element->addChild('agiledashboard');
+        if ($agiledashboard_node === null) {
+            throw new \Exception('Unable to create agiledashboard node');
+        }
+
+        return $agiledashboard_node;
     }
 }

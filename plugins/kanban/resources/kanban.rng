@@ -1,0 +1,43 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="kanban_list">
+    <optional>
+      <attribute name="title">
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <zeroOrMore>
+      <element name="kanban">
+        <attribute name="ID">
+          <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+        <attribute name="tracker_id">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+        <attribute name="name">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+        <zeroOrMore>
+          <element name="column">
+            <attribute name="REF">
+              <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+            <optional>
+              <attribute name="wip">
+                <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </optional>
+          </element>
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
+  </define>
+</div></div>
+  <start>
+    <optional>
+      <element name="kanban_list">
+        <ref name="kanban_list"/>
+      </element>
+    </optional>
+  </start>
+</grammar>

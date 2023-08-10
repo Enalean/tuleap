@@ -58,8 +58,12 @@ class ProjectKanban extends KanbanWidget
         );
     }
 
-    public function exportAsXML(): \SimpleXMLElement
+    public function exportAsXML(): ?\SimpleXMLElement
     {
+        if (! $this->kanban_id) {
+            return null;
+        }
+
         $widget = new \SimpleXMLElement('<widget />');
         $widget->addAttribute('name', $this->id);
 

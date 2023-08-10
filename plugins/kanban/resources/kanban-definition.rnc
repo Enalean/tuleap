@@ -1,0 +1,11 @@
+kanban_list = attribute title { xsd:string }?,
+    element kanban {
+         attribute ID { xsd:ID },
+         attribute tracker_id { xsd:string },
+         attribute name { xsd:string },
+
+         element column {
+            attribute REF { xsd:IDREF },
+            attribute wip { xsd:long }?
+         }*
+    }*

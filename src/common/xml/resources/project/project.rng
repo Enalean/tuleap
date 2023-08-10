@@ -619,101 +619,105 @@
 </div></div>
   <div><div xmlns="http://relaxng.org/ns/structure/1.0">
   <define name="agiledashboard">
-    <optional>
-      <element name="admin">
-        <element name="scrum">
-          <element name="explicit_backlog">
-            <attribute name="is_used">
-              <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </element>
-        </element>
-      </element>
-    </optional>
-    <optional>
-      <element name="top_backlog">
-        <oneOrMore>
-          <element name="artifact">
-            <attribute name="artifact_id">
-              <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </element>
-        </oneOrMore>
-      </element>
-    </optional>
-    <element name="plannings">
-      <zeroOrMore>
-        <element name="planning">
-          <attribute name="name">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </attribute>
-          <attribute name="plan_title">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </attribute>
-          <attribute name="planning_tracker_id">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </attribute>
-          <attribute name="backlog_title">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </attribute>
-          <element name="backlogs">
-            <oneOrMore>
-              <element name="backlog">
-                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-              </element>
-            </oneOrMore>
-          </element>
-          <optional>
-            <element name="permissions">
-              <oneOrMore>
-                <element name="permission">
-                  <attribute name="ugroup">
-                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-                  </attribute>
-                  <attribute name="type">
-                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-                  </attribute>
-                </element>
-              </oneOrMore>
+    <interleave>
+      <optional>
+        <element name="admin">
+          <element name="scrum">
+            <element name="explicit_backlog">
+              <attribute name="is_used">
+                <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
             </element>
-          </optional>
-        </element>
-      </zeroOrMore>
-    </element>
-    <optional>
-      <element name="kanban_list">
-        <optional>
-          <attribute name="title">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </attribute>
-        </optional>
-        <zeroOrMore>
-          <element name="kanban">
-            <attribute name="ID">
-              <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-            <attribute name="tracker_id">
-              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-            <attribute name="name">
-              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-            <zeroOrMore>
-              <element name="column">
-                <attribute name="REF">
-                  <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-                </attribute>
-                <optional>
-                  <attribute name="wip">
-                    <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-                  </attribute>
-                </optional>
-              </element>
-            </zeroOrMore>
           </element>
-        </zeroOrMore>
-      </element>
-    </optional>
+        </element>
+      </optional>
+      <optional>
+        <element name="top_backlog">
+          <oneOrMore>
+            <element name="artifact">
+              <attribute name="artifact_id">
+                <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="plannings">
+          <zeroOrMore>
+            <element name="planning">
+              <attribute name="name">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="plan_title">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="planning_tracker_id">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="backlog_title">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <element name="backlogs">
+                <oneOrMore>
+                  <element name="backlog">
+                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  </element>
+                </oneOrMore>
+              </element>
+              <optional>
+                <element name="permissions">
+                  <oneOrMore>
+                    <element name="permission">
+                      <attribute name="ugroup">
+                        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                      </attribute>
+                      <attribute name="type">
+                        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                      </attribute>
+                    </element>
+                  </oneOrMore>
+                </element>
+              </optional>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="kanban_list">
+          <optional>
+            <attribute name="title">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+          </optional>
+          <zeroOrMore>
+            <element name="kanban">
+              <attribute name="ID">
+                <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="tracker_id">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="name">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <zeroOrMore>
+                <element name="column">
+                  <attribute name="REF">
+                    <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  </attribute>
+                  <optional>
+                    <attribute name="wip">
+                      <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                    </attribute>
+                  </optional>
+                </element>
+              </zeroOrMore>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+    </interleave>
   </define>
 </div></div>
   <div><div xmlns="http://relaxng.org/ns/structure/1.0">

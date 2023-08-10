@@ -19,7 +19,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Kanban\XML\KanbanXMLExporter;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -35,10 +34,6 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var SimpleXMLElement
      */
     private $xml_tree;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|KanbanXMLExporter
-     */
-    private $kanban_XML_exporter;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter
      */
@@ -71,12 +66,10 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->explicit_backlog_xml_exporter = Mockery::mock(Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter::class);
         $this->planning_xml_exporter         = Mockery::mock(Tuleap\AgileDashboard\Planning\XML\XMLExporter::class);
-        $this->kanban_XML_exporter           = Mockery::mock(KanbanXMLExporter::class);
 
         $this->exporter = new AgileDashboard_XMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
-            $this->kanban_XML_exporter,
             $this->explicit_backlog_xml_exporter
         );
 
@@ -88,7 +81,6 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
         $this->explicit_backlog_xml_exporter->shouldNotReceive('exportExplicitBacklogContent');
         $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
-        $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
 
         $this->xml_validator->shouldReceive('validate')->once();
 
@@ -100,7 +92,6 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
         $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogContent')->once();
         $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
-        $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
 
         $this->xml_validator->shouldReceive('validate')->once();
 
@@ -111,7 +102,6 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
         $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
-        $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
 
         $this->xml_validator->shouldReceive('validate')->once()->andThrows(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
 

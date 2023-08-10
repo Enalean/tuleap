@@ -1,0 +1,7 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    include "kanban-definition.rnc"
+
+    start = element kanban_list { kanban_list }?
+}
