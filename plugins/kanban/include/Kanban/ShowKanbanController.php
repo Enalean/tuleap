@@ -53,7 +53,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
     ) {
     }
 
-    public function getBreadcrumbs(\PFUser $user, Project $project, Kanban $kanban): BreadCrumbCollection
+    private function getBreadcrumbs(\PFUser $user, Project $project, Kanban $kanban): BreadCrumbCollection
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(new BreadCrumb(
