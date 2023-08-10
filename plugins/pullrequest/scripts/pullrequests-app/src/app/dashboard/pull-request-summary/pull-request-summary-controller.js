@@ -56,7 +56,12 @@ function PullRequestSummaryController(
     function goToOverview() {
         if (SharedPropertiesService.isVueOverviewShown()) {
             window.location.assign(
-                buildVueOverviewURL(window.location, self.pull_request).toString()
+                buildVueOverviewURL(
+                    window.location,
+                    self.pull_request,
+                    SharedPropertiesService.getProjectId(),
+                    SharedPropertiesService.getRepositoryId()
+                ).toString()
             );
             return;
         }

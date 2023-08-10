@@ -14,6 +14,9 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
     function init() {
         const pullrequest_init_data = $element[0].querySelector(".pullrequest-init-data").dataset;
 
+        const project_id = pullrequest_init_data.projectId;
+        SharedPropertiesService.setProjectId(project_id);
+
         const repository_id = pullrequest_init_data.repositoryId;
         SharedPropertiesService.setRepositoryId(repository_id);
 

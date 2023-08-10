@@ -5,6 +5,7 @@ SharedPropertiesService.$inject = [];
 function SharedPropertiesService() {
     var property = {
         readyPromise: null,
+        project_id: null,
         repository_id: null,
         pull_request: null,
         user_id: null,
@@ -21,6 +22,8 @@ function SharedPropertiesService() {
     return {
         whenReady,
         setReadyPromise,
+        getProjectId,
+        setProjectId,
         getRepositoryId,
         setRepositoryId,
         getPullRequest,
@@ -51,6 +54,14 @@ function SharedPropertiesService() {
 
     function setReadyPromise(promise) {
         property.readyPromise = promise;
+    }
+
+    function getProjectId() {
+        return property.project_id;
+    }
+
+    function setProjectId(repository_id) {
+        property.project_id = parseInt(repository_id, 10);
     }
 
     function getRepositoryId() {
