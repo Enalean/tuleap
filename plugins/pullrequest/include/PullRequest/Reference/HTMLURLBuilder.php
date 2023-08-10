@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest\Reference;
 use GitRepoNotFoundException;
 use GitRepository;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequestV2FeatureFlag;
 use Tuleap\ServerHostname;
 
 class HTMLURLBuilder
@@ -50,11 +49,8 @@ class HTMLURLBuilder
             'action'   => 'pull-requests',
             'repo_id'  => $pull_request->getRepositoryId(),
             'group_id' => $project_id,
+            'tab'      => 'overview',
         ];
-
-        if (PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository)) {
-            $query_params['tab'] = 'overview';
-        }
 
         return '/plugins/git/?'
             . http_build_query($query_params)

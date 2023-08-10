@@ -29,19 +29,3 @@
         font-size: 20px;
     }
 }
-
-.pull-request-header-labels-box {
-    display: flex;
-    margin: 0 0 0 var(--tlp-medium-spacing);
-}
-
-.pull-request-tab-content {
-    display: flex;
-    position: relative;
-    align-items: flex-start;
-    padding: 0;
-
-    @media screen and (max-width: 1200px) {
-        display: block;
-    }
-}

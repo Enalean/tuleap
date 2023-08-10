@@ -1,5 +1,3 @@
-import { LegacyLabelsBoxDisplay } from "./LegacyLabelsBoxDisplay";
-
 export default PullRequestHeaderController;
 
 PullRequestHeaderController.$inject = ["$state", "SharedPropertiesService"];
@@ -9,11 +7,6 @@ function PullRequestHeaderController($state, SharedPropertiesService) {
 
     Object.assign(self, {
         $onInit,
-        isLabelsBoxDisplayed: () =>
-            LegacyLabelsBoxDisplay.shouldLegacyLabelsBoxBeDisplayed(
-                $state,
-                SharedPropertiesService
-            ),
     });
 
     function $onInit() {

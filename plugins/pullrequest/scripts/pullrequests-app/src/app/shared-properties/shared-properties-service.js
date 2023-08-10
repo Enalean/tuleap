@@ -13,7 +13,6 @@ function SharedPropertiesService() {
         nb_pull_request_badge: null,
         is_there_at_least_one_pull_request: null,
         is_merge_commit_allowed: null,
-        is_vue_overview_shown: false,
         date_time_format: "",
         user_locale: "",
         relative_date_display: "",
@@ -41,8 +40,6 @@ function SharedPropertiesService() {
         setIsThereAtLeastOnePullRequest,
         isMergeCommitAllowed,
         setIsMergeCommitAllowed,
-        isVueOverviewShown,
-        setIsVueOverviewShown,
         setDateTimeFormat,
         setUserLocale,
         setRelativeDateDisplay,
@@ -122,14 +119,6 @@ function SharedPropertiesService() {
 
     function setIsMergeCommitAllowed(is_merge_commit_allowed) {
         property.is_merge_commit_allowed = Boolean(is_merge_commit_allowed);
-    }
-
-    function isVueOverviewShown() {
-        return property.is_vue_overview_shown;
-    }
-
-    function setIsVueOverviewShown(is_vue_overview_shown) {
-        property.is_vue_overview_shown = is_vue_overview_shown;
     }
 
     function setDateTimeFormat(date_time_format) {

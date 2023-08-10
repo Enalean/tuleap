@@ -1,4 +1,4 @@
-import { buildVueOverviewURL } from "../helpers/vue-overview-url-builder";
+import { buildOverviewURL } from "../helpers/overview-url-builder";
 
 export default PullRequestController;
 
@@ -10,16 +10,13 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
     Object.assign(self, {
         $state,
         $onInit: init,
-        isVueOverviewShown: () => {
-            return SharedPropertiesService.isVueOverviewShown();
-        },
-        getVueOverviewUrl: () => {
+        getOverviewUrl: () => {
             const pull_request = SharedPropertiesService.getPullRequest();
             if (!pull_request) {
                 return "";
             }
 
-            return buildVueOverviewURL(
+            return buildOverviewURL(
                 window.location,
                 pull_request,
                 SharedPropertiesService.getProjectId(),

@@ -8,9 +8,6 @@ dependencies:
   '@tuleap/angular-tlp':
     specifier: workspace:*
     version: link:../../../../lib/frontend/angular-tlp
-  '@tuleap/core':
-    specifier: workspace:*
-    version: link:../../../../src/scripts/main
   '@tuleap/core-rest-api-types':
     specifier: workspace:*
     version: link:../../../../lib/frontend/rest-api-types
@@ -65,9 +62,6 @@ dependencies:
   codemirror:
     specifier: ^5.62.0
     version: 5.65.9
-  dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
   hybrids:
     specifier: ^8.2.2
     version: 8.2.2
@@ -91,15 +85,9 @@ devDependencies:
   '@types/codemirror':
     specifier: ^5.60.5
     version: 5.60.5
-  '@types/dompurify':
-    specifier: ^2.4.0
-    version: 2.4.0
   angular-mocks:
     specifier: ^1.8.2
     version: 1.8.3
-  jquery:
-    specifier: ^3.6.0
-    version: 3.6.1
 
 packages:
 
@@ -107,12 +95,6 @@ packages:
     resolution: {integrity: sha512-TiECZmm8St5YxjFUp64LK0c8WU5bxMDt9YaAek1UqUb9swrSCoJhh92fWu1p3mTEqlHjhB5sY7OFBhWroJXZVg==}
     dependencies:
       '@types/tern': 0.23.4
-    dev: true
-
-  /@types/dompurify@2.4.0:
-    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
-    dependencies:
-      '@types/trusted-types': 2.0.3
     dev: true
 
   /@types/estree@1.0.0:
@@ -123,10 +105,6 @@ packages:
     resolution: {integrity: sha512-JAUw1iXGO1qaWwEOzxTKJZ/5JxVeON9kvGZ/osgZaJImBnyjyn0cjovPsf6FNLmyGY8Vw9DoXZCMlfMkMwHRWg==}
     dependencies:
       '@types/estree': 1.0.0
-    dev: true
-
-  /@types/trusted-types@2.0.3:
-    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
   /@uirouter/angularjs@1.0.30(angular@1.8.3):
@@ -170,19 +148,11 @@ packages:
     resolution: {integrity: sha512-19Jox5sAKpusTDgqgKB5dawPpQcY+ipQK7xoEI+MVucEF9qqFaXpeqY1KaoyGBso/wHQoDa4HMMxMjdsS3Zzzw==}
     dev: false
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
-    dev: false
-
   /hybrids@8.2.2:
     resolution: {integrity: sha512-xCangE3oItxeWMNKHLa0yn0MHi0MHBtGLIz0Ty7PwdcBBN2sQ0mrBvVSf4lLMyBFNO7x47/2lO13FSJB/SkPyw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false
-
-  /jquery@3.6.1:
-    resolution: {integrity: sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==}
-    dev: true
 
   /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}

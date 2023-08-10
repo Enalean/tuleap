@@ -28,7 +28,7 @@ describe("code-mirror-common-sections-collapse", () => {
     let doc: Document;
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
+        setCatalog({ getPlural: (nb, msgid) => msgid });
 
         doc = document.implementation.createHTMLDocument();
     });

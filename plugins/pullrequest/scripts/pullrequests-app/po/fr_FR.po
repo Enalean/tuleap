@@ -17,24 +17,8 @@ msgid_plural "... Skipped {{ $count }} common lines"
 msgstr[0] "... 1 ligne commune sautée"
 msgstr[1] "... {{ $count }} lignes communes sautées"
 
-msgid "Abandon"
-msgstr "Abandonner"
-
 msgid "Abandoned"
 msgstr "Abandonné"
-
-msgid "Add labels"
-msgstr "Ajouter un label"
-
-msgid "Add reviewers"
-msgstr "Ajouter des relecteurs"
-
-msgctxt "submit-form"
-msgid "Add reviewers"
-msgstr "Ajouter les relecteurs"
-
-msgid "Already merged"
-msgstr "Déjà intégré"
 
 msgid "An error occured while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
@@ -45,27 +29,11 @@ msgstr "Fichier binaire"
 msgid "CI"
 msgstr "IC"
 
-msgid "Cancel"
-msgstr "Annuler"
-
 msgid "Changes"
 msgstr "Changements"
 
-msgid "Checkout"
-msgstr "Checkout"
-
-msgid "Checkout with"
-msgstr "Checkout avec"
-
-msgctxt "submit-form"
-msgid "Clear reviewers"
-msgstr "Enlever les relecteurs"
-
 msgid "Close"
 msgstr "Fermer"
-
-msgid "Comment"
-msgstr "Commenter"
 
 msgid "Commits"
 msgstr "Commits"
@@ -76,70 +44,20 @@ msgstr "Status intégration continue : Échec le %s"
 msgid "Continuous integration status: Success on %s"
 msgstr "Status intégration continue : Succès le %s"
 
-msgid "Description"
-msgstr "Description"
-
-msgid "Discussion has not started yet."
-msgstr "La discussion n’a pas commencé."
-
-msgid "Edit message"
-msgstr "Éditer le message"
-
-msgid "Edit reviewers"
-msgstr "Éditer les relecteurs"
-
 msgid "Error details"
 msgstr "Détails de l'erreur"
-
-msgid "Failure"
-msgstr "Échec"
-
-msgid "Failure on"
-msgstr "Échec le"
 
 msgid "Git LFS file"
 msgstr "Fichier Git LFS"
 
-msgid "Has abandoned the pull request."
-msgstr "A abandonné la pull request."
-
-msgid "Has merged the pull request."
-msgstr "A intégré la pull request."
-
-msgid "Has rebased the pull request."
-msgstr "A rebasé la pull request."
-
-msgid "Has reopened the pull request."
-msgstr "A rouvert la pull request."
-
-msgid "Has updated the pull request."
-msgstr "A mis à jour la pull request."
-
 msgid "It seems that the pull request does not have any commits."
 msgstr "Il semblerait que la pull request n'a aucun commit."
-
-msgid "Last CI Status"
-msgstr "Statut intégration continue"
 
 msgid "Load closed pull requests"
 msgstr "Charger les pull requests fermées"
 
-msgid "Merge"
-msgstr "Intégrer"
-
-msgid ""
-"Merge commits are forbidden in the repository configuration (fast-forward "
-"only). Please rebase the commit and update the pull request."
-msgstr ""
-"Les commits de fusion sont interdits par la configuration du dépôt (avance "
-"rapide uniquement). Veuillez rebaser votre commit et mettre à jour la pull "
-"request."
-
 msgid "Merged"
 msgstr "Intégré"
-
-msgid "Non fast-forward merge"
-msgstr "Intégration non fast-forward"
 
 msgid "OK"
 msgstr "OK"
@@ -150,78 +68,11 @@ msgstr "Oh mince !"
 msgid "Overview"
 msgstr "Résumé"
 
-msgid "Pending since"
-msgstr "En cours depuis"
-
-msgid "Proceed with merge"
-msgstr "Continuer l’intégration"
-
-msgid ""
-"Pull request can not be merged automatically due to conflicts with "
-"destination. Resolve conflicts on the command line and update the pull "
-"request."
-msgstr ""
-"Cette pull request ne peut pas être intégrée automatiquement car il existe "
-"des conflits avec la destination. Résolvez ces conflits via la ligne de "
-"commande et mettez à jour la pull request."
-
-msgid ""
-"Pull request cannot be merged because source and destination branches have "
-"the very same content."
-msgstr ""
-"La pull request ne peut pas être intégrée car les branches source et "
-"destination ont exactement le même contenu."
-
-msgid ""
-"Pull request destination has diverged. Merge will not resolve in a fast-"
-"forward. You can proceed with the merge, or cancel and update your pull "
-"request."
-msgstr ""
-"La destination de la pull request a divergé. L’intégration ne sera pas en "
-"fast-forward. Vous pouvez continuer l’intégration, ou annuler et mettre à "
-"jour la pull request."
-
-msgid "Pull request is currently abandoned. You can reopen it."
-msgstr ""
-"Cette pull request est actuellement abandonnée. Vous pouvez la rouvrir."
-
-msgid ""
-"Pull request mergeability with destination is not determined. You can merge "
-"on the command line and push to destination."
-msgstr ""
-"Le statut d’intégration de cette pull request est indéterminé. Essayez de "
-"l’intégrer en ligne de commande et poussez vers la destination."
-
-msgid "Reopen"
-msgstr "Rouvrir"
-
-msgctxt "field-label"
-msgid "Reviewers"
-msgstr "Relecteurs"
-
-msgid "Reviewers:"
-msgstr "Relecteurs :"
-
-msgid "Save"
-msgstr "Sauvegarder"
-
-msgid "Say something…"
-msgstr "Dites quelque chose…"
-
-msgid "Select reviewers"
-msgstr "Éditer les relecteurs"
-
 msgid "Show details"
 msgstr "Voir les détails"
 
 msgid "Side by side diff"
 msgstr "Diff côte à côte"
-
-msgid "Success"
-msgstr "Succès"
-
-msgid "Success on"
-msgstr "Succès le"
 
 msgid "There are no closed pull requests"
 msgstr "Il n'existe pas de pull requests fermées"
@@ -241,21 +92,5 @@ msgstr ""
 "code malveillant qui semble sûr. Vous devriez examiner le fichier dans un "
 "éditeur qui révèle les caractères Unicode cachés."
 
-msgid "This pull request will be cleared from all of its reviewers."
-msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
-
-msgid "Title"
-msgstr "Titre"
-
 msgid "Unified diff"
 msgstr "Diff unifié"
-
-msgid "Unknown"
-msgstr "Inconnu"
-
-msgid "Update reviewers"
-msgstr "Éditer les relecteurs"
-
-msgctxt "submit-form"
-msgid "Update reviewers"
-msgstr "Éditer les relecteurs"

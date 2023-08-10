@@ -36,9 +36,6 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         const is_merge_commit_allowed = pullrequest_init_data.isMergeCommitAllowed;
         SharedPropertiesService.setIsMergeCommitAllowed(is_merge_commit_allowed);
 
-        const is_pullrequest_v2_enabled = pullrequest_init_data.allowPullrequestV2;
-        SharedPropertiesService.setIsVueOverviewShown(is_pullrequest_v2_enabled);
-
         const relative_date_display = pullrequest_init_data.relativeDateDisplay;
         SharedPropertiesService.setRelativeDateDisplay(relative_date_display);
 
