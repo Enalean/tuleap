@@ -8,16 +8,18 @@
 {{^ kanban_empty_message_must_be_displayed }}
     <div class="ad-homepage-title">
         <h2>{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}</h2>
-        {{# is_user_admin }}
-            {{# are_trackers_available }}
-                <a id="add_kanban_button" href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban" data-test="add-kanban-button">
-            {{/are_trackers_available }}
-            {{^ are_trackers_available }}
-                <a id="add_kanban_button" data-toggle="tooltip" data-placement="right" title="{{ no_tracker_available }}" class="btn add-kanban disabled">
-            {{/are_trackers_available }}
-            <i class="fa fa-plus"></i> {{ add_kanban }}
-        </a>
-        {{/ is_user_admin }}
+        {{^ is_using_kanban_service }}
+            {{# is_user_admin }}
+                {{# are_trackers_available }}
+                    <a id="add_kanban_button" href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban" data-test="add-kanban-button">
+                {{/are_trackers_available }}
+                {{^ are_trackers_available }}
+                    <a id="add_kanban_button" data-toggle="tooltip" data-placement="right" title="{{ no_tracker_available }}" class="btn add-kanban disabled">
+                {{/are_trackers_available }}
+                <i class="fa fa-plus"></i> {{ add_kanban }}
+            </a>
+            {{/ is_user_admin }}
+        {{/ is_using_kanban_service }}
     </div>
 
     <div class="kanban-home-ad">
@@ -58,51 +60,53 @@
     </div>
 </div>
 
-<div id="add-kanban-modal"
-        class="modal hide fade"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="myModalLabel"
-        aria-hidden="true"
-        data-test="add-kanban-modal"
->
-    <div class="modal-header">
-        <h3> {{ add_kanban_modal_title }}</h3>
+{{^ is_using_kanban_service }}
+    <div id="add-kanban-modal"
+            class="modal hide fade"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true"
+            data-test="add-kanban-modal"
+    >
+        <div class="modal-header">
+            <h3> {{ add_kanban_modal_title }}</h3>
+        </div>
+
+        <form action="{{ create_kanban_url }}" method="post" class="form-horizontal">
+            <div class="modal-body">
+                <ol>
+                    <li class="kanban-modal-element">
+                         <div class="control-group">
+                            <label class="control-label" for="kanban-name">{{ kanban_name_label }}</label>
+                            <div class="controls">
+                                <input type="text" id="kanban-name" name="kanban-name" placeholder="Name" data-test="kanban-name" required>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="kanban-modal-element">
+                        <div class="control-group">
+                            <label class="control-label" for="tracker-kanban">{{ tracker_kanban_label }}</label>
+                            <div class="controls">
+                                <select id="tracker-kanban" name="tracker-kanban" data-test="tracker-kanban">
+                                    {{# trackers }}
+                                    <option value="{{ id }}" {{# used }} disabled {{/ used }}> {{ name }} </option>
+                                    {{/ trackers }}
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal"> {{ btn_close_label }} </button>
+              <button type="submit" class="btn btn-primary" name="add-keys" data-test="create-kanban-modal-submit">{{ btn_add_modal_label }} </button>
+            </div>
+        </form>
     </div>
-
-    <form action="{{ create_kanban_url }}" method="post" class="form-horizontal">
-        <div class="modal-body">
-            <ol>
-                <li class="kanban-modal-element">
-                     <div class="control-group">
-                        <label class="control-label" for="kanban-name">{{ kanban_name_label }}</label>
-                        <div class="controls">
-                            <input type="text" id="kanban-name" name="kanban-name" placeholder="Name" data-test="kanban-name" required>
-                        </div>
-                    </div>
-                </li>
-                <li class="kanban-modal-element">
-                    <div class="control-group">
-                        <label class="control-label" for="tracker-kanban">{{ tracker_kanban_label }}</label>
-                        <div class="controls">
-                            <select id="tracker-kanban" name="tracker-kanban" data-test="tracker-kanban">
-                                {{# trackers }}
-                                <option value="{{ id }}" {{# used }} disabled {{/ used }}> {{ name }} </option>
-                                {{/ trackers }}
-                            </select>
-                        </div>
-                    </div>
-                </li>
-            </ol>
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn" data-dismiss="modal"> {{ btn_close_label }} </button>
-          <button type="submit" class="btn btn-primary" name="add-keys" data-test="create-kanban-modal-submit">{{ btn_add_modal_label }} </button>
-        </div>
-    </form>
-</div>
+{{/ is_using_kanban_service }}
 {{/ kanban_empty_message_must_be_displayed }}
