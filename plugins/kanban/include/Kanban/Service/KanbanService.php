@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\Service;
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 final class KanbanService extends \Service
 {
@@ -54,9 +57,17 @@ final class KanbanService extends \Service
 
     public function displayKanbanHeader(): void
     {
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext('tuleap-kanban', 'Kanban'),
+                KanbanServiceHomepageUrlBuilder::getUrl($this->project),
+            )
+        ));
+
         $this->displayHeader(
             dgettext('tuleap-kanban', 'Kanban'),
-            [],
+            $breadcrumbs,
             []
         );
     }
