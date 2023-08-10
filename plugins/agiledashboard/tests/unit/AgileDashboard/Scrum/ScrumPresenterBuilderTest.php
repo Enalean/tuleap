@@ -36,6 +36,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -100,8 +101,10 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUsedService('plugin_agiledashboard')
+            ->build();
 
         $root_planning = false;
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($root_planning);
@@ -141,7 +144,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             true,
             [],
-            false
+            false,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -155,8 +159,10 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUsedService('plugin_agiledashboard')
+            ->build();
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getId')->andReturn(42);
@@ -203,7 +209,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             true,
             [],
-            false
+            false,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -217,8 +224,10 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUsedService('plugin_agiledashboard')
+            ->build();
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getId')->andReturn(42);
@@ -267,7 +276,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             true,
             [],
-            false
+            false,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -281,8 +291,11 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withUsedService('plugin_agiledashboard')
+            ->build();
+
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getId')->andReturn(42);
@@ -328,7 +341,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             true,
             true,
             [],
-            false
+            false,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));

@@ -55,6 +55,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -327,10 +328,14 @@ class AdminController extends BaseController
     {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
 
+        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service = $service !== null;
+
         return new AdminChartsPresenter(
             $project,
             $token,
-            $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project)
+            $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
+            $is_using_kanban_service,
         );
     }
 }

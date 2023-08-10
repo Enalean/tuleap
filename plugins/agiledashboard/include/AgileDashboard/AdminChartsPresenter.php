@@ -45,6 +45,7 @@ class AdminChartsPresenter
         Project $project,
         \CSRFSynchronizerToken $token,
         bool $is_burnup_count_mode_activated,
+        public bool $is_using_kanban_service,
     ) {
         $this->project_id                     = $project->getID();
         $this->csrf_token                     = $token;

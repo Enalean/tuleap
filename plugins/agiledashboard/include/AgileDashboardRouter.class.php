@@ -43,6 +43,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -305,6 +306,11 @@ class AgileDashboardRouter
                 if ($this->userIsAdmin($request)) {
                     $pane = $request->get('pane');
                     if ($pane === self::PANE_KANBAN) {
+                        $service = $request->getProject()->getService(KanbanService::SERVICE_SHORTNAME);
+                        if ($service !== null) {
+                            throw new \Tuleap\Request\NotFoundException();
+                        }
+
                         $this->renderAction($this->buildController($request), 'adminKanban', $request, [], ['body_class' => ['agiledashboard-body']]);
                     } elseif ($pane === self::PANE_CHARTS) {
                         $this->renderAction($this->buildController($request), 'adminCharts', $request, [], ['body_class' => ['agiledashboard-body']]);
