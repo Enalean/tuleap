@@ -19,34 +19,64 @@
  *
  */
 
-class FRSReleaseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\FRS;
 
+use FRSPackageFactory;
+use FRSReleaseFactory;
+use PermissionsManager;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectManager;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
+
+class FRSReleaseFactoryTest extends TestCase
+{
     protected $group_id   = 12;
     protected $package_id = 34;
     protected $release_id = 56;
     protected $user_id    = 78;
 
+    /**
+     * @var MockObject&PFUser
+     */
     private $user;
+    /**
+     * @var MockObject&FRSReleaseFactory
+     */
     private $frs_release_factory;
+    /**
+     * @var MockObject&UserManager
+     */
     private $user_manager;
+    /**
+     * @var MockObject&PermissionsManager
+     */
     private $permission_manager;
 
     protected function setUp(): void
     {
-        $this->user                = \Mockery::spy(\PFUser::class);
-        $this->frs_release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->user_manager        = \Mockery::spy(\UserManager::class);
-        $this->permission_manager  = \Mockery::spy(\PermissionsManager::class);
-        $this->user_manager->shouldReceive('getUserById')->andReturns($this->user);
-        $this->frs_release_factory->shouldReceive('getUserManager')->andReturns($this->user_manager);
-        $project = Mockery::spy(Project::class);
-        $project->shouldReceive('getID')->andReturn($this->group_id);
-        $project->shouldReceive('isActive')->andReturn(true);
-        $project->shouldReceive('isPublic')->andReturn(true);
-        $project_manager = Mockery::mock(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
+        $this->user                = $this->createMock(PFUser::class);
+        $this->frs_release_factory = $this->createPartialMock(FRSReleaseFactory::class, [
+            'getUserManager',
+            'userCanAdmin',
+            'getPermissionsManager',
+            '_getFRSPackageFactory',
+            'getFRSReleasesInfoListFromDb',
+            'delete_release',
+        ]);
+        $this->user_manager        = $this->createMock(UserManager::class);
+        $this->permission_manager  = $this->createMock(PermissionsManager::class);
+        $this->user_manager->method('getUserById')->willReturn($this->user);
+        $this->frs_release_factory->method('getUserManager')->willReturn($this->user_manager);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($this->group_id);
+        $project->method('isActive')->willReturn(true);
+        $project->method('isPublic')->willReturn(true);
+        $project->method('isError');
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($project);
         ProjectManager::setInstance($project_manager);
     }
 
@@ -56,102 +86,117 @@ class FRSReleaseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         ProjectManager::clearInstance();
     }
 
-    public function testAdminHasAlwaysAccessToReleases()
+    public function testAdminHasAlwaysAccessToReleases(): void
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
-        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(true);
+        self::assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    protected function _userCanReadWhenNoPermsOnRelease($canReadPackage)
+    protected function userCanReadWhenNoPermsOnRelease($canReadPackage): MockObject&FRSReleaseFactory
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
-        $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(false);
-        $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(false);
+        $this->permission_manager->expects(self::once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(false);
+        $this->frs_release_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
-        $frs_package_factory = \Mockery::spy(\FRSPackageFactory::class);
-        $frs_package_factory->shouldReceive('userCanRead')->with($this->group_id, $this->package_id, null)->once()->andReturns($canReadPackage);
-        $this->frs_release_factory->shouldReceive('_getFRSPackageFactory')->andReturns($frs_package_factory);
+        $frs_package_factory = $this->createMock(FRSPackageFactory::class);
+        $frs_package_factory->expects(self::once())->method('userCanRead')->with($this->group_id, $this->package_id, null)->willReturn($canReadPackage);
+        $this->frs_release_factory->method('_getFRSPackageFactory')->willReturn($frs_package_factory);
+
+        $this->user->method('isAnonymous');
+        $this->user->method('isSuperUser');
+        $this->user->method('isMember');
+        $this->user->method('isRestricted');
+        $this->user->method('getId');
 
         return $this->frs_release_factory;
     }
 
-    public function testUserCanReadWhenNoPermsOnReleaseButCanReadPackage()
+    public function testUserCanReadWhenNoPermsOnReleaseButCanReadPackage(): void
     {
-        $this->_userCanReadWhenNoPermsOnRelease(true);
-        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->userCanReadWhenNoPermsOnRelease(true);
+        self::assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    public function testUserCanReadWhenNoPermsOnReleaseButCannotReadPackage()
+    public function testUserCanReadWhenNoPermsOnReleaseButCannotReadPackage(): void
     {
-        $this->_userCanReadWhenNoPermsOnRelease(false);
-        $this->assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->userCanReadWhenNoPermsOnRelease(false);
+        self::assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    protected function _userCanReadWithSpecificPerms($can_read_release)
+    protected function userCanReadWithSpecificPerms($can_read_release): void
     {
-        $this->user->shouldReceive('getUgroups')->with($this->group_id, [])->once()->andReturns([1, 2, 76]);
-        $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(true);
-        $this->permission_manager->shouldReceive('userHasPermission')->with($this->release_id, 'RELEASE_READ', [1, 2, 76])->once()->andReturns($can_read_release);
-        $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
+        $this->user->expects(self::once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->method('isAnonymous');
+        $this->user->method('isSuperUser');
+        $this->user->method('isMember');
+        $this->user->method('isRestricted');
+        $this->permission_manager->expects(self::once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(true);
+        $this->permission_manager->expects(self::once())->method('userHasPermission')->with($this->release_id, 'RELEASE_READ', [1, 2, 76])->willReturn($can_read_release);
+        $this->frs_release_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
+        $this->frs_release_factory->method('userCanAdmin');
     }
 
-    public function testUserCanReadWithSpecificPermsHasAccess()
+    public function testUserCanReadWithSpecificPermsHasAccess(): void
     {
-        $this->_userCanReadWithSpecificPerms(true);
-        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->userCanReadWithSpecificPerms(true);
+        self::assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    public function testUserCanReadWithSpecificPermsHasNoAccess()
+    public function testUserCanReadWithSpecificPermsHasNoAccess(): void
     {
-        $this->_userCanReadWithSpecificPerms(false);
-        $this->assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->userCanReadWithSpecificPerms(false);
+        self::assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    public function testAdminCanAlwaysUpdateReleases()
+    public function testAdminCanAlwaysUpdateReleases(): void
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
-        $this->assertTrue($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(true);
+        self::assertTrue($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
-    public function testMereMortalCannotUpdateReleases()
+    public function testMereMortalCannotUpdateReleases(): void
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
-        $this->assertFalse($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(false);
+        self::assertFalse($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
-    public function testAdminCanAlwaysCreateReleases()
+    public function testAdminCanAlwaysCreateReleases(): void
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
-        $this->assertTrue($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(true);
+        self::assertTrue($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    public function testMereMortalCannotCreateReleases()
+    public function testMereMortalCannotCreateReleases(): void
     {
-        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
-        $this->assertFalse($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
+        $this->frs_release_factory->method('userCanAdmin')->willReturn(false);
+        self::assertFalse($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    public function testDeleteProjectReleasesFail()
+    public function testDeleteProjectReleasesFail(): void
     {
         $release1 = ['release_id' => 1];
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
-        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns([$release1, $release2, $release3]);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(false);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);
-        $this->assertFalse($this->frs_release_factory->deleteProjectReleases(1));
+        $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
+        $this->frs_release_factory->method('delete_release')->withConsecutive(
+            [1, 1],
+            [1, 2],
+            [1, 3]
+        )->willReturnOnConsecutiveCalls(true, false, true);
+        self::assertFalse($this->frs_release_factory->deleteProjectReleases(1));
     }
 
-    public function testDeleteProjectReleasesSuccess()
+    public function testDeleteProjectReleasesSuccess(): void
     {
         $release1 = ['release_id' => 1];
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
-        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns([$release1, $release2, $release3]);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(true);
-        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);
-        $this->assertTrue($this->frs_release_factory->deleteProjectReleases(1));
+        $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
+        $this->frs_release_factory->method('delete_release')->withConsecutive(
+            [1, 1],
+            [1, 2],
+            [1, 3]
+        )->willReturn(true);
+        self::assertTrue($this->frs_release_factory->deleteProjectReleases(1));
     }
 }
