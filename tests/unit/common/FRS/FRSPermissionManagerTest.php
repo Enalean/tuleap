@@ -21,46 +21,45 @@
 
 namespace Tuleap\FRS;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use Project_AccessException;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+class FRSPermissionManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private FRSPermissionManager $permission_manager;
     /**
-     * @var FRSPermissionManager
-     */
-    private $permission_manager;
-    /**
-     * @var \Mockery\MockInterface|\PFUser
+     * @var MockObject&PFUser
      */
     private $user;
     /**
-     * @var \Mockery\MockInterface|\Project
+     * @var MockObject&Project
      */
     private $project;
     /**
-     * @var \Mockery\MockInterface|FRSPermissionDao
+     * @var MockObject&FRSPermissionDao
      */
     private $permission_dao;
     /**
-     * @var \Mockery\MockInterface|FRSPermissionFactory
+     * @var MockObject&FRSPermissionFactory
      */
     private $permission_factory;
     /**
-     * @var \Mockery\MockInterface|ProjectAccessChecker
+     * @var MockObject&ProjectAccessChecker
      */
     private $access_checker;
 
     public function setUp(): void
     {
-        $this->permission_dao     = \Mockery::mock(\Tuleap\FRS\FRSPermissionDao::class);
-        $this->permission_factory = \Mockery::mock(\Tuleap\FRS\FRSPermissionFactory::class);
-        $this->project            = \Mockery::mock(\Project::class, ['getID' => 101]);
-        $this->user               = \Mockery::mock(\PFUser::class, ['isSuperUser' => false, 'isAdmin' => false]);
-        $this->access_checker     = \Mockery::mock(ProjectAccessChecker::class, ['checkUserCanAccessProject' => null]);
+        $this->permission_dao     = $this->createMock(FRSPermissionDao::class);
+        $this->permission_factory = $this->createMock(FRSPermissionFactory::class);
+        $this->project            = $this->createConfiguredMock(Project::class, ['getID' => 101]);
+        $this->user               = $this->createMock(PFUser::class);
+        $this->access_checker     = $this->createMock(ProjectAccessChecker::class);
+        $this->access_checker->method('checkUserCanAccessProject');
 
         $this->permission_manager = new FRSPermissionManager(
             $this->permission_dao,
@@ -71,23 +70,28 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfUserIsProjectAdmin()
     {
-        $this->user->shouldReceive('isAdmin')->andReturns(true);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isAdmin')->willReturn(true);
 
-        $this->assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
+        self::assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
-    public function testItRetrunsTrueIfUserIsInFrsGroupAdmin()
+    public function testItReturnsTrueIfUserIsInFrsGroupAdmin()
     {
         $permissions = [
             '5' => new FRSPermission('5'),
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
-        $this->user->shouldReceive('isMemberOfUGroup')->with(5, 101)->andReturns(false);
-        $this->user->shouldReceive('isMemberOfUGroup')->with(4, 101)->andReturns(true);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isAdmin')->willReturn(false);
+        $this->user->method('isMemberOfUGroup')->withConsecutive(
+            [5, 101],
+            [4, 101]
+        )->willReturnOnConsecutiveCalls(false, true);
 
-        $this->assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
+        self::assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItReturnsFalseIfUserIsNotProjectAdminAndUserIsNotInFrsGroupAdmin()
@@ -97,38 +101,41 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
-        $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isAdmin')->willReturn(false);
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
 
-        $this->assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
+        self::assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItReturnsTrueIfUserIsSiteAdminAndDontHaveExplicitAccessRights()
     {
-        $this->user->shouldReceive('isSuperUser')->andReturns(true);
+        $this->user->method('isSuperUser')->willReturn(true);
 
         $permissions = [
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
-        $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->user->method('isAdmin')->willReturn(false);
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
 
-        $this->assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
+        self::assertTrue($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItShouldNotBePossibleToAdministrateFRSIfUserCannotAccessTheProject()
     {
-        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $this->project)->andThrow(\Mockery::mock(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createMock(Project_AccessException::class));
 
-        $this->assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
+        self::assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItReturnsFalseIToUserCanReadfProjectLevelChecksReturnsAnException()
     {
-        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $this->project)->andThrow(\Mockery::mock(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createMock(Project_AccessException::class));
 
-        $this->assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
+        self::assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
     }
 
     public function testUserHasReadAccessIfTheyAreAdmin()
@@ -137,33 +144,35 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
-        $this->user->shouldReceive('isMemberOfUGroup')->with(4, 101)->andReturns(true);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isAdmin')->willReturn(false);
+        $this->user->method('isMemberOfUGroup')->with(4, 101)->willReturn(true);
 
-        $this->assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
+        self::assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
     }
 
     public function testUserHasReadAccessIfTheyArePartOfFRSReaders()
     {
-        $this->permission_dao->shouldReceive('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->andReturns(
+        $this->permission_dao->method('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->willReturn(
             [
                 [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]
         );
-        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturns(true);
+        $this->user->method('isMemberOfUGroup')->with(3, 101)->willReturn(true);
 
-        $this->assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
+        self::assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
     }
 
     public function testUserCannotReadFRS()
     {
-        $this->permission_dao->shouldReceive('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->andReturns(
+        $this->permission_dao->method('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->willReturn(
             [
                 [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]
         );
-        $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
 
-        $this->assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
+        self::assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
     }
 }
