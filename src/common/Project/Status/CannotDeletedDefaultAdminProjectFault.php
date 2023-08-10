@@ -20,31 +20,15 @@
 
 namespace Tuleap\Project\Status;
 
-use Project;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 
-final class UpdateStatusChecker
+/**
+ * @psalm-immutable
+ */
+final class CannotDeletedDefaultAdminProjectFault extends Fault
 {
-    /**
-     * @return Ok<null> | Err<Fault>
-     */
-    public static function checkProjectStatusCanBeUpdated(Project $project, string $new_status): Ok|Err
+    public static function build(): Fault
     {
-        if ($new_status === Project::STATUS_PENDING) {
-            return Result::err(SwitchingBackToPendingFault::build());
-        }
-
-        if ($project->getStatus() === Project::STATUS_DELETED) {
-            return Result::err(UpdateAlreadyDeletedProjectFault::build());
-        }
-
-        if ((int) $project->getID() === Project::DEFAULT_ADMIN_PROJECT_ID && $new_status === Project::STATUS_DELETED) {
-            return Result::err(CannotDeletedDefaultAdminProjectFault::build());
-        }
-
-        return Result::ok(null);
+        return new self(_('The default Administration project cannot be deleted.'));
     }
 }

@@ -59,6 +59,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     public const SITE_NEWS_PROJECT_ID        = 46;
     public const DEFAULT_TEMPLATE_PROJECT_ID = 100;
+    public const DEFAULT_ADMIN_PROJECT_ID    = 1;
 
     public const ACCESS_PRIVATE               = 'private';
     public const ACCESS_PRIVATE_WO_RESTRICTED = 'private-wo-restr';

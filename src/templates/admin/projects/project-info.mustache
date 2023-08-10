@@ -86,7 +86,7 @@
                                             {{/ is_status_invalid}}
 
                                             {{# status }}
-                                                <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                                <option value="{{ key }}" {{# is_current }}selected{{/ is_current }} {{^ can_be_selected }}disabled{{/ can_be_selected }}>
                                                     {{ status }}
                                                 </option>
                                             {{/ status }}

@@ -3751,6 +3751,9 @@ msgstr "Le tableau de bord \"%s\" existe déjà."
 msgid "The dashboard '%s' doesn't exist."
 msgstr "Le tableau de bord \"%s\" n’existe pas."
 
+msgid "The default Administration project cannot be deleted."
+msgstr "Le projet par défaut Administration ne peut pas être supprimé."
+
 #, php-format
 msgid "The directory %s is not valid"
 msgstr "Le répertoire %s n'est valide"

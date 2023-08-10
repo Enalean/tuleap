@@ -1719,6 +1719,22 @@ class ProjectTest extends ProjectBase
         self::assertEquals(400, $response->getStatusCode());
     }
 
+    public function testPATCHWithAdminToSDeleteProjectIsNotAllowed(): void
+    {
+        $patch_resource = json_encode([
+            'status' => 'deleted',
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('PATCH', 'projects/' . $this->project_deleted_id)->withBody(
+                $this->stream_factory->createStream($patch_resource)
+            )
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
     public function getSuspendedProjectTrackersWithRegularUser()
     {
         $response = $this->getResponseByName(

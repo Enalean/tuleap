@@ -22,6 +22,7 @@
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\DeletedProjectStatusChangeException;
+use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\User\Admin\PendingProjectBuilder;
 use Tuleap\Admin\AdminPageRenderer;
@@ -71,7 +72,7 @@ if ($action == 'activate') {
 
     try {
         $project_manager->updateStatus($project, Project::STATUS_DELETED);
-    } catch (DeletedProjectStatusChangeException | SwitchingBackToPendingException $exception) {
+    } catch (DeletedProjectStatusChangeException | SwitchingBackToPendingException | CannotDeletedDefaultAdminProjectException $exception) {
         // Do nothing
     }
 

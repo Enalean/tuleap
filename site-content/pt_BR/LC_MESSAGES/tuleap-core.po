@@ -3690,6 +3690,9 @@ msgstr "O painel \"%s\" já existe."
 msgid "The dashboard '%s' doesn't exist."
 msgstr "O painel '%s' não existe."
 
+msgid "The default Administration project cannot be deleted."
+msgstr ""
+
 #, php-format
 msgid "The directory %s is not valid"
 msgstr "O diretório %s não é válido"
