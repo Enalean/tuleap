@@ -309,20 +309,83 @@ Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: stri
 
 Cypress.Commands.add(
     "assertUserMessagesReceivedByWithSpecificContent",
-    (email: string, specific_content_of_mail: string): void => {
-        cy.request({
-            method: "GET",
-            url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email),
-            headers: {
-                accept: "application/json",
-            },
-        }).then((response) => {
-            expect(quotedPrintable.decode(response.body.items[0].Content.Body)).contains(
-                specific_content_of_mail,
+    (email_address: string, specific_content_of_mail: string): void => {
+        const reloadCallback = (): void => {
+            cy.log("Check user email");
+        };
+        const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
+            cy.log(
+                `Check that user ${email_address} have receive email ${specific_content_of_mail} (attempt ${number_of_attempts}/${max_attempts})`,
             );
-        });
+            return getEmailsReceivedBy(email_address).then((response) => {
+                if (response.body.items.length === 0) {
+                    return false;
+                }
+                return quotedPrintable
+                    .decode(response.body.items[0].Content.Body)
+                    .includes(specific_content_of_mail);
+            });
+        };
+        cy.reloadUntilCondition(
+            reloadCallback,
+            conditionCallback,
+            "Timed out while checking if messages have been received",
+        );
     },
 );
+
+Cypress.Commands.add(
+    "assertNotEmailWithContentReceived",
+    (email_address: string, specific_content_of_mail: string): void => {
+        const reloadCallback = (): void => {
+            cy.log("Check user email");
+        };
+        const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
+            cy.log(
+                `Check that user ${email_address} have not receive email  ${specific_content_of_mail}  (attempt ${number_of_attempts}/${max_attempts})`,
+            );
+            return getEmailsReceivedBy(email_address).then((response) => {
+                if (!response.body.items) {
+                    return false;
+                }
+                const n = response.body.items.length;
+                for (let i = 0; i < n; i++) {
+                    expect(
+                        quotedPrintable.decode(response.body.items[i].Content.Body),
+                    ).not.contains(specific_content_of_mail);
+                }
+                return true;
+            });
+        };
+        cy.reloadUntilCondition(
+            reloadCallback,
+            conditionCallback,
+            "Timed out while checking if user did not receive specific message",
+        );
+    },
+);
+
+interface Item {
+    Content: {
+        Body: string;
+    };
+}
+
+interface MailResponse {
+    items: Array<Item>;
+}
+
+function getEmailsReceivedBy(
+    email_address: string,
+): Cypress.Chainable<Cypress.Response<MailResponse>> {
+    return cy.request({
+        method: "GET",
+        url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email_address),
+        headers: {
+            accept: "application/json",
+        },
+    });
+}
 
 const MAX_ATTEMPTS = 10;
 
@@ -373,7 +436,7 @@ Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label)
             .find("[data-test=lazybox-search-field]", { includeShadowDom: true })
             .type(query);
         // Lazybox waits a delay before loading items
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
+
         cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
         cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
         return cy

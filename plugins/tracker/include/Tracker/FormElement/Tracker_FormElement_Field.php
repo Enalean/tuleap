@@ -494,7 +494,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                     '</button>';
             }
 
-            $html .= '<label id="tracker_artifact_' . $this->id . '" for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) . '" class="tracker_formelement_label">' .  $purifier->purify($this->getLabel())  . $required . '</label>';
+            $html .= '<label data-test="field-label" id="tracker_artifact_' . $this->id . '" for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) . '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
 
             $html .= $html_value;
             $html .= '</div>';
@@ -553,7 +553,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html    .= '<div class="' . $this->getClassNamesForSubmit() . '"
                 data-field-id="' . $this->id . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
-            $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
+            $html    .= '<label data-test="field-label" for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . $required . '</label>';
 
             $html .= $this->fetchSubmitValue($submitted_values);
             $html .= $this->fetchSubmitAdditionnalInfo($submitted_values);

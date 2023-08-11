@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="conditionnal-notifications" full-name="conditionnal notifications" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="coordinators1" description="">
+      <members>
+        <member format="username">Coordinator1</member>
+      </members>
+    </ugroup>
+    <ugroup name="coordinators2" description="">
+      <members>
+        <member format="username">Coordinator2</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T359" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Conditional Notifications]]></name>
+      <item_name><![CDATA[cond_notif]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[inca-silver]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F8346" rank="2" id="8346" tracker_id="359" parent_id="0">
+          <name><![CDATA[summary_1]]></name>
+          <label><![CDATA[Summary]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="sb" ID="F8347" rank="3" id="8347" tracker_id="359" parent_id="0" notifications="1">
+          <name><![CDATA[assigned_to_1]]></name>
+          <label><![CDATA[Assigned to]]></label>
+          <bind type="users">
+            <items>
+              <item label="group_members"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F8348" rank="4852" id="8348" tracker_id="359" parent_id="0">
+          <name><![CDATA[category]]></name>
+          <label><![CDATA[Category]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="V3366" label="Database" is_hidden="0"/>
+              <item ID="V3367" label="User interface" is_hidden="0"/>
+              <item ID="V3368" label="SOAP API" is_hidden="0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F8349" rank="4853" id="8349" tracker_id="359" parent_id="0" notifications="1">
+          <name><![CDATA[coordinators]]></name>
+          <label><![CDATA[Coordinators]]></label>
+          <bind type="ugroups">
+            <items>
+              <item ID="V182" label="coordinators1" is_hidden="0"/>
+              <item ID="V183" label="coordinators2" is_hidden="0"/>
+            </items>
+          </bind>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F8346"/>
+        </semantic>
+        <semantic type="contributor">
+          <shortname><![CDATA[contributor]]></shortname>
+          <label><![CDATA[Contributor/assignee]]></label>
+          <description><![CDATA[Define the contributor/assignee of an artifact]]></description>
+          <field REF="F8347"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_831" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R1304" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns>
+                <field REF="F8346"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F8346" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F8346" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F8346" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F8347" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F8347" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F8347" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F8348" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F8348" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F8348" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F8349" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F8349" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F8349" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts/>
+    </tracker>
+    <triggers/>
+  </trackers>
+</project>

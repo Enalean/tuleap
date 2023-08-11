@@ -455,7 +455,7 @@ class Tracker_RulesManager
         //source
         $source_field = $this->form_element_factory->getFormElementById($source_field_id);
         if (! $source_field) {
-            echo '<select name="source_field" onchange="this.form.submit()">';
+            echo '<select name="source_field" data-test="source_field" onchange="this.form.submit()">';
             echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose source field') . '</option>';
             $sources = $this->getAllSourceFields();
             foreach ($sources as $id => $field) {
@@ -476,7 +476,7 @@ class Tracker_RulesManager
         if (! $source_field) {
             $disabled = 'disabled="disabled" readonly="readonly"';
         }
-        echo '<select name="target_field" ' . $disabled . '>';
+        echo '<select name="target_field" data-test="target_field" ' . $disabled . '>';
         echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose target field') . '</option>';
         if ($source_field) {
             $sources = $this->getAllTargetFields($source_field_id);
@@ -488,7 +488,7 @@ class Tracker_RulesManager
         }
         echo '</select>';
 
-        echo ' <input type="submit" name="choose_source" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo ' <input type="submit" name="choose_source" data-test="choose_source_button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
         echo '</form>';
 
         //Shortcut
@@ -514,7 +514,7 @@ class Tracker_RulesManager
             }
 
             if ($dependencies) {
-                echo '<p>' . dgettext('tuleap-tracker', 'Or select an existing field dependency') . '</p>';
+                echo '<p data-test="existing-field-dependency-label">' . dgettext('tuleap-tracker', 'Or select an existing field dependency') . '</p>';
                 echo '<ul><li>' . implode('</li><li>', $dependencies) . '</li></ul>';
             }
             echo '</ul>';
@@ -549,8 +549,8 @@ class Tracker_RulesManager
         $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
         $purifier = Codendi_HTMLPurifier::instance();
-        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies']) . '" method="POST">';
-        echo '<table class="tlp-table" id="tracker-field-dependencies-matrix">';
+        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func' => 'admin-dependencies']) . '" method="POST">';
+        echo '<table class="tlp-table" id="tracker-field-dependencies-matrix" data-test="tracker-field-dependencies-matrix">';
 
         echo "<thead><th class='matrix-cell matrix-empty-cell matrix-label-cell'></th>";
         foreach ($target_field_values as $target_field_value_id => $target_field_value) {
@@ -564,7 +564,7 @@ class Tracker_RulesManager
         echo "<tbody>";
        //Display the available transitions
         foreach ($source_field_values as $source_field_value_id => $source_field_value) {
-            echo "<tr class=\"" . util_get_alt_row_color($j) . "\">\n";
+            echo "<tr class=\"" . util_get_alt_row_color($j) . "\" data-test='matrix-row'>\n";
             echo "<th class='matrix-label-cell'>" . $purifier->purify($source_field_value->getLabel()) . "</th>";
             foreach ($target_field_values as $target_field_value_id => $target_field_value) {
                 $box_value = $source_field_value_id . '_' . $target_field_value_id;
@@ -583,7 +583,7 @@ class Tracker_RulesManager
         ) . '">';
         echo '&laquo; ' . $GLOBALS['Language']->getText('global', 'btn_cancel');
         echo '</a> ';
-        echo '<input type="submit" name="create_field_dependencies" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo '<input type="submit" name="create_field_dependencies" data-test="create-field-dependencies-button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
         echo '</FORM>';
     }
 
@@ -599,7 +599,7 @@ class Tracker_RulesManager
             }
         }
 
-          echo '<td class="matrix-cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
+        echo '<td class="matrix-cell" ><label class="pc_checkbox"><input type="checkbox" data-test="create-dependency" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
     }
 
     public function displayRulesAsJavascript(): string
