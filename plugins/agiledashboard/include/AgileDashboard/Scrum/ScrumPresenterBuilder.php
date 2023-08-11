@@ -38,6 +38,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
+use Tuleap\Kanban\Service\KanbanService;
 
 class ScrumPresenterBuilder
 {
@@ -105,6 +106,9 @@ class ScrumPresenterBuilder
         $planning_administration_delegation = new PlanningAdministrationDelegation($project);
         $this->event_manager->dispatch($planning_administration_delegation);
 
+        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service = $service !== null;
+
         return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $project, $root_planning),
             $group_id,
@@ -120,7 +124,8 @@ class ScrumPresenterBuilder
             $this->doesProjectUseExplicitBacklog($project),
             $has_workflow_action_add_to_top_backlog_defined,
             $additional_scrum_sections->getAdditionalSectionsControllers(),
-            $planning_administration_delegation->isPlanningAdministrationDelegated()
+            $planning_administration_delegation->isPlanningAdministrationDelegated(),
+            $is_using_kanban_service,
         );
     }
 
