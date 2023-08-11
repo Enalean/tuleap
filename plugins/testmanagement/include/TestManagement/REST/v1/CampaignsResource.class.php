@@ -62,6 +62,7 @@ use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
@@ -127,6 +128,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
@@ -437,24 +439,29 @@ class CampaignsResource
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
 
-        $node_js_client          = new NodeJSClient(
+        $node_js_client                  = new NodeJSClient(
             HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger(),
         );
-        $permissions_serializer  = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer          = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
-        $artifact_message_sender = new RealTimeArtifactMessageSender(
+        $artifact_message_sender         = new RealTimeArtifactMessageSender(
             $node_js_client,
             $permissions_serializer
         );
-
-        $this->realtime_message_sender = new RealTimeMessageSender(
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_artifact_message_sender = new RealTimeMercureArtifactMessageSender(
+            $mercure_client
+        );
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $this->realtime_message_sender   = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,
-            $artifact_message_sender
+            $artifact_message_sender,
+            $mercure_artifact_message_sender,
         );
 
         $http_client          = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
@@ -670,11 +677,11 @@ class CampaignsResource
 
         foreach ($executions_to_remove as $execution) {
             $this->execution_dao->removeExecution($execution->getId());
-            $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution);
+            $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
         }
 
         foreach ($executions_to_add as $execution) {
-            $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution);
+            $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
         }
 
         $this->sendAllowHeadersForExecutionsList($artifact);
@@ -857,7 +864,7 @@ class CampaignsResource
 
         $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
 
-        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign->getArtifact());
+        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign->getArtifact(), $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
 
         $this->sendAllowHeadersForCampaign($campaign);
 
