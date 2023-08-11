@@ -30,6 +30,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
+use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectFault;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Project\Status\SwitchingBackToPendingFault;
 use Tuleap\Project\Status\UpdateAlreadyDeletedProjectFault;
@@ -463,6 +465,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
     /**
      * @throws DeletedProjectStatusChangeException
      * @throws SwitchingBackToPendingException
+     * @throws CannotDeletedDefaultAdminProjectException
      */
     public function updateStatus(Project $project, string $status): void
     {
@@ -479,6 +482,8 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
                     throw new DeletedProjectStatusChangeException();
                 } elseif ($fault instanceof SwitchingBackToPendingFault) {
                     throw new SwitchingBackToPendingException();
+                } elseif ($fault instanceof CannotDeletedDefaultAdminProjectFault) {
+                    throw new CannotDeletedDefaultAdminProjectException();
                 }
             }
         );

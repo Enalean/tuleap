@@ -171,7 +171,7 @@ class ProjectDetailsPresenter
         $this->plugin_suspended_and_not_blocked_warnings = $plugin_suspended_and_not_blocked_warnings;
     }
 
-    private function getTypes(Project $project)
+    private function getTypes(Project $project): array
     {
         $localized_types = TemplateSingleton::instance()->getLocalizedTypes();
 
@@ -187,26 +187,24 @@ class ProjectDetailsPresenter
         return $types;
     }
 
-    private function getStatus(Project $project)
+    private function getStatus(Project $project): array
     {
         $labels = $this->getAssignableProjectStatuses($project);
 
         $all_status = [];
         foreach ($labels as $key => $status) {
             $all_status[] = [
-                'key'        => $key,
-                'status'     => $status,
-                'is_current' => $project->getStatus() === $key,
+                'key'             => $key,
+                'status'          => $status,
+                'is_current'      => $project->getStatus() === $key,
+                'can_be_selected' => ! ((int) $project->getID() === Project::DEFAULT_ADMIN_PROJECT_ID && $key === Project::STATUS_DELETED),
             ];
         }
 
         return $all_status;
     }
 
-    /**
-     * @return array
-     */
-    private function getAssignableProjectStatuses(Project $project)
+    private function getAssignableProjectStatuses(Project $project): array
     {
         $status = [
             Project::STATUS_ACTIVE => _('Active'),

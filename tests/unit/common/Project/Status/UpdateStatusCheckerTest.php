@@ -49,6 +49,17 @@ final class UpdateStatusCheckerTest extends TestCase
         self::assertInstanceOf(UpdateAlreadyDeletedProjectFault::class, $result->error);
     }
 
+    public function testItReturnsAFaultIfProjectToBeDeletedIsTheDefaultAdministrationProject(): void
+    {
+        $result = UpdateStatusChecker::checkProjectStatusCanBeUpdated(
+            ProjectTestBuilder::aProject()->withId(Project::DEFAULT_ADMIN_PROJECT_ID)->withStatusActive()->build(),
+            Project::STATUS_DELETED,
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(CannotDeletedDefaultAdminProjectFault::class, $result->error);
+    }
+
     public function testItsOKIfProjectStatusCanBeUpdated(): void
     {
         $result = UpdateStatusChecker::checkProjectStatusCanBeUpdated(

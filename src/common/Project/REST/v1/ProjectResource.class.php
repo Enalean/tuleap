@@ -91,6 +91,7 @@ use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
+use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Project\XML\InvalidXMLContentFault;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -846,6 +847,8 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(403, 'A deleted project cannot be reactivated.');
         } catch (SwitchingBackToPendingException $exception) {
             throw new RestException(403, 'An already activated project cannot be reset to pending.');
+        } catch (CannotDeletedDefaultAdminProjectException $exception) {
+            throw new RestException(403, 'Cannot delete the default Administration project.');
         }
 
         $this->sendAllowHeadersForProject();
