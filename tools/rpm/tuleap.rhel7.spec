@@ -1543,6 +1543,10 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/enalean_licensemanager
 
+%files plugin-webauthn
+%defattr(-,root,root,-)
+${APP_DIR}/plugins/webauthn
+
 %endif
 
 %if %{with experimental}
