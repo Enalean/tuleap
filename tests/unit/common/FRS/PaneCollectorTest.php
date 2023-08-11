@@ -21,29 +21,28 @@
 
 namespace Tuleap\FRS\PermissionsPerGroup;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PaneCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+class PaneCollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItDoesNotBuildPaneIfServiceNotUsed()
+    public function testItDoesNotBuildPaneIfServiceNotUsed(): void
     {
-        $service_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder::class);
-        $package_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder::class);
+        $service_builder = $this->createMock(PermissionPerGroupFRSServicePresenterBuilder::class);
+        $package_builder = $this->createMock(PermissionPerGroupFRSPackagesPresenterBuilder::class);
 
         $builder = new PaneCollector(
             $service_builder,
             $package_builder
         );
 
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
-        $project->shouldReceive('usesFile')->andReturns(false);
+        $project = $this->createConfiguredMock(Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $project->method('usesFile')->willReturn(false);
 
         $selected_ugroup_id = null;
 
-        $service_builder->shouldReceive('getPanePresenter')->never();
-        $package_builder->shouldReceive('getPanePresenter')->never();
+        $service_builder->expects(self::never())->method('getPanePresenter');
+        $package_builder->expects(self::never())->method('getPanePresenter');
 
         $builder->collectPane($project, $selected_ugroup_id);
     }

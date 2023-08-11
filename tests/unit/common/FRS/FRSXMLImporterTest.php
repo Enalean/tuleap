@@ -19,6 +19,7 @@
  *
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\UploadedLinksUpdater;
 
@@ -48,60 +49,62 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
 class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\ForgeConfigSandbox;
 
     /**
-     * @var \Tuleap\FRS\UploadedLinksDao
+     * @var MockObject&\Tuleap\FRS\UploadedLinksDao
      */
     protected $link_dao;
+    /**
+     * @var MockObject&\Tuleap\FRS\FRSPermissionManager
+     */
     protected $frs_permission_creator;
     private FRSPackageFactoryMock $package_factory;
     /**
-     * @var \Mockery\MockInterface&FRSReleaseFactory
+     * @var MockObject&FRSReleaseFactory
      */
     private $release_factory;
     private FRSXMLImporterTest_FRSFileFactory $file_factory;
     /**
-     * @var FRSPackageDao&\Mockery\MockInterface
+     * @var MockObject&FRSPackageDao
      */
     private $package_dao;
     /**
-     * @var PermissionsManager&\Mockery\MockInterface
+     * @var MockObject&PermissionsManager
      */
     private $permissions_manager;
     /**
-     * @var FRSReleaseDao&\Mockery\MockInterface
+     * @var MockObject&FRSReleaseDao
      */
     private $release_dao;
     /**
-     * @var FRSFileDao&\Mockery\MockInterface
+     * @var MockObject&FRSFileDao
      */
     private $file_dao;
     /**
-     * @var FRSProcessorDao&\Mockery\MockInterface
+     * @var MockObject&FRSProcessorDao
      */
     private $processor_dao;
     /**
-     * @var FRSFileTypeDao&\Mockery\MockInterface
+     * @var MockObject&FRSFileTypeDao
      */
     private $filetype_dao;
     /**
-     * @var \User\XML\Import\IFindUserFromXMLReference&\Mockery\MockInterface
+     * @var MockObject&\User\XML\Import\IFindUserFromXMLReference
      */
     private $user_finder;
     /**
-     * @var UserManager&\Mockery\MockInterface
+     * @var MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var UGroupDao&\Mockery\MockInterface
+     * @var MockObject&UGroupDao
      */
     private $ugroup_dao;
     /**
-     * @var XMLImportHelper&\Mockery\MockInterface
+     * @var MockObject&XMLImportHelper
      */
     private $xml_import_helper;
     private FRSXMLImporter $frs_importer;
@@ -109,42 +112,49 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->package_factory = new FRSPackageFactoryMock();
-        $this->release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->release_factory = $this->createPartialMock(FRSReleaseFactory::class, [
+            'getFRSReleaseFromDb',
+        ]);
         $this->file_factory    = new FRSXMLImporterTest_FRSFileFactory();
 
-        $this->package_dao          = \Mockery::spy(\FRSPackageDao::class);
+        $this->package_dao          = $this->createMock(FRSPackageDao::class);
         $this->package_factory->dao = $this->package_dao;
         FRSPackageFactory::setInstance($this->package_factory);
 
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->release_dao          = \Mockery::spy(\FRSReleaseDao::class);
-        $this->release_factory->dao =  $this->release_dao;
+        $this->release_dao          = $this->createMock(FRSReleaseDao::class);
+        $this->release_factory->dao = $this->release_dao;
         FRSReleaseFactory::setInstance($this->release_factory);
 
-        $this->file_dao                      = \Mockery::spy(\FRSFileDao::class);
+        $this->file_dao                      = $this->createMock(FRSFileDao::class);
         $this->file_factory->dao             = $this->file_dao;
         $this->file_factory->release_factory = $this->release_factory;
 
-        $this->processor_dao = \Mockery::spy(\FRSProcessorDao::class);
-        $this->filetype_dao  = \Mockery::spy(\FRSFileTypeDao::class);
+        $this->processor_dao = $this->createMock(FRSProcessorDao::class);
+        $this->filetype_dao  = $this->createMock(FRSFileTypeDao::class);
 
-        $this->user_finder  = \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class);
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->user_finder  = $this->createMock(\User\XML\Import\IFindUserFromXMLReference::class);
+        $this->user_manager = $this->createMock(UserManager::class);
         UserManager::setInstance($this->user_manager);
 
-        $this->ugroup_dao = \Mockery::spy(\UGroupDao::class);
-        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(new DataAccessResultEmpty());
+        $this->ugroup_dao = $this->createMock(UGroupDao::class);
+        $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(new DataAccessResultEmpty());
 
-        $this->xml_import_helper      = \Mockery::spy(\XMLImportHelper::class);
-        $this->frs_permission_creator = \Mockery::spy(\Tuleap\FRS\FRSPermissionCreator::class);
+        $this->xml_import_helper      = $this->createMock(XMLImportHelper::class);
+        $this->frs_permission_creator = $this->createMock(\Tuleap\FRS\FRSPermissionCreator::class);
 
-        $this->link_dao = \Mockery::spy(\Tuleap\FRS\UploadedLinksDao::class);
-        $links_updater  = new UploadedLinksUpdater($this->link_dao, \Mockery::spy(\FRSLog::class));
+        $this->link_dao = $this->createMock(\Tuleap\FRS\UploadedLinksDao::class);
+        $frs_log        = $this->createMock(FRSLog::class);
+        $frs_log->method('addLog');
+        $links_updater = new UploadedLinksUpdater($this->link_dao, $frs_log);
+
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->method('log');
 
         $this->frs_importer = new FRSXMLImporter(
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
+            $logger,
             $this->package_factory,
             $this->release_factory,
             $this->file_factory,
@@ -156,7 +166,10 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->filetype_dao
         );
 
-        EventManager::setInstance(Mockery::spy(EventManager::class));
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent');
+        $em->method('addListener');
+        EventManager::setInstance($em);
         ForgeConfig::set('ftp_incoming_dir', $this->getTmpDir());
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir());
     }
@@ -187,7 +200,9 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $xml_element            = new SimpleXMLElement($xml);
         $expected_package_array = $this->getDefaultPackage('empty_package');
-        $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once();
+        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array);
+
+        $this->permissions_manager->method('savePermissions');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -198,8 +213,10 @@ XML;
         $pm      = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
 
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [2], FRSPermission::FRS_READER)->ordered()->atLeast()->once();
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [3], FRSPermission::FRS_ADMIN)->ordered()->atLeast()->once();
+        $this->frs_permission_creator->expects(self::atLeast(2))->method('savePermissions')->withConsecutive(
+            [$project, [2], FRSPermission::FRS_READER],
+            [$project, [3], FRSPermission::FRS_ADMIN]
+        );
 
         $xml = <<<XML
         <project>
@@ -241,11 +258,11 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
+        $this->user_finder->method('getUser')->willReturn(new PFUser(['user_id' => $user_id]));
 
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id             = 1337;
-        $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->andReturns($package_id);
+        $this->package_dao->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
 
         $expected_release_array = [
             'release_id' => 0,
@@ -258,7 +275,9 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once();
+        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array);
+
+        $this->permissions_manager->method('savePermissions');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -288,18 +307,20 @@ XML;
 
         $user_id    = 42;
         $package_id = 1337;
-        $release    = \Mockery::spy(FRSRelease::class);
+        $release    = $this->createMock(FRSRelease::class);
 
-        $release->shouldReceive('getGroupId')->andReturn(123);
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
-        $this->package_dao->shouldReceive('createFromArray')->andReturns($package_id);
-        $this->release_dao->shouldReceive('createFromArray')->andReturns(47);
-        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $release->method('getGroupId')->willReturn(123);
+        $this->user_finder->method('getUser')->willReturn(new PFUser(['user_id' => $user_id]));
+        $this->package_dao->method('createFromArray')->willReturn($package_id);
+        $this->release_dao->method('createFromArray')->willReturn(47);
+        $this->release_factory->method('getFRSReleaseFromDb')->willReturn($release);
+
+        $this->permissions_manager->method('savePermissions');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
 
-        $this->assertSame($frs_mapping[47], 'A101');
+        self::assertSame($frs_mapping[47], 'A101');
     }
 
     public function testItShouldImportOnePackageWithOneReleaseWithOneFile(): void
@@ -333,21 +354,21 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
+        $this->user_finder->method('getUser')->willReturn(new PFUser(['user_id' => $user_id]));
 
         $package_id            = 1337;
         $package_array_with_id = [
             'package_id' => $package_id,
-            'group_id'   => 123,
-            'name'       => "package",
-            'status_id'  => FRSPackage::STATUS_ACTIVE,
-            'rank'       => 0,
+            'group_id' => 123,
+            'name' => "package",
+            'status_id' => FRSPackage::STATUS_ACTIVE,
+            'rank' => 0,
             'approve_license' => true,
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');
-        $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
-        $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
+        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
+        $this->package_dao->method('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->willReturn(TestHelper::arrayToDar($package_array_with_id));
 
         $release_id             = 8665;
         $expected_release_array = [
@@ -361,44 +382,50 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
+        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
 
         $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
-        $this->filetype_dao->shouldReceive('searchTypeId')->andReturns(667);
-        $this->processor_dao->shouldReceive('searchProcessorId')->andReturns(69);
-        $this->release_dao->shouldReceive('searchById')->andReturns(\TestHelper::arrayToDar($release_array_with_group));
-        $this->file_dao->shouldReceive('searchFileByName')->andReturns(\TestHelper::emptyDar());
+        $this->filetype_dao->method('searchTypeId')->willReturn(667);
+        $this->processor_dao->method('searchProcessorId')->willReturn(69);
+        $this->release_dao->method('searchById')->willReturn(TestHelper::arrayToDar($release_array_with_group));
+        $this->file_dao->method('searchFileByName')->willReturn(TestHelper::emptyDar());
 
         $file_id             = 12569;
         $expected_file_array = [
-            'file_id'       => null,
-            'filename'      => "p1337_r8665/lefichier",
-            'filepath'      => "p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
-            'release_id'    => $release_id,
-            'type_id'       => 667,
-            'processor_id'  => 69,
-            'release_time'  => strtotime('2015-12-03T16:46:00'),
+            'file_id' => null,
+            'filename' => "p1337_r8665/lefichier",
+            'filepath' => "p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
+            'release_id' => $release_id,
+            'type_id' => 667,
+            'processor_id' => 69,
+            'release_time' => strtotime('2015-12-03T16:46:00'),
             'file_location' => ForgeConfig::get('ftp_frs_dir_prefix') . "/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
-            'file_size'     => 14,
-            'post_date'     => strtotime('2015-12-03T16:46:42'),
-            'status'        => "A",
-            'computed_md5'  => "c58ef9ab0b1fc7f6f90ffb607dee0073",
+            'file_size' => 14,
+            'post_date' => strtotime('2015-12-03T16:46:42'),
+            'status' => "A",
+            'computed_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
             'reference_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
-            'user_id'       => $user_id,
-            'comment'       => "one file to rule them all",
+            'user_id' => $user_id,
+            'comment' => "one file to rule them all",
         ];
 
-        $this->file_dao->shouldReceive('createFromArray')->with($expected_file_array)->once()->andReturns($file_id);
+        $this->file_dao->expects(self::once())->method('createFromArray')->with($expected_file_array)->willReturn($file_id);
 
         $expected_file_array_with_id       = $expected_file_array;
         $expected_file_array_with_id['id'] = $file_id;
-        $this->file_dao->shouldReceive('searchById')->with($file_id)->andReturns(\TestHelper::arrayToDar($expected_file_array_with_id));
+        $this->file_dao->method('searchById')->with($file_id)->willReturn(TestHelper::arrayToDar($expected_file_array_with_id));
 
-        $release = \Mockery::spy(FRSRelease::class);
-        $release->shouldReceive('getGroupId')->andReturn(123);
-        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $release = $this->createMock(FRSRelease::class);
+        $release->method('getGroupId')->willReturn(123);
+        $release->method('getPackageID');
+        $release->method('getReleaseID');
+        $this->release_factory->method('getFRSReleaseFromDb')->willReturn($release);
+
+        $this->permissions_manager->method('savePermissions');
+        $this->file_dao->method('isMarkedToBeRestored');
+        $this->user_manager->method('getCurrentUser');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
@@ -433,21 +460,21 @@ XML;
         $xml_element     = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
+        $this->user_finder->method('getUser')->willReturn(new PFUser(['user_id' => $user_id]));
 
         $package_id            = 1337;
         $package_array_with_id = [
             'package_id' => $package_id,
-            'group_id'   => 123,
-            'name'       => "package",
-            'status_id'  => FRSPackage::STATUS_ACTIVE,
-            'rank'       => 0,
+            'group_id' => 123,
+            'name' => "package",
+            'status_id' => FRSPackage::STATUS_ACTIVE,
+            'rank' => 0,
             'approve_license' => true,
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');
-        $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
-        $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
+        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
+        $this->package_dao->method('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->willReturn(TestHelper::arrayToDar($package_array_with_id));
 
         $release_id             = 8665;
         $expected_release_array = [
@@ -461,16 +488,18 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
+        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
 
         $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
-        $this->link_dao->shouldReceive('create')->andReturns(true);
+        $this->link_dao->method('create')->willReturn(true);
 
-        $release = \Mockery::spy(FRSRelease::class);
-        $release->shouldReceive('getGroupId')->andReturn(123);
-        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $release = $this->createMock(FRSRelease::class);
+        $release->method('getGroupId')->willReturn(123);
+        $this->release_factory->method('getFRSReleaseFromDb')->willReturn($release);
+
+        $this->permissions_manager->method('savePermissions');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
