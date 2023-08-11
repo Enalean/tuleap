@@ -1,0 +1,65 @@
+/**
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "@tuleap/tlp-modal";
+@use "@tuleap/tlp-button";
+
+.agiledashboard-split-kanban-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 600px;
+    padding: var(--tlp-large-spacing);
+}
+
+.agiledashboard-split-kanban-modal-title {
+    margin: var(--tlp-medium-spacing) 0;
+    font-size: 2.25rem;
+    letter-spacing: -0.1125rem;
+    text-align: center;
+}
+
+.agiledashboard-split-kanban-modal-subtitle {
+    margin: 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.625rem;
+    text-align: center;
+}
+
+.agiledashboard-split-kanban-modal-separator {
+    width: 1.875rem;
+    height: 0.0625rem;
+    margin: var(--tlp-x-large-spacing);
+}
+
+.agiledashboard-split-kanban-modal-preview {
+    margin: 0 0 var(--tlp-large-spacing);
+}
+
+.agiledashboard-split-kanban-modal-explanation {
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5rem;
+
+    > a {
+        font-weight: 700;
+    }
+}

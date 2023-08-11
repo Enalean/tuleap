@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/fault':
     specifier: workspace:*
@@ -13,6 +17,9 @@ dependencies:
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../../../../src/scripts/tlp
+  '@tuleap/tlp-button':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-button
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal

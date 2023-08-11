@@ -42,7 +42,9 @@ use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\Layout\AfterStartProjectContainer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BeforeStartProjectHeader;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
@@ -161,8 +163,13 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(HeaderConfiguration|array $params): void
     {
+        $project = null;
+        if (is_array($params) && ! empty($params['group'])) {
+            $project = $this->project_manager->getProject($params['group']);
+            $this->event_manager->dispatch(new BeforeStartProjectHeader($project, $this, $this->current_user->user));
+        }
+
         $this->header_has_been_written = true;
-        $project                       = null;
         $project_context               = null;
         $in_project_without_sidebar    = null;
 
@@ -174,9 +181,7 @@ class BurningParrotTheme extends BaseLayout
             ];
         }
 
-        if (! empty($params['group'])) {
-            $project = $this->project_manager->getProject($params['group']);
-
+        if ($project) {
             $project_context = ProjectContextPresenter::build(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
@@ -295,6 +300,10 @@ class BurningParrotTheme extends BaseLayout
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
+
+        if ($project) {
+            $this->event_manager->dispatch(new AfterStartProjectContainer($project, $this->current_user->user));
+        }
     }
 
     protected function hasHeaderBeenWritten(): bool

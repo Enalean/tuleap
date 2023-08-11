@@ -1,0 +1,15 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp-button",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "style": "themes/tlp-button.scss",
+  "exports": {
+    ".": {
+      "default": "./themes/tlp-button.scss"
+    }
+  },
+  "dependencies": {
+  }
+}

@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@fortawesome/fontawesome-free':
     specifier: ^6.4.0
@@ -7,6 +11,9 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-badge
+  '@tuleap/tlp-button':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-button
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-dropdown

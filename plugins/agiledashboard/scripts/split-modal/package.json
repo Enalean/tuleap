@@ -1,0 +1,19 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-agiledashboard-split-modal",
+  "homepage": "https://www.tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/tlp-button": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

@@ -145,6 +145,7 @@ if (! IS_SCRIPT) {
     $csp_rules                .= "form-action 'self'; ";
     $csp_rules                .= "manifest-src 'self'; ";
     $csp_rules                .= "img-src * data: blob:; ";
+    $csp_rules                .= "media-src 'self'; ";
     $csp_rules                .= "connect-src *; ";
     $csp_rules                .= "child-src *; ";
     $csp_rules                .= "upgrade-insecure-requests; ";
