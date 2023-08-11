@@ -25,6 +25,7 @@ use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Kanban\BreadCrumbBuilder;
 use Tuleap\Kanban\HierarchyChecker;
@@ -311,6 +312,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             ),
             new CheckProjectCSRFMiddleware(new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider()),
             new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware($user_manager, new ProjectAdministratorChecker()),
+            new ServiceInstrumentationMiddleware(KanbanService::INSTRUMENTATION_NAME),
         );
     }
 
@@ -336,7 +338,8 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
                     EventManager::instance()
                 ),
                 UserManager::instance(),
-            )
+            ),
+            new ServiceInstrumentationMiddleware(KanbanService::INSTRUMENTATION_NAME),
         );
     }
 

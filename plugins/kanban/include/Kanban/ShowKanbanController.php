@@ -35,6 +35,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -69,6 +70,8 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        ServiceInstrumentation::increment(KanbanService::INSTRUMENTATION_NAME);
+
         $kanban_id = (int) $variables['id'];
         $user      = $request->getCurrentUser();
 
