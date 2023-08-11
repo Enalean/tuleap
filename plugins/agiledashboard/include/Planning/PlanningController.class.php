@@ -269,11 +269,15 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function showEmptyHome()
     {
+        $service                 = $this->getProjectFromRequest()->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service = $service !== null;
+
         $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
             $this->isUserAdmin(),
             $this->isScrumMonoMilestoneEnabled(),
-            $this->isPlanningManagementDelegated()
+            $this->isPlanningManagementDelegated(),
+            $is_using_kanban_service,
         );
         return $this->renderToString('empty-home', $presenter);
     }

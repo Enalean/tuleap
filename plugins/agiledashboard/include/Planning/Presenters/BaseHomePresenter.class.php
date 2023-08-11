@@ -36,6 +36,7 @@ class Planning_Presenter_BaseHomePresenter
         $is_user_admin,
         $is_mono_milestone_enabled,
         bool $is_planning_management_delegated,
+        public readonly bool $is_using_kanban_service,
     ) {
         $this->group_id                = $group_id;
         $this->is_user_admin           = $is_user_admin;
