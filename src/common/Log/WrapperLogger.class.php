@@ -18,25 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BrokerLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
     /**
-     * @var \Psr\Log\LoggerInterface[]
+     * @var \Psr\Log\LoggerInterface
      */
-    private $loggers = [];
+    private $logger;
 
     /**
-     * @param \Psr\Log\LoggerInterface[] $loggers
+     * @var string[]
      */
-    public function __construct(array $loggers)
+    private array $prefix = [];
+
+    public function __construct(\Psr\Log\LoggerInterface $logger, string $prefix)
     {
-        $this->loggers = $loggers;
+        $this->logger   = $logger;
+        $this->prefix[] = $prefix;
     }
 
     public function log($level, string|\Stringable $message, array $context = []): void
     {
-        foreach ($this->loggers as $logger) {
-            $logger->log($level, $message, $context);
-        }
+        $this->logger->log($level, $this->formatMessage($message), $context);
+    }
+
+    private function formatMessage(string|\Stringable $message): string
+    {
+        return '[' . implode('][', $this->prefix) . '] ' . $message;
+    }
+
+    public function push(string $prefix): void
+    {
+        $this->prefix[] = $prefix;
+    }
+
+    public function pop(): void
+    {
+        array_pop($this->prefix);
     }
 }

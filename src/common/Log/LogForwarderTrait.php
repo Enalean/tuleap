@@ -70,6 +70,9 @@ trait LogForwarderTrait
         $this->logger->debug($message, $context);
     }
 
+    /**
+     * @param mixed $level
+     */
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->logger->log($level, $message, $context);

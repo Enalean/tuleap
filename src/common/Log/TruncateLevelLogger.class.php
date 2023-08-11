@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TruncateLevelLogger implements \Psr\Log\LoggerInterface
 {
     /**
@@ -25,22 +26,28 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
      */
     private $logger;
 
-    private $level_weight = [
+    private array $level_weight = [
         \Psr\Log\LogLevel::DEBUG => 0,
         \Psr\Log\LogLevel::INFO  => 10,
         \Psr\Log\LogLevel::WARNING  => 20,
         \Psr\Log\LogLevel::ERROR => 30,
     ];
 
-    private $should_log;
+    private array $should_log = [];
 
+    /**
+     * @param mixed $level
+     */
     public function __construct(\Psr\Log\LoggerInterface $logger, $level)
     {
         $this->logger = $logger;
         $this->setLevel($level);
     }
 
-    private function setLevel($min_level)
+    /**
+     * @param mixed $min_level
+     */
+    private function setLevel($min_level): void
     {
         $min_weight = $this->level_weight[$min_level] ?? $this->level_weight[\Psr\Log\LogLevel::WARNING];
         foreach ($this->level_weight as $level_label => $weight) {

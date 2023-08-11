@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Log_ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
     public const BLACK   = "\033[30m";
