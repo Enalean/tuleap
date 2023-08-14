@@ -546,16 +546,16 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-enalean-licensemanager
 %{summary}.
 
+%endif
+
+%if %{with experimental}
+
 %package plugin-webauthn
 Summary: WebAuthn plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-webauthn
-Allow users to register and use passkeys with WebAuthn protocol
-
-%endif
-
-%if %{with experimental}
+Allow users to register and use passkeys with WebAuthn protocol.
 
 %endif
 
@@ -635,7 +635,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %endif
 
 %if "%{?dist}" == ".el9"
@@ -644,6 +643,7 @@ done
 
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1543,13 +1543,13 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/enalean_licensemanager
 
-%files plugin-webauthn
-%defattr(-,root,root,-)
-${APP_DIR}/plugins/webauthn
-
 %endif
 
 %if %{with experimental}
+
+%files plugin-webauthn
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/webauthn
 
 %endif
 
