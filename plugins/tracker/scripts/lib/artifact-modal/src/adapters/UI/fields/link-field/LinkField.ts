@@ -237,7 +237,6 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
             onartifact-created="${onArtifactCreated}"
         ></tuleap-artifact-modal-link-artifact-creator>`;
     }
-    const link_selector = host.link_selector;
     return html`<div class="link-field-add-link-row">
         <span class="link-field-row-type">
             <tuleap-artifact-modal-link-type-selector
@@ -247,11 +246,11 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
                 ontype-changed="${onLinkTypeChanged}"
             ></tuleap-artifact-modal-link-type-selector>
         </span>
-        <div class="link-field-add-link-input">${link_selector}</div>
+        <div class="link-field-add-link-input">${host.link_selector}</div>
     </div>`;
 };
 
-const createLazyBox = (host: HostElement): void => {
+const createLazyBox = (host: HostElement): Lazybox & HTMLElement => {
     const link_selector = createLazybox(host.ownerDocument);
     const options: LazyboxOptions = {
         is_multiple: false,
@@ -280,14 +279,12 @@ const createLazyBox = (host: HostElement): void => {
                 : getCreateNewArtifactButtonInLinkLabel(),
     };
     link_selector.options = options;
-    host.link_selector = link_selector;
+    return link_selector;
 };
 
 export const LinkField = define<InternalLinkField>({
     tag: "tuleap-artifact-modal-link-field",
-    link_selector: {
-        set: (host, new_value) => new_value ?? Option.nothing(),
-    },
+    link_selector: { get: (host) => createLazyBox(host) },
     controller: {
         set(host, controller: LinkFieldController) {
             host.current_artifact_reference = controller.getCurrentArtifactReference();
@@ -304,7 +301,6 @@ export const LinkField = define<InternalLinkField>({
                 host.linked_artifacts = artifacts;
                 host.is_loading_links = false;
             });
-            createLazyBox(host);
             controller.getPossibleParents().then((parents) => {
                 host.current_link_type = controller.getCurrentLinkType(parents.length > 0);
                 host.allowed_link_types =

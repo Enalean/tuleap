@@ -43,7 +43,7 @@
                 <label class="tlp-label" for="update-reviewers-modal-select">{{
                     $gettext("Reviewers")
                 }}</label>
-                <tuleap-lazybox ref="reviewer_input" />
+                <tuleap-lazybox id="update-reviewers-modal-select" ref="reviewer_input" />
             </div>
         </div>
         <div class="tlp-modal-footer pull-request-manage-reviewers-modal-footer">
