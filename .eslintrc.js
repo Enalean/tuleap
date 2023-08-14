@@ -174,9 +174,10 @@ module.exports = {
                 "plugins/baseline/**/*.vue",
                 "plugins/create_test_env/**/*.vue",
                 "plugins/crosstracker/**/*.vue",
-                "plugins/agiledashboard/scripts/permissions-per-group/**/*.vue",
+                "plugins/agiledashboard/scripts/permissions-per-group/src/**/*.vue",
                 "src/scripts/main/src/project/admin/services/**/*.vue",
                 "src/scripts/main/src/*/permissions-per-group/**/*.vue",
+                "src/scripts/news-permissions-per-group/src/**/*.vue",
             ],
             rules: {
                 "vue/no-v-for-template-key": "off", //will be supported in vue3, we do not want template introduce div when we don't need them

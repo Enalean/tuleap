@@ -43,10 +43,10 @@ class PaneCollector
         $this->packages_pane_builder     = $packages_pane_builder;
     }
 
-    public function collectPane(Project $project, $selected_ugroup = null)
+    public function collectPane(Project $project, $selected_ugroup = null): string
     {
         if (! $project->usesFile()) {
-            return;
+            return '';
         }
 
         $service_presenter = $this->service_presenter_builder->getPanePresenter($project, $selected_ugroup);

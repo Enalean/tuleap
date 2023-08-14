@@ -40,8 +40,8 @@
             "po": "src/scripts/frs-permissions-per-group/po"
         },
         "permissions-per-group-news": {
-            "src": "src/scripts/main/src/news/permissions-per-group",
-            "po": "src/scripts/main/src/news/permissions-per-group/po"
+            "src": "src/scripts/news-permissions-per-group/src",
+            "po": "src/scripts/news-permissions-per-group/po"
         },
         "project-admin-services": {
             "src": "src/scripts/main/src/project/admin/services/src",
