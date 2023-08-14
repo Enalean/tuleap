@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
 import NewsPermissions from "./BaseNewsPermissions.vue";
 
@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(Vue, (locale) =>
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
         import(
-            /* webpackChunkName: "permissions-per-group-news-po-" */ "./po/" +
+            /* webpackChunkName: "permissions-per-group-news-po-" */ "../po/" +
                 getPOFileFromLocale(locale)
         )
     );

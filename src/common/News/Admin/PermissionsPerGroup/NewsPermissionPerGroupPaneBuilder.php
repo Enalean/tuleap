@@ -26,6 +26,7 @@ namespace Tuleap\News\Admin\PermissionsPerGroup;
 
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupLoadAllButtonPresenter;
 use UGroupManager;
 
@@ -42,15 +43,18 @@ class NewsPermissionPerGroupPaneBuilder
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function getPaneContent(Project $project, $selected_ugroup_id)
+    public function getPaneContent(Project $project, $selected_ugroup_id): string
     {
         if (! $project->usesNews()) {
-            return;
+            return '';
         }
 
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../scripts/news-permissions-per-group/frontend-assets',
+            '/assets/core/news-permissions-per-group'
+        );
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('news-permissions.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'news-permissions.js'));
 
         $ugroup        = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
         $templates_dir = __DIR__ . '/../../../../templates/news/';
