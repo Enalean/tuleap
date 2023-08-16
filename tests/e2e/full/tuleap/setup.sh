@@ -53,6 +53,7 @@ enable_plugins() {
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
     sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_activate_split_kanban_for_project 1
+    sudo -u codendiadm /usr/bin/tuleap config-set sys_user_approval 1
 }
 
 load_project() {
