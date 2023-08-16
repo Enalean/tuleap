@@ -402,10 +402,9 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      * When getPlanningsByBacklogTracker(Epic) -> [Product, Release]
      * When getPlanningsByBacklogTracker(Story) -> [Sprint]
      *
-     *
-     * @return Planning
+     * @return Planning[]
      */
-    public function getPlanningsByBacklogTracker(Tracker $backlog_tracker)
+    public function getPlanningsByBacklogTracker(Tracker $backlog_tracker): array
     {
         $plannings = [];
         foreach ($this->dao->searchByBacklogTrackerId($backlog_tracker->getId()) as $planning) {
