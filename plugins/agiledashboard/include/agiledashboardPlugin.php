@@ -449,6 +449,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         $backlog_tracker = $event->getTracker();
 
+        $nearest_planning_tracker = (new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->getPlanningFactory()))->getNearestPlanningTracker(
+            $backlog_tracker,
+            Tracker_HierarchyFactory::instance(),
+        );
+        if ($nearest_planning_tracker === null) {
+            //Old criterion is set but tracker is no more used in AD configuration
+            return;
+        }
+
         $user    = $event->getUser();
         $project = $backlog_tracker->getProject();
 
