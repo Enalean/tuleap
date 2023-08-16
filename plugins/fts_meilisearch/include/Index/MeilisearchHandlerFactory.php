@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 use Meilisearch\Endpoints\Indexes;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
@@ -40,6 +41,7 @@ final class MeilisearchHandlerFactory
         private LocalMeilisearchServer $local_meilisearch_server,
         private MeilisearchMetadataDAO $metadata_dao,
         private RequestFactoryInterface $request_factory,
+        private readonly StreamFactoryInterface $stream_factory,
         private ClientInterface $client_for_local_use,
         private ClientInterface $client_for_remote_use,
     ) {
@@ -71,6 +73,8 @@ final class MeilisearchHandlerFactory
             $key->getString(),
             $this->client_for_local_use,
             $this->request_factory,
+            [],
+            $this->stream_factory,
         ))->index(self::LOCAL_INDEX_NAME);
     }
 
@@ -81,6 +85,8 @@ final class MeilisearchHandlerFactory
             \ForgeConfig::getSecretAsClearText(RemoteMeilisearchServerSettings::API_KEY)->getString(),
             $this->client_for_remote_use,
             $this->request_factory,
+            [],
+            $this->stream_factory,
         ))->index(\ForgeConfig::get(RemoteMeilisearchServerSettings::INDEX_NAME));
     }
 }

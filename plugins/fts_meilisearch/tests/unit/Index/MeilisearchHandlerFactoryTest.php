@@ -82,6 +82,7 @@ final class MeilisearchHandlerFactoryTest extends TestCase
             new LocalMeilisearchServer($root_dir),
             $this->createStub(MeilisearchMetadataDAO::class),
             HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             HttpClientFactory::createClientForInternalTuleapUse(),
             HttpClientFactory::createClient(),
         );
