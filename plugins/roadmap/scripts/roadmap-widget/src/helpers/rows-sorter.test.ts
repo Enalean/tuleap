@@ -17,12 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SkeletonRow, SubtaskRow, TaskRow } from "../type";
+import type { SkeletonRow, SubtaskRow, Task, TaskRow } from "../type";
 import { sortRows } from "./rows-sorter";
 
 describe("rows-sorter", () => {
     it("sort rows", () => {
+        const parent_task = {
+            id: 70,
+            start: new Date(40),
+        } as Task;
         const unsorted_rows = [
+            {
+                task: {
+                    id: 60,
+                    start: new Date(40),
+                    parent: parent_task,
+                },
+            } as TaskRow,
+            {
+                task: {
+                    id: 70,
+                    start: new Date(40),
+                },
+            } as TaskRow,
             {
                 for_task: {
                     id: 10,
@@ -70,6 +87,12 @@ describe("rows-sorter", () => {
                 },
               },
               {
+                "task": {
+                  "id": 70,
+                  "start": 1970-01-01T00:00:00.040Z,
+                },
+              },
+              {
                 "for_task": {
                   "id": 5,
                   "start": null,
@@ -85,6 +108,16 @@ describe("rows-sorter", () => {
                 "task": {
                   "id": 50,
                   "start": null,
+                },
+              },
+              {
+                "task": {
+                  "id": 60,
+                  "parent": {
+                    "id": 70,
+                    "start": 1970-01-01T00:00:00.040Z,
+                  },
+                  "start": 1970-01-01T00:00:00.040Z,
                 },
               },
             ]
