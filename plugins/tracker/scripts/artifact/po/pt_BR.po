@@ -8,3 +8,9 @@ msgstr ""
 
 msgid "Choose a value in the list"
 msgstr "Escolha um valor na lista"
+
+msgid "Status"
+msgstr ""
+
+msgid "Title"
+msgstr ""

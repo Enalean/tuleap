@@ -36,11 +36,6 @@ codendi.locales['tracker_artifact_link'] = {
     trackers_label: 'Trackers',
     type_label: 'Liens par nature'
 };
-codendi.locales['tracker_hierarchy'] = {
-    no_child_artifacts: 'Cet artéfact n\'as pas encore d\'enfants',
-    title_column_name: 'Titre',
-    status_column_name: 'Status'
-};
 codendi.locales['tracker_trigger'] = {
     at_least_one: {
         name: 'au moins un enfant',
