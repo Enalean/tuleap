@@ -160,6 +160,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
             new LocalMeilisearchServer(),
             new MeilisearchMetadataDAO(),
             \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Http\HttpClientFactory::createClientForInternalTuleapUse(),
             \Tuleap\Http\HttpClientFactory::createClient(),
         );
