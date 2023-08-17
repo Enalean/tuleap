@@ -22,83 +22,63 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
-use HTTPRequest;
-use Mockery;
-use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\TestLayout;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var PlatformBannerAdministrationController */
-    private $controller;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminPageRenderer */
-    private $renderer;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets */
-    private $include_assets;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|BannerRetriever */
-    private $banner_retriever;
+    private AdminPageRenderer & \PHPUnit\Framework\MockObject\MockObject $renderer;
+    private BannerRetriever & \PHPUnit\Framework\MockObject\Stub $banner_retriever;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->renderer         = Mockery::mock(AdminPageRenderer::class);
-        $this->include_assets   = Mockery::mock(IncludeAssets::class);
-        $this->banner_retriever = Mockery::mock(BannerRetriever::class);
+        $this->renderer         = $this->createMock(AdminPageRenderer::class);
+        $this->banner_retriever = $this->createStub(BannerRetriever::class);
+        $this->user             = UserTestBuilder::buildWithDefaults();
+    }
 
-        $this->controller = new PlatformBannerAdministrationController(
+    private function process(): void
+    {
+        $request    = HTTPRequestBuilder::get()->withUser($this->user)->build();
+        $layout     = new TestLayout(new LayoutInspector());
+        $controller = new PlatformBannerAdministrationController(
             $this->renderer,
-            $this->include_assets,
+            JavascriptAssetGenericBuilder::build(),
+            JavascriptAssetGenericBuilder::build(),
             $this->banner_retriever
         );
+        $controller->process($request, $layout, []);
     }
 
     public function testProcessRenders(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive(['isSuperUser' => true]);
+        $this->user = UserTestBuilder::buildSiteAdministrator();
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive(['getCurrentUser' => $current_user]);
+        $this->banner_retriever->method('getBanner')
+            ->willReturn(new Banner('didymous Politburo', Banner::IMPORTANCE_STANDARD, null));
 
-        $layout = Mockery::mock(BaseLayout::class);
-
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('ckeditor.js');
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('site-admin/platform-banner.js');
-        $layout->shouldReceive('includeFooterJavascriptFile')->twice();
-        $this->banner_retriever->shouldReceive('getBanner')
-            ->once();
-        $this->renderer->shouldReceive('renderAPresenter')
-            ->once()
+        $this->renderer->expects(self::once())
+            ->method('renderAPresenter')
             ->with(
                 'Platform banner',
-                Mockery::type('string'),
+                self::isType('string'),
                 'administration',
-                Mockery::type('array')
+                self::isType('array')
             );
 
-        $this->controller->process($request, $layout, []);
+        $this->process();
     }
 
     public function testThrowExceptionIfUserIsNotSuperUser(): void
     {
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive(['isSuperUser' => false]);
-
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive(['getCurrentUser' => $current_user]);
-
-        $layout = Mockery::mock(BaseLayout::class);
-
+        $this->user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
         $this->expectException(ForbiddenException::class);
-
-        $this->controller->process($request, $layout, []);
+        $this->process();
     }
 }

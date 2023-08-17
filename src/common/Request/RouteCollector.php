@@ -138,8 +138,6 @@ use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
-use Tuleap\Platform\Banner\BannerDao;
-use Tuleap\Platform\Banner\BannerRetriever;
 use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
 use Tuleap\Platform\RobotsTxtController;
 use Tuleap\Project\Admin\Categories;
@@ -925,8 +923,12 @@ class RouteCollector
     {
         return new PlatformBannerAdministrationController(
             new AdminPageRenderer(),
-            new \Tuleap\Layout\IncludeCoreAssets(),
-            new BannerRetriever(new BannerDao())
+            new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'ckeditor.js'),
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../scripts/platform-admin-banner/frontend-assets', '/assets/core/platform-admin-banner'),
+                'platform-admin-banner.js'
+            ),
+            new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao())
         );
     }
 

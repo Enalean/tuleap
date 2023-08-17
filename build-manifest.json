@@ -59,9 +59,9 @@
             "src": "src/scripts/switch-to/src",
             "po": "src/scripts/switch-to/po"
         },
-        "platform-banner-admin": {
-            "src": "src/scripts/main/src/platform/banner/admin/src",
-            "po": "src/scripts/main/src/platform/banner/admin/po"
+        "platform-admin-banner": {
+            "src": "src/scripts/platform-admin-banner/src",
+            "po": "src/scripts/platform-admin-banner/po"
         }
     }
 }

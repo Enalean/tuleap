@@ -25,44 +25,29 @@ namespace Tuleap\Platform\Banner;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
 final class PlatformBannerAdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var IncludeAssets
-     */
-    private $banner_assets;
-    /**
-     * @var BannerRetriever
-     */
-    private $banner_retriever;
-
     public function __construct(
-        AdminPageRenderer $admin_page_renderer,
-        IncludeAssets $banner_assets,
-        BannerRetriever $banner_retriever,
+        private readonly AdminPageRenderer $admin_page_renderer,
+        private readonly JavascriptAssetGeneric $ckeditor_assets,
+        private readonly JavascriptAssetGeneric $banner_assets,
+        private readonly BannerRetriever $banner_retriever,
     ) {
-        $this->admin_page_renderer = $admin_page_renderer;
-        $this->banner_assets       = $banner_assets;
-        $this->banner_retriever    = $banner_retriever;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
         }
 
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('site-admin/platform-banner.js'));
+        $layout->addJavascriptAsset($this->ckeditor_assets);
+        $layout->addJavascriptAsset($this->banner_assets);
 
         $banner = $this->banner_retriever->getBanner();
 
