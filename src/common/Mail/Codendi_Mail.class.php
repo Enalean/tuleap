@@ -378,7 +378,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * The default is to send it through the use of a template to send pretty html
      * email in a common format shared across the platform. Some usages require
-     * to not use this template (eg: forumml, ...) it can be discarded with the
+     * to not use this template it can be discarded with the
      * second parameter $use_common_look_and_feel.
      *
      * @param String $message                  html code to send to the user
@@ -488,23 +488,6 @@ class Codendi_Mail implements Codendi_Mail_Interface
     }
 
     /**
-     *
-     * @param array $cc
-     *
-     * @return array
-     */
-    public function setCcUser($cc)
-    {
-        $arrayCc         = $this->validateArrayOfUsers($cc);
-        $arrayCcRealName = [];
-        foreach ($arrayCc as $user) {
-            $this->message->addCc($user['email'], $user['real_name']);
-            $arrayCcRealName[] = $user['real_name'];
-        }
-        return $arrayCcRealName;
-    }
-
-    /**
      * Send the mail
      *
      * @return bool
@@ -586,14 +569,6 @@ class Codendi_Mail implements Codendi_Mail_Interface
     {
         $header = new Mail\Header\GenericHeader($name, $value);
         $this->message->getHeaders()->addHeader($header);
-    }
-
-    public function addAttachment($data, $mime_type, $filename)
-    {
-        $mime_part              = $this->getMimePartAttachment($data, $mime_type);
-        $mime_part->filename    = $filename;
-        $mime_part->disposition = Laminas\Mime\Mime::DISPOSITION_ATTACHMENT;
-        $this->attachments[]    = $mime_part;
     }
 
     public function addInlineAttachment($data, $mime_type, $cid)

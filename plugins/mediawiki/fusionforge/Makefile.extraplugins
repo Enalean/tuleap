@@ -5,27 +5,15 @@ PROXY=
 PROXY=https_proxy=http://p-goodway:3128
 
 MAILMANGIT=git@github.com:Codendi/mailman-codendi-ff.git
-FORUMMLGIT=git@github.com:Codendi/forumml-codendi-ff.git
 
 MAILMANGIT=https://github.com/Codendi/mailman-codendi-ff.git
-FORUMMLGIT=https://github.com/Codendi/forumml-codendi-ff.git
 
-default: mailmanpull forummlpull
+default: mailmanpull
 
 mailmanpull: $(PLUGINDIR)/mailman
 	cd $(PLUGINDIR)/mailman; \
 	$(PROXY) git pull
 
-forummlpull: $(PLUGINDIR)/forumml
-	cd $(PLUGINDIR)/forumml; \
-	$(PROXY) git pull
-
 $(PLUGINDIR)/mailman:
 	[ -d $(PLUGINDIR)/mailman ] || cd $(PLUGINDIR); \
 	$(PROXY) git clone $(MAILMANGIT) mailman ; \
-
-$(PLUGINDIR)/forumml:
-	[ -d $(PLUGINDIR)/forumml ] || cd $(PLUGINDIR); \
-	$(PROXY) git clone $(FORUMMLGIT) forumml
-	cd $(PLUGINDIR)/forumml ; \
-	$(PROXY) git checkout --track -b ff-integration origin/ff-integration

@@ -536,7 +536,7 @@ class Statistics_DiskUsageManager
     }
 
     /**
-     * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
+     * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'WEBDAV',
      */
     private function collectProjects(DateTimeImmutable $collect_date)
     {
