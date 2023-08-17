@@ -22,43 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use HTTPRequest;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
+use Tuleap\Test\Stubs\TemplateRendererStub;
 
 final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /** @var IndexController */
-    private $controller;
-    /** @var LayoutHelperPassthrough */
-    private $helper;
-    /** @var M\LegacyMockInterface|M\MockInterface|ServicesPresenterBuilder */
-    private $presenter_builder;
-    /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
-    private $renderer;
-    /** @var M\LegacyMockInterface|M\MockInterface|IncludeAssets */
-    private $include_assets;
+    private const PROJECT_ID = 102;
+
+    private TemplateRendererStub $renderer;
+    private \PFUser $user;
+    private TestLayout $layout;
+    private JavascriptAssetGeneric $project_admin_assets;
+    private JavascriptAssetGeneric $site_admin_assets;
 
     protected function setUp(): void
     {
-        $this->helper            = new LayoutHelperPassthrough();
-        $this->presenter_builder = M::mock(ServicesPresenterBuilder::class);
-        $this->renderer          = M::mock(\TemplateRenderer::class);
-        $this->include_assets    = M::mock(IncludeAssets::class);
-        $this->controller        = new IndexController(
-            $this->helper,
-            $this->presenter_builder,
-            $this->renderer,
-            $this->include_assets,
-        );
+        $this->user                 = UserTestBuilder::buildWithDefaults();
+        $this->renderer             = new TemplateRendererStub();
+        $this->layout               = new TestLayout(new LayoutInspector());
+        $this->project_admin_assets = JavascriptAssetGenericBuilder::build();
+        $this->site_admin_assets    = JavascriptAssetGenericBuilder::build();
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
@@ -69,51 +62,40 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
+    private function process(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $helper  = new LayoutHelperPassthrough();
+        $helper->setCallbackParams($project, $this->user);
+
+        $presenter_builder = $this->createStub(ServicesPresenterBuilder::class);
+        $presenter         = $this->createStub(ServicesPresenter::class);
+        $presenter_builder->method('build')->willReturn($presenter);
+
+        $request    = HTTPRequestBuilder::get()->build();
+        $controller = new IndexController(
+            $helper,
+            $presenter_builder,
+            $this->renderer,
+            $this->project_admin_assets,
+            $this->site_admin_assets
+        );
+        $controller->process($request, $this->layout, ['project_id' => (string) self::PROJECT_ID]);
+    }
+
     public function testProcessIncludesSpecialAssetForSiteAdmin(): void
     {
-        $project      = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $current_user = M::mock(PFUser::class);
-        $current_user->shouldReceive('isSuperUser')->once()->andReturnTrue();
-        $this->helper->setCallbackParams($project, $current_user);
-
-        $presenter = M::mock(ServicesPresenter::class);
-        $this->presenter_builder->shouldReceive('build')->once()->andReturn($presenter);
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('site-admin-services.js');
-        $request = M::mock(HTTPRequest::class);
-        $layout  = M::mock(BaseLayout::class);
-        $layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->renderer->shouldReceive('renderToPage')
-            ->once()
-            ->with('services', $presenter);
-
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->user = UserTestBuilder::buildSiteAdministrator();
+        $this->process();
+        self::assertTrue($this->renderer->has_rendered_something);
+        self::assertContains($this->site_admin_assets, $this->layout->getJavascriptAssets());
     }
 
     public function testProcessIncludesNormalAssetForProjectAdmin(): void
     {
-        $project      = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $current_user = M::mock(PFUser::class);
-        $current_user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->helper->setCallbackParams($project, $current_user);
-
-        $presenter = M::mock(ServicesPresenter::class);
-        $this->presenter_builder->shouldReceive('build')->once()->andReturn($presenter);
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('project-admin-services.js');
-        $request = M::mock(HTTPRequest::class);
-        $layout  = M::mock(BaseLayout::class);
-        $layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->renderer->shouldReceive('renderToPage')
-            ->once()
-            ->with('services', $presenter);
-
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
+        $this->process();
+        self::assertTrue($this->renderer->has_rendered_something);
+        self::assertContains($this->project_admin_assets, $this->layout->getJavascriptAssets());
     }
 }

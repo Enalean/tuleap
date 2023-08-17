@@ -27,6 +27,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Widget_Static;
 
 final class TestLayout extends BaseLayout
@@ -36,7 +37,6 @@ final class TestLayout extends BaseLayout
      */
     private $inspector;
     private bool $header_has_been_written = false;
-
 
     public function __construct(LayoutInspector $inspector)
     {
@@ -68,6 +68,19 @@ final class TestLayout extends BaseLayout
 
     public function includeFooterJavascriptFile($file)
     {
+    }
+
+    public function addJavascriptAsset(JavascriptAssetGeneric $asset): void
+    {
+        $this->javascript_assets[] = $asset;
+    }
+
+    /**
+     * @return JavascriptAssetGeneric[]
+     */
+    public function getJavascriptAssets(): array
+    {
+        return $this->javascript_assets;
     }
 
     protected function getUser()

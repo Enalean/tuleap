@@ -37,6 +37,7 @@ use MailManager;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
+use ServiceManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
 use ThemeVariant;
@@ -174,7 +175,7 @@ use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
-use Tuleap\Project\Service\IndexController;
+use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\REST\BasicAuthentication;
@@ -887,7 +888,17 @@ class RouteCollector
 
     public static function getGetServices(): DispatchableWithRequest
     {
-        return IndexController::buildSelf();
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../scripts/project-services/frontend-assets',
+            '/assets/core/project-services'
+        );
+        return new \Tuleap\Project\Service\IndexController(
+            AdministrationLayoutHelper::buildSelf(),
+            new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/project/admin/services/'),
+            new JavascriptAsset($assets, 'project-admin-services.js'),
+            new JavascriptAsset($assets, 'site-admin-services.js'),
+        );
     }
 
     public static function getPostServicesAdd(): DispatchableWithRequest

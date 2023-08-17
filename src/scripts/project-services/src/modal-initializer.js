@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export async function setupModalButtons(addModalCallback, editModalCallback) {
-    await initVueGettext(Vue, (locale) =>
-        import(/* webpackChunkName: "services-po-" */ "../po/" + getPOFileFromLocale(locale))
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`)
     );
     setupAddButton(addModalCallback);
     setupEditButtons(editModalCallback);

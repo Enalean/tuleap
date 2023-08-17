@@ -175,8 +175,7 @@ module.exports = {
                 "plugins/create_test_env/**/*.vue",
                 "plugins/crosstracker/**/*.vue",
                 "plugins/agiledashboard/scripts/permissions-per-group/src/**/*.vue",
-                "src/scripts/main/src/project/admin/services/**/*.vue",
-                "src/scripts/main/src/*/permissions-per-group/**/*.vue",
+                "src/scripts/project-services/src/**/*.vue",
                 "src/scripts/news-permissions-per-group/src/**/*.vue",
             ],
             rules: {

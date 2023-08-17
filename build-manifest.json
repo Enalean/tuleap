@@ -44,8 +44,8 @@
             "po": "src/scripts/news-permissions-per-group/po"
         },
         "project-admin-services": {
-            "src": "src/scripts/main/src/project/admin/services/src",
-            "po": "src/scripts/main/src/project/admin/services/po"
+            "src": "src/scripts/project-services/src",
+            "po": "src/scripts/project-services/po"
         },
         "project-admin-banner": {
             "src": "src/scripts/project-admin-banner/src",
