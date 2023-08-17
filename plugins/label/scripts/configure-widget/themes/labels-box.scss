@@ -28,6 +28,7 @@
         .item-labels-box-select2 {
             > .select2-selection__rendered {
                 > .select2-selection__choice {
+                    border: 1px solid transparent;
                     color: var(--tlp-main-color);
 
                     @each $color-name, $colors in tlp-swatch-colors.$color-map {
