@@ -44,6 +44,8 @@ use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
 use Tuleap\JiraImport\Project\GroupMembers\GroupMembersImporter;
+use Tuleap\JiraImport\Project\Kanban\JiraKanbanActivator;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -325,7 +327,15 @@ final class CreateProjectFromJira
                             $service['enabled'] = '1';
                         } elseif (
                             (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME &&
-                            $platform_configuration_collection->areAgileFeaturesAvailable()
+                            (
+                                $platform_configuration_collection->areAgileFeaturesAvailable() ||
+                                $import_mode === CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE
+                            )
+                        ) {
+                            $service['enabled'] = '1';
+                        } elseif (
+                            (string) $service['shortname'] === KanbanService::SERVICE_SHORTNAME &&
+                            $import_mode === CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE
                         ) {
                             $service['enabled'] = '1';
                         }
@@ -395,6 +405,8 @@ final class CreateProjectFromJira
                             $jira_issue_types,
                             $jira_epic_issue_type
                         );
+                    } elseif ($import_mode === CreateProjectFromJiraCommand::OPT_IMPORT_MODE_MONO_TRACKER_VALUE) {
+                        (new JiraKanbanActivator($logger))->activateKanbanForProject($xml_element);
                     }
 
                     $xml_element = $this->addWidgetOnDashboard(
