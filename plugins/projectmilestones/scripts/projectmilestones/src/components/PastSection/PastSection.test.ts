@@ -33,6 +33,10 @@ async function getPersonalWidgetInstance(
 ): Promise<Wrapper<PastSection>> {
     const store = createStoreMock(store_options);
 
+    component_options.propsData = {
+        label_tracker_planning: "sprint",
+    };
+
     component_options.mocks = { $store: store };
     component_options.localVue = await createReleaseWidgetLocalVue();
 
@@ -47,6 +51,7 @@ describe("PastSection", () => {
                 is_loading: false,
                 current_milestones: [],
                 project_id: project_id,
+                nb_past_releases: 4,
             },
             getters: {
                 has_rest_error: false,

@@ -20,29 +20,14 @@
 
 <template>
     <div class="project-release-timeframe">
-        <translate class="project-release-label">Roadmap</translate>
+        <span class="project-release-label">{{ $gettext("Roadmap") }}</span>
         <div class="project-other-releases">
             <div class="project-release-time-stripe-icon">
                 <i class="fa fa-angle-double-up"></i>
             </div>
             <a class="releases-link" v-bind:href="backlog_link" data-test="backlog-link">
-                <translate
-                    v-bind:translate-params="{ nb_backlog_items: nb_backlog_items }"
-                    v-bind:translate-n="nb_backlog_items"
-                    translate-plural="%{ nb_backlog_items } items in the backlog."
-                >
-                    %{nb_backlog_items} item in the backlog.
-                </translate>
-                <translate
-                    v-bind:translate-params="{
-                        nb_upcoming_releases: nb_upcoming_releases,
-                        label_tracker: label_tracker_planning,
-                    }"
-                    v-bind:translate-n="nb_upcoming_releases"
-                    translate-plural="%{nb_upcoming_releases} upcoming %{label_tracker}."
-                >
-                    %{nb_upcoming_releases} upcoming %{label_tracker}.
-                </translate>
+                {{ items_in_backlog_label }}
+                {{ upcoming_releases }}
             </a>
         </div>
     </div>
@@ -70,6 +55,29 @@ export default class RoadmapSection extends Vue {
             encodeURIComponent(this.project_id) +
             "&pane=topplanning-v2"
         );
+    }
+
+    get items_in_backlog_label(): string {
+        const translated = this.$ngettext(
+            "%{nb_backlog_items} item in the backlog.",
+            "%{nb_backlog_items} items in the backlog.",
+            this.nb_backlog_items
+        );
+
+        return this.$gettextInterpolate(translated, { nb_backlog_items: this.nb_backlog_items });
+    }
+
+    get upcoming_releases(): string {
+        const translated = this.$ngettext(
+            "%{nb_upcoming_releases} upcoming %{label_tracker}.",
+            "%{nb_upcoming_releases} upcoming %{label_tracker}.",
+            this.nb_upcoming_releases
+        );
+
+        return this.$gettextInterpolate(translated, {
+            nb_upcoming_releases: this.nb_upcoming_releases,
+            label_tracker: this.label_tracker_planning,
+        });
     }
 }
 </script>

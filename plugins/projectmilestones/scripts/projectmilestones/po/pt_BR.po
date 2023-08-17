@@ -10,7 +10,7 @@ msgid "%{label_submilestone} Planning"
 msgstr ""
 
 msgid "%{nb_backlog_items} item in the backlog."
-msgid_plural "%{ nb_backlog_items } items in the backlog."
+msgid_plural "%{nb_backlog_items} items in the backlog."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -25,11 +25,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "%{total_closed_sprint} closed %{tracker_label}"
-msgid_plural "%{ total_closed_sprint } closed %{tracker_label}"
+msgid_plural "%{total_closed_sprint} closed %{tracker_label}"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "'%s' field is empty or invalid."
+msgid "'%{field_name}' field is empty or invalid."
 msgstr ""
 
 msgid "Blocked"
@@ -62,7 +62,9 @@ msgstr "Conteúdo"
 msgid "Failed"
 msgstr ""
 
-msgid "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
+msgid ""
+"Initial effort (%{initial_effort}) should be bigger or equal to remaining "
+"effort (%{remaining_effort})."
 msgstr ""
 
 msgid "Initial effort equal at 0."

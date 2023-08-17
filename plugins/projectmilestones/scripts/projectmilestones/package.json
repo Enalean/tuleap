@@ -16,7 +16,6 @@
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
-    "sprintf-js": "^1.1.2",
     "vue": "^2.7.8",
     "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"
@@ -38,7 +37,7 @@
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "test": "jest"
   }
 }

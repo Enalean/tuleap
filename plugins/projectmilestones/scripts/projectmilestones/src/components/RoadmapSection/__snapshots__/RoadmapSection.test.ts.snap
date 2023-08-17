@@ -4,12 +4,11 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
 <div
   class="project-release-timeframe"
 >
-  <translate-stub
+  <span
     class="project-release-label"
-    tag="span"
   >
     Roadmap
-  </translate-stub>
+  </span>
    
   <div
     class="project-other-releases"
@@ -27,25 +26,10 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
       data-test="backlog-link"
       href="/plugins/agiledashboard/?action=show-top&group_id=102&pane=topplanning-v2"
     >
-      <translate-stub
-        tag="span"
-        translateparams="[object Object]"
-        translateplural="%{ nb_backlog_items } items in the backlog."
-      >
+      
+            2 items in the backlog.
+            1 upcoming sprint.
         
-                %{nb_backlog_items} item in the backlog.
-            
-      </translate-stub>
-       
-      <translate-stub
-        tag="span"
-        translateparams="[object Object]"
-        translateplural="%{nb_upcoming_releases} upcoming %{label_tracker}."
-      >
-        
-                %{nb_upcoming_releases} upcoming %{label_tracker}.
-            
-      </translate-stub>
     </a>
   </div>
 </div>

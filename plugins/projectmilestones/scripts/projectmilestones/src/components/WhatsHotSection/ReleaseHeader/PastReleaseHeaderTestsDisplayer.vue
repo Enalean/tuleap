@@ -23,13 +23,7 @@
         <span class="release-remaining-value" data-test="number-tests">
             {{ number_tests }}
         </span>
-        <translate
-            class="release-remaining-text"
-            v-bind:translate-n="number_tests"
-            translate-plural="tests"
-        >
-            test
-        </translate>
+        <span class="release-remaining-text">{{ test_label }}</span>
     </div>
 </template>
 
@@ -59,6 +53,10 @@ export default class PastReleaseHeaderTestsDisplayer extends Vue {
 
     get is_testplan_activated(): boolean {
         return is_testplan_activated(this.release_data);
+    }
+
+    get test_label(): string {
+        return this.$ngettext("test", "tests", this.number_tests);
     }
 }
 </script>

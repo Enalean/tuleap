@@ -4,12 +4,11 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
 <div
   class="project-release-timeframe"
 >
-  <translate-stub
+  <span
     class="project-release-label"
-    tag="span"
   >
     Roadmap
-  </translate-stub>
+  </span>
    
   <div
     class="empty-state-pane"
@@ -17,15 +16,11 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
   >
     <s-v-g-project-milestones-empty-state-stub />
      
-    <translate-stub
+    <span
       class="empty-state-text"
-      tag="span"
-      translateparams="[object Object]"
     >
-      
-            There is no item nor milestone in the %{ name } backlog yet.
-        
-    </translate-stub>
+      There is no item nor milestone in the my project backlog yet.
+    </span>
      
     <a
       class="button-backlog-link empty-state-action"
@@ -36,12 +31,9 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
         class="tlp-button-primary"
         type="button"
       >
-        <translate-stub
-          tag="span"
-        >
-          Start Planning
-        </translate-stub>
-         
+        
+                Start Planning
+                
         <i
           class="tlp-button-icon-right fas fa-long-arrow-alt-right"
           data-test="display-arrow"

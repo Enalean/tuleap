@@ -34,13 +34,7 @@
             >
                 {{ formatPoints(release_data.remaining_effort) }}
             </span>
-            <translate
-                class="release-remaining-text"
-                v-bind:translate-n="release_data.remaining_effort"
-                translate-plural="pts to go"
-            >
-                pt to go
-            </translate>
+            <span class="release-remaining-text">{{ pts_to_go_label }}</span>
         </div>
         <div class="release-remaining-progress">
             <div
@@ -57,7 +51,6 @@
 </template>
 
 <script lang="ts">
-import { sprintf } from "sprintf-js";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData } from "../../../type";
@@ -105,12 +98,14 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         }
 
         if (initial_effort < remaining_effort) {
-            return sprintf(
+            return this.$gettextInterpolate(
                 this.$gettext(
-                    "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
+                    "Initial effort (%{initial_effort}) should be bigger or equal to remaining effort (%{remaining_effort})."
                 ),
-                initial_effort,
-                remaining_effort
+                {
+                    initial_effort,
+                    remaining_effort,
+                }
             );
         }
 
@@ -118,6 +113,11 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
             (((initial_effort - remaining_effort) / initial_effort) * 100).toFixed(2).toString() +
             "%"
         );
+    }
+
+    get pts_to_go_label(): string {
+        const remaining_effort = this.release_data.remaining_effort ?? 0;
+        return this.$ngettext("pt to go", "pts to go", remaining_effort);
     }
 }
 </script>

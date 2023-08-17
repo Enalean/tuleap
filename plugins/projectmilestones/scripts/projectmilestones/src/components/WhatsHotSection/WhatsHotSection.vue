@@ -19,7 +19,7 @@
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label" v-translate>What's hot</span>
+        <span class="project-release-label"> {{ $gettext("What's hot") }}</span>
         <release-displayer
             v-for="(milestone, index) in current_milestones"
             v-bind:key="milestone.id"
