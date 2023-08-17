@@ -39,16 +39,6 @@ final class ServerHostname
     #[ConfigKeyString]
     public const DEFAULT_DOMAIN = 'sys_default_domain';
 
-    #[ConfigKey('Machine that hosts the mailing lists')]
-    #[ConfigKeyHelp(<<<EOT
-    (This could also be the mail host if you have enough horsepower & bandwidth)
-    /!\ Developers: if you need to change the default value, it will have an
-    impact on the source code, grep is your friend.
-    EOT)]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
-    public const LIST_HOST = 'sys_lists_host';
-
     private function __construct()
     {
     }

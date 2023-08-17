@@ -23,7 +23,6 @@ function forge_get_config($key, $scope = 'core')
     $conf_variables_mapping = [
         'web_host'          => 'sys_default_domain',
         'forge_name'        => 'sys_name',
-        //'lists_host'        => 'sys_lists_host',
         //'config_path'       => 'sys_custom_dir',
         'database_host'     => 'sys_dbhost',
         'database_user'     => 'sys_dbuser',

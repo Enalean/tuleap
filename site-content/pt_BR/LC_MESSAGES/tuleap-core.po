@@ -147,9 +147,6 @@ msgstr "destaques nas %s novidades do projeto"
 msgid "%s with email %s created an account on %s."
 msgstr "%s com o email %s criou uma conta em %s."
 
-msgid "(Un)Subscribe/Preferences"
-msgstr "(Des)Inscrever/Preferências"
-
 msgid "(day/month/year)"
 msgstr "(dia/mês/ano)"
 
@@ -235,40 +232,6 @@ msgstr "<forte>Monitore esta discussão</strong>"
 
 msgid "A deleted project can not be restored."
 msgstr "Um projeto excluído não pode ser restaurado."
-
-#, php-format
-msgid ""
-"A mailing list will be created on %1$s in a few minutes\n"
-"and you are the list administrator.\n"
-"\n"
-"Your mailing list info is at:\n"
-"%3$s\n"
-"\n"
-"List administration can be found at:\n"
-"%4$s\n"
-"\n"
-"Your list password is: %5$s\n"
-"You are encouraged to change this password as soon as possible.\n"
-"\n"
-"Thank you for using %1$s.\n"
-"\n"
-" -- The %1$s Team"
-msgstr ""
-"Uma lista de email será criada no(a) %1$s em alguns minutos\n"
-"e você é o administrador da lista.\n"
-"\n"
-"As informações da sua lista de email estão em:\n"
-"%3$s\n"
-"\n"
-"A administração da lista pode ser encontrada em:\n"
-"%4$s\n"
-"\n"
-"A senha da sua lista é: %5$s\n"
-"Recomendamos que altere sua senha assim que possível.\n"
-"\n"
-"Obrigado por utilizar %1$s.\n"
-"\n"
-" -- Equipe %1$s"
 
 #, php-format
 msgid ""
@@ -459,9 +422,6 @@ msgstr "Adicionar este Fórum"
 msgid "Add a Forum"
 msgstr "Adicionar um Fórum"
 
-msgid "Add a mailing list"
-msgstr "Adicionar lista de email"
-
 msgid "Add a new service"
 msgstr "Adicionar novo serviço"
 
@@ -489,9 +449,6 @@ msgstr "Adicionar projeto pai"
 msgid "Add project administrator"
 msgstr ""
 
-msgid "Add this list"
-msgstr "Adiciona esta lista"
-
 msgid "Add users group"
 msgstr "Adicionar grupo de usuários"
 
@@ -512,9 +469,6 @@ msgstr "O serviço de administração não pode ser desativado."
 
 msgid "Administration"
 msgstr "Administração"
-
-msgid "Administration in Mailman"
-msgstr "Administração do Mailman"
 
 msgid "Administrator"
 msgstr "Administrador"
@@ -667,9 +621,6 @@ msgstr ""
 
 msgid "Appearance & language"
 msgstr "Aparência e linguagem"
-
-msgid "Archives"
-msgstr "Arquivos"
 
 msgid "Are you sure you want to remove this passkey?"
 msgstr ""
@@ -1248,9 +1199,6 @@ msgstr "Excluir %s"
 msgid "Delete Message"
 msgstr "Excluir mensagem"
 
-msgid "Delete a mailing list"
-msgstr "Excluir uma lista de email"
-
 msgid "Delete a message"
 msgstr "Excluir uma mensagem"
 
@@ -1440,10 +1388,6 @@ msgstr "Email não enviado"
 msgid "Email sent"
 msgstr "Email enviado"
 
-#, php-format
-msgid "Email sent with details to: %1$s"
-msgstr "Email enviado com os detalhes para: %1$s"
-
 msgid "Email was not updated"
 msgstr "O email não foi atualizado"
 
@@ -1509,9 +1453,6 @@ msgstr "Erro - esta notícia não foi encontrada"
 msgid "Error Adding Forum '%1$s'."
 msgstr "Erro ao adicionar o Fórum '%1$s'."
 
-msgid "Error Adding List"
-msgstr "Erro ao adicionar lista"
-
 msgid "Error Updating Forum Info"
 msgstr "Erro ao Atualizar as Informações do Fórum"
 
@@ -1535,9 +1476,6 @@ msgstr "Eventos com alertas"
 
 msgid "Existing Forums"
 msgstr "Fóruns Existentes"
-
-msgid "Existing mailing lists"
-msgstr "Listas de emails existentes"
 
 msgid ""
 "Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
@@ -1865,9 +1803,6 @@ msgstr ""
 msgid "Invalid Email Address"
 msgstr "Endereço de email inválido"
 
-msgid "Invalid List Name"
-msgstr "Nome de Lista Inválido"
-
 msgid "Invalid Password Or User Name"
 msgstr "Senha ou usuário inválidos"
 
@@ -2070,30 +2005,8 @@ msgstr "Link"
 msgid "Links"
 msgstr "Links"
 
-msgid "List"
-msgstr "Lista"
-
-msgid "List about development of…"
-msgstr "Lista sobre o desenvolvimento de..."
-
-msgid "List added"
-msgstr "Lista adicionada"
-
-msgid "List already exists"
-msgstr "Lista já existente"
-
-msgid ""
-"List name contains bad characters. Authorized characters are: letters, "
-"numbers, -, _, ."
-msgstr ""
-"O nome da lista contém caracteres inválidos. São permitidos apenas: letras, "
-"números, -, _."
-
 msgid "List of impacted files"
 msgstr "Lista de arquivos impactados"
-
-msgid "Lists"
-msgstr "Listas"
 
 msgid "Lists the project members."
 msgstr "Lista os membros do projeto."
@@ -2119,28 +2032,11 @@ msgstr "Baixo tráfego, altamente recomendado."
 msgid "Low traffic."
 msgstr "Baixo tráfego."
 
-msgid "ML Administration"
-msgstr "Administração da Lista de Email"
-
 msgid "Mail To"
 msgstr "Enviar para"
 
-msgid ""
-"Mailing list creation is no longer possible as the plugin will be removed "
-"soon"
-msgstr ""
-
-msgid "Mailing list name"
-msgstr "Nome da lista de email"
-
-msgid "Mailing lists"
-msgstr "Listas de email"
-
 msgid "Mailing lists (Lists Service)"
 msgstr "Listas de email (Serviço de Listas)"
-
-msgid "Mailing lists administration"
-msgstr "Administração das listas de email"
 
 msgid "Manage all plugins"
 msgstr "Gerir todos os plugins"
@@ -2283,9 +2179,6 @@ msgstr "Deve escolher uma mensagem primeiro"
 msgid "Must include a message body and subject"
 msgstr "Deve incluir um corpo e um assunto de mensagem"
 
-msgid "Must provide list name that is 4 or more characters long"
-msgstr "O nome da lista deve conter 4 ou mais caracteres"
-
 msgid "My Dashboard"
 msgstr "Meu Painel"
 
@@ -2343,9 +2236,6 @@ msgstr ""
 
 msgid "New events"
 msgstr "Novos eventos"
-
-msgid "New mailing list"
-msgstr "Nova lista de email"
 
 msgid "New messages will be highlighted when you return."
 msgstr "Novas mensagens serão destacadas quando você retornar."
@@ -2772,9 +2662,6 @@ msgstr "Login anterior bem sucedido:"
 msgid "Private"
 msgstr "Particular"
 
-msgid "Private archives"
-msgstr "Arquivos privados"
-
 msgid "Private incl. restricted"
 msgstr "Privado incl. restrito"
 
@@ -2989,9 +2876,6 @@ msgstr "A URL da nota de release não está bem formada"
 msgid "Public"
 msgstr "Público"
 
-msgid "Public archives"
-msgstr "Arquivos públicos"
-
 msgid "Public incl. restricted"
 msgstr "Público incl. restrito"
 
@@ -3000,13 +2884,6 @@ msgstr "Público, incluindo restritos"
 
 msgid "Public information"
 msgstr "Informação pública"
-
-msgid ""
-"Public means subscription right is granted to any user, and archives are "
-"public"
-msgstr ""
-"Público significa que qualquer usuário pode se inscrever, e todos os "
-"arquivos são públicos"
 
 msgid "Public project categories"
 msgstr "Categorias públicas de projeto"
@@ -3917,16 +3794,6 @@ msgstr "Não há grupo de usuários vinculado a este."
 msgid "There isn't any activity yet"
 msgstr "Ainda não há nenhuma atividade"
 
-msgid "There isn't any mailing list yet"
-msgstr "Não há nenhuma lista de emails ainda"
-
-msgid "There isn't any mailing lists"
-msgstr ""
-
-msgid ""
-"There isn't any mailing lists or you don't have permissions to see them."
-msgstr ""
-
 msgid "There isn't any matching members"
 msgstr "Não foram encontrados membros relacionados"
 
@@ -4032,9 +3899,6 @@ msgstr ""
 "Siga este link para ver os membros atuais do seu projeto:\n"
 "%s\n"
 "\n"
-
-msgid "This operation cannot be undone."
-msgstr "Esta operação não pode ser desfeita."
 
 msgid ""
 "This option displays special patterns on colored cards in Agiledashboard and "
@@ -4330,9 +4194,6 @@ msgstr "Atualize a informação"
 
 msgid "Update label"
 msgstr "Atualizar rótulo"
-
-msgid "Update mailing list"
-msgstr "Atualizar lista de emails"
 
 msgid "Update notifications settings"
 msgstr "Atualizar configuração de notificações"
@@ -4792,9 +4653,6 @@ msgstr[0] ""
 msgstr[1] ""
 "Você está prestes a remover %s usuários restritos deste projeto. Por favor "
 "confirme sua ação. A remoção será feita alguns minutos após sua confirmação."
-
-msgid "You are about to remove the mailing list %s."
-msgstr "Você está prestes a remover a lista de emails %s."
 
 msgid "You are going be redirected"
 msgstr "Você será redirecionado"

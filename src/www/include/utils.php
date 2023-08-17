@@ -717,14 +717,6 @@ function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
     return sprintf($retstring, $size, $sys['prefix'][$i]);
 }
 
-// Return mailing list server URL
-// Used e.g. when inserting links in emails
-function get_list_server_url()
-{
-    return "https://" . ForgeConfig::get('sys_lists_host');
-}
-
-
 /**
  * util_check_fileupload() - determines if a filename is appropriate for upload
  *

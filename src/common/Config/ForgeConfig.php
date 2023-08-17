@@ -98,7 +98,6 @@ class ForgeConfig
     private static function initDefaultValues(string $fqdn): void
     {
         self::set(ServerHostname::DEFAULT_DOMAIN, $fqdn);
-        self::set(ServerHostname::LIST_HOST, 'lists.' . $fqdn);
         self::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
         self::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
         self::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));

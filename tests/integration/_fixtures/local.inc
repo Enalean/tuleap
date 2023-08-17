@@ -10,18 +10,6 @@ $sys_custompluginsroot = "/usr/share/tuleap/tests/integration/_fixtures/";
 $sys_pluginspath       = "/plugins";
 $sys_custompluginspath = "/customplugins";
 
-// Machine that hosts the mailing lists (This could also be
-// the mail host if you have enough horsepower & bandwidth)
-// /!\ Developers: if you need to change the default value, it will have an
-//     impact on the source code, grep is your friend.
-$sys_lists_host = "lists.%sys_default_domain%";
-
-// If you want the mailing-lists to belong to a domain different of $sys_lists_host
-// you can define it here.
-// For instance, you might want to send mails via 'lists.forge.example.com' machine
-// but with lists like 'tuleap-devel@example.com' name.
-$sys_lists_domain = $sys_lists_host;
-
 //This is used for cookie authentication. If you have distributed servers,
 //please use same cookie prefix for a "cluster"
 $sys_cookie_prefix = "TULEAP";
@@ -33,7 +21,7 @@ $sys_cookie_prefix = "TULEAP";
 //
 //
 
-// In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
+// In order to run a test server (without backend cron jobs, CVS, SVN, vhosts, FRS, etc.)
 // Please update the following variables:
 // $codendi_dir = "mydir/tuleap"
 // $sys_custom_dir = "mydir/etc/tuleap"
@@ -109,11 +97,6 @@ $dump_dir         = "/var/lib/tuleap/dumps";// Where should we stick files we're
 // Paths for backend scripts
 $codendi_log        = "/tmp";   // Tuleap log dir (cvslogs,)
 $codendi_shell_skel = "/etc/skel_codendi";  // Tuleap Shell skeleton files directory
-
-// Mailman paths
-$mailman_bin_dir = "/usr/lib/mailman/bin";
-$mailman_list_dir= "/var/lib/mailman/lists";
-$mailman_wrapper = "/usr/lib/mailman/mail/mailman";
 
 // Sendmail alias
 $alias_file      = "/etc/aliases.codendi";
@@ -239,15 +222,6 @@ $markdown_path = "/usr/share/php-markdown";
 
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
-
-// The minimum length of mailing list name
-$sys_lists_name_min_length = 4;
-
-// The mailing list name prefix
-$sys_lists_prefix = '';
-
-// The mailing list name suffix
-$sys_lists_suffix = '';
 
 // Displays to end users the privacy of the project
 // If enabled (1), a 'lock' icon will be displayed plus the mention public|private

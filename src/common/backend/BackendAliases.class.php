@@ -26,21 +26,7 @@ class BackendAliases extends Backend
     public const ADMIN_ALIAS        = 'codendi-admin';
     public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
-    protected $need_update    = false;
-    protected $mailinglistdao = null;
-
-    /**
-     * Get the mainling list dao
-     *
-     * @return MailingListDao
-     */
-    protected function getMailingListDao()
-    {
-        if (! $this->mailinglistdao) {
-            $this->mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
-        }
-        return $this->mailinglistdao;
-    }
+    protected $need_update = false;
 
     /**
      * Set if we need to update mail aliases
@@ -65,7 +51,6 @@ class BackendAliases extends Backend
     /**
      * Write System email aliases:
      * - generic aliases like codendi-admin
-     * - mailing list aliases for mailman
      * - user aliases for addresses like user@codendi.server.name
      *
      * @return bool
@@ -90,7 +75,6 @@ class BackendAliases extends Backend
 
         if (
             (! $this->writeGenericAliases($fp))
-            || (! $this->writeListAliases($fp))
             || (! $this->writeOtherAliases($fp))
         ) {
             $this->log("Can't write aliases to $alias_file_new", Backend::LOG_ERROR);
@@ -128,43 +112,6 @@ class BackendAliases extends Backend
         fwrite($fp, "noreply:                 \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n");
         fwrite($fp, "undisclosed-recipients:  \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n"); // for phpWiki notifications...
         fwrite($fp, "webmaster:               " . self::ADMIN_ALIAS . "\n");
-        return fwrite($fp, "\n\n");
-    }
-
-    /**
-     * Mailing list aliases for mailman
-     *
-     * @param resource $fp A file system pointer resource that is typically created using fopen().
-     *
-     * @return bool
-     */
-    protected function writeListAliases($fp)
-    {
-        // Determine the name of the mailman wrapper
-        $mm_wrapper = ForgeConfig::get('mailman_wrapper');
-
-        fwrite($fp, "### Begin Mailing List Aliases ###\n\n");
-        $dar = $this->getMailingListDao()->searchAllActiveML();
-        foreach ($dar as $row) {
-            if ($row['list_name']) {
-                // Convert to lower case
-                $list_name = strtolower($row['list_name']);
-                // Remove blank chars
-                $list_name = str_replace(' ', '', $list_name);
-                // Mailman 2.1 aliases
-                $list_name_as_argument = escapeshellarg($list_name);
-                $this->writeAlias($fp, new System_Alias("$list_name", "\"|$mm_wrapper post $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-admin", "\"|$mm_wrapper admin $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-bounces", "\"|$mm_wrapper bounces $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-confirm", "\"|$mm_wrapper confirm $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-join", "\"|$mm_wrapper join $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-leave", "\"|$mm_wrapper leave $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-owner", "\"|$mm_wrapper owner $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-request", "\"|$mm_wrapper request $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-subscribe", "\"|$mm_wrapper subscribe $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-unsubscribe", "\"|$mm_wrapper unsubscribe $list_name_as_argument\""));
-            }
-        }
         return fwrite($fp, "\n\n");
     }
 

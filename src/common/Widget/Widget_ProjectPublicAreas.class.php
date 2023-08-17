@@ -24,7 +24,7 @@ use Tuleap\Widget\Event\GetPublicAreas;
 /**
 * Widget_ProjectPublicAreas
 */
-class Widget_ProjectPublicAreas extends Widget
+class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -78,18 +78,6 @@ class Widget_ProjectPublicAreas extends Widget
                 $html     .= $GLOBALS['Language']->getText('include_project_home', 'forums', $row_count['count']) . " )\n";
             }
             $html .= '</p>';
-        }
-
-        // ##################### Mailing lists (only for Active)
-
-        $mail_service = $project->getService(Service::ML);
-        if ($mail_service !== null) {
-            $html     .= '<p><a href="' . $purifier->purify($mail_service->getUrl()) . '">';
-            $html     .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($mail_service->getIcon()) . '"></i>';
-            $html     .= $GLOBALS['Language']->getText('include_project_home', 'mail_lists') . '</A>';
-            $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
-            $row_count = db_fetch_array($res_count);
-            $html     .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'public_mail_lists', $row_count['count']) . ' )</p>';
         }
 
         // ######################### Wiki (only for Active)

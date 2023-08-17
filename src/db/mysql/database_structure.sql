@@ -580,20 +580,6 @@ CREATE TABLE group_desc_value (
   INDEX idx (group_id)
 );
 
-CREATE TABLE mail_group_list (
-  group_list_id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  list_name text,
-  is_public int(11) NOT NULL default '0',
-  password varchar(16) default NULL,
-  list_admin int(11) NOT NULL default '0',
-  status int(11) NOT NULL default '0',
-  description text,
-  PRIMARY KEY  (group_list_id),
-  KEY idx_mail_group_list_group (group_id)
-);
-
-
 #
 # Table structure for table 'news_bytes'
 #

@@ -44,7 +44,6 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('alias_file', vfsStream::setup()->url() . '/aliases.codendi');
         $this->alias_file = \ForgeConfig::get('alias_file');
         \ForgeConfig::set('codendi_bin_prefix', '/bin/');
-        \ForgeConfig::set('mailman_wrapper', 'mailman_wrapper');
 
         $listdao = \Mockery::spy(\MailingListDao::class);
         $listdao->shouldReceive('searchAllActiveML')->andReturns(
@@ -59,7 +58,6 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->backend = \Mockery::mock(\BackendAliases::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->backend->shouldReceive('getMailingListDao')->andReturns($listdao);
 
         $plugin = new class {
             public function hook(array $params): void
@@ -107,16 +105,6 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertStringContainsString('codendi-contact', $aliases, "Codendi-wide aliases not set");
-    }
-
-    public function testItGeneratesMailingListAliases(): void
-    {
-        $this->backend->shouldReceive('system')->andReturns(true);
-        $this->backend->update();
-        $aliases = file_get_contents($this->alias_file);
-        $this->assertStringContainsString('"list1-bounces":', $aliases, "ML aliases not set");
-        $this->assertStringContainsString('"listwithanunexpectedquote":', $aliases);
-        $this->assertStringContainsString('"listwithanunexpectednewline":', $aliases);
     }
 
     public function testItGeneratesUserAliasesGivenByPlugins(): void

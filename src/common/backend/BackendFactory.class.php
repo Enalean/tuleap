@@ -74,24 +74,6 @@ class BackendFactory
     }
 
     /**
-     * Return a BackendMailingList instance
-     *
-     * Let plugins propose their own backend. If none provided, use the default one.
-     *
-     * @return BackendMailingList
-     */
-    public static function getMailingList()
-    {
-        $backend = null;
-        $params  = ['backend' => &$backend];
-        EventManager::instance()->processEvent('backend_factory_get_mailinglist', $params);
-        if ($backend === null) {
-            $backend = BackendMailingList::instance();
-        }
-        return $backend;
-    }
-
-    /**
      * Return a BackendCVS instance
      *
      * Let plugins propose their own backend. If none provided, use the default one.

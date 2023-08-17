@@ -193,14 +193,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
             $user_is_allowed = true;
         }
 
-        // Codendi mailing lists page
-        if (
-            strpos($req_uri, '/mail/') === 0 &&
-            isset($allow_access_to_project_mail[$group_id])
-        ) {
-            $user_is_allowed = true;
-        }
-
         // Codendi file releases
         if (
             strpos($req_uri, '/file/') === 0 &&
