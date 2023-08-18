@@ -4,21 +4,19 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
   "dependencies": {
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/user-and-ugroup-autocompleter": "workspace:*"
   },
-  "config": {
-    "bin": "../../node_modules/.bin"
-  },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
-    "test": "$npm_package_config_bin/jest",
+    "test": "jest",
     "watch": "webpack --config webpack.dev.js --watch"
-  },
-  "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
   }
 }
