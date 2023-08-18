@@ -45,6 +45,6 @@ import { Prop } from "vue-property-decorator";
 @Component({ components: { UgroupBadge } })
 export default class FRSPackagePermissionsTablePackageRelease extends Vue {
     @Prop()
-    private readonly release!: PackagePermissionPerGroupReleaseRepresentation;
+    readonly release!: PackagePermissionPerGroupReleaseRepresentation;
 }
 </script>

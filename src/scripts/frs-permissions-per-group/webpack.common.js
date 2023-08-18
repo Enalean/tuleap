@@ -50,7 +50,6 @@ const config = {
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
         POGettextPlugin.webpack(),
     ],
 };

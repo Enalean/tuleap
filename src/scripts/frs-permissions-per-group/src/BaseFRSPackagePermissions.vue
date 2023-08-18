@@ -60,12 +60,12 @@ export default class BaseFRSPackagePermissions extends Vue {
     @Prop()
     private readonly selectedProjectId!: string;
     @Prop()
-    private readonly selectedUgroupName!: string;
+    readonly selectedUgroupName!: string;
 
-    private is_loaded = false;
-    private is_loading = false;
-    private rest_error: string | null = null;
-    private packages_list: PackagePermission[] = [];
+    is_loaded = false;
+    is_loading = false;
+    rest_error: string | null = null;
+    packages_list: PackagePermission[] = [];
 
     get hasRestError(): boolean {
         return this.rest_error !== null;

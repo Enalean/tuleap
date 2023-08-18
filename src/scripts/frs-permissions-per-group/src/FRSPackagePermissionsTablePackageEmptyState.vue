@@ -42,7 +42,7 @@ import { Prop } from "vue-property-decorator";
 @Component
 export default class FRSPackagePermissionsTablePackageEmptyState extends Vue {
     @Prop()
-    private readonly selectedUgroupName!: string;
+    readonly selectedUgroupName!: string;
 
     get hasASelectedUserGroup(): boolean {
         return this.selectedUgroupName !== "";
