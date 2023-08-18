@@ -175,28 +175,6 @@ const webpack_config_for_burning_parrot_code = {
     },
 };
 
-const webpack_config_for_vue = {
-    entry: {
-        "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
-        "site-admin-services": "./src/project/admin/services/src/index-site-admin.js",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-    },
-    module: {
-        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
-    resolve: {
-        extensions: [".js", ".ts", ".vue"],
-    },
-};
-
 const fat_combined_files = [
         "../../www/scripts/prototype/prototype.js",
         "../../www/scripts/protocheck/protocheck.js",
@@ -345,7 +323,6 @@ module.exports = [
     webpack_config_for_rich_text_editor,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
-    webpack_config_for_vue,
     webpack_config_for_burning_parrot_css,
     webpack_config_for_flaming_parrot_css,
 ];

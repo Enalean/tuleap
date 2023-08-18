@@ -23,12 +23,11 @@
         v-bind:action="form_url"
         class="tlp-modal"
         role="dialog"
-        aria-labelledby="project-admin-services-edit-modal-title"
-        data-test="service-edit-modal"
+        aria-labelledby="project-admin-services-add-modal-title"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="project-admin-services-edit-modal-title">
-                <translate>Edit service</translate>
+            <h1 class="tlp-modal-title" id="project-admin-services-add-modal-title">
+                <translate>Add a new service</translate>
             </h1>
             <button
                 class="tlp-modal-close"
@@ -49,22 +48,18 @@
             >
                 Cancel
             </button>
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-modal-action"
-                data-test="save-service-modifications"
-            >
-                <i class="fa fa-save tlp-button-icon"></i>
-                <translate>Save modifications</translate>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <translate>Add service</translate>
             </button>
         </div>
     </form>
 </template>
 <script>
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 
 export default {
-    name: "EditModal",
+    name: "AddModal",
     props: {
         form_url: {
             type: String,
