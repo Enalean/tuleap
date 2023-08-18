@@ -18,8 +18,8 @@
  */
 
 import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import App from "./src/components/App.vue";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import App from "./components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("platform-banner-admin");
@@ -27,12 +27,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
         (locale: string) =>
             import(
-                /* webpackChunkName: "site-admin/platform-banner-po-" */ "./po/" +
-                    getPOFileFromLocale(locale)
+                /* webpackChunkName: "platform-admin-banner-po-" */ `../po/${getPOFileFromLocale(
+                    locale
+                )}`
             )
     );
 

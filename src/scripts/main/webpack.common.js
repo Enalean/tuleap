@@ -177,7 +177,6 @@ const webpack_config_for_burning_parrot_code = {
 
 const webpack_config_for_vue = {
     entry: {
-        "site-admin/platform-banner": "./src/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
         "site-admin-services": "./src/project/admin/services/src/index-site-admin.js",
     },
@@ -185,29 +184,16 @@ const webpack_config_for_vue = {
     output,
     externals: {
         tlp: "tlp",
-        ckeditor4: "CKEDITOR",
-        jquery: "jQuery",
     },
     module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
+        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
-    ],
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
     },
     resolve: {
         extensions: [".js", ".ts", ".vue"],
-        alias: {
-            vue: path.resolve(__dirname, "node_modules", "vue"),
-        },
     },
 };
 
