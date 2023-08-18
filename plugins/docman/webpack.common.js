@@ -51,7 +51,6 @@ module.exports = [
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "docman.js": [
