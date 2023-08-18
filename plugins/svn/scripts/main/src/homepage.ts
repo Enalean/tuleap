@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "include/homepage";
-@use "include/permissions";
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+
+document.addEventListener("DOMContentLoaded", () => {
+    openTargetModalIdOnClick(document, "create-repository-button");
+});

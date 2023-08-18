@@ -19,55 +19,36 @@
 
 const path = require("path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
-const manifest_plugin = webpack_configurator.getManifestPlugin();
-const context = __dirname;
-const output = webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets"));
 
-const webpack_config_for_vue_and_themes = {
+const config = {
     entry: {
-        "permission-per-group": "./scripts/permissions-per-group/src/index.js",
-        homepage: "./scripts/homepage.ts",
+        svn: "./src/svn.js",
+        "svn-admin": "./src/svn-admin.js",
+        homepage: "./src/homepage.ts",
         "style-fp": "./themes/FlamingParrot/css/style.scss",
         "style-bp": "./themes/BurningParrot/css/style.scss",
-        "global-admin-migrate": "./scripts/global-admin-migrate.ts",
+        "global-admin-migrate": "./src/global-admin-migrate.ts",
     },
-    context,
-    output,
+    context: __dirname,
+    output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
     externals: {
-        tlp: "tlp",
+        codendi: "codendi",
+        jquery: "jQuery",
     },
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_scss_loader,
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
         ],
     },
     plugins: [
-        manifest_plugin,
-        webpack_configurator.getTypescriptCheckerPlugin(true),
-        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getManifestPlugin(),
         ...webpack_configurator.getCSSExtractionPlugins(),
     ],
     resolve: {
         extensions: [".ts", ".js"],
     },
-    resolveLoader: { alias: webpack_configurator.easygettext_loader_alias },
 };
 
-const webpack_config_for_vanilla = {
-    entry: {
-        svn: "./scripts/svn.js",
-        "svn-admin": "./scripts/svn-admin.js",
-    },
-    context,
-    output,
-    externals: {
-        codendi: "codendi",
-        jquery: "jQuery",
-    },
-    plugins: [manifest_plugin],
-};
-
-module.exports = [webpack_config_for_vue_and_themes, webpack_config_for_vanilla];
+module.exports = [config];

@@ -18,11 +18,10 @@
  */
 
 import Vue from "vue";
-import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import SvnPermissions from "./SVNPermissions.vue";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("svn-permission-per-group");
 
     if (!vue_mount_point) {
@@ -34,15 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Could not read data-project-id from mount point");
     }
 
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import(`../po/${getPOFileFromLocale(locale)}`)
+    );
 
     const RootComponent = Vue.extend(SvnPermissions);
     new RootComponent({
