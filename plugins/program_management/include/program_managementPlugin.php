@@ -65,6 +65,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Synchr
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusIsAlignedVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\TimeframeIsAlignedVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
@@ -498,11 +499,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new SemanticsVerifier(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
-                $timeframe_dao,
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
                     $semantic_status_factory,
                     $tracker_factory
+                ),
+                new TimeframeIsAlignedVerifier(
+                    $timeframe_dao,
                 ),
             ),
             new RequiredFieldVerifier($tracker_factory),
@@ -1488,11 +1491,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new SemanticsVerifier(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
-                $timeframe_dao,
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
                     $semantic_status_factory,
                     $tracker_factory
+                ),
+                new TimeframeIsAlignedVerifier(
+                    $timeframe_dao,
                 ),
             ),
             new RequiredFieldVerifier($tracker_factory),
