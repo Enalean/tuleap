@@ -27,7 +27,6 @@ final class PullRequestPresenter
 {
     public bool $is_there_at_least_one_pull_request;
     public bool $is_merge_commit_allowed;
-    public bool $allow_pullrequest_v2;
     public int $user_id;
     public string $user_avatar_url;
     public string $relative_date_display;
@@ -41,7 +40,6 @@ final class PullRequestPresenter
         $this->project_id                         = $repository->getProjectId();
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
-        $this->allow_pullrequest_v2               = PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository);
         $this->user_id                            = (int) $user->getId();
         $this->user_avatar_url                    = $user->getAvatarUrl();
         $this->language                           = $user->getShortLocale();

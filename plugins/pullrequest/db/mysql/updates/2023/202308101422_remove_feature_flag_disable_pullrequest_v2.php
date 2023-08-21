@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./reviewers.tpl.html";
+declare(strict_types=1);
 
-import ReviewersController from "./reviewers-controller.js";
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202308101422_remove_feature_flag_disable_pullrequest_v2 extends \Tuleap\ForgeUpgrade\Bucket
+{
+    public function description(): string
+    {
+        return 'Remove old feature flag named "feature_flag_allow_pullrequest_v2" from forgeconfig.';
+    }
 
-export default ReviewersDirective;
-
-function ReviewersDirective() {
-    return {
-        restrict: "A",
-        scope: {},
-        templateUrl: "reviewers.tpl.html",
-        controller: ReviewersController,
-        controllerAs: "reviewers_controller",
-        bindToController: true,
-    };
+    public function up(): void
+    {
+        $this->api->dbh->exec("DELETE FROM forgeconfig WHERE name='feature_flag_disable_pullrequest_v2'");
+    }
 }

@@ -22,11 +22,8 @@
 @use "@tuleap/plugin-pullrequest-comments";
 @use "./includes/dashboard";
 @use "./includes/pull-request";
-@use "./includes/overview";
 @use "./includes/commits";
 @use "./includes/files";
 @use "./includes/file-diff";
-@use "./includes/tuleap-username";
 @use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
-@use "../../../../../src/themes/BurningParrot/css/includes/labels/labels-box";

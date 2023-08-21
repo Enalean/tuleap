@@ -1,5 +1,5 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
-import { buildVueOverviewURL } from "../../helpers/vue-overview-url-builder";
+import { buildOverviewURL } from "../../helpers/overview-url-builder";
 
 import "./PullRequestLabelsList";
 
@@ -54,18 +54,13 @@ function PullRequestSummaryController(
     }
 
     function goToOverview() {
-        if (SharedPropertiesService.isVueOverviewShown()) {
-            window.location.assign(
-                buildVueOverviewURL(
-                    window.location,
-                    self.pull_request,
-                    SharedPropertiesService.getProjectId(),
-                    SharedPropertiesService.getRepositoryId()
-                ).toString()
-            );
-            return;
-        }
-
-        $state.go("overview", { id: self.pull_request.id });
+        window.location.assign(
+            buildOverviewURL(
+                window.location,
+                self.pull_request,
+                SharedPropertiesService.getProjectId(),
+                SharedPropertiesService.getRepositoryId()
+            ).toString()
+        );
     }
 }

@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\Reference;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequestV2FeatureFlag;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -53,15 +52,13 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->html_url_builder = new HTMLURLBuilder(
             $this->git_repository_factory
         );
-
-        \ForgeConfig::set("feature_flag_" . PullRequestV2FeatureFlag::FEATURE_FLAG_KEY, "1");
     }
 
     public function testItReturnsTheWebURLToPullRequestOverview(): void
     {
         $result = $this->html_url_builder->getPullRequestOverviewUrl($this->buildPullRequest(27));
 
-        $expected_url = '/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/27/overview';
+        $expected_url = '/plugins/git/?action=pull-requests&repo_id=8&group_id=109&tab=overview#/pull-requests/27/overview';
 
         self::assertEquals($expected_url, $result);
     }
@@ -72,7 +69,7 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
 
-        $expected_url = 'https://example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
+        $expected_url = 'https://example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109&tab=overview#/pull-requests/28/overview';
 
         self::assertEquals($expected_url, $result);
     }

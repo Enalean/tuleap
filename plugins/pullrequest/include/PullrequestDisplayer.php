@@ -67,7 +67,7 @@ class PullrequestDisplayer
             )
         );
 
-        $is_vue_overview_shown = $request->get("tab") === "overview" && PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository);
+        $is_vue_overview_shown = $request->get("tab") === "overview";
         if ($is_vue_overview_shown) {
             $layout->addJavascriptAsset(
                 new JavascriptViteAsset(

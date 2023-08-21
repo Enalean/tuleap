@@ -4,14 +4,7 @@
             <pull-request-header pull-request-id="{{ pull_request.$state.params.id }}"></pull-request-header>
 
             <nav class="tlp-tabs">
-                <a ng-if="! pull_request.isVueOverviewShown()" class="tlp-tab"
-                   ng-class="{'tlp-tab-active': pull_request.$state.includes('overview')}"
-                   ui-sref="overview"
-                >
-                    {{ ::'Overview' | translate }}
-                </a>
-
-                <a ng-if="pull_request.isVueOverviewShown()" class="tlp-tab" href="{{ pull_request.getVueOverviewUrl() }}">
+                <a class="tlp-tab" href="{{ pull_request.getOverviewUrl() }}">
                     {{ ::'Overview' | translate }}
                 </a>
 
@@ -29,7 +22,6 @@
                 </a>
             </nav>
 
-            <div ng-if="! pull_request.isVueOverviewShown()" ui-view="overview" ng-show="pull_request.$state.includes('overview')"></div>
             <div ui-view="commits" ng-show="pull_request.$state.includes('commits')"></div>
             <div ui-view="files" ng-show="pull_request.$state.includes('files')" class="tlp-pane-section"></div>
         </div>

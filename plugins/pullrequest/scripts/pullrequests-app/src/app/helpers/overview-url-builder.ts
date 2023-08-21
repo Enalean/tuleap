@@ -27,7 +27,7 @@ interface PullRequestWithProjectAndRepository {
     };
 }
 
-export function buildVueOverviewURL(
+export function buildOverviewURL(
     location: Location,
     pull_request: PullRequestWithProjectAndRepository,
     current_project_id: number,

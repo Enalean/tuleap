@@ -18,8 +18,6 @@
  */
 
 import {
-    TYPE_EVENT_PULLREQUEST_ACTION,
-    TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
 } from "@tuleap/plugin-pullrequest-constants";
@@ -27,11 +25,18 @@ import {
 import type {
     PullRequestCommentPresenter,
     PullRequestInlineCommentPresenter,
-    PullRequestGlobalCommentPresenter,
     PullRequestCommentFile,
 } from "@tuleap/plugin-pullrequest-comments";
 
-const comment_presenter_base: PullRequestGlobalCommentPresenter = {
+const file = {
+    file_path: "README.md",
+    file_url: "url/to/readme.md",
+    unidiff_offset: 8,
+    position: INLINE_COMMENT_POSITION_RIGHT,
+    is_displayed: false,
+};
+
+const comment_presenter_base: PullRequestInlineCommentPresenter = {
     id: 12,
     user: {
         id: 102,
@@ -42,41 +47,15 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     post_date: "a moment ago",
     content: "Please rebase",
     parent_id: 0,
-    type: TYPE_GLOBAL_COMMENT,
+    type: TYPE_INLINE_COMMENT,
     color: "",
-};
-
-const file = {
-    file_path: "README.md",
-    file_url: "url/to/readme.md",
-    unidiff_offset: 8,
-    position: INLINE_COMMENT_POSITION_RIGHT,
-    is_displayed: false,
+    is_outdated: false,
+    file: { ...file },
 };
 
 export const PullRequestCommentPresenterStub = {
-    buildInlineCommentOutdated: (): PullRequestCommentPresenter => ({
-        ...comment_presenter_base,
-        file: { ...file },
-        is_outdated: true,
-        type: TYPE_INLINE_COMMENT,
-    }),
-
     buildInlineComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
-        file: { ...file },
-        is_outdated: false,
-        type: TYPE_INLINE_COMMENT,
-    }),
-
-    buildGlobalComment: (): PullRequestCommentPresenter => ({
-        ...comment_presenter_base,
-        type: TYPE_GLOBAL_COMMENT,
-    }),
-
-    buildPullRequestEventComment: (): PullRequestCommentPresenter => ({
-        ...comment_presenter_base,
-        type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 
     buildFileDiffCommentPresenter: (
@@ -85,8 +64,6 @@ export const PullRequestCommentPresenterStub = {
     ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         id: comment_id,
-        type: TYPE_INLINE_COMMENT,
-        is_outdated: false,
         file: {
             ...file,
             ...file_data,

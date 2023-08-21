@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildVueOverviewURL } from "./vue-overview-url-builder";
+import { buildOverviewURL } from "./overview-url-builder";
 
-describe("vue-overview-url-builder", () => {
+describe("overview-url-builder", () => {
     it("Given a pull-request, then it should build an url to the view overview app", () => {
         const location: Location = {
             origin: "https://www.example.com",
         } as unknown as Location;
 
-        const url = buildVueOverviewURL(
+        const url = buildOverviewURL(
             location,
             {
                 id: 15,

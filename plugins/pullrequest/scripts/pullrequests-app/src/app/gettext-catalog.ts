@@ -18,7 +18,6 @@
  */
 
 interface GettextCatalog {
-    getString: (source: string) => string;
     getPlural: (
         nb_items: number,
         singular_form: string,
@@ -33,16 +32,6 @@ export function setCatalog(catalog: GettextCatalog): void {
     gettextCatalog = catalog;
 }
 
-export const getUserUpdatePullRequest = (): string =>
-    gettextCatalog.getString("Has updated the pull request.");
-export const getUserRebasePullRequest = (): string =>
-    gettextCatalog.getString("Has rebased the pull request.");
-export const getUserMergePullRequest = (): string =>
-    gettextCatalog.getString("Has merged the pull request.");
-export const getUserAbandonedPullRequest = (): string =>
-    gettextCatalog.getString("Has abandoned the pull request.");
-export const getUserReopenedPullRequest = (): string =>
-    gettextCatalog.getString("Has reopened the pull request.");
 export const getCollapsibleSectionLabel = (nb_lines: number): string =>
     gettextCatalog.getPlural(
         nb_lines,
