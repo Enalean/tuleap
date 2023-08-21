@@ -58,9 +58,9 @@ import type { PackagePermission } from "./types";
 @Component({ components: { EmptyState, UgroupBadge, ReleasePermissions } })
 export default class FRSPackagePermissionsTablePackage extends Vue {
     @Prop()
-    private readonly packagePermissions!: PackagePermission[];
+    readonly packagePermissions!: PackagePermission[];
     @Prop()
-    private readonly selectedUgroupName!: string;
+    readonly selectedUgroupName!: string;
 
     get has_permissions(): boolean {
         return this.packagePermissions.length > 0;
