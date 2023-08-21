@@ -86,8 +86,8 @@ final class DisplayMigrateFromCoreController implements DispatchableWithRequest,
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../../frontend-assets',
-                    '/assets/svn'
+                    __DIR__ . '/../../../scripts/main/frontend-assets',
+                    '/assets/svn/main'
                 ),
                 'global-admin-migrate.js'
             )

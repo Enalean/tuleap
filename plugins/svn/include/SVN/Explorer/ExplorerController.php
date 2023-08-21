@@ -26,6 +26,7 @@ use HTTPRequest;
 use Project;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
@@ -81,10 +82,10 @@ class ExplorerController
 
         $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/svn'
+            __DIR__ . '/../../../scripts/main/frontend-assets',
+            '/assets/svn/main'
         );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("homepage.js"));
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'homepage.js'));
 
         $service->renderInPage(
             $request,

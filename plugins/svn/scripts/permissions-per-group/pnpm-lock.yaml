@@ -1,35 +1,27 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
-  '@tuleap/html-escaper':
-    specifier: workspace:*
-    version: link:../../lib/frontend/html-escaper
-  '@tuleap/project-background':
-    specifier: workspace:*
-    version: link:../../lib/frontend/project-background
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
-  '@tuleap/user-and-ugroup-autocompleter':
+    version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init':
     specifier: workspace:*
-    version: link:../../lib/frontend/user-and-ugroup-autocompleter
+    version: link:../../../../lib/frontend/vue2-gettext-init
   vue:
     specifier: ^2.7.8
     version: 2.7.8
-  vue-gettext:
-    specifier: ^2.1.12
-    version: 2.1.12
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator':
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
     specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
+    version: link:../../../../lib/frontend/po-gettext-plugin
 
 packages:
 
@@ -98,11 +90,6 @@ packages:
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
-    dev: false
-
-  /vue-gettext@2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
     dev: false
 
   /vue@2.7.8:
