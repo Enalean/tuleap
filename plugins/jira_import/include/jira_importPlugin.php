@@ -65,7 +65,7 @@ final class jira_importPlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['tracker', 'agiledashboard', 'cardwall', 'roadmap', 'projectmilestones'];
+        return ['tracker', 'agiledashboard', 'kanban', 'cardwall', 'roadmap', 'projectmilestones'];
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

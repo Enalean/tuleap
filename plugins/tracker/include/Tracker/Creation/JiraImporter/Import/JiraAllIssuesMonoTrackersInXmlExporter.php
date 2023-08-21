@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use Psr\Log\LoggerInterface;
+use Tracker;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -37,7 +38,8 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExporter
 {
-    public const MONO_TRACKER_NAME = 'Issues';
+    public const MONO_TRACKER_NAME   = 'Issues';
+    public const MONO_TRACKER_XML_ID = Tracker::XML_ID_PREFIX . "1";
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -81,7 +83,7 @@ class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExport
         $this->logger->info(sprintf("Import all issues in mono tracker %s", self::MONO_TRACKER_NAME));
 
         $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat(self::MONO_TRACKER_NAME);
-        $tracker          = (new XMLTracker("1", $tracker_itemname))->withName(self::MONO_TRACKER_NAME);
+        $tracker          = (new XMLTracker(self::MONO_TRACKER_XML_ID, $tracker_itemname))->withName(self::MONO_TRACKER_NAME);
 
         $tracker_xml = $this->issues_from_project_in_mono_tracker_in_xml_exporter->exportIssuesToXml(
             $jira_platform_configuration,

@@ -8,6 +8,7 @@
     <service shortname="plugin_git" enabled="0"/>
     <service shortname="plugin_tracker" enabled="0"/>
     <service shortname="plugin_agiledashboard" enabled="0" />
+    <service shortname="plugin_kanban" enabled="0" />
     <service shortname="plugin_svn" enabled="0" />
     <service shortname="file" enabled="0"/>
     <service shortname="hudson" enabled="0"/>
