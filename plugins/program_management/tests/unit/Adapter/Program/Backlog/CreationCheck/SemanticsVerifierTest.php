@@ -96,8 +96,8 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->verifier        = new SemanticsVerifier(
             $this->title_dao,
             $this->description_dao,
-            $this->timeframe_dao,
-            $this->status_verifier
+            $this->status_verifier,
+            new TimeframeIsAlignedVerifier($this->timeframe_dao),
         );
     }
 

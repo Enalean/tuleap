@@ -25,18 +25,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifySemanticsAreConfigured;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyTimeframeIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticsVerifier implements VerifySemanticsAreConfigured
 {
     public function __construct(
         private \Tracker_Semantic_TitleDao $semantic_title_dao,
         private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
-        private SemanticTimeframeDao $semantic_timeframe_dao,
         private VerifyStatusIsAligned $status_verifier,
+        private VerifyTimeframeIsAligned $timeframe_verifier,
     ) {
     }
 
@@ -73,13 +72,13 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
                 return false;
             }
         }
-        if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
-            $this->buildSemanticError(
-                $configuration_errors,
-                $source_tracker_collection->getSourceTrackers(),
-                dgettext('tuleap-program_management', 'Timeframe'),
-                SemanticTimeframe::NAME
-            );
+        if (
+            $this->timeframe_verifier->isTimeframeWellConfigured(
+                $tracker,
+                $source_tracker_collection,
+                $configuration_errors
+            ) === false
+        ) {
             $has_error = true;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return false;
@@ -99,21 +98,6 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
         }
 
         return ! $has_error;
-    }
-
-    /**
-     * @param int[] $tracker_ids
-     */
-    private function areTimeFrameSemanticsAligned(array $tracker_ids): bool
-    {
-        if ($this->semantic_timeframe_dao->getNbOfTrackersWithoutTimeFrameSemanticDefined($tracker_ids) > 0) {
-            return false;
-        }
-        if (! $this->semantic_timeframe_dao->areTimeFrameSemanticsUsingSameTypeOfField($tracker_ids)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
