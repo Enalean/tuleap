@@ -1,29 +1,37 @@
 # Push your code
 
-As a prerequisite, please read [Don\'t \"Push\" Your Pull
+As a prerequisite, please read [Don't "Push" Your Pull
 Requests](https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/).
 
 The Tuleap project uses Gerrit to ensure a proper review and integration
 of contributed code. It means that:
 
--   Each and every commits is reviewed individually
+-   Each and every commit is reviewed individually
 -   A Tuleap-contributor can vote between -2..+2 on each contribution
 -   A Tuleap-integrator submit is mandatory
 
-![Activity diagram: Tuleap
-contribution](./images/development_organization.png)
+![Activity diagram: Tuleap contribution](./images/development_organization.png)
 
 Development repository is hosted on <https://gerrit.tuleap.net>
 
 You can checkout <https://gerrit.tuleap.net/admin/repos/tuleap>. You
 need an account on gerrit in order to do the checkout.
 
-The reference repository, stable, is "the true master" (ie. it\'s from
-this repository that releases are rolled out). There are mirrors of
-stable repository available on
-[GitHub](https://github.com/Enalean/tuleap/) or
-[repo.or.cz](https://repo.or.cz/tuleap.git), that are synchronized on
-every push on master.
+The reference repository, stable, is "the true master" (ie. it's from
+this repository that releases are rolled out). There is a mirror of
+stable repository available on [GitHub](https://github.com/Enalean/tuleap/)
+that is synchronized on every push on master.
+
+## Integration rules
+
+For a commit to reach the main development branch (`master`), it *must* comply with following rules:
+* [Gerrit tests](./tests.md#what-is-run-and-when--aka-continuous-integration-rules-) must pass
+* An Integrator must review the code prior to the integration.
+    * When two Integrators are doing pair programming, a third reviewer is not required:
+      * The co-author (the one that is not performing the commit) must be mentionned in the commit message with `Signed-off-by: Author <email>`
+      * The co-author must perform the integration of the submitted patch on it's own development environment (regular integration flow via gerrit, minus the review)
+    * When an Integrator is doing pair programming with a contributor, a independent review from another integrator is required.
+    * An Integrator is not allowed to self-merge their own patches. If this happens, patch must be reverted as soon as possible.
 
 ## Setting up your environment
 
