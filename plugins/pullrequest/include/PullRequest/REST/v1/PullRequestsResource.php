@@ -1133,8 +1133,13 @@ class PullRequestsResource extends AuthenticatedResource
         $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
         $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
         $current_time        = time();
-        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '');
-        $color               = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
+        $format              = $comment_data->format;
+        if (! $format) {
+            $format = Comment::FORMAT_TEXT;
+        }
+
+        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '', $format);
+        $color   = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
         $color_assigner->assignColor((int) $comment_data->parent_id, $color);
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);

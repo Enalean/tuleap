@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\InlineComment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
@@ -50,6 +51,11 @@ class InlineCommentCreator
     ): InsertedInlineComment {
         $pull_request_id = $pull_request->getId();
 
+        $format = $comment_data->format;
+        if (! $format) {
+            $format = Comment::FORMAT_TEXT;
+        }
+
         $inserted = $this->dao->insert(
             $pull_request_id,
             $user->getId(),
@@ -59,6 +65,7 @@ class InlineCommentCreator
             $comment_data->content,
             $comment_data->position,
             (int) $comment_data->parent_id,
+            $format
         );
 
         $color = $this->color_retriever->retrieveColor($pull_request_id, (int) $comment_data->parent_id);

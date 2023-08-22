@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments
     content         TEXT,
     parent_id       INT(11) NOT NULL,
     color           VARCHAR(50) DEFAULT '',
+    format VARCHAR(10) NOT NULL DEFAULT 'text',
     INDEX idx_pr_pull_request_id (pull_request_id)
 );
 
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments
     is_outdated     BOOL        NOT NULL DEFAULT false,
     position        VARCHAR(10) NOT NULL DEFAULT 'right',
     parent_id       INT(11)     NOT NULL,
+    format VARCHAR(10) NOT NULL DEFAULT 'text',
     color VARCHAR(50) DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_timeline_event (

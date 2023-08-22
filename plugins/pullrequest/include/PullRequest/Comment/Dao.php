@@ -24,11 +24,11 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater
 {
-    public function save(int $pull_request_id, int $user_id, int $post_date, string $content, int $parent_id): int
+    public function save(int $pull_request_id, int $user_id, int $post_date, string $content, int $parent_id, string $format): int
     {
-        $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content, parent_id)
-                VALUES (?, ?, ?, ?, ?)';
-        $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $content, $parent_id);
+        $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content, parent_id, format)
+                VALUES (?, ?, ?, ?, ?, ?)';
+        $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $content, $parent_id, $format);
 
         return (int) $this->getDB()->lastInsertId();
     }
@@ -55,7 +55,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
      */
     public function searchByCommentID(int $comment_id): ?array
     {
-        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id, color
+        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id, color, format
                 FROM plugin_pullrequest_comments
                 WHERE id = ?';
 

@@ -96,6 +96,7 @@ class Factory
             $row['content'],
             $row['parent_id'],
             $row['color'],
+            $row['format'],
         );
     }
 }
