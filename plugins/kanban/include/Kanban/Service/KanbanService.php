@@ -25,15 +25,39 @@ namespace Tuleap\Kanban\Service;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Project\Service\ServiceForCreation;
 
-final class KanbanService extends \Service
+final class KanbanService extends \Service implements ServiceForCreation
 {
+    private const ICON_NAME           = 'fa-solid fa-tlp-kanban-boards';
     public const SERVICE_SHORTNAME    = 'plugin_kanban';
     public const INSTRUMENTATION_NAME = 'kanban';
 
+
+    public static function forServiceCreation(\Project $project): self
+    {
+        return new self(
+            $project,
+            [
+                'service_id' => self::FAKE_ID_FOR_CREATION,
+                'group_id' => $project->getID(),
+                'label' => 'label',
+                'description' => '',
+                'short_name' => self::SERVICE_SHORTNAME,
+                'link' => null,
+                'is_active' => 1,
+                'is_used' => 0,
+                'scope' => self::SCOPE_SYSTEM,
+                'rank' => 154,
+                'is_in_iframe' => 0,
+                'is_in_new_tab' => false,
+            ]
+        );
+    }
+
     public function getIconName(): string
     {
-        return "fa-solid fa-tlp-kanban-boards";
+        return self::ICON_NAME;
     }
 
     public function getInternationalizedName(): string

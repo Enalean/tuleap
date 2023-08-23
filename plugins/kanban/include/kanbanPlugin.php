@@ -54,6 +54,7 @@ use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\Kanban\REST\ResourcesInjector;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\Widget\MyKanban;
@@ -328,7 +329,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
-            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
+            new SplitKanbanConfigurationChecker(),
             EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -365,7 +366,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )
             ),
-            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
+            new SplitKanbanConfigurationChecker(),
         );
     }
 
@@ -740,7 +741,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
 
     protected function isServiceAllowedForProject(\Project $project): bool
     {
-        $configuration_checker = new \Tuleap\Kanban\SplitKanbanConfigurationChecker();
+        $configuration_checker = new SplitKanbanConfigurationChecker();
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
             return false;
         }
@@ -750,7 +751,12 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
 
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
     {
-        // nothing to do for kanban
+        $project               = $event->project;
+        $configuration_checker = new SplitKanbanConfigurationChecker();
+        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            return;
+        }
+        $event->addService(KanbanService::forServiceCreation($project));
     }
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
