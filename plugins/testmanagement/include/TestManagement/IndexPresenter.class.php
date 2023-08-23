@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use PFUser;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\User\REST\UserRepresentation;
@@ -134,6 +135,8 @@ class IndexPresenter
 
     public string $artifact_links_types;
 
+    public bool $mercure_enabled;
+
     /**
      * @param int|false                         $campaign_tracker_id
      * @param int|false                         $test_definition_tracker_id
@@ -205,6 +208,7 @@ class IndexPresenter
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
 
         $this->artifact_links_types = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
+        $this->mercure_enabled      = \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) === "1";
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
