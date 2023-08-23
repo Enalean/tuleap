@@ -78,6 +78,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
+use Tuleap\Project\Service\HideServiceInUserInterfaceEvent;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
@@ -739,14 +740,17 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         // nothing to do for kanban
     }
 
-    protected function isServiceAllowedForProject(\Project $project): bool
+    #[ListeningToEventClass]
+    public function hideKanbanServiceAccordingToFeatureFlag(HideServiceInUserInterfaceEvent $event): void
     {
-        $configuration_checker = new SplitKanbanConfigurationChecker();
-        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            return false;
+        $service = $event->service;
+        if ($service->getShortName() !== KanbanService::SERVICE_SHORTNAME) {
+            return;
         }
-
-        return parent::isServiceAllowedForProject($project);
+        $configuration_checker = new SplitKanbanConfigurationChecker();
+        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($service->getProject())) {
+            $event->hideService();
+        }
     }
 
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void

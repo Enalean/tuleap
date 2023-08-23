@@ -20,38 +20,31 @@
 
 namespace Tuleap\Project\Service;
 
-use CSRFSynchronizerToken;
 use Project;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class ServicesPresenter
 {
-    /** @var array|ServicePresenter[] */
-    public $services;
-    /** @var CSRFSynchronizerToken */
-    public $csrf;
-    /** @var int */
-    public $project_id;
-    /** @var bool */
-    public $is_default_template;
-    /** @var int */
-    public $minimal_rank;
-    /** @var string */
-    public $csrf_token_name;
-    /** @var string */
-    public $csrf_token;
-    /** @var string */
-    public $allowed_icons;
+    /** @var ServicePresenter[] */
+    public array $services;
+    public CSRFSynchronizerTokenInterface $csrf;
+    public int $project_id;
+    public bool $is_default_template;
+    public int $minimal_rank;
+    public string $csrf_token_name;
+    public string $csrf_token;
+    public string $allowed_icons;
 
     /**
      * @param ServicePresenter[]    $services
      */
-    public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)
+    public function __construct(Project $project, CSRFSynchronizerTokenInterface $csrf, array $services)
     {
         $this->services            = $services;
         $this->csrf_token_name     = $csrf->getTokenName();
         $this->csrf_token          = $csrf->getToken();
         $this->csrf                = $csrf;
-        $this->project_id          = $project->getID();
+        $this->project_id          = (int) $project->getID();
         $this->is_default_template = (int) $project->getID() === Project::DEFAULT_TEMPLATE_PROJECT_ID;
         $this->minimal_rank        = $project->getMinimalRank() + 1;
         $this->allowed_icons       = ServiceIconValidator::getAllowedIconsJSON();
