@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
+use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -85,7 +86,7 @@ class AgileDashboardRouter
     private $planning_factory;
 
     /**
-     * @var Planning_MilestoneControllerFactory
+     * @var MilestoneControllerFactory
      */
     private $milestone_controller_factory;
 
@@ -183,7 +184,7 @@ class AgileDashboardRouter
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
-        Planning_MilestoneControllerFactory $milestone_controller_factory,
+        MilestoneControllerFactory $milestone_controller_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
         KanbanManager $kanban_manager,

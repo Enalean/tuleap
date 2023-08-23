@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -34,7 +35,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
     use \Tuleap\ForgeConfigSandbox;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneControllerFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MilestoneControllerFactory
      */
     private $milestone_controller_factory;
     /**
@@ -56,7 +57,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         parent::setUp();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
 
-        $this->milestone_controller_factory = Mockery::mock(Planning_MilestoneControllerFactory::class);
+        $this->milestone_controller_factory = Mockery::mock(MilestoneControllerFactory::class);
         $this->planning_controller          = Mockery::mock(Planning_Controller::class);
         $plugin                             = Mockery::mock(Plugin::class);
         $plugin->shouldReceive('getThemePath');
@@ -132,7 +133,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->planning_milestone_factory->shouldReceive('getLastMilestoneCreated')->andReturn($last_milestone);
 
         $this->milestone_controller_factory->shouldReceive('getMilestoneController')
-            ->andReturn(Mockery::mock(Planning_MilestoneSelectorController::class))
+            ->andReturn(Mockery::mock(Planning_MilestoneController::class))
             ->once();
 
         $this->router->shouldReceive('renderAction')->once();
@@ -153,7 +154,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->planning_milestone_factory->shouldReceive('getLastMilestoneCreated')->andReturn($last_milestone);
 
         $this->milestone_controller_factory->shouldReceive('getMilestoneController')
-            ->andReturn(Mockery::mock(Planning_MilestoneSelectorController::class))
+            ->andReturn(Mockery::mock(Planning_MilestoneController::class))
             ->once();
 
         $this->router->shouldReceive('renderAction')->once();
