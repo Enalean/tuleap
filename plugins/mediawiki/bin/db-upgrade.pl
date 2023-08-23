@@ -14,7 +14,7 @@ use HTML::Entities ;
 
 use vars qw/$dbh @reqlist $query/ ;
 use vars qw/$sys_default_domain $sys_cvs_host
-    $sys_shell_host $sys_users_host $sys_docs_host $sys_lists_host
+    $sys_shell_host $sys_users_host $sys_docs_host
     $sys_dns1_host $sys_dns2_host $FTPINCOMING_DIR $FTPFILES_DIR
     $sys_urlroot $sf_cache_dir $sys_name
     $sys_news_group $sys_dbhost $sys_dbname $sys_dbuser $sys_dbpasswd
@@ -28,7 +28,7 @@ sub is_greater ( $$ ) ;
 sub debug ( $ ) ;
 sub parse_sql_file ( $ ) ;
 
-require ("/usr/share/gforge/lib/include.pl") ; # Include a few predefined functions 
+require ("/usr/share/gforge/lib/include.pl") ; # Include a few predefined functions
 require ("/usr/share/gforge/lib/sqlparser.pm") ; # Our magic SQL parser
 
 debug "You'll see some debugging info during this installation." ;
@@ -46,16 +46,16 @@ eval {
     my ($sth, @array, $version, $path, $target) ;
 
     &create_metadata_table ("0") ;
-    
+
     $version = &get_db_version ;
     $target = "0.1" ;
     if (is_lesser $version, $target) {
 	my @filelist = ( "/usr/share/gforge/plugins/$pluginname/lib/$pluginname-init.sql" ) ;
-	
+
 	foreach my $file (@filelist) {
 	    debug "Processing $file" ;
 	    @reqlist = @{ &parse_sql_file ($file) } ;
-	    
+
 	    foreach my $s (@reqlist) {
 		$query = $s ;
 		# debug $query ;
@@ -65,12 +65,12 @@ eval {
 	    }
 	}
 	@reqlist = () ;
-	
+
 	&update_db_version ($target) ;
 	debug "Committing." ;
 	$dbh->commit () ;
     }
-    
+
     debug "It seems your database install/upgrade went well and smoothly.  That's cool." ;
     debug "Please enjoy using Debian GForge." ;
 

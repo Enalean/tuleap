@@ -143,17 +143,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
             }
             $this->svn_authentication_cache_invalidator->invalidateProjectCache($project);
 
-            // Delete Mailing lists
-            $backendMailinList = $this->getBackend('MailingList');
-            if (! $backendMailinList->deleteProjectMailingLists($groupId)) {
-                $this->error("Could not archive project mailing lists");
-                $deleteState = false;
-            } else {
-                // Need to remove list aliases
-                $backendAliases = $this->getBackend('Aliases');
-                $backendAliases->setNeedUpdateMailAliases();
-            }
-
             if ($deleteState) {
                 $this->done();
             }

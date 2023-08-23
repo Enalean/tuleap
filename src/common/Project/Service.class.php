@@ -27,7 +27,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const ADMIN     = 'admin';
     public const FORUM     = 'forum';
     public const HOMEPAGE  = 'homepage';
-    public const ML        = 'mail';
     public const NEWS      = 'news';
     public const CVS       = 'cvs';
     public const FILE      = 'file';
@@ -42,7 +41,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         self::ADMIN     => 'fas fa-cogs',
         self::FORUM     => 'fas fa-users',
         self::HOMEPAGE  => 'fas fa-home',
-        self::ML        => 'fas fa-envelope',
         self::NEWS      => 'fas fa-rss',
         self::CVS       => 'fas fa-tlp-versioning-cvs',
         self::WIKI      => 'fas fa-tlp-wiki',

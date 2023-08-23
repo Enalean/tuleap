@@ -80,6 +80,9 @@ Provides: forgeupgrade
 Obsoletes: tuleap-plugin-forumml <= 15.0
 Provides: tuleap-plugin-forumml
 
+Obsoletes: tuleap-core-mailman <= 15.0
+Provides: tuleap-core-mailman
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
 
@@ -89,14 +92,6 @@ Tuleap is a web based application that address all the aspects of product develo
 #
 
 %if "%{?dist}" == ".el7"
-
-%package core-mailman
-Summary: Mailman component for Tuleap
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: mailman-tuleap
-%description core-mailman
-Manage dependencies for Tuleap mailman integration
 
 %package core-cvs
 Summary: CVS component for Tuleap
@@ -1216,9 +1211,6 @@ fi
 # Core
 #
 %if "%{?dist}" == ".el7"
-%files core-mailman
-%defattr(-,root,root,-)
-
 %files core-cvs
 %defattr(-,root,root,-)
 %attr(00751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/cvsroot

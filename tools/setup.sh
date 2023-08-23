@@ -97,7 +97,6 @@ fi
 
 if [ ${configure:-false} = "true" ]; then
     ${tuleapcfg} configure apache
-    _configureMailman
     _checkInstalledPlugins
     _checkPluginsConfiguration
     _configureCVS

@@ -75,8 +75,6 @@ class SystemEventManager
             'project_admin_ugroup_deletion',
             'project_admin_ugroup_bind_modified',
             'project_admin_remove_user_from_project_ugroups',
-            'mail_list_create',
-            'mail_list_delete',
             Event::SERVICE_IS_USED,
             'codendi_daily_start',
         ];
@@ -311,20 +309,6 @@ class SystemEventManager
                     }
                 }
                 break;
-            case 'mail_list_create':
-                $this->createEvent(
-                    SystemEvent::TYPE_MAILING_LIST_CREATE,
-                    $params['group_list_id'],
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-            case 'mail_list_delete':
-                $this->createEvent(
-                    SystemEvent::TYPE_MAILING_LIST_DELETE,
-                    $params['group_list_id'],
-                    SystemEvent::PRIORITY_LOW
-                );
-                break;
             case Event::SERVICE_IS_USED:
                 $this->createEvent(
                     SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
@@ -502,8 +486,6 @@ class SystemEventManager
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:
             case SystemEvent::TYPE_USER_DELETE:
             case SystemEvent::TYPE_USER_RENAME:
-            case SystemEvent::TYPE_MAILING_LIST_CREATE:
-            case SystemEvent::TYPE_MAILING_LIST_DELETE:
             case SystemEvent::TYPE_CVS_IS_PRIVATE:
             case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
             case SystemEvent::TYPE_ROOT_DAILY:

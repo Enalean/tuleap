@@ -83,7 +83,6 @@ SystemEventManager::fetchEvents() => not used
 */cron_utils.php
 */externals.txt
 */LocalSettings.php
-*/Makefile.extraplugins
 */Makefile.mediawiki
 */mediawikiactivate.sql
 */mediawikiviews.sql

@@ -32,7 +32,6 @@ use FastRoute;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
-use MailingListDao;
 use MailManager;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -119,14 +118,6 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
-use Tuleap\MailingList\MailingListAdministrationController;
-use Tuleap\MailingList\MailingListDeleteController;
-use Tuleap\MailingList\MailingListDoCreateController;
-use Tuleap\MailingList\MailingListDomainBuilder;
-use Tuleap\MailingList\MailingListHomepageController;
-use Tuleap\MailingList\MailingListPresenterBuilder;
-use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
-use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\CommonMarkInterpreterController;
@@ -1015,57 +1006,6 @@ class RouteCollector
         );
     }
 
-    public static function getMailingListsAdministration(): MailingListAdministrationController
-    {
-        return new MailingListAdministrationController(
-            new ProjectRetriever(\ProjectManager::instance()),
-            new ProjectAdministratorChecker(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
-            new \MailingListDao(),
-            new MailingListPresenterCollectionBuilder(new MailingListPresenterBuilder(EventManager::instance())),
-        );
-    }
-
-    public static function getMailingListsDoCreateController(): MailingListDoCreateController
-    {
-        return new MailingListDoCreateController(
-            new ProjectRetriever(\ProjectManager::instance()),
-            new ProjectAdministratorChecker(),
-            new MailingListDao(),
-            EventManager::instance(),
-            new MailingListDomainBuilder(),
-        );
-    }
-
-    public static function getMailingListUpdateController(): MailingListUpdateController
-    {
-        return new MailingListUpdateController(
-            new ProjectRetriever(\ProjectManager::instance()),
-            new ProjectAdministratorChecker(),
-            new \MailingListDao(),
-        );
-    }
-
-    public static function getMailingListDeleteController(): MailingListDeleteController
-    {
-        return new MailingListDeleteController(
-            new ProjectRetriever(\ProjectManager::instance()),
-            new ProjectAdministratorChecker(),
-            new \MailingListDao(),
-            EventManager::instance(),
-        );
-    }
-
-    public static function getMailingListsHomepageController(): MailingListHomepageController
-    {
-        return new MailingListHomepageController(
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
-            new \MailingListDao(),
-            new MailingListPresenterCollectionBuilder(new MailingListPresenterBuilder(EventManager::instance())),
-            $GLOBALS['Language'],
-        );
-    }
-
     public static function getReferencesController(): ReferenceAdministrationBrowseController
     {
         return new ReferenceAdministrationBrowseController(
@@ -1535,17 +1475,11 @@ class RouteCollector
             $r->get('/banner', [self::class, 'getGetProjectBannerAdministration']);
             $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
 
-            $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
-            $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
-            $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
-
             $r->get('/references', [self::class, 'getReferencesController']);
 
             $r->get('/export/xml', [self::class, 'getProjectXmlExportController']);
             $r->get('/export', [self::class, 'getProjectExportController']);
         });
-
-        $r->get('/mail/', [self::class, 'getMailingListsHomepageController']);
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
 

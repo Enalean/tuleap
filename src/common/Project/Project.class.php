@@ -97,7 +97,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
             Service::FILE => ServiceFile::class,
             Service::SVN  => ServiceSVN::class,
             Service::CVS  => \Tuleap\ConcurrentVersionsSystem\ServiceCVS::class,
-            Service::ML   => \Tuleap\MailingList\ServiceMailingList::class,
         ];
 
         EventManager::instance()->processEvent(
@@ -266,12 +265,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->usesService(Service::FILE);
     }
 
-    //whether or not this group has opted to use mailing lists
-    public function usesMail()
-    {
-        return $this->usesService(Service::ML);
-    }
-
     //whether or not this group has opted to use news
     public function usesNews()
     {
@@ -344,11 +337,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function getForumPage()
     {
         return $this->getServiceLink(Service::FORUM);
-    }
-
-    public function getMailPage()
-    {
-        return $this->getServiceLink(Service::ML);
     }
 
     public function getCvsPage()

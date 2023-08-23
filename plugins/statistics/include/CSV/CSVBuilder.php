@@ -149,8 +149,6 @@ class CSVBuilder
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDistinctFilesPublished(), "Distinct files published");
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), "Downloaded files (between start date and end date)");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfActiveMailingLists(), "Active mailing lists");
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfInactiveMailingLists(), "Inactive mailing lists");
 
         //Forums
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfActiveForums(), "Active forums");

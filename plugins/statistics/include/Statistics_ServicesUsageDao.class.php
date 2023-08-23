@@ -287,26 +287,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getNumberOfActiveMailingLists()
-    {
-        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id ) AS result
-                FROM mail_group_list
-                WHERE is_public != 9
-                GROUP BY group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function getNumberOfInactiveMailingLists()
-    {
-        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id ) AS result
-                FROM mail_group_list
-                WHERE is_public = 9
-                GROUP BY group_id";
-
-        return $this->retrieve($sql);
-    }
-
     public function getNumberOfActiveForums()
     {
         $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id ) AS result

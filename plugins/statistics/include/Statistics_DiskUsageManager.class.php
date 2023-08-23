@@ -37,7 +37,6 @@ class Statistics_DiskUsageManager
     public const USR_HOME      = 'usr_home';
     public const WIKI          = 'wiki';
     public const PLUGIN_WEBDAV = 'plugin_webdav';
-    public const MAILMAN       = 'mailman';
     public const MYSQL         = 'mysql';
     public const CODENDI_LOGS  = 'codendi_log';
     public const BACKUP        = 'backup';
@@ -93,7 +92,6 @@ class Statistics_DiskUsageManager
                 self::FTP           => 'Public FTP',
                 self::GRP_HOME      => 'Home page',
                 self::WIKI          => 'Wiki',
-                self::MAILMAN       => 'Mailman',
             ];
             if ($siteAdminView) {
                 $this->services[self::PLUGIN_WEBDAV] = 'SVN/Webdav';
@@ -127,8 +125,6 @@ class Statistics_DiskUsageManager
                 return 'mistyrose';
             case self::WIKI:
                 return 'darkturquoise';
-            case self::MAILMAN:
-                return 'darkkhaki';
             case self::PLUGIN_WEBDAV:
                 return 'aquamarine';
             case self::USR_HOME:
@@ -536,7 +532,7 @@ class Statistics_DiskUsageManager
     }
 
     /**
-     * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'WEBDAV',
+     * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'DOCMAN', 'WEBDAV',
      */
     private function collectProjects(DateTimeImmutable $collect_date)
     {
@@ -548,7 +544,6 @@ class Statistics_DiskUsageManager
             self::GRP_HOME => 0,
             Service::WIKI => 0,
             self::PLUGIN_WEBDAV => 0,
-            self::MAILMAN => 0,
         ];
 
         $dar = $this->dao->searchAllOpenProjects();
@@ -583,8 +578,6 @@ class Statistics_DiskUsageManager
 
             $this->dao->getDa()->commit();
         }
-
-        $this->collectMailingLists($collect_date, $time_to_collect);
 
         return $time_to_collect;
     }
@@ -631,41 +624,6 @@ class Statistics_DiskUsageManager
         $time = $end - $start;
 
         $time_to_collect[Service::SVN] += $time;
-    }
-
-    private function collectMailingLists(DateTimeImmutable $collect_date, array &$time_to_collect)
-    {
-        $start          = microtime(true);
-        $mmArchivesPath = '/var/lib/mailman/archives/private';
-        $dao            = $this->_getDao();
-        $dao->startTransaction();
-        $dar      = $dao->searchAllLists();
-        $previous = -1;
-        $sMailman = 0;
-
-        foreach ($dar as $row) {
-            if ($row['group_id'] != $previous) {
-                if ($previous != -1) {
-                    $dao->addGroup($previous, 'mailman', $sMailman, $collect_date->getTimestamp());
-                }
-                $sMailman = 0;
-            }
-            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '/') ?: 0;
-            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '.mbox/') ?: 0;
-
-            $previous = $row['group_id'];
-        }
-        // Last one, don't forget it!
-        if ($sMailman != 0) {
-            $dao->addGroup($previous, 'mailman', $sMailman, $collect_date->getTimestamp());
-        }
-        //We commit all the DB modification
-        $dao->commit();
-
-        $end  = microtime(true);
-        $time = $end - $start;
-
-        $time_to_collect[self::MAILMAN] += $time;
     }
 
     private function collectUsers(DateTimeImmutable $collect_date)

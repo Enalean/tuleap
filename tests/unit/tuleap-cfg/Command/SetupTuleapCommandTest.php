@@ -90,7 +90,6 @@ final class SetupTuleapCommandTest extends TestCase
         require $this->base_dir . '/etc/tuleap/conf/local.inc';
 
         self::assertEquals('tuleap.example.com', $sys_default_domain);
-        self::assertEquals('lists.tuleap.example.com', $sys_lists_host);
         self::assertEquals('codendi-admin@tuleap.example.com', $sys_email_admin);
         self::assertEquals('codendi-contact@tuleap.example.com', $sys_email_contact);
         self::assertEquals('"Tuleap" <noreply@tuleap.example.com>', $sys_noreply);
