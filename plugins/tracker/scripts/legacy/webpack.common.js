@@ -54,7 +54,6 @@ const config_for_legacy_scripts = {
                 "./src/SubmissionKeeper.js",
                 "./src/TrackerFieldDependencies.js",
                 "./src/artifactChildren.js",
-                "./src/load-artifactChildren.js",
                 "./src/FixAggregatesHeaderHeight.js",
                 "./src/TrackerSettings.js",
                 "./src/TrackerCollapseFieldset.js",

@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\Artifact\View;
 
 use Tracker_Artifact_View_View;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 
 class TypeView extends Tracker_Artifact_View_View
 {
@@ -39,6 +41,13 @@ class TypeView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
+        $layout = $GLOBALS['HTML'];
+        \assert($layout instanceof \Tuleap\Layout\BaseLayout);
+        $layout->addJavascriptAsset(new JavascriptAsset(
+            new IncludeAssets(__DIR__ . '/../../../../frontend-assets', '/assets/trackers'),
+            "children-view.js",
+        ));
+
         return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>';
     }
 }

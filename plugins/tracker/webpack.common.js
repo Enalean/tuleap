@@ -47,6 +47,7 @@ const webpack_config_for_burndown_chart = {
 
 const config_for_flaming_parrot = {
     entry: {
+        "children-view": "./scripts/artifact/artifact-children.ts",
         "create-view": "./scripts/artifact/create-view.ts",
         "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
         "edit-view": "./scripts/artifact/edition/edit-view.ts",
