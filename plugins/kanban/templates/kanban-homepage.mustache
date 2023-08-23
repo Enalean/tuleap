@@ -34,35 +34,31 @@
                 {{> svg-empty-state-tumbleweed }}
             </div>
             <h1 class="empty-state-title">
-                {{# dgettext }}tuleap-kanban | No Kanban has been configured yet.{{/ dgettext }}
+                {{# dgettext }}tuleap-kanban | Nothing to see here.{{/ dgettext }}
             </h1>
+            <p class="empty-state-text">{{# dgettext }}tuleap-kanban | There is no Kanban created yet.{{/ dgettext }}</p>
             {{# is_admin }}
                 {{# are_trackers_available }}
                     <button
                         type="button"
-                        class="empty-state-action tlp-button-primary tlp-button-large kanban-create-kanban-button"
+                        class="empty-state-action tlp-button-primary kanban-create-kanban-button"
                         data-target-modal-id="add-kanban-modal"
                     >
                         <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                        {{# dgettext }}tuleap-kanban | Create a Kanban{{/ dgettext }}
                     </button>
                 {{/ are_trackers_available }}
                 {{^ are_trackers_available }}
                     <button
                         type="button"
-                        class="empty-state-action tlp-button-primary tlp-button-large tlp-tooltip tlp-tooltip-bottom"
+                        class="empty-state-action tlp-button-primary tlp-tooltip tlp-tooltip-bottom"
                         disabled
                         data-tlp-tooltip="{{# dgettext }}tuleap-kanban | No tracker is available{{/ dgettext }}"
                     >
                         <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                        {{# dgettext }}tuleap-kanban | Add a Kanban{{/ dgettext }}
+                        {{# dgettext }}tuleap-kanban | Create a Kanban{{/ dgettext }}
                     </button>
                 {{/ are_trackers_available }}
-            {{/ is_admin }}
-            {{^ is_admin }}
-                <p class="empty-state-text">
-                    {{# dgettext }}tuleap-kanban | Please come back later.{{/ dgettext }}
-                </p>
             {{/ is_admin }}
         </section>
     {{/ has_at_least_one_kanban }}
