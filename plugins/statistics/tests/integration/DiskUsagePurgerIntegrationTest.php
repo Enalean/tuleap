@@ -222,7 +222,7 @@ class DiskUsagePurgerIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
             $sql .= "('$i','grp_home','$date','16384'),";
             $sql .= "('$i','plugin_docman','$date','24576'),";
             $sql .= "('$i','plugin_git','$date','217088'),";
-            $sql .= "('$i','plugin_forumml','$date','0'),";
+            $sql .= "('$i','plugin_kanban','$date','0'),";
         }
 
         $sql = substr($sql, 0, -1) . ';';

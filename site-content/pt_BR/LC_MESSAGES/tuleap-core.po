@@ -3945,9 +3945,6 @@ msgstr "Estes projetos já são relacionados."
 msgid "This Project Has Turned CVS Off"
 msgstr "Este Projeto desabilitou o CVS"
 
-msgid "This Project Has Turned Off Mailing Lists"
-msgstr "Este projeto Desligou as Listas de Discussão"
-
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "O arquivo está pronto para ser importado em uma instância Tuleap."
 

@@ -4014,9 +4014,6 @@ msgstr "Un lien de parenté existe déjà entre ces projets."
 msgid "This Project Has Turned CVS Off"
 msgstr "Ce projet a désactivé CVS"
 
-msgid "This Project Has Turned Off Mailing Lists"
-msgstr "Ce projet a désactivé les listes de diffusion"
-
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "Cette archive est prête à être importé dans une instance de Tuleap."
 

@@ -13,7 +13,6 @@ chown -R codendiadm:codendiadm \
     /data/home/codendiadm \
     /data/lib/tuleap/boomerang \
     /data/lib/tuleap/docman \
-    /data/lib/tuleap/forumml \
     /data/lib/tuleap/images \
     /data/lib/tuleap/mediawiki \
     /data/lib/tuleap/tracker \

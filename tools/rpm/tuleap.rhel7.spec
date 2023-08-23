@@ -77,6 +77,9 @@ Requires: systemd
 Obsoletes: forgeupgrade <= 999
 Provides: forgeupgrade
 
+Obsoletes: tuleap-plugin-forumml <= 15.0
+Provides: tuleap-plugin-forumml
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
 
@@ -130,17 +133,6 @@ Manage dependencies for Tuleap Subversion integration
 #
 ## Plugins
 #
-
-%if "%{?dist}" == ".el7"
-%package plugin-forumml
-Summary: ForumML plugin for Tuleap
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php81-php-pecl-mailparse
-Requires: tuleap-core-mailman
-%description plugin-forumml
-ForumML brings to Tuleap a very nice mail archive viewer and the possibility
-to send mails through the web interface. It can replace the forums.
-%endif
 
 %package plugin-svn
 Summary: Subversion plugin for Tuleap
@@ -637,10 +629,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %endif
 
-%if "%{?dist}" == ".el9"
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml
-%endif
-
 %if %{with experimental}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
@@ -703,7 +691,6 @@ done
 %{__install} src/utils/systemd/tmpfiles/tuleap.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %if "%{?dist}" == ".el7"
 %{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
-%{__install} src/utils/systemd/tmpfiles/tuleap-forumml.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %endif
 
 # Install Tuleap executables
@@ -762,12 +749,6 @@ done
 %{__install} plugins/webdav/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
-
-## plugin forumml
-%if "%{?dist}" == ".el7"
-%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
-%{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
-%endif
 
 # plugin-git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
@@ -1253,15 +1234,6 @@ fi
 #
 # Plugins
 #
-%if "%{?dist}" == ".el7"
-%files plugin-forumml
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/forumml
-%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
-%attr(00644,root,root) %{_tmpfilesdir}/tuleap-forumml.conf
-%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
-%endif
-
 %files plugin-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/git
