@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -40,12 +40,12 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
         $this->assertEquals('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
-    public function testStripLightForibdden()
+    public function testStripLightForbidden(): void
     {
         $p   = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $rm  = \Mockery::spy(\ReferenceManager::class);
+        $rm  = $this->createMock(\ReferenceManager::class);
         $val = 'bugtest #123';
-        $rm->shouldReceive('insertReferences')->andReturns($val);
+        $rm->expects(self::once())->method('insertReferences')->willReturn($val);
         $p->shouldReceive('getReferenceManager')->andReturns($rm);
 
         $this->assertEquals('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));

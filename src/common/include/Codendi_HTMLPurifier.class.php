@@ -278,18 +278,15 @@ class Codendi_HTMLPurifier
     public function purify($html, $level = 0, $groupId = 0)
     {
         $html = (string) $html;
+        if ($html === '') {
+            return '';
+        }
         switch ($level) {
             case self::CONFIG_DISABLED:
                 $clean = $html;
                 break;
 
             case self::CONFIG_LIGHT:
-                if (empty($html)) {
-                    $clean = $html;
-                    break;
-                }
-                $this->insertReferences($html, $groupId);
-                // Actual purification still needs to be done
             case self::CONFIG_STRIP_HTML:
             case self::CONFIG_FULL:
             case self::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE:
