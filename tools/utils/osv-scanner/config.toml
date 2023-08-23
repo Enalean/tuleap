@@ -78,10 +78,4 @@ reason = "No impact in our situation, unplugin-vue2-script-setup will be removed
 
 ### TO BE FIXED
 
-# semver
-## Used as a transitive dep for dev tool, no fix available yet for 5.7 and 6.3 branches
-## See https://github.com/npm/node-semver/pull/564
-[[IgnoredVulns]]
-id = "GHSA-c2qf-rxjj-qqgw" # CVE-2022-25883
-reason = "Only used for dev tooling (so only on trusted inputs), no real risk of ReDoS"
-ignoreUntil = 2023-08-23 # To be revisited to see if fixes have been released for 5.7/6.3 branches
+# Nothing right now
