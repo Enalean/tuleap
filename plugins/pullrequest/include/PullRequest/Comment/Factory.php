@@ -35,7 +35,7 @@ class Factory
     ) {
     }
 
-    public function save(Comment $comment, PFUser $user, $project_id)
+    public function save(Comment $comment, PFUser $user, $project_id): int
     {
         $saved = $this->dao->save(
             $comment->getPullRequestId(),
@@ -43,6 +43,7 @@ class Factory
             $comment->getPostDate(),
             $comment->getContent(),
             $comment->getParentId(),
+            $comment->getFormat()
         );
 
         $this->reference_manager->extractCrossRef(
@@ -91,6 +92,7 @@ class Factory
             $row['content'],
             (int) $row['parent_id'],
             $row['color'],
+            $row['format']
         );
     }
 }

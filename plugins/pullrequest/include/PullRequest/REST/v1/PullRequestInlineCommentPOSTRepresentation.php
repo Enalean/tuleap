@@ -31,6 +31,11 @@ class PullRequestInlineCommentPOSTRepresentation
     public $content;
 
     /**
+     * @var string | null {@type string} {@required false} {@choice text,commonmark}
+     */
+    public $format;
+
+    /**
      * @var string {@type string}
      */
     public $file_path;
@@ -55,12 +60,14 @@ class PullRequestInlineCommentPOSTRepresentation
         int $unidiff_offset,
         string $position,
         ?int $parent_id,
+        ?string $format,
     ) {
         $this->content        = $content;
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
         $this->position       = $position;
         $this->parent_id      = $parent_id;
+        $this->format         = $format;
     }
 
     public static function build(
@@ -69,6 +76,7 @@ class PullRequestInlineCommentPOSTRepresentation
         int $unidiff_offset,
         string $position,
         ?int $parent_id,
+        ?string $format,
     ): self {
         return new self(
             $content,
@@ -76,6 +84,7 @@ class PullRequestInlineCommentPOSTRepresentation
             $unidiff_offset,
             $position,
             $parent_id,
+            $format
         );
     }
 }

@@ -65,7 +65,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
-    public function insert(int $pull_request_id, int $user_id, string $file_path, int $post_date, int $unidiff_offset, string $content, string $position, int $parent_id): int
+    public function insert(int $pull_request_id, int $user_id, string $file_path, int $post_date, int $unidiff_offset, string $content, string $position, int $parent_id, string $format): int
     {
         $this->getDB()->insert(
             'plugin_pullrequest_inline_comments',
@@ -78,6 +78,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
                 'content' => $content,
                 'position' => $position,
                 'parent_id' => $parent_id,
+                'format' => $format,
             ]
         );
 

@@ -27,7 +27,10 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
  */
 final class Comment implements TimelineEvent
 {
-    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id, private string $color)
+    public const FORMAT_TEXT     = 'text';
+    public const FORMAT_MARKDOWN = "commonmark";
+
+    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id, private string $color, private string $format)
     {
     }
 
@@ -64,5 +67,10 @@ final class Comment implements TimelineEvent
     public function getColor(): string
     {
         return $this->color;
+    }
+
+    public function getFormat(): string
+    {
+        return $this->format;
     }
 }

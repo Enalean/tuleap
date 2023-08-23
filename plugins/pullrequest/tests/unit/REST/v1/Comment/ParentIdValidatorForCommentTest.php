@@ -58,7 +58,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             time(),
             "My content",
             1234,
-            "graffiti-yellow"
+            "graffiti-yellow",
+            Comment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -77,7 +78,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             time(),
             "My content",
             0,
-            "graffiti-yellow"
+            "graffiti-yellow",
+            Comment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -98,7 +100,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             time(),
             "My content",
             0,
-            "graffiti-yellow"
+            "graffiti-yellow",
+            Comment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 

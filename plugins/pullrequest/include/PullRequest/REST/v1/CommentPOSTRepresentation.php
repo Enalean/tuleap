@@ -34,4 +34,8 @@ final class CommentPOSTRepresentation
      * @var int | null {@type int} {@required false}
      */
     public $parent_id = 0;
+    /**
+     * @var string | null {@type string} {@required false} {@choice text,commonmark}
+     */
+    public $format;
 }
