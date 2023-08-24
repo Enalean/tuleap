@@ -18,13 +18,11 @@
  */
 
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
-import type { WritingZoneState } from "../templates/WritingZoneTemplate";
 
 export interface DescriptionCommentFormPresenter {
     readonly pull_request_id: number;
     readonly description_content: string;
     readonly is_being_submitted: boolean;
-    readonly writing_zone_state: WritingZoneState;
 }
 
 export const PullRequestDescriptionCommentFormPresenter = {
@@ -34,10 +32,6 @@ export const PullRequestDescriptionCommentFormPresenter = {
         pull_request_id: current_description.pull_request_id,
         description_content: current_description.raw_content,
         is_being_submitted: false,
-        writing_zone_state: {
-            initial_content: current_description.raw_content,
-            is_focused: false,
-        },
     }),
     updateDescriptionContent: (
         presenter: DescriptionCommentFormPresenter,
@@ -45,16 +39,6 @@ export const PullRequestDescriptionCommentFormPresenter = {
     ): DescriptionCommentFormPresenter => ({
         ...presenter,
         description_content: content,
-    }),
-    updateWritingZoneState: (
-        presenter: DescriptionCommentFormPresenter,
-        is_focused: boolean
-    ): DescriptionCommentFormPresenter => ({
-        ...presenter,
-        writing_zone_state: {
-            ...presenter.writing_zone_state,
-            is_focused,
-        },
     }),
     buildSubmitted: (
         presenter: DescriptionCommentFormPresenter

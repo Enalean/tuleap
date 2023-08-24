@@ -26,19 +26,28 @@ import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import { getDescriptionContentTemplate } from "./PullRequestDescriptionContentTemplate";
 import { getDescriptionCommentFormTemplate } from "./PullRequestDescriptionCommentFormTemplate";
 import { gettext_provider } from "../gettext-provider";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
+import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
+import type { InternalWritingZone } from "../writing-zone/WritingZone";
+import { getWritingZoneElement } from "../writing-zone/WritingZone";
+import type { ElementContainingAWritingZone } from "../types";
 
 export const PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME =
     "tuleap-pullrequest-description-comment";
-export type HostElement = PullRequestDescriptionComment & HTMLElement;
+export type HostElement = PullRequestDescriptionComment &
+    ElementContainingAWritingZone<PullRequestDescriptionComment> &
+    HTMLElement;
 
-export interface PullRequestDescriptionComment {
+export type PullRequestDescriptionComment = {
     readonly content: () => HTMLElement;
     readonly after_render_once: unknown;
     readonly controller: ControlPullRequestDescriptionComment;
     readonly post_description_form_close_callback: () => void;
+    readonly writing_zone_controller: ControlWritingZone;
+    readonly writing_zone: HTMLElement & InternalWritingZone;
     description: PullRequestDescriptionCommentPresenter;
     edition_form_presenter: DescriptionCommentFormPresenter | null;
-}
+};
 
 export const after_render_once_descriptor = {
     get: (host: PullRequestDescriptionComment): unknown => host.content(),
@@ -63,6 +72,16 @@ export const PullRequestCommentDescriptionComponent = define<PullRequestDescript
     post_description_form_close_callback: post_description_form_close_callback_descriptor,
     edition_form_presenter: {
         set: (host, presenter: DescriptionCommentFormPresenter | undefined) => presenter ?? null,
+    },
+    writing_zone_controller: {
+        get: (host, controller: ControlWritingZone | undefined) =>
+            controller ??
+            WritingZoneController({
+                focus_writing_zone_when_connected: true,
+            }),
+    },
+    writing_zone: {
+        get: getWritingZoneElement,
     },
     content: (host) => html`
         <div class="pull-request-comment pull-request-description-comment">

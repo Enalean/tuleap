@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { WritingZoneState } from "../templates/WritingZoneTemplate";
 import type { NewCommentFormComponentConfig } from "./NewCommentFormController";
 
 export interface NewCommentFormAuthorPresenter {
@@ -28,7 +27,6 @@ export interface NewCommentFormPresenter {
     readonly comment: string;
     readonly is_saving_comment: boolean;
     readonly is_cancel_allowed: boolean;
-    readonly writing_zone_state: WritingZoneState;
     readonly author: NewCommentFormAuthorPresenter;
 }
 
@@ -40,10 +38,6 @@ export const NewCommentFormPresenter = {
         comment: "",
         is_saving_comment: false,
         is_cancel_allowed: config.is_cancel_allowed,
-        writing_zone_state: {
-            initial_content: "",
-            is_focused: false,
-        },
         author,
     }),
     buildWithUpdatedComment: (
@@ -52,16 +46,6 @@ export const NewCommentFormPresenter = {
     ): NewCommentFormPresenter => ({
         ...presenter,
         comment: new_comment,
-    }),
-    buildWithUpdatedWritingZoneState: (
-        presenter: NewCommentFormPresenter,
-        is_focused: boolean
-    ): NewCommentFormPresenter => ({
-        ...presenter,
-        writing_zone_state: {
-            ...presenter.writing_zone_state,
-            is_focused,
-        },
     }),
     buildSavingComment: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
         ...presenter,

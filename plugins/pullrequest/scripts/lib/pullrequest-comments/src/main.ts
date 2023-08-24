@@ -24,4 +24,3 @@ export * from "./comment/main";
 export * from "./new-comment-form/main";
 export * from "./description-comment/main";
 export * from "./skeleton/main";
-export * from "./helpers/main";

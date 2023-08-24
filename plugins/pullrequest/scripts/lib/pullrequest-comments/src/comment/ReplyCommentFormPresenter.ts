@@ -19,7 +19,6 @@
 
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import type { CurrentPullRequestUserPresenter } from "../types";
-import type { WritingZoneState } from "../templates/WritingZoneTemplate";
 
 export interface ReplyCommentFormPresenter {
     readonly pull_request_id: number;
@@ -27,7 +26,6 @@ export interface ReplyCommentFormPresenter {
     readonly comment_author: CurrentPullRequestUserPresenter;
     readonly is_being_submitted: boolean;
     readonly is_submittable: boolean;
-    readonly writing_zone_state: WritingZoneState;
 }
 
 export const ReplyCommentFormPresenter = {
@@ -40,10 +38,6 @@ export const ReplyCommentFormPresenter = {
         comment_content: "",
         is_being_submitted: false,
         is_submittable: false,
-        writing_zone_state: {
-            initial_content: "",
-            is_focused: false,
-        },
     }),
     updateContent: (
         presenter: ReplyCommentFormPresenter,
@@ -52,16 +46,6 @@ export const ReplyCommentFormPresenter = {
         ...presenter,
         comment_content: content,
         is_submittable: content.length > 0,
-    }),
-    updateWritingZoneState: (
-        presenter: ReplyCommentFormPresenter,
-        is_focused: boolean
-    ): ReplyCommentFormPresenter => ({
-        ...presenter,
-        writing_zone_state: {
-            ...presenter.writing_zone_state,
-            is_focused,
-        },
     }),
     buildSubmitted: (presenter: ReplyCommentFormPresenter): ReplyCommentFormPresenter => ({
         ...presenter,

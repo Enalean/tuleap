@@ -29,6 +29,7 @@ import type {
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
+import type { ControlWritingZone } from "./writing-zone/WritingZoneController";
 
 export interface CurrentPullRequestUserPresenter {
     readonly user_id: number;
@@ -43,3 +44,16 @@ export type SupportedTimelineItemTypes =
     | Extract<PullRequestEventType, typeof TYPE_EVENT_PULLREQUEST_ACTION>;
 export type SupportedTimelineItem = GlobalComment | CommentOnFile | ActionOnPullRequestEvent;
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;
+
+export type WritingZoneInteractionsHandler<ElementType> = {
+    handleWritingZoneContentChange(
+        element: ElementContainingAWritingZone<ElementType>,
+        content: string
+    ): void;
+    shouldFocusWritingZoneOnceRendered(): boolean;
+};
+
+export type ElementContainingAWritingZone<ElementType> = {
+    readonly controller: WritingZoneInteractionsHandler<ElementType>;
+    readonly writing_zone_controller: ControlWritingZone;
+};

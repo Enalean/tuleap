@@ -26,6 +26,12 @@ import { PullRequestCommentControllerStub } from "../../tests/stubs/PullRequestC
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { ReplyCommentFormPresenterStub } from "../../tests/stubs/ReplyCommentFormPresenterStub";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
+import {
+    getWritingZoneElement,
+    isWritingZoneElement,
+    TAG as WRITING_ZONE_TAG_NAME,
+} from "../writing-zone/WritingZone";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
 
 describe("PullRequestCommentReplyFormTemplate", () => {
     let target: ShadowRoot;
@@ -125,20 +131,28 @@ describe("PullRequestCommentReplyFormTemplate", () => {
             currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
             controller,
+            writing_zone_controller: WritingZoneController({
+                focus_writing_zone_when_connected: true,
+            }),
         } as unknown as HostElement;
 
-        const render = getReplyFormTemplate(host, GettextProviderStub);
-        render(host, target);
+        const host_with_writing_zone = {
+            ...host,
+            writing_zone: getWritingZoneElement(host),
+        };
+        const render = getReplyFormTemplate(host_with_writing_zone, GettextProviderStub);
+        render(host_with_writing_zone, target);
 
-        const textarea = selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
+        const writing_zone = target.querySelector(WRITING_ZONE_TAG_NAME);
+        if (!writing_zone || !isWritingZoneElement(writing_zone)) {
+            throw new Error("Can't find the WritingZone element in the DOM.");
+        }
+
+        writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
         );
-        textarea.value = "Some comment";
-        textarea.dispatchEvent(new Event("input"));
 
-        expect(controller.updateCurrentReply).toHaveBeenCalledOnce();
+        expect(controller.handleWritingZoneContentChange).toHaveBeenCalledOnce();
     });
 
     it("Should save the new comment presenter when user clicks on [Reply]", () => {
@@ -156,47 +170,5 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         selectOrThrow(target, "[data-test=button-save-reply]").click();
 
         expect(controller.saveReply).toHaveBeenCalledOnce();
-    });
-
-    it("When some content has been updated in the writing zone, then the controller should update the template", () => {
-        const controller = PullRequestCommentControllerStub();
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Some content"),
-            controller,
-        } as unknown as HostElement;
-
-        const render = getReplyFormTemplate(host, GettextProviderStub);
-        render(host, target);
-
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("input"));
-
-        expect(controller.updateCurrentReply).toHaveBeenCalledOnce();
-    });
-
-    it("When the writing zone focus has changed, then the controller should update the template", () => {
-        const controller = PullRequestCommentControllerStub();
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Some content"),
-            controller,
-        } as unknown as HostElement;
-
-        const render = getReplyFormTemplate(host, GettextProviderStub);
-        render(host, target);
-
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("focus"));
-
-        expect(controller.updateWritingZoneState).toHaveBeenCalledOnce();
     });
 });

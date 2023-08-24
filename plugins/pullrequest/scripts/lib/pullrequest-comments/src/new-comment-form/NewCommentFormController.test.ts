@@ -23,8 +23,6 @@ import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-typ
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 import type { PullRequestCommentErrorCallback } from "../types";
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
-import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
 import { SaveNewCommentStub } from "../../tests/stubs/SaveNewCommentStub";
 
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
@@ -38,6 +36,7 @@ import type {
     NewCommentPostSubmitCallback,
 } from "./NewCommentFormController";
 import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
+import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
 
 const author = { avatar_url: "url/to/user_avatar.png" };
 
@@ -46,7 +45,6 @@ describe("NewCommentFormController", () => {
         on_error_callback: PullRequestCommentErrorCallback,
         on_cancel_callback: NewCommentCancelCallback,
         post_submit_callback: NewCommentPostSubmitCallback,
-        focus_helper: FocusTextArea,
         host_content: HTMLElement;
 
     const getController = (
@@ -54,7 +52,6 @@ describe("NewCommentFormController", () => {
     ): ControlNewCommentForm =>
         NewCommentFormController(
             new_comment_saver,
-            focus_helper,
             author,
             config,
             post_submit_callback,
@@ -70,28 +67,16 @@ describe("NewCommentFormController", () => {
         on_error_callback = vi.fn();
         on_cancel_callback = vi.fn();
         post_submit_callback = vi.fn();
-        focus_helper = FocusTextareaStub();
         host_content = document.implementation.createHTMLDocument().createElement("div");
     });
 
     describe("buildInitialPresenter()", () => {
         it.each([
-            [
-                "is_autofocus_enabled and is_cancel_allowed set to true",
-                "assign the host a new presenter and focus the textarea",
-                NewCommentFormComponentConfigStub.withCancelActionAllowed(),
-                1,
-            ],
-            [
-                "is_autofocus_enabled and is_cancel_allowed set to false",
-                "only assign the host a new presenter",
-                NewCommentFormComponentConfigStub.withCancelActionDisallowed(),
-                0,
-            ],
+            [true, NewCommentFormComponentConfigStub.withCancelActionAllowed(), true],
+            [false, NewCommentFormComponentConfigStub.withCancelActionDisallowed(), false],
         ])(
-            `Given that the config has options %s
-            Then it should %s`,
-            (given, expected, given_config, nb_times_focus_textarea) => {
+            `Given that the config has is_cancel_allowed being %s, Then presenter.is_cancel_allowed should be %s`,
+            (config_value, given_config, expected_value) => {
                 config = given_config;
                 const host = {
                     content: () => host_content,
@@ -101,8 +86,7 @@ describe("NewCommentFormController", () => {
                 getController().buildInitialPresenter(host);
                 vi.advanceTimersToNextTimer();
 
-                expect(host.presenter).toStrictEqual(getEmptyPresenter());
-                expect(focus_helper.focusTextArea).toHaveBeenCalledTimes(nb_times_focus_textarea);
+                expect(host.presenter.is_cancel_allowed).toStrictEqual(expected_value);
             }
         );
     });
@@ -123,30 +107,10 @@ describe("NewCommentFormController", () => {
             const host = { presenter: getEmptyPresenter() } as NewCommentForm;
             const new_comment = "This is a new comment";
 
-            getController().updateNewComment(host, new_comment);
+            getController().handleWritingZoneContentChange(host, new_comment);
 
             expect(host.presenter).toStrictEqual(
                 NewCommentFormPresenter.buildWithUpdatedComment(getEmptyPresenter(), new_comment)
-            );
-        });
-    });
-
-    describe("updateWritingZoneState()", () => {
-        it("Should update the writing zone state", () => {
-            const is_writing_zone_currently_focused = true;
-            const presenter = NewCommentFormPresenter.buildWithUpdatedWritingZoneState(
-                getEmptyPresenter(),
-                is_writing_zone_currently_focused
-            );
-            const host = { presenter } as NewCommentForm;
-
-            getController().updateWritingZoneState(host, !is_writing_zone_currently_focused);
-
-            expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.buildWithUpdatedWritingZoneState(
-                    getEmptyPresenter(),
-                    !is_writing_zone_currently_focused
-                )
             );
         });
     });
@@ -162,6 +126,9 @@ describe("NewCommentFormController", () => {
                     comment_content
                 ),
                 content: () => host_content,
+                writing_zone_controller: {
+                    resetTextArea: vi.fn(),
+                } as unknown as ControlWritingZone,
             } as NewCommentForm;
 
             const comment_saver = SaveNewCommentStub.withResponsePayload({
@@ -173,7 +140,7 @@ describe("NewCommentFormController", () => {
             await getController(comment_saver).saveNewComment(host);
 
             expect(post_submit_callback).toHaveBeenCalledOnce();
-            expect(focus_helper.resetTextArea).toHaveBeenCalledOnce();
+            expect(host.writing_zone_controller.resetTextArea).toHaveBeenCalledOnce();
             expect(host.presenter).toStrictEqual(getEmptyPresenter());
         });
 

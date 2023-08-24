@@ -29,6 +29,12 @@ import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { ControlNewCommentFormStub } from "../../tests/stubs/ControlNewCommentFormStub";
 import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
+import {
+    getWritingZoneElement,
+    isWritingZoneElement,
+    TAG as WRITING_ZONE_TAG_NAME,
+} from "../writing-zone/WritingZone";
 
 describe("NewCommentFormTemplate", () => {
     let target: ShadowRoot;
@@ -50,76 +56,33 @@ describe("NewCommentFormTemplate", () => {
             "This is a new comment"
         );
 
-    it("should have the pull-request-comment-with-writing-zone-active class when the writing zone has the focus", () => {
-        const host = {
-            presenter: NewCommentFormPresenter.buildWithUpdatedWritingZoneState(
-                getPresenter(),
-                true
-            ),
-        } as HostElement;
-
-        const render = getNewCommentFormContent(host, GettextProviderStub);
-        render(host, target);
-
-        expect(
-            selectOrThrow(target, "[data-test=new-comment-form-content]").classList.contains(
-                "pull-request-comment-with-writing-zone-active"
-            )
-        ).toBe(true);
-    });
-
-    it("should not have the pull-request-comment-with-writing-zone-active class when the writing zone has not the focus", () => {
-        const host = {
-            presenter: NewCommentFormPresenter.buildWithUpdatedWritingZoneState(
-                getPresenter(),
-                false
-            ),
-        } as HostElement;
-
-        const render = getNewCommentFormContent(host, GettextProviderStub);
-        render(host, target);
-
-        expect(
-            selectOrThrow(target, "[data-test=new-comment-form-content]").classList.contains(
-                "pull-request-comment-with-writing-zone-active"
-            )
-        ).toBe(false);
-    });
-
     it("When some content has been updated in the writing zone, then the controller should update the template", () => {
         const host = {
             presenter: getPresenter(),
             controller: ControlNewCommentFormStub(),
+            writing_zone_controller: WritingZoneController({
+                focus_writing_zone_when_connected: true,
+            }),
         } as HostElement;
 
-        const render = getNewCommentFormContent(host, GettextProviderStub);
-        render(host, target);
+        const host_with_writing_zone = {
+            ...host,
+            writing_zone: getWritingZoneElement(host),
+        };
 
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("input"));
+        const render = getNewCommentFormContent(host_with_writing_zone, GettextProviderStub);
+        render(host_with_writing_zone, target);
 
-        expect(host.controller.updateNewComment).toHaveBeenCalledOnce();
-    });
+        const writing_zone = target.querySelector(WRITING_ZONE_TAG_NAME);
+        if (!writing_zone || !isWritingZoneElement(writing_zone)) {
+            throw new Error("Can't find the WritingZone element in the DOM.");
+        }
 
-    it("When the writing zone focus has changed, then the controller should update the template", () => {
-        const host = {
-            presenter: getPresenter(),
-            controller: ControlNewCommentFormStub(),
-        } as HostElement;
+        writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
+        );
 
-        const render = getNewCommentFormContent(host, GettextProviderStub);
-        render(host, target);
-
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("focus"));
-
-        expect(host.controller.updateWritingZoneState).toHaveBeenCalledOnce();
+        expect(host.controller.handleWritingZoneContentChange).toHaveBeenCalledOnce();
     });
 
     describe("Cancel button", () => {

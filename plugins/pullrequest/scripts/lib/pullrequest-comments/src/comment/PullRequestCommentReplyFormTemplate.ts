@@ -22,7 +22,6 @@ import type { UpdateFunction } from "hybrids";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { GettextProvider } from "@tuleap/gettext";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
-import { getWritingZoneTemplate } from "../templates/WritingZoneTemplate";
 
 export const getReplyFormTemplate = (
     host: PullRequestCommentComponentType,
@@ -40,24 +39,12 @@ export const getReplyFormTemplate = (
         host.controller.saveReply(host);
     };
 
-    const classes = {
-        "pull-request-comment-content": true,
-        "pull-request-comment-with-writing-zone-active":
-            host.reply_comment_presenter.writing_zone_state.is_focused,
-    };
-
     return html`
         <div class="pull-request-comment-reply-form" data-test="pull-request-comment-reply-form">
             <div class="pull-request-comment pull-request-comment-follow-up-content">
                 ${getCommentAvatarTemplate(host.reply_comment_presenter.comment_author)}
-                <div class="${classes}">
-                    ${getWritingZoneTemplate(
-                        host.reply_comment_presenter.writing_zone_state,
-                        host.controller.getFocusHelper(),
-                        (content) => host.controller.updateCurrentReply(host, content),
-                        (is_focused) => host.controller.updateWritingZoneState(host, is_focused),
-                        gettext_provider
-                    )}
+                <div class="pull-request-comment-content">
+                    ${host.writing_zone}
                     <div
                         class="pull-request-comment-footer"
                         data-test="pull-request-comment-footer"

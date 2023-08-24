@@ -22,8 +22,8 @@ import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { NewCommentForm } from "./NewCommentForm";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
-import { getWritingZoneTemplate } from "../templates/WritingZoneTemplate";
-import { PullRequestCommentTextareaFocusHelper } from "../helpers/textarea-focus-helper";
+
+import "../writing-zone/WritingZone";
 
 export const getSubmitButton = (
     host: NewCommentForm,
@@ -82,29 +82,15 @@ export const getCancelButton = (
 export const getNewCommentFormContent = (
     host: NewCommentForm,
     gettext_provider: GettextProvider
-): UpdateFunction<NewCommentForm> => {
-    const classes = {
-        "pull-request-comment-content": true,
-        "pull-request-comment-with-writing-zone-active":
-            host.presenter.writing_zone_state.is_focused,
-    };
-
-    return html`
-        <div class="pull-request-comment pull-request-new-comment-component">
-            ${getCommentAvatarTemplate(host.presenter.author)}
-            <div class="${classes}" data-test="new-comment-form-content">
-                ${getWritingZoneTemplate(
-                    host.presenter.writing_zone_state,
-                    PullRequestCommentTextareaFocusHelper(),
-                    (content) => host.controller.updateNewComment(host, content),
-                    (is_focused) => host.controller.updateWritingZoneState(host, is_focused),
-                    gettext_provider
-                )}
-                <div class="pull-request-comment-footer" data-test="pull-request-comment-footer">
-                    ${getCancelButton(host, gettext_provider)}
-                    ${getSubmitButton(host, gettext_provider)}
-                </div>
+): UpdateFunction<NewCommentForm> => html`
+    <div class="pull-request-comment pull-request-new-comment-component">
+        ${getCommentAvatarTemplate(host.presenter.author)}
+        <div class="pull-request-comment-content" data-test="new-comment-form-content">
+            ${host.writing_zone}
+            <div class="pull-request-comment-footer" data-test="pull-request-comment-footer">
+                ${getCancelButton(host, gettext_provider)}
+                ${getSubmitButton(host, gettext_provider)}
             </div>
         </div>
-    `;
-};
+    </div>
+`;

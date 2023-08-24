@@ -25,6 +25,12 @@ import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescrip
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import { getDescriptionCommentFormTemplate } from "./PullRequestDescriptionCommentFormTemplate";
 import { ControlPullRequestDescriptionCommentStub } from "../../tests/stubs/ControlPullRequestDescriptionCommentStub";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
+import {
+    getWritingZoneElement,
+    isWritingZoneElement,
+    TAG as WRITING_ZONE_TAG_NAME,
+} from "../writing-zone/WritingZone";
 
 describe("PullRequestDescriptionCommentFormTemplate", () => {
     let target: ShadowRoot, host: HostElement;
@@ -64,28 +70,35 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
     });
 
     it("When some content has been updated in the writing zone, then the controller should update the template", () => {
-        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
-        render(host, target);
+        const base_host = {
+            ...host,
+            writing_zone_controller: WritingZoneController({
+                focus_writing_zone_when_connected: true,
+            }),
+        } as unknown as HostElement;
 
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("input"));
+        const host_with_writing_zone = {
+            ...base_host,
+            writing_zone: getWritingZoneElement(base_host),
+        };
 
-        expect(host.controller.updateCurrentlyEditedDescription).toHaveBeenCalledOnce();
-    });
+        const render = getDescriptionCommentFormTemplate(
+            host_with_writing_zone,
+            GettextProviderStub
+        );
+        render(host_with_writing_zone, target);
 
-    it("When the writing zone focus has changed, then the controller should update the template", () => {
-        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
-        render(host, target);
+        const writing_zone = target.querySelector(WRITING_ZONE_TAG_NAME);
+        if (!writing_zone || !isWritingZoneElement(writing_zone)) {
+            throw new Error("Can't find the WritingZone element in the DOM.");
+        }
 
-        selectOrThrow(
-            target,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        ).dispatchEvent(new Event("focus"));
+        writing_zone.dispatchEvent(
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
+        );
 
-        expect(host.controller.updateWritingZoneState).toHaveBeenCalledOnce();
+        expect(
+            host_with_writing_zone.controller.handleWritingZoneContentChange
+        ).toHaveBeenCalledOnce();
     });
 });

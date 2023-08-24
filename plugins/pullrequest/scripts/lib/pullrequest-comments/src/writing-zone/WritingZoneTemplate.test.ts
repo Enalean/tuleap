@@ -19,50 +19,38 @@
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import type {
-    onWritingZoneContentChangeCallbackType,
-    onWritingZoneStateChangeCallbackType,
-    WritingZoneState,
-} from "./WritingZoneTemplate";
 import { getWritingZoneTemplate } from "./WritingZoneTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
-import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
+import type { HostElement } from "./WritingZone";
+import { WritingZonePresenter } from "./WritingZonePresenter";
+import type { ControlWritingZone } from "./WritingZoneController";
+import { WritingZoneController } from "./WritingZoneController";
 
 describe("WritingZoneTemplate", () => {
-    let onTextAreaChange: onWritingZoneContentChangeCallbackType,
-        onFocusChange: onWritingZoneStateChangeCallbackType,
-        focus_helper: FocusTextArea;
+    let controller: ControlWritingZone;
 
     beforeEach(() => {
-        onTextAreaChange = vi.fn();
-        onFocusChange = vi.fn();
-        focus_helper = FocusTextareaStub();
+        controller = WritingZoneController({
+            focus_writing_zone_when_connected: false,
+        });
     });
 
-    const renderWritingZone = (state: WritingZoneState): ShadowRoot => {
+    const renderWritingZone = (host: HostElement): ShadowRoot => {
         const doc = document.implementation.createHTMLDocument();
-        const host_element = doc.createElement("div");
         const target = doc.createElement("div") as unknown as ShadowRoot;
 
-        const render = getWritingZoneTemplate(
-            state,
-            focus_helper,
-            onTextAreaChange,
-            onFocusChange,
-            GettextProviderStub
-        );
+        const render = getWritingZoneTemplate(host, GettextProviderStub);
 
-        render(host_element, target);
+        render(host, target);
 
         return target;
     };
 
     it("When the writing zone is focused, then the [Writing] tab should be active", () => {
         const writing_zone = renderWritingZone({
-            initial_content: "",
-            is_focused: true,
-        });
+            controller,
+            presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
+        } as HostElement);
 
         expect(
             selectOrThrow(writing_zone, "[data-test=writing-tab]").classList.contains(
@@ -71,52 +59,46 @@ describe("WritingZoneTemplate", () => {
         ).toBe(true);
     });
 
-    it("When the writing tab is clicked, then the textarea should be focused", () => {
+    it("should display tabs", () => {
         const writing_zone = renderWritingZone({
-            initial_content: "",
-            is_focused: false,
-        });
+            controller,
+            presenter: WritingZonePresenter.buildInitial(),
+        } as HostElement);
 
-        selectOrThrow(writing_zone, "[data-test=writing-tab]").click();
+        const writing_tab = selectOrThrow(writing_zone, "[data-test=writing-tab]");
 
-        expect(focus_helper.focusTextArea).toHaveBeenCalledOnce();
-    });
-
-    it("Should put the initial content into the textarea when some is provided", () => {
-        const writing_zone = renderWritingZone({
-            initial_content: "This is a description comment",
-            is_focused: false,
-        });
-
-        expect(
-            selectOrThrow(writing_zone, "[data-test=writing-zone-textarea]").textContent?.trim()
-        ).toBe("This is a description comment");
+        expect(writing_tab).toBeDefined();
     });
 
     it("When some content is typed into the textarea, then the onTextAreaChange callback should be triggered", () => {
+        const onTextareaInput = vi.spyOn(controller, "onTextareaInput");
         const writing_zone = renderWritingZone({
-            initial_content: "This is a description comment",
-            is_focused: true,
-        });
+            controller,
+            presenter: WritingZonePresenter.buildWithContent(
+                WritingZonePresenter.buildInitial(),
+                "This is a description comment"
+            ),
+        } as HostElement);
 
         const textarea = selectOrThrow(
             writing_zone,
             "[data-test=writing-zone-textarea]",
             HTMLTextAreaElement
         );
-        const new_content = "This is a description comment for bug #123";
 
-        textarea.value = new_content;
+        textarea.value = "This is a description comment for bug #123";
         textarea.dispatchEvent(new Event("input"));
 
-        expect(onTextAreaChange).toHaveBeenCalledWith(new_content);
+        expect(onTextareaInput).toHaveBeenCalledOnce();
     });
 
     it("When the textarea gets or looses the focus, then the onFocusChange callback should be triggered", () => {
+        const focusTextArea = vi.spyOn(controller, "focusTextArea");
+        const blurTextArea = vi.spyOn(controller, "blurTextArea");
         const writing_zone = renderWritingZone({
-            initial_content: "This is a description comment",
-            is_focused: false,
-        });
+            controller,
+            presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+        } as HostElement);
 
         const textarea = selectOrThrow(
             writing_zone,
@@ -125,9 +107,9 @@ describe("WritingZoneTemplate", () => {
         );
 
         textarea.dispatchEvent(new Event("focus"));
-        expect(onFocusChange).toHaveBeenNthCalledWith(1, true);
+        expect(focusTextArea).toHaveBeenCalledOnce();
 
         textarea.dispatchEvent(new Event("blur"));
-        expect(onFocusChange).toHaveBeenNthCalledWith(2, false);
+        expect(blurTextArea).toHaveBeenCalledOnce();
     });
 });

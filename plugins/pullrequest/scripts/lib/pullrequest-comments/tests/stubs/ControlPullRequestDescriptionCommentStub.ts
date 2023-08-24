@@ -20,14 +20,12 @@
 import { vi } from "vitest";
 import type { ControlPullRequestDescriptionComment } from "../../src/description-comment/PullRequestDescriptionCommentController";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
-import { FocusTextareaStub } from "./FocusTextareaStub";
 
 export const ControlPullRequestDescriptionCommentStub: ControlPullRequestDescriptionComment = {
     showEditionForm: vi.fn(),
     hideEditionForm: vi.fn(),
-    updateCurrentlyEditedDescription: vi.fn(),
-    updateWritingZoneState: vi.fn(),
+    handleWritingZoneContentChange: vi.fn(),
     saveDescriptionComment: vi.fn(),
     getRelativeDateHelper: () => RelativeDateHelperStub,
-    getFocusHelper: () => FocusTextareaStub(),
+    shouldFocusWritingZoneOnceRendered: () => true,
 };

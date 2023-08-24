@@ -19,16 +19,14 @@
 
 import { vi } from "vitest";
 import type { ControlNewCommentForm } from "../../src/new-comment-form/NewCommentFormController";
-import { FocusTextareaStub } from "./FocusTextareaStub";
 
 export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
     buildInitialPresenter: vi.fn(),
     saveNewComment: vi.fn(),
     cancelNewComment: vi.fn(),
-    updateNewComment: vi.fn(),
-    updateWritingZoneState: vi.fn(),
-    getFocusHelper: () => FocusTextareaStub(),
+    handleWritingZoneContentChange: vi.fn(),
     triggerPostSubmitCallback: (): void => {
         // Do nothing
     },
+    shouldFocusWritingZoneOnceRendered: () => true,
 });

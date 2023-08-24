@@ -39,7 +39,6 @@ import {
     PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
     NewCommentSaver,
     NewCommentFormController,
-    PullRequestCommentTextareaFocusHelper,
 } from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
@@ -171,7 +170,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
                     user_id: widget_params.user_id,
                     comment_context: widget_params.context,
                 }),
-                PullRequestCommentTextareaFocusHelper(),
                 { avatar_url: widget_params.user_avatar_url },
                 {
                     is_cancel_allowed: true,

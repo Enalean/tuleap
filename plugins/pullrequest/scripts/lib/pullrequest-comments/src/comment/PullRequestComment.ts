@@ -33,13 +33,20 @@ import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestComme
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { gettext_provider } from "../gettext-provider";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
+import type { ElementContainingAWritingZone } from "../types";
+import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
+import type { InternalWritingZone } from "../writing-zone/WritingZone";
+import { getWritingZoneElement } from "../writing-zone/WritingZone";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
-export type HostElement = PullRequestCommentComponentType & HTMLElement;
+export type HostElement = PullRequestCommentComponentType &
+    ElementContainingAWritingZone<PullRequestCommentComponentType> &
+    HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
-export interface PullRequestCommentComponentType {
+export type PullRequestCommentComponentType = {
     readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
     readonly after_render_once: unknown;
@@ -47,10 +54,12 @@ export interface PullRequestCommentComponentType {
     readonly post_rendering_callback: (() => void) | undefined;
     readonly post_reply_save_callback: () => void;
     readonly controller: ControlPullRequestComment;
+    readonly writing_zone_controller: ControlWritingZone;
+    readonly writing_zone: HTMLElement & InternalWritingZone;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
-}
+};
 
 const getCommentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
@@ -149,6 +158,16 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     },
     reply_comment_presenter: {
         set: setNewCommentState,
+    },
+    writing_zone_controller: {
+        get: (host, controller: ControlWritingZone | undefined) =>
+            controller ??
+            WritingZoneController({
+                focus_writing_zone_when_connected: true,
+            }),
+    },
+    writing_zone: {
+        get: getWritingZoneElement,
     },
     content: (host) => html`
         <div class="pull-request-comment-component">

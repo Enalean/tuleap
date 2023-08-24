@@ -19,32 +19,29 @@
 
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
+import type {
+    CurrentPullRequestUserPresenter,
+    PullRequestCommentErrorCallback,
+    WritingZoneInteractionsHandler,
+} from "../types";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 
-export interface ControlPullRequestComment {
-    showReplyForm: (host: PullRequestCommentComponentType) => void;
-    hideReplyForm: (host: PullRequestCommentComponentType) => void;
-    displayReplies: (host: PullRequestCommentComponentType) => void;
-    updateCurrentReply: (host: PullRequestCommentComponentType, reply_content: string) => void;
-    updateWritingZoneState: (
-        host: PullRequestCommentComponentType,
-        is_textarea_focused: boolean
-    ) => void;
-    saveReply: (host: PullRequestCommentComponentType) => void;
-    getRelativeDateHelper: () => HelpRelativeDatesDisplay;
-    getFocusHelper: () => FocusTextArea;
-}
+export type ControlPullRequestComment =
+    WritingZoneInteractionsHandler<PullRequestCommentComponentType> & {
+        showReplyForm: (host: PullRequestCommentComponentType) => void;
+        hideReplyForm: (host: PullRequestCommentComponentType) => void;
+        displayReplies: (host: PullRequestCommentComponentType) => void;
+        saveReply: (host: PullRequestCommentComponentType) => void;
+        getRelativeDateHelper: () => HelpRelativeDatesDisplay;
+    };
 
 export const PullRequestCommentController = (
-    focus_helper: FocusTextArea,
     replies_store: StorePullRequestCommentReplies,
     new_comment_saver: SaveNewReplyToComment,
     current_user: CurrentPullRequestUserPresenter,
@@ -56,26 +53,18 @@ export const PullRequestCommentController = (
             current_user,
             current_pull_request
         );
-
-        focus_helper.focusTextArea(host.content());
     },
     hideReplyForm: (host: PullRequestCommentComponentType): void => {
         host.reply_comment_presenter = null;
     },
-    updateCurrentReply: (host: PullRequestCommentComponentType, reply_content: string): void => {
+    handleWritingZoneContentChange: (
+        host: PullRequestCommentComponentType,
+        reply_content: string
+    ): void => {
         const comment_reply = getExistingCommentReplyPresenter(host);
         host.reply_comment_presenter = ReplyCommentFormPresenter.updateContent(
             comment_reply,
             reply_content
-        );
-    },
-    updateWritingZoneState: (
-        host: PullRequestCommentComponentType,
-        is_textarea_focused: boolean
-    ): void => {
-        host.reply_comment_presenter = ReplyCommentFormPresenter.updateWritingZoneState(
-            getExistingCommentReplyPresenter(host),
-            is_textarea_focused
         );
     },
     saveReply: (host: PullRequestCommentComponentType): void => {
@@ -119,7 +108,7 @@ export const PullRequestCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale
         ),
-    getFocusHelper: (): FocusTextArea => focus_helper,
+    shouldFocusWritingZoneOnceRendered: () => true,
 });
 
 function getExistingCommentReplyPresenter(
