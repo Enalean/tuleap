@@ -44,7 +44,7 @@ class AttachmentDownloader
         }
 
         if (! is_dir(self::getTmpFolderURL())) {
-            $this->logger->debug(sprintf('%s is not created on filesystem' . self::getTmpFolderURL()));
+            $this->logger->debug(sprintf('%s is not created on filesystem', self::getTmpFolderURL()));
         }
 
         $random_name = $this->name_generator->getName();

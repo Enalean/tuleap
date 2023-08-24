@@ -26,9 +26,6 @@ final class CommentToMySelfComparisonException extends InvalidMetadataException
 {
     public function __construct()
     {
-        $message = sprintf(
-            dgettext("tuleap-tracker", "The @comments metadata cannot be compared to MYSELF().")
-        );
-        parent::__construct($message);
+        parent::__construct(dgettext("tuleap-tracker", "The @comments metadata cannot be compared to MYSELF()."));
     }
 }

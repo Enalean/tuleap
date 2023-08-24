@@ -148,7 +148,6 @@ msgid ""
 "TestManagement and \"hidden fieldsets\" are defined."
 msgstr ""
 
-#, php-format
 msgid "The submitted administration configuration is not valid."
 msgstr ""
 

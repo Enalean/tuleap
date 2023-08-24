@@ -144,7 +144,7 @@ class AdminController extends TestManagementController
         ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                sprintf(dgettext('tuleap-testmanagement', 'The submitted administration configuration is not valid.'))
+                dgettext('tuleap-testmanagement', 'The submitted administration configuration is not valid.'),
             );
 
             return;
