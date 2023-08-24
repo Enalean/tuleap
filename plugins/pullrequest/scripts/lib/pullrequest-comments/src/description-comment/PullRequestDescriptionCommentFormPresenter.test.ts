@@ -44,10 +44,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             pull_request_id: description.pull_request_id,
             description_content: description.raw_content,
             is_being_submitted: false,
-            writing_zone_state: {
-                initial_content: description.raw_content,
-                is_focused: false,
-            },
         });
     });
 
@@ -61,23 +57,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             pull_request_id: current_presenter.pull_request_id,
             description_content: "This commit fixes bug #456",
             is_being_submitted: false,
-            writing_zone_state: {
-                initial_content: description.raw_content,
-                is_focused: false,
-            },
-        });
-    });
-
-    it("updateWritingZoneState() should return a new presenter containing the updated writing zone state", () => {
-        const is_focused = true;
-        expect(
-            PullRequestDescriptionCommentFormPresenter.updateWritingZoneState(
-                current_presenter,
-                is_focused
-            ).writing_zone_state
-        ).toStrictEqual({
-            initial_content: "This commit fixes bug #123",
-            is_focused,
         });
     });
 
@@ -88,10 +67,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             pull_request_id: current_presenter.pull_request_id,
             description_content: current_presenter.description_content,
             is_being_submitted: true,
-            writing_zone_state: {
-                initial_content: description.raw_content,
-                is_focused: false,
-            },
         });
     });
 
@@ -105,10 +80,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             pull_request_id: current_presenter.pull_request_id,
             description_content: current_presenter.description_content,
             is_being_submitted: false,
-            writing_zone_state: {
-                initial_content: description.raw_content,
-                is_focused: false,
-            },
         });
     });
 });

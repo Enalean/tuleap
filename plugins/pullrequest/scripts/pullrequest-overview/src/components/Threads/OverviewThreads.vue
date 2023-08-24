@@ -75,7 +75,6 @@ import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 
 import {
     PullRequestCommentController,
-    PullRequestCommentTextareaFocusHelper,
     PullRequestCommentRepliesStore,
     PullRequestCommentNewReplySaver,
     PullRequestDescriptionCommentSaver,
@@ -119,7 +118,6 @@ const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });
 const comments_presenters = ref<PullRequestCommentPresenter[]>([]);
 const comments_controller = ref<null | ControlPullRequestComment>(null);
 const replies_store = ref<null | StorePullRequestCommentReplies>(null);
-const textarea_focus_helper = ref(PullRequestCommentTextareaFocusHelper());
 const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
     user_id,
     avatar_url,
@@ -134,7 +132,6 @@ const description_comment_presenter = ref<null | PullRequestDescriptionCommentPr
 const description_comment_controller = ref<ControlPullRequestDescriptionComment>(
     PullRequestDescriptionCommentController(
         PullRequestDescriptionCommentSaver(),
-        textarea_focus_helper.value,
         current_user_presenter.value,
         displayTuleapAPIFault
     )
@@ -181,7 +178,6 @@ watch(
                 threads.list = [...replies_store.value.getAllRootComments()];
 
                 comments_controller.value = PullRequestCommentController(
-                    textarea_focus_helper.value,
                     replies_store.value,
                     PullRequestCommentNewReplySaver(),
                     current_user_presenter.value,

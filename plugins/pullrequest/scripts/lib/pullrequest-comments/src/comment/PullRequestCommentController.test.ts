@@ -26,8 +26,6 @@ import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { HostElement, PullRequestCommentComponentType } from "./PullRequestComment";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
-import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
 import { SaveNewReplyToCommentStub } from "../../tests/stubs/SaveNewReplyToCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
@@ -42,19 +40,16 @@ import type { PullRequestCommentErrorCallback } from "../types";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 
 describe("PullRequestCommentController", () => {
-    let focus_helper: FocusTextArea,
-        replies_store: StorePullRequestCommentReplies,
+    let replies_store: StorePullRequestCommentReplies,
         on_error_callback: PullRequestCommentErrorCallback;
 
     beforeEach(() => {
-        focus_helper = FocusTextareaStub();
         replies_store = PullRequestCommentRepliesStore([]);
         on_error_callback = vi.fn();
     });
 
     const getController = (save_new_comment: SaveNewReplyToComment): ControlPullRequestComment =>
         PullRequestCommentController(
-            focus_helper,
             replies_store,
             save_new_comment,
             CurrentPullRequestUserPresenterStub.withDefault(),
@@ -72,7 +67,6 @@ describe("PullRequestCommentController", () => {
         getController(SaveNewReplyToCommentStub.withDefault()).showReplyForm(host);
 
         expect(host.reply_comment_presenter).not.toBeNull();
-        expect(focus_helper.focusTextArea).toHaveBeenCalledTimes(1);
     });
 
     it("should hide the reply to comment form", () => {
@@ -85,29 +79,18 @@ describe("PullRequestCommentController", () => {
         expect(host.reply_comment_presenter).toBeNull();
     });
 
-    it("Should update the host reply_comment_presenter content", () => {
+    it("Should update the host reply_comment_presenter content when handleWritingZoneContentChange is called", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
         } as unknown as HostElement;
 
-        getController(SaveNewReplyToCommentStub.withDefault()).updateCurrentReply(
+        getController(SaveNewReplyToCommentStub.withDefault()).handleWritingZoneContentChange(
             host,
             "Please rebase"
         );
 
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
-    });
-
-    it("should update the writing zone focus state", () => {
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
-        } as unknown as HostElement;
-
-        getController(SaveNewReplyToCommentStub.withDefault()).updateWritingZoneState(host, true);
-
-        expect(host.reply_comment_presenter?.writing_zone_state.is_focused).toBe(true);
     });
 
     it("Should save the new comment, hide the form and add the new comment reply in the collection of replies", async () => {

@@ -23,9 +23,11 @@ import { form_height_descriptor } from "./NewCommentForm";
 
 describe("NewCommentForm", () => {
     it("should execute the post_rendering_callback each time the component height changes", () => {
+        vi.useFakeTimers();
         const host = { post_rendering_callback: vi.fn() } as unknown as HostElement;
 
         form_height_descriptor.observe(host);
+        vi.advanceTimersToNextTimer();
 
         expect(host.post_rendering_callback).toHaveBeenCalledTimes(1);
     });

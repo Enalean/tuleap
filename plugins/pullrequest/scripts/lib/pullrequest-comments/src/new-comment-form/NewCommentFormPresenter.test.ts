@@ -43,10 +43,6 @@ describe("NewCommentFormPresenter", () => {
                 comment: "",
                 is_saving_comment: false,
                 is_cancel_allowed: config.is_cancel_allowed,
-                writing_zone_state: {
-                    initial_content: "",
-                    is_focused: false,
-                },
                 author,
             });
         }
@@ -62,25 +58,6 @@ describe("NewCommentFormPresenter", () => {
             comment: "This is a newer comment",
             is_saving_comment: false,
             is_cancel_allowed: true,
-            writing_zone_state: {
-                initial_content: "",
-                is_focused: false,
-            },
-            author,
-        });
-    });
-
-    it("buildWithUpdatedWritingZoneState() should return a clone of the provided presenter containing the updated writing zone state", () => {
-        expect(
-            NewCommentFormPresenter.buildWithUpdatedWritingZoneState(getBasePresenter(), true)
-        ).toStrictEqual({
-            comment: "This is a new comment",
-            is_saving_comment: false,
-            is_cancel_allowed: true,
-            writing_zone_state: {
-                initial_content: "",
-                is_focused: true,
-            },
             author,
         });
     });
@@ -90,10 +67,6 @@ describe("NewCommentFormPresenter", () => {
             comment: "This is a new comment",
             is_saving_comment: true,
             is_cancel_allowed: true,
-            writing_zone_state: {
-                initial_content: "",
-                is_focused: false,
-            },
             author,
         });
     });
@@ -108,10 +81,6 @@ describe("NewCommentFormPresenter", () => {
             comment: "This is a new comment",
             is_saving_comment: false,
             is_cancel_allowed: true,
-            writing_zone_state: {
-                initial_content: "",
-                is_focused: false,
-            },
             author,
         });
     });

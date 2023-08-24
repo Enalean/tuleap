@@ -31,29 +31,17 @@ export const ReplyCommentFormPresenterStub = {
         comment_content: "",
         is_being_submitted: false,
         is_submittable: false,
-        writing_zone_state: {
-            is_focused: false,
-            initial_content: "",
-        },
     }),
     buildWithContent: (content: string): ReplyCommentFormPresenter => ({
         ...presenter_base,
         comment_content: content,
         is_being_submitted: false,
         is_submittable: true,
-        writing_zone_state: {
-            is_focused: true,
-            initial_content: "",
-        },
     }),
     buildBeingSubmitted: (content: string): ReplyCommentFormPresenter => ({
         ...presenter_base,
         comment_content: content,
         is_being_submitted: true,
         is_submittable: true,
-        writing_zone_state: {
-            is_focused: true,
-            initial_content: "",
-        },
     }),
 };

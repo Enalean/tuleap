@@ -19,33 +19,27 @@
 
 import type { DescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
-import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
+import type {
+    CurrentPullRequestUserPresenter,
+    PullRequestCommentErrorCallback,
+    WritingZoneInteractionsHandler,
+} from "../types";
 import type { SaveDescriptionComment } from "./PullRequestDescriptionCommentSaver";
 import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 
-export interface ControlPullRequestDescriptionComment {
-    showEditionForm: (host: PullRequestDescriptionComment) => void;
-    hideEditionForm: (host: PullRequestDescriptionComment) => void;
-    updateCurrentlyEditedDescription: (
-        host: PullRequestDescriptionComment,
-        new_description: string
-    ) => void;
-    updateWritingZoneState: (
-        host: PullRequestDescriptionComment,
-        is_writing_zone_focused: boolean
-    ) => void;
-    saveDescriptionComment: (host: PullRequestDescriptionComment) => void;
-    getRelativeDateHelper: () => HelpRelativeDatesDisplay;
-    getFocusHelper: () => FocusTextArea;
-}
+export type ControlPullRequestDescriptionComment =
+    WritingZoneInteractionsHandler<PullRequestDescriptionComment> & {
+        showEditionForm: (host: PullRequestDescriptionComment) => void;
+        hideEditionForm: (host: PullRequestDescriptionComment) => void;
+        saveDescriptionComment: (host: PullRequestDescriptionComment) => void;
+        getRelativeDateHelper: () => HelpRelativeDatesDisplay;
+    };
 
 export const PullRequestDescriptionCommentController = (
     description_saver: SaveDescriptionComment,
-    focus_helper: FocusTextArea,
     current_user: CurrentPullRequestUserPresenter,
     on_error_callback: PullRequestCommentErrorCallback
 ): ControlPullRequestDescriptionComment => ({
@@ -53,10 +47,13 @@ export const PullRequestDescriptionCommentController = (
         host.edition_form_presenter =
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description);
 
-        focus_helper.focusTextArea(host.content());
+        host.writing_zone_controller.setWritingZoneContent(
+            host.writing_zone,
+            host.description.raw_content
+        );
     },
     hideEditionForm,
-    updateCurrentlyEditedDescription: (
+    handleWritingZoneContentChange: (
         host: PullRequestDescriptionComment,
         new_description: string
     ): void => {
@@ -64,16 +61,6 @@ export const PullRequestDescriptionCommentController = (
             PullRequestDescriptionCommentFormPresenter.updateDescriptionContent(
                 getExistingEditionFormPresenter(host),
                 new_description
-            );
-    },
-    updateWritingZoneState: (
-        host: PullRequestDescriptionComment,
-        is_writing_zone_focused: boolean
-    ): void => {
-        host.edition_form_presenter =
-            PullRequestDescriptionCommentFormPresenter.updateWritingZoneState(
-                getExistingEditionFormPresenter(host),
-                is_writing_zone_focused
             );
     },
     saveDescriptionComment: (host: PullRequestDescriptionComment): void => {
@@ -105,7 +92,7 @@ export const PullRequestDescriptionCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale
         ),
-    getFocusHelper: () => focus_helper,
+    shouldFocusWritingZoneOnceRendered: () => true,
 });
 
 function hideEditionForm(host: PullRequestDescriptionComment): void {

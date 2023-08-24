@@ -21,7 +21,6 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
-import { getWritingZoneTemplate } from "../templates/WritingZoneTemplate";
 
 export const getDescriptionCommentFormTemplate = (
     host: PullRequestDescriptionComment,
@@ -39,21 +38,9 @@ export const getDescriptionCommentFormTemplate = (
         host.controller.saveDescriptionComment(host);
     };
 
-    const classes = {
-        "pull-request-comment-content": true,
-        "pull-request-comment-with-writing-zone-active":
-            host.edition_form_presenter.writing_zone_state.is_focused,
-    };
-
     return html`
-        <div class="${classes}" data-test="pull-request-description-write-mode">
-            ${getWritingZoneTemplate(
-                host.edition_form_presenter.writing_zone_state,
-                host.controller.getFocusHelper(),
-                (content) => host.controller.updateCurrentlyEditedDescription(host, content),
-                (is_focused) => host.controller.updateWritingZoneState(host, is_focused),
-                gettext_provider
-            )}
+        <div class="pull-request-comment-content" data-test="pull-request-description-write-mode">
+            ${host.writing_zone}
             <div
                 class="pull-request-comment-footer"
                 data-test="pull-request-description-comment-footer"

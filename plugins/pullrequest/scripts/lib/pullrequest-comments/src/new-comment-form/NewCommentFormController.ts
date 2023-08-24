@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { SaveNewComment } from "./NewCommentSaver";
-import type { PullRequestCommentErrorCallback } from "../types";
+import type { PullRequestCommentErrorCallback, WritingZoneInteractionsHandler } from "../types";
 import type { NewCommentForm } from "./NewCommentForm";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { NewCommentFormAuthorPresenter } from "./NewCommentFormPresenter";
@@ -30,22 +29,19 @@ export interface NewCommentFormComponentConfig {
     readonly is_autofocus_enabled: boolean;
 }
 
-export interface ControlNewCommentForm {
+export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentForm> & {
     buildInitialPresenter: (host: NewCommentForm) => void;
     saveNewComment: (host: NewCommentForm) => void;
     cancelNewComment: (host: NewCommentForm) => void;
-    updateNewComment: (host: NewCommentForm, new_comment: string) => void;
-    updateWritingZoneState: (host: NewCommentForm, is_focused: boolean) => void;
-    getFocusHelper: () => FocusTextArea;
     triggerPostSubmitCallback: NewCommentPostSubmitCallback;
-}
+    shouldFocusWritingZoneOnceRendered: () => boolean;
+};
 
 export type NewCommentCancelCallback = () => void;
 export type NewCommentPostSubmitCallback = (new_comment_payload: PullRequestComment) => void;
 
 export const NewCommentFormController = (
     comment_saver: SaveNewComment,
-    focus_helper: FocusTextArea,
     author: NewCommentFormAuthorPresenter,
     config: NewCommentFormComponentConfig,
     post_submit_callback: NewCommentPostSubmitCallback,
@@ -54,12 +50,6 @@ export const NewCommentFormController = (
 ): ControlNewCommentForm => ({
     buildInitialPresenter: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
-
-        if (config.is_autofocus_enabled) {
-            setTimeout(() => {
-                focus_helper.focusTextArea(host.content());
-            });
-        }
     },
     cancelNewComment: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
@@ -71,8 +61,8 @@ export const NewCommentFormController = (
         comment_saver.postComment(host.presenter.comment).match(
             (payload: PullRequestComment) => {
                 post_submit_callback(payload);
-                focus_helper.resetTextArea(host.content());
 
+                host.writing_zone_controller.resetTextArea(host.writing_zone);
                 host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
             },
             (fault) => {
@@ -81,19 +71,12 @@ export const NewCommentFormController = (
             }
         );
     },
-    updateNewComment: (host: NewCommentForm, new_comment: string): void => {
+    handleWritingZoneContentChange: (host: NewCommentForm, new_comment: string): void => {
         host.presenter = NewCommentFormPresenter.buildWithUpdatedComment(
             host.presenter,
             new_comment
         );
     },
-    updateWritingZoneState: (host: NewCommentForm, is_focused: boolean): void => {
-        host.presenter = NewCommentFormPresenter.buildWithUpdatedWritingZoneState(
-            host.presenter,
-            is_focused
-        );
-    },
-    getFocusHelper: (): FocusTextArea => focus_helper,
     triggerPostSubmitCallback: (new_comment_payload: PullRequestComment): void => {
         /**
          * Expose a method to manually trigger the post_submit_callback.
@@ -101,4 +84,5 @@ export const NewCommentFormController = (
          */
         post_submit_callback(new_comment_payload);
     },
+    shouldFocusWritingZoneOnceRendered: () => config.is_autofocus_enabled,
 });

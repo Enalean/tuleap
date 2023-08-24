@@ -20,15 +20,13 @@
 import { vi } from "vitest";
 import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
-import { FocusTextareaStub } from "./FocusTextareaStub";
 
 export const PullRequestCommentControllerStub = (): ControlPullRequestComment => ({
     hideReplyForm: vi.fn(),
     showReplyForm: vi.fn(),
     displayReplies: vi.fn(),
-    updateCurrentReply: vi.fn(),
-    updateWritingZoneState: vi.fn(),
+    handleWritingZoneContentChange: vi.fn(),
     saveReply: vi.fn(),
     getRelativeDateHelper: () => RelativeDateHelperStub,
-    getFocusHelper: () => FocusTextareaStub(),
+    shouldFocusWritingZoneOnceRendered: () => true,
 });

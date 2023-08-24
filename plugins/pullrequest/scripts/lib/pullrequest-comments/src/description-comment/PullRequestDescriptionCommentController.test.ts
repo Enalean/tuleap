@@ -24,12 +24,12 @@ import { PullRequestDescriptionCommentController } from "./PullRequestDescriptio
 import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
-import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import type { PullRequestCommentErrorCallback } from "../types";
 import { SaveDescriptionCommentStub } from "../../tests/stubs/SaveDescriptionCommentStub";
 import type { SaveDescriptionComment } from "./PullRequestDescriptionCommentSaver";
+import { WritingZoneController } from "../writing-zone/WritingZoneController";
 
 describe("PullRequestDescriptionCommentController", () => {
     let onErrorCallback: PullRequestCommentErrorCallback;
@@ -43,18 +43,25 @@ describe("PullRequestDescriptionCommentController", () => {
     ): ControlPullRequestDescriptionComment =>
         PullRequestDescriptionCommentController(
             description_saver,
-            FocusTextareaStub(),
             CurrentPullRequestUserPresenterStub.withDefault(),
             onErrorCallback
         );
 
     it("showEditionForm() should assign a DescriptionCommentFormPresenter to the given host", () => {
-        const content = document.implementation.createHTMLDocument().createElement("div");
+        const doc = document.implementation.createHTMLDocument();
+        const content = doc.createElement("div");
+        const writing_zone = doc.createElement("div");
+        const writing_zone_controller = WritingZoneController({
+            focus_writing_zone_when_connected: true,
+        });
+        const setWritingZoneContent = vi.spyOn(writing_zone_controller, "setWritingZoneContent");
         const host = {
             edition_form_presenter: null,
             description: {
                 raw_content: "This commit fixes bug #123",
             },
+            writing_zone_controller,
+            writing_zone,
             content: () => content,
         } as unknown as PullRequestDescriptionComment;
 
@@ -62,6 +69,10 @@ describe("PullRequestDescriptionCommentController", () => {
 
         expect(host.edition_form_presenter).toStrictEqual(
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description)
+        );
+        expect(setWritingZoneContent).toHaveBeenCalledWith(
+            writing_zone,
+            host.description.raw_content
         );
     });
 
@@ -90,32 +101,12 @@ describe("PullRequestDescriptionCommentController", () => {
             } as PullRequestDescriptionComment;
 
             const new_description = "This commit fixes bug #123";
-            getController(
-                SaveDescriptionCommentStub.withDefault()
-            ).updateCurrentlyEditedDescription(host, new_description);
+            getController(SaveDescriptionCommentStub.withDefault()).handleWritingZoneContentChange(
+                host,
+                new_description
+            );
 
             expect(host.edition_form_presenter?.description_content).toStrictEqual(new_description);
-        });
-    });
-
-    describe("updateWritingZoneState()", () => {
-        it(`should update the writing zone focus state`, () => {
-            const host = {
-                edition_form_presenter:
-                    PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
-                        raw_content: "This commit fixes bug #",
-                    } as PullRequestDescriptionCommentPresenter),
-            } as PullRequestDescriptionComment;
-
-            const is_focused = true;
-            getController(SaveDescriptionCommentStub.withDefault()).updateWritingZoneState(
-                host,
-                is_focused
-            );
-
-            expect(host.edition_form_presenter?.writing_zone_state.is_focused).toStrictEqual(
-                is_focused
-            );
         });
     });
 

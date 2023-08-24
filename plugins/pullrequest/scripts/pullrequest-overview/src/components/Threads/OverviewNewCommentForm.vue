@@ -26,11 +26,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import {
-    NewCommentSaver,
-    NewCommentFormController,
-    PullRequestCommentTextareaFocusHelper,
-} from "@tuleap/plugin-pullrequest-comments";
+import { NewCommentSaver, NewCommentFormController } from "@tuleap/plugin-pullrequest-comments";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -70,7 +66,6 @@ const controller = NewCommentFormController(
         type: TYPE_GLOBAL_COMMENT,
         pull_request_id: pull_request_id,
     }),
-    PullRequestCommentTextareaFocusHelper(),
     { avatar_url },
     { is_cancel_allowed: false, is_autofocus_enabled: false },
     post_submit_callback,

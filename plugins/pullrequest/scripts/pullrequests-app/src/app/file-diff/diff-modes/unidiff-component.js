@@ -27,7 +27,6 @@ import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/
 import "../editors/modes.ts";
 import {
     PullRequestCommentController,
-    PullRequestCommentTextareaFocusHelper,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
 
@@ -68,7 +67,6 @@ function controller($element, $scope, SharedPropertiesService) {
         widget_creator: SideBySideCodeMirrorWidgetCreator(
             document,
             PullRequestCommentController(
-                PullRequestCommentTextareaFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(
