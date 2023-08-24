@@ -20,14 +20,13 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-/**
- * @psalm-immutable
- */
-class CommentRepresentation
+final class CommentRepresentation
 {
     /** @var int */
     public $id;
@@ -55,22 +54,47 @@ class CommentRepresentation
      * @var string {@type string}
      */
     public string $color;
+    /**
+     * @var string {@type string}
+     */
+    public string $format;
+    /**
+     * @var string {@type string}
+     */
+    public string $post_processed_content;
 
-
-    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id, string $color)
+    private function __construct(private readonly Codendi_HTMLPurifier $purifier, private readonly ContentInterpretor $common_mark_interpreter, int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id, string $color, string $format)
     {
-        $this->id        = $id;
-        $this->user      = $user_representation;
-        $this->post_date = JsonCast::toDate($post_date);
-        $this->content   = self::getPurifiedContent($project_id, $content);
-        $this->type      = 'comment';
-        $this->parent_id = $parent_id;
-        $this->color     = $color;
+        $this->id                     = $id;
+        $this->user                   = $user_representation;
+        $this->post_date              = JsonCast::toDate($post_date);
+        $this->content                = $this->getPurifiedContent($project_id, $content);
+        $this->type                   = 'comment';
+        $this->parent_id              = $parent_id;
+        $this->color                  = $color;
+        $this->format                 = $format;
+        $this->post_processed_content = $this->getPurifiedContentFromHTML($format, $project_id, $content);
     }
 
-    private static function getPurifiedContent(int $project_id, string $content): string
+    public static function build(Codendi_HTMLPurifier $purifier, ContentInterpretor $common_mark_interpreter, int $id, int $project_id, MinimalUserRepresentation $user_representation, string $color, Comment $comment): self
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+        return new self($purifier, $common_mark_interpreter, $id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $color, $comment->getFormat());
+    }
+
+    private function getPurifiedContent(int $project_id, string $content): string
+    {
+        return $this->purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+    }
+
+    private function getPurifiedContentFromHTML(string $format, int $project_id, string $content): string
+    {
+        if ($format === Comment::FORMAT_MARKDOWN) {
+            return $this->common_mark_interpreter->getInterpretedContentWithReferences(
+                $content,
+                $project_id
+            );
+        }
+
+        return $this->getPurifiedContent($project_id, $content);
     }
 }

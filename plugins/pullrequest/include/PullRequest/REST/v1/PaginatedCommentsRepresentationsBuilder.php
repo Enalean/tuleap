@@ -20,25 +20,19 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Codendi_HTMLPurifier;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\PullRequest\Comment\Factory;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
 class PaginatedCommentsRepresentationsBuilder
 {
-    /** @var Tuleap\PullRequest\Comment\Factory */
-    private $comment_factory;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    public function __construct(Factory $comment_factory)
+    public function __construct(private readonly Factory $comment_factory, private readonly UserManager $user_manager, private readonly Codendi_HTMLPurifier $purifier, private readonly CommonMarkInterpreter $common_mark_interpreter)
     {
-        $this->comment_factory = $comment_factory;
-        $this->user_manager    = UserManager::instance();
     }
 
-    public function getPaginatedCommentsRepresentations($pull_request_id, $project_id, $limit, $offset, $order)
+    public function getPaginatedCommentsRepresentations(int $pull_request_id, $project_id, $limit, $offset, $order): PaginatedCommentsRepresentations
     {
         $paginated_comments       = $this->comment_factory->getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order);
         $comments_representations = [];
@@ -50,7 +44,15 @@ class PaginatedCommentsRepresentationsBuilder
             }
             $user_representation = MinimalUserRepresentation::build($user);
 
-            $comment_representation     = new CommentRepresentation($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $comment->getColor());
+            $comment_representation     = CommentRepresentation::build(
+                $this->purifier,
+                $this->common_mark_interpreter,
+                $comment->getId(),
+                $project_id,
+                $user_representation,
+                $comment->getColor(),
+                $comment
+            );
             $comments_representations[] = $comment_representation;
         }
 
