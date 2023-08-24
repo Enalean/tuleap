@@ -56,6 +56,7 @@ use Tuleap\Project\DelegatedUserAccessForProject;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
@@ -94,7 +95,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(DelegatedUserAccessForProject::NAME);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
-        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
 
         // Search
@@ -416,12 +416,10 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         }
     }
 
-    /**
-     * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
-     */
-    public function get_services_allowed_for_restricted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function handleServiceAllowedForRestricted(CollectServicesAllowedForRestrictedEvent $event): void
     {
-        $params['allowed_services'][] = $this->getServiceShortname();
+        $event->addServiceShortname($this->getServiceShortname());
     }
 
     private function getInstantiater($group_id)

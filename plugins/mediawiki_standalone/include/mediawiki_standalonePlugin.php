@@ -136,6 +136,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
+use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -485,13 +486,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $injector->populate($params['restler']);
     }
 
-    /**
-     * @psalm-param array{allowed_services: string[]} $params
-     */
-    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED)]
-    public function getServicesAllowedForRestricted(array &$params): void
+    #[ListeningToEventClass]
+    public function handleServiceAllowedForRestricted(CollectServicesAllowedForRestrictedEvent $event): void
     {
-        $params['allowed_services'][] = $this->getServiceShortname();
+        $event->addServiceShortname($this->getServiceShortname());
     }
 
     #[ListeningToEventClass]
