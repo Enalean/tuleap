@@ -5,8 +5,8 @@
 #
 # params:
 # 1) group_id (int) group_id of the projet that host the scm repository
-# 2) scm (string) scm use for the commit (accepted values are 'svn' and 'cvs')
-# 3) modified_svn_paths (array) list of impacted folders for the svn commit (empty in cvs context)
+# 2) scm (string) scm use for the commit (accepted values is 'svn')
+# 3) modified_svn_paths (array) list of impacted folders for the svn commit
 #
 sub trigger_hudson_builds() {
 
@@ -55,8 +55,6 @@ sub trigger_hudson_builds() {
                     } else {
                         $trigger_job = 1;
                     }
-                } else {
-                    $trigger_job = 1;
                 }
 
                 if ($trigger_job) {

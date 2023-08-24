@@ -89,40 +89,6 @@ function export_file_logs($project, $span, $who)
     }
 }
 
-// Export cvs access logs for this group
-function export_cvs_logs($project, $span, $who)
-{
-    $eol = "\n";
-
-    $sql_cvs      = cvsaccess_logs_extract($project, $span, $who);
-    $col_list_cvs = ['day', 'user', 'email', 'cvs_checkouts', 'cvs_browse'];
-    $cvs_title    =  ['day'            => $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'cvs_access'),
-        'user'           => '',
-        'email'          => '',
-        'cvs_checkouts'  => '',
-        'cvs_browse'     => '',
-    ];
-    $lbl_list_cvs = [ 'day'            => $GLOBALS['Language']->getText('project_export_access_logs_export', 'time'),
-        'user'           => $GLOBALS['Language']->getText('project_export_access_logs_export', 'user'),
-        'email'          => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
-        'cvs_checkouts'  => $GLOBALS['Language']->getText('project_export_access_logs_export', 'chk_upd'),
-        'cvs_browse'     => $GLOBALS['Language']->getText('project_export_access_logs_export', 'file_brows'),
-    ];
-    $result_cvs   = db_query($sql_cvs);
-    $rows_cvs     = db_numrows($result_cvs);
-
-    if ($result_cvs && $rows_cvs > 0) {
-        // Build csv for cvs access logs
-        echo build_csv_header($col_list_cvs, $cvs_title) . $eol;
-        echo build_csv_header($col_list_cvs, $lbl_list_cvs) . $eol;
-        while ($arr_cvs = db_fetch_array($result_cvs)) {
-            prepare_access_logs_record($project->getGroupId(), $arr_cvs);
-            echo build_csv_record($col_list_cvs, $arr_cvs) . $eol;
-        }
-        echo build_csv_header($col_list_cvs, []) . $eol;
-    }
-}
-
 // Export svn access logs for this group
 function export_svn_logs($project, $span, $who)
 {

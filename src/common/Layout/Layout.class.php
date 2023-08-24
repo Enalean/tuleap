@@ -57,7 +57,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'Tasks' => 'ic/index.png',
         'Docs' => 'ic/docman.png',
         'News' => 'ic/news.png',
-        'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',
         'Trackers' => 'ic/tracker20w.png',
     ];
@@ -650,7 +649,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                 case 'admin':
                 case 'forum':
                 case 'docman':
-                case 'cvs':
                 case 'svn':
                 case 'file':
                 case 'tracker':

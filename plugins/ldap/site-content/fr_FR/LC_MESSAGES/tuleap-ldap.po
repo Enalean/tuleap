@@ -24,9 +24,6 @@ msgstr "compte %1$s"
 msgid "%s group name"
 msgstr "nom du groupe %s"
 
-msgid "<em>Required for CVS, FTP and Subversion accesses</em>."
-msgstr "<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>."
-
 msgid ""
 "<strong>%s</strong> is already linked with %s group <strong>%s</strong>."
 msgstr "<strong>%s</strong> est déjà lié avec le groupe%s <strong>%s</strong>."

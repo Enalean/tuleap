@@ -158,7 +158,6 @@ class WelcomeDisplayController implements DispatchableWithRequest
 <tr>
 <td>' . sprintf(dgettext('tuleap-ldap', '%1$s internal login:'), \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '</td>
 <td>' . $this->html_purifier->purify($currentUser->getUserName()) . '<br>
-' . dgettext('tuleap-ldap', '<em>Required for CVS, FTP and Subversion accesses</em>.') . '
 </td>
 </tr>
 </table>';

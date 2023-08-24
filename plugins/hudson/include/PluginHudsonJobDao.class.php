@@ -107,7 +107,6 @@ class PluginHudsonJobDao extends DataAccessObject
         $hudson_job_url,
         $job_name,
         $use_svn_trigger,
-        $use_cvs_trigger,
         $token,
         $svn_paths,
     ) {
@@ -115,12 +114,11 @@ class PluginHudsonJobDao extends DataAccessObject
         $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);
         $job_name        = $this->da->quoteSmart($job_name);
         $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
-        $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
         $token           = ($token !== null) ? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
         $svn_paths       = $this->da->quoteSmart($svn_paths);
 
-        $sql = "INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, use_cvs_trigger, token, svn_paths)
-                VALUES ($project_id, $hudson_job_url, $job_name, $use_svn_trigger, $use_cvs_trigger, $token, $svn_paths)";
+        $sql = "INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, token, svn_paths)
+                VALUES ($project_id, $hudson_job_url, $job_name, $use_svn_trigger, $token, $svn_paths)";
 
         return $this->updateAndGetLastId($sql);
     }
@@ -130,7 +128,6 @@ class PluginHudsonJobDao extends DataAccessObject
         $hudson_job_url,
         $job_name,
         $use_svn_trigger,
-        $use_cvs_trigger,
         $token,
         $svn_paths,
     ) {
@@ -138,7 +135,6 @@ class PluginHudsonJobDao extends DataAccessObject
         $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);
         $job_name        = $this->da->quoteSmart($job_name);
         $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
-        $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
         $token           = ($token !== null) ? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
         $svn_paths       = $this->da->quoteSmart($svn_paths);
 
@@ -146,7 +142,6 @@ class PluginHudsonJobDao extends DataAccessObject
                 SET job_url = $hudson_job_url,
                 name = $job_name,
                 use_svn_trigger = $use_svn_trigger,
-                use_cvs_trigger = $use_cvs_trigger,
                 token = $token,
                 svn_paths = $svn_paths
                 WHERE job_id = $job_id";

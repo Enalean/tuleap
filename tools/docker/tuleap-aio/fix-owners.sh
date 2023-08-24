@@ -28,7 +28,6 @@ chown codendiadm:codendiadm \
     /data/home/users \
     /data/lib/tuleap \
     /data/lib/tuleap/backup \
-    /data/lib/tuleap/cvsroot \
     /data/lib/tuleap/gitolite \
     /data/lib/tuleap/gitroot \
     /data/lib/tuleap/svnroot

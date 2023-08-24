@@ -103,13 +103,6 @@
        </a>
        [is entries.state "dead"](dead)[end]
      </td>
-     [if-any entries.graph_href]
-       <td style="width:1%"><a href="[entries.graph_href]"
-       title="View Revision Graph"><img
-       src="[docroot]/images/cvsgraph_16x16.png"
-       alt="View Revision Graph" class="vc_icon" />
-       </a></td>
-     [end]
      [if-any entries.errors]
        <td colspan=[is cfg.options.show_logs "1"]4[else]3[end]>
          [for entries.errors]<em>[entries.errors]</em>[end]

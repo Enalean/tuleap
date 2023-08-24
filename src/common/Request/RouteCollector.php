@@ -732,11 +732,6 @@ class RouteCollector
         );
     }
 
-    public static function getCVSViewVC()
-    {
-        return new \Tuleap\ConcurrentVersionsSystem\ViewVC\ViewVCController();
-    }
-
     public static function getOldFileDownloadURLRedirection(): FRSFileDownloadOldURLRedirectionController
     {
         return new FRSFileDownloadOldURLRedirectionController(HTTPFactoryBuilder::responseFactory(), new SapiEmitter());
@@ -1580,7 +1575,6 @@ class RouteCollector
         $r->post('/join-project-restricted-user-mail/', [self::class, 'postJoinRestrictedUserMail']);
 
         $r->get('/svn/viewvc.php[/{path:.*}]', [self::class, 'getSvnViewVC']);
-        $r->get('/cvs/viewvc.php[/{path:.*}]', [self::class, 'getCVSViewVC']);
 
         $r->addGroup('/file', function (FastRoute\RouteCollector $r) {
             $r->get('/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);

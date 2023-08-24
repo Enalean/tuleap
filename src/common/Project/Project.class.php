@@ -96,7 +96,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         $this->serviceClassnames = [
             Service::FILE => ServiceFile::class,
             Service::SVN  => ServiceSVN::class,
-            Service::CVS  => \Tuleap\ConcurrentVersionsSystem\ServiceCVS::class,
         ];
 
         EventManager::instance()->processEvent(
@@ -250,11 +249,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->usesService(Service::TRACKERV3);
     }
 
-    public function usesCVS()
-    {
-        return $this->usesService(Service::CVS);
-    }
-
     public function usesSVN()
     {
         return $this->usesService(Service::SVN);
@@ -339,11 +333,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->getServiceLink(Service::FORUM);
     }
 
-    public function getCvsPage()
-    {
-        return $this->getServiceLink(Service::CVS);
-    }
-
     public function getSvnPage()
     {
         return $this->getServiceLink(Service::SVN);
@@ -356,39 +345,9 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     /*
 
-    Subversion and CVS settings
+    Subversion settings
 
     */
-
-    public function cvsMailingList()
-    {
-        return $this->project_data_array['cvs_events_mailing_list'];
-    }
-
-    public function getCVSMailingHeader()
-    {
-        return $this->project_data_array['cvs_events_mailing_header'];
-    }
-
-    public function isCVSTracked()
-    {
-        return $this->project_data_array['cvs_tracker'];
-    }
-
-    public function getCVSWatchMode()
-    {
-        return $this->project_data_array['cvs_watch_mode'];
-    }
-
-    public function getCVSpreamble()
-    {
-        return $this->project_data_array['cvs_preamble'];
-    }
-
-    public function isCVSPrivate()
-    {
-        return $this->project_data_array['cvs_is_private'];
-    }
 
     public function getSVNMailingHeader()
     {

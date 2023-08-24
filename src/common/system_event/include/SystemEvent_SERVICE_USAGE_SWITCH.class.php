@@ -52,18 +52,6 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
         list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
 
         if ($project = $this->getProject($group_id)) {
-            // If 'CVS' was activated, create the repo (if it does not exist) and regenerate cvs_root_allow.
-            // if 'CVS' was inactivated... keep the repository, and do nothing.
-            if (($shortname == 'cvs') && ($is_used)) {
-                // This function will not create the repo if it already exists
-                if (! Backend::instanceCVS()->createProjectCVS($project)) {
-                    $this->error("Could not create CVS repo for project $group_id after service activation");
-                    return false;
-                }
-                Backend::instanceCVS()->setCVSRootListNeedUpdate();
-            }
-
-            // Same as for CVS.
             if (($shortname == 'svn') && ($is_used)) {
                 $backendSVN = Backend::instanceSVN();
                 if (! $backendSVN->createProjectSVN($group_id)) {

@@ -77,14 +77,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(true);
-        $backendCVS->shouldReceive('isNameAvailable')->andReturns(true);
-        $backendCVS->shouldReceive('renameCVSRepository')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendCVS->shouldReceive('setCVSRootListNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
@@ -149,11 +141,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // CVS no rep, just ensure test
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->once()->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // Project Home
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->once()->andReturns(false);
@@ -215,11 +202,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // CVS no rep, just ensure test
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->once()->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // Project Home
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->once()->andReturns(false);
@@ -243,75 +225,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->shouldReceive('done')->never();
 
         $this->assertFalse($evt->process());
-    }
-
-    public function testRenameCVSRepositoryFailure(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
-
-        // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(true);
-        $backendCVS->shouldReceive('isNameAvailable')->andReturns(true);
-        $backendCVS->shouldReceive('renameCVSRepository')->with($project, 'FooBar')->once()->andReturns(false);
-        $backendCVS->shouldReceive('setCVSRootListNeedUpdate')->never();
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
-        // Project Home
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->once()->andReturns(false);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->never();
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-
-        // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
-
-        // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
-
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
-
-        // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
-
-        $this->assertFalse($evt->process());
-
-        // Check errors
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/could not rename CVS/i', $evt->getLog());
     }
 
     public function testRenameHomeRepositoryFailure(): void
@@ -346,11 +259,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN = \Mockery::spy(\BackendSVN::class);
         $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
@@ -416,11 +324,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
@@ -482,11 +385,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN = \Mockery::spy(\BackendSVN::class);
         $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
@@ -551,11 +449,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
@@ -616,12 +509,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('isNameAvailable')->andReturns(false);
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // Error in CVS
-        $backendCVS = \Mockery::spy(\BackendCVS::class);
-        $backendCVS->shouldReceive('repositoryExists')->andReturns(true);
-        $backendCVS->shouldReceive('isNameAvailable')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('CVS')->andReturns($backendCVS);
-
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
         $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
@@ -645,6 +532,5 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
         $this->assertMatchesRegularExpression('/.*SVN repository.*not available/', $evt->getLog());
-        $this->assertMatchesRegularExpression('/.*CVS repository.*not available/', $evt->getLog());
     }
 }

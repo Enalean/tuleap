@@ -50,8 +50,6 @@ project_admin_editservice	service_doc_lbl_key	Documentation
 project_admin_editservice	service_doc_desc_key	Gestion de document
 project_admin_editservice	service_news_lbl_key	Annonces
 project_admin_editservice	service_news_desc_key	Annonces du projet
-project_admin_editservice	service_cvs_lbl_key	CVS
-project_admin_editservice	service_cvs_desc_key	Accès CVS
 project_admin_editservice	service_file_lbl_key	Fichiers
 project_admin_editservice	service_file_desc_key	Publication de fichiers
 project_admin_editservice	service_tracker_lbl_key	Suivi v3
@@ -170,7 +168,6 @@ project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_na
 ## Naming rule for the key:
 ## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Artefact
-project_reference	reference_cvs_desc_key	Détail de commit CVS
 project_reference	reference_svn_desc_key	Détail de révision Subversion
 project_reference	reference_wiki_desc_key	Page Wiki
 project_reference	reference_wikiversion_desc_key	Version Wiki
@@ -187,7 +184,6 @@ project_reference	reference_release_desc_key	Version
 
 project_reference	reference_artifact_nature_key	Artefact
 project_reference	reference_document_nature_key	Document
-project_reference	reference_cvs_commit_nature_key	Commit CVS
 project_reference	reference_svn_revision_nature_key	Révision Subversion
 project_reference	reference_file_nature_key	Fichier
 project_reference	reference_release_nature_key	Version
@@ -536,7 +532,6 @@ project_export_task_export	depend_on_task_desc	Tâches dont celle-ci dépend
 project_stats_index	months	mois
 project_stats_index	weeks	semaines
 project_stats_index	days	jours
-project_stats_index	cvs	CVS
 
 #
 #-----------------------------------------------
@@ -576,7 +571,6 @@ project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Documentation
 project_stats_source_code_access_utils	wiki	Wiki
 project_stats_source_code_access_utils	wiki_attachments	Fichiers joints Wiki
-project_stats_source_code_access_utils	cvs_co_upd	Accès CVS (checkout/update)
 project_stats_source_code_access_utils	svn_access	Accès Subversion
 project_stats_source_code_access_utils	doc_download	Téléchargements de documents
 project_stats_source_code_access_utils	documents	Documents
@@ -584,7 +578,6 @@ project_stats_source_code_access_utils	wiki_access	Accès Wiki
 project_stats_source_code_access_utils	wiki_page	Pages
 project_stats_source_code_access_utils	wiki_attachment_access	Accès aux fichiers joints Wiki
 project_stats_source_code_access_utils	wiki_attachment_title	Fichier joint
-project_stats_source_code_access_utils	cvs_access	Accès CVS
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	Visualisation fichiers
 project_stats_source_code_access_utils	accesses	Accès

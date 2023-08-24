@@ -65,9 +65,6 @@ if (isset($_REQUEST['SUBMIT'])) {
     if ($project->usesFile()) {
         export_file_logs($project, $period, $who);
     }
-    if ($project->usesCVS()) {
-        export_cvs_logs($project, $period, $who);
-    }
     if ($project->usesSVN()) {
         export_svn_logs($project, $period, $who);
     }
@@ -131,7 +128,6 @@ switch ($view) {
         print '<P>';
         $span_days = (int) ($span * 30.5);
         filedownload_logs_daily($project, $span_days, $who);
-        cvsaccess_logs_daily($project, $span_days, $who);
         svnaccess_logs_daily($project, $span_days, $who);
         wiki_logs_daily($project, $span_days, $who);
         wiki_attachments_logs_daily($project, $span_days, $who);
@@ -141,7 +137,6 @@ switch ($view) {
     case "weekly":
         print '<P>';
         filedownload_logs_daily($project, $span * 7, $who);
-        cvsaccess_logs_daily($project, $span * 7, $who);
         svnaccess_logs_daily($project, $span * 7, $who);
         wiki_logs_daily($project, $span * 7, $who);
         wiki_attachments_logs_daily($project, $span * 7, $who);
@@ -151,7 +146,6 @@ switch ($view) {
     case 'daily':
     default:
         filedownload_logs_daily($project, $span, $who);
-        cvsaccess_logs_daily($project, $span, $who);
         svnaccess_logs_daily($project, $span, $who);
         wiki_logs_daily($project, $span, $who);
         wiki_attachments_logs_daily($project, $span, $who);

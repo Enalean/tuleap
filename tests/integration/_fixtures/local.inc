@@ -21,7 +21,7 @@ $sys_cookie_prefix = "TULEAP";
 //
 //
 
-// In order to run a test server (without backend cron jobs, CVS, SVN, vhosts, FRS, etc.)
+// In order to run a test server (without backend cron jobs, SVN, vhosts, FRS, etc.)
 // Please update the following variables:
 // $codendi_dir = "mydir/tuleap"
 // $sys_custom_dir = "mydir/etc/tuleap"
@@ -71,14 +71,6 @@ $codendi_cache_dir = $tmp_dir;
 $homedir_prefix = "/home/users"; // prefix to add to the user's homedir
 $grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
 
-// CVS paths
-$cvs_prefix          = "/var/lib/tuleap/cvsroot";  // cvs root
-$cvslock_prefix      = "/var/lock/cvs";           // prefix to add to the cvs lock directory
-$cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
-$cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
-$cvs_cmd             = "/usr/bin/cvs";       // CVS binary
-$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks. Must be similar in commit_prep
-
 // Subversion paths
 $svn_prefix    = "/var/lib/tuleap/svnroot";// prefix to add to the subversion root directory
 $svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
@@ -95,7 +87,7 @@ $ftp_anon_dir_prefix = "/var/lib/tuleap/ftp/pub";     // prefix to add to the an
 $dump_dir         = "/var/lib/tuleap/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
-$codendi_log        = "/tmp";   // Tuleap log dir (cvslogs,)
+$codendi_log        = "/tmp";   // Tuleap log dir
 $codendi_shell_skel = "/etc/skel_codendi";  // Tuleap Shell skeleton files directory
 
 // Sendmail alias
@@ -131,7 +123,7 @@ $sys_trove_cat_mandatory = 1;
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 
-// Disable sub-domains (like cvs.proj.example.com)
+// Disable sub-domains (like aaa.proj.example.com)
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;
 
@@ -273,9 +265,6 @@ $sys_project_backup_path = $tmp_dir;
 // This could be needed if JavaScript code needs to be executed from an external website
 // For example, this could be 'https://example.com http://tuleap.net' or 'https://example.com/script.js'
 $sys_csp_script_scr_whitelist = '';
-
-// Convert cvs commit log messages from cp1252 to utf8.
-$sys_cvs_convert_cp1252_to_utf8 = 0;
 
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //

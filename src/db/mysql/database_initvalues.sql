@@ -104,16 +104,11 @@ INSERT INTO `groups` SET \
   unix_box = 'shell1', \
   http_domain = 'admin._DOMAIN_NAME_', \
   short_description = 'Administration Project', \
-  cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   register_time = 940000000, \
   rand_hash = '', \
   type = '1', \
   built_from_template = '100', \
-  cvs_tracker = '1', \
-  cvs_events_mailing_list = '', \
-  cvs_events_mailing_header = '', \
-  cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
@@ -129,16 +124,11 @@ INSERT INTO `groups` SET \
   unix_box = 'shell1', \
   http_domain = 'sitenews._DOMAIN_NAME_', \
   short_description = 'Site News Private Project. All Site News should be posted from this project', \
-  cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   register_time = 940000000, \
   rand_hash = '', \
   type = '1', \
   built_from_template = '100', \
-  cvs_tracker = '0', \
-  cvs_events_mailing_list = '', \
-  cvs_events_mailing_header = '', \
-  cvs_preamble = '', \
   svn_tracker = '0', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
@@ -155,16 +145,11 @@ INSERT INTO `groups` SET \
   unix_box = 'shell1', \
   http_domain = '', \
   short_description = 'The default Tuleap template', \
-  cvs_box = '', \
   svn_box = '', \
   register_time = 940000000, \
   rand_hash = '', \
   type = '2', \
   built_from_template = '100', \
-  cvs_tracker = '1', \
-  cvs_events_mailing_list = '', \
-  cvs_events_mailing_header = '', \
-  cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
@@ -242,7 +227,6 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (2, 100, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 0, 0, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 0, 0, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 0, 0, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 0, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 0, 0, 'system', 105);
 
@@ -355,24 +339,6 @@ INSERT INTO reference SET \
     scope='S', \
     service_short_name='plugin_tracker', \
     nature='plugin_tracker_artifact';
-
-INSERT INTO reference SET \
-    id='3',        \
-    keyword='commit', \
-    description='reference_cvs_desc_key', \
-    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
-    scope='S', \
-    service_short_name='cvs', \
-    nature='cvs_commit';
-
-INSERT INTO reference SET \
-    id='4',        \
-    keyword='cvs', \
-    description='reference_cvs_desc_key', \
-    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
-    scope='S', \
-    service_short_name='cvs', \
-    nature='cvs_commit';
 
 INSERT INTO reference SET \
     id='5',        \

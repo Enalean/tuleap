@@ -58,14 +58,6 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent
                 return $this->setErrorBadParam();
             }
 
-            // CVS writers
-            if ($project->usesCVS()) {
-                if (! Backend::instanceCVS()->updateCVSwriters($project)) {
-                    $this->error("Could not update CVS writers for group $group_id");
-                    return false;
-                }
-            }
-
             // SVN access file
             (new UpdateProjectAccessFilesScheduler(SystemEventManager::instance()))->scheduleUpdateOfProjectAccessFiles($project);
 

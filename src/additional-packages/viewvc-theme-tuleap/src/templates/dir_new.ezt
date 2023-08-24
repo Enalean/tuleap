@@ -62,53 +62,42 @@
       [define graph_icon_link][end]
       [define download_icon_link][end]
       [define annotate_icon_link][end]
-      [define log_icon_link][if-any entries.log_href]<a 
+      [define log_icon_link][if-any entries.log_href]<a
         href="[entries.log_href]"
         title="View Log"><img
           src="[docroot]/images/log.png"
-          alt="View Log" 
+          alt="View Log"
           class="vc_icon" /></a>[end][end]
 
       [is entries.pathtype "dir"]
-        [is roottype "cvs"]
-          [# no point in showing icon when there's only one to choose from]
-        [else]
-          [define view_icon_link]<a 
-            href="[entries.view_href]"
-            title="View Directory Listing"><img
-              src="[docroot]/images/list.png"
-              alt="View Directory Listing" 
-              class="vc_icon" /></a>[end]
-        [end]
+        [define view_icon_link]<a
+          href="[entries.view_href]"
+          title="View Directory Listing"><img
+            src="[docroot]/images/list.png"
+            alt="View Directory Listing"
+            class="vc_icon" /></a>[end]
       [end]
 
       [is entries.pathtype "file"]
-        [define view_icon_link][if-any entries.view_href]<a 
+        [define view_icon_link][if-any entries.view_href]<a
           href="[entries.view_href]"
           title="View File"><img
             src="[docroot]/images/view.png"
-            alt="View File" 
+            alt="View File"
             class="vc_icon" /></a>[end][end]
 
-        [define graph_icon_link][if-any entries.graph_href]<a 
-          href="[entries.graph_href]"
-          title="View Revision Graph"><img
-            src="[docroot]/images/cvsgraph_16x16.png"
-            alt="View Revision Graph" 
-            class="vc_icon" /></a>[end][end]
-
-        [define download_icon_link][if-any entries.download_href]<a 
+        [define download_icon_link][if-any entries.download_href]<a
           href="[entries.download_href]"
           title="Download File"><img
             src="[docroot]/images/download.png"
             alt="Download File"
             class="vc_icon" /></a>[end][end]
 
-        [define annotate_icon_link][if-any entries.annotate_href]<a 
+        [define annotate_icon_link][if-any entries.annotate_href]<a
           href="[entries.annotate_href]"
           title="Annotate File"><img
             src="[docroot]/images/annotate.png"
-            alt="Annotate File" 
+            alt="Annotate File"
             class="vc_icon" /></a>[end][end]
       [end]
 
@@ -125,9 +114,6 @@
           ([entries.ago] ago)
           by <em>[entries.author]</em>:
           [entries.log]
-          [is entries.pathtype "dir"][is roottype "cvs"]
-            <em>(from [entries.log_file]/[entries.log_rev])</em>
-          [end][end]
         [end]
       </td>
     [end]

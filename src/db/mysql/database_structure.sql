@@ -393,38 +393,6 @@ CREATE TABLE IF NOT EXISTS frs_global_permissions(
 );
 
 #
-# Table structure for table 'group_cvs_full_history'
-#
-
-CREATE TABLE group_cvs_full_history (
-  group_id int(11) NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  day int(11) NOT NULL default '0',
-  cvs_commits int(11) NOT NULL default '0',
-  cvs_adds int(11) NOT NULL default '0',
-  cvs_checkouts int(11) NOT NULL default '0',
-  cvs_browse int(11) NOT NULL default '0',
-  KEY group_id_idx (group_id),
-  KEY user_id_idx (user_id),
-  KEY day_idx (day)
-);
-
-#
-# Table structure for table 'group_cvs_history'
-#
-
-CREATE TABLE group_cvs_history (
-  group_id int(11) NOT NULL default '0',
-  user_name varchar(80) NOT NULL default '',
-  cvs_commits int(11) NOT NULL default '0',
-  cvs_commits_wk int(11) NOT NULL default '0',
-  cvs_adds int(11) NOT NULL default '0',
-  cvs_adds_wk int(11) NOT NULL default '0',
-  KEY group_id_idx (group_id),
-  KEY user_name_idx (user_name)
-);
-
-#
 # Table structure for table 'group_svn_full_history'
 #
 
@@ -483,18 +451,11 @@ CREATE TABLE `groups` (
   unix_box varchar(20) NOT NULL default 'shell1',
   http_domain varchar(80) default NULL,
   short_description varchar(255) default NULL,
-  cvs_box varchar(20) NOT NULL default 'cvs1',
   svn_box varchar(20) NOT NULL default 'svn1',
   register_time int(11) NOT NULL default '0',
   rand_hash text,
   type int(11) NOT NULL default '1',
   built_from_template int(11) NOT NULL default '100',
-  cvs_tracker               int(11)    NOT NULL default '1',
-  cvs_watch_mode            int(11)    NOT NULL default '0',
-  cvs_events_mailing_list   text       NOT NULL,
-  cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
-  cvs_preamble              text       NOT NULL,
-  cvs_is_private            TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker               int(11)    NOT NULL default '1',
   svn_mandatory_ref         TINYINT    NOT NULL default '0',
   svn_can_change_log        TINYINT(1) NOT NULL default '0',
@@ -788,87 +749,6 @@ CREATE TABLE user_preferences (
   preference_value text,
   PRIMARY KEY  (user_id,preference_name),
   INDEX idx_name(preference_name)
-);
-
-# CREATE cvs support tables
-
-CREATE TABLE cvs_checkins (
-  type enum('Change','Add','Remove'),
-  ci_when datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  whoid mediumint(9) DEFAULT '0' NOT NULL,
-  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
-  dirid mediumint(9) DEFAULT '0' NOT NULL,
-  fileid mediumint(9) DEFAULT '0' NOT NULL,
-  revision varchar(32) binary ,
-  stickytag varchar(255) binary DEFAULT '' NOT NULL,
-  branchid mediumint(9) DEFAULT '0' NOT NULL,
-  addedlines int(11) DEFAULT '999' NOT NULL,
-  removedlines int(11) DEFAULT '999' NOT NULL,
-  commitid int(11) DEFAULT '0' NOT NULL,
-  descid int(11) DEFAULT '0' NOT NULL,
-  UNIQUE repositoryid (repositoryid,dirid,fileid,revision),
-  KEY ci_when (ci_when),
-  KEY repositoryid_2 (repositoryid),
-  KEY dirid (dirid),
-  KEY fileid (fileid),
-  KEY branchid (branchid),
-  KEY commitid (commitid)
-);
-
-CREATE TABLE cvs_commits (
-  id mediumint(9) NOT NULL auto_increment,
-  comm_when timestamp,
-  whoid mediumint(9) DEFAULT '0' NOT NULL,
-  KEY whoid (whoid),
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE cvs_descs (
-  id mediumint(9) NOT NULL auto_increment,
-  description text,
-  hash bigint(20) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (id),
-  KEY hash (hash)
-);
-
-CREATE TABLE cvs_dirs (
-  id mediumint(9) NOT NULL auto_increment,
-  dir varchar(128) binary DEFAULT '' NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE dir (dir)
-);
-
-CREATE TABLE cvs_files (
-  id mediumint(9) NOT NULL auto_increment,
-  file varchar(128) binary DEFAULT '' NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE file (file)
-);
-
-CREATE TABLE cvs_repositories (
-  id mediumint(9) NOT NULL auto_increment,
-  repository varchar(64) binary DEFAULT '' NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE repository (repository)
-);
-
-CREATE TABLE cvs_tags (
-  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
-  branchid mediumint(9) DEFAULT '0' NOT NULL,
-  dirid mediumint(9) DEFAULT '0' NOT NULL,
-  fileid mediumint(9) DEFAULT '0' NOT NULL,
-  revision varchar(32) binary DEFAULT '' NOT NULL,
-  KEY repositoryid_2 (repositoryid),
-  KEY dirid (dirid),
-  KEY fileid (fileid),
-  KEY branchid (branchid)
-);
-
-CREATE TABLE cvs_branches (
-  id mediumint(9) NOT NULL auto_increment,
-  branch varchar(64) binary DEFAULT '' NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE branch (branch)
 );
 
 # CREATE SVN support tables

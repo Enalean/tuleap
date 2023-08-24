@@ -24,7 +24,6 @@
 .project-with-background {
     .project-administration-title,
     .administration-title,
-    .cvs-header > .administration-title,
     .project-header-title {
         @include project-background.title-header-typography;
 

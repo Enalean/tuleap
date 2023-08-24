@@ -85,7 +85,7 @@ final class SetupMysqlInitCommand extends Command
         the database admin user (`tuleapadm` or --admin-user) with the required GRANTS.
 
         By using --nss-password., it will create the user to be used of lower level integration (used for subversion,
-        cvs, etc). Please note that, unless you are using subversion, it's unlikely that you will need to use this
+        etc). Please note that, unless you are using subversion, it's unlikely that you will need to use this
         option.
 
         Both --app-password and --nss-password can be used independently or together.

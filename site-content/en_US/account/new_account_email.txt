@@ -16,7 +16,7 @@ $section_two = "As a registered user, you can now fully participate in the activ
                ."project.";
 
 $section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-                   ." to create your Shell account. Some features like CVS and SVN access depend on it. Your Shell account will be activated in less than two"
+                   ." to create your Shell account. Some features like SVN access depend on it. Your Shell account will be activated in less than two"
                    ." hours from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
                    ."the Site Documentation and finalize the setup of your User Profile "
                    ."(Define your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "

@@ -122,16 +122,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
                 $deleteState = false;
             }
 
-            $backendCVS = $this->getBackend('CVS');
-            if ($backendCVS->repositoryExists($project)) {
-                if (! $backendCVS->archiveProjectCVS($groupId)) {
-                    $this->error("Could not archive project CVS repository");
-                    $deleteState = false;
-                } else {
-                    $backendCVS->setCVSRootListNeedUpdate();
-                }
-            }
-
             $backendSVN = $this->getBackend('SVN');
             if ($backendSVN->repositoryExists($project)) {
                 if (! $backendSVN->archiveProjectSVN($groupId)) {

@@ -799,40 +799,6 @@ function util_get_ids_from_aid($aid, &$art_group_id, &$atid, &$art_name)
 }
 
 /**
- * Return the group id (i.e. project) the commit belongs to
- *
- * @param cid: the commit id
- *
- * @return 0|string group_id, or 0 if group does not exist
- */
-function util_get_group_from_commit_id($cid)
-{
-    $sql           = "SELECT repositoryid FROM cvs_checkins WHERE commitid=" . db_ei($cid);
-    $res           = db_query($sql);
-    $repository_id = db_result($res, 0, 'repositoryid');
-    if (! $repository_id) {
-        return 0;
-    }
-
-    $sql        = "SELECT repository FROM cvs_repositories WHERE id=" . db_ei($repository_id);
-    $res        = db_query($sql);
-    $repository = db_result($res, 0, 'repository');
-    if (! $repository) {
-        return 0;
-    }
-
-  // Remove ".*/cvsroot/" to get the project unix name
-    $projname = preg_replace("/.*\/cvsroot\//i", "", $repository);
-    if (! $projname) {
-        return 0;
-    }
-
-    $sql = "SELECT group_id FROM `groups` WHERE unix_group_name='" . db_es($projname) . "'";
-    $res = db_query($sql);
-    return db_result($res, 0, 'group_id');
-}
-
-/**
  * getStringFromServer - get a string from Server environment
  *
  * @param string $key key of the wanted value

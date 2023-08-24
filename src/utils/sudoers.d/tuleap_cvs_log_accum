@@ -1,2 +1,0 @@
-Defaults:ALL !requiretty
-ALL ALL= (codendiadm) SETENV: NOPASSWD: /usr/lib/tuleap/bin/log_accum*

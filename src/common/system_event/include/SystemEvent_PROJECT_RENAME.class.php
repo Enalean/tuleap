@@ -82,22 +82,6 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
                 }
             }
 
-            // Rename CVS
-            $backendCVS = $this->getBackend('CVS');
-            if ($backendCVS->repositoryExists($project)) {
-                if ($backendCVS->isNameAvailable($new_name)) {
-                    if (! $backendCVS->renameCVSRepository($project, $new_name)) {
-                        $this->error('Could not rename CVS repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
-                        $renameState = $renameState & false;
-                    } else {
-                        $backendCVS->setCVSRootListNeedUpdate();
-                    }
-                } else {
-                    $this->error('Could not rename CVS repository: Name ' . $new_name . ' not available');
-                    $renameState = $renameState & false;
-                }
-            }
-
             // Rename system home/groups
             $backendSystem = $this->getBackend('System');
             if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {

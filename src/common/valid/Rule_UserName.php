@@ -155,22 +155,6 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
 
     /**
-     * Test if the name corresponds to a CVS user account
-     *
-     * @param String $val Value to test
-     *
-     * @return bool
-     */
-    public function isCvsAccount($val)
-    {
-        if (\preg_match('/^anoncvs_/i', $val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'reserved_cvs');
-            return \true;
-        }
-        return \false;
-    }
-
-    /**
      * Test minimal length of name
      *
      * @param String $val Value to test
@@ -323,6 +307,6 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function isAvailableOnSystem(string $login): bool
     {
-        return ! $this->isSystemName($login) && ! $this->isCvsAccount($login);
+        return ! $this->isSystemName($login);
     }
 }

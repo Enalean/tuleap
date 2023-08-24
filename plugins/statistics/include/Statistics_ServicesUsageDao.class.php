@@ -179,25 +179,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getCVSActivities()
-    {
-        $cvs_format_start_date = $this->formatDateForCVS($this->start_date);
-        $cvs_format_end_date   = $this->formatDateForCVS($this->end_date);
-
-        $sql = "SELECT group_id, SUM(cvs_commits) AS result
-                FROM group_cvs_full_history
-                WHERE day <= $cvs_format_end_date
-                    AND day >= $cvs_format_start_date
-                GROUP BY group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    private function formatDateForCVS($timestamp)
-    {
-        return date("Ymd", $timestamp);
-    }
-
     public function getSVNActivities()
     {
         $sql = "SELECT group_id,COUNT(*) AS result

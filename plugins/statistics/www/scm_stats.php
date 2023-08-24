@@ -21,7 +21,6 @@
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/Statistics_Formatter.class.php';
-require_once __DIR__ . '/../include/Statistics_Formatter_Cvs.class.php';
 require_once __DIR__ . '/../include/Statistics_Formatter_Svn.class.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
@@ -79,8 +78,6 @@ if ($request->exist('export')) {
     header('Content-Disposition: filename=scm_stats_' . $startDate . '_' . $endDate . '.csv');
     $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $project_id);
     echo $statsSvn->getStats();
-    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $project_id);
-    echo $statsCvs->getStats();
     $em                  = EventManager::instance();
     $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $project_id);
     $em->processEvent('statistics_collector', $params);

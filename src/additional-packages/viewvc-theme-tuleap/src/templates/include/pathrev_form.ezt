@@ -1,46 +1,14 @@
 <div class="tuleap-viewvc-header-actions-entry">
-    <span class="tuleap-viewvc-header-actions-entry-stickyrevision">Sticky [is roottype "cvs"]Tag[else]Revision[end]:</span>
+    <span class="tuleap-viewvc-header-actions-entry-stickyrevision">Sticky Revision:</span>
     <span>
         <form method="get" action="[pathrev_action]" style="display: inline">
             [for pathrev_hidden_values]
                 <input type="hidden" name="[pathrev_hidden_values.name]" value="[pathrev_hidden_values.value]"/>
             [end]
-            [is roottype "cvs"]
-                [define pathrev_selected][pathrev][end]
-                <select name="pathrev" onchange="submit()">
-                    <option value=""></option>
-                    [if-any branch_tags]
-                        <optgroup label="Branches">
-                            [for branch_tags]
-                                [is branch_tags pathrev]
-                                    <option selected>[branch_tags]</option>
-                                    [define pathrev_selected][end]
-                                [else]
-                                    <option>[branch_tags]</option>
-                                [end]
-                            [end]
-                        </optgroup>
-                    [end]
-                    <optgroup label="Non-branch tags">
-                        [for plain_tags]
-                            [is plain_tags pathrev]
-                                <option selected>[plain_tags]</option>
-                                [define pathrev_selected][end]
-                            [else]
-                                <option>[plain_tags]</option>
-                            [end]
-                        [end]
-                    </optgroup>
-                    [if-any pathrev_selected]
-                        <option selected>[pathrev_selected]</option>
-                    [end]
-                </select>
-            [else]
-                <div class="input-append">
-                    <input type="text" name="pathrev" value="[pathrev]" class="input-small" size="6"/>
-                    <button type="submit" class="btn">Set</button>
-                </div>
-            [end]
+            <div class="input-append">
+                <input type="text" name="pathrev" value="[pathrev]" class="input-small" size="6"/>
+                <button type="submit" class="btn">Set</button>
+            </div>
         </form>
 
         [if-any pathrev]

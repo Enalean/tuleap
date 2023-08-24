@@ -72,7 +72,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
 
     public const REFERENCE_NATURE_ARTIFACT     = 'artifact';
     public const REFERENCE_NATURE_DOCUMENT     = 'document';
-    public const REFERENCE_NATURE_CVSCOMMIT    = 'cvs_commit';
     public const REFERENCE_NATURE_SVNREVISION  = 'svn_revision';
     public const REFERENCE_NATURE_FILE         = 'file';
     public const REFERENCE_NATURE_RELEASE      = 'release';
@@ -126,16 +125,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
                 'doc',
                 'fas fa-folder-open',
                 $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key'),
-                true
-            )
-        );
-
-        $natures_collection->addNature(
-            self::REFERENCE_NATURE_CVSCOMMIT,
-            new Nature(
-                'cvs',
-                'fas ' . Service::ICONS[Service::CVS],
-                $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
                 true
             )
         );

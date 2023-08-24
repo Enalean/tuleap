@@ -91,14 +91,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const BACKEND_FACTORY_GET_ALIASES = 'backend_factory_get_aliases';
 
     /**
-     * We are retrieving an instance of BackendCVS.
-     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'CVS'
-     *
-     * @see BACKEND_FACTORY_GET_PREFIX
-     */
-    public const BACKEND_FACTORY_GET_CVS = 'backend_factory_get_cvs';
-
-    /**
      * We are retrieving an instance of BackendSVN.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'SVN'
      *

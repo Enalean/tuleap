@@ -88,15 +88,6 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_result, $rules->isUnixValid($given_username));
     }
 
-    public function testCVSNames(): void
-    {
-        $r = new Rule_UserName();
-        $this->assertTrue($r->isCvsAccount("anoncvs_"));
-        $this->assertTrue($r->isCvsAccount("anoncvs_test"));
-        $this->assertTrue($r->isCvsAccount("ANONCVS_"));
-        $this->assertTrue($r->isCvsAccount("ANONCVS_TEST"));
-    }
-
     public function testMinLen(): void
     {
         $r = new Rule_UserName();

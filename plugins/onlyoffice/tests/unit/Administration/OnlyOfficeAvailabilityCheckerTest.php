@@ -80,7 +80,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
-            ->withUsedService('cvs')
+            ->withUsedService('example')
             ->build();
 
         self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
@@ -96,7 +96,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
-            ->withUsedService('cvs')
+            ->withUsedService('example')
             ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
             ->build();
 
@@ -120,7 +120,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
-            ->withUsedService('cvs')
+            ->withUsedService('example')
             ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
             ->build();
 

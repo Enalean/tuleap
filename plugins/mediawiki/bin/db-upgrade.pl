@@ -13,7 +13,7 @@ use MIME::Base64 ;
 use HTML::Entities ;
 
 use vars qw/$dbh @reqlist $query/ ;
-use vars qw/$sys_default_domain $sys_cvs_host
+use vars qw/$sys_default_domain
     $sys_shell_host $sys_users_host $sys_docs_host
     $sys_dns1_host $sys_dns2_host $FTPINCOMING_DIR $FTPFILES_DIR
     $sys_urlroot $sf_cache_dir $sys_name

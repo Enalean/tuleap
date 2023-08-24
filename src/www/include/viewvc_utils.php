@@ -18,9 +18,6 @@ function viewvc_utils_track_browsing($group_id, $type)
         if ($type == 'svn') {
             $browse_column = 'svn_browse';
             $table         = 'group_svn_full_history';
-        } elseif ($type == 'cvs') {
-            $browse_column = 'cvs_browse';
-            $table         = 'group_cvs_full_history';
         }
 
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());

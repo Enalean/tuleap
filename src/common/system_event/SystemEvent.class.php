@@ -52,7 +52,6 @@ abstract class SystemEvent
     public const TYPE_MEMBERSHIP_CREATE                        = "MEMBERSHIP_CREATE";
     public const TYPE_MEMBERSHIP_DELETE                        = "MEMBERSHIP_DELETE";
     public const TYPE_MEMBERSHIP_MODIFY                        = "MEMBERSHIP_MODIFY";
-    public const TYPE_CVS_IS_PRIVATE                           = "CVS_IS_PRIVATE";
     public const TYPE_PROJECT_IS_PRIVATE                       = "PROJECT_IS_PRIVATE";
     public const TYPE_SERVICE_USAGE_SWITCH                     = "SERVICE_USAGE_SWITCH";
     public const TYPE_ROOT_DAILY                               = "ROOT_DAILY";

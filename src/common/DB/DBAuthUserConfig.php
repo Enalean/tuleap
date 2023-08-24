@@ -31,7 +31,7 @@ use Tuleap\Config\ConfigKeyString;
 final class DBAuthUserConfig
 {
     #[ConfigKey('Database user for SVN authentication')]
-    #[ConfigKeyHelp('On some platforms it is also used for local accounts (CVS & co)')]
+    #[ConfigKeyHelp('On some platforms it is also used for local accounts')]
     #[ConfigKeyString('dbauthuser')]
     public const USER = 'sys_dbauth_user';
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SystemEvent;
 
 use BackendAliases;
-use BackendCVS;
 use BackendSVN;
 use BackendSystem;
 use Exception;
@@ -75,7 +74,6 @@ class SystemEventProcessorRootTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->system_event_dao,
                 $this->logger,
                 M::spy(BackendAliases::class),
-                M::spy(BackendCVS::class),
                 M::spy(BackendSVN::class),
                 M::spy(BackendSystem::class),
                 $this->site_cache,

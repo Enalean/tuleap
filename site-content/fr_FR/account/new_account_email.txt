@@ -15,7 +15,7 @@ $section_two = "En tant que tel, vous pouvez participer pleinement à toutes les
 
 
 $section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-                  ." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS et SVN en dépendent. "
+                  ." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires SVN en dépendent. "
                   ." Votre compte shell sera activé dans moins de deux heures."
                   ."\n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site"
                   ." et de peaufiner la configuration de votre compte utilisateur "

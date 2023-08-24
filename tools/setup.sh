@@ -32,7 +32,6 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/options.sh
 . ${include}/helper.sh
 . ${include}/logger.sh
-. ${include}/core.sh
 . ${include}/plugins.sh
 
 # Main
@@ -99,7 +98,6 @@ if [ ${configure:-false} = "true" ]; then
     ${tuleapcfg} configure apache
     _checkInstalledPlugins
     _checkPluginsConfiguration
-    _configureCVS
     if ${printf} '%s' ${plugins_configured[@]:-false} | \
         ${grep} --quiet "true"; then
 

@@ -77,11 +77,19 @@ Requires: systemd
 Obsoletes: forgeupgrade <= 999
 Provides: forgeupgrade
 
+%if "%{?dist}" == ".el7"
+
 Obsoletes: tuleap-plugin-forumml <= 15.0
 Provides: tuleap-plugin-forumml
 
 Obsoletes: tuleap-core-mailman <= 15.0
 Provides: tuleap-core-mailman
+
+Obsoletes: tuleap-core-cvs <= 15.0
+Provides: tuleap-core-cvs
+
+%endif
+
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -90,22 +98,6 @@ Tuleap is a web based application that address all the aspects of product develo
 #
 ## Core component definitions
 #
-
-%if "%{?dist}" == ".el7"
-
-%package core-cvs
-Summary: CVS component for Tuleap
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph
-Requires: perl-libwww-perl, perl-LWP-Protocol-https
-Requires: viewvc >= 1.1.30, viewvc-theme-tuleap >= 1.0.8
-Requires: cvs-tuleap
-Requires: libnss-mysql, nss, nscd
-Requires: perl-Text-Iconv
-%description core-cvs
-Manage dependencies for Tuleap CVS integration
-
-%endif
 
 %package core-subversion
 Summary: Subversion component for Tuleap
@@ -684,9 +676,6 @@ done
 # Install system tmpfiles
 %{__install} -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
-%if "%{?dist}" == ".el7"
-%{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
-%endif
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -695,15 +684,6 @@ done
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%if "%{?dist}" == ".el7"
-%{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvsroot
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvslocks
-%{__install} -d $RPM_BUILD_ROOT/var/run/log_accum
-%endif
 %{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -725,9 +705,6 @@ done
 
 # Log dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
-%if "%{?dist}" == ".el7"
-%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
-%endif
 
 # Run dir
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
@@ -735,9 +712,6 @@ done
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
-%if "%{?dist}" == ".el7"
-%{__install} src/utils/sudoers.d/tuleap_cvs_log_accum $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
-%endif
 
 ## plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -961,11 +935,6 @@ fi
 
 chmod 750 /var/lib/gitolite
 
-%if "%{?dist}" == ".el7"
-%pre core-cvs
-/usr/bin/rm -rf /var/lock/cvs
-%endif
-
 #
 #
 #
@@ -977,18 +946,6 @@ chmod 750 /var/lib/gitolite
 
 # Clean old tuleap cache file
 /usr/bin/rm -rf %{APP_CACHE_DIR}/tuleap_hooks_cache
-
-%if "%{?dist}" == ".el7"
-%post core-cvs
-/usr/bin/ln -s %{APP_DATA_DIR}/cvslocks /var/lock/cvs
-if [ ! -f %{_sysconfdir}/shells ] ; then
-    echo "%{APP_LIBBIN_DIR}/cvssh" > %{_sysconfdir}/shells
-    echo "%{APP_LIBBIN_DIR}/cvssh-restricted" > %{_sysconfdir}/shells
-else
-    grep -q "^%{APP_LIBBIN_DIR}/cvssh$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh" >> %{_sysconfdir}/shells
-    grep -q "^%{APP_LIBBIN_DIR}/cvssh-restricted$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh-restricted" >> %{_sysconfdir}/shells
-fi
-%endif
 
 %post core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
@@ -1039,14 +996,6 @@ fi
 /usr/bin/systemctl unmask php81-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
-%if "%{?dist}" == ".el7"
-%postun core-cvs
-if [ "$1" = 0 ] && [ -f %{_sysconfdir}/shells ] ; then
-    sed -i '\!^%{APP_LIBBIN_DIR}/cvssh$!d' %{_sysconfdir}/shells
-    sed -i '\!^%{APP_LIBBIN_DIR}/cvssh-restricted$!d' %{_sysconfdir}/shells
-fi
-%endif
-
 %postun core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
@@ -1094,7 +1043,6 @@ fi
 %dir %{APP_DIR}/src/www/api
 %{APP_DIR}/src/www/api/index.php
 %{APP_DIR}/src/www/api/reference
-%{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/forum
@@ -1154,12 +1102,6 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-%if "%{?dist}" == ".el7"
-%attr(0755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
-%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
-%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
-%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
-%endif
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
@@ -1172,15 +1114,9 @@ fi
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
-%if "%{?dist}" == ".el7"
-%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
-%endif
 
 # Sudoers
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_fileforge
-%if "%{?dist}" == ".el7"
-%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
-%endif
 
 # Run dir
 %attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap
@@ -1210,16 +1146,6 @@ fi
 #
 # Core
 #
-%if "%{?dist}" == ".el7"
-%files core-cvs
-%defattr(-,root,root,-)
-%attr(00751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/cvsroot
-%attr(00751,root,root) %{APP_DATA_DIR}/cvslocks
-%attr(00777,root,root) /var/run/log_accum
-# Systemd tmpfiles
-%attr(00644,root,root) %{_tmpfilesdir}/tuleap-cvs.conf
-%endif
-
 %files core-subversion
 %defattr(-,root,root,-)
 

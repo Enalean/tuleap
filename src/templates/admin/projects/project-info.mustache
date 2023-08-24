@@ -10,20 +10,17 @@
         {{/ is_active }}
     </nav>
 
-    {{# is_suspended_status }}
+    {{^ plugin_suspended_and_not_blocked_warnings }}
         <section class="tlp-alert-warning site-admin-project-is-supended-warning">
             {{# gettext }}This project is suspended. Only site administrators may access it.
                 However, the following services are not blocked and may still be used:{{/ gettext }}
             <ul>
-                <li>{{# gettext }}Mailing lists (Lists Service){{/ gettext }}</li>
-                <li>{{# gettext }}Project web pages (Home Page Service){{/ gettext }}</li>
-                <li>{{# gettext }}CVS{{/ gettext }}</li>
                 {{# plugin_suspended_and_not_blocked_warnings}}
                     <li>{{ . }}</li>
                 {{/ plugin_suspended_and_not_blocked_warnings }}
             </ul>
         </section>
-    {{/ is_suspended_status }}
+    {{/ plugin_suspended_and_not_blocked_warnings }}
 
     <section class="tlp-framed-horizontally" id="siteadmin-project-information">
         <div id="siteadmin-project-information-details">

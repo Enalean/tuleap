@@ -87,13 +87,6 @@ class SystemEvent_USER_RENAME extends SystemEvent
                 $renameState = $renameState & false;
             }
 
-            //Rename CVS files
-            $backendCVS = $this->getBackend('CVS');
-            if (! $backendCVS->updateCVSWritersForGivenMember($user)) {
-                $this->error('Could not update CVS writers for the user (id:' . $user->getId() . ')');
-                $renameState = $renameState & false;
-            }
-
             //Rename SVN files
             $backendSVN = $this->getBackend('SVN');
             if (! $backendSVN->updateSVNAccessForGivenMember($user)) {

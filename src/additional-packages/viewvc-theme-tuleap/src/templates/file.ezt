@@ -39,16 +39,8 @@
     [if-any branches]
       <br />Branch: <strong>[branches]</strong>
     [end]
-    [if-any tags]
-      <br />CVS Tags: <strong>[tags]</strong>
-    [end]
     [if-any branch_points]
       <br />Branch point for: <strong>[branch_points]</strong>
-    [end]
-    [is roottype "cvs"]
-      [if-any changed]
-        <br />Changes since <strong>[prev]: [changed] lines</strong>
-      [end]
     [end]
     [is annotation "binary"]
       <br /><strong>Unable to calculate annotation data on binary file contents.</strong>

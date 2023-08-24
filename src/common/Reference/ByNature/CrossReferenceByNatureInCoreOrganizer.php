@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature;
 
-use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
@@ -35,10 +34,6 @@ class CrossReferenceByNatureInCoreOrganizer
      * @var CrossReferenceWikiOrganizer
      */
     private $wiki_organizer;
-    /**
-     * @var CrossReferenceCvsOrganizer
-     */
-    private $cvs_organizer;
 
     /**
      * @var CrossReferenceFRSOrganizer
@@ -55,13 +50,11 @@ class CrossReferenceByNatureInCoreOrganizer
 
     public function __construct(
         CrossReferenceWikiOrganizer $wiki_organizer,
-        CrossReferenceCvsOrganizer $cvs_organizer,
         CrossReferenceFRSOrganizer $frs_organizer,
         CrossReferenceForumOrganizer $forum_organizer,
         CrossReferenceNewsOrganizer $news_organizer,
     ) {
         $this->wiki_organizer  = $wiki_organizer;
-        $this->cvs_organizer   = $cvs_organizer;
         $this->frs_organizer   = $frs_organizer;
         $this->forum_organizer = $forum_organizer;
         $this->news_organizer  = $news_organizer;
@@ -73,9 +66,6 @@ class CrossReferenceByNatureInCoreOrganizer
             switch ($cross_reference_presenter->type) {
                 case \ReferenceManager::REFERENCE_NATURE_WIKIPAGE:
                     $this->wiki_organizer->organizeWikiReference($cross_reference_presenter, $by_nature_organizer);
-                    break;
-                case \ReferenceManager::REFERENCE_NATURE_CVSCOMMIT:
-                    $this->cvs_organizer->organizeCvsReference($cross_reference_presenter, $by_nature_organizer);
                     break;
                 case \ReferenceManager::REFERENCE_NATURE_RELEASE:
                     $this->frs_organizer->organizeFRSReleaseReference($cross_reference_presenter, $by_nature_organizer);

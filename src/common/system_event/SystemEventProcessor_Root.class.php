@@ -37,11 +37,6 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     private $backend_aliases;
 
     /**
-     * @var BackendCVS
-     */
-    private $backend_cvs;
-
-    /**
      * @var BackendSVN
      */
     private $backend_svn;
@@ -62,7 +57,6 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         SystemEventDao $dao,
         \Psr\Log\LoggerInterface $logger,
         BackendAliases $backend_aliases,
-        BackendCVS $backend_cvs,
         BackendSVN $backend_svn,
         BackendSystem $backend_system,
         SiteCache $site_cache,
@@ -70,7 +64,6 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
         $this->backend_aliases = $backend_aliases;
-        $this->backend_cvs     = $backend_cvs;
         $this->backend_svn     = $backend_svn;
         $this->backend_system  = $backend_system;
         $this->site_cache      = $site_cache;
@@ -89,11 +82,6 @@ class SystemEventProcessor_Root extends SystemEventProcessor
          // Since generating aliases may be costly, do it only once everything else is processed
         if ($this->backend_aliases->aliasesNeedUpdate()) {
             $this->backend_aliases->update();
-        }
-
-        // Update CVS root allow file once everything else is processed
-        if ($this->backend_cvs->getCVSRootListNeedUpdate()) {
-            $this->backend_cvs->CVSRootListUpdate();
         }
 
         // Update SVN root definition for Apache once everything else is processed

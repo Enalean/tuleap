@@ -79,7 +79,6 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $shell = "";
         if ($status == 'restricted') {
             $newstatus = 'R';
-            $shell     = ",shell='" . ForgeConfig::get('codendi_bin_prefix') . "/cvssh-restricted'";
         } else {
             $newstatus = 'A';
         }

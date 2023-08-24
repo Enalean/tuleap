@@ -173,9 +173,3 @@ INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, 
 SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 3
 FROM service
 WHERE short_name = 'svn' AND is_active = 1 AND is_used = 1;
-
--- only if CVS is used
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, `rank`)
-SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 4
-FROM service
-WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;

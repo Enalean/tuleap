@@ -19,26 +19,23 @@
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 /**
- * SCM statistics for SVN or CVS
+ * SCM statistics for SVN
  */
 class Statistics_Formatter_Scm extends Statistics_Formatter
 {
-    private $scm;
     protected $dao;
 
     /**
      * Constructor of the class
      *
-     * @param String  $scm       'svn' or 'cvs'
      * @param String  $startDate Period start date
      * @param String  $endDate   Period end date
      * @param int $groupId Project Id
      *
      * @return void
      */
-    public function __construct($scm, $startDate, $endDate, $groupId = null)
+    public function __construct($startDate, $endDate, $groupId = null)
     {
-        $this->scm = $scm;
         parent::__construct($startDate, $endDate, get_csv_separator(), $groupId);
     }
 
@@ -52,11 +49,6 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $read_user_label    = dgettext('tuleap-statistics', 'Total number of users with SVN read access');
         $total_read_label   = dgettext('tuleap-statistics', 'Total number of SVN read access');
         $read_project_label = dgettext('tuleap-statistics', 'Total number of projects with SVN read access');
-        if ($this->scm === 'cvs') {
-            $read_user_label    = dgettext('tuleap-statistics', 'Total number of users with CVS read access');
-            $total_read_label   = dgettext('tuleap-statistics', 'Total number of CVS read access');
-            $read_project_label = dgettext('tuleap-statistics', 'Total number of projects with CVS read access');
-        }
 
         $readIndex[]          = dgettext('tuleap-statistics', 'Month');
         $totalRead[]          = $total_read_label;
@@ -89,11 +81,6 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $commit_user_label    = dgettext('tuleap-statistics', 'Total number of users with SVN commits');
         $total_commit_label   = dgettext('tuleap-statistics', 'Total number of SVN commits');
         $commit_project_label = dgettext('tuleap-statistics', 'Total number of projects with SVN commits');
-        if ($this->scm === 'cvs') {
-            $commit_user_label    = dgettext('tuleap-statistics', 'Total number of users with CVS commits');
-            $total_commit_label   = dgettext('tuleap-statistics', 'Total number of CVS commits');
-            $commit_project_label = dgettext('tuleap-statistics', 'Total number of projects with CVS commits');
-        }
 
         $commitsIndex[]         = dgettext('tuleap-statistics', 'Month');
         $totalCommits[]         = $total_commit_label;
@@ -179,7 +166,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     }
 
     /**
-     * Add stats for SVN or CVS in CSV format
+     * Add stats for SVN in CSV format
      *
      * @return String
      */

@@ -314,9 +314,6 @@ msgstr "Data absoluta apenas"
 msgid "Access"
 msgstr "Acesso"
 
-msgid "Access Denied"
-msgstr "Acesso Negado"
-
 msgid "Access control"
 msgstr "Controle de acesso"
 
@@ -407,9 +404,6 @@ msgstr "Ativo"
 msgid "Active sessions browser statistics"
 msgstr "Estatísticas das sessões ativas de navegador"
 
-msgid "Add"
-msgstr "Adicionar"
-
 msgid "Add Forum"
 msgstr "Adicionar Fórum"
 
@@ -457,9 +451,6 @@ msgstr "Adicionar vínculo de grupo de usuários"
 
 msgid "Add widget"
 msgstr "Adicionar widget"
-
-msgid "Added Lines"
-msgstr "Linhas adicionadas"
 
 msgid "Adding a non-project member"
 msgstr "Adicionar um membro de fora do projeto"
@@ -708,29 +699,8 @@ msgstr "Azul"
 msgid "Bound to service"
 msgstr "Vinculado ao serviço"
 
-msgid "Branch"
-msgstr "Branch"
-
 msgid "Broken Thread"
 msgstr "Discussão interrompida"
-
-msgid "Browse CVS Tree"
-msgstr "Árvore de navegação CVS"
-
-msgid "Browse commits by"
-msgstr "Procurar commits por"
-
-msgid "Browse the CVS Tree"
-msgstr "Ver Árvore CVS"
-
-msgid ""
-"Browsing the CVS tree gives you a great view into the current status of this "
-"project's code. You may also view the complete histories of any file in the "
-"repository."
-msgstr ""
-"Navegar na árvore CVS dá-lhe uma excelente visão do estado atual do código "
-"deste projeto. Você também pode visualizar os históricos completos de "
-"qualquer arquivo no repositório."
 
 msgid "Built from template"
 msgstr "Construído a partir do modelo"
@@ -775,42 +745,6 @@ msgstr "CSV formato da data"
 
 msgid "CSV separator"
 msgstr "CSV separado"
-
-msgid "CVS"
-msgstr "CVS"
-
-msgid "CVS Administration"
-msgstr "Administração CVS"
-
-#, php-format
-msgid "CVS Commit #%1$s - Details"
-msgstr "CVS Compromisso #%1$s - Detalhes"
-
-msgid "CVS Commit Browsing"
-msgstr "Visualizar Commit CVS"
-
-msgid "CVS Information"
-msgstr "Informações CVS"
-
-msgid "CVS Permissions"
-msgstr "Permissões CVS"
-
-msgid "CVS Preamble"
-msgstr "Preâmbulo do CVS"
-
-msgid "CVS Tracking"
-msgstr "Rastreamento CVS"
-
-msgid "CVS Watch Mode"
-msgstr "Modo de Vigia CVS"
-
-msgid ""
-"CVS creates working copies of project files read-only, to remind developers "
-"to run the cvs edit command before working on them."
-msgstr ""
-"O CVS cria cópias de trabalho de arquivos de projeto somente leitura, para "
-"lembrar os desenvolvedores de executar o comando de edição de cvs antes de "
-"trabalhar neles."
 
 msgid "Can only be updated when the category is not used as project flag."
 msgstr ""
@@ -877,9 +811,6 @@ msgstr ""
 "Categorizar o seu projeto ajudará potenciais desenvolvedores e usuários a "
 "encontrarem-no e participarem."
 
-msgid "Change"
-msgstr "Alterar"
-
 msgid "Change Forum Status"
 msgstr "Alterar o Status do Fórum"
 
@@ -895,9 +826,6 @@ msgid ""
 msgstr ""
 "Selecione esta opção se você deseja forçar o uso desta preferência para "
 "todos os usuários."
-
-msgid "Checkin -"
-msgstr "Checkin -"
 
 msgid "Child projects"
 msgstr "Projetos Filhos"
@@ -916,16 +844,6 @@ msgstr "Escolha um fuso-horário"
 
 msgid "Clear history"
 msgstr "Histórico claro"
-
-#, php-format
-msgid ""
-"Click a column heading to sort results (up or down), or <A "
-"HREF=\"%1$s\"><b>Reset sort</b></a>. You can also <a href=\"%2$s\"><b>%3$s "
-"multicolumn sort</b></a>."
-msgstr ""
-"Clique no título de uma coluna para ordenar os resultados (para cima ou para "
-"baixo), ou <A HREF=\"%1$s\"><b>Reiniciar ordenação</b></a>. Você também pode "
-"<a href=\"%2$s\"><b>%3$s multicoluna sort</b><</a>."
 
 msgid "Close"
 msgstr "Fechar"
@@ -952,16 +870,6 @@ msgstr "Vírgula"
 msgid "Comment"
 msgstr "Comente"
 
-msgid "Commit #"
-msgstr "Commit #"
-
-#, php-format
-msgid "Commit #%1$s not found in this project"
-msgstr "Commit #%1$s não encontrado neste projeto"
-
-msgid "Commits"
-msgstr "Commits"
-
 msgid "Completed invitation"
 msgstr "Convite finalizado"
 
@@ -970,9 +878,6 @@ msgstr "Senha comprometida"
 
 msgid "Condensed"
 msgstr "Resumido"
-
-msgid "Configuration updated"
-msgstr "Configuração atualizada"
 
 msgid "Configure homepage"
 msgstr "Configurar a página inicial"
@@ -1253,9 +1158,6 @@ msgstr "Descrição"
 msgid "Details"
 msgstr "Detalhes"
 
-msgid "Developer Commits (Last 7 days/Total)"
-msgstr "Commits de Desenvolvedores (Últimos 7 dias/Total)"
-
 msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr ""
 "Não recebeu um email de confirmação? Verique sua pasta de lixo eletrônico "
@@ -1297,9 +1199,6 @@ msgstr "Eventos realizados"
 msgid "Download agreement"
 msgstr "Acordo de download"
 
-msgid "E-mail notification on commits"
-msgstr "Notificação por e-mail sobre os compromissos"
-
 #, php-format
 msgid "E.g %1$s employees"
 msgstr "E.g %1$s empregados"
@@ -1307,19 +1206,6 @@ msgstr "E.g %1$s empregados"
 #, php-format
 msgid "E.g %1$s employees & subco"
 msgstr "E.g %1$s empregados & subcontratados"
-
-msgid "ERROR - no group_id"
-msgstr "ERRO - nenhum grupo_id"
-
-msgid ""
-"Each commit event can also be notified via email to specific recipients or "
-"mailing lists (comma separated). A specific subject header for the email "
-"message can also be specified."
-msgstr ""
-"Cada evento de commit também pode ser notificado por email para "
-"destinatários específicos ou listas de emails (separados por vírgulas). Um "
-"cabeçalho de assunto específico para a mensagem de email também pode ser "
-"especificado."
 
 msgid ""
 "Edge Legacy is not supported. Please upgrade to the latest version of Edge "
@@ -1506,9 +1392,6 @@ msgstr "FRS"
 
 msgid "Fields"
 msgstr "Campos"
-
-msgid "File"
-msgstr "Arquivo"
 
 #, php-format
 msgid "File upload error (error code: %1$s)"
@@ -1706,9 +1589,6 @@ msgstr "Eu aceito"
 msgid "I decline"
 msgstr "Eu recuso"
 
-msgid "ID"
-msgstr "ID"
-
 msgid "INSERT FAILED"
 msgstr "FALHA AO INSERIR"
 
@@ -1777,9 +1657,6 @@ msgstr "Enquanto isso, você pode %svoltar à pagina inicial%s."
 msgid "Inactive service cannot be enabled."
 msgstr "O serviço inativo não pode ser ativado."
 
-msgid "Info"
-msgstr "Informação"
-
 msgid "Inherited?"
 msgstr "Herdado?"
 
@@ -1791,14 +1668,6 @@ msgstr "Erro interno: Não foi possível atualizar a senha"
 
 msgid "Internal server error"
 msgstr "Erro interno do servidor"
-
-#, php-format
-msgid ""
-"Introductory message to replace the default one on the <a href=\"%1$s\">CVS "
-"welcome page</a>. (HTML tags allowed)"
-msgstr ""
-"Mensagem introdutória para substituir a mensagem padrão no <a "
-"href=\"%1$s\">Página de boas-vindas do CVS</a>. (tags HTML permitidas)"
 
 msgid "Invalid Email Address"
 msgstr "Endereço de email inválido"
@@ -1934,9 +1803,6 @@ msgstr "Palavra-chave"
 msgid "Keyword that will trigger a reference creation"
 msgstr "Palavra-chave que irá desencadear uma criação de referência"
 
-msgid "Keywords in log messages"
-msgstr "Palavras-chave no log de mensagens"
-
 msgid "Label"
 msgstr "Rótulo"
 
@@ -2005,14 +1871,8 @@ msgstr "Link"
 msgid "Links"
 msgstr "Links"
 
-msgid "List of impacted files"
-msgstr "Lista de arquivos impactados"
-
 msgid "Lists the project members."
 msgstr "Lista os membros do projeto."
-
-msgid "Log message"
-msgstr "Log de Mensagem"
 
 msgid "Login"
 msgstr "Login"
@@ -2031,12 +1891,6 @@ msgstr "Baixo tráfego, altamente recomendado."
 
 msgid "Low traffic."
 msgstr "Baixo tráfego."
-
-msgid "Mail To"
-msgstr "Enviar para"
-
-msgid "Mailing lists (Lists Service)"
-msgstr "Listas de email (Serviço de Listas)"
 
 msgid "Manage all plugins"
 msgstr "Gerir todos os plugins"
@@ -2273,9 +2127,6 @@ msgstr "Não"
 
 msgid "No Comments"
 msgstr "Sem Comentários"
-
-msgid "No Commit matches your criteria"
-msgstr "Nenhum Commit corresponde aos seus critérios"
 
 msgid "No Forums Found"
 msgstr "Não foram encontrados Fóruns"
@@ -2668,9 +2519,6 @@ msgstr "Privado incl. restrito"
 msgid "Private including restricted"
 msgstr "Privado incluindo restrito"
 
-msgid "Private projects can't make their repository public."
-msgstr "Os projetos privados não podem tornar público o seu repositório."
-
 msgid "Processors"
 msgstr "Processadores"
 
@@ -2839,9 +2687,6 @@ msgstr "Tipo de projeto"
 
 msgid "Project visibility"
 msgstr "Visibilidade do projeto"
-
-msgid "Project web pages (Home Page Service)"
-msgstr "Páginas web do projeto (Home Page Service)"
 
 msgid "Projects"
 msgstr "Projetos"
@@ -3041,9 +2886,6 @@ msgstr "Remover membro do grupo"
 msgid "Remove project administrator"
 msgstr ""
 
-msgid "Removed Lines"
-msgstr "Linhas Removidas"
-
 msgid "Repeat new password"
 msgstr "Digite novamente a senha"
 
@@ -3052,9 +2894,6 @@ msgstr "Digite novamente a senha"
 
 msgid "Replace the current logo"
 msgstr "Substitua o logotipo atual"
-
-msgid "Repository History"
-msgstr "Histórico do Repositório"
 
 msgid "Request body is empty"
 msgstr ""
@@ -3099,9 +2938,6 @@ msgstr "Revisar projetos pendentes"
 
 msgid "Review pending users"
 msgstr "Revisar usuários pendentes"
-
-msgid "Revision"
-msgstr "Revisão"
 
 msgid "Revoke selected SVN token"
 msgstr "Revogar os tokens SVN selecionados"
@@ -3389,17 +3225,11 @@ msgstr "Estilo"
 msgid "Subject"
 msgstr "Assunto"
 
-msgid "Subject header"
-msgstr "Cabeçalho do assunto"
-
 msgid "Submitted CSV date format is not valid"
 msgstr "O formato de data CSV escolhido não é válido"
 
 msgid "Submitted CSV separator is not valid"
 msgstr "O separador CSV escolhido não é válido"
-
-msgid "Submitted by"
-msgstr "Enviado por"
 
 msgid "Submitted relative dates display is not valid."
 msgstr "A exibição de datas relativas submetida não é válida."
@@ -3809,9 +3639,6 @@ msgstr "Não há grupo de usuários ainda"
 msgid "These projects are already related."
 msgstr "Estes projetos já são relacionados."
 
-msgid "This Project Has Turned CVS Off"
-msgstr "Este Projeto desabilitou o CVS"
-
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "O arquivo está pronto para ser importado em uma instância Tuleap."
 
@@ -3934,17 +3761,11 @@ msgstr ""
 "Esta pessoa ainda será capaz de se registrar sozinha, mas nãoserá "
 "automaticamente um membro do projeto."
 
-msgid "This plugin will be removed in september 2023"
-msgstr "Este plugin será removido em setembro de 2023"
-
 msgid "This project doesn't allow short name edition."
 msgstr "Este projeto não permite a edição de nomes reduzidos."
 
 msgid "This project doesn't use any services with permissions"
 msgstr "Este projeto não utiliza nenhum serviço com permissões"
-
-msgid "This project has no CVS history."
-msgstr "Este projeto não tem histórico CVS."
 
 msgid "This project is deleted"
 msgstr "Este projeto foi excluído"
@@ -4104,9 +3925,6 @@ msgstr "Trackers"
 msgid "Trackers v3 import"
 msgstr "Importação de Tracker v3"
 
-msgid "Tree"
-msgstr "Árvore"
-
 msgid "Trove categories"
 msgstr "Categorias de baú de projetos"
 
@@ -4125,9 +3943,6 @@ msgstr ""
 "rápidas com facilidade.\n"
 "Aqui você pode planejar, acompanhar, programar e colaborar em projetos de "
 "software."
-
-msgid "Type"
-msgstr "Tipo"
 
 msgid "URL pointed by the reference"
 msgstr "URL apontada pela referência"
@@ -4470,18 +4285,6 @@ msgstr "Qual o objetivo do seu projeto?"
 msgid "What's this access key for?"
 msgstr "Para que serve esta chave de acesso?"
 
-#, php-format
-msgid ""
-"When CVS tracking is on, the commits (file change, addition and removal) are "
-"registered in the %1$s database so that they can be browsed and searched. "
-"Else commits are not logged in the database; only the CVS history is "
-"available"
-msgstr ""
-"Quando o acompanhamento do CVS está ligado, os commits (alteração, adição e "
-"remoção de arquivos) são registados na base de dados %1$s para que possam "
-"ser vistos e pesquisados. Outras submissões não são registradas no banco de "
-"dados; apenas o histórico do CVS está disponível"
-
 msgid ""
 "When this setting is active, whenever you add someone in any user group, "
 "they will be automatically added in project members."
@@ -4666,14 +4469,6 @@ msgstr ""
 
 msgid "You are not allowed to access this resource"
 msgstr "Você não está autorizado a acessar este recurso"
-
-#, php-format
-msgid ""
-"You are not authorized to access this file. Please contact a <A "
-"HREF=\"%1$s\">Project Administrator</A>."
-msgstr ""
-"Você não está autorizado a acessar este arquivo. Por favor contate um <A "
-"HREF=\"%1$s\">Project Administrator</A>."
 
 msgid "You are not the user who asked for email change"
 msgstr "Você não é o usuário que solicitou a alteração do email"
@@ -5098,9 +4893,6 @@ msgstr "[%s] Confirmação de alteração de email"
 msgid "`description` is required."
 msgstr "É necessária uma \"descrição\"."
 
-msgid "activate"
-msgstr "ativar"
-
 msgid "active"
 msgstr "ativo"
 
@@ -5124,12 +4916,6 @@ msgstr "verifique em seu email o link para ativar sua conta."
 
 msgid "check your email for the link to recover your password."
 msgstr "verifique em seu email o link para recuperar sua senha."
-
-msgid "commits at once"
-msgstr "commit imediatamente"
-
-msgid "deactivate"
-msgstr "desativar"
 
 msgid "deleted"
 msgstr "excluído"
@@ -5159,9 +4945,6 @@ msgstr "login"
 msgid "login (Real Name)"
 msgstr "login (Nome real)"
 
-msgid "matching commits"
-msgstr "commits correspondentes"
-
 msgid "or"
 msgstr "ou"
 
@@ -5178,11 +4961,6 @@ msgid "parameter \"query\", property \"%s\" invalid type: boolean expected"
 msgstr ""
 "parâmetro \"query\", propriedade \"%s\" tipo inválido: booleano esperado"
 
-msgid "partly<br>Email Address Appears Invalid, e-mail notification is off."
-msgstr ""
-"parcialmente<br>Endereço de e-mail aparece inválido, a notificação por e-"
-"mail está desligada."
-
 msgid "pending"
 msgstr "pendente"
 
@@ -5192,9 +4970,6 @@ msgstr "monitoramento de pessoas"
 msgid "permissions"
 msgstr "permissões"
 
-msgid "private repository"
-msgstr "repositório privado"
-
 msgid "project"
 msgstr "projeto"
 
@@ -5203,12 +4978,6 @@ msgstr "responder"
 
 msgid "restricted"
 msgstr "restrito"
-
-msgid "sorted by"
-msgstr "ordenado por"
-
-msgid "successfully"
-msgstr "com sucesso"
 
 msgid "supported browsers"
 msgstr "navegadores suportados"

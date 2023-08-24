@@ -810,7 +810,7 @@ class BackendSVN extends Backend
     }
 
     /**
-     * Make the cvs repository of the project private or public
+     * Make the svn repository of the project private or public
      *
      * @param Project $project    The project to work on
      * @param bool $is_private true if the repository is private

@@ -163,16 +163,12 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN = $this->createMock(\BackendSVN::class);
         $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
 
-        $backendCVS = $this->createMock(\BackendCVS::class);
-        $backendCVS->method('isNameAvailable')->with('foobar')->willReturn(true);
-
         $backendSystem = $this->createMock(\BackendSystem::class);
         $backendSystem->method('isProjectNameAvailable')->with('foobar')->willReturn(true);
 
         $r->method('_getBackend')->willReturnMap(
             [
                 ['SVN', $backendSVN],
-                ['CVS', $backendCVS],
                 ['System', $backendSystem],
             ]
         );
@@ -189,32 +185,6 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(false);
         $r->method('_getBackend')->with('SVN')->willReturn($backendSVN);
 
-        $backendCVS = $this->createMock(\BackendCVS::class);
-        $backendCVS->expects(self::never())->method('isNameAvailable');
-
-        $this->assertFalse($r->isNameAvailable('foobar'));
-    }
-
-    public function testIsNameAvailableCVSFailure(): void
-    {
-        $r = $this->createPartialMock(\Rule_ProjectName::class, ['_getBackend']);
-
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
-
-        $backendCVS = $this->createMock(\BackendCVS::class);
-        $backendCVS->method('isNameAvailable')->with('foobar')->willReturn(false);
-
-        $backendSystem = $this->createMock(\BackendSystem::class);
-        $backendSystem->expects(self::never())->method('isProjectNameAvailable');
-
-        $r->method('_getBackend')->willReturnMap(
-            [
-                ['SVN', $backendSVN],
-                ['CVS', $backendCVS],
-            ]
-        );
-
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 
@@ -225,16 +195,12 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN = $this->createMock(\BackendSVN::class);
         $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
 
-        $backendCVS = $this->createMock(\BackendCVS::class);
-        $backendCVS->method('isNameAvailable')->with('foobar')->willReturn(true);
-
         $backendSystem = $this->createMock(\BackendSystem::class);
         $backendSystem->method('isProjectNameAvailable')->with('foobar')->willReturn(false);
 
         $r->method('_getBackend')->willReturnMap(
             [
                 ['SVN', $backendSVN],
-                ['CVS', $backendCVS],
                 ['System', $backendSystem],
             ]
         );
