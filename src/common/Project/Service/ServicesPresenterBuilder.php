@@ -20,27 +20,31 @@
 
 namespace Tuleap\Project\Service;
 
-use CSRFSynchronizerToken;
 use PFUser;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Service;
 use ServiceManager;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class ServicesPresenterBuilder
 {
     private const NONE_SERVICE_ID = 100;
 
-    public function __construct(private ServiceManager $service_manager, private \EventManager $event_manager)
-    {
+    public function __construct(
+        private readonly ServiceManager $service_manager,
+        private readonly EventDispatcherInterface $event_manager,
+    ) {
     }
 
-    public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user): ServicesPresenter
+    public function build(Project $project, CSRFSynchronizerTokenInterface $csrf, PFUser $user): ServicesPresenter
     {
         $service_presenters = [];
         $allowed_services   = $this->service_manager->getListOfAllowedServicesForProject($project);
         $add_missing        = $this->event_manager->dispatch(
             new AddMissingService($project, $allowed_services)
         );
+
         foreach ($add_missing->getAllowedServices() as $service) {
             if (! $this->isServiceReadable($service, $user) || $this->isBannedService($service)) {
                 continue;
@@ -86,7 +90,16 @@ class ServicesPresenterBuilder
             return true;
         }
 
-        return $service->isActive();
+        $is_service_shown = $this->event_manager->dispatch(new HideServiceInUserInterfaceEvent($service))->isShown();
+        if (! $is_service_shown) {
+            return false;
+        }
+
+        if ($service->isActive()) {
+            return true;
+        }
+
+        return false;
     }
 
     private function isBannedService(Service $service): bool
@@ -105,7 +118,7 @@ class ServicesPresenterBuilder
     private function isServiceDisabledByPlugin(Service $service, Project $project, PFUser $user): ServiceDisabledCollector
     {
         $service_collector = new ServiceDisabledCollector($project, $service->getShortName(), $user);
-        $this->event_manager->processEvent($service_collector);
+        $this->event_manager->dispatch($service_collector);
 
         return $service_collector;
     }
