@@ -57,6 +57,20 @@ final class TimeframeIsAlignedVerifier implements VerifyTimeframeIsAligned
             );
             return false;
         }
+        if (! $this->semantic_timeframe_dao->areTimeFrameSemanticsUsingSameDatetimeDisplayingForStartDate($tracker_ids)) {
+            $this->buildSemanticError(
+                $configuration_errors,
+                $source_tracker_collection->getSourceTrackers(),
+            );
+            return false;
+        }
+        if (! $this->semantic_timeframe_dao->areTimeFrameSemanticsUsingSameDatetimeDisplayingForEndDate($tracker_ids)) {
+            $this->buildSemanticError(
+                $configuration_errors,
+                $source_tracker_collection->getSourceTrackers(),
+            );
+            return false;
+        }
 
         return true;
     }

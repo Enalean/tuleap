@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyTimeframeIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
@@ -35,13 +36,11 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerSt
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
     private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
-    private SemanticsVerifier $verifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_TitleDao
      */
@@ -50,14 +49,6 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_DescriptionDao
      */
     private $description_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeDao
-     */
-    private $timeframe_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&VerifyStatusIsAligned
-     */
-    private $status_verifier;
     private TrackerReference $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
@@ -91,18 +82,12 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->title_dao       = $this->createMock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
-        $this->timeframe_dao   = $this->createMock(SemanticTimeframeDao::class);
-        $this->status_verifier = $this->createMock(VerifyStatusIsAligned::class);
-        $this->verifier        = new SemanticsVerifier(
-            $this->title_dao,
-            $this->description_dao,
-            $this->status_verifier,
-            new TimeframeIsAlignedVerifier($this->timeframe_dao),
-        );
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
         $this->title_dao->expects(self::once())
             ->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
@@ -111,21 +96,32 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
-        $this->status_verifier->expects(self::once())
-            ->method('isStatusWellConfigured')
-            ->willReturn(true);
-        $this->timeframe_dao->expects(self::once())
-            ->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
-            ->willReturn(0);
-        $this->timeframe_dao->expects(self::once())
-            ->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
-            ->willReturn(true);
 
-        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+        $verifier = new SemanticsVerifier(
+            $this->title_dao,
+            $this->description_dao,
+            new class implements VerifyStatusIsAligned {
+                public function isStatusWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    return true;
+                }
+            },
+            new class implements VerifyTimeframeIsAligned {
+                public function isTimeframeWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    return true;
+                }
+            },
+        );
+
         self::assertTrue(
-            $this->verifier->areTrackerSemanticsWellConfigured(
+            $verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -136,6 +132,8 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfSomethingIsIncorrect(): void
     {
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
+
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(1);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
@@ -144,16 +142,33 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
-        $this->status_verifier->method('isStatusWellConfigured')
-            ->willReturn(false);
-        $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->willReturn(1);
-        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->willReturn(true);
 
-        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
+        $verifier = new SemanticsVerifier(
+            $this->title_dao,
+            $this->description_dao,
+            new class implements VerifyStatusIsAligned {
+                public function isStatusWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    return false;
+                }
+            },
+            new class implements VerifyTimeframeIsAligned {
+                public function isTimeframeWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    $configuration_errors->addSemanticError("Timeframe", "timeframe", []);
+                    return false;
+                }
+            },
+        );
+
         self::assertFalse(
-            $this->verifier->areTrackerSemanticsWellConfigured(
+            $verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -177,16 +192,34 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
-        $this->status_verifier->method('isStatusWellConfigured')
-            ->willReturn(false);
-        $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->willReturn(1);
-        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->willReturn(true);
+
+        $verifier = new SemanticsVerifier(
+            $this->title_dao,
+            $this->description_dao,
+            new class implements VerifyStatusIsAligned {
+                public function isStatusWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    return false;
+                }
+            },
+            new class implements VerifyTimeframeIsAligned {
+                public function isTimeframeWellConfigured(
+                    TrackerReference $tracker,
+                    SourceTrackerCollection $source_tracker_collection,
+                    ConfigurationErrorsCollector $configuration_errors,
+                ): bool {
+                    $configuration_errors->addSemanticError("Timeframe", "timeframe", []);
+                    return false;
+                }
+            },
+        );
 
         $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         self::assertFalse(
-            $this->verifier->areTrackerSemanticsWellConfigured(
+            $verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -196,31 +229,5 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(1, $collected_errors);
         self::assertStringContainsString("Title", $collected_errors[0]->semantic_name);
-    }
-
-    public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
-    {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(0);
-        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->willReturn(0);
-        $this->status_verifier->method('isStatusWellConfigured')
-            ->willReturn(true);
-        $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->willReturn(0);
-        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->willReturn(false);
-
-        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
-        self::assertFalse(
-            $this->verifier->areTrackerSemanticsWellConfigured(
-                $this->program_increment_tracker,
-                $this->source_trackers,
-                $configuration_errors
-            )
-        );
-        $collected_errors = $configuration_errors->getSemanticErrors();
-        self::assertCount(1, $collected_errors);
-        self::assertStringContainsString("Timeframe", $collected_errors[0]->semantic_name);
     }
 }

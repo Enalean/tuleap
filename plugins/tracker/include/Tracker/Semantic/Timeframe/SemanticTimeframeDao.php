@@ -89,6 +89,30 @@ WHERE tracker_id IN $tracker_ids_statement";
         return $result === self::SQL_TRUE_VALUE;
     }
 
+    public function areTimeFrameSemanticsUsingSameDatetimeDisplayingForStartDate(array $tracker_ids): bool
+    {
+        $tracker_ids_statement = EasyStatement::open()->in('(?*)', $tracker_ids);
+        $sql                   = "SELECT DISTINCT display_time
+FROM tracker_semantic_timeframe
+INNER JOIN tracker_field_date ON (tracker_semantic_timeframe.start_date_field_id = tracker_field_date.field_id)
+WHERE tracker_id IN $tracker_ids_statement";
+
+        $rows = $this->getDB()->run($sql, ...$tracker_ids_statement->values());
+        return count($rows) === 1;
+    }
+
+    public function areTimeFrameSemanticsUsingSameDatetimeDisplayingForEndDate(array $tracker_ids): bool
+    {
+        $tracker_ids_statement = EasyStatement::open()->in('(?*)', $tracker_ids);
+        $sql                   = "SELECT DISTINCT display_time
+FROM tracker_semantic_timeframe
+INNER JOIN tracker_field_date ON (tracker_semantic_timeframe.end_date_field_id = tracker_field_date.field_id)
+WHERE tracker_id IN $tracker_ids_statement";
+
+        $rows = $this->getDB()->run($sql, ...$tracker_ids_statement->values());
+        return count($rows) <= 1;
+    }
+
     /**
      * @psalm-return array<int, array{tracker_id: int, implied_from_tracker_id: int}>|null
      */
