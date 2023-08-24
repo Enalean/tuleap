@@ -84,6 +84,7 @@ use Tuleap\Git\Hook\PreReceive\PreReceiveAction;
 use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -309,7 +310,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
-        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
@@ -2165,9 +2165,10 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-    public function get_services_allowed_for_restricted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function handleServiceAllowedForRestricted(CollectServicesAllowedForRestrictedEvent $event): void
     {
-        $params['allowed_services'][] = $this->getServiceShortname();
+        $event->addServiceShortname($this->getServiceShortname());
     }
 
     /**

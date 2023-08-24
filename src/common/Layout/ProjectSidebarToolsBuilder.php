@@ -20,12 +20,11 @@
 
 namespace Tuleap\Layout;
 
-use Event;
-use EventManager;
 use ForgeConfig;
 use PFUser;
 use Project;
-use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 use Tuleap\Sanitizer\URISanitizer;
@@ -33,18 +32,11 @@ use Tuleap\ServerHostname;
 
 class ProjectSidebarToolsBuilder
 {
-    private EventManager $event_manager;
-    private ProjectManager $project_manager;
-    private URISanitizer $uri_sanitizer;
-
     public function __construct(
-        EventManager $event_manager,
-        ProjectManager $project_manager,
-        URISanitizer $uri_sanitizer,
+        private readonly EventDispatcherInterface $event_manager,
+        private readonly \ProjectManager $project_manager,
+        private readonly URISanitizer $uri_sanitizer,
     ) {
-        $this->event_manager   = $event_manager;
-        $this->project_manager = $project_manager;
-        $this->uri_sanitizer   = $uri_sanitizer;
     }
 
     /**
@@ -68,39 +60,32 @@ class ProjectSidebarToolsBuilder
         }
     }
 
-    private function restrictedMemberIsNotProjectMember(PFUser $user, Project $project)
+    private function restrictedMemberIsNotProjectMember(PFUser $user, Project $project): bool
     {
         return $user->isRestricted() && ! $user->isMember($project->getID());
     }
 
-    private function isProjectSuperPublic(Project $project)
+    private function isProjectSuperPublic(Project $project): bool
     {
         $projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 
         return in_array($project->getID(), $projects);
     }
 
-    /** @return string[] */
-    private function getAllowedServicesForUser(PFUser $user, Project $project)
+    private function getAllowedServicesForUser(PFUser $user, Project $project): CollectServicesAllowedForRestrictedEvent
     {
-        $allowed_services = ['summary'];
+        $event = new CollectServicesAllowedForRestrictedEvent();
         if ($this->restrictedMemberIsNotProjectMember($user, $project)) {
-            $this->event_manager->processEvent(
-                Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED,
-                [
-                    'allowed_services' => &$allowed_services,
-                ]
-            );
+            $this->event_manager->dispatch($event);
         }
-
-        return $allowed_services;
+        return $event;
     }
 
     private function canServiceBeAddedInSidebar(
         Project $project,
         PFUser $user,
         \Service $service,
-        array $allowed_services,
+        CollectServicesAllowedForRestrictedEvent $allowed_services,
     ): bool {
         $short_name = $service->getShortName();
 
@@ -122,7 +107,7 @@ class ProjectSidebarToolsBuilder
         if (
             ! $this->isProjectSuperPublic($project)
             && $this->restrictedMemberIsNotProjectMember($user, $project)
-            && ! in_array($short_name, $allowed_services)
+            && ! $allowed_services->isServiceShortnameAllowed($short_name)
         ) {
             return false;
         }

@@ -569,17 +569,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
 
     /**
-     * Sends-out an event to get all services that handle independently restricted users
-     *
-     * Parameters:
-     *    'allowed_services' => array
-     *
-     * Expected result:
-     *    'allowed_services' => array
-     */
-    public const GET_SERVICES_ALLOWED_FOR_RESTRICTED = 'get_services_allowed_for_restricted';
-
-    /**
      * We are writing aliases, so if you have any it is time to give them.
      *
      * Expected result:
