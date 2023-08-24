@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
@@ -35,12 +36,13 @@ class MilestoneControllerFactory
         private readonly \ProjectManager $project_manager,
         private readonly \Planning_MilestoneFactory $milestone_factory,
         private readonly \Planning_MilestonePaneFactory $pane_factory,
-        private readonly \Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory,
+        private readonly VirtualTopMilestonePresenterBuilder $top_milestone_presenter_builder,
         private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
         private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly VisitRecorder $visit_recorder,
         private readonly AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         private readonly HeaderOptionsProvider $header_options_provider,
+        private readonly SplitKanbanConfigurationChecker $flag_checker,
     ) {
     }
 
@@ -63,10 +65,11 @@ class MilestoneControllerFactory
             $request,
             $this->milestone_factory,
             $this->project_manager,
-            $this->top_milestone_pane_factory,
+            $this->top_milestone_presenter_builder,
             $this->service_crumb_builder,
             $this->top_milestone_crumb_builder,
-            $this->header_options_provider
+            $this->header_options_provider,
+            $this->flag_checker,
         );
     }
 }

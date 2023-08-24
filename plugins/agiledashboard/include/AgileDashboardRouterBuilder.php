@@ -99,6 +99,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
         assert($plugin instanceof AgileDashboardPlugin);
 
+        $project_explicit_backlog_dao = new ExplicitBacklogDao();
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);
         $planning_permissions_manager = new PlanningPermissionsManager();
@@ -112,11 +113,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $event_manager = EventManager::instance();
 
-        $top_milestone_pane_factory = $this->getTopMilestonePaneFactory(
-            $request,
-            $event_manager
-        );
-
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
@@ -128,7 +124,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ProjectManager::instance(),
             $milestone_factory,
             $this->pane_factory,
-            $top_milestone_pane_factory,
+            new \Tuleap\AgileDashboard\Planning\VirtualTopMilestonePresenterBuilder(
+                $event_manager,
+                $project_explicit_backlog_dao
+            ),
             $service_crumb_builder,
             new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
             $this->visit_recorder,
@@ -151,6 +150,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 ),
                 $header_options_inserter
             ),
+            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
         );
 
         $ugroup_manager = new UGroupManager();
@@ -199,7 +199,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $mono_milestone_checker,
                 $event_manager,
                 $this->getPlanningFactory(),
-                new ExplicitBacklogDao(),
+                $project_explicit_backlog_dao,
                 new AddToTopBacklogPostActionDao()
             ),
             $event_manager,
@@ -231,13 +231,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 BackendLogger::getDefaultLogger(),
             )
         );
-    }
-
-    private function getTopMilestonePaneFactory(
-        Codendi_Request $request,
-        EventManager $event_manager,
-    ): Planning_VirtualTopMilestonePaneFactory {
-        return new Planning_VirtualTopMilestonePaneFactory($request, new ExplicitBacklogDao(), $event_manager);
     }
 
     /**
