@@ -31,36 +31,40 @@ export type ControlWritingZone = {
     initWritingZone(host: HostElement): void;
     setWritingZoneContent(host: HostElement, content: string): void;
     shouldFocusWritingZoneWhenConnected(): boolean;
+    getDocument: () => Document;
 };
 
 export type WritingZoneConfig = {
+    document: Document;
     focus_writing_zone_when_connected?: boolean;
     is_comments_markdown_mode_enabled?: boolean;
 };
+
+export const PARENT_ELEMENT_ACTIVE_CLASS = "pull-request-comment-with-writing-zone-active";
 
 export const WritingZoneController = (config: WritingZoneConfig): ControlWritingZone => {
     const focusWritingZone = (host: HostElement): void => {
         host.presenter = WritingZonePresenter.buildFocused(host.presenter);
 
-        if (host.presenter.is_in_writing_mode) {
+        if (host.presenter.is_in_writing_mode && config.document.activeElement !== host.textarea) {
             host.textarea.focus();
             host.textarea.setSelectionRange(host.textarea.value.length, host.textarea.value.length);
         }
 
         if (host.parentElement) {
-            host.parentElement.classList.add("pull-request-comment-with-writing-zone-active");
+            host.parentElement.classList.add(PARENT_ELEMENT_ACTIVE_CLASS);
         }
     };
 
     const blurWritingZone = (host: HTMLElement & InternalWritingZone): void => {
         host.presenter = WritingZonePresenter.buildBlurred(host.presenter);
 
-        if (host.presenter.is_in_writing_mode) {
+        if (host.presenter.is_in_writing_mode && config.document.activeElement === host.textarea) {
             host.textarea.blur();
         }
 
         if (host.parentElement) {
-            host.parentElement.classList.remove("pull-request-comment-with-writing-zone-active");
+            host.parentElement.classList.remove(PARENT_ELEMENT_ACTIVE_CLASS);
         }
     };
 
@@ -111,5 +115,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         },
 
         shouldFocusWritingZoneWhenConnected: () => config.focus_writing_zone_when_connected ?? true,
+
+        getDocument: () => config.document,
     };
 };

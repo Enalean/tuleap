@@ -31,6 +31,7 @@ describe("WritingZoneTemplate", () => {
 
     beforeEach(() => {
         controller = WritingZoneController({
+            document: document.implementation.createHTMLDocument(),
             focus_writing_zone_when_connected: false,
         });
 

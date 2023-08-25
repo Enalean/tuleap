@@ -42,12 +42,16 @@ describe("WritingZone", () => {
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         focus_writing_zone_when_connected = true;
+
+        vi.useFakeTimers();
     });
 
     const getBuiltWritingZoneElement = (): HTMLElement & InternalWritingZone => {
         const shouldFocusWritingZoneOnceRendered = (): boolean => focus_writing_zone_when_connected;
         writing_zone_controller = WritingZoneController({
+            document: doc,
             focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
+            is_comments_markdown_mode_enabled: true,
         });
 
         focusWritingZone = vi.spyOn(writing_zone_controller, "focusWritingZone");
@@ -84,6 +88,7 @@ describe("WritingZone", () => {
                     shouldFocusWritingZoneOnceRendered,
                 },
                 writing_zone_controller: WritingZoneController({
+                    document: doc,
                     focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
                 }),
             };
@@ -125,6 +130,8 @@ describe("WritingZone", () => {
 
             await doc.body.append(writing_zone);
 
+            vi.advanceTimersToNextTimer();
+
             expect(focusWritingZone).toHaveBeenCalled();
         });
 
@@ -149,13 +156,27 @@ describe("WritingZone", () => {
             expect(writing_zone.textarea.value).toBe(content);
         });
 
-        it("When the WritingZone element is removed from the DOM tree, then it should reset the textarea", async () => {
+        it("When the WritingZone is added to the DOM tree, then it should add a click event listener on document", async () => {
             const writing_zone = getBuiltWritingZoneElement();
+            const addEventListener = vi.spyOn(doc, "addEventListener");
+
+            await doc.body.append(writing_zone);
+            vi.advanceTimersToNextTimer();
+
+            expect(addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
+        });
+
+        it(`When the WritingZone element is removed from the DOM tree
+            Then it should reset the textarea
+            And remove the click event listener it has set on document`, async () => {
+            const writing_zone = getBuiltWritingZoneElement();
+            const removeEventListener = vi.spyOn(doc, "removeEventListener");
 
             await doc.body.append(writing_zone);
             await doc.body.removeChild(writing_zone);
 
             expect(resetWritingZone).toHaveBeenCalledOnce();
+            expect(removeEventListener).toHaveBeenCalledWith("click", expect.any(Function));
         });
     });
 
@@ -176,24 +197,28 @@ describe("WritingZone", () => {
 
             expect(onTextareaInput).toHaveBeenCalledOnce();
         });
+    });
 
-        it("When the textarea gets or looses the focus, then the onFocusChange callback should be triggered", async () => {
-            focus_writing_zone_when_connected = false;
-
+    describe("Focus management", () => {
+        it("Should focus the WritingZone when one if its inner elements is clicked", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
             await doc.body.append(writing_zone);
+            vi.advanceTimersToNextTimer();
 
-            const textarea = selectOrThrow(
-                writing_zone,
-                "[data-test=writing-zone-textarea]",
-                HTMLTextAreaElement
-            );
+            writing_zone.click();
 
-            textarea.dispatchEvent(new Event("focus"));
-            expect(focusWritingZone).toHaveBeenCalledOnce();
+            expect(focusWritingZone).toHaveBeenCalledTimes(2);
+        });
 
-            textarea.dispatchEvent(new Event("blur"));
+        it("Should blur the WritingZone when an outside element is clicked", async () => {
+            const writing_zone = getBuiltWritingZoneElement();
+
+            await doc.body.append(writing_zone);
+            vi.advanceTimersToNextTimer();
+
+            doc.body.click();
+
             expect(blurWritingZone).toHaveBeenCalledOnce();
         });
     });

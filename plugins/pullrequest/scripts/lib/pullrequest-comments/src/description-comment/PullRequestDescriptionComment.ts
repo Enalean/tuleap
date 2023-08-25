@@ -79,6 +79,7 @@ export const PullRequestCommentDescriptionComponent = define<PullRequestDescript
         get: (host, controller: ControlWritingZone | undefined) =>
             controller ??
             WritingZoneController({
+                document,
                 focus_writing_zone_when_connected: true,
                 is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
             }),

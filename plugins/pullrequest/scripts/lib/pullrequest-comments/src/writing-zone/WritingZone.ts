@@ -69,12 +69,28 @@ export const WritingZoneElement = define<InternalWritingZone>({
             return controller;
         },
         connect: (host) => {
-            if (host.controller.shouldFocusWritingZoneWhenConnected()) {
+            const onClickInDocumentHandler = (event: MouseEvent): void => {
+                if (!event.composedPath().includes(host)) {
+                    host.controller.blurWritingZone(host);
+                    return;
+                }
+
                 host.controller.focusWritingZone(host);
-            }
+            };
+
+            host.controller.getDocument().addEventListener("click", onClickInDocumentHandler);
+
+            setTimeout(() => {
+                if (host.controller.shouldFocusWritingZoneWhenConnected()) {
+                    host.controller.focusWritingZone(host);
+                }
+            });
 
             return (): void => {
                 host.controller.resetWritingZone(host);
+                host.controller
+                    .getDocument()
+                    .removeEventListener("click", onClickInDocumentHandler);
             };
         },
     },
@@ -93,10 +109,6 @@ export const WritingZoneElement = define<InternalWritingZone>({
                 gettext_provider.gettext("Say something…")
             );
             textarea_element.addEventListener("input", () => host.controller.onTextareaInput(host));
-            textarea_element.addEventListener("focus", () =>
-                host.controller.focusWritingZone(host)
-            );
-            textarea_element.addEventListener("blur", () => host.controller.blurWritingZone(host));
 
             return textarea_element;
         },

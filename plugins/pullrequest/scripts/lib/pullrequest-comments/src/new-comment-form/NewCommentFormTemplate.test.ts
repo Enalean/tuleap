@@ -61,6 +61,7 @@ describe("NewCommentFormTemplate", () => {
             presenter: getPresenter(),
             controller: ControlNewCommentFormStub(),
             writing_zone_controller: WritingZoneController({
+                document: document.implementation.createHTMLDocument(),
                 focus_writing_zone_when_connected: true,
             }),
         } as HostElement;

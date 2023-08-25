@@ -73,6 +73,7 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
         const base_host = {
             ...host,
             writing_zone_controller: WritingZoneController({
+                document: document.implementation.createHTMLDocument(),
                 focus_writing_zone_when_connected: true,
             }),
         } as unknown as HostElement;
