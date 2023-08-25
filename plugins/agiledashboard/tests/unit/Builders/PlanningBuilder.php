@@ -27,8 +27,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningBuilder
 {
-    private int $id      = 34;
-    private string $name = 'Release Planning';
+    private int $id               = 34;
+    private string $name          = 'Release Planning';
+    private string $backlog_title = 'Product Backlog';
+    private string $plan_title    = 'Release Plan';
 
     /**
      * @param Option<\Tracker> $milestone_tracker
@@ -88,14 +90,26 @@ final class PlanningBuilder
         return $this;
     }
 
+    public function withBacklogTitle(string $backlog_title): self
+    {
+        $this->backlog_title = $backlog_title;
+        return $this;
+    }
+
+    public function withPlanTitle(string $plan_title): self
+    {
+        $this->plan_title = $plan_title;
+        return $this;
+    }
+
     public function build(): \Planning
     {
         $planning = new \Planning(
             $this->id,
             $this->name,
             $this->project_id,
-            'Product Backlog',
-            'Release Plan',
+            $this->backlog_title,
+            $this->plan_title,
             [],
             0
         );

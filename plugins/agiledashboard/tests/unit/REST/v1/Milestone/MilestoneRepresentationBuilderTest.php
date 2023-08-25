@@ -28,14 +28,17 @@ use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private const PROJECT_ID = 101;
 
     /**
      * @var MilestoneRepresentationBuilder
@@ -104,7 +107,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
         $this->planning_factory->shouldReceive('getChildrenPlanning')->andReturnNull();
 
-        $project           = ProjectTestBuilder::aProject()->build();
+        $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $milestone_tracker = $this->buildMilestoneTracker($project);
         $backlog_tracker   = $this->buildBacklogTracker($project);
         $planning          = $this->buildPlanning($milestone_tracker, $backlog_tracker);
@@ -166,24 +169,28 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     private function buildMilestoneTracker(\Project $project): \Tracker
     {
-        $milestone_tracker = $this->buildTestTracker(8, 'Releases');
-        $milestone_tracker->setProject($project);
-        return $milestone_tracker;
+        return TrackerTestBuilder::aTracker()
+            ->withId(8)
+            ->withName('Releases')
+            ->withProject($project)
+            ->build();
     }
 
     private function buildBacklogTracker(\Project $project): \Tracker
     {
-        $backlog_tracker = $this->buildTestTracker(9, 'User Stories');
-        $backlog_tracker->setProject($project);
-        return $backlog_tracker;
+        return TrackerTestBuilder::aTracker()
+            ->withId(9)
+            ->withName('User Stories')
+            ->withProject($project)
+            ->build();
     }
 
     private function buildPlanning(\Tracker $milestone_tracker, \Tracker $backlog_tracker): \Planning
     {
-        $planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $planning->setPlanningTracker($milestone_tracker);
-        $planning->setBacklogTrackers([$backlog_tracker]);
-        return $planning;
+        return PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($milestone_tracker)
+            ->withBacklogTrackers($backlog_tracker)
+            ->build();
     }
 
     private function buildMilestone(
@@ -209,27 +216,6 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $planning,
             $artifact,
             $this->mono_milestone_checker
-        );
-    }
-
-    private function buildTestTracker(int $tracker_id, string $name): \Tracker
-    {
-        return new \Tracker(
-            $tracker_id,
-            null,
-            $name,
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            TrackerColor::default(),
-            false
         );
     }
 }

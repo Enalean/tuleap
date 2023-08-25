@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
@@ -192,15 +196,13 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
     {
         $group_id = 12;
 
-        $this->release_planning = new Planning(
-            $this->release_planning_id,
-            "test",
-            $group_id,
-            "backlog title",
-            "planning_title",
-            [],
-            $this->releases_tracker_id
-        );
+        $release_tracker        = TrackerTestBuilder::aTracker()
+            ->withId($this->releases_tracker_id)
+            ->build();
+        $this->release_planning = PlanningBuilder::aPlanning($group_id)
+            ->withId($this->release_planning_id)
+            ->withMilestoneTracker($release_tracker)
+            ->build();
 
         $this->planning_factory->shouldReceive('getPlanning')->with($this->release_planning_id)->andReturns(
             $this->release_planning

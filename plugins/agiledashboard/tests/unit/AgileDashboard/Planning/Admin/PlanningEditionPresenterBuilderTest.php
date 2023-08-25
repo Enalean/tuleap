@@ -31,16 +31,18 @@ use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var PlanningEditionPresenterBuilder
-     */
-    private $builder;
+    private const PLANNING_ID = 89;
+    private const PROJECT_ID  = 109;
+
     /**
      * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
      */
@@ -61,6 +63,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
      * @var M\LegacyMockInterface|M\MockInterface|\Tracker_FormElementFactory
      */
     private $tracker_form_element_factory;
+    private \Planning $planning;
 
     protected function setUp(): void
     {
@@ -69,23 +72,35 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->scrum_planning_filter        = M::mock(ScrumPlanningFilter::class);
         $this->planning_permissions_manager = M::mock(\PlanningPermissionsManager::class);
         $this->tracker_form_element_factory = M::mock(\Tracker_FormElementFactory::class);
-        $this->builder                      = new PlanningEditionPresenterBuilder(
+        $this->planning                     = PlanningBuilder::aPlanning(self::PROJECT_ID)->build();
+    }
+
+    private function buildPresenter(): \Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenter
+    {
+        $user    = UserTestBuilder::aUser()->build();
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+
+        $builder = new PlanningEditionPresenterBuilder(
             $this->planning_factory,
             $this->event_manager,
             $this->scrum_planning_filter,
             $this->planning_permissions_manager,
             $this->tracker_form_element_factory
         );
+
+        return $builder->build($this->planning, $user, $project);
     }
 
     public function testBuildReturnsACompletePresenter(): void
     {
-        $planning          = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user              = UserTestBuilder::aUser()->build();
-        $project           = new \Project(['group_id' => '109']);
-        $milestone_tracker = M::mock(\Tracker::class);
-        $milestone_tracker->shouldReceive('getId')->andReturn(127);
-        $planning->setPlanningTracker($milestone_tracker);
+        $milestone_tracker = TrackerTestBuilder::aTracker()->withId(127)->build();
+        $this->planning    = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withId(self::PLANNING_ID)
+            ->withName('Release planning')
+            ->withBacklogTitle('Product Backlog')
+            ->withPlanTitle('Release Plan')
+            ->withMilestoneTracker($milestone_tracker)
+            ->build();
 
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
@@ -96,7 +111,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->andReturn($planning);
+            ->andReturn($this->planning);
         $this->event_manager->addClosureOnEvent(
             RootPlanningEditionEvent::NAME,
             function (RootPlanningEditionEvent $event) {
@@ -111,10 +126,10 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             }
         );
 
-        $presenter = $this->builder->build($planning, $user, $project);
+        $presenter = $this->buildPresenter();
 
-        $this->assertSame(89, $presenter->planning_id);
-        $this->assertSame(109, $presenter->project_id);
+        $this->assertSame(self::PLANNING_ID, $presenter->planning_id);
+        $this->assertSame(self::PROJECT_ID, $presenter->project_id);
         $this->assertSame('Release planning', $presenter->planning_name);
         $this->assertSame('Product Backlog', $presenter->planning_backlog_title);
         $this->assertSame('Release Plan', $presenter->planning_plan_title);
@@ -131,9 +146,6 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBuildAddsAWarningFromAnEvent(): void
     {
-        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $burnup = M::mock(Burnup::class);
@@ -154,7 +166,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             }
         );
 
-        $presenter = $this->builder->build($planning, $user, $project);
+        $presenter = $this->buildPresenter();
 
         $this->assertContains($warning_presenter, $presenter->warning_list);
         $this->assertTrue($presenter->has_warning);
@@ -162,9 +174,6 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBuildAddsNoWarning(): void
     {
-        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
@@ -172,7 +181,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->andReturnFalse();
 
-        $presenter = $this->builder->build($planning, $user, $project);
+        $presenter = $this->buildPresenter();
 
         $this->assertEmpty($presenter->warning_list);
         $this->assertFalse($presenter->has_warning);
@@ -180,26 +189,23 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBuildAllowsMilestoneTrackerUpdate(): void
     {
-        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([]);
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->andReturn($planning);
+            ->andReturn($this->planning);
 
-        $presenter = $this->builder->build($planning, $user, $project);
+        $presenter = $this->buildPresenter();
 
         $this->assertNull($presenter->milestone_tracker_modification_ban);
     }
 
     private function mockBacklogAndMilestoneTrackers(): void
     {
-        $milestone_tracker = M::mock(\Tracker::class);
-        $backlog_tracker   = M::mock(\Tracker::class);
+        $milestone_tracker = TrackerTestBuilder::aTracker()->build();
+        $backlog_tracker   = TrackerTestBuilder::aTracker()->build();
         $this->scrum_planning_filter->shouldReceive('getPlanningTrackersFiltered')
             ->once()
             ->andReturn([$milestone_tracker]);

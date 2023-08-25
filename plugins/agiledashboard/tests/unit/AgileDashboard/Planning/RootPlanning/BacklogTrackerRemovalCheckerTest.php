@@ -22,73 +22,67 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Planning;
 use PlanningParameters;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var BacklogTrackerRemovalChecker
-     */
-    private $checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
-     */
-    private $add_to_top_backlog_post_action_dao;
+    private AddToTopBacklogPostActionDao & \PHPUnit\Framework\MockObject\MockObject $add_to_top_backlog_post_action_dao;
+    /** @var int[] */
+    private array $backlog_tracker_ids;
 
     protected function setUp(): void
     {
-        $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
+        $this->add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);
 
-        $this->checker = new BacklogTrackerRemovalChecker($this->add_to_top_backlog_post_action_dao);
+        $this->backlog_tracker_ids = [1];
+    }
+
+    private function check(): void
+    {
+        $checker = new BacklogTrackerRemovalChecker($this->add_to_top_backlog_post_action_dao);
+
+        $first_tracker  = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(2)->build();
+        $third_tracker  = TrackerTestBuilder::aTracker()->withId(3)->build();
+        $planning       = PlanningBuilder::aPlanning(123)
+            ->withBacklogTrackers($first_tracker, $second_tracker, $third_tracker)
+            ->build();
+        $checker->checkRemovedBacklogTrackersCanBeRemoved(
+            $planning,
+            PlanningParameters::fromArray(['backlog_tracker_ids' => $this->backlog_tracker_ids])
+        );
     }
 
     public function testItReturnsIfNoTrackerRemovedAsBacklogTracker(): void
     {
-        $planning = new Planning('1', 'Root Planning', '123', '', '', [1, 2, 3]);
+        $this->backlog_tracker_ids = [1, 2, 3, 4];
         $this->expectNotToPerformAssertions();
-
-        $this->checker->checkRemovedBacklogTrackersCanBeRemoved(
-            $planning,
-            PlanningParameters::fromArray(['backlog_tracker_ids' => [1, 2, 3, 4]])
-        );
+        $this->check();
     }
 
     public function testItReturnsIfRemovedTrackerDoesNotHaveAAddToTopBacklogWorkflowAction(): void
     {
-        $this->add_to_top_backlog_post_action_dao->shouldReceive('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
-            ->once()
-            ->andReturn([]);
+        $this->add_to_top_backlog_post_action_dao->expects(self::once())
+            ->method('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
+            ->willReturn([]);
 
-        $planning = new Planning('1', 'Root Planning', '123', '', '', [1, 2, 3]);
-
-        $this->checker->checkRemovedBacklogTrackersCanBeRemoved(
-            $planning,
-            PlanningParameters::fromArray(['backlog_tracker_ids' => [1]])
-        );
+        $this->check();
     }
 
     public function testItThrowsAnExceptionIfRemovedTrackerHasAtLeastOneAddToTopBacklogWorkflowAction(): void
     {
-        $this->add_to_top_backlog_post_action_dao->shouldReceive('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
+        $this->add_to_top_backlog_post_action_dao->expects(self::once())
+            ->method('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
             ->with([2, 3])
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 ['name' => 'tracker01'],
             ]);
 
-        $planning = new Planning('1', 'Root Planning', '123', '', '', [1, 2, 3]);
         $this->expectException(TrackerHaveAtLeastOneAddToTopBacklogPostActionException::class);
-
-        $this->checker->checkRemovedBacklogTrackersCanBeRemoved(
-            $planning,
-            PlanningParameters::fromArray(['backlog_tracker_ids' => [1]])
-        );
+        $this->check();
     }
 }

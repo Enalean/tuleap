@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 
@@ -64,7 +65,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsIfNoRootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturnFalse();
@@ -75,10 +76,10 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsIfNotARootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withId(15)->withName('Not root planning')->build();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->andReturn(new \Planning(1, '102', 'Root planning', '', ''));
+            ->andReturn(PlanningBuilder::aPlanning(102)->withId(1)->withName('Root planning')->build());
 
         $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $user);
     }
@@ -86,7 +87,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenNewMilestoneTrackerIDIsNotAValidTrackerID(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn($planning);
@@ -107,7 +108,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenNewMilestoneTrackerIDIsInAnotherProject(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn($planning);
@@ -130,7 +131,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsWhenUpdateIsAllowed(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn($planning);

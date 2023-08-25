@@ -31,6 +31,8 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningFactoryTestGetVirtualTopPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -67,15 +69,13 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends \Tuleap\Test\PH
 
     public function testItCreatesNewPlanningWithValidBacklogAndPlanningTrackers(): void
     {
-        $backlog_tracker  = Mockery::mock(Tracker::class);
-        $planning_tracker = Mockery::mock(Tracker::class);
+        $backlog_tracker  = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $planning_tracker = TrackerTestBuilder::aTracker()->withId(45)->build();
 
-        $backlog_tracker->shouldReceive('getId')->andReturn(78);
-        $planning_tracker->shouldReceive('getId')->andReturn(45);
-
-        $my_planning = new Planning(null, null, null, null, null, [78], 45);
-        $my_planning->setBacklogTrackers([$backlog_tracker])
-            ->setPlanningTracker($planning_tracker);
+        $my_planning = PlanningBuilder::aPlanning(56)
+            ->withBacklogTrackers($backlog_tracker)
+            ->withMilestoneTracker($planning_tracker)
+            ->build();
 
         $this->partial_factory->shouldReceive('getRootPlanning')->andReturn($my_planning);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(45)->andReturn($backlog_tracker);
