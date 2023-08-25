@@ -29,6 +29,11 @@ export function addShortcutsGroupToShortcutsModal(
     shortcuts_group: ShortcutsGroup,
     scope: Scope = PLUGIN_SCOPE
 ): void {
+    const help_template = doc.querySelector("[data-shortcuts-help-header-template]");
+    if (!(help_template instanceof HTMLElement)) {
+        return;
+    }
+
     const shortcuts_group_container = createShortcutsGroupContainer(doc, shortcuts_group);
     const shortcuts_modal_section =
         scope === GLOBAL_SCOPE ? getGlobalShortcutsSection(doc) : getSpecificShortcutsSection(doc);

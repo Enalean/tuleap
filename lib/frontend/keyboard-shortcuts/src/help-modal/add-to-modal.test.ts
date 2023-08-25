@@ -37,12 +37,17 @@ describe("add-to-help-modal.ts", () => {
     let specific_shortcuts_section: HTMLElement;
 
     let shortcuts_group_head: HTMLElement;
+    let shortcuts_template: HTMLElement;
     let shortcuts_group_table: HTMLTableElement;
 
     const shortcuts_group: ShortcutsGroup = { title: "Shortcuts group title" } as ShortcutsGroup;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+
+        shortcuts_template = doc.createElement("div");
+        shortcuts_template.setAttribute("data-shortcuts-help-header-template", "");
+        doc.body.append(shortcuts_template);
 
         shortcuts_group_head = doc.createElement("div");
         shortcuts_group_table = doc.createElement("table");
@@ -83,6 +88,17 @@ describe("add-to-help-modal.ts", () => {
             addShortcutsGroupToShortcutsModal(doc, shortcuts_group);
 
             expect(get_specific_shortcuts_section).toHaveBeenCalled();
+        });
+
+        it("never add shortcut when help button is not present", () => {
+            shortcuts_template.remove();
+            const get_specific_shortcuts_section = vi.spyOn(
+                getter_shortcut_section,
+                "getSpecificShortcutsSection"
+            );
+            addShortcutsGroupToShortcutsModal(doc, shortcuts_group);
+
+            expect(get_specific_shortcuts_section).not.toHaveBeenCalled();
         });
     });
 
