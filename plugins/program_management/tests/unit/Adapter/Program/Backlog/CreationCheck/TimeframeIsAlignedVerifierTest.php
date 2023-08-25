@@ -77,6 +77,35 @@ final class TimeframeIsAlignedVerifierTest extends TestCase
         self::assertFalse($this->verifier->isTimeframeWellConfigured($tracker_reference, $source_trackers, $configuration_errors));
     }
 
+    public function testItReturnsFalseIfSemanticTimeframesDoesNotUsesTheSameDateTimeDisplayingForStartDate(): void
+    {
+        $tracker_reference = TrackerReferenceStub::withDefaults();
+        $source_trackers   = $this->buildSourceTrackerCollection($tracker_reference);
+
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $this->dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')->willReturn(0);
+        $this->dao->method('areTimeFrameSemanticsUsingSameTypeOfField')->willReturn(true);
+        $this->dao->method('areTimeFrameSemanticsUsingSameDatetimeDisplayingForStartDate')->willReturn(false);
+
+        self::assertFalse($this->verifier->isTimeframeWellConfigured($tracker_reference, $source_trackers, $configuration_errors));
+    }
+
+    public function testItReturnsFalseIfSemanticTimeframesDoesNotUsesTheSameDateTimeDisplayingForendDate(): void
+    {
+        $tracker_reference = TrackerReferenceStub::withDefaults();
+        $source_trackers   = $this->buildSourceTrackerCollection($tracker_reference);
+
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $this->dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')->willReturn(0);
+        $this->dao->method('areTimeFrameSemanticsUsingSameTypeOfField')->willReturn(true);
+        $this->dao->method('areTimeFrameSemanticsUsingSameDatetimeDisplayingForStartDate')->willReturn(true);
+        $this->dao->method('areTimeFrameSemanticsUsingSameDatetimeDisplayingForEndDate')->willReturn(false);
+
+        self::assertFalse($this->verifier->isTimeframeWellConfigured($tracker_reference, $source_trackers, $configuration_errors));
+    }
+
     public function testItReturnsTrueIfSemanticTimeframesAreWellConfigured(): void
     {
         $tracker_reference = TrackerReferenceStub::withDefaults();
@@ -86,6 +115,8 @@ final class TimeframeIsAlignedVerifierTest extends TestCase
 
         $this->dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')->willReturn(0);
         $this->dao->method('areTimeFrameSemanticsUsingSameTypeOfField')->willReturn(true);
+        $this->dao->method('areTimeFrameSemanticsUsingSameDatetimeDisplayingForStartDate')->willReturn(true);
+        $this->dao->method('areTimeFrameSemanticsUsingSameDatetimeDisplayingForEndDate')->willReturn(true);
 
         self::assertTrue($this->verifier->isTimeframeWellConfigured($tracker_reference, $source_trackers, $configuration_errors));
     }
