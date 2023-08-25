@@ -30,11 +30,11 @@ describe("WritingZoneTabsTemplate", () => {
     let target: ShadowRoot, controller: ControlWritingZone;
 
     beforeEach(() => {
-        target = document.implementation
-            .createHTMLDocument()
-            .createElement("div") as unknown as ShadowRoot;
+        const doc = document.implementation.createHTMLDocument();
+        target = doc.createElement("div") as unknown as ShadowRoot;
 
         controller = WritingZoneController({
+            document: doc,
             focus_writing_zone_when_connected: false,
         });
     });

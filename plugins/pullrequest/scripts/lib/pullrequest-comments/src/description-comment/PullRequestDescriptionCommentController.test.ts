@@ -52,6 +52,7 @@ describe("PullRequestDescriptionCommentController", () => {
         const content = doc.createElement("div");
         const writing_zone = doc.createElement("div");
         const writing_zone_controller = WritingZoneController({
+            document: doc,
             focus_writing_zone_when_connected: true,
         });
         const setWritingZoneContent = vi.spyOn(writing_zone_controller, "setWritingZoneContent");
