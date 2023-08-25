@@ -80,6 +80,7 @@ use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -1459,7 +1460,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 'src/index.ts'
             ),
             new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
-            EventManager::instance()
+            EventManager::instance(),
+            new CheckSplitKanbanConfiguration()
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);

@@ -81,6 +81,8 @@ class AdminScrumPresenter
      * @psalm-readonly
      */
     public $has_side_panes;
+    public readonly string $explicit_backlog_checkbox_title;
+    public readonly string $explicit_backlog_checkbox_info;
 
     public function __construct(
         array $plannings,
@@ -99,6 +101,7 @@ class AdminScrumPresenter
         array $additional_scrum_sections_controllers,
         bool $is_planning_administration_delegated,
         public readonly bool $is_using_kanban_service,
+        bool $is_split_feature_flag_enabled,
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
@@ -122,6 +125,9 @@ class AdminScrumPresenter
         $this->additional_scrum_sections_controllers          = $additional_scrum_sections_controllers;
         $this->is_planning_administration_delegated           = $is_planning_administration_delegated;
         $this->has_side_panes                                 = ! $is_planning_administration_delegated || $additional_content !== '';
+
+        $this->explicit_backlog_checkbox_title = $is_split_feature_flag_enabled ? dgettext("tuleap-agiledashboard", "Explicit backlog") : dgettext("tuleap-agiledashboard", "Explicit top backlog");
+        $this->explicit_backlog_checkbox_info  = $is_split_feature_flag_enabled ? dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum backlog.") : dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum top backlog.");
     }
 
     public function has_plannings()

@@ -110,7 +110,7 @@ class XMLImporter
             $logger->error($no_root_planning_exception->getMessage());
             return;
         } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
-            $logger->warning($exception->getMessage() . "They are not added in the top backlog.");
+            $logger->warning($exception->getMessage() . "They are not added in the backlog.");
 
             $added_artifact_ids = array_diff($added_artifact_ids, $exception->getArtifactIds());
         }

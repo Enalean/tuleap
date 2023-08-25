@@ -35,6 +35,7 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
@@ -118,7 +119,8 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->planned_artifact_dao,
             new JavascriptAsset(Mockery::mock(IncludeAssets::class)->shouldReceive('getFileURL')->getMock(), 'mock.js'),
             $this->planning_tracker_backlog_checker,
-            $this->event_dispatcher
+            $this->event_dispatcher,
+            new CheckSplitKanbanConfiguration()
         );
 
         $project = Mockery::mock(Project::class);
