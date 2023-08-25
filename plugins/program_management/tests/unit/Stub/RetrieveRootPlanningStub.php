@@ -29,13 +29,13 @@ use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 
 final class RetrieveRootPlanningStub implements RetrieveRootPlanning
 {
-    private function __construct(private int $team_project_id, private int $backlog_tracker_id)
+    private function __construct(private int $team_project_id, private \Planning $planning)
     {
     }
 
-    public static function withProjectAndBacklogTracker(int $team_project_id, int $backlog_tracker_id): self
+    public static function withProjectAndPlanning(int $team_project_id, \Planning $planning): self
     {
-        return new self($team_project_id, $backlog_tracker_id);
+        return new self($team_project_id, $planning);
     }
 
     public function getRootPlanning(PFUser $user, int $group_id): Planning|false
@@ -43,14 +43,6 @@ final class RetrieveRootPlanningStub implements RetrieveRootPlanning
         if ($group_id !== $this->team_project_id) {
             return false;
         }
-        return new Planning(
-            34,
-            'Release plan',
-            $this->team_project_id,
-            'Backlog',
-            'Releases',
-            [$this->backlog_tracker_id],
-            1
-        );
+        return $this->planning;
     }
 }

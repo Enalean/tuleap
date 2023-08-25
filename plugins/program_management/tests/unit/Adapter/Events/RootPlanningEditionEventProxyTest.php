@@ -24,24 +24,26 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent as CoreEvent;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class RootPlanningEditionEventProxyTest extends TestCase
 {
+    private const PROJECT_ID = 110;
     private CoreEvent $event;
 
     protected function setUp(): void
     {
-        $this->event = new \Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent(
-            new \Project(['group_id' => '110', 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => ""]),
-            new \Planning(50, 'Release Planning', 110, '', '')
-        );
+        $project     = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $planning    = PlanningBuilder::aPlanning(self::PROJECT_ID)->build();
+        $this->event = new \Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent($project, $planning);
     }
 
     public function testItBuildFromEvent(): void
     {
         $event_proxy = RootPlanningEditionEventProxy::buildFromEvent($this->event);
-        self::assertSame((int) $this->event->getProject()->getID(), $event_proxy->getProjectIdentifier()->getId());
+        self::assertSame(self::PROJECT_ID, $event_proxy->getProjectIdentifier()->getId());
     }
 
     public function testItProhibitMilestoneTrackerModification(): void

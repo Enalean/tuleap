@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Planning;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
@@ -35,6 +35,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROJECT_ID           = 101;
+    private const MILESTONE_TRACKER_ID = 40;
     private PlanningAdapter $adapter;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\PlanningFactory
@@ -53,7 +55,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThrowExceptionIfRootPlanningDoesNotExist(): void
     {
-        $project_id = 101;
+        $project_id = self::PROJECT_ID;
         $this->planning_factory->method('getRootPlanning')->willReturn(false);
 
         $this->expectException(TopPlanningNotFoundInProjectException::class);
@@ -62,43 +64,45 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThrowExceptionIfRootPlanningHasNoPlanningTracker(): void
     {
-        $project_id = 101;
-        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
+        $planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withBadConfigurationAndNoMilestoneTracker()
+            ->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
-        $this->adapter->getRootPlanning($this->user_identifier, $project_id);
+        $this->adapter->getRootPlanning($this->user_identifier, self::PROJECT_ID);
     }
 
     public function testItBuildARootPlanning(): void
     {
-        $project_id = 101;
-        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning->setPlanningTracker($tracker);
+        $project     = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $tracker     = TrackerTestBuilder::aTracker()->withId(self::MILESTONE_TRACKER_ID)->withProject($project)->build(
+        );
+        $planning_id = 170;
+        $planning    = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withId($planning_id)
+            ->withMilestoneTracker($tracker)
+            ->build();
 
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $project_id = 101;
-
-        $team_planning = $this->adapter->getRootPlanning($this->user_identifier, $project_id);
-        self::assertEquals($planning->getId(), $team_planning->getId());
+        $team_planning = $this->adapter->getRootPlanning($this->user_identifier, self::PROJECT_ID);
+        self::assertSame($planning_id, $team_planning->getId());
     }
 
     public function testItRetrievesTheRootMilestoneTracker(): void
     {
-        $project_id = 101;
-        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning->setPlanningTracker($tracker);
+        $project  = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withId(self::MILESTONE_TRACKER_ID)->withProject($project)->build();
+        $planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($tracker)
+            ->build();
 
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $wrapper_project = ProjectReferenceStub::withValues($project_id, 'Team Blue', 'team_blue', '');
+        $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
         self::assertSame(
-            $tracker->getId(),
+            self::MILESTONE_TRACKER_ID,
             $this->adapter->retrieveRootPlanningMilestoneTracker(
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser(),
@@ -109,10 +113,9 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCollectErrorWhenNoPlanning(): void
     {
-        $project_id = 101;
         $this->planning_factory->method('getRootPlanning')->willReturn(false);
 
-        $wrapper_project = ProjectReferenceStub::withValues($project_id, 'Team Blue', 'team_blue', '');
+        $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
 
         $this->adapter->retrieveRootPlanningMilestoneTracker(
             $wrapper_project,
@@ -139,16 +142,18 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTCollectsErrorIfNoSecondPlanningMilestoneInProject(): void
     {
-        $project_id    = 101;
-        $root_planning = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project       = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $root_tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $root_planning->setPlanningTracker($root_tracker);
+        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $root_tracker  = TrackerTestBuilder::aTracker()->withId(self::MILESTONE_TRACKER_ID)->withProject(
+            $project
+        )->build();
+        $root_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($root_tracker)
+            ->build();
 
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
         $this->planning_factory->method('getChildrenPlanning')->willReturn(null);
 
-        $wrapper_project = ProjectReferenceStub::withValues($project_id, 'Team Blue', 'team_blue', '');
+        $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
         $this->adapter->retrieveSecondPlanningMilestoneTracker(
             $wrapper_project,
             UserIdentifierStub::buildGenericUser(),
@@ -160,18 +165,22 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowErrorIfNoTrackerInSecondPlanningMilestoneInProject(): void
     {
-        $project_id    = 101;
-        $root_planning = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project       = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $root_tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $root_planning->setPlanningTracker($root_tracker);
+        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $root_tracker  = TrackerTestBuilder::aTracker()->withId(self::MILESTONE_TRACKER_ID)->withProject(
+            $project
+        )->build();
+        $root_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($root_tracker)
+            ->build();
 
-        $second_planning = new Planning(2, 'second', $project_id, 'backlog title', 'plan title', []);
+        $second_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withBadConfigurationAndNoMilestoneTracker()
+            ->build();
 
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
-        $wrapper_project = ProjectReferenceStub::withValues($project_id, 'Team Blue', 'team_blue', '');
+        $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker(
             $wrapper_project,
@@ -182,19 +191,22 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnSecondPlanningMilestoneTracker(): void
     {
-        $project_id    = 101;
-        $root_planning = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project       = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $root_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)->build();
 
-        $second_planning = new Planning(2, 'second', $project_id, 'backlog title', 'plan title', []);
-        $second_tracker  = TrackerTestBuilder::aTracker()->withId(2)->withProject($project)->build();
-        $second_planning->setPlanningTracker($second_tracker);
+        $second_milestone_tracker_id = 85;
+        $second_tracker              = TrackerTestBuilder::aTracker()->withId(
+            $second_milestone_tracker_id
+        )->withProject($project)->build();
+        $second_planning             = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($second_tracker)
+            ->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
-        $wrapper_project = ProjectReferenceStub::withValues($project_id, 'Team Blue', 'team_blue', '');
+        $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
         self::assertSame(
-            $second_tracker->getId(),
+            $second_milestone_tracker_id,
             $this->adapter->retrieveSecondPlanningMilestoneTracker(
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser(),

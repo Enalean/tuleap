@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use PFUser;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
@@ -45,6 +46,7 @@ use function PHPUnit\Framework\assertTrue;
 
 final class PossibleParentSelectorProxyTest extends TestCase
 {
+    private const TEAM_PROJECT_ID = 555;
     private PFUser $user;
     private Tracker $bug_tracker;
     private Tracker $user_story_tracker;
@@ -55,10 +57,8 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->user               = UserTestBuilder::buildWithDefaults();
-        $team_project             = ProjectTestBuilder::aProject()->withId(555)->build();
+        $team_project             = ProjectTestBuilder::aProject()->withId(self::TEAM_PROJECT_ID)->build();
         $this->user_story_tracker = TrackerTestBuilder::aTracker()
             ->withId(789)
             ->withProject($team_project)
@@ -68,7 +68,10 @@ final class PossibleParentSelectorProxyTest extends TestCase
             ->withProject($team_project)
             ->build();
 
-        $this->retrieve_root_planning = RetrieveRootPlanningStub::withProjectAndBacklogTracker((int) $team_project->getID(), $this->user_story_tracker->getId());
+        $root_planning                = PlanningBuilder::aPlanning(self::TEAM_PROJECT_ID)
+            ->withBacklogTrackers($this->user_story_tracker)
+            ->build();
+        $this->retrieve_root_planning = RetrieveRootPlanningStub::withProjectAndPlanning(self::TEAM_PROJECT_ID, $root_planning);
 
         $this->feature_53           = FeatureIdentifierBuilder::withId(53);
         $this->feature_53_reference = new FeatureReference($this->feature_53, 'A fine feature');
