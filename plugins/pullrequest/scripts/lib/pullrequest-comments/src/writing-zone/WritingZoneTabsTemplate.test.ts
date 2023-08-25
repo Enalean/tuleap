@@ -22,7 +22,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import { WritingZonePresenter } from "./WritingZonePresenter";
 import type { HostElement } from "./WritingZone";
-import { buildWriteTab } from "./WritingZoneTabsTemplate";
+import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
@@ -39,40 +39,96 @@ describe("WritingZoneTabsTemplate", () => {
         });
     });
 
-    const getWritingTab = (host: HostElement): HTMLElement => {
-        const render = buildWriteTab(host, GettextProviderStub);
-        render(host, target);
+    describe("Write tab", () => {
+        const getWritingTab = (host: HostElement): HTMLElement => {
+            const render = buildWriteTab(host, GettextProviderStub);
+            render(host, target);
 
-        return selectOrThrow(target, "[data-test=writing-tab]");
-    };
+            return selectOrThrow(target, "[data-test=writing-tab]");
+        };
 
-    it("should be active by default when the WritingZone has the focus", () => {
-        const tab = getWritingTab({
-            controller,
-            presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
-        } as HostElement);
+        it("should be active when the WritingZone has the focus and is in writing mode", () => {
+            const tab = getWritingTab({
+                controller,
+                presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
+            } as HostElement);
 
-        expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab", "tlp-tab-active"]);
+            expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab", "tlp-tab-active"]);
+        });
+
+        it("should not be active when the WritingZone has not the focus", () => {
+            const tab = getWritingTab({
+                controller,
+                presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+            } as HostElement);
+
+            expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab"]);
+        });
+
+        it("When it is clicked, the writing mode should be activated", () => {
+            vi.useFakeTimers();
+
+            const switchToWritingMode = vi.spyOn(controller, "switchToWritingMode");
+            const tab = getWritingTab({
+                controller,
+                presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+                textarea: document.implementation.createHTMLDocument().createElement("textarea"),
+            } as HostElement);
+
+            tab.click();
+
+            vi.advanceTimersToNextTimer();
+
+            expect(switchToWritingMode).toHaveBeenCalledOnce();
+        });
     });
 
-    it("should not be active when the WritingZone has not the focus", () => {
-        const tab = getWritingTab({
-            controller,
-            presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
-        } as HostElement);
+    describe("Preview tab", () => {
+        const getPreviewTab = (host: HostElement): HTMLElement => {
+            const render = buildPreviewTab(host, GettextProviderStub);
+            render(host, target);
 
-        expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab"]);
-    });
+            return selectOrThrow(target, "[data-test=preview-tab]");
+        };
 
-    it("When it is clicked, the writing mode should be activated", () => {
-        const switchToWritingMode = vi.spyOn(controller, "switchToWritingMode");
-        const tab = getWritingTab({
-            controller,
-            presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
-        } as HostElement);
+        it("should be active when the WritingZone has the focus and is in preview mode", () => {
+            const tab = getPreviewTab({
+                controller,
+                presenter: WritingZonePresenter.buildPreviewMode(
+                    WritingZonePresenter.buildInitial(true)
+                ),
+            } as HostElement);
 
-        tab.click();
+            expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab", "tlp-tab-active"]);
+        });
 
-        expect(switchToWritingMode).toHaveBeenCalledOnce();
+        it("should not be active when the WritingZone has not the focus", () => {
+            const tab = getPreviewTab({
+                controller,
+                presenter: WritingZonePresenter.buildBlurred(
+                    WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial(true))
+                ),
+            } as HostElement);
+
+            expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab"]);
+        });
+
+        it("When it is clicked, the preview mode should be activated", () => {
+            vi.useFakeTimers();
+
+            const switchToPreviewMode = vi.spyOn(controller, "switchToPreviewMode");
+            const tab = getPreviewTab({
+                controller,
+                presenter: WritingZonePresenter.buildBlurred(
+                    WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial(true))
+                ),
+            } as HostElement);
+
+            tab.click();
+
+            vi.advanceTimersToNextTimer();
+
+            expect(switchToPreviewMode).toHaveBeenCalledOnce();
+        });
     });
 });

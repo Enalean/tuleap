@@ -21,13 +21,11 @@ import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
 import type { PullRequestCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export type DisplayErrorCallback = (fault: Fault) => void;
 type DisplayNewlyCreatedGlobalCommentCallback = (comment: PullRequestCommentPresenter) => void;
 export type PostPullRequestUpdateCallback = (updated_pull_request: PullRequest) => void;
-
-export type PostPullRequestUpdateReviewersCallback = (updated_reviewers: Array<User>) => void;
 
 export const OVERVIEW_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("overview_app_base_url");
 export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
@@ -49,7 +47,8 @@ export const ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY: StrictInjectionKey<boolean
 export const POST_PULL_REQUEST_UPDATE_CALLBACK: StrictInjectionKey<PostPullRequestUpdateCallback> =
     Symbol("post_pull_request_update_callback");
 
-export const POST_PULL_REQUEST_UPDATE_REVIEWERS_CALLBACK: StrictInjectionKey<PostPullRequestUpdateReviewersCallback> =
-    Symbol("post_pull_request_update_reviewers_callback");
+export const IS_COMMENTS_MARKDOWN_MODE_ENABLED: StrictInjectionKey<boolean> = Symbol(
+    "is_comments_markdown_mode_enabled"
+);
 
 export const VIEW_OVERVIEW_NAME = "overview";

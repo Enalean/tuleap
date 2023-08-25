@@ -21,9 +21,30 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { InternalWritingZone } from "./WritingZone";
-import { buildWriteTab } from "./WritingZoneTabsTemplate";
+import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
 
-export const TEXTAREA_CLASSNAME = "pull-request-comment-textarea";
+const displayWritingMode = (host: InternalWritingZone): UpdateFunction<InternalWritingZone> => {
+    if (!host.presenter.is_in_writing_mode) {
+        return html``;
+    }
+
+    return html`${host.textarea}`;
+};
+
+const displayPreviewMode = (host: InternalWritingZone): UpdateFunction<InternalWritingZone> => {
+    if (!host.presenter.is_comments_markdown_mode_enabled || !host.presenter.is_in_preview_mode) {
+        return html``;
+    }
+
+    return html`
+        <div
+            class="pull-request-comment-writing-zone-commonmark-preview"
+            data-test="writing-zone-preview"
+        >
+            <div class="tlp-alert-info">This feature is under implementation.</div>
+        </div>
+    `;
+};
 
 export const getWritingZoneTemplate = (
     host: InternalWritingZone,
@@ -32,17 +53,9 @@ export const getWritingZoneTemplate = (
     return html`
         <div class="pull-request-comment-write-mode-header">
             <div class="tlp-tabs pull-request-comment-write-mode-header-tabs">
-                ${buildWriteTab(host, gettext_provider)}
+                ${buildWriteTab(host, gettext_provider)} ${buildPreviewTab(host, gettext_provider)}
             </div>
         </div>
-        <textarea
-            data-test="writing-zone-textarea"
-            class="${TEXTAREA_CLASSNAME} tlp-textarea"
-            rows="10"
-            placeholder="${gettext_provider.gettext("Say something…")}"
-            oninput="${host.controller.onTextareaInput}"
-            onfocus="${host.controller.focusTextArea}"
-            onblur="${host.controller.blurTextArea}"
-        ></textarea>
+        ${displayWritingMode(host)} ${displayPreviewMode(host)}
     `;
 };

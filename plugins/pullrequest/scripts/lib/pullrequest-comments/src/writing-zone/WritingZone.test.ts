@@ -19,6 +19,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { SpyInstance } from "vitest";
+import { selectOrThrow } from "@tuleap/dom";
 import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
@@ -30,11 +31,45 @@ type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
 }>;
 
 describe("WritingZone", () => {
-    let doc: Document;
+    let doc: Document,
+        focus_writing_zone_when_connected: boolean,
+        focusWritingZone: SpyInstance,
+        blurWritingZone: SpyInstance,
+        resetWritingZone: SpyInstance,
+        onTextareaInput: SpyInstance,
+        writing_zone_controller: ControlWritingZone;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+        focus_writing_zone_when_connected = true;
     });
+
+    const getBuiltWritingZoneElement = (): HTMLElement & InternalWritingZone => {
+        const shouldFocusWritingZoneOnceRendered = (): boolean => focus_writing_zone_when_connected;
+        writing_zone_controller = WritingZoneController({
+            focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
+        });
+
+        focusWritingZone = vi.spyOn(writing_zone_controller, "focusWritingZone");
+        blurWritingZone = vi.spyOn(writing_zone_controller, "blurWritingZone");
+        resetWritingZone = vi.spyOn(writing_zone_controller, "resetWritingZone");
+        onTextareaInput = vi.spyOn(writing_zone_controller, "onTextareaInput");
+
+        const component_needing_a_writing_zone: ElementNeedingAWritingZone = {
+            controller: {
+                handleWritingZoneContentChange: vi.fn(),
+                shouldFocusWritingZoneOnceRendered,
+            },
+            writing_zone_controller,
+        };
+
+        const writing_zone = getWritingZoneElement(component_needing_a_writing_zone);
+        if (!isWritingZoneElement(writing_zone)) {
+            throw new Error("Expected a WritingZone element.");
+        }
+
+        return writing_zone;
+    };
 
     describe("getWritingZoneElement()", () => {
         it(`Given a component needing to display a WritingZone
@@ -81,51 +116,16 @@ describe("WritingZone", () => {
     });
 
     describe("Connect/Disconnect", () => {
-        let focus_writing_zone_when_connected: boolean,
-            focusTextArea: SpyInstance,
-            resetTextArea: SpyInstance,
-            writing_zone_controller: ControlWritingZone;
-
-        beforeEach(() => {
-            focus_writing_zone_when_connected = true;
-        });
-
-        const getBuiltWritingZoneElement = (): HTMLElement & InternalWritingZone => {
-            const shouldFocusWritingZoneOnceRendered = (): boolean =>
-                focus_writing_zone_when_connected;
-            writing_zone_controller = WritingZoneController({
-                focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
-            });
-
-            focusTextArea = vi.spyOn(writing_zone_controller, "focusTextArea");
-            resetTextArea = vi.spyOn(writing_zone_controller, "resetTextArea");
-
-            const component_needing_a_writing_zone: ElementNeedingAWritingZone = {
-                controller: {
-                    handleWritingZoneContentChange: vi.fn(),
-                    shouldFocusWritingZoneOnceRendered,
-                },
-                writing_zone_controller,
-            };
-
-            const writing_zone = getWritingZoneElement(component_needing_a_writing_zone);
-            if (!isWritingZoneElement(writing_zone)) {
-                throw new Error("Expected a WritingZone element.");
-            }
-
-            return writing_zone;
-        };
-
         it("When focus_writing_zone_when_connected is true, and the WritingZone is added the DOM tree, then it should be focused", async () => {
             focus_writing_zone_when_connected = true;
 
             const writing_zone = getBuiltWritingZoneElement();
 
-            expect(focusTextArea).not.toHaveBeenCalled();
+            expect(focusWritingZone).not.toHaveBeenCalled();
 
             await doc.body.append(writing_zone);
 
-            expect(focusTextArea).toHaveBeenCalled();
+            expect(focusWritingZone).toHaveBeenCalled();
         });
 
         it("When focus_writing_zone_when_connected is false, and the WritingZone is added the DOM tree, then it should not be focused", async () => {
@@ -135,7 +135,7 @@ describe("WritingZone", () => {
 
             await doc.body.append(writing_zone);
 
-            expect(focusTextArea).not.toHaveBeenCalledOnce();
+            expect(focusWritingZone).not.toHaveBeenCalledOnce();
         });
 
         it("When the WritingZone is added the DOM tree, then its textarea should be filled with its current value", async () => {
@@ -155,7 +155,46 @@ describe("WritingZone", () => {
             await doc.body.append(writing_zone);
             await doc.body.removeChild(writing_zone);
 
-            expect(resetTextArea).toHaveBeenCalledOnce();
+            expect(resetWritingZone).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("The <textarea/> element", () => {
+        it("When some content is typed into the textarea, then the onTextAreaChange callback should be triggered", async () => {
+            const writing_zone = getBuiltWritingZoneElement();
+
+            await doc.body.append(writing_zone);
+
+            const textarea = selectOrThrow(
+                writing_zone,
+                "[data-test=writing-zone-textarea]",
+                HTMLTextAreaElement
+            );
+
+            textarea.value = "This is a description comment for bug #123";
+            textarea.dispatchEvent(new Event("input"));
+
+            expect(onTextareaInput).toHaveBeenCalledOnce();
+        });
+
+        it("When the textarea gets or looses the focus, then the onFocusChange callback should be triggered", async () => {
+            focus_writing_zone_when_connected = false;
+
+            const writing_zone = getBuiltWritingZoneElement();
+
+            await doc.body.append(writing_zone);
+
+            const textarea = selectOrThrow(
+                writing_zone,
+                "[data-test=writing-zone-textarea]",
+                HTMLTextAreaElement
+            );
+
+            textarea.dispatchEvent(new Event("focus"));
+            expect(focusWritingZone).toHaveBeenCalledOnce();
+
+            textarea.dispatchEvent(new Event("blur"));
+            expect(blurWritingZone).toHaveBeenCalledOnce();
         });
     });
 });

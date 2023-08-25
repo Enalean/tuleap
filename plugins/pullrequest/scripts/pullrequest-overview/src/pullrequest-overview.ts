@@ -33,6 +33,7 @@ import {
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    IS_COMMENTS_MARKDOWN_MODE_ENABLED,
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
@@ -58,6 +59,10 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
             Boolean(getDatasetItemOrThrow(mount_point, "areMergeCommitsAllowedInRepository"))
+        )
+        .provide(
+            IS_COMMENTS_MARKDOWN_MODE_ENABLED,
+            Boolean(getDatasetItemOrThrow(mount_point, "isFeatureFlagMarkdownCommentsEnabled"))
         )
         .use(createOverviewRouter(base_url))
         .use(

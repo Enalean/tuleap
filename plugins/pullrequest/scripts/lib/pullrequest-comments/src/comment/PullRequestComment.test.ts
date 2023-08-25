@@ -121,11 +121,14 @@ describe("PullRequestComment", () => {
         });
 
         it("should execute the post_rendering_callback each time the component height changes", () => {
+            vi.useFakeTimers();
+
             const post_rendering_callback = vi.fn();
             const host = { post_rendering_callback } as unknown as HostElement;
 
             element_height_descriptor.observe(host);
 
+            vi.advanceTimersToNextTimer();
             expect(post_rendering_callback).toHaveBeenCalledTimes(1);
         });
 

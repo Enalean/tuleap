@@ -43,6 +43,10 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         SharedPropertiesService.setUserLocale(document.body.dataset.userLocale);
         SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
+        SharedPropertiesService.setIsCommentsMarkdownModeEnabled(
+            pullrequest_init_data.isFeatureFlagMarkdownCommentsEnabled ?? false
+        );
+
         useUiRouterInPullRequestTabLink();
     }
 

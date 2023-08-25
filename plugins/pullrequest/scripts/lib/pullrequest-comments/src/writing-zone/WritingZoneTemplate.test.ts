@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect, vi } from "vitest";
+import { describe, beforeEach, it, expect } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { getWritingZoneTemplate } from "./WritingZoneTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
@@ -27,12 +27,15 @@ import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
 describe("WritingZoneTemplate", () => {
-    let controller: ControlWritingZone;
+    let controller: ControlWritingZone, textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
         controller = WritingZoneController({
             focus_writing_zone_when_connected: false,
         });
+
+        textarea = document.implementation.createHTMLDocument().createElement("textarea");
+        textarea.setAttribute("data-test", "writing-zone-textarea");
     });
 
     const renderWritingZone = (host: HostElement): ShadowRoot => {
@@ -46,70 +49,46 @@ describe("WritingZoneTemplate", () => {
         return target;
     };
 
-    it("When the writing zone is focused, then the [Writing] tab should be active", () => {
-        const writing_zone = renderWritingZone({
-            controller,
-            presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
-        } as HostElement);
-
-        expect(
-            selectOrThrow(writing_zone, "[data-test=writing-tab]").classList.contains(
-                "tlp-tab-active"
-            )
-        ).toBe(true);
-    });
-
     it("should display tabs", () => {
         const writing_zone = renderWritingZone({
             controller,
-            presenter: WritingZonePresenter.buildInitial(),
+            presenter: WritingZonePresenter.buildInitial(true),
         } as HostElement);
 
         const writing_tab = selectOrThrow(writing_zone, "[data-test=writing-tab]");
+        const preview_tab = selectOrThrow(writing_zone, "[data-test=preview-tab]");
 
         expect(writing_tab).toBeDefined();
+        expect(preview_tab).toBeDefined();
     });
 
-    it("When some content is typed into the textarea, then the onTextAreaChange callback should be triggered", () => {
-        const onTextareaInput = vi.spyOn(controller, "onTextareaInput");
+    it("when the WritingZone is in writing mode, then only the textarea is displayed", () => {
         const writing_zone = renderWritingZone({
             controller,
-            presenter: WritingZonePresenter.buildWithContent(
-                WritingZonePresenter.buildInitial(),
-                "This is a description comment"
+            presenter: WritingZonePresenter.buildWritingMode(
+                WritingZonePresenter.buildInitial(true)
             ),
+            textarea,
         } as HostElement);
 
-        const textarea = selectOrThrow(
-            writing_zone,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        );
+        const textarea_element = selectOrThrow(writing_zone, "[data-test=writing-zone-textarea]");
 
-        textarea.value = "This is a description comment for bug #123";
-        textarea.dispatchEvent(new Event("input"));
-
-        expect(onTextareaInput).toHaveBeenCalledOnce();
+        expect(textarea_element).toBeDefined();
+        expect(writing_zone.querySelector("[data-test=writing-zone-preview]")).toBeNull();
     });
 
-    it("When the textarea gets or looses the focus, then the onFocusChange callback should be triggered", () => {
-        const focusTextArea = vi.spyOn(controller, "focusTextArea");
-        const blurTextArea = vi.spyOn(controller, "blurTextArea");
+    it("when the WritingZone is in preview mode, then only the preview is displayed", () => {
         const writing_zone = renderWritingZone({
             controller,
-            presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+            presenter: WritingZonePresenter.buildPreviewMode(
+                WritingZonePresenter.buildInitial(true)
+            ),
+            textarea,
         } as HostElement);
 
-        const textarea = selectOrThrow(
-            writing_zone,
-            "[data-test=writing-zone-textarea]",
-            HTMLTextAreaElement
-        );
+        const preview_element = selectOrThrow(writing_zone, "[data-test=writing-zone-preview]");
 
-        textarea.dispatchEvent(new Event("focus"));
-        expect(focusTextArea).toHaveBeenCalledOnce();
-
-        textarea.dispatchEvent(new Event("blur"));
-        expect(blurTextArea).toHaveBeenCalledOnce();
+        expect(preview_element).toBeDefined();
+        expect(writing_zone.querySelector("[data-test=writing-zone-textarea]")).toBeNull();
     });
 });

@@ -24,7 +24,7 @@ describe("WritingZonePresenter", () => {
     let initial_presenter: WritingZonePresenter;
 
     beforeEach(() => {
-        initial_presenter = WritingZonePresenter.buildInitial();
+        initial_presenter = WritingZonePresenter.buildInitial(true);
     });
 
     it("buildInitial() should return an initial presenter", () => {
@@ -32,6 +32,8 @@ describe("WritingZonePresenter", () => {
             initial_content: "",
             is_focused: false,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: true,
         });
     });
 
@@ -40,6 +42,8 @@ describe("WritingZonePresenter", () => {
             initial_content: "",
             is_focused: true,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: true,
         });
     });
 
@@ -48,6 +52,8 @@ describe("WritingZonePresenter", () => {
             initial_content: "",
             is_focused: false,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: true,
         });
     });
 
@@ -56,6 +62,18 @@ describe("WritingZonePresenter", () => {
             initial_content: "",
             is_focused: true,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: true,
+        });
+    });
+
+    it("buildPreviewMode() should return a presenter with is_focused and is_in_preview_mode being true", () => {
+        expect(WritingZonePresenter.buildPreviewMode(initial_presenter)).toStrictEqual({
+            initial_content: "",
+            is_focused: true,
+            is_in_writing_mode: false,
+            is_in_preview_mode: true,
+            is_comments_markdown_mode_enabled: true,
         });
     });
 
@@ -66,6 +84,8 @@ describe("WritingZonePresenter", () => {
             initial_content: "This is new content",
             is_focused: false,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: true,
         });
     });
 });

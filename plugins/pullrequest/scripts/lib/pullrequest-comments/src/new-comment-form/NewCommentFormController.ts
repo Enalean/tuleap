@@ -62,7 +62,7 @@ export const NewCommentFormController = (
             (payload: PullRequestComment) => {
                 post_submit_callback(payload);
 
-                host.writing_zone_controller.resetTextArea(host.writing_zone);
+                host.writing_zone_controller.resetWritingZone(host.writing_zone);
                 host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
             },
             (fault) => {

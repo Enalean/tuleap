@@ -24,32 +24,40 @@ import { WritingZonePresenter } from "./WritingZonePresenter";
 export type ControlWritingZone = {
     onTextareaInput(host: HostElement): void;
     switchToWritingMode(host: HostElement): void;
-    focusTextArea(host: HostElement): void;
-    blurTextArea(host: HostElement): void;
-    resetTextArea(host: HTMLElement & InternalWritingZone): void;
+    switchToPreviewMode(host: HostElement): void;
+    focusWritingZone(host: HostElement): void;
+    blurWritingZone(host: HostElement): void;
+    resetWritingZone(host: HTMLElement & InternalWritingZone): void;
     initWritingZone(host: HostElement): void;
     setWritingZoneContent(host: HostElement, content: string): void;
     shouldFocusWritingZoneWhenConnected(): boolean;
 };
 
-type WritingZoneConfig = {
+export type WritingZoneConfig = {
     focus_writing_zone_when_connected?: boolean;
+    is_comments_markdown_mode_enabled?: boolean;
 };
 
 export const WritingZoneController = (config: WritingZoneConfig): ControlWritingZone => {
-    const focusTextArea = (host: HostElement): void => {
+    const focusWritingZone = (host: HostElement): void => {
         host.presenter = WritingZonePresenter.buildFocused(host.presenter);
-        host.textarea.focus();
-        host.textarea.setSelectionRange(host.textarea.value.length, host.textarea.value.length);
+
+        if (host.presenter.is_in_writing_mode) {
+            host.textarea.focus();
+            host.textarea.setSelectionRange(host.textarea.value.length, host.textarea.value.length);
+        }
 
         if (host.parentElement) {
             host.parentElement.classList.add("pull-request-comment-with-writing-zone-active");
         }
     };
 
-    const blurTextArea = (host: HTMLElement & InternalWritingZone): void => {
+    const blurWritingZone = (host: HTMLElement & InternalWritingZone): void => {
         host.presenter = WritingZonePresenter.buildBlurred(host.presenter);
-        host.textarea.blur();
+
+        if (host.presenter.is_in_writing_mode) {
+            host.textarea.blur();
+        }
 
         if (host.parentElement) {
             host.parentElement.classList.remove("pull-request-comment-with-writing-zone-active");
@@ -58,7 +66,9 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
 
     return {
         initWritingZone: (host: HostElement): void => {
-            host.presenter = WritingZonePresenter.buildInitial();
+            host.presenter = WritingZonePresenter.buildInitial(
+                config.is_comments_markdown_mode_enabled
+            );
         },
 
         onTextareaInput: (host: HostElement): void => {
@@ -70,18 +80,30 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         },
 
         switchToWritingMode: (host: HostElement): void => {
-            focusTextArea(host);
-
             host.presenter = WritingZonePresenter.buildWritingMode(host.presenter);
+
+            setTimeout(() => {
+                focusWritingZone(host);
+            });
         },
 
-        focusTextArea,
-        blurTextArea,
+        switchToPreviewMode: (host: HostElement): void => {
+            host.presenter = WritingZonePresenter.buildPreviewMode(host.presenter);
 
-        resetTextArea: (host: HTMLElement & InternalWritingZone): void => {
+            setTimeout(() => {
+                focusWritingZone(host);
+            });
+        },
+
+        focusWritingZone,
+        blurWritingZone,
+
+        resetWritingZone: (host: HTMLElement & InternalWritingZone): void => {
             host.textarea.value = "";
-            host.presenter = WritingZonePresenter.buildBlurred(host.presenter);
-            blurTextArea(host);
+            host.presenter = WritingZonePresenter.buildBlurred(
+                WritingZonePresenter.buildWritingMode(host.presenter)
+            );
+            blurWritingZone(host);
         },
 
         setWritingZoneContent: (host: HostElement, content: string): void => {
