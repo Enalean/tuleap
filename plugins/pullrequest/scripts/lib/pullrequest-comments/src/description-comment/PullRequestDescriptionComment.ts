@@ -45,6 +45,7 @@ export type PullRequestDescriptionComment = {
     readonly post_description_form_close_callback: () => void;
     readonly writing_zone_controller: ControlWritingZone;
     readonly writing_zone: HTMLElement & InternalWritingZone;
+    readonly is_comments_markdown_mode_enabled: boolean;
     description: PullRequestDescriptionCommentPresenter;
     edition_form_presenter: DescriptionCommentFormPresenter | null;
 };
@@ -66,6 +67,7 @@ export const post_description_form_close_callback_descriptor = {
 
 export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
+    is_comments_markdown_mode_enabled: false,
     description: undefined,
     controller: undefined,
     after_render_once: after_render_once_descriptor,
@@ -78,6 +80,7 @@ export const PullRequestCommentDescriptionComponent = define<PullRequestDescript
             controller ??
             WritingZoneController({
                 focus_writing_zone_when_connected: true,
+                is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
             }),
     },
     writing_zone: {

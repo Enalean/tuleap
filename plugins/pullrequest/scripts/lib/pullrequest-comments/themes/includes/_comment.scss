@@ -21,6 +21,7 @@ $arrow-width: 6px;
 $follow-up-base-margin-left: 40px;
 $tlp-avatar-width: 32px;
 $thread-border-width: 2px;
+$writing-zone-content-height: 214px;
 
 .pull-request-comment-component {
     display: flex;
@@ -185,7 +186,7 @@ $thread-border-width: 2px;
     margin: var(--tlp-small-spacing) 0 0;
 }
 
-.pull-request-comment-textarea {
+.pull-request-comment-writing-zone-textarea {
     width: 100%;
     padding: var(--tlp-medium-spacing);
     border: unset;
@@ -195,6 +196,11 @@ $thread-border-width: 2px;
         border-color: unset;
         box-shadow: unset;
     }
+}
+
+.pull-request-comment-writing-zone-commonmark-preview {
+    height: $writing-zone-content-height;
+    padding: var(--tlp-medium-spacing);
 }
 
 .pull-request-comment-follow-up {

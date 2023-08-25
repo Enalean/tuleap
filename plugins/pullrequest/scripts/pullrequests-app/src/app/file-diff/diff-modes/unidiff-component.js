@@ -81,7 +81,8 @@ function controller($element, $scope, SharedPropertiesService) {
                 )
             ),
             getStore(),
-            comment_widgets_map
+            comment_widgets_map,
+            SharedPropertiesService.isCommentsMarkdownModeEnabled()
         ),
     });
 

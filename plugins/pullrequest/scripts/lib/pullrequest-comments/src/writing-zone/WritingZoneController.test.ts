@@ -19,28 +19,36 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { HostElement } from "./WritingZone";
+import type { WritingZoneConfig } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 import { WritingZonePresenter } from "./WritingZonePresenter";
 
 describe("WritingZoneController", () => {
-    let doc: Document, textarea: HTMLTextAreaElement;
+    let doc: Document, textarea: HTMLTextAreaElement, config: WritingZoneConfig;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         textarea = doc.createElement("textarea");
+        config = {
+            focus_writing_zone_when_connected: false,
+            is_comments_markdown_mode_enabled: true,
+        };
     });
 
     it("initWritingZone() should assign the WritingZone a default presenter", () => {
         const host = {
             presenter: undefined,
+            is_comments_markdown_mode_enabled: true,
         } as unknown as HostElement;
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).initWritingZone(host);
+        WritingZoneController(config).initWritingZone(host);
 
         expect(host.presenter).toStrictEqual({
             initial_content: "",
             is_focused: false,
             is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled: config.is_comments_markdown_mode_enabled,
         });
     });
 
@@ -53,7 +61,7 @@ describe("WritingZoneController", () => {
 
         const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).onTextareaInput(host);
+        WritingZoneController(config).onTextareaInput(host);
 
         expect(dispatchEvent).toHaveBeenCalledOnce();
 
@@ -63,7 +71,7 @@ describe("WritingZoneController", () => {
         expect(event.detail).toStrictEqual({ content: textarea.value });
     });
 
-    it("focusTextArea() should focus the <textarea/>, put the component in focused state and add the active class on its parent element", () => {
+    it("focusWritingZone() should focus the <textarea/>, put the component in focused state and add the active class on its parent element", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
@@ -76,7 +84,7 @@ describe("WritingZoneController", () => {
         const focus = vi.spyOn(textarea, "focus");
         const setSelectionRange = vi.spyOn(textarea, "setSelectionRange");
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).focusTextArea(host);
+        WritingZoneController(config).focusWritingZone(host);
 
         expect(focus).toHaveBeenCalledOnce();
         expect(setSelectionRange).toHaveBeenCalledOnce();
@@ -91,7 +99,7 @@ describe("WritingZoneController", () => {
         );
     });
 
-    it("blurTextArea() should blur the <textarea/>, remove the component focused state and remove the active class on its parent element", () => {
+    it("blurWritingZone() should blur the <textarea/>, remove the component focused state and remove the active class on its parent element", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
@@ -101,7 +109,7 @@ describe("WritingZoneController", () => {
 
         const blur = vi.spyOn(textarea, "blur");
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).blurTextArea(host);
+        WritingZoneController(config).blurWritingZone(host);
 
         expect(blur).toHaveBeenCalledOnce();
         expect(host.presenter.is_focused).toBe(false);
@@ -111,31 +119,49 @@ describe("WritingZoneController", () => {
     });
 
     it("switchToWritingMode() should focus the <textarea/> set the presenter to writing_mode", () => {
+        vi.useFakeTimers();
+
         const host = {
             textarea,
-            presenter: {
-                initial_content: "",
-                is_focused: false,
-                is_in_writing_mode: false,
-            },
+            presenter: WritingZonePresenter.buildPreviewMode(
+                WritingZonePresenter.buildInitial(true)
+            ),
         } as HostElement;
 
         const focus = vi.spyOn(textarea, "focus");
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).switchToWritingMode(
-            host
-        );
+        WritingZoneController(config).switchToWritingMode(host);
+
+        vi.advanceTimersToNextTimer();
 
         expect(focus).toHaveBeenCalledOnce();
         expect(host.presenter.is_focused).toBe(true);
         expect(host.presenter.is_in_writing_mode).toBe(true);
     });
 
-    it("resetTextArea() should empty + blur the <textarea/> and", () => {
+    it("switchToPreviewMode() should focus WritingZone and set the presenter to preview_mode", () => {
+        vi.useFakeTimers();
+
+        const host = {
+            textarea,
+            presenter: WritingZonePresenter.buildWritingMode(
+                WritingZonePresenter.buildInitial(true)
+            ),
+        } as HostElement;
+
+        WritingZoneController(config).switchToPreviewMode(host);
+
+        vi.advanceTimersToNextTimer();
+
+        expect(host.presenter.is_focused).toBe(true);
+        expect(host.presenter.is_in_preview_mode).toBe(true);
+    });
+
+    it("resetWritingZone() should empty + blur the <textarea/> and display back the writing mode", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
-            presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
+            presenter: WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial()),
             parentElement: parent_element,
         } as unknown as HostElement;
 
@@ -143,11 +169,12 @@ describe("WritingZoneController", () => {
 
         const blur = vi.spyOn(textarea, "blur");
 
-        WritingZoneController({ focus_writing_zone_when_connected: false }).resetTextArea(host);
+        WritingZoneController(config).resetWritingZone(host);
 
         expect(textarea.value).toBe("");
         expect(blur).toHaveBeenCalledOnce();
         expect(host.presenter.is_focused).toBe(false);
+        expect(host.presenter.is_in_writing_mode).toBe(true);
         expect(Array.from(parent_element.classList)).not.toContain(
             "pull-request-comment-with-writing-zone-active"
         );

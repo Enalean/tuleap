@@ -62,6 +62,7 @@ export const FileDiffWidgetStub = {
             getRelativeDateHelper: jest.fn(),
             shouldFocusWritingZoneOnceRendered: () => true,
         },
+        is_comments_markdown_mode_enabled: true,
         post_rendering_callback: noop,
         ...data,
     }),
@@ -78,6 +79,7 @@ export const FileDiffWidgetStub = {
             triggerPostSubmitCallback: jest.fn(),
             shouldFocusWritingZoneOnceRendered: () => true,
         },
+        is_comments_markdown_mode_enabled: true,
         post_rendering_callback: noop,
     }),
 

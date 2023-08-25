@@ -30,6 +30,9 @@ msgstr "Obsolète"
 msgid "Please add one."
 msgstr "Veuillez en ajouter une."
 
+msgid "Preview"
+msgstr "Aperçu"
+
 msgid "Reply"
 msgstr "Répondre"
 

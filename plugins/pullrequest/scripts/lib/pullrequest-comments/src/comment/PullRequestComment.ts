@@ -56,6 +56,7 @@ export type PullRequestCommentComponentType = {
     readonly controller: ControlPullRequestComment;
     readonly writing_zone_controller: ControlWritingZone;
     readonly writing_zone: HTMLElement & InternalWritingZone;
+    readonly is_comments_markdown_mode_enabled: boolean;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
@@ -117,7 +118,9 @@ export const element_height_descriptor = {
     get: (host: PullRequestCommentComponentType): number =>
         host.content().getBoundingClientRect().height,
     observe(host: PullRequestCommentComponentType): void {
-        host.post_rendering_callback?.();
+        setTimeout(() => {
+            host.post_rendering_callback?.();
+        });
     },
 };
 
@@ -137,6 +140,7 @@ export const post_reply_save_callback_descriptor = {
 
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
+    is_comments_markdown_mode_enabled: false,
     comment: undefined,
     post_rendering_callback: undefined,
     relative_date_helper: undefined,
@@ -164,6 +168,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
             controller ??
             WritingZoneController({
                 focus_writing_zone_when_connected: true,
+                is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
             }),
     },
     writing_zone: {

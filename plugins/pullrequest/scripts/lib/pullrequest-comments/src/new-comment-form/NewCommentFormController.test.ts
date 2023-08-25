@@ -118,7 +118,7 @@ describe("NewCommentFormController", () => {
     describe("saveNewComment()", () => {
         it(`When the comment is saved successfully
             Then it should call the post_submit_callback with the PullRequestComment
-            And reset the textarea + the presenter`, async () => {
+            And reset the WritingZone + the presenter`, async () => {
             const comment_content = "This is what I have to say";
             const host = {
                 presenter: NewCommentFormPresenter.buildWithUpdatedComment(
@@ -127,7 +127,7 @@ describe("NewCommentFormController", () => {
                 ),
                 content: () => host_content,
                 writing_zone_controller: {
-                    resetTextArea: vi.fn(),
+                    resetWritingZone: vi.fn(),
                 } as unknown as ControlWritingZone,
             } as NewCommentForm;
 
@@ -140,7 +140,7 @@ describe("NewCommentFormController", () => {
             await getController(comment_saver).saveNewComment(host);
 
             expect(post_submit_callback).toHaveBeenCalledOnce();
-            expect(host.writing_zone_controller.resetTextArea).toHaveBeenCalledOnce();
+            expect(host.writing_zone_controller.resetWritingZone).toHaveBeenCalledOnce();
             expect(host.presenter).toStrictEqual(getEmptyPresenter());
         });
 

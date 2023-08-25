@@ -22,7 +22,7 @@ import { gettext_provider } from "../gettext-provider";
 import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
 import type { WritingZonePresenter } from "./WritingZonePresenter";
-import { getWritingZoneTemplate, TEXTAREA_CLASSNAME } from "./WritingZoneTemplate";
+import { getWritingZoneTemplate } from "./WritingZoneTemplate";
 
 export const TAG = "tuleap-pullrequest-comment-writing-zone";
 
@@ -70,25 +70,35 @@ export const WritingZoneElement = define<InternalWritingZone>({
         },
         connect: (host) => {
             if (host.controller.shouldFocusWritingZoneWhenConnected()) {
-                host.controller.focusTextArea(host);
+                host.controller.focusWritingZone(host);
             }
 
             return (): void => {
-                host.controller.resetTextArea(host);
+                host.controller.resetWritingZone(host);
             };
         },
     },
     presenter: undefined,
     textarea: {
         get: (host) => {
-            const textarea = host
-                .content()
-                .querySelector<HTMLTextAreaElement>(`.${TEXTAREA_CLASSNAME}`);
-            if (!textarea) {
-                throw new Error("Can't find the writing-zone's <textarea/> element");
-            }
+            const textarea_element = document.createElement("textarea");
+            textarea_element.setAttribute("data-test", "writing-zone-textarea");
+            textarea_element.setAttribute(
+                "class",
+                "pull-request-comment-writing-zone-textarea tlp-textarea"
+            );
+            textarea_element.setAttribute("rows", "10");
+            textarea_element.setAttribute(
+                "placeholder",
+                gettext_provider.gettext("Say something…")
+            );
+            textarea_element.addEventListener("input", () => host.controller.onTextareaInput(host));
+            textarea_element.addEventListener("focus", () =>
+                host.controller.focusWritingZone(host)
+            );
+            textarea_element.addEventListener("blur", () => host.controller.blurWritingZone(host));
 
-            return textarea;
+            return textarea_element;
         },
         connect: (host) => {
             host.textarea.value = host.presenter.initial_content;

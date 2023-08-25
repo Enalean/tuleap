@@ -69,12 +69,14 @@ export interface InlineCommentWidget extends WidgetElement {
     comment: PullRequestCommentPresenter;
     controller: ControlPullRequestComment;
     post_rendering_callback: () => void;
+    is_comments_markdown_mode_enabled: boolean;
 }
 
 export interface NewInlineCommentFormWidget extends WidgetElement {
     localName: "tuleap-pullrequest-new-comment-form";
     post_rendering_callback: () => void;
     controller: ControlNewCommentForm;
+    is_comments_markdown_mode_enabled: boolean;
 }
 
 export interface FileDiffPlaceholderWidget extends WidgetElement {

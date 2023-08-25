@@ -21,13 +21,17 @@ export interface WritingZonePresenter {
     readonly initial_content: string;
     readonly is_focused: boolean;
     readonly is_in_writing_mode: boolean;
+    readonly is_in_preview_mode: boolean;
+    readonly is_comments_markdown_mode_enabled: boolean;
 }
 
 export const WritingZonePresenter = {
-    buildInitial: (): WritingZonePresenter => ({
+    buildInitial: (is_comments_markdown_mode_enabled = false): WritingZonePresenter => ({
         initial_content: "",
         is_focused: false,
         is_in_writing_mode: true,
+        is_in_preview_mode: false,
+        is_comments_markdown_mode_enabled,
     }),
     buildFocused: (presenter: WritingZonePresenter): WritingZonePresenter => ({
         ...presenter,
@@ -41,6 +45,13 @@ export const WritingZonePresenter = {
         ...presenter,
         is_focused: true,
         is_in_writing_mode: true,
+        is_in_preview_mode: false,
+    }),
+    buildPreviewMode: (presenter: WritingZonePresenter): WritingZonePresenter => ({
+        ...presenter,
+        is_focused: true,
+        is_in_writing_mode: false,
+        is_in_preview_mode: true,
     }),
     buildWithContent: (presenter: WritingZonePresenter, content: string): WritingZonePresenter => ({
         ...presenter,

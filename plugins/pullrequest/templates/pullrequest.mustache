@@ -13,6 +13,7 @@
              data-is-there-at-least-one-pull-request="{{ is_there_at_least_one_pull_request }}"
              data-is-merge-commit-allowed="{{ is_merge_commit_allowed }}"
              data-relative-date-display="{{ relative_date_display }}"
+             data-is-feature-flag-markdown-comments-enabled="{{ is_feature_flag_markdown_comments_enabled }}"
         ></div>
         <ui-view></ui-view>
     </div>
@@ -24,5 +25,6 @@
          data-relative-date-display="{{ relative_date_display }}"
          data-user-avatar-url="{{ user_avatar_url }}"
          data-are-merge-commits-allowed-in-repository="{{ is_merge_commit_allowed }}"
+         data-is-feature-flag-markdown-comments-enabled="{{ is_feature_flag_markdown_comments_enabled }}"
     ></div>
 {{/ is_vue_overview_shown }}

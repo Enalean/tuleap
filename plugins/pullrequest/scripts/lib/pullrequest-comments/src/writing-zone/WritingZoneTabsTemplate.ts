@@ -24,16 +24,20 @@ import type { InternalWritingZone } from "./WritingZone";
 import type { WritingZonePresenter } from "./WritingZonePresenter";
 import "../writing-zone/WritingZone";
 
-type WritingZoneTabName = "write";
+type WritingZoneTabName = "write" | "preview";
 
 const TAB_WRITE: WritingZoneTabName = "write";
+const TAB_PREVIEW: WritingZoneTabName = "preview";
 
 const isTabActive = (tab_name: WritingZoneTabName, presenter: WritingZonePresenter): boolean => {
     if (!presenter.is_focused) {
         return false;
     }
 
-    return tab_name === TAB_WRITE;
+    return (
+        (tab_name === TAB_PREVIEW && presenter.is_in_preview_mode) ||
+        (tab_name === TAB_WRITE && presenter.is_in_writing_mode)
+    );
 };
 
 export const buildWriteTab = (
@@ -52,6 +56,30 @@ export const buildWriteTab = (
             onclick="${host.controller.switchToWritingMode}"
         >
             ${gettext_provider.gettext("Write")}
+        </span>
+    `;
+};
+
+export const buildPreviewTab = (
+    host: InternalWritingZone,
+    gettext_provider: GettextProvider
+): UpdateFunction<InternalWritingZone> => {
+    if (!host.presenter.is_comments_markdown_mode_enabled) {
+        return html``;
+    }
+
+    const tabs_classes = {
+        "tlp-tab": true,
+        "tlp-tab-active": isTabActive(TAB_PREVIEW, host.presenter),
+    };
+
+    return html`
+        <span
+            data-test="preview-tab"
+            class="${tabs_classes}"
+            onclick="${host.controller.switchToPreviewMode}"
+        >
+            ${gettext_provider.gettext("Preview")}
         </span>
     `;
 };
