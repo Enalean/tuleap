@@ -203,7 +203,7 @@ mod tests {
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"internal_error":"Failed to load the wasm module: failed to read input file"}"#,
+            r#"{"internal_error":"Failed to load the wasm module: failed to read input file: ./test-wasm-modules/target/wasm32-wasi/release/i-do-not-exist.wasm"}"#,
             str_out
         );
     }

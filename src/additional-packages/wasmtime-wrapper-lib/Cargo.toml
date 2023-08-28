@@ -13,11 +13,11 @@ cbindgen = "0.24.3"
 
 [dependencies]
 async-trait = "0.1"
-cap-std = "1.0.15"
+cap-std = "2.0.0"
 rustix = "0.37.19"
 serde = { version = "1.0.147", features = ["derive"] }
 serde_json = "1.0.87"
 anyhow = "1.0.66"
-wasmtime = { version = "11.0.0", default_features = false, features = ["parallel-compilation", "cranelift", "pooling-allocator"] }
-wasmtime-wasi = "11.0.0"
-wasi-common = "11.0.0"
+wasmtime = { version = "12.0.1", default_features = false, features = ["parallel-compilation", "cranelift", "pooling-allocator"] }
+wasmtime-wasi = "12.0.1"
+wasi-common = "12.0.1"
