@@ -28,17 +28,14 @@
                 class="tlp-select"
                 id="project-selector"
             >
-                <option v-bind:value="null" disabled="disabled" v-translate>
-                    Choose a project...
-                </option>
+                <option v-bind:value="null" disabled v-translate>Choose a project...</option>
                 <option
                     v-for="project in available_projects"
                     v-bind:value="project"
                     v-bind:key="project.id"
-                    v-bind:selected="{
-                        selected:
-                            selected_project_model && project.id === selected_project_model.id,
-                    }"
+                    v-bind:selected="
+                        selected_project_model !== null && selected_project_model.id === project.id
+                    "
                 >
                     {{ project.name }}
                 </option>
@@ -60,15 +57,13 @@
                 id="template-selector"
                 name="tracker-id-from-project"
             >
-                <option disabled="disabled" v-bind:value="null" v-translate>
-                    Choose a tracker...
-                </option>
+                <option disabled v-bind:value="null" v-translate>Choose a tracker...</option>
                 <option
                     v-for="tracker in trackers_of_selected_project"
                     v-bind:value="tracker"
                     v-bind:key="tracker.id"
                     v-bind:selected="
-                        selected_tracker_model && tracker.id === selected_tracker_model.id
+                        selected_tracker_model !== null && selected_tracker_model.id === tracker.id
                     "
                 >
                     {{ tracker.name }}
@@ -102,9 +97,9 @@ export default class TrackerFromAnotherProjectSelector extends Vue {
     @Mutation
     readonly setSelectedProject!: (project: ProjectWithTrackers) => void;
 
-    private selected_project_model: ProjectWithTrackers | null = null;
-    private trackers_of_selected_project: Tracker[] = [];
-    private selected_tracker_model: Tracker | null = null;
+    selected_project_model: ProjectWithTrackers | null = null;
+    trackers_of_selected_project: Tracker[] = [];
+    selected_tracker_model: Tracker | null = null;
 
     mounted() {
         if (this.selected_project_tracker_template && this.selected_project) {

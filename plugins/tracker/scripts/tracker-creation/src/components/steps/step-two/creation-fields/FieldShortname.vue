@@ -38,7 +38,7 @@
             id="tracker-shortname"
             name="tracker-shortname"
             data-test="tracker-shortname-input"
-            v-on:keyup="setTrackerShortName($event.target.value)"
+            v-on:keyup="setTrackerShortName($event)"
             v-bind:value="tracker_to_be_created.shortname"
             required
         />
@@ -71,7 +71,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State, Mutation, Getter } from "vuex-class";
+import { Getter, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
@@ -89,8 +89,12 @@ export default class FieldShortname extends Vue {
     @Getter
     readonly can_display_slugify_mode!: boolean;
 
-    @Mutation
-    readonly setTrackerShortName!: (name: string) => void;
+    setTrackerShortName(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+        this.$store.commit("setTrackerShortName", event.target.value);
+    }
 
     @Getter
     readonly is_shortname_valid!: boolean;

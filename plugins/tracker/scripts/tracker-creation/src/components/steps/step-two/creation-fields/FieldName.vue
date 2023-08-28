@@ -36,7 +36,7 @@
             name="tracker-name"
             data-test="tracker-name-input"
             v-bind:value="tracker_to_be_created.name"
-            v-on:keyup="setTrackerName($event.target.value)"
+            v-on:keyup="setTrackerName($event)"
             required
         />
         <p class="tlp-text-danger" data-test="name-error" v-if="is_name_already_used">
@@ -49,7 +49,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State, Mutation, Getter } from "vuex-class";
+import { Getter, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
@@ -58,8 +58,12 @@ export default class FieldName extends Vue {
     @State
     readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
 
-    @Mutation
-    readonly setTrackerName!: (name: string) => void;
+    setTrackerName(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+        this.$store.commit("setTrackerName", event.target.value);
+    }
 
     @Getter
     readonly can_display_slugify_mode!: boolean;

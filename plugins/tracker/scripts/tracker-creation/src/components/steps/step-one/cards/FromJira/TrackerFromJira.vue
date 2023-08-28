@@ -68,11 +68,11 @@ export default class TrackerFromJira extends Vue {
 
     private is_connection_valid = false;
     private is_loading = false;
-    private error_message = "";
+    error_message = "";
 
-    private project_list: ProjectList[] | null = null;
+    project_list: ProjectList[] | null = null;
 
-    private credentials: Credentials = {
+    credentials: Credentials = {
         server_url: "",
         user_email: "",
         token: "",

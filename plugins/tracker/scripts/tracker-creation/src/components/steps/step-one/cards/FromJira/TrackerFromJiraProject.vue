@@ -33,7 +33,7 @@
                 class="tlp-select"
                 id="project"
                 name="project"
-                v-on:change="selectProject($event.target.value)"
+                v-on:change="selectProject($event)"
                 data-test="project-list"
             >
                 <option value="" v-translate>Choose a project...</option>
@@ -43,7 +43,7 @@
                     v-bind:key="project.id"
                     v-bind:data-test="`project-${project.id}`"
                     v-bind:selected="
-                        from_jira_data.project && project.id === from_jira_data.project.id
+                        from_jira_data.project !== null && project.id === from_jira_data.project.id
                     "
                 >
                     {{ project.label }}
@@ -64,7 +64,7 @@
                 name="tracker_name"
                 data-test="tracker-name"
                 v-if="!is_loading"
-                v-on:change="selectTracker($event.target.value)"
+                v-on:change="selectTracker($event)"
             >
                 <option value="" selected v-translate>Choose an issue type...</option>
                 <option
@@ -72,8 +72,8 @@
                     v-bind:value="JSON.stringify(tracker)"
                     v-bind:key="tracker.id"
                     v-bind:selected="
-                        from_jira_data.tracker_list &&
-                        from_jira_data.tracker &&
+                        from_jira_data.tracker_list !== null &&
+                        from_jira_data.tracker !== null &&
                         tracker.id === from_jira_data.tracker.id
                     "
                 >
@@ -121,14 +121,17 @@ export default class TrackerFromJiraProject extends Vue {
         project_key: string
     ) => Promise<TrackerList[]>;
 
-    private is_a_project_selected = false;
-    private is_loading = false;
-    private error_message = "";
+    is_a_project_selected = false;
+    is_loading = false;
+    error_message = "";
 
-    async selectProject(payload: string): Promise<void> {
+    async selectProject(event: Event): Promise<void> {
+        if (!(event.target instanceof HTMLSelectElement)) {
+            return;
+        }
         this.error_message = "";
 
-        const project = JSON.parse(payload);
+        const project = JSON.parse(event.target.value);
         try {
             this.is_a_project_selected = true;
             this.is_loading = true;
@@ -150,8 +153,11 @@ export default class TrackerFromJiraProject extends Vue {
         }
     }
 
-    selectTracker(payload: string): void {
-        const tracker = JSON.parse(payload);
+    selectTracker(event: Event): void {
+        if (!(event.target instanceof HTMLSelectElement)) {
+            return;
+        }
+        const tracker = JSON.parse(event.target.value);
         this.setTrackerName(tracker.name);
         this.setTracker(tracker);
     }

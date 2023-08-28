@@ -61,7 +61,7 @@ export default class TrackerXmlFileSelector extends Vue {
     @Mutation
     readonly setTrackerToBeCreatedFromXml!: () => void;
 
-    private should_render_fresh_input = true;
+    should_render_fresh_input = true;
 
     mounted(): void {
         if (this.selected_xml_file_input === null) {

@@ -44,6 +44,6 @@ import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
     },
 })
 export default class TrackerXmlFileCard extends Vue {
-    private option_name = TRACKER_XML_FILE;
+    option_name = TRACKER_XML_FILE;
 }
 </script>

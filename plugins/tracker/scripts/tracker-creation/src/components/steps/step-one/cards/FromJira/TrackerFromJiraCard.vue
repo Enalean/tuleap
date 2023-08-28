@@ -44,6 +44,6 @@ import TrackerFromJira from "./TrackerFromJira.vue";
     },
 })
 export default class TrackerFromJiraCard extends Vue {
-    private option_name = FROM_JIRA;
+    option_name = FROM_JIRA;
 }
 </script>
