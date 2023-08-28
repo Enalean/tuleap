@@ -23,21 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROJECT_ID = 110;
     private VerifyIsTeamStub $team_verifier;
     private RootPlanningEditionEvent $event;
     private RootPlanningEditionEventProxy $event_proxy;
 
     protected function setUp(): void
     {
-        $this->event         = new RootPlanningEditionEvent(
-            new \Project(['group_id' => '110', 'group_name' => 'A project', 'unix_group_name' => 'a_project', "icon_codepoint" => ""]),
-            new \Planning(50, 'Release Planning', 110, '', '')
-        );
+        $project             = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $planning            = PlanningBuilder::aPlanning(self::PROJECT_ID)->build();
+        $this->event         = new RootPlanningEditionEvent($project, $planning);
         $this->team_verifier = VerifyIsTeamStub::withValidTeam();
         $this->event_proxy   = RootPlanningEditionEventProxy::buildFromEvent($this->event);
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team;
 
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -50,6 +51,7 @@ final class PossibleParentHandlerTest extends TestCase
     private const FEATURE_ID   = 123;
     private const PROGRAM_ID_1 = 899;
     private const PROGRAM_ID_2 = 741;
+    private const PROJECT_ID   = 555;
 
     private SearchOpenFeaturesStub $search_open_features;
     private RetrieveOpenFeatureCount $retrieve_open_feature_count;
@@ -77,18 +79,18 @@ final class PossibleParentHandlerTest extends TestCase
         $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(0);
 
         $this->user    = UserTestBuilder::buildWithDefaults();
-        $this->project = ProjectTestBuilder::aProject()->withId(555)->build();
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->tracker = TrackerTestBuilder::aTracker()
-                                           ->withId(789)
-                                           ->withProject($this->project)
-                                           ->build();
+            ->withId(789)
+            ->withProject($this->project)
+            ->build();
 
         $this->event = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
 
-        $this->retrieve_planning = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
+        $root_planning           = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withBacklogTrackers($this->tracker)
+            ->build();
+        $this->retrieve_planning = RetrieveRootPlanningStub::withProjectAndPlanning(self::PROJECT_ID, $root_planning);
 
         $this->possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
@@ -207,10 +209,11 @@ final class PossibleParentHandlerTest extends TestCase
 
     public function testAnArtifactThatCannotBeInTeamProjectBacklogWillNotHavePossibleParents(): void
     {
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            666
-        );
+        $other_backlog_tracker    = TrackerTestBuilder::aTracker()->withId(666)->build();
+        $root_planning            = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withBacklogTrackers($other_backlog_tracker)
+            ->build();
+        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndPlanning(self::PROJECT_ID, $root_planning);
         $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
             $this->event,
             $retrieve_planning,

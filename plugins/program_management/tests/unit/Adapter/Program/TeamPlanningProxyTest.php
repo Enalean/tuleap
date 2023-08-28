@@ -23,25 +23,48 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Planning;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TeamPlanningProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROJECT_ID              = 101;
+    private const PLANNING_ID             = 43;
+    private const PLANNING_NAME           = 'test';
+    private const MILESTONE_TRACKER_ID    = 82;
+    private const USER_STORIES_TRACKER_ID = 644;
+    private const BUGS_TRACKER_ID         = 816;
+
     public function testItBuildAPlanning(): void
     {
-        $project_id = 101;
-        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning->setPlanningTracker($tracker);
+        $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $milestone_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::MILESTONE_TRACKER_ID)
+            ->withProject($project)
+            ->build();
+        $user_stories      = TrackerTestBuilder::aTracker()
+            ->withId(self::USER_STORIES_TRACKER_ID)
+            ->build();
+        $bugs              = TrackerTestBuilder::aTracker()
+            ->withId(self::BUGS_TRACKER_ID)
+            ->build();
+
+        $planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($milestone_tracker)
+            ->withBacklogTrackers($user_stories, $bugs)
+            ->withId(self::PLANNING_ID)
+            ->withName(self::PLANNING_NAME)
+            ->build();
 
         $team_planning = TeamPlanningProxy::fromPlanning($planning);
 
-        self::assertEquals($planning->getId(), $team_planning->getId());
-        self::assertEquals($planning->getPlanningTracker()->getId(), $team_planning->getPlanningTracker()->getId());
-        self::assertEquals($planning->getName(), $team_planning->getName());
-        self::assertEquals($planning->getBacklogTrackersIds(), $team_planning->getPlannableTrackerIds());
+        self::assertSame(self::PLANNING_ID, $team_planning->getId());
+        self::assertSame(self::MILESTONE_TRACKER_ID, $team_planning->getPlanningTracker()->getId());
+        self::assertSame(self::PLANNING_NAME, $team_planning->getName());
+        self::assertEqualsCanonicalizing(
+            [self::USER_STORIES_TRACKER_ID, self::BUGS_TRACKER_ID],
+            $team_planning->getPlannableTrackerIds()
+        );
     }
 }

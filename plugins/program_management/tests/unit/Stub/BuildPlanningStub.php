@@ -22,32 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Project;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\TeamPlanningProxy;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BuildPlanningStub implements BuildPlanning
 {
-    private bool $valid_root_planning;
-
-    public function __construct(bool $valid_root_planning)
+    public function __construct(private bool $valid_root_planning)
     {
-        $this->valid_root_planning = $valid_root_planning;
     }
 
     public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning
     {
         if ($this->valid_root_planning) {
-            $planning = new \Planning(1, 'Root planning', $project_id, '', '');
-            $planning->setPlanningTracker(
-                TrackerTestBuilder::aTracker()->withId(20)
-                                              ->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))
-                                              ->build()
-            );
+            $project           = ProjectTestBuilder::aProject()->withId($project_id)->build();
+            $milestone_tracker = TrackerTestBuilder::aTracker()
+                ->withId(20)
+                ->withProject($project)
+                ->build();
+            $planning          = PlanningBuilder::aPlanning($project_id)
+                ->withMilestoneTracker($milestone_tracker)
+                ->build();
             return TeamPlanningProxy::fromPlanning($planning);
         }
 
