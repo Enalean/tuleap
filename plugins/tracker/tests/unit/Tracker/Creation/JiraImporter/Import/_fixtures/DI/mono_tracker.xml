@@ -1,60 +1,60 @@
 <?xml version="1.0"?>
 <tracker id="T1" parent_id="0">
-  <name><![CDATA[issues]]></name>
-  <item_name><![CDATA[Issues]]></item_name>
+  <name><![CDATA[Issues]]></name>
+  <item_name><![CDATA[issue]]></item_name>
   <description><![CDATA[Issues]]></description>
   <color><![CDATA[inca-silver]]></color>
   <cannedResponses/>
   <formElements>
-    <formElement type="fieldset" ID="issues_details_fieldset" rank="1">
+    <formElement type="fieldset" ID="issue_details_fieldset" rank="1">
       <name><![CDATA[details_fieldset]]></name>
       <label><![CDATA[Details]]></label>
       <formElements>
-        <formElement type="column" ID="issues_left_column" rank="1">
+        <formElement type="column" ID="issue_left_column" rank="1">
           <name><![CDATA[left_column]]></name>
           <label><![CDATA[left_column]]></label>
           <formElements>
-            <formElement type="string" ID="issues_summary" rank="1" required="1">
+            <formElement type="string" ID="issue_summary" rank="1" required="1">
               <name><![CDATA[summary]]></name>
               <label><![CDATA[Summary]]></label>
             </formElement>
-            <formElement type="text" ID="issues_description" rank="2">
+            <formElement type="text" ID="issue_description" rank="2">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Description]]></label>
               <properties rows="10" cols="50"/>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="column" ID="issues_right_column" rank="2">
+        <formElement type="column" ID="issue_right_column" rank="2">
           <name><![CDATA[right_column]]></name>
           <label><![CDATA[right_column]]></label>
           <formElements>
-            <formElement type="aid" ID="issues_artifact_id" rank="7">
+            <formElement type="aid" ID="issue_artifact_id" rank="7">
               <name><![CDATA[artifact_id]]></name>
               <label><![CDATA[Artifact id]]></label>
             </formElement>
-            <formElement type="string" ID="issues_jira_issue_url" rank="8">
+            <formElement type="string" ID="issue_jira_issue_url" rank="8">
               <name><![CDATA[jira_issue_url]]></name>
               <label><![CDATA[Link to original issue]]></label>
             </formElement>
-            <formElement type="subby" ID="issues_creator" rank="2">
+            <formElement type="subby" ID="issue_creator" rank="2">
               <name><![CDATA[creator]]></name>
               <label><![CDATA[Created by]]></label>
             </formElement>
-            <formElement type="subon" ID="issues_created" rank="3">
+            <formElement type="subon" ID="issue_created" rank="3">
               <name><![CDATA[created]]></name>
               <label><![CDATA[Creation date]]></label>
             </formElement>
-            <formElement type="lud" ID="issues_updated" rank="4">
+            <formElement type="lud" ID="issue_updated" rank="4">
               <name><![CDATA[updated]]></name>
               <label><![CDATA[Last update date]]></label>
             </formElement>
-            <formElement type="date" ID="issues_resolutiondate" rank="5">
+            <formElement type="date" ID="issue_resolutiondate" rank="5">
               <name><![CDATA[resolutiondate]]></name>
               <label><![CDATA[Resolved]]></label>
               <properties display_time="1"/>
             </formElement>
-            <formElement type="sb" ID="issues_status" rank="1">
+            <formElement type="sb" ID="issue_status" rank="1">
               <name><![CDATA[status]]></name>
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
@@ -65,20 +65,20 @@
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="issues_issuetype" rank="1" required="1">
+            <formElement type="sb" ID="issue_issuetype" rank="1" required="1">
               <name><![CDATA[issuetype]]></name>
               <label><![CDATA[Issue Type]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="Vissues_issuetype_task" label="Task"/>
-                  <item ID="Vissues_issuetype_sub-task" label="Sub-task"/>
-                  <item ID="Vissues_issuetype_story" label="Story"/>
-                  <item ID="Vissues_issuetype_bug" label="Bug"/>
-                  <item ID="Vissues_issuetype_epicen" label="EpicEN"/>
+                  <item ID="Vissue_issuetype_task" label="Task"/>
+                  <item ID="Vissue_issuetype_sub-task" label="Sub-task"/>
+                  <item ID="Vissue_issuetype_story" label="Story"/>
+                  <item ID="Vissue_issuetype_bug" label="Bug"/>
+                  <item ID="Vissue_issuetype_epicen" label="EpicEN"/>
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="issues_reporter" rank="10" required="1">
+            <formElement type="sb" ID="issue_reporter" rank="10" required="1">
               <name><![CDATA[reporter]]></name>
               <label><![CDATA[Reporter]]></label>
               <bind type="users">
@@ -87,20 +87,20 @@
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="issues_priority" rank="6">
+            <formElement type="sb" ID="issue_priority" rank="6">
               <name><![CDATA[priority]]></name>
               <label><![CDATA[Priority]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="Vissues_priority_highest" label="Highest"/>
-                  <item ID="Vissues_priority_high" label="High"/>
-                  <item ID="Vissues_priority_medium" label="Medium"/>
-                  <item ID="Vissues_priority_low" label="Low"/>
-                  <item ID="Vissues_priority_lowest" label="Lowest"/>
+                  <item ID="Vissue_priority_highest" label="Highest"/>
+                  <item ID="Vissue_priority_high" label="High"/>
+                  <item ID="Vissue_priority_medium" label="Medium"/>
+                  <item ID="Vissue_priority_low" label="Low"/>
+                  <item ID="Vissue_priority_lowest" label="Lowest"/>
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="issues_assignee" rank="9">
+            <formElement type="sb" ID="issue_assignee" rank="9">
               <name><![CDATA[assignee]]></name>
               <label><![CDATA[Assignee]]></label>
               <bind type="users">
@@ -113,77 +113,77 @@
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="issues_custom_fieldset" rank="2">
+    <formElement type="fieldset" ID="issue_custom_fieldset" rank="2">
       <name><![CDATA[custom_fieldset]]></name>
       <label><![CDATA[Custom Fields]]></label>
       <formElements>
-        <formElement type="msb" ID="issues_components" rank="1">
+        <formElement type="msb" ID="issue_components" rank="1">
           <name><![CDATA[components]]></name>
           <label><![CDATA[Components]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_components_car_component" label="Car component"/>
+              <item ID="Vissue_components_car_component" label="Car component"/>
             </items>
           </bind>
         </formElement>
-        <formElement type="msb" ID="issues_fixversions" rank="1">
+        <formElement type="msb" ID="issue_fixversions" rank="1">
           <name><![CDATA[fixversions]]></name>
           <label><![CDATA[Fix versions]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_fixversions_v1" label="v1"/>
-              <item ID="Vissues_fixversions_v2" label="v2"/>
+              <item ID="Vissue_fixversions_v1" label="v1"/>
+              <item ID="Vissue_fixversions_v2" label="v2"/>
             </items>
           </bind>
         </formElement>
-        <formElement type="tbl" ID="issues_labels" rank="1">
+        <formElement type="tbl" ID="issue_labels" rank="1">
           <name><![CDATA[labels]]></name>
           <label><![CDATA[Labels]]></label>
           <bind type="static" is_rank_alpha="0"/>
         </formElement>
-        <formElement type="cb" ID="issues_customfield_10032" rank="1">
+        <formElement type="cb" ID="issue_customfield_10032" rank="1">
           <name><![CDATA[customfield_10032]]></name>
           <label><![CDATA[[mag] checkbox]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_customfield_10032_test" label="test"/>
-              <item ID="Vissues_customfield_10032_test2" label="test2"/>
-              <item ID="Vissues_customfield_10032_test3" label="test3"/>
-              <item ID="Vissues_customfield_10032_test4" label="test4"/>
+              <item ID="Vissue_customfield_10032_test" label="test"/>
+              <item ID="Vissue_customfield_10032_test2" label="test2"/>
+              <item ID="Vissue_customfield_10032_test3" label="test3"/>
+              <item ID="Vissue_customfield_10032_test4" label="test4"/>
             </items>
           </bind>
         </formElement>
-        <formElement type="msb" ID="issues_versions" rank="1">
+        <formElement type="msb" ID="issue_versions" rank="1">
           <name><![CDATA[versions]]></name>
           <label><![CDATA[Affects versions]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vissues_versions_v1" label="v1"/>
-              <item ID="Vissues_versions_v2" label="v2"/>
+              <item ID="Vissue_versions_v1" label="v1"/>
+              <item ID="Vissue_versions_v2" label="v2"/>
             </items>
           </bind>
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="issues_attachment_fieldset" rank="3">
+    <formElement type="fieldset" ID="issue_attachment_fieldset" rank="3">
       <name><![CDATA[attachment_fieldset]]></name>
       <label><![CDATA[Attachments]]></label>
       <formElements>
-        <formElement type="file" ID="issues_attachment" rank="1">
+        <formElement type="file" ID="issue_attachment" rank="1">
           <name><![CDATA[attachment]]></name>
           <label><![CDATA[Attachments]]></label>
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="issues_links_fieldset" rank="4">
+    <formElement type="fieldset" ID="issue_links_fieldset" rank="4">
       <name><![CDATA[links_fieldset]]></name>
       <label><![CDATA[Links]]></label>
       <formElements>
-        <formElement type="art_link" ID="issues_issuelinks" rank="1">
+        <formElement type="art_link" ID="issue_issuelinks" rank="1">
           <name><![CDATA[issuelinks]]></name>
           <label><![CDATA[Links]]></label>
         </formElement>
-        <formElement type="cross" ID="issues_orgtuleapcrossreferences" rank="2">
+        <formElement type="cross" ID="issue_orgtuleapcrossreferences" rank="2">
           <name><![CDATA[orgtuleapcrossreferences]]></name>
           <label><![CDATA[References]]></label>
         </formElement>
@@ -195,19 +195,19 @@
       <shortname>title</shortname>
       <label>Title</label>
       <description>Define the title of an artifact</description>
-      <field REF="issues_summary"/>
+      <field REF="issue_summary"/>
     </semantic>
     <semantic type="description">
       <shortname>description</shortname>
       <label>Description</label>
       <description>Define the description of an artifact</description>
-      <field REF="issues_description"/>
+      <field REF="issue_description"/>
     </semantic>
     <semantic type="status">
       <shortname>status</shortname>
       <label>Status</label>
       <description>Define the status of an artifact</description>
-      <field REF="issues_status"/>
+      <field REF="issue_status"/>
       <open_values>
         <open_value REF="V13"/>
         <open_value REF="V15"/>
@@ -225,7 +225,7 @@
       <shortname>contributor</shortname>
       <label>Contributor/assignee</label>
       <description>Define the contributor/assignee of an artifact</description>
-      <field REF="issues_assignee"/>
+      <field REF="issue_assignee"/>
     </semantic>
   </semantics>
   <reports>
@@ -234,30 +234,30 @@
       <description><![CDATA[All the issues in this tracker]]></description>
       <criterias>
         <criteria rank="1">
-          <field REF="issues_summary"/>
+          <field REF="issue_summary"/>
         </criteria>
         <criteria rank="2">
-          <field REF="issues_description"/>
+          <field REF="issue_description"/>
         </criteria>
         <criteria rank="3">
-          <field REF="issues_status"/>
+          <field REF="issue_status"/>
         </criteria>
         <criteria rank="4">
-          <field REF="issues_priority"/>
+          <field REF="issue_priority"/>
         </criteria>
         <criteria rank="5">
-          <field REF="issues_issuetype"/>
+          <field REF="issue_issuetype"/>
         </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
           <name><![CDATA[Results]]></name>
           <columns>
-            <field REF="issues_summary"/>
-            <field REF="issues_status"/>
-            <field REF="issues_jira_issue_url"/>
-            <field REF="issues_priority"/>
-            <field REF="issues_issuetype"/>
+            <field REF="issue_summary"/>
+            <field REF="issue_status"/>
+            <field REF="issue_jira_issue_url"/>
+            <field REF="issue_priority"/>
+            <field REF="issue_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -267,34 +267,34 @@
       <description><![CDATA[All open issues in this tracker]]></description>
       <criterias>
         <criteria rank="0" is_advanced="1">
-          <field REF="issues_status"/>
+          <field REF="issue_status"/>
           <criteria_value type="list">
             <selected_value REF="V13"/>
             <selected_value REF="V15"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
-          <field REF="issues_summary"/>
+          <field REF="issue_summary"/>
         </criteria>
         <criteria rank="2">
-          <field REF="issues_description"/>
+          <field REF="issue_description"/>
         </criteria>
         <criteria rank="3">
-          <field REF="issues_priority"/>
+          <field REF="issue_priority"/>
         </criteria>
         <criteria rank="4">
-          <field REF="issues_issuetype"/>
+          <field REF="issue_issuetype"/>
         </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
           <name><![CDATA[Results]]></name>
           <columns>
-            <field REF="issues_summary"/>
-            <field REF="issues_status"/>
-            <field REF="issues_jira_issue_url"/>
-            <field REF="issues_priority"/>
-            <field REF="issues_issuetype"/>
+            <field REF="issue_summary"/>
+            <field REF="issue_status"/>
+            <field REF="issue_jira_issue_url"/>
+            <field REF="issue_priority"/>
+            <field REF="issue_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -304,33 +304,33 @@
       <description><![CDATA[All done issues in this tracker]]></description>
       <criterias>
         <criteria rank="0" is_advanced="1">
-          <field REF="issues_status"/>
+          <field REF="issue_status"/>
           <criteria_value type="list">
             <selected_value REF="V14"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
-          <field REF="issues_summary"/>
+          <field REF="issue_summary"/>
         </criteria>
         <criteria rank="2">
-          <field REF="issues_description"/>
+          <field REF="issue_description"/>
         </criteria>
         <criteria rank="3">
-          <field REF="issues_priority"/>
+          <field REF="issue_priority"/>
         </criteria>
         <criteria rank="4">
-          <field REF="issues_issuetype"/>
+          <field REF="issue_issuetype"/>
         </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
           <name><![CDATA[Results]]></name>
           <columns>
-            <field REF="issues_summary"/>
-            <field REF="issues_status"/>
-            <field REF="issues_jira_issue_url"/>
-            <field REF="issues_priority"/>
-            <field REF="issues_issuetype"/>
+            <field REF="issue_summary"/>
+            <field REF="issue_status"/>
+            <field REF="issue_jira_issue_url"/>
+            <field REF="issue_priority"/>
+            <field REF="issue_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -340,31 +340,31 @@
       <description><![CDATA[All issues created recently in this tracker]]></description>
       <criterias>
         <criteria rank="0">
-          <field REF="issues_summary"/>
+          <field REF="issue_summary"/>
         </criteria>
         <criteria rank="1">
-          <field REF="issues_description"/>
+          <field REF="issue_description"/>
         </criteria>
         <criteria rank="2">
-          <field REF="issues_priority"/>
+          <field REF="issue_priority"/>
         </criteria>
         <criteria rank="3">
-          <field REF="issues_created"/>
+          <field REF="issue_created"/>
         </criteria>
         <criteria rank="4">
-          <field REF="issues_issuetype"/>
+          <field REF="issue_issuetype"/>
         </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
           <name><![CDATA[Results]]></name>
           <columns>
-            <field REF="issues_summary"/>
-            <field REF="issues_status"/>
-            <field REF="issues_jira_issue_url"/>
-            <field REF="issues_priority"/>
-            <field REF="issues_created"/>
-            <field REF="issues_issuetype"/>
+            <field REF="issue_summary"/>
+            <field REF="issue_status"/>
+            <field REF="issue_jira_issue_url"/>
+            <field REF="issue_priority"/>
+            <field REF="issue_created"/>
+            <field REF="issue_issuetype"/>
           </columns>
         </renderer>
       </renderers>
@@ -374,96 +374,96 @@
       <description><![CDATA[All issues updated recently in this tracker]]></description>
       <criterias>
         <criteria rank="0">
-          <field REF="issues_summary"/>
+          <field REF="issue_summary"/>
         </criteria>
         <criteria rank="1">
-          <field REF="issues_description"/>
+          <field REF="issue_description"/>
         </criteria>
         <criteria rank="2">
-          <field REF="issues_priority"/>
+          <field REF="issue_priority"/>
         </criteria>
         <criteria rank="3">
-          <field REF="issues_updated"/>
+          <field REF="issue_updated"/>
         </criteria>
         <criteria rank="4">
-          <field REF="issues_issuetype"/>
+          <field REF="issue_issuetype"/>
         </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
           <name><![CDATA[Results]]></name>
           <columns>
-            <field REF="issues_summary"/>
-            <field REF="issues_status"/>
-            <field REF="issues_jira_issue_url"/>
-            <field REF="issues_priority"/>
-            <field REF="issues_updated"/>
-            <field REF="issues_issuetype"/>
+            <field REF="issue_summary"/>
+            <field REF="issue_status"/>
+            <field REF="issue_jira_issue_url"/>
+            <field REF="issue_priority"/>
+            <field REF="issue_updated"/>
+            <field REF="issue_issuetype"/>
           </columns>
         </renderer>
       </renderers>
     </report>
   </reports>
   <permissions>
-    <permission scope="field" REF="issues_summary" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_summary" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_summary" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_description" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_artifact_id" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_jira_issue_url" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_creator" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_creator" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_creator" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_created" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_created" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_created" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_updated" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_updated" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_updated" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_resolutiondate" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_resolutiondate" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_resolutiondate" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_status" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_status" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_status" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_issuetype" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_reporter" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_assignee" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_assignee" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_assignee" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_components" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_components" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_components" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_labels" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_customfield_10032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_attachment" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_attachment" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_attachment" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_issuelinks" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_issuelinks" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_issuelinks" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="issues_orgtuleapcrossreferences" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="issues_orgtuleapcrossreferences" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="issues_orgtuleapcrossreferences" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_summary" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_summary" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_summary" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_description" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_description" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_description" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_artifact_id" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_jira_issue_url" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_creator" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_creator" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_creator" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_created" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_created" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_created" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_updated" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_updated" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_updated" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_resolutiondate" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_resolutiondate" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_resolutiondate" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_status" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_status" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_status" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_issuetype" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_issuetype" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_issuetype" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_reporter" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_reporter" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_reporter" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_assignee" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_assignee" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_assignee" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_components" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_components" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_components" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_labels" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_labels" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_labels" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_customfield_10032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_customfield_10032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_customfield_10032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_attachment" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_attachment" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_attachment" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_issuelinks" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_issuelinks" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_issuelinks" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="issue_orgtuleapcrossreferences" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="issue_orgtuleapcrossreferences" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="issue_orgtuleapcrossreferences" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
   </permissions>
   <artifacts>
     <artifact id="10236">
@@ -475,7 +475,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value/>
@@ -494,7 +494,7 @@
           <value format="username">manon</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[Perform one end-to-end delivery request]]></value>
@@ -513,7 +513,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value/>
@@ -532,7 +532,7 @@
           <value format="username">manon</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[Track lockbox contents using RFID]]></value>
@@ -554,7 +554,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value/>
@@ -573,7 +573,7 @@
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_sub-task]]></value>
+          <value format="id"><![CDATA[issue_issuetype_sub-task]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-8]]></value>
@@ -613,7 +613,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value/>
@@ -632,7 +632,7 @@
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_sub-task]]></value>
+          <value format="id"><![CDATA[issue_issuetype_sub-task]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[Headlights in front]]></value>
@@ -657,7 +657,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
           <value/>
@@ -670,13 +670,13 @@
           <value format="id"><![CDATA[15]]></value>
         </field_change>
         <field_change field_name="components" type="list" bind="static">
-          <value format="id"><![CDATA[issues_components_car_component]]></value>
+          <value format="id"><![CDATA[issue_components_car_component]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-6]]></value>
@@ -731,23 +731,23 @@
           <value><![CDATA[Add brakes]]></value>
         </field_change>
         <field_change field_name="fixversions" type="list" bind="static">
-          <value format="id"><![CDATA[issues_fixversions_v1]]></value>
+          <value format="id"><![CDATA[issue_fixversions_v1]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
           <value/>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="components" type="list" bind="static">
-          <value format="id"><![CDATA[issues_components_car_component]]></value>
+          <value format="id"><![CDATA[issue_components_car_component]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change field_name="resolutiondate" type="date">
           <value format="ISO8601"><![CDATA[2023-05-31T15:06:44+02:00]]></value>
@@ -805,10 +805,10 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
-          <value format="id"><![CDATA[issues_versions_v2]]></value>
+          <value format="id"><![CDATA[issue_versions_v2]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -821,12 +821,12 @@
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_bug]]></value>
+          <value format="id"><![CDATA[issue_issuetype_bug]]></value>
         </field_change>
         <field_change field_name="customfield_10032" type="list" bind="static">
-          <value format="id"><![CDATA[issues_customfield_10032_test]]></value>
-          <value format="id"><![CDATA[issues_customfield_10032_test2]]></value>
-          <value format="id"><![CDATA[issues_customfield_10032_test4]]></value>
+          <value format="id"><![CDATA[issue_customfield_10032_test]]></value>
+          <value format="id"><![CDATA[issue_customfield_10032_test2]]></value>
+          <value format="id"><![CDATA[issue_customfield_10032_test4]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-4]]></value>
@@ -901,10 +901,10 @@
           <value><![CDATA[Add wheel]]></value>
         </field_change>
         <field_change field_name="fixversions" type="list" bind="static">
-          <value format="id"><![CDATA[issues_fixversions_v1]]></value>
+          <value format="id"><![CDATA[issue_fixversions_v1]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
           <value/>
@@ -914,13 +914,13 @@
           <value format="id"><![CDATA[15]]></value>
         </field_change>
         <field_change field_name="components" type="list" bind="static">
-          <value format="id"><![CDATA[issues_components_car_component]]></value>
+          <value format="id"><![CDATA[issue_components_car_component]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-3]]></value>
@@ -982,7 +982,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value><![CDATA[car]]></value>
@@ -995,13 +995,13 @@
           <value><![CDATA[10206]]></value>
         </field_change>
         <field_change field_name="components" type="list" bind="static">
-          <value format="id"><![CDATA[issues_components_car_component]]></value>
+          <value format="id"><![CDATA[issue_components_car_component]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_story]]></value>
+          <value format="id"><![CDATA[issue_issuetype_story]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-2]]></value>
@@ -1080,7 +1080,7 @@
           <value/>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[issues_priority_medium]]></value>
+          <value format="id"><![CDATA[issue_priority_medium]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
           <value/>
@@ -1099,7 +1099,7 @@
           <value format="username">yannis</value>
         </field_change>
         <field_change field_name="issuetype" type="list" bind="static">
-          <value format="id"><![CDATA[issues_issuetype_epicen]]></value>
+          <value format="id"><![CDATA[issue_issuetype_epicen]]></value>
         </field_change>
         <field_change type="string" field_name="jira_issue_url">
           <value><![CDATA[https://example.com/browse/DI-1]]></value>
