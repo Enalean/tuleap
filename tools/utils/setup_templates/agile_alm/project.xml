@@ -5,6 +5,7 @@
     <service shortname="summary" enabled="1"/>
     <service shortname="docman" enabled="1"/>
     <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_kanban" enabled="0"/>
     <service shortname="plugin_mediawiki" enabled="0"/>
     <service shortname="plugin_git" enabled="1"/>
     <service shortname="plugin_testmanagement" enabled="1"/>
