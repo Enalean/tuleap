@@ -20,14 +20,13 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
 
-/**
- * @psalm-immutable
- */
-class TimelineInlineCommentRepresentation
+final class TimelineInlineCommentRepresentation
 {
     public const TYPE = 'inline-comment';
 
@@ -83,8 +82,12 @@ class TimelineInlineCommentRepresentation
      * @var string {@type string}
      */
     public $color;
+    public string $post_processed_content;
+    public string $format;
 
-    public function __construct(
+    private function __construct(
+        private readonly Codendi_HTMLPurifier $purifier,
+        private readonly ContentInterpretor $common_mark_interpreter,
         string $file_path,
         int $unidiff_offset,
         MinimalUserRepresentation $user,
@@ -96,23 +99,71 @@ class TimelineInlineCommentRepresentation
         int $id,
         string $position,
         string $color,
+        string $format,
     ) {
-        $this->file_path      = $file_path;
-        $this->unidiff_offset = $unidiff_offset;
-        $this->user           = $user;
-        $this->post_date      = JsonCast::toDate($post_date);
-        $this->content        = self::getPurifiedContent($project_id, $content);
-        $this->is_outdated    = $is_outdated;
-        $this->type           = self::TYPE;
-        $this->parent_id      = $parent_id;
-        $this->id             = $id;
-        $this->position       = $position;
-        $this->color          = $color;
+        $this->file_path              = $file_path;
+        $this->unidiff_offset         = $unidiff_offset;
+        $this->user                   = $user;
+        $this->post_date              = JsonCast::toDate($post_date);
+        $this->content                = $this->getPurifiedContent($project_id, $content);
+        $this->is_outdated            = $is_outdated;
+        $this->type                   = self::TYPE;
+        $this->parent_id              = $parent_id;
+        $this->id                     = $id;
+        $this->position               = $position;
+        $this->color                  = $color;
+        $this->format                 = $format;
+        $this->post_processed_content = $this->getPurifiedContentFromHTML($format, $project_id, $content);
     }
 
-    private static function getPurifiedContent(int $project_id, string $content): string
+    public static function build(
+        Codendi_HTMLPurifier $purifier,
+        ContentInterpretor $common_mark_interpreter,
+        string $file_path,
+        int $unidiff_offset,
+        MinimalUserRepresentation $user,
+        int $post_date,
+        string $content,
+        bool $is_outdated,
+        int $project_id,
+        int $parent_id,
+        int $id,
+        string $position,
+        string $color,
+        string $format,
+    ): self {
+        return new self(
+            $purifier,
+            $common_mark_interpreter,
+            $file_path,
+            $unidiff_offset,
+            $user,
+            $post_date,
+            $content,
+            $is_outdated,
+            $project_id,
+            $parent_id,
+            $id,
+            $position,
+            $color,
+            $format
+        );
+    }
+
+    private function getPurifiedContent(int $project_id, string $content): string
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+        return $this->purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+    }
+
+    private function getPurifiedContentFromHTML(string $format, int $project_id, string $content): string
+    {
+        if ($format === Comment::FORMAT_MARKDOWN) {
+            return $this->common_mark_interpreter->getInterpretedContentWithReferences(
+                $content,
+                $project_id,
+            );
+        }
+
+        return $this->getPurifiedContent($project_id, $content);
     }
 }

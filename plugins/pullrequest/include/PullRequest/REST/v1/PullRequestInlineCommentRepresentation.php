@@ -69,10 +69,8 @@ final class PullRequestInlineCommentRepresentation
      * @var string {@type string}
      */
     public string $color;
-    /**
-     * @var string
-     */
-    public $post_processed_content;
+    public string $post_processed_content;
+    public string $format;
 
     private function __construct(private readonly Codendi_HTMLPurifier $purifier, private readonly ContentInterpretor $common_mark_interpreter, int $unidiff_offset, MinimalUserRepresentation $user, int $post_date, string $content, int $project_id, string $position, int $parent_id, int $id, string $file_path, string $color, string $format)
     {
@@ -86,6 +84,7 @@ final class PullRequestInlineCommentRepresentation
         $this->file_path              = $file_path;
         $this->color                  = $color;
         $this->post_processed_content = $this->getPurifiedContentFromHTML($format, $project_id, $content);
+        $this->format                 = $format;
     }
 
     public static function build(Codendi_HTMLPurifier $purifier, ContentInterpretor $common_mark_interpreter, int $unidiff_offset, MinimalUserRepresentation $user, int $post_date, string $content, int $project_id, string $position, int $parent_id, int $id, string $file_path, string $color, string $format): self

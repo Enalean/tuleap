@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileNullDiff;
 use Tuleap\PullRequest\UniDiffLine;
@@ -44,7 +45,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeObsoleteIfLineWasAddedAndLineIsDeleted(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -69,7 +70,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeObsoleteIfLineWasKeptAndLineIsDeleted(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
@@ -94,7 +95,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeObsoleteIfLineWasAddedAndLineContentHasChanged(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -122,7 +123,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeMovedIfLineWasAddedAndLineIsMoved(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -154,7 +155,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeMovedIfLineWasKeptAndLineIsMoved(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
@@ -186,7 +187,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeObsoleteIfLineWasDeletedAndLineIsNoMoreDeleted(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
@@ -213,7 +214,7 @@ class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldBeKeptIfLineWasDeletedAndLineIsMoved(): void
     {
-        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "")];
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false, 0, "right", "", Comment::FORMAT_TEXT)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
