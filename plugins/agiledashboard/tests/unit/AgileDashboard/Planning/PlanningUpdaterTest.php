@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PlanningFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -83,7 +84,7 @@ final class PlanningUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($updated_planning_id, $planning_parameters);
         $this->permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->once();
 
-        $planning = new \Planning(20, 'Root Planning', 102, '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withId(20)->build();
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
 
         $this->artifacts_in_explicit_backlog_dao->shouldNotReceive(
@@ -105,7 +106,7 @@ final class PlanningUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($updated_planning_id, $planning_parameters);
         $this->permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->once();
 
-        $planning = new \Planning($updated_planning_id, 'Root Planning', 102, '', '');
+        $planning = PlanningBuilder::aPlanning(102)->withId($updated_planning_id)->build();
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
 
         $this->artifacts_in_explicit_backlog_dao->shouldReceive(

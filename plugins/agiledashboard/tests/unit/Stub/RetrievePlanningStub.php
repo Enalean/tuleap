@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Stub;
 
 use Tuleap\AgileDashboard\Planning\RetrievePlannings;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 
 final class RetrievePlanningStub implements RetrievePlannings
 {
@@ -39,7 +40,7 @@ final class RetrievePlanningStub implements RetrievePlannings
     public function getNonLastLevelPlannings(\PFUser $user, int $project_id): array
     {
         if ($this->with_non_last_level_planning) {
-            return [new \Planning(1, 'Root', $project_id, "backlog", "plan")];
+            return [PlanningBuilder::aPlanning($project_id)->build()];
         }
 
         return [];
@@ -48,7 +49,7 @@ final class RetrievePlanningStub implements RetrievePlannings
     public function getLastLevelPlannings(\PFUser $user, int $project_id): array
     {
         if ($this->with_last_level_planning) {
-            return [new \Planning(2, 'Child', $project_id, "backlog", "plan")];
+            return [PlanningBuilder::aPlanning($project_id)->build()];
         }
 
         return [];

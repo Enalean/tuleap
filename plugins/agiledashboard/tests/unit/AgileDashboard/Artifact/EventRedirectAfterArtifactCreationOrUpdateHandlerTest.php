@@ -36,6 +36,7 @@ use ProjectManager;
 use Tracker;
 use Tracker_Artifact_Redirect;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -146,15 +147,9 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                 ]
             )->getMock();
 
-        $this->planning = new Planning(
-            self::PLANNING_ID,
-            'name',
-            self::PROJECT_ID,
-            'backlog_title',
-            'plan_title',
-            [],
-            null
-        );
+        $this->planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withId(self::PLANNING_ID)
+            ->build();
 
         ProjectManager::setInstance(
             Mockery::mock(ProjectManager::class)

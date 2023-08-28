@@ -32,16 +32,20 @@ use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private const PROJECT_ID = 101;
 
     /**
      * @var \Planning_MilestoneFactory
@@ -67,6 +71,15 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
      * @var M\LegacyMockInterface|M\MockInterface|IComputeTimeframes
      */
     private $timeframe_calculator;
+    private \Planning $top_planning;
+    private TopMilestoneRequest $top_milestone_request;
+    private SubMilestoneRequest $sub_milestone_request;
+    private SiblingMilestoneRequest $sibling_milestone_request;
+    private \Tracker $sub_milestone_tracker;
+    private \Planning_ArtifactMilestone $reference_milestone;
+    private \Project $project;
+    private \Planning $sub_planning;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -75,7 +88,10 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->mono_milestone_checker = M::mock(ScrumForMonoMilestoneChecker::class);
         $this->milestone_dao          = M::mock(\AgileDashboard_Milestone_MilestoneDao::class);
         $this->timeframe_calculator   = M::mock(IComputeTimeframes::class);
-        $semantic_timeframe           = M::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
+        $semantic_timeframe           = M::mock(
+            SemanticTimeframe::class,
+            ['getTimeframeCalculator' => $this->timeframe_calculator]
+        );
         $semantic_timeframe_builder   = M::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
 
         $this->milestone_factory = new \Planning_MilestoneFactory(
@@ -90,25 +106,72 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             new NullLogger(),
             M::mock(MilestoneBurndownFieldChecker::class)
         );
-    }
 
-    public function testItReturnsEmptyWhenNoMilestones(): void
-    {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = ProjectTestBuilder::aProject()->build();
-        $request = new TopMilestoneRequest(
-            $user,
-            $project,
+        $this->user         = UserTestBuilder::aUser()->build();
+        $this->project      = ProjectTestBuilder::aProject()->build();
+        $this->top_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)->withName('Release Planning')->build();
+
+        $this->top_milestone_request = new TopMilestoneRequest(
+            $this->user,
+            $this->project,
             50,
             0,
             'asc',
             FilteringQuery::fromStatusQuery(new StatusAll())
         );
 
-        $planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($planning);
+        $parent_milestone = new \Planning_ArtifactMilestone(
+            $this->project,
+            $this->top_planning,
+            ArtifactTestBuilder::anArtifact(121)->build(),
+            $this->mono_milestone_checker
+        );
 
-        $milestones = $this->milestone_factory->getPaginatedTopMilestones($request);
+        $this->sub_milestone_request = new SubMilestoneRequest(
+            $this->user,
+            $parent_milestone,
+            50,
+            0,
+            'asc',
+            new StatusAll()
+        );
+
+        $this->sub_milestone_tracker  = TrackerTestBuilder::aTracker()->withId(17)->build();
+        $reference_milestone_artifact = ArtifactTestBuilder::anArtifact(121)
+            ->inTracker($this->sub_milestone_tracker)
+            ->build();
+
+        $this->sub_planning        = PlanningBuilder::aPlanning(self::PROJECT_ID)->withName('Sprint Planning')->build();
+        $this->reference_milestone = new \Planning_ArtifactMilestone(
+            $this->project,
+            $this->sub_planning,
+            $reference_milestone_artifact,
+            $this->mono_milestone_checker
+        );
+
+        $this->sibling_milestone_request = new SiblingMilestoneRequest(
+            $this->user,
+            $this->reference_milestone,
+            50,
+            0,
+            new StatusOpen()
+        );
+    }
+
+    private function getTopMilestones(): \Tuleap\AgileDashboard\Milestone\PaginatedMilestones
+    {
+        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($this->top_planning);
+
+        return $this->milestone_factory->getPaginatedTopMilestones($this->top_milestone_request);
+    }
+
+    public function testItReturnsEmptyWhenNoMilestones(): void
+    {
+        $this->top_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withBadConfigurationAndNoMilestoneTracker()
+            ->build();
+
+        $milestones = $this->getTopMilestones();
 
         $this->assertSame(0, $milestones->getTotalSize());
         $this->assertEmpty($milestones->getMilestones());
@@ -116,25 +179,14 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     public function testItReturnsMilestonesFilteredByStatus(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = ProjectTestBuilder::aProject()->build();
-        $request = new TopMilestoneRequest(
-            $user,
-            $project,
-            50,
-            0,
-            'asc',
-            FilteringQuery::fromStatusQuery(new StatusAll())
-        );
-
-        $planning          = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $milestone_tracker = $this->buildTestTracker(15);
-        $planning->setPlanningTracker($milestone_tracker);
-        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($planning);
+        $milestone_tracker  = TrackerTestBuilder::aTracker()->withId(15)->build();
+        $this->top_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
+            ->withMilestoneTracker($milestone_tracker)
+            ->build();
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnFalse();
         $this->milestone_dao->shouldReceive('searchPaginatedTopMilestones')
             ->once()
-            ->with(15, $request)
+            ->with(15, $this->top_milestone_request)
             ->andReturn(
                 \TestHelper::arrayToDar(
                     ['id' => 24],
@@ -151,11 +203,11 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
-            ->andReturn($planning);
+            ->andReturn($this->top_planning);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $milestones = $this->milestone_factory->getPaginatedTopMilestones($request);
+        $milestones = $this->getTopMilestones();
 
         $this->assertSame(2, $milestones->getTotalSize());
         $first_milestone = $milestones->getMilestones()[0];
@@ -164,19 +216,17 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->assertSame(25, $second_milestone->getArtifactId());
     }
 
-    public function testItReturnsEmptyWhenNoSubMilestones(): void
+    private function getSubMilestones(): \Tuleap\AgileDashboard\Milestone\PaginatedMilestones
     {
-        $user                      = UserTestBuilder::aUser()->build();
-        $top_planning              = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $parent_milestone = new \Planning_ArtifactMilestone(ProjectTestBuilder::aProject()->build(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
-        $request          =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
-
         $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')->andReturn(\TestHelper::emptyDar());
         $this->milestone_dao->shouldReceive('foundRows')->andReturn(0);
 
-        $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
+        return $this->milestone_factory->getPaginatedSubMilestones($this->sub_milestone_request);
+    }
+
+    public function testItReturnsEmptyWhenNoSubMilestones(): void
+    {
+        $sub_milestones = $this->getSubMilestones();
 
         $this->assertSame(0, $sub_milestones->getTotalSize());
         $this->assertEmpty($sub_milestones->getMilestones());
@@ -184,18 +234,9 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     public function testItReturnsSubMilestonesFilteredByStatus(): void
     {
-        $user                      = UserTestBuilder::aUser()->build();
-        $top_planning              = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $sub_planning              = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $parent_milestone      = new \Planning_ArtifactMilestone(ProjectTestBuilder::aProject()->build(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
-        $request               =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
-        $sub_milestone_tracker = $this->buildTestTracker(17);
-
         $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')
             ->once()
-            ->with(121, $request)
+            ->with(121, $this->sub_milestone_request)
             ->andReturn(
                 \TestHelper::arrayToDar(
                     ['id' => 138],
@@ -206,18 +247,18 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $sub_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $sub_milestone_tracker);
+        $first_artifact  = $this->mockArtifact(138, $this->sub_milestone_tracker);
+        $second_artifact = $this->mockArtifact(139, $this->sub_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
-            ->with($sub_milestone_tracker)
-            ->andReturn($sub_planning);
+            ->with($this->sub_milestone_tracker)
+            ->andReturn($this->sub_planning);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
+        $sub_milestones = $this->getSubMilestones();
 
         $this->assertSame(2, $sub_milestones->getTotalSize());
         $first_milestone = $sub_milestones->getMilestones()[0];
@@ -226,25 +267,17 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->assertSame(139, $second_milestone->getArtifactId());
     }
 
+    private function getSiblingMilestones(): \Tuleap\AgileDashboard\Milestone\PaginatedMilestones
+    {
+        return $this->milestone_factory->getPaginatedSiblingMilestones($this->sibling_milestone_request);
+    }
+
     public function testItReturnsEmptyWhenNoSiblingTopMilestones(): void
     {
-        $user                         = UserTestBuilder::aUser()->build();
-        $planning                     = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
-        $reference_milestone = new \Planning_ArtifactMilestone(
-            ProjectTestBuilder::aProject()->build(),
-            $planning,
-            $reference_milestone_artifact,
-            $this->mono_milestone_checker
-        );
-        $request             = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
-
         $this->milestone_dao->shouldReceive('searchPaginatedSiblingTopMilestones')->andReturn(\TestHelper::emptyDar());
         $this->milestone_dao->shouldReceive('foundRows')->andReturn(0);
 
-        $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
+        $sibling_milestones = $this->getSiblingMilestones();
 
         $this->assertSame(0, $sibling_milestones->getTotalSize());
         $this->assertEmpty($sibling_milestones->getMilestones());
@@ -252,23 +285,28 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     public function testItReturnsSiblingTopMilestonesFilteredByStatus(): void
     {
-        $user                         = UserTestBuilder::aUser()->build();
-        $planning                     = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $sub_milestone_tracker = $this->buildTestTracker(17);
-        $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
-        $reference_milestone = new \Planning_ArtifactMilestone(
-            ProjectTestBuilder::aProject()->build(),
-            $planning,
+        $top_milestone_tracker_id        = 69;
+        $top_milestone_tracker           = TrackerTestBuilder::aTracker()->withId($top_milestone_tracker_id)->build();
+        $reference_milestone_artifact    = ArtifactTestBuilder::anArtifact(93)
+            ->inTracker($top_milestone_tracker)
+            ->build();
+        $this->reference_milestone       = new \Planning_ArtifactMilestone(
+            $this->project,
+            $this->top_planning,
             $reference_milestone_artifact,
             $this->mono_milestone_checker
         );
-        $request             = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
+        $this->sibling_milestone_request = new SiblingMilestoneRequest(
+            $this->user,
+            $this->reference_milestone,
+            50,
+            0,
+            new StatusOpen()
+        );
 
         $this->milestone_dao->shouldReceive('searchPaginatedSiblingTopMilestones')
             ->once()
-            ->with(121, 17, $request)
+            ->with(93, $top_milestone_tracker_id, $this->sibling_milestone_request)
             ->andReturn(
                 \TestHelper::arrayToDar(
                     ['id' => 138],
@@ -279,18 +317,18 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $sub_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $sub_milestone_tracker);
+        $first_artifact  = $this->mockArtifact(138, $top_milestone_tracker);
+        $second_artifact = $this->mockArtifact(139, $top_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
-            ->with($sub_milestone_tracker)
-            ->andReturn($planning);
+            ->with($top_milestone_tracker)
+            ->andReturn($this->top_planning);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
+        $sibling_milestones = $this->getSiblingMilestones();
 
         $this->assertSame(2, $sibling_milestones->getTotalSize());
         $first_milestone = $sibling_milestones->getMilestones()[0];
@@ -301,32 +339,18 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     public function testItReturnsEmptyWhenNoSiblingSubMilestones(): void
     {
-        $user                         = UserTestBuilder::aUser()->build();
-        $project                      = ProjectTestBuilder::aProject()->build();
-        $top_planning                 = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $sub_planning                 = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
-        $reference_milestone = new \Planning_ArtifactMilestone(
-            $project,
-            $sub_planning,
-            $reference_milestone_artifact,
+        $parent_milestone = new \Planning_ArtifactMilestone(
+            $this->project,
+            $this->top_planning,
+            ArtifactTestBuilder::anArtifact(462)->build(),
             $this->mono_milestone_checker
         );
-        $parent_milestone    = new \Planning_ArtifactMilestone(
-            $project,
-            $top_planning,
-            M::mock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $this->mono_milestone_checker
-        );
-        $reference_milestone->setAncestors([$parent_milestone]);
-        $request = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
+        $this->reference_milestone->setAncestors([$parent_milestone]);
 
         $this->milestone_dao->shouldReceive('searchPaginatedSiblingMilestones')->andReturn(\TestHelper::emptyDar());
         $this->milestone_dao->shouldReceive('foundRows')->andReturn(0);
 
-        $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
+        $sibling_milestones = $this->getSiblingMilestones();
 
         $this->assertSame(0, $sibling_milestones->getTotalSize());
         $this->assertEmpty($sibling_milestones->getMilestones());
@@ -334,32 +358,17 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     public function testItReturnsSiblingSubMilestonesFilteredByStatus(): void
     {
-        $user                         = UserTestBuilder::aUser()->build();
-        $project                      = ProjectTestBuilder::aProject()->build();
-        $top_planning                 = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $sub_planning                 = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $sub_milestone_tracker = $this->buildTestTracker(17);
-        $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
-        $reference_milestone = new \Planning_ArtifactMilestone(
-            $project,
-            $sub_planning,
-            $reference_milestone_artifact,
+        $parent_milestone = new \Planning_ArtifactMilestone(
+            $this->project,
+            $this->top_planning,
+            ArtifactTestBuilder::anArtifact(462)->build(),
             $this->mono_milestone_checker
         );
-        $parent_milestone    = new \Planning_ArtifactMilestone(
-            $project,
-            $top_planning,
-            M::mock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $this->mono_milestone_checker
-        );
-        $reference_milestone->setAncestors([$parent_milestone]);
-        $request = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
+        $this->reference_milestone->setAncestors([$parent_milestone]);
 
         $this->milestone_dao->shouldReceive('searchPaginatedSiblingMilestones')
             ->once()
-            ->with(121, $request)
+            ->with(121, $this->sibling_milestone_request)
             ->andReturn(
                 \TestHelper::arrayToDar(
                     ['id' => 138],
@@ -370,45 +379,24 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $sub_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $sub_milestone_tracker);
+        $first_artifact  = $this->mockArtifact(138, $this->sub_milestone_tracker);
+        $second_artifact = $this->mockArtifact(139, $this->sub_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
-            ->with($sub_milestone_tracker)
-            ->andReturn($sub_planning);
+            ->with($this->sub_milestone_tracker)
+            ->andReturn($this->sub_planning);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
+        $sibling_milestones = $this->getSiblingMilestones();
 
         $this->assertSame(2, $sibling_milestones->getTotalSize());
         $first_milestone = $sibling_milestones->getMilestones()[0];
         $this->assertSame(138, $first_milestone->getArtifactId());
         $second_milestone = $sibling_milestones->getMilestones()[1];
         $this->assertSame(139, $second_milestone->getArtifactId());
-    }
-
-    private function buildTestTracker(int $tracker_id): \Tracker
-    {
-        return new \Tracker(
-            $tracker_id,
-            null,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            TrackerColor::default(),
-            false
-        );
     }
 
     /**

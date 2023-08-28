@@ -20,17 +20,39 @@
 
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var UpdateRequestValidator
-     */
-    private $validator;
+    private const ORIGINAL_MILESTONE_TRACKER_ID = 54;
+    private const NEW_MILESTONE_TRACKER_ID      = 97;
+    /** @var int[] */
+    private array $unavailable_planning_tracker_ids;
+    private \Planning $original_planning;
+    private ?ModificationBan $modification_ban;
 
     protected function setUp(): void
     {
-        $this->validator = new UpdateRequestValidator();
+        $this->unavailable_planning_tracker_ids = [];
+        $this->modification_ban                 = null;
+
+        $milestone_tracker       = TrackerTestBuilder::aTracker()->withId(self::ORIGINAL_MILESTONE_TRACKER_ID)->build();
+        $this->original_planning = PlanningBuilder::aPlanning(101)
+            ->withMilestoneTracker($milestone_tracker)
+            ->build();
+    }
+
+    private function validate(\Codendi_Request $request): ?\PlanningParameters
+    {
+        $validator = new UpdateRequestValidator();
+
+        return $validator->getValidatedPlanning(
+            $this->original_planning,
+            $request,
+            $this->unavailable_planning_tracker_ids,
+            $this->modification_ban
+        );
     }
 
     /**
@@ -39,18 +61,9 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItRejectsTheRequestWhenItIsInvalid($request_parameters): void
     {
-        $request                          = $this->buildRequest($request_parameters);
-        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant');
-        $unavailable_planning_tracker_ids = [];
+        $request = $this->buildRequest($request_parameters);
 
-        $this->assertNull(
-            $this->validator->getValidatedPlanning(
-                $original_planning,
-                $request,
-                $unavailable_planning_tracker_ids,
-                null
-            )
-        );
+        $this->assertNull($this->validate($request));
     }
 
     public static function dataProviderInvalidRequest(): array
@@ -80,100 +93,76 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWhenPlanningTrackerModificationIsBannedItForcesItToOriginal(): void
     {
-        $request                          = $this->buildRequest(
+        $request                = $this->buildRequest(
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
             ]
         );
-        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
-        $unavailable_planning_tracker_ids = [];
-
-        $validated_updated_planning = $this->validator->getValidatedPlanning(
-            $original_planning,
-            $request,
-            $unavailable_planning_tracker_ids,
-            new class implements ModificationBan {
-                public function getMessage(): string
-                {
-                    return 'Cannot modify planning tracker';
-                }
+        $this->modification_ban = new class implements ModificationBan {
+            public function getMessage(): string
+            {
+                return 'Cannot modify planning tracker';
             }
-        );
+        };
+
+        $validated_updated_planning = $this->validate($request);
         $this->assertNotNull($validated_updated_planning);
-        $this->assertSame('54', $validated_updated_planning->planning_tracker_id);
+        $this->assertSame((string) self::ORIGINAL_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIsUnavailable(): void
     {
-        $request                          = $this->buildRequest(
+        $request                                = $this->buildRequest(
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97,
+                \PlanningParameters::PLANNING_TRACKER_ID => self::NEW_MILESTONE_TRACKER_ID,
             ]
         );
-        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
-        $unavailable_planning_tracker_ids = [97];
+        $this->unavailable_planning_tracker_ids = [self::NEW_MILESTONE_TRACKER_ID];
 
-        $this->assertNull(
-            $this->validator->getValidatedPlanning(
-                $original_planning,
-                $request,
-                $unavailable_planning_tracker_ids,
-                null
-            )
-        );
+        $this->assertNull($this->validate($request));
     }
 
     public function testItReturnsValidatedPlanningParametersWhenPlanningTrackerIsAvailable(): void
     {
-        $request                          = $this->buildRequest(
+        $request                                = $this->buildRequest(
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TITLE       => 'Product Backlog',
                 \PlanningParameters::PLANNING_TITLE      => 'Release Plan',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97,
+                \PlanningParameters::PLANNING_TRACKER_ID => self::NEW_MILESTONE_TRACKER_ID,
             ]
         );
-        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
-        $unavailable_planning_tracker_ids = [189];
+        $this->unavailable_planning_tracker_ids = [189];
 
-        $validated_updated_planning = $this->validator->getValidatedPlanning(
-            $original_planning,
-            $request,
-            $unavailable_planning_tracker_ids,
-            null
-        );
+        $validated_updated_planning = $this->validate($request);
         $this->assertNotNull($validated_updated_planning);
         $this->assertSame('Release Planning', $validated_updated_planning->name);
         $this->assertContains(10, $validated_updated_planning->backlog_tracker_ids);
         $this->assertContains(26, $validated_updated_planning->backlog_tracker_ids);
-        $this->assertSame(97, $validated_updated_planning->planning_tracker_id);
+        $this->assertSame(self::NEW_MILESTONE_TRACKER_ID, $validated_updated_planning->planning_tracker_id);
         $this->assertSame('Product Backlog', $validated_updated_planning->backlog_title);
         $this->assertSame('Release Plan', $validated_updated_planning->plan_title);
     }
 
     public function testItReturnsValidatedPlanningParametersWhenPlanningTrackerDidNotChange(): void
     {
-        $request                          = $this->buildRequest(
+        $request                                = $this->buildRequest(
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97,
+                \PlanningParameters::PLANNING_TRACKER_ID => self::NEW_MILESTONE_TRACKER_ID,
             ]
         );
-        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 97);
-        $unavailable_planning_tracker_ids = [97];
-
-        $validated_updated_planning = $this->validator->getValidatedPlanning(
-            $original_planning,
-            $request,
-            $unavailable_planning_tracker_ids,
-            null
-        );
-        $this->assertNotNull($validated_updated_planning);
+        $milestone_tracker                      = TrackerTestBuilder::aTracker()->withId(self::NEW_MILESTONE_TRACKER_ID)->build();
+        $this->original_planning                = PlanningBuilder::aPlanning(101)
+            ->withMilestoneTracker($milestone_tracker)
+            ->build();
+        $this->unavailable_planning_tracker_ids = [self::NEW_MILESTONE_TRACKER_ID];
+        $this->assertNotNull($this->validate($request));
     }
 
     /**

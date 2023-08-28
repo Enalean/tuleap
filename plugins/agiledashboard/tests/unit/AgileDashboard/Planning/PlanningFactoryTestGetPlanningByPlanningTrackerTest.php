@@ -25,11 +25,11 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Tracker;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -64,7 +64,7 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
 
     public function testItReturnsNothingIfThereIsNoAssociatedPlanning(): void
     {
-        $tracker = $this->mockTrackerWithId(99);
+        $tracker = TrackerTestBuilder::aTracker()->withId(99)->build();
         $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')
             ->andReturnNull();
 
@@ -73,13 +73,14 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
 
     public function testItReturnsAPlanning(): void
     {
-        $tracker          = $this->mockTrackerWithId(99);
-        $planning_tracker = $this->mockTrackerWithId(1);
-        $backlog_tracker  = $this->mockTrackerWithId(2);
+        $tracker          = TrackerTestBuilder::aTracker()->withId(99)->build();
+        $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $backlog_tracker  = TrackerTestBuilder::aTracker()->withId(2)->build();
 
-        $planning = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', []);
-        $planning->setPlanningTracker($planning_tracker);
-        $planning->setBacklogTrackers([$backlog_tracker]);
+        $planning = PlanningBuilder::aPlanning(102)
+            ->withMilestoneTracker($planning_tracker)
+            ->withBacklogTrackers($backlog_tracker)
+            ->build();
 
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->once()->andReturn($planning_tracker);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->once()->andReturn($backlog_tracker);
@@ -100,16 +101,5 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
         $retrieved_planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
         $this->assertEquals($planning->getPlanningTracker(), $retrieved_planning->getPlanningTracker());
         $this->assertEquals($planning->getBacklogTrackers(), $retrieved_planning->getBacklogTrackers());
-    }
-
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private function mockTrackerWithId(int $tracker_id)
-    {
-        $tracker = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
-
-        return $tracker;
     }
 }

@@ -24,26 +24,22 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery;
-use PFUser;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker;
 use Tracker_Hierarchy;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Planning
-     */
-    private $sprint_planning;
-    /**
-     * @var Planning
-     */
-    private $release_planning;
+    private Planning $sprint_planning;
+    private Planning $release_planning;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
@@ -52,18 +48,9 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $release_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $backlog_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $planning_tracker;
+    private \PFUser $user;
+    private \Tracker $backlog_tracker;
+    private \Tracker $planning_tracker;
     /**
      * @var PlanningFactory
      */
@@ -103,13 +90,13 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
             ->with(1)
             ->andReturn([['planning_id' => 1, 'tracker_id' => 104]]);
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->planning_tracker = $this->mockTrackerWithId(103);
-        $this->backlog_tracker  = $this->mockTrackerWithId(104);
+        $this->planning_tracker = TrackerTestBuilder::aTracker()->withId(103)->build();
+        $this->backlog_tracker  = TrackerTestBuilder::aTracker()->withId(104)->build();
 
-        $epic_tracker          = $this->mockTrackerWithId(101);
-        $story_tracker         = $this->mockTrackerWithId(100);
+        $epic_tracker          = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $story_tracker         = TrackerTestBuilder::aTracker()->withId(100)->build();
         $this->release_tracker = $this->mockTrackerWithId(107);
         $this->sprint_tracker  = $this->mockTrackerWithId(108);
 
@@ -159,12 +146,22 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan');
-        $this->release_planning->setBacklogTrackers([$epic_tracker]);
-        $this->release_planning->setPlanningTracker($this->release_tracker);
-        $this->sprint_planning = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan');
-        $this->sprint_planning->setBacklogTrackers([$this->backlog_tracker]);
-        $this->sprint_planning->setPlanningTracker($this->sprint_tracker);
+        $this->release_planning = PlanningBuilder::aPlanning(123)
+            ->withId(2)
+            ->withName('Release Planning')
+            ->withBacklogTitle('Product Backlog')
+            ->withPlanTitle('Release Plan')
+            ->withBacklogTrackers($epic_tracker)
+            ->withMilestoneTracker($this->release_tracker)
+            ->build();
+        $this->sprint_planning  = PlanningBuilder::aPlanning(123)
+            ->withId(1)
+            ->withName('Sprint Planning')
+            ->withBacklogTitle('Release Backlog')
+            ->withPlanTitle('Sprint Plan')
+            ->withBacklogTrackers($this->backlog_tracker)
+            ->withMilestoneTracker($this->sprint_tracker)
+            ->build();
     }
 
     public function testItCanRetrieveBothAPlanningAndItsTrackers(): void

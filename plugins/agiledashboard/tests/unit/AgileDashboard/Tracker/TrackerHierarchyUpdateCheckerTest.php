@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Tracker;
 use Planning;
 use PlanningFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -145,12 +146,15 @@ final class TrackerHierarchyUpdateCheckerTest extends TestCase
 
         $user           = UserTestBuilder::aUser()->build();
         $project        = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-        $parent_tracker = TrackerTestBuilder::aTracker()->withId(self::PARENT_TRACKER_ID)->withProject($project)->build();
+        $parent_tracker = TrackerTestBuilder::aTracker()->withId(self::PARENT_TRACKER_ID)->withProject($project)->build(
+        );
 
-        $this->planning_factory->method('getPlannings')->willReturn($this->buildListOfPlannings([
-            self::PARENT_TRACKER_ID,
-            self::ANOTHER_TRACKER_ID,
-        ]));
+        $this->planning_factory->method('getPlannings')->willReturn(
+            $this->buildListOfPlannings([
+                self::PARENT_TRACKER_ID,
+                self::ANOTHER_TRACKER_ID,
+            ])
+        );
 
         $this->checker->canTrackersBeLinkedWithHierarchy(
             $user,
@@ -166,25 +170,13 @@ final class TrackerHierarchyUpdateCheckerTest extends TestCase
      */
     private function buildListOfPlannings(array $scrum_backlog_ids): array
     {
+        $backlog_trackers = array_map(
+            fn(int $id) => TrackerTestBuilder::aTracker()->withId($id)->build(),
+            $scrum_backlog_ids
+        );
         return [
-            new Planning(
-                1,
-                "Release Planning",
-                self::PROJECT_ID,
-                "Release Planning",
-                "Release Planning",
-                [],
-                null,
-            ),
-            new Planning(
-                2,
-                "Scrum Planning",
-                self::PROJECT_ID,
-                "Scrum Planning",
-                "Scrum Planning",
-                $scrum_backlog_ids,
-                null,
-            ),
+            PlanningBuilder::aPlanning(self::PROJECT_ID)->build(),
+            PlanningBuilder::aPlanning(self::PROJECT_ID)->withBacklogTrackers(...$backlog_trackers)->build(),
         ];
     }
 }
