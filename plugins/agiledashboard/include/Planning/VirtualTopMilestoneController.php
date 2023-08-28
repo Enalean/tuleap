@@ -24,14 +24,18 @@ use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Option\Option;
 
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
 final class VirtualTopMilestoneController extends BaseController
 {
-    private \Planning_Milestone $milestone;
+    /** @var Option<\Planning_VirtualTopMilestone> */
+    private Option $milestone;
     private \Project $project;
 
     /**
@@ -43,73 +47,48 @@ final class VirtualTopMilestoneController extends BaseController
      */
     public function __construct(
         \Codendi_Request $request,
-        private readonly \Planning_MilestoneFactory $milestone_factory,
+        \Planning_MilestoneFactory $milestone_factory,
         \ProjectManager $project_manager,
-        private readonly \Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory,
+        private readonly VirtualTopMilestonePresenterBuilder $presenter_builder,
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly HeaderOptionsProvider $header_options_provider,
+        private readonly SplitKanbanConfigurationChecker $flag_checker,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->project = $project_manager->getProject($request->get('group_id'));
+        try {
+            $this->milestone = Option::fromValue(
+                $milestone_factory->getVirtualTopMilestone($this->getCurrentUser(), $this->project)
+            );
+        } catch (\Planning_NoPlanningsException) {
+            $this->milestone = Option::nothing(\Planning_VirtualTopMilestone::class);
+        }
     }
 
     public function showTop(): string
     {
-        try {
-            $this->generateVirtualTopMilestone();
-        } catch (\Planning_NoPlanningsException) {
+        if ($this->milestone->isNothing() && ! $this->flag_checker->isProjectAllowedToUseSplitKanban($this->project)) {
             $query_parts = ['group_id' => $this->request->get('group_id')];
             $this->redirect($query_parts);
         }
-
-        $this->redirectToCorrectPane();
-
-        return $this->renderToString('show-top', $this->getTopMilestonePresenter());
-    }
-
-    private function redirectToCorrectPane(): void
-    {
-        $current_pane_identifier = $this->getActivePaneIdentifier();
-        if ($current_pane_identifier !== $this->request->get('pane')) {
-            $this->request->set('pane', $current_pane_identifier);
-            $this->redirect($this->request->params);
-        }
-    }
-
-    private function getActivePaneIdentifier(): string
-    {
-        return $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier();
+        $presenter = $this->presenter_builder->buildPresenter(
+            $this->milestone,
+            $this->project,
+            $this->getCurrentUser()
+        );
+        return $this->renderToString('show-top', $presenter);
     }
 
     public function getHeaderOptions(\PFUser $user): array
     {
-        try {
-            $this->generateVirtualTopMilestone();
-            $identifier = $this->getActivePaneIdentifier();
-
-            return $this->header_options_provider->getHeaderOptions($user, $this->milestone, $identifier);
-        } catch (\Planning_NoPlanningsException) {
-            return [];
-        }
-    }
-
-    private function getTopMilestonePresenter(): \AgileDashboard_MilestonePresenter
-    {
-        return new \AgileDashboard_MilestonePresenter(
-            $this->milestone,
-            $this->top_milestone_pane_factory->getPanePresenterData($this->milestone)
-        );
-    }
-
-    /**
-     * @throws \Planning_NoPlanningsException
-     */
-    private function generateVirtualTopMilestone(): void
-    {
-        $this->milestone = $this->milestone_factory->getVirtualTopMilestone(
-            $this->getCurrentUser(),
-            $this->project
+        return $this->milestone->mapOr(
+            fn($milestone) => $this->header_options_provider->getHeaderOptions(
+                $user,
+                $milestone,
+                PlanningV2PaneInfo::IDENTIFIER
+            ),
+            []
         );
     }
 

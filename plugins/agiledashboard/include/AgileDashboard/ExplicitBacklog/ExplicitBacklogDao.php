@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Tuleap\DB\DataAccessObject;
 
-class ExplicitBacklogDao extends DataAccessObject
+class ExplicitBacklogDao extends DataAccessObject implements VerifyProjectUsesExplicitBacklog
 {
     public function isProjectUsingExplicitBacklog(int $project_id): bool
     {

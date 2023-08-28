@@ -1,4 +1,21 @@
 <h1 class="agiledashboard-header-title">{{# dgettext }}tuleap-agiledashboard | Top Backlog Planning{{/ dgettext }}</h1>
 <div class="agiledashboard tlp-framed-vertically agiledashboard-top-backlog">
-    {{{ getActivePane.getFullContent }}}
+    {{# planning_presenter }}
+        {{> pane-planning-v2 }}
+    {{/ planning_presenter }}
+    {{^ planning_presenter }}
+        <section class="empty-state-page">
+            <div class="empty-state-illustration">{{> svg-empty-state-tumbleweed }}</div>
+            <h1 class="empty-state-title">
+                {{# dgettext }}tuleap-agiledashboard | Nothing to see here.{{/ dgettext }}
+            </h1>
+            <p class="empty-state-text">{{# dgettext }}tuleap-agiledashboard | There is no Backlog created yet.{{/ dgettext }}</p>
+            {{# is_admin }}
+                <button type="button" disabled class="empty-state-action tlp-button-primary">
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-agiledashboard | Create a Backlog{{/ dgettext }}
+                </button>
+            {{/ is_admin }}
+        </section>
+    {{/ planning_presenter }}
 </div>

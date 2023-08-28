@@ -148,6 +148,9 @@ msgstr ""
 msgid "Create"
 msgstr "Criar"
 
+msgid "Create a Backlog"
+msgstr ""
+
 msgid "Create a kanban"
 msgstr ""
 
@@ -303,6 +306,9 @@ msgstr ""
 msgid ""
 "Note:<br>Importing a template will create new trackers. The import will not "
 "work if any existing tracker match those in the template"
+msgstr ""
+
+msgid "Nothing to see here."
 msgstr ""
 
 msgid "Once activated, you will start with a copy of the previous top backlog."
@@ -475,6 +481,9 @@ msgid "The tracker %s is not found"
 msgstr ""
 
 msgid "There are no milestones for this period"
+msgstr ""
+
+msgid "There is no Backlog created yet."
 msgstr ""
 
 msgid "There is no item yet"
