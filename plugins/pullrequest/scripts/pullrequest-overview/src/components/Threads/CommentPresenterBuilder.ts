@@ -35,6 +35,7 @@ import {
     TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_INLINE_COMMENT,
 } from "@tuleap/plugin-pullrequest-constants";
+import type { CommentTextFormat } from "@tuleap/plugin-pullrequest-constants";
 import { formatFilePathForUIRouter } from "../../helpers/file-path-formatter";
 
 export const CommentPresenterBuilder = {
@@ -47,9 +48,9 @@ export const CommentPresenterBuilder = {
         const common = {
             id: payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id,
             user: payload.user,
-            content: getContentMessage(payload, $gettext),
             post_date: payload.post_date,
             ...getThreadData(payload),
+            ...getContentData(payload, $gettext),
         };
 
         if (payload.type === TYPE_INLINE_COMMENT) {
@@ -82,6 +83,29 @@ function getThreadData(payload: SupportedTimelineItem): {
     return {
         parent_id: payload.parent_id,
         color: payload.color,
+    };
+}
+
+function getContentData(
+    payload: SupportedTimelineItem,
+    $gettext: (msgid: string) => string
+): {
+    content: string;
+    post_processed_content: string;
+    format: CommentTextFormat | "";
+} {
+    if (payload.type === TYPE_EVENT_PULLREQUEST_ACTION) {
+        return {
+            content: getContentMessage(payload, $gettext),
+            post_processed_content: "",
+            format: "",
+        };
+    }
+
+    return {
+        content: getContentMessage(payload, $gettext),
+        post_processed_content: payload.post_processed_content,
+        format: payload.format,
     };
 }
 

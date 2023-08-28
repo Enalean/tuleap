@@ -72,32 +72,38 @@ export const PullRequestCommentController = (
             getExistingCommentReplyPresenter(host)
         );
 
-        new_comment_saver.saveReply(host.comment, host.reply_comment_presenter).match(
-            (comment_payload: PullRequestComment) => {
-                host.reply_comment_presenter = null;
+        new_comment_saver
+            .saveReply(
+                host.comment,
+                host.reply_comment_presenter,
+                host.is_comments_markdown_mode_enabled
+            )
+            .match(
+                (comment_payload: PullRequestComment) => {
+                    host.reply_comment_presenter = null;
 
-                replies_store.addReplyToComment(
-                    host.comment,
-                    PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload)
-                );
+                    replies_store.addReplyToComment(
+                        host.comment,
+                        PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload)
+                    );
 
-                host.replies = replies_store.getCommentReplies(host.comment);
-                host.comment.color = comment_payload.color;
-                host.post_reply_save_callback();
-            },
-            (fault) => {
-                host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
-                    getExistingCommentReplyPresenter(host)
-                );
+                    host.replies = replies_store.getCommentReplies(host.comment);
+                    host.comment.color = comment_payload.color;
+                    host.post_reply_save_callback();
+                },
+                (fault) => {
+                    host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
+                        getExistingCommentReplyPresenter(host)
+                    );
 
-                if (on_error_callback) {
-                    on_error_callback(fault);
-                    return;
+                    if (on_error_callback) {
+                        on_error_callback(fault);
+                        return;
+                    }
+                    // eslint-disable-next-line no-console
+                    console.error(String(fault));
                 }
-                // eslint-disable-next-line no-console
-                console.error(String(fault));
-            }
-        );
+            );
     },
     displayReplies: (host: PullRequestCommentComponentType): void => {
         host.replies = replies_store.getCommentReplies(host.comment);

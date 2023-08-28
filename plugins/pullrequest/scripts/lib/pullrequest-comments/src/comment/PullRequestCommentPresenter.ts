@@ -22,6 +22,7 @@ import type {
     InlineCommentPosition,
     InlineCommentType,
     PullRequestActionEventType,
+    CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SupportedTimelineItemTypes } from "../types";
@@ -35,10 +36,12 @@ export interface PullRequestCommentFile {
     readonly is_displayed: boolean;
 }
 
-interface CommonComment {
+export interface CommonComment {
     readonly id: number;
     readonly user: User;
     readonly content: string;
+    readonly post_processed_content: string;
+    readonly format: CommentTextFormat | "";
     readonly type: SupportedTimelineItemTypes;
     readonly post_date: string;
     readonly parent_id: number;
@@ -69,6 +72,8 @@ export const PullRequestCommentPresenter = {
             user: reply.user,
             post_date: reply.post_date,
             content: replaceLineReturns(reply.content),
+            post_processed_content: reply.post_processed_content,
+            format: reply.format,
             parent_id: reply.parent_id,
             color: "",
         };

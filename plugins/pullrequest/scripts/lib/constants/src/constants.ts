@@ -74,3 +74,7 @@ export type PullRequestStatusType =
 export const PULL_REQUEST_STATUS_REVIEW: PullRequestStatusReviewType = "review";
 export const PULL_REQUEST_STATUS_MERGED: PullRequestStatusMergedType = "merge";
 export const PULL_REQUEST_STATUS_ABANDON: PullRequestStatusAbandonedType = "abandon";
+
+export type CommentTextFormat = "text" | "commonmark";
+export const FORMAT_TEXT: CommentTextFormat = "text";
+export const FORMAT_COMMONMARK: CommentTextFormat = "commonmark";

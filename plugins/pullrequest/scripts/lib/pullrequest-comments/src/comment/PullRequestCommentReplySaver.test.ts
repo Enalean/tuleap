@@ -24,11 +24,12 @@ import { PullRequestCommentNewReplySaver } from "./PullRequestCommentReplySaver"
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { uri } from "@tuleap/fetch-result";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
-import type {
-    NewCommentOnFile,
-    NewGlobalComment,
-} from "@tuleap/plugin-pullrequest-rest-api-types/src/post-comments";
+import {
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+    FORMAT_COMMONMARK,
+} from "@tuleap/plugin-pullrequest-constants";
+import type { NewCommentOnFile, NewGlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 vi.mock("@tuleap/fetch-result");
 
@@ -42,6 +43,8 @@ const getFormPresenter = (): ReplyCommentFormPresenter =>
         },
     } as ReplyCommentFormPresenter);
 
+const is_comments_markdown_mode_enabled = true;
+
 describe("PullRequestCommentReplySaver", () => {
     it("Given a ReplyCommentFormPresenter and a global comment, then it should save it as a regular comment", async () => {
         const root_comment = PullRequestCommentPresenterStub.buildGlobalComment();
@@ -53,13 +56,16 @@ describe("PullRequestCommentReplySaver", () => {
             user: root_comment.user,
             parent_id: root_comment.id,
             color: "red-wine",
+            post_processed_content: "",
+            format: FORMAT_COMMONMARK,
         };
 
         const postSpy = vi.spyOn(tuleap_api, "postJSON").mockReturnValue(okAsync(new_comment));
 
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
-            getFormPresenter()
+            getFormPresenter(),
+            is_comments_markdown_mode_enabled
         );
 
         if (!result.isOk()) {
@@ -70,6 +76,7 @@ describe("PullRequestCommentReplySaver", () => {
             content: "Please rebase",
             parent_id: root_comment.id,
             user_id: current_user_id,
+            format: FORMAT_COMMONMARK,
         });
 
         expect(result.value).toStrictEqual({ ...new_comment });
@@ -87,6 +94,8 @@ describe("PullRequestCommentReplySaver", () => {
             file_path: root_comment.file.file_path,
             position: root_comment.file.position,
             unidiff_offset: root_comment.file.unidiff_offset,
+            format: FORMAT_COMMONMARK,
+            post_processed_content: "",
         };
 
         const postSpy = vi
@@ -97,7 +106,8 @@ describe("PullRequestCommentReplySaver", () => {
 
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
-            form_presenter
+            form_presenter,
+            is_comments_markdown_mode_enabled
         );
 
         if (!result.isOk()) {
@@ -111,6 +121,7 @@ describe("PullRequestCommentReplySaver", () => {
             file_path: root_comment.file.file_path,
             position: root_comment.file.position,
             unidiff_offset: root_comment.file.unidiff_offset,
+            format: FORMAT_COMMONMARK,
         });
 
         expect(result.value).toStrictEqual({

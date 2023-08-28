@@ -24,6 +24,7 @@ import {
     INLINE_COMMENT_POSITION_RIGHT,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
+    FORMAT_COMMONMARK,
 } from "@tuleap/plugin-pullrequest-constants";
 import { NewCommentSaver } from "./NewCommentSaver";
 import { uri } from "@tuleap/fetch-result";
@@ -35,6 +36,8 @@ const user = {
     user_url: "url/to/user_avatar.png",
     display_name: "Joe l'Asticot",
 };
+
+const is_comments_markdown_mode_enabled = true;
 
 describe("NewInlineCommentSaver", () => {
     it("should save the new inline comment and return a CommentOnFile", async () => {
@@ -60,7 +63,10 @@ describe("NewInlineCommentSaver", () => {
             },
         });
 
-        const result = await comment_saver.postComment("This is fine");
+        const result = await comment_saver.postComment(
+            "This is fine",
+            is_comments_markdown_mode_enabled
+        );
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }
@@ -71,6 +77,7 @@ describe("NewInlineCommentSaver", () => {
             position: INLINE_COMMENT_POSITION_RIGHT,
             content: "This is fine",
             user_id: 102,
+            format: FORMAT_COMMONMARK,
         });
 
         expect(result.value).toStrictEqual({
@@ -104,7 +111,10 @@ describe("NewInlineCommentSaver", () => {
             pull_request_id: 1,
         });
 
-        const result = await comment_saver.postComment("This is fine");
+        const result = await comment_saver.postComment(
+            "This is fine",
+            is_comments_markdown_mode_enabled
+        );
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }
@@ -112,6 +122,7 @@ describe("NewInlineCommentSaver", () => {
         expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/1/comments`, {
             content: "This is fine",
             user_id: 102,
+            format: FORMAT_COMMONMARK,
         });
 
         expect(result.value).toStrictEqual({

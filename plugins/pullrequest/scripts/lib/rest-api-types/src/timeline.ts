@@ -26,6 +26,7 @@ import type {
     InlineCommentType,
     PullRequestActionEventType,
     ReviewerChangeEventType,
+    CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 
 import type { User } from "@tuleap/core-rest-api-types";
@@ -38,6 +39,8 @@ interface CommonComment {
     readonly user: User;
     readonly parent_id: number;
     readonly color: string;
+    readonly post_processed_content: string;
+    readonly format: CommentTextFormat;
 }
 
 export interface GlobalComment extends CommonComment {

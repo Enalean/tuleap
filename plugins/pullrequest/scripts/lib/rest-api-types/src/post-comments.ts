@@ -21,6 +21,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 import type {
     InlineCommentPosition,
     GlobalCommentType,
+    CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 
 interface CommonNewComment {
@@ -30,6 +31,8 @@ interface CommonNewComment {
     readonly user: User;
     readonly parent_id: number;
     readonly color: string;
+    readonly post_processed_content: string;
+    readonly format: CommentTextFormat;
 }
 
 export interface NewCommentOnFile extends CommonNewComment {
