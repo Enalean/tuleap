@@ -128,7 +128,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->pane_factory,
             new \Tuleap\AgileDashboard\Planning\VirtualTopMilestonePresenterBuilder(
                 $event_manager,
-                $project_explicit_backlog_dao
+                $project_explicit_backlog_dao,
+                $split_kanban_configuration_checker
             ),
             $service_crumb_builder,
             new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),

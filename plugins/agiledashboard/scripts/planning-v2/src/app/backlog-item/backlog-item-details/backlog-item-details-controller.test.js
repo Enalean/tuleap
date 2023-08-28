@@ -209,7 +209,7 @@ describe("BacklogItemDetailsController -", function () {
     });
 
     describe("canShowRemoveFromExplicitBacklog() -", () => {
-        it("Given that the current top backlog is not explicit, it does not show remove action", function () {
+        it("Given that the current backlog is not explicit, it does not show remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = false;
 
             var result = BacklogItemDetailsController.canShowRemoveFromExplicitBacklog();
@@ -235,7 +235,7 @@ describe("BacklogItemDetailsController -", function () {
             expect(result).toBe(false);
         });
 
-        it("Given that the item is in explicit top backlog, it shows the remove action", function () {
+        it("Given that the item is in explicit backlog, it shows the remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = true;
 
             var result = BacklogItemDetailsController.canShowRemoveFromExplicitBacklog();

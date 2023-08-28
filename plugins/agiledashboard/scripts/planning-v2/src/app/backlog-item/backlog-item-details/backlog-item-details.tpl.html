@@ -35,7 +35,7 @@
                         role="menuitem"
                     >
                         <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-tlp-remove-from-backlog"></i>
-                        <span translate>Remove from top backlog</span>
+                        <span>{{details.getRemoveFromBacklogText()}}</span>
                     </a>
                     <span class="tlp-dropdown-menu-title" ng-if="details.backlog_item.accept.trackers.length > 0" translate>Children</span>
                     <a href=""

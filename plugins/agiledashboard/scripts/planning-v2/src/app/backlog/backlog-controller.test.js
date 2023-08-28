@@ -204,7 +204,7 @@ describe("BacklogController -", () => {
     });
 
     describe("$onInit() -", function () {
-        describe("Given we are in a top backlog context", function () {
+        describe("Given we are in a backlog context", function () {
             it("When I load the controller, then the project's backlog will be retrieved and the backlog updated", function () {
                 BacklogController.milestone_id = undefined;
                 BacklogController.$onInit();
