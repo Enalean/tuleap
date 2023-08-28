@@ -70,7 +70,7 @@ final class PullRequestInlineCommentRepresentation
      */
     public string $color;
     /**
-     * @var string {@type string}
+     * @var string
      */
     public $post_processed_content;
 

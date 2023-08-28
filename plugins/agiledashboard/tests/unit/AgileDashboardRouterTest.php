@@ -94,6 +94,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 Mockery::mock(\Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder::class),
                 new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
                 $this->createMock(BacklogTrackersUpdateChecker::class),
+                new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

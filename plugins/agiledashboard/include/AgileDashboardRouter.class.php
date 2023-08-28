@@ -209,6 +209,7 @@ class AgileDashboardRouter
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
         private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
@@ -308,7 +309,7 @@ class AgileDashboardRouter
                     $pane = $request->get('pane');
                     if ($pane === self::PANE_KANBAN) {
                         $service = $request->getProject()->getService(KanbanService::SERVICE_SHORTNAME);
-                        if ($service !== null) {
+                        if ($service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())) {
                             throw new \Tuleap\Request\NotFoundException();
                         }
 
@@ -490,6 +491,7 @@ class AgileDashboardRouter
             $this->planning_edition_presenter_builder,
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
+            $this->split_kanban_configuration_checker,
         );
     }
 

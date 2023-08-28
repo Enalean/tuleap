@@ -142,6 +142,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
         private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -194,7 +195,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $project = $this->getProjectFromRequest();
 
         $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $service !== null;
+        $is_using_kanban_service = $this->isUsingKanbanService($project, $service);
 
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($configuration->getPlannings()),
@@ -269,8 +270,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function showEmptyHome()
     {
-        $service                 = $this->getProjectFromRequest()->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $service !== null;
+        $project                 = $this->getProjectFromRequest();
+        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service = $this->isUsingKanbanService($project, $service);
 
         $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
@@ -280,6 +282,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $is_using_kanban_service,
         );
         return $this->renderToString('empty-home', $presenter);
+    }
+
+    private function isUsingKanbanService(Project $project, ?Service $service): bool
+    {
+        return $service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
     }
 
     /**

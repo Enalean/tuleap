@@ -54,13 +54,7 @@ final class CommentRepresentation
      * @var string {@type string}
      */
     public string $color;
-    /**
-     * @var string {@type string}
-     */
     public string $format;
-    /**
-     * @var string {@type string}
-     */
     public string $post_processed_content;
 
     private function __construct(private readonly Codendi_HTMLPurifier $purifier, private readonly ContentInterpretor $common_mark_interpreter, int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id, string $color, string $format)
