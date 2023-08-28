@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Codendi_HTMLPurifier;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\InlineComment\Dao;
 use Tuleap\PullRequest\PullRequest;
 use UserManager;
@@ -27,7 +29,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestInlineCommentRepresentationBuilder
 {
-    public function __construct(private Dao $dao, private UserManager $user_manager)
+    public function __construct(private readonly Dao $dao, private readonly UserManager $user_manager, private readonly Codendi_HTMLPurifier $purifier, private readonly ContentInterpretor $common_mark_interpreter)
     {
     }
 
@@ -43,17 +45,20 @@ class PullRequestInlineCommentRepresentationBuilder
             $user_id             = $row['user_id'];
             $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user_id));
 
-            $inline_comments[] = new PullRequestInlineCommentRepresentation(
+            $inline_comments[] = PullRequestInlineCommentRepresentation::build(
+                $this->purifier,
+                $this->common_mark_interpreter,
                 (int) $row['unidiff_offset'],
                 $user_representation,
                 $row['post_date'],
                 $row['content'],
-                $project_id,
+                (int) $project_id,
                 $row['position'],
-                $row['parent_id'],
-                $row['id'],
+                (int) $row['parent_id'],
+                (int) $row['id'],
                 $row['file_path'],
-                $row['color']
+                $row['color'],
+                $row['format']
             );
         }
 

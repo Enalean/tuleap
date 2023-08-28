@@ -54,6 +54,9 @@ use Tuleap\Label\REST\LabelsUpdater;
 use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
 use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
+use Tuleap\Markdown\CodeBlockFeatures;
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -132,79 +135,26 @@ class PullRequestsResource extends AuthenticatedResource
 {
     public const MAX_LIMIT = 50;
 
-    /** @var PullRequestPermissionChecker */
-    private $permission_checker;
-
-    /** @var LabelsUpdater */
-    private $labels_updater;
-
-    /** @var LabelsCurlyCoatedRetriever */
-    private $labels_retriever;
-
-    /** @var GitRepositoryFactory */
-    private $git_repository_factory;
-
-    /** @var PullRequestFactory */
-    private $pull_request_factory;
-
-    /** @var Tuleap\PullRequest\Timeline\Factory */
-    private $timeline_factory;
-
+    private PullRequestPermissionChecker $permission_checker;
+    private LabelsUpdater $labels_updater;
+    private LabelsCurlyCoatedRetriever $labels_retriever;
+    private GitRepositoryFactory $git_repository_factory;
+    private PullRequestFactory $pull_request_factory;
     private CommentFactory $comment_factory;
-
-    /** @var PaginatedCommentsRepresentationsBuilder */
-    private $paginated_timeline_representation_builder;
-
-    /** @var PaginatedCommentsRepresentationsBuilder */
-    private $paginated_comments_representations_builder;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var PullRequestMerger */
-    private $pull_request_merger;
-
-    /** @var PullRequestCloser */
-    private $pull_request_closer;
-
-    /** @var PullRequestCreator */
-    private $pull_request_creator;
-
-    /** @var EventManager */
-    private $event_manager;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /**
-     * @var InlineCommentCreator
-     */
-    private $inline_comment_creator;
-
-    /**
-     * @var AccessControlVerifier
-     */
-    private $access_control_verifier;
-    /**
-     * @var GitPullRequestReferenceRetriever
-     */
-    private $git_pull_request_reference_retriever;
-    /**
-     * @var GitPullRequestReferenceUpdater
-     */
-    private $git_pull_request_reference_updater;
-    /**
-     * @var GitPlugin
-     */
-    private $git_plugin;
-    /**
-     * @var GitCommitRepresentationBuilder
-     */
-    private $commit_representation_builder;
-    /**
-     * @var CommitStatusRetriever
-     */
-    private $status_retriever;
+    private PaginatedTimelineRepresentationBuilder $paginated_timeline_representation_builder;
+    private PaginatedCommentsRepresentationsBuilder $paginated_comments_representations_builder;
+    private UserManager $user_manager;
+    private PullRequestCloser $pull_request_closer;
+    private PullRequestCreator $pull_request_creator;
+    private EventManager $event_manager;
+    private LoggerInterface $logger;
+    private InlineCommentCreator $inline_comment_creator;
+    private AccessControlVerifier $access_control_verifier;
+    private GitPullRequestReferenceRetriever $git_pull_request_reference_retriever;
+    private GitPullRequestReferenceUpdater $git_pull_request_reference_updater;
+    private GitPlugin $git_plugin;
+    private GitCommitRepresentationBuilder $commit_representation_builder;
+    private CommitStatusRetriever $status_retriever;
 
     public function __construct()
     {
@@ -226,9 +176,9 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->user_manager = UserManager::instance();
 
-        $inline_comment_dao     = new InlineCommentDao();
-        $timeline_dao           = new TimelineDao();
-        $this->timeline_factory = new TimelineFactory(
+        $inline_comment_dao = new InlineCommentDao();
+        $timeline_dao       = new TimelineDao();
+        $timeline_factory   = new TimelineFactory(
             $comment_dao,
             $inline_comment_dao,
             $timeline_dao,
@@ -239,23 +189,34 @@ class PullRequestsResource extends AuthenticatedResource
             )
         );
 
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpretor = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
-            $this->timeline_factory,
-            $this->user_manager
+            $timeline_factory,
+            $this->user_manager,
+            $purifier,
+            $content_interpretor
         );
 
         $this->paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
-            $this->comment_factory
+            $this->comment_factory,
+            $this->user_manager,
+            $purifier,
+            $content_interpretor
         );
 
         $this->event_manager        = EventManager::instance();
-        $this->pull_request_merger  = new PullRequestMerger(
+        $pull_request_merger        = new PullRequestMerger(
             new MergeSettingRetriever(new MergeSettingDAO())
         );
         $this->pull_request_creator = new PullRequestCreator(
             new PullRequestCreatorChecker($pull_request_dao),
             $this->pull_request_factory,
-            $this->pull_request_merger,
+            $pull_request_merger,
             $this->event_manager,
             new GitPullRequestReferenceCreator(
                 new GitPullRequestReferenceDAO(),
@@ -264,7 +225,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
         $this->pull_request_closer  = new PullRequestCloser(
             $pull_request_dao,
-            $this->pull_request_merger,
+            $pull_request_merger,
             new TimelineEventCreator(new TimelineDao()),
             $event_dispatcher
         );
@@ -680,9 +641,17 @@ class PullRequestsResource extends AuthenticatedResource
                 $pull_request->getSha1Src()
             );
 
+            $purifier            = \Codendi_HTMLPurifier::instance();
+            $content_interpretor = CommonMarkInterpreter::build(
+                $purifier,
+                new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+            );
+
             $inline_comment_builder = new PullRequestInlineCommentRepresentationBuilder(
                 new \Tuleap\PullRequest\InlineComment\Dao(),
-                $this->user_manager
+                $this->user_manager,
+                $purifier,
+                $content_interpretor
             );
             $git_repository_source  = $this->getRepository($pull_request->getRepositoryId());
             $inline_comments        = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
@@ -752,17 +721,26 @@ class PullRequestsResource extends AuthenticatedResource
 
         $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user->getId()));
 
-        return new PullRequestInlineCommentRepresentation(
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpretor = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
+        return PullRequestInlineCommentRepresentation::build(
+            $purifier,
+            $content_interpretor,
             $comment_data->unidiff_offset,
             $user_representation,
             $post_date,
             $comment_data->content,
-            $git_repository_source->getProjectId(),
+            (int) $git_repository_source->getProjectId(),
             $comment_data->position,
             (int) $comment_data->parent_id,
             $inserted_inline_comment->id,
             $comment_data->file_path,
-            $inserted_inline_comment->color
+            $inserted_inline_comment->color,
+            $comment_data->format ?? ""
         );
     }
 
@@ -1147,7 +1125,13 @@ class PullRequestsResource extends AuthenticatedResource
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $color);
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpretor = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
+        return CommentRepresentation::build($purifier, $content_interpretor, $new_comment_id, $project_id, $user_representation, $color, $comment);
     }
 
     /**
