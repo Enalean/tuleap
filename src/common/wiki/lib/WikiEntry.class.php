@@ -32,7 +32,7 @@ class WikiEntry
   /* private int(11) */     public $rank;
   /* private string */      public $language_id;
   /* private string(255) */ public $name;
-  /* private string(255) */ public $page;
+  /* private string(255) */ public mixed $page;
   /* private string(255) */ public $desc;
   /* private WikiPage */    public $wikiPage;
 

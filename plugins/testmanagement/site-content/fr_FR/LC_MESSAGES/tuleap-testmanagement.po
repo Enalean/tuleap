@@ -177,7 +177,6 @@ msgstr ""
 "dans la configuration de TestManagement des \" groupes de champ cachés\" "
 "sont définis."
 
-#, php-format
 msgid "The submitted administration configuration is not valid."
 msgstr "La configuration envoyée n'est pas valide."
 

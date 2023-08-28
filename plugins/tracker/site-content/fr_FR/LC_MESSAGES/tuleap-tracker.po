@@ -2986,15 +2986,12 @@ msgstr "L'attribut 'job_url' doit être une URL valide."
 msgid "The <strong>%s</strong> tracker has been successfully created."
 msgstr "L'outil de suivi <strong>%s</strong> a été crée avec succès"
 
-#, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr "@comments ne peut pas être comparé à MYSELF()."
 
-#, php-format
 msgid "The @comments metadata cannot be compared to NOW()."
 msgstr "@comments ne peut pas être comparé à NOW()."
 
-#, php-format
 msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr "@comments ne peut pas être comparé à OPEN()."
 

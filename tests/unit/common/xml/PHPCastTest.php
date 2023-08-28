@@ -26,6 +26,7 @@ class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="0" />');
 
+        self::assertNotNull($xml['enabled']);
         self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
@@ -33,6 +34,7 @@ class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="1" />');
 
+        self::assertNotNull($xml['enabled']);
         self::assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
@@ -40,6 +42,7 @@ class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="true" />');
 
+        self::assertNotNull($xml['enabled']);
         self::assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
@@ -47,6 +50,7 @@ class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="false" />');
 
+        self::assertNotNull($xml['enabled']);
         self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
@@ -54,6 +58,7 @@ class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="stuff" />');
 
+        self::assertNotNull($xml['enabled']);
         self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 }

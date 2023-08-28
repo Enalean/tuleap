@@ -2671,15 +2671,12 @@ msgstr ""
 msgid "The <strong>%s</strong> tracker has been successfully created."
 msgstr ""
 
-#, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr ""
 
-#, php-format
 msgid "The @comments metadata cannot be compared to NOW()."
 msgstr ""
 
-#, php-format
 msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr ""
 

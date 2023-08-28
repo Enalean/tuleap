@@ -28,7 +28,7 @@ final class ProgramIncrementCannotPlanIntoItselfException extends \Exception imp
 
     public function __construct()
     {
-        parent::__construct(sprintf('Program Increment tracker id must not be contained into plannable tracker ids'));
+        parent::__construct('Program Increment tracker id must not be contained into plannable tracker ids');
         $this->i18n_message = dgettext('tuleap-program_management', 'Program Increment tracker id must not be contained into plannable tracker ids');
     }
 
