@@ -86,7 +86,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
                 $name = $UH->getDisplayNameFromUserName($data['who']);
             }
             $html .= $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . ' on ';
-            //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
+            //In the db, svn dates are stored as int
             $html .= format_date(
                 $GLOBALS['Language']->getText('system', 'datefmt'),
                 (is_numeric($data['date']) ? $data['date'] : strtotime($data['date']))

@@ -164,27 +164,6 @@ if ($request->isAjax()) {
             echo ' </tr>';
             echo '</table>';
             break;
-        case 'cvs':
-            require_once __DIR__ . '/../www/cvs/commit_utils.php';
-            $commit_id = $request->get('val');
-            $result    =  cvs_get_revision_detail($commit_id);
-            if (db_numrows($result) < 1) {
-                echo sprintf(_('Commit #%1$s not found in this project'), $commit_id);
-            } else {
-                $date     = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
-                $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);
-                echo '<table>';
-                echo ' <tr>';
-                echo '  <td><strong>' . _('Date') . ':</strong></td>';
-                echo '  <td>' . $html_purifier->purify($date) . '</td>';
-                echo ' </tr>';
-                echo ' <tr>';
-                echo '  <td><strong>' . _('Log message') . ':</strong></td>';
-                echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
-                echo ' </tr>';
-                echo '</table>';
-            }
-            break;
         case 'file':
             $group_id = $request->get('group_id');
             switch ($ref->getNature()) {

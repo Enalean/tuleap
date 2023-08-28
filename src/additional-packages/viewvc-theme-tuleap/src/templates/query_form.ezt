@@ -26,35 +26,6 @@ Browse Directory</a></p>
 <div class="vc_query_form">
   [for query_hidden_values]<input type="hidden" name="[query_hidden_values.name]" value="[query_hidden_values.value]"/>[end]
 <table cellspacing="0" cellpadding="5" class="auto">
-  [is roottype "cvs"]
-  [# For subversion, the branch field is not used ]
-  <tr>
-    <th style="text-align:right;vertical-align:top;">Branch:</th>
-    <td>
-      <input type="text" name="branch" value="[branch]" /><br />
-      <label for="branch_match_exact">
-        <input type="radio" name="branch_match" id="branch_match_exact"
-           value="exact" [is branch_match "exact"]checked="checked"[end] />
-        Exact match
-      </label>
-      <label for="branch_match_glob">
-        <input type="radio" name="branch_match" id="branch_match_glob"
-           value="glob" [is branch_match "glob"]checked="checked"[end] />
-        Glob pattern match
-      </label>
-      <label for="branch_match_regex">
-        <input type="radio" name="branch_match" id="branch_match_regex"
-           value="regex" [is branch_match "regex"]checked="checked"[end] />
-        Regex match
-      </label>
-      <label for="branch_match_notregex">
-        <input type="radio" name="branch_match" id="branch_match_notregex"
-           value="notregex" [is branch_match "notregex"]checked="checked"[end] />
-        Regex doesn't match
-      </label>
-    </td>
-  </tr>
-  [end]
   <tr>
     <th style="text-align:right;vertical-align:top;">Subdirectory:</th>
     <td>

@@ -28,7 +28,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const FORUM     = 'forum';
     public const HOMEPAGE  = 'homepage';
     public const NEWS      = 'news';
-    public const CVS       = 'cvs';
     public const FILE      = 'file';
     public const SVN       = 'svn';
     public const WIKI      = 'wiki';
@@ -42,7 +41,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         self::FORUM     => 'fas fa-users',
         self::HOMEPAGE  => 'fas fa-home',
         self::NEWS      => 'fas fa-rss',
-        self::CVS       => 'fas fa-tlp-versioning-cvs',
         self::WIKI      => 'fas fa-tlp-wiki',
         self::TRACKERV3 => 'fas fa-list-ol',
     ];

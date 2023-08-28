@@ -64,7 +64,6 @@ if ($group_name && ! $group_id) {
 
 // Commit and patch are not ambiguous (not trackers)
 $svn_loc = "/svn/?func=detailrevision&rev_id=" . (int) $aid . "&group_id=" . (int) $group_id;
-$cvs_loc = "/cvs/?func=detailcommit&commit_id=" . (int) $aid . "&group_id=" . (int) $group_id;
 if (($atn == 'rev') || ($atn == 'revision')) {
     $location .= $svn_loc;
     header($location);
@@ -76,18 +75,9 @@ if ($atn == 'commit') {
     $feed = '';
     if ($res && db_numrows($res) > 0) {
         $location .= $svn_loc . $feed;
-    } else {
-        // Check that the commit belongs to the same project
-        $commit_group_id = util_get_group_from_commit_id($aid);
-        if (($commit_group_id) && ($group_id != $commit_group_id)) {
-            // The link is coming from another project, add a warning msg
-            $group_name = util_get_group_name_from_id($commit_group_id);
-            $feed       = "&feedback" . urlencode($Language->getText('tracker_gotoid', 'commit_belongs_to', $group_name));
-        }
-        $location .= $cvs_loc . $feed;
+        header($location);
+        exit;
     }
-    header($location);
-    exit;
 }
 
 

@@ -177,13 +177,6 @@ if ($request->isPost()) {
                         } elseif (ForgeConfig::areRestrictedUsersAllowed()) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
-                            if (
-                                $user->getShell()
-                                && ($user->getShell() != "/bin/false")
-                                && ($user->getShell() != "/sbin/nologin")
-                            ) {
-                                $user->setShell(ForgeConfig::get('codendi_bin_prefix') . '/cvssh-restricted');
-                            }
                             $accountActivationEvent = 'project_admin_activate_user';
                         }
                         break;

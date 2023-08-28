@@ -90,7 +90,6 @@ class SystemEventProcessor_Factory
             new SystemEventDao(),
             $this->logger,
             Backend::instance('Aliases'),
-            Backend::instanceCVS(),
             Backend::instanceSVN(),
             Backend::instance('System'),
             new SiteCache($this->logger),

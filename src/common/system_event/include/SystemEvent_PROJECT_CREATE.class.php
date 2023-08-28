@@ -67,16 +67,6 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
                     return false;
                 }
 
-                if ($project->usesCVS()) {
-                    $backendCVS = Backend::instanceCVS();
-                    if (! $backendCVS->createProjectCVS($project)) {
-                        $this->error("Could not create/initialize project CVS repository");
-                        return false;
-                    }
-                    $backendCVS->setCVSRootListNeedUpdate();
-                    $backendCVS->setCVSPrivacy($project, ! $project->isPublic() || $project->isCVSPrivate());
-                }
-
                 if ($project->usesSVN()) {
                     $backendSVN = Backend::instanceSVN();
                     if (! $backendSVN->createProjectSVN((int) $group_id)) {

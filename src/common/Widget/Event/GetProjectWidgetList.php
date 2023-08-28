@@ -36,7 +36,6 @@ class GetProjectWidgetList extends GetWidgetList
         'projectlatestnews',
         'projectpublicareas',
         'projectlatestsvncommits',
-        'projectlatestcvscommits',
         'projectsvnstats',
         'projectrss',
         'projectimageviewer',

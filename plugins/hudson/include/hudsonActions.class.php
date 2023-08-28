@@ -48,7 +48,6 @@ class hudsonActions extends Actions
             );
 
             $use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
-            $use_cvs_trigger = ($request->get('hudson_use_cvs_trigger') === 'on');
             $token           = $request->get('hudson_trigger_token');
             $svn_paths       = $this->svn_paths_updater->transformContent($request->get('hudson_svn_paths'));
 
@@ -58,7 +57,6 @@ class hudsonActions extends Actions
                 $job_url,
                 $job->getName(),
                 $use_svn_trigger,
-                $use_cvs_trigger,
                 $token,
                 $svn_paths
             );
@@ -90,7 +88,6 @@ class hudsonActions extends Actions
         }
 
         $new_use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
-        $new_use_cvs_trigger = ($request->get('hudson_use_cvs_trigger') === 'on');
         $new_token           = $request->get('hudson_trigger_token');
         $svn_paths           = $this->svn_paths_updater->transformContent($request->get('hudson_svn_paths'));
         $job_dao             = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -101,7 +98,6 @@ class hudsonActions extends Actions
                 $new_job_url,
                 $new_job_name,
                 $new_use_svn_trigger,
-                $new_use_cvs_trigger,
                 $new_token,
                 $svn_paths
             )

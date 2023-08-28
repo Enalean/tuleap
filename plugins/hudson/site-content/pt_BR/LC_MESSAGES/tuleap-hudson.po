@@ -55,15 +55,6 @@ msgstr ""
 msgid "Build performed on:"
 msgstr ""
 
-msgid "CVS"
-msgstr ""
-
-msgid "CVS commit will trigger a build"
-msgstr ""
-
-msgid "CVS trigger"
-msgstr ""
-
 msgid "Continuous Integration"
 msgstr ""
 

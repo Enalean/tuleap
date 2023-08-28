@@ -82,7 +82,6 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         $project->method('getID')->willReturn($this->project_id);
         $project_manager->method('getProject')->willReturn($project);
 
-        $project->method('usesCVS')->willReturn(false);
         $project->method('usesSVN')->willReturn(false);
 
         $project->method('getAccess')->willReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
@@ -134,7 +133,6 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         $project->method('getID')->willReturn($this->project_id);
         $project_manager->method('getProject')->willReturn($project);
 
-        $project->method('usesCVS')->willReturn(false);
         $project->method('usesSVN')->willReturn(false);
 
         $project->method('getAccess')->willReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);

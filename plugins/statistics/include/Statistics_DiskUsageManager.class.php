@@ -22,7 +22,6 @@
 use Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult;
 use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageManager
@@ -30,7 +29,6 @@ class Statistics_DiskUsageManager
     private array $services = [];
 
     public const SVN           = 'svn';
-    public const CVS           = 'cvs';
     public const FRS           = 'frs';
     public const FTP           = 'ftp';
     public const GRP_HOME      = 'grp_home';
@@ -57,21 +55,13 @@ class Statistics_DiskUsageManager
      * @var EventManager
      */
     private $event_manager;
-
-    /**
-     * @var CVSCollector
-     */
-    private $cvs_collector;
-
     public function __construct(
         Statistics_DiskUsageDao $dao,
         SVNCollector $svn_collector,
-        CVSCollector $cvs_collector,
         EventManager $event_manager,
     ) {
         $this->dao           = $dao;
         $this->svn_collector = $svn_collector;
-        $this->cvs_collector = $cvs_collector;
         $this->event_manager = $event_manager;
     }
 
@@ -87,7 +77,6 @@ class Statistics_DiskUsageManager
     {
         if (count($this->services) == 0) {
             $this->services = [self::SVN           => 'Subversion',
-                self::CVS           => 'CVS',
                 self::FRS           => 'File releases',
                 self::FTP           => 'Public FTP',
                 self::GRP_HOME      => 'Home page',
@@ -115,8 +104,6 @@ class Statistics_DiskUsageManager
         switch ($service) {
             case self::SVN:
                 return 'darkolivegreen';
-            case self::CVS:
-                return 'darkgreen';
             case self::FRS:
                 return 'pink1';
             case self::FTP:
@@ -532,13 +519,12 @@ class Statistics_DiskUsageManager
     }
 
     /**
-     * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'DOCMAN', 'WEBDAV',
+     * 'SVN', 'FRS', 'FTP', 'HOME', 'WIKI', 'DOCMAN', 'WEBDAV',
      */
     private function collectProjects(DateTimeImmutable $collect_date)
     {
         $time_to_collect = [
             Service::SVN => 0,
-            Service::CVS => 0,
             self::FRS => 0,
             self::FTP => 0,
             self::GRP_HOME => 0,
@@ -552,7 +538,6 @@ class Statistics_DiskUsageManager
 
             $project = new Project($row);
             $this->collectSVNDiskUsage($project, $collect_date, $time_to_collect);
-            $this->collectCVSDiskUsage($project, $collect_date, $time_to_collect);
 
             $this->storeForGroup($collect_date, $row['group_id'], self::FRS, ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($collect_date, $row['group_id'], self::FTP, ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
@@ -580,28 +565,6 @@ class Statistics_DiskUsageManager
         }
 
         return $time_to_collect;
-    }
-
-    private function collectCVSDiskUsage(Project $project, DateTimeImmutable $collect_date, array &$time_to_collect)
-    {
-        $start = microtime(true);
-        $size  = $this->cvs_collector->collectForCVSRepositories($project);
-        if (! $size) {
-            $path = ForgeConfig::get('cvs_prefix') . '/' . $project->getUnixNameMixedCase();
-            $size = $this->getDirSize($path . '/');
-        }
-
-        $this->dao->addGroup(
-            $project->getID(),
-            self::CVS,
-            $size,
-            $collect_date->getTimestamp()
-        );
-
-        $end  = microtime(true);
-        $time = $end - $start;
-
-        $time_to_collect[Service::CVS] += $time;
     }
 
     private function collectSVNDiskUsage(Project $project, DateTimeImmutable $collect_date, array &$time_to_collect)

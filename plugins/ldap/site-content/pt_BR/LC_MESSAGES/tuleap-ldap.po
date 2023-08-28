@@ -17,9 +17,6 @@ msgstr ""
 msgid "%s group name"
 msgstr ""
 
-msgid "<em>Required for CVS, FTP and Subversion accesses</em>."
-msgstr ""
-
 msgid ""
 "<strong>%s</strong> is already linked with %s group <strong>%s</strong>."
 msgstr ""

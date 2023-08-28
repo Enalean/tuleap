@@ -50,8 +50,6 @@ project_admin_editservice	service_doc_lbl_key	Docs
 project_admin_editservice	service_doc_desc_key	Document Manager
 project_admin_editservice	service_news_lbl_key	News
 project_admin_editservice	service_news_desc_key	Project News
-project_admin_editservice	service_cvs_lbl_key	CVS
-project_admin_editservice	service_cvs_desc_key	CVS Access
 project_admin_editservice	service_file_lbl_key	Files
 project_admin_editservice	service_file_desc_key	File Releases
 project_admin_editservice	service_tracker_lbl_key	Trackers v3
@@ -170,7 +168,6 @@ project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : pro
 ## Naming rule for the key:
 ## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Tracker Artifact
-project_reference	reference_cvs_desc_key	CVS commit detail
 project_reference	reference_svn_desc_key	Subversion revision details
 project_reference	reference_wiki_desc_key	Wiki page
 project_reference	reference_wikiversion_desc_key	Wiki version
@@ -187,7 +184,6 @@ project_reference	reference_release_desc_key	Release
 
 project_reference	reference_artifact_nature_key	Artifact
 project_reference	reference_document_nature_key	Document
-project_reference	reference_cvs_commit_nature_key	CVS Commit
 project_reference	reference_svn_revision_nature_key	Subversion Revision
 project_reference	reference_file_nature_key	File
 project_reference	reference_release_nature_key	Release
@@ -538,7 +534,6 @@ project_export_task_export	depend_on_task_desc	List of  tasks this task depends 
 project_stats_index	months	Months
 project_stats_index	weeks	Weeks
 project_stats_index	days	Days
-project_stats_index	cvs	CVS
 
 #
 #-----------------------------------------------
@@ -578,7 +573,6 @@ project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Docs
 project_stats_source_code_access_utils	wiki	Wiki
 project_stats_source_code_access_utils	wiki_attachments	Wiki Attachments
-project_stats_source_code_access_utils	cvs_co_upd	CVS Access (checkout/update
 project_stats_source_code_access_utils	svn_access	Subversion accesses
 project_stats_source_code_access_utils	doc_download	Document Download
 project_stats_source_code_access_utils	documents	Documents
@@ -586,7 +580,6 @@ project_stats_source_code_access_utils	wiki_access	Wiki access
 project_stats_source_code_access_utils	wiki_page	Pages
 project_stats_source_code_access_utils	wiki_attachment_access	Wiki Attachment access
 project_stats_source_code_access_utils	wiki_attachment_title	Attachment
-project_stats_source_code_access_utils	cvs_access	CVS Access
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	File Browsing
 project_stats_source_code_access_utils	accesses	Accesses

@@ -1,5 +1,3 @@
 [include "paging.ezt"]
 
-[include "sort.ezt"]
-
 [include "footer.ezt"]

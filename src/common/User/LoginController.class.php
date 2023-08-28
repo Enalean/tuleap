@@ -47,10 +47,6 @@ class User_LoginController extends MVC2_Controller
             }
             if ($user->getUnixUid() == 0) {
                 $user_manager->assignNextUnixUid($user);
-                if ($user->getStatus() == PFUser::STATUS_RESTRICTED) {
-                    // Set restricted shell for restricted users.
-                    $user->setShell(ForgeConfig::get('codendi_bin_prefix') . '/cvssh-restricted');
-                }
             }
             $user->setUnixStatus(PFUser::STATUS_ACTIVE);
             $user_manager->updateDb($user);

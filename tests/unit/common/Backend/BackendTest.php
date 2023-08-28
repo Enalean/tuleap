@@ -49,7 +49,6 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Core backends
         $this->assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
-        $this->assertInstanceOf(\BackendCVS::class, Backend::instance('CVS'));
         $this->assertInstanceOf(\Backend::class, Backend::instance(Backend::BACKEND));
         $this->assertInstanceOf(\BackendSystem::class, Backend::instance(Backend::SYSTEM));
         $this->assertInstanceOf(\BackendAliases::class, Backend::instance(Backend::ALIASES));

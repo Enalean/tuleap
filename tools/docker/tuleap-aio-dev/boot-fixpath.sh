@@ -11,7 +11,6 @@ set -x
 [ -f /etc/my.cnf ]                && rm -f /etc/my.cnf
 [ -f /etc/nsswitch.conf ]         && rm -f /etc/nsswitch.conf
 [ -d /etc/tuleap ]                && rm -rf /etc/tuleap
-[ -d /cvsroot ]                   && rm -f /cvsroot
 [ -d /svnroot ]                   && rm -f /svnroot
 [ -d /etc/httpd/conf ]            && rm -rf /etc/httpd/conf
 [ -d /etc/httpd/conf.d ]          && rm -rf /etc/httpd/conf.d
@@ -47,5 +46,4 @@ ln -s /data/home/groups groups
 cd /var/lib
 ln -s /data/lib/tuleap tuleap
 [ -d /data/lib/gitolite ] && ln -s /data/lib/gitolite gitolite
-ln -s /var/lib/tuleap/cvsroot /cvsroot
 ln -s /var/lib/tuleap/svnroot /svnroot

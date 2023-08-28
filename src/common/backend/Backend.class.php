@@ -32,12 +32,10 @@ class Backend
     public const LOG_ERROR   = \Psr\Log\LogLevel::ERROR;
     public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
-    public const SVN         = 'SVN';
-    private const CVS        = 'CVS';
-    public const MAILINGLIST = 'MailingList';
-    public const BACKEND     = 'Backend';
-    public const SYSTEM      = 'System';
-    public const ALIASES     = 'Aliases';
+    public const SVN     = 'SVN';
+    public const BACKEND = 'Backend';
+    public const SYSTEM  = 'System';
+    public const ALIASES = 'Aliases';
 
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
@@ -70,7 +68,7 @@ class Backend
      *
      * Let plugins propose their own backend. If none provided, use the default one.
      *
-     * @param string $type  SVN | CVS | MailingList | System | Backend | Aliases | plugin_git | ... Default is 'Backend' (itself)
+     * @param string $type  SVN | System | Backend | Aliases | plugin_git | ... Default is 'Backend' (itself)
      * @param string $base  The name of the base backend class. Useless for core backends, mandatory for plugin ones
      * @param array  $setup The parameters to setUp the plugin, if needed. Null if no parameters
      *
@@ -138,16 +136,6 @@ class Backend
     {
         $instance = self::instance(self::SVN);
         assert($instance instanceof BackendSVN);
-        return $instance;
-    }
-
-    /**
-     * Helper for static analysis
-     */
-    final public static function instanceCVS(): BackendCVS
-    {
-        $instance = self::instance(self::CVS);
-        assert($instance instanceof BackendCVS);
         return $instance;
     }
 

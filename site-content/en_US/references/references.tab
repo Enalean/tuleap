@@ -2,7 +2,7 @@
 #  *
 #  * Tracker scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -15,7 +15,6 @@ cross_ref_fact_include	references	References
 
 cross_ref_fact_include	artifact	Artifact
 cross_ref_fact_include	svn_revision	SVN Revision
-cross_ref_fact_include	cvs_commit	CVS Commit
 cross_ref_fact_include	legend	List of items referenced by or referencing this item.
 cross_ref_fact_include	legend_referenced_by	List of items referencing this item.
 cross_ref_fact_include	cross_referenced	Bidirectionnal References :

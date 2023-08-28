@@ -29,9 +29,6 @@ require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.ph
 
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 $pluginManager = PluginManager::instance();
 $p             = $pluginManager->getPluginByName('statistics');
@@ -97,15 +94,11 @@ if ($request->exist('export') && $startDate && $endDate) {
     $svn_log_dao       = new SVN_LogDao();
     $svn_retriever     = new SVNRetriever($disk_usage_dao);
     $svn_collector     = new SVNCollector($svn_log_dao, $svn_retriever);
-    $cvs_history_dao   = new FullHistoryDao();
-    $cvs_retriever     = new CVSRetriever($disk_usage_dao);
-    $cvs_collector     = new CVSCollector($cvs_history_dao, $cvs_retriever);
     $event_manager     = EventManager::instance();
 
     $disk_usage_manager = new Statistics_DiskUsageManager(
         $disk_usage_dao,
         $svn_collector,
-        $cvs_collector,
         $event_manager
     );
 

@@ -66,15 +66,6 @@ msgstr "Revenir à la liste des jobs"
 msgid "Build performed on:"
 msgstr "Build exécuté le :"
 
-msgid "CVS"
-msgstr "CVS"
-
-msgid "CVS commit will trigger a build"
-msgstr "Un commit CVS déclenchera un build"
-
-msgid "CVS trigger"
-msgstr "Evénement CVS"
-
 msgid "Continuous Integration"
 msgstr "Intégration Continue"
 

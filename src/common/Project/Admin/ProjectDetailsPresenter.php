@@ -70,7 +70,6 @@ class ProjectDetailsPresenter
     public $is_system;
     public $is_active;
     public $is_status_invalid;
-    public $is_suspended_status;
     public $plugin_suspended_and_not_blocked_warnings;
     /**
      * @var ProjectAccessPresenter
@@ -125,10 +124,9 @@ class ProjectDetailsPresenter
             ['project' => $project, 'links' => &$this->links]
         );
 
-        $this->status              = $this->getStatus($project);
-        $this->can_change_status   = $project->getStatus() === Project::STATUS_DELETED;
-        $this->is_suspended_status = $project->getStatus() === Project::STATUS_SUSPENDED;
-        $this->types               = $this->getTypes($project);
+        $this->status            = $this->getStatus($project);
+        $this->can_change_status = $project->getStatus() === Project::STATUS_DELETED;
+        $this->types             = $this->getTypes($project);
 
         $template_factory = TemplateFactory::build();
         $xml_template     = $template_factory->getTemplateForProject($project);

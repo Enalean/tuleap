@@ -71,13 +71,6 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
         $this->cleanRestrictedUsersIfNecessary($project);
 
-        if ($project->usesCVS()) {
-            if (! Backend::instanceCVS()->setCVSPrivacy($project, $project_is_private)) {
-                $this->error("Could not set cvs privacy for project $group_id");
-                return false;
-            }
-        }
-
         if ($project->usesSVN()) {
             $backendSVN = Backend::instanceSVN();
             if (! $backendSVN->setSVNPrivacy($project, $project_is_private)) {

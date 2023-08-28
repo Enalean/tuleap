@@ -133,8 +133,7 @@ class CSVBuilder
             );
         }
 
-        //CVS & SVN
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getCVSActivities(), "CVS activities");
+        //SVN
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getSVNActivities(), "SVN activities");
 
         //GIT

@@ -74,24 +74,6 @@ class BackendFactory
     }
 
     /**
-     * Return a BackendCVS instance
-     *
-     * Let plugins propose their own backend. If none provided, use the default one.
-     *
-     * @return BackendCVS
-     */
-    public static function getCVS()
-    {
-        $backend = null;
-        $params  = ['backend' => &$backend];
-        EventManager::instance()->processEvent('backend_factory_get_cvs', $params);
-        if ($backend === null) {
-            $backend = BackendCVS::instance();
-        }
-        return $backend;
-    }
-
-    /**
      * Return a BackendSVN instance
      *
      * Let plugins propose their own backend. If none provided, use the default one.

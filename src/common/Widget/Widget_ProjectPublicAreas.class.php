@@ -95,16 +95,6 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
             $html .= '</p>';
         }
 
-        // ######################### CVS (only for Active)
-
-        $cvs_service = $project->getService(Service::CVS);
-        if ($cvs_service !== null) {
-            $html .= '<p><a href="' . $purifier->purify($cvs_service->getUrl()) . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($cvs_service->getIcon()) . '"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
-            $html .= '</p>';
-        }
-
         // ######################### Subversion (only for Active)
 
         $svn_service = $project->getService(Service::SVN);

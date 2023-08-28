@@ -30,7 +30,6 @@ widget_description_project_description	description	Affiche la description du pro
 widget_description_project_latest_news	description	Affiche les dix dernières annonces publiées par les membres du projet.
 widget_description_project_public_areas	description	Affiche tous les services disponibles pour ce projet assortis d'informations complémentaires (comme par exemple le nombre d'artéfact ouvert ou fermé). <br>Le rôle de cette liste est quasiment identique à celui du menu principal du projet situé en haut de la page à savoir fournir un accès rapide à chacun des services du projet.
 widget_description_project_latest_svn_commits	description	Affiche  la liste des derniers commits SVN du projet.
-widget_description_project_latest_cvs_commits	description	Affiche  la liste des derniers commits CVS du projet.
 widget_description_project_svn_stats	description	Affiche les statistiques svn du projet par semaine.Le résultat s'affiche sous forme d'histogramme empilé.
 widget_description_project_contacts	description	Vous permet de contacter les administrateurs de projet
 

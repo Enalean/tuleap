@@ -36,7 +36,6 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         Service::HOMEPAGE,
         Service::FORUM,
         Service::NEWS,
-        Service::CVS,
         Service::FILE,
         Service::SVN,
         Service::WIKI,

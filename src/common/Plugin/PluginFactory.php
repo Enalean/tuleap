@@ -359,7 +359,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $plugins = [];
         $paths   = $this->getOfficialPluginPaths();
-        $exclude = ['.', '..', 'CVS', '.svn'];
+        $exclude = ['.', '..', '.svn'];
         foreach ($paths as $path) {
             if (! is_dir($path)) {
                 continue;

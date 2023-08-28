@@ -9,7 +9,6 @@ cross_ref_fact_include	references	Références
 
 cross_ref_fact_include	artifact	Artefact
 cross_ref_fact_include	svn_revision	Revision SVN
-cross_ref_fact_include	cvs_commit	Commit CVS
 cross_ref_fact_include	legend	Liste des objets étant référencés par cet objet ou le référençant.
 cross_ref_fact_include	legend_referenced_by	Liste des objets référençant cet objet.
 cross_ref_fact_include	cross_referenced	Références bidirectionnelles :

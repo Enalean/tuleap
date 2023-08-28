@@ -66,7 +66,6 @@ class SystemEventManager
             'project_admin_remove_user',
             'project_admin_activate_user',
             'project_admin_delete_user',
-            'cvs_is_private',
             'project_is_private',
             'project_admin_ugroup_creation',
             'project_admin_ugroup_edition',
@@ -250,14 +249,6 @@ class SystemEventManager
                     SystemEvent::TYPE_USER_RENAME,
                     $this->concatParameters($params, ['user_id', 'new_name', 'old_user']),
                     SystemEvent::PRIORITY_HIGH
-                );
-                break;
-            case 'cvs_is_private':
-                $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
-                $this->createEvent(
-                    SystemEvent::TYPE_CVS_IS_PRIVATE,
-                    $this->concatParameters($params, ['group_id', 'cvs_is_private']),
-                    SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
             case 'project_is_private':
@@ -486,7 +477,6 @@ class SystemEventManager
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:
             case SystemEvent::TYPE_USER_DELETE:
             case SystemEvent::TYPE_USER_RENAME:
-            case SystemEvent::TYPE_CVS_IS_PRIVATE:
             case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
             case SystemEvent::TYPE_ROOT_DAILY:
             case SystemEvent::TYPE_COMPUTE_MD5SUM:

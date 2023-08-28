@@ -43,7 +43,6 @@ use Widget_MyRss;
 use Widget_MySystemEvent;
 use Widget_ProjectDescription;
 use Widget_ProjectImageViewer;
-use Widget_ProjectLatestCvsCommits;
 use Widget_ProjectLatestFileReleases;
 use Widget_ProjectLatestSvnCommits;
 use Widget_ProjectPublicAreas;
@@ -154,9 +153,6 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
             case 'projectlatestsvncommits':
                 $widget = new Widget_ProjectLatestSvnCommits();
-                break;
-            case 'projectlatestcvscommits':
-                $widget = new Widget_ProjectLatestCvsCommits();
                 break;
             case 'projectimageviewer':
                 $widget = new Widget_ProjectImageViewer();

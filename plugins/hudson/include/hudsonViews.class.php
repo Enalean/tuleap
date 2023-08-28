@@ -260,7 +260,6 @@ class hudsonViews extends Views
                     $row['job_url'],
                     $row['name'],
                     $row['use_svn_trigger'],
-                    $row['use_cvs_trigger'],
                     $row['token'],
                     $row['svn_paths']
                 );
@@ -292,9 +291,6 @@ class hudsonViews extends Views
             if ($project->usesSVN()) {
                 echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'SVN trigger')) . '</th>';
             }
-            if ($project->usesCVS()) {
-                echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'CVS trigger')) . '</th>';
-            }
             if (! empty($services)) {
                 foreach ($services as $service) {
                     echo '  <th>' . $purifier->purify($service['title']) . '</th>';
@@ -322,7 +318,6 @@ class hudsonViews extends Views
                         'name'            => $row['name'],
                         'url'             => $row['job_url'],
                         'use_svn_trigger' => $row['use_svn_trigger'],
-                        'use_cvs_trigger' => $row['use_cvs_trigger'],
                     ];
                 } catch (HudsonJobURLMalformedException $ex) {
                     // Managed when a new job is added
@@ -361,13 +356,6 @@ class hudsonViews extends Views
                             echo '  <td>&nbsp;</td>';
                         }
                     }
-                    if ($project->usesCVS()) {
-                        if ($hudson_jobs_complementary_information[$job_id]['use_cvs_trigger'] == 1) {
-                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $purifier->purify(dgettext('tuleap-hudson', 'CVS commit will trigger a build')) . '" title="' . $purifier->purify(dgettext('tuleap-hudson', 'CVS commit will trigger a build')) . '"></td>';
-                        } else {
-                            echo '  <td>&nbsp;</td>';
-                        }
-                    }
                     if (! empty($services)) {
                         foreach ($services as $service) {
                             if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
@@ -386,9 +374,6 @@ class hudsonViews extends Views
                     echo '</td>';
                     $nb_columns = 3;
                     if ($project->usesSVN()) {
-                        $nb_columns++;
-                    }
-                    if ($project->usesCVS()) {
                         $nb_columns++;
                     }
 
@@ -442,7 +427,7 @@ class hudsonViews extends Views
         echo '<input class="btn btn-primary" value="' . dgettext('tuleap-hudson', 'Add job') . '" type="submit" onclick="toggle_addurlform(); return false;">';
         echo ' ' . $this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
-        $this->displayForm($project, $services, 'add', 'add', dgettext('tuleap-hudson', 'Submit'), null, null, null, null, null, null, '');
+        $this->displayForm($project, $services, 'add', 'add', dgettext('tuleap-hudson', 'Submit'), null, null, null, null, null, '');
         echo '</div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
@@ -457,7 +442,6 @@ class hudsonViews extends Views
         $job_url,
         $name,
         $use_svn_trigger,
-        $use_cvs_trigger,
         $token,
         $svn_paths,
     ) {
@@ -483,7 +467,7 @@ class hudsonViews extends Views
                         </div>
                     </div>';
         }
-        if ($project->usesSVN() || $project->usesCVS() || ! empty($services)) {
+        if ($project->usesSVN() || ! empty($services)) {
             echo '  <div class="control-group">
                         <label class="control-label" for="hudson_job_url">' . dgettext('tuleap-hudson', 'Trigger a build after commits:') . '</label>
                             <div class="controls">';
@@ -506,16 +490,6 @@ class hudsonViews extends Views
                         <p class="help">' . $purifier->purify(dgettext('tuleap-hudson', 'If empty, every commits will trigger a build.')) . '</p>
                       </div>
                     ';
-            }
-            if ($project->usesCVS()) {
-                $checked = '';
-                if ($use_cvs_trigger) {
-                    $checked = ' checked="checked" ';
-                }
-                echo '<label class="checkbox">
-                        <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" ' . $checked . '/>
-                        ' . $purifier->purify(dgettext('tuleap-hudson', 'CVS')) . '
-                        </label>';
             }
             foreach ($services as $service) {
                 echo $service[$add_or_edit . '_form'];

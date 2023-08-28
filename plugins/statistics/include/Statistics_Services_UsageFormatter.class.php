@@ -59,7 +59,7 @@ class Statistics_Services_UsageFormatter
     }
 
     /**
-     * Build CVS datas from SQL queries results to export them in a file
+     * Build CSV datas from SQL queries results to export them in a file
      * @param array|\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $query_result
      */
     public function buildDatas($query_result, string $title)

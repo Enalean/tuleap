@@ -36,7 +36,6 @@ widget_description_project_classification	description	Lists the categories of th
 widget_description_project_description	description	Allows you to view the project description.
 widget_description_project_latest_news	description	Lists the last 10 pieces of news posted by the project members.
 widget_description_project_public_areas	description	Lists all available services for this project along with some information next to it. Click on any of this item to access a service. <br>The role of this area is pretty much equivalent to the Project Main Menu at the top of the screen except that it shows additional information about each of the service (e.g. total number of open bugs, tasks, ...)
-widget_description_project_latest_cvs_commits	description	Lists the latest CVS commits of the project.
 widget_description_project_latest_svn_commits	description	Lists the latest SVN commits of the project.
 widget_description_project_svn_stats	description	Shows the svn statistics of the project by week.The result is shown on a bar chart.
 widget_description_project_contacts	description	Allows you to contact project administrators

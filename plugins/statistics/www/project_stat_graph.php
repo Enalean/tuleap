@@ -24,9 +24,6 @@ require_once __DIR__ . '/../include/Statistics_DiskUsageGraph.class.php';
 
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
@@ -50,17 +47,13 @@ if (! $user->isAdmin($groupId)) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$disk_usage_dao  = new Statistics_DiskUsageDao();
-$svn_log_dao     = new SVN_LogDao();
-$svn_retriever   = new SVNRetriever($disk_usage_dao);
-$svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
-$cvs_history_dao = new FullHistoryDao();
-$cvs_retriever   = new CVSRetriever($disk_usage_dao);
-$cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
-$duMgr           = new Statistics_DiskUsageManager(
+$disk_usage_dao = new Statistics_DiskUsageDao();
+$svn_log_dao    = new SVN_LogDao();
+$svn_retriever  = new SVNRetriever($disk_usage_dao);
+$svn_collector  = new SVNCollector($svn_log_dao, $svn_retriever);
+$duMgr          = new Statistics_DiskUsageManager(
     $disk_usage_dao,
     $svn_collector,
-    $cvs_collector,
     EventManager::instance()
 );
 

@@ -59,24 +59,18 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
             $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_svn');
             return \false;
         } else {
-            $backendCVS = $this->_getBackend('CVS');
-            if (! $backendCVS->isNameAvailable($val)) {
-                $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_cvs');
+            $backendSystem = $this->_getBackend('System');
+            if (! $backendSystem->isProjectNameAvailable($val)) {
+                $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_sys');
                 return \false;
             } else {
-                $backendSystem = $this->_getBackend('System');
-                if (! $backendSystem->isProjectNameAvailable($val)) {
-                    $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_sys');
+                $result = \true;
+                // Add Hook for plugins to check the name validity under plugins directories
+                $error = '';
+                $this->getEventManager()->processEvent('file_exists_in_data_dir', ['new_name' => $val, 'result' => &$result, 'error' => &$error]);
+                if ($result == \false) {
+                    $this->error = $error;
                     return \false;
-                } else {
-                    $result = \true;
-                    // Add Hook for plugins to check the name validity under plugins directories
-                    $error = '';
-                    $this->getEventManager()->processEvent('file_exists_in_data_dir', ['new_name' => $val, 'result' => &$result, 'error' => &$error]);
-                    if ($result == \false) {
-                        $this->error = $error;
-                        return \false;
-                    }
                 }
             }
         }

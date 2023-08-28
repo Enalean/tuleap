@@ -331,7 +331,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * - activate the same services (using the ame server id and options)
      * - send message to the project requested (pepend on template values)
      * - create forums with the same name and public status
-     * - copy CVS properties
      * - copy SVN settings and start .SVNAccessFile hisr=tiry
      * - add system references withut services
      * - copy ugroups and save mapping for further import
@@ -396,7 +395,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
         $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
         $this->initForumModuleFromTemplate($group_id, $template_group->getID());
-        $this->initCVSModuleFromTemplate($group_id, $template_group->getID());
 
         if ($legacy[Service::SVN] === true) {
             $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
@@ -478,7 +476,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'http_domain'         => "'" . db_es($http_domain) . "'",
             'status'              => "'P'",
             'unix_box'            => "'shell1'",
-            'cvs_box'             => "'cvs1'",
             'short_description'   => "'" . db_es($data->getShortDescription()) . "'",
             'register_time'       => time(),
             'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",
@@ -573,27 +570,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             if ($fid != -1) {
                 forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
             }
-        }
-    }
-
-    /**
-     * protected for testing purpose
-     */
-    protected function initCVSModuleFromTemplate($group_id, $template_id)
-    {
-        $sql    = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM `groups` WHERE group_id=" . db_ei($template_id);
-        $result = db_query($sql);
-        $arr    = db_fetch_array($result);
-        $query  = "UPDATE `groups`
-                  SET cvs_tracker='" . db_ei($arr['cvs_tracker']) . "',
-                      cvs_watch_mode='" . db_ei($arr['cvs_watch_mode']) . "' ,
-                      cvs_preamble='" . db_escape_string($arr['cvs_preamble']) . "',
-                      cvs_is_private = " . db_escape_int($arr['cvs_is_private']) . "
-                  WHERE group_id = '" . db_ei($group_id) . "'";
-
-        $result = db_query($query);
-        if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_cvs_infos'));
         }
     }
 

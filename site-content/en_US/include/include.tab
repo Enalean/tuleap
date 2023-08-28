@@ -25,11 +25,9 @@ include_account	illegal_char	Illegal character in name.
 include_account	name_too_short	Name is too short. It must be at least 3 characters.
 include_account	name_too_long	Name is too long. It must be less than $1 characters.
 include_account	reserved	Name is reserved.
-include_account	reserved_cvs	Name is reserved for CVS.
 include_account	reserved_dns	Name is reserved for DNS purposes.
 include_account	dns_error	Short name cannot contain underscore or dot.
 include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name
-include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name
 include_account	used_by_sys	This short name is not available: A home project already exists with this name
 #
 #-----------------------------------------------
@@ -180,7 +178,6 @@ include_project_home	proj_task_man	Project/Task Manager
 include_project_home	no_public_proj	There are no public projects available
 include_project_home	wiki	Wiki
 include_project_home	nb_wiki_pages	<B>$1</B> pages
-include_project_home	cvs_repo	CVS Repository
 include_project_home	svn_repo	Subversion Repository
 include_project_home	browse_svn	Browse Subversion
 include_project_home	accesses	<B>$1</B> accesses
@@ -194,7 +191,6 @@ include_project_home	latest_news	Latest News
 include_project_home	start_monitoring	Monitor this package
 include_project_home	stop_monitoring	Stop monitoring this package
 include_project_home	latest_svn_commit	Latest SVN Commits
-include_project_home	latest_cvs_commit	Latest CVS Commit
 include_project_home	contact_admins	Contact project administrators
 
 contact_admins	title	Contact administrators of project $1

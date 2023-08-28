@@ -24,7 +24,6 @@ namespace Tuleap\Reference\ByNature;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
@@ -40,10 +39,6 @@ class CrossReferenceByNatureInCoreOrganizerTest extends \Tuleap\Test\PHPUnit\Tes
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceWikiOrganizer
      */
     private $wiki_organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceCvsOrganizer
-     */
-    private $cvs_organizer;
     /**
      * @var CrossReferenceByNatureInCoreOrganizer
      */
@@ -69,14 +64,12 @@ class CrossReferenceByNatureInCoreOrganizerTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $this->by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
         $this->wiki_organizer      = Mockery::mock(CrossReferenceWikiOrganizer::class);
-        $this->cvs_organizer       = Mockery::mock(CrossReferenceCvsOrganizer::class);
         $this->frs_organizer       = Mockery::mock(CrossReferenceFRSOrganizer::class);
         $this->forum_organizer     = Mockery::mock(CrossReferenceForumOrganizer::class);
         $this->news_organizer      = Mockery::mock(CrossReferenceNewsOrganizer::class);
 
         $this->core_organizer = new CrossReferenceByNatureInCoreOrganizer(
             $this->wiki_organizer,
-            $this->cvs_organizer,
             $this->frs_organizer,
             $this->forum_organizer,
             $this->news_organizer
@@ -99,27 +92,6 @@ class CrossReferenceByNatureInCoreOrganizerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->wiki_organizer
             ->shouldReceive('organizeWikiReference')
             ->with($wiki_ref, $this->by_nature_organizer)
-            ->once();
-
-        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
-    }
-
-    public function testItOrganizeCvsReferences(): void
-    {
-        $cvs_ref = CrossReferencePresenterBuilder::get(1)->withType('cvs_commit')->build();
-
-        $this->by_nature_organizer->shouldReceive(
-            [
-                'getCrossReferencePresenters' => [
-                    CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                    $cvs_ref,
-                ],
-            ]
-        );
-
-        $this->cvs_organizer
-            ->shouldReceive('organizeCvsReference')
-            ->with($cvs_ref, $this->by_nature_organizer)
             ->once();
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);

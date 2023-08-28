@@ -57,16 +57,6 @@
                           <a href="[entries.diff_to_prev_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Previous [entries.prev]</a>
                         [end]
 
-                        [is roottype "cvs"]
-                          [if-any entries.branch_point]
-                            <a href="[entries.diff_to_branch_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Branch point [entries.branch_point]</a>
-                          [end]
-
-                          [if-any entries.next_main]
-                            <a href="[entries.diff_to_main_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Next main [entries.next_main]</a>
-                          [end]
-                        [end]
-
                         [if-any entries.diff_to_sel_href]
                           <a href="[entries.diff_to_sel_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Selected [rev_selected]</a>
                         [end]
@@ -133,15 +123,6 @@
             </span>
         [end]
 
-        [if-any entries.tags]
-            <span class="log-revision-footer-entry">
-                <span class="log-revision-footer-entry-label">CVS Tags:</span>
-                [for entries.tags]
-                  <a href="[entries.tags.href]">[entries.tags.name]</a>[if-index entries.tags last][else],[end]
-                [end]
-            </span>
-        [end]
-
         [if-any entries.branch_points]
             <span class="log-revision-footer-entry">
                 <span class="log-revision-footer-entry-label">Branch point for:</span>
@@ -149,16 +130,6 @@
                   <a href="[entries.branch_points.href]">[entries.branch_points.name]</a>[if-index entries.branch_points last][else],[end]
                 [end]
             </span>
-        [end]
-
-        [if-any entries.prev]
-            [if-any entries.changed]
-                [is roottype "cvs"]
-                    <span class="log-revision-footer-entry">
-                        <span class="log-revision-footer-entry-label">Changes since [entries.prev]:</span> [entries.changed] lines
-                    </span>
-                [end]
-            [end]
         [end]
     </div>
 </div>

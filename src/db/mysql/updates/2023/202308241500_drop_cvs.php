@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,35 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// stylelint-disable selector-no-qualifying-type
-body.cvs-body .main .content {
-    padding: 0;
-}
-// stylelint-enable
+declare(strict_types=1);
 
-.cvs-header {
-    background: var(--tlp-background-color);
-
-    > .administration-title {
-        margin: 0;
-        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 30px;
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202308241500_drop_cvs extends \Tuleap\ForgeUpgrade\Bucket
+{
+    public function description(): string
+    {
+        return 'Remove restrictions on CVS DB columns';
     }
 
-    > .main-project-tabs > .nav-tabs {
-        margin: 0;
+    public function up(): void
+    {
+        $this->api->dbh->exec('ALTER TABLE `groups` MODIFY COLUMN cvs_preamble TEXT');
+        $this->api->dbh->exec('ALTER TABLE `groups` MODIFY COLUMN cvs_events_mailing_list TEXT');
     }
-}
-
-.cvs-alert-warning {
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
-}
-
-.cvs-intro {
-    padding: var(--tlp-medium-spacing);
-}
-
-.cvs-commit,
-.cvs-commits,
-.cvs-admin {
-    padding: 0 var(--tlp-medium-spacing);
 }

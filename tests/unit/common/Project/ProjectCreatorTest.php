@@ -239,7 +239,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
         $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
         $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
         $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
@@ -295,7 +294,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
         $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
         $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
         $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();

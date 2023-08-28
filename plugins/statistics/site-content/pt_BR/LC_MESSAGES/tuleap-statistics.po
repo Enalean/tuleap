@@ -333,22 +333,10 @@ msgstr ""
 msgid "Top users (number of commits)"
 msgstr ""
 
-msgid "Total number of CVS commits"
-msgstr ""
-
-msgid "Total number of CVS read access"
-msgstr ""
-
 msgid "Total number of SVN commits"
 msgstr ""
 
 msgid "Total number of SVN read access"
-msgstr ""
-
-msgid "Total number of projects with CVS commits"
-msgstr ""
-
-msgid "Total number of projects with CVS read access"
 msgstr ""
 
 msgid "Total number of projects with SVN commits"
@@ -358,12 +346,6 @@ msgid "Total number of projects with SVN read access"
 msgstr ""
 
 msgid "Total number of repositories containing commits"
-msgstr ""
-
-msgid "Total number of users with CVS commits"
-msgstr ""
-
-msgid "Total number of users with CVS read access"
 msgstr ""
 
 msgid "Total number of users with SVN commits"

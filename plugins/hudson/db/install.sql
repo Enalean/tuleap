@@ -5,7 +5,6 @@ CREATE TABLE plugin_hudson_job (
   job_url varchar(255) NOT NULL ,
   name varchar(128) NOT NULL ,
   use_svn_trigger tinyint(4) NOT NULL default 0 ,
-  use_cvs_trigger tinyint(4) NOT NULL default 0 ,
   token varchar(128) NOT NULL ,
   svn_paths TEXT NOT NULL,
   INDEX idx_group_id(group_id)
@@ -33,33 +32,33 @@ WHERE group_id NOT IN (SELECT group_id
     LIKE 'hudson');
 
 -- Create references and add them into every project
-INSERT INTO reference SET 
-    keyword='job', 
-    description='plugin_hudson:reference_job_desc_key', 
-    link='/plugins/hudson/?group_id=$group_id&action=view_job&job=$1', 
-    scope='S', 
+INSERT INTO reference SET
+    keyword='job',
+    description='plugin_hudson:reference_job_desc_key',
+    link='/plugins/hudson/?group_id=$group_id&action=view_job&job=$1',
+    scope='S',
     service_short_name='hudson',
     nature='hudson_job';
 INSERT INTO reference_group (reference_id, group_id, is_active)
 SELECT last_insert_id, group_id, 1
 FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, `groups`;
-    
-INSERT INTO reference SET 
-    keyword='build', 
-    description='plugin_hudson:reference_build_desc_key', 
-    link='/plugins/hudson/?group_id=$group_id&action=view_build&job=$1&build=$2', 
-    scope='S', 
+
+INSERT INTO reference SET
+    keyword='build',
+    description='plugin_hudson:reference_build_desc_key',
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&job=$1&build=$2',
+    scope='S',
     service_short_name='hudson',
     nature='hudson_build';
 INSERT INTO reference_group (reference_id, group_id, is_active)
 SELECT last_insert_id, group_id, 1
 FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, `groups`;
 
-INSERT INTO reference SET 
-    keyword='build', 
-    description='plugin_hudson:reference_build_desc_key', 
-    link='/plugins/hudson/?group_id=$group_id&action=view_build&build=$1', 
-    scope='S', 
+INSERT INTO reference SET
+    keyword='build',
+    description='plugin_hudson:reference_build_desc_key',
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&build=$1',
+    scope='S',
     service_short_name='hudson',
     nature='hudson_build';
 INSERT INTO reference_group (reference_id, group_id, is_active)

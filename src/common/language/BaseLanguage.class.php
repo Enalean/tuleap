@@ -169,7 +169,6 @@ class BaseLanguage
                     && $file != '.'
                     && $file != '..'
                     && $file != '.svn'
-                    && $file != 'CVS'
                 ) {
                     $location = $basedir . '/' . $file . '/site-content/' . $lang;
                     if (is_dir($location)) {
@@ -196,7 +195,6 @@ class BaseLanguage
                        && $file != '.'
                        && $file != '..'
                        && $file != '.svn'
-                       && $file != 'CVS'
                 ) {
                     $this->loadAllTabFiles($basedir . '/' . $file, $text_array);
                 }

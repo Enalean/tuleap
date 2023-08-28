@@ -6,7 +6,7 @@ Name:           viewvc-tuleap
 Conflicts:      viewvc
 Version:        1.3.0
 Release:	    1%{?nixpkgs_epoch}%{?dist}
-Summary:        Browser interface for CVS and SVN version control repositories
+Summary:        Browser interface for SVN version control repositories
 
 Group:          Development/Tools
 License:        BSD
@@ -25,7 +25,7 @@ Requires:       python3-chardet
 Requires:       python3-pygments
 
 %description
-ViewVC is a browser interface for CVS and Subversion version control
+ViewVC is a browser interface for Subversion version control
 repositories. It generates templatized HTML to present navigable directory,
 revision, and change log listings. It can display specific versions of files
 as well as diffs between those versions. Basically, ViewVC provides the bulk

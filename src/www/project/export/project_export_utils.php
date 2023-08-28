@@ -253,7 +253,7 @@ function prepare_access_logs_record($group_id, &$record)
     } else {
         $record['user'] = 'N/A';
     }
-    //for cvs & svn access logs
+    //for svn access logs
     if (isset($record['day'])) {
         $day           = $record['day'];
         $record['day'] = substr($day, 0, 4) . "-" . substr($day, 4, 2) . "-" . substr($day, 6, 2);

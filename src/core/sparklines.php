@@ -69,7 +69,6 @@ if (is_array($sparkline_urls)) {
                 switch ($ref->getServiceShortName()) {
                     case 'tracker':
                     case 'svn':
-                    case 'cvs':
                     case 'file':
                         break;
 

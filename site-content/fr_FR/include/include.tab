@@ -18,11 +18,9 @@ include_account	illegal_char	Caractère non autorisé dans le nom.
 include_account	name_too_short	Le nom est trop court. Il doit comporter au moins 3 caractères.
 include_account	name_too_long	Le nom est trop long. Il doit comporter au plus $1 caractères.
 include_account	reserved	Le nom est réservé.
-include_account	reserved_cvs	Le nom est réservé pour CVS.
 include_account	reserved_dns	Le nom est réservé pour le DNS.
 include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés ou de points.
 include_account	used_by_svn	Ce nom n'est pas disponible : Un répertoire SVN existe déjà avec ce nom.
-include_account	used_by_cvs	Ce nom n'est pas disponible : Un répertoire CVS existe déjà avec ce nom.
 include_account	used_by_sys	Ce nom n'est pas disponible : Un home projet  existe déjà avec ce nom.
 
 #
@@ -174,7 +172,6 @@ include_project_home	proj_task_man	Gestionnaire de projet/tâches
 include_project_home	no_public_proj	Aucun projet public disponible
 include_project_home	wiki	Wiki
 include_project_home	nb_wiki_pages	<B>$1</B> pages
-include_project_home	cvs_repo	Dépôt CVS
 include_project_home	svn_repo	Dépôt Subversion
 include_project_home	browse_svn	Parcourir l'arbre Subversion
 include_project_home	accesses	<B>$1</B> accès
@@ -188,7 +185,6 @@ include_project_home	latest_news	Dernières annonces
 include_project_home	start_monitoring	Surveiller ce paquet
 include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
 include_project_home	latest_svn_commit	Derniers commits SVN
-include_project_home	latest_cvs_commit	Derniers commits CVS
 include_project_home	contact_admins	Contacter les administrateurs de projet
 
 contact_admins	title	Contacter les administrateurs du projet $1

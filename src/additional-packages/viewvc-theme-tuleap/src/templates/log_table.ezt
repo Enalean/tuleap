@@ -9,9 +9,6 @@
   [is pathtype "file"]
   <th class="vc_header">Diffs</th>
   [end]
-  [is roottype "cvs"]
-  <th class="vc_header">Branches/<br />Tags</th>
-  [end]
   <th class="vc_header[is logsort "date"]_sort[end]">Age</th>
   <th class="vc_header">Author</th>
 </tr>
@@ -75,53 +72,6 @@
       [end]
       </td>
     [end]
-    [is roottype "cvs"]
-    <td>
-      [# Branches column]
-      [if-any entries.vendor_branch]
-        <em>vendor branch</em><br />
-      [end]
-      [if-any entries.branches]
-        [for entries.branches]
-          <a href="[entries.branches.href]"><strong>[entries.branches.name]</strong></a><br />
-        [end]
-      [end]
-      [if-any entries.branch_points]
-        Branch point for:
-        [for entries.branch_points]
-          <a href="[entries.branch_points.href]"><strong>[entries.branch_points.name]</strong></a><br />
-        [end]
-      [end]
-      [if-any entries.next_main]
-        <a href="[entries.diff_to_main_href]"><strong>Diff&nbsp;to&nbsp;next&nbsp;MAIN&nbsp;[entries.next_main]</strong></a>
-        [if-any human_readable]
-        [else]
-          (<a href="[entries.diff_to_main_href]&amp;diff_format=h"><strong>colored</strong></a>)
-        [end]<br />
-      [end]
-      [if-any entries.branch_point]
-        <a href="[entries.diff_to_branch_href]"><strong>Diff&nbsp;to&nbsp;branch&nbsp;point&nbsp;[entries.branch_point]</strong></a>
-        [if-any human_readable]
-        [else]
-          (<a href="[entries.diff_to_branch_href]&amp;diff_format=h"><strong>colored</strong></a>)
-        [end]<br />
-      [end]
-
-      [# Tags ]
-      [if-any entries.tags]
-        <form method=get action="[pathrev_action]" >
-          [for pathrev_hidden_values]<input type="hidden" name="[pathrev_hidden_values.name]" value="[pathrev_hidden_values.value]"/>[end]
-          <select name="pathrev" onChange="submit()">
-          <option value="" [is pathrev ""]selected[end]>Show all tags</option>
-          [for entries.tags]
-            <option [is pathrev entries.tags.name]selected[end]>[entries.tags.name]</option>
-          [end]
-          </select>
-        </form>
-      [else]&nbsp;
-      [end]
-    </td>
-    [end]
 
     [# Time column]
     <td>
@@ -130,13 +80,6 @@
       [end]
       [if-any entries.ago][entries.ago] ago<br />[end]
       [if-any entries.date]<em>[entries.date]</em>[end]
-      [is roottype "cvs"]
-        [if-any entries.prev]
-          [if-any entries.changed]
-            <br />Changes since <strong>[entries.prev]: [entries.changed] lines</strong>
-          [end]
-        [end]
-      [end]
     </td>
 
     [# Author column]
