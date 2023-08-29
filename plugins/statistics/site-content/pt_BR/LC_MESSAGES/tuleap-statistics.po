@@ -165,19 +165,7 @@ msgstr "Nome"
 msgid "No data to display"
 msgstr ""
 
-msgid "No matching data for this user"
-msgstr ""
-
-msgid "No matching user data"
-msgstr ""
-
 msgid "No motivation"
-msgstr ""
-
-msgid "No user selected"
-msgstr ""
-
-msgid "One user details"
 msgstr ""
 
 msgid "Opened Artifacts (V3)"
@@ -318,9 +306,6 @@ msgstr ""
 msgid "This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota."
 msgstr ""
 
-msgid "Top 10 users"
-msgstr ""
-
 msgid "Top projects"
 msgstr ""
 
@@ -376,14 +361,8 @@ msgstr ""
 msgid "Used proportion"
 msgstr ""
 
-msgid "User"
-msgstr ""
-
 msgid "User consumption over time"
 msgstr ""
-
-msgid "User statistics"
-msgstr "Estatísticas de usuários"
 
 msgid "Users"
 msgstr "Usuários"

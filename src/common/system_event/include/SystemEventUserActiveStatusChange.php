@@ -22,13 +22,11 @@
 
 namespace Tuleap\SystemEvent;
 
-use Backend;
 use ForgeConfig;
 use PFUser;
 use Project;
 use SystemEvent;
 use Tuleap\Project\UserRemover;
-use Tuleap\User\UnixUserChecker;
 use UserGroupDao;
 use UserManager;
 
@@ -82,31 +80,10 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
         $user    = $this->user_manager->getUserById($user_id);
         if ($user && ! $user->isAnonymous()) {
             $this->cleanRestrictedUserFromProjectMembershipIfNecessary($user);
-            if ($this->createUser($user)) {
-                $this->done();
-                return true;
-            } else {
-                $message = "Could not create user home " . $user->getUserName() . " id: " . $user->getId();
-                if (! UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user->getUserName())) {
-                    $message .= ". The login is numeric, this is not compatible with unix users.";
-                }
-                $this->error($message);
-                return false;
-            }
-        } else {
-            return $this->setErrorBadParam();
+            $this->done();
+            return true;
         }
-    }
-
-    /**
-     * Perform user creation on system
-     */
-    private function createUser(PFUser $user): bool
-    {
-        $system_backend = Backend::instance('System');
-        \assert($system_backend instanceof \BackendSystem);
-        $system_backend->flushNscdAndFsCache();
-        return $system_backend->createUserHome($user);
+        return $this->setErrorBadParam();
     }
 
     private function cleanRestrictedUserFromProjectMembershipIfNecessary(PFUser $user): void

@@ -95,8 +95,6 @@ final class SetupTuleapCommandTest extends TestCase
         self::assertEquals('"Tuleap" <noreply@tuleap.example.com>', $sys_noreply);
         self::assertEquals('Tuleap', $sys_org_name);
         self::assertEquals('Tuleap', $sys_long_org_name);
-        self::assertSame('', $homedir_prefix);
-        self::assertSame('', $grpdir_prefix);
         self::assertSame('0', $sys_mail_secure_mode);
         self::assertSame('1', $sys_disable_subdomains);
     }

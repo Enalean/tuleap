@@ -38,17 +38,12 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
 
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
-
         $sm = \Mockery::spy(\SystemEventManager::class);
         $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
 
         $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->shouldReceive('_getUserManager')->andReturns($um);
         $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
         self::assertTrue($r->isValid("user"));
@@ -66,8 +61,6 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
 
         $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
 
         $sm = \Mockery::spy(\SystemEventManager::class);
         $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
@@ -90,10 +83,6 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProjectByUnixName')->with('user')->andReturns($p);
 
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
-
         $sm = \Mockery::spy(\SystemEventManager::class);
         $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
 
@@ -113,123 +102,14 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
 
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
-
         $sm = \Mockery::spy(\SystemEventManager::class);
         $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
 
         $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->shouldReceive('_getUserManager')->andReturns($um);
         $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
         self::assertFalse($r->isValid("user name"));
-    }
-
-    public function testUnixUserExistsWhenUnixUsersEnabled(): void
-    {
-        ForgeConfig::set("homedir_prefix", "/home/users");
-
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
-
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(true);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
-
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
-
-        self::assertFalse($r->isValid("user"));
-    }
-
-    public function testItDontCheckIfUnixUserExistsWhenUnixUsersDisabled(): void
-    {
-        ForgeConfig::set("homedir_prefix", "");
-
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
-
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->never();
-        $backend->shouldReceive('unixGroupExists')->never();
-
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
-
-        self::assertTrue($r->isValid("user"));
-    }
-
-    public function testUnixGroupExistsWhenUnixUsersEnabled(): void
-    {
-        ForgeConfig::set("homedir_prefix", "/home/users");
-
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
-
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(true);
-
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
-
-        self::assertFalse($r->isValid("user"));
-    }
-
-    public function testItDontCheckIfUnixGroupExistsWhenUnixUsersDisabled(): void
-    {
-        ForgeConfig::set("homedir_prefix", "");
-
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
-
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->never();
-        $backend->shouldReceive('unixGroupExists')->never();
-
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
-
-        self::assertTrue($r->isValid("user"));
     }
 }

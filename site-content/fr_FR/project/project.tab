@@ -223,7 +223,6 @@ project_admin_utils	deleted	Détruit
 project_admin_utils	is_public	Public
 project_admin_utils	type	Type
 project_admin_utils	http_domain	Domaine http
-project_admin_utils	unix_box	Serveur Unix
 project_admin_utils	feedback_history	Historique du retour d'information
 project_admin_utils	changed_personal_email_notif	Modification de la configuration de la notification e-mail personnelle
 project_admin_utils	changed_bts_form_message	Modification du message du formulaire du BTS

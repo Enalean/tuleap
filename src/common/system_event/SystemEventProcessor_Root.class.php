@@ -89,13 +89,6 @@ class SystemEventProcessor_Root extends SystemEventProcessor
             $this->generator->generate();
         }
 
-        // Update system user and group caches once everything else is processed
-        if ($this->backend_system->getNeedRefreshUserCache()) {
-            $this->backend_system->refreshUserCache();
-        }
-        if ($this->backend_system->getNeedRefreshGroupCache()) {
-            $this->backend_system->refreshGroupCache();
-        }
         $this->triggerApplicationOwnerEventsProcessing();
     }
 

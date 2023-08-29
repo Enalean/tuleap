@@ -21,22 +21,13 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
     use GlobalSVNPollution;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        ForgeConfig::set('grpdir_prefix', vfsStream::setup()->url());
-    }
 
     /**
      * Rename project 142 'TestProj' in 'FooBar'
@@ -79,14 +70,9 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('isProjectNameAvailable')->andReturns(true);
-        $backendSystem->shouldReceive('renameProjectHomeDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         //DB
@@ -141,12 +127,8 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
-        // Project Home
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->once()->andReturns(false);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->never();
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
 
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
@@ -204,10 +186,7 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // Project Home
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->once()->andReturns(false);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->never();
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
 
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
@@ -225,70 +204,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->shouldReceive('done')->never();
 
         $this->assertFalse($evt->process());
-    }
-
-    public function testRenameHomeRepositoryFailure(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
-
-        // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('isProjectNameAvailable')->andReturns(true);
-        $backendSystem->shouldReceive('renameProjectHomeDirectory')->with($project, 'FooBar')->once()->andReturns(false);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->never();
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-
-        // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
-
-        // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
-
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
-
-        // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
-
-        $this->assertFalse($evt->process());
-
-        // Check errors
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/Could not rename project home/i', $evt->getLog());
     }
 
     public function testRenameFRSRepositoryFailure(): void
@@ -326,10 +241,8 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(false);
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
 
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
@@ -351,69 +264,6 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
         $this->assertMatchesRegularExpression('/Could not rename FRS repository/i', $evt->getLog());
-    }
-
-    public function testRenameFTPRepositoryFailure(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
-
-        // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
-
-        //FRS
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(false);
-
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-
-        // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
-
-        // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
-
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
-
-        // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
-
-        $this->assertFalse($evt->process());
-
-        // Check errors
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/Could not rename FTP repository/i', $evt->getLog());
     }
 
     public function testRenameDBUpdateFailure(): void
@@ -451,11 +301,9 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
 
         //FRS
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->andReturns(true);
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->with($project, 'FooBar')->once()->andReturns(true);
 
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
@@ -511,13 +359,9 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(false);
 
         //FRS
         $backendSystem->shouldReceive('renameFileReleasedDirectory')->andReturns(true);
-
-        // FTP
-        $backendSystem->shouldReceive('renameAnonFtpDirectory')->andReturns(true);
 
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 

@@ -270,7 +270,6 @@ class LDAP_UserManager
         // Default LDAP
         $user->setStatus($this->getLdap()->getLDAPParam('default_user_status'));
         $user->setRegisterPurpose('LDAP');
-        $user->setUnixStatus('S');
         $user->setTimezone('UTC');
         $user->setLanguageID(ForgeConfig::get(BaseLanguage::CONFIG_KEY, BaseLanguage::DEFAULT_LANG));
 

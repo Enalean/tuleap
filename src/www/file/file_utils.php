@@ -423,7 +423,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $script  .= "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     $script  .= "var refresh_files_list = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'refresh_file_list'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     $script  .= "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var ftp_scp_upload_enabled = " . (ForgeConfig::areUnixGroupsAvailableOnSystem() ? 'true' : 'false') . ";";
 
     if ($is_update) {
         $pm  = PermissionsManager::instance();
@@ -633,13 +632,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 </table>
                 <?php
                 echo '<span class="small" style="color:#666"><i>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_msg', formatByteToMb(ForgeConfig::get('sys_max_size_upload')))) . '</i> </span>';
-
-                if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
-                          echo '<div id=\'files_help\'><span class="smaller">';
-
-                          include($GLOBALS['Language']->getContent('file/qrs_attach_file'));
-                          echo '</span></div>';
-                }
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(
                     ForgeConfig::get('codendi_dir') . '/src/templates/frs/'

@@ -164,7 +164,6 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
 
         $backendSystem = $this->createMock(\BackendSystem::class);
-        $backendSystem->method('isProjectNameAvailable')->with('foobar')->willReturn(true);
 
         $r->method('_getBackend')->willReturnMap(
             [
@@ -184,26 +183,6 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $backendSVN = $this->createMock(\BackendSVN::class);
         $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(false);
         $r->method('_getBackend')->with('SVN')->willReturn($backendSVN);
-
-        $this->assertFalse($r->isNameAvailable('foobar'));
-    }
-
-    public function testIsNameAvailableSystemFailure(): void
-    {
-        $r = $this->createPartialMock(\Rule_ProjectName::class, ['_getBackend']);
-
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
-
-        $backendSystem = $this->createMock(\BackendSystem::class);
-        $backendSystem->method('isProjectNameAvailable')->with('foobar')->willReturn(false);
-
-        $r->method('_getBackend')->willReturnMap(
-            [
-                ['SVN', $backendSVN],
-                ['System', $backendSystem],
-            ]
-        );
 
         $this->assertFalse($r->isNameAvailable('foobar'));
     }

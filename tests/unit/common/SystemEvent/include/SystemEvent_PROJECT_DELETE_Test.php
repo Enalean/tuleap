@@ -19,8 +19,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
@@ -31,14 +29,7 @@ use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
     use GlobalSVNPollution;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        ForgeConfig::set('grpdir_prefix', vfsStream::setup()->url());
-    }
 
     /**
      * Project delete Users fail
@@ -92,10 +83,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -171,10 +158,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -249,10 +232,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -328,10 +307,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -348,164 +323,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         $evt->shouldReceive('done')->never();
         $evt->shouldReceive('error')->with("Could not mark all trackers as deleted")->once();
-
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
-
-        // Launch the event
-        $this->assertFalse($evt->process());
-    }
-
-    /**
-     * Project delete Home fail
-     *
-     * @return Void
-     */
-    public function testProjectDeleteProjectHomeFail(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
-
-        // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
-
-        //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
-
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
-
-        //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
-
-        //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
-
-        //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
-
-        // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(false);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->never();
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-
-        // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
-
-        // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not archive project home")->once();
-
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
-
-        // Launch the event
-        $this->assertFalse($evt->process());
-    }
-
-    /**
-     * Project delete Public FTP fail
-     *
-     * @return Void
-     */
-    public function testProjectDeletePublicFtpFail(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
-
-        // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
-
-        //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
-
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
-
-        //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
-
-        //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
-
-        //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
-
-        // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(false);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-
-        // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
-
-        // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
-
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not archive project public ftp")->once();
 
         $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
 
@@ -565,10 +382,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -644,10 +457,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -723,10 +532,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments
@@ -802,10 +607,6 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // System
         $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('projectHomeExists')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectHome')->andReturns(true);
-        $backendSystem->shouldReceive('archiveProjectFtp')->andReturns(true);
-        $backendSystem->shouldReceive('setNeedRefreshGroupCache')->once();
         $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
 
         // Wiki attachments

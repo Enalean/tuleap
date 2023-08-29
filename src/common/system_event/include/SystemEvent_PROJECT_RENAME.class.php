@@ -84,28 +84,6 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
 
             // Rename system home/groups
             $backendSystem = $this->getBackend('System');
-            if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
-                if ($backendSystem->projectHomeExists($project)) {
-                    if ($backendSystem->isProjectNameAvailable($new_name)) {
-                        if (! $backendSystem->renameProjectHomeDirectory($project, $new_name)) {
-                            $this->error("Could not rename project home");
-                            $renameState = $renameState & false;
-                        } else {
-                            // Need to update system group cache
-                            $backendSystem->setNeedRefreshGroupCache();
-                        }
-                    } else {
-                        $this->error('Could not rename project home: Name ' . $new_name . ' not available');
-                        $renameState = $renameState & false;
-                    }
-                }
-
-                // Rename system FTP pub
-                if (! $backendSystem->renameAnonFtpDirectory($project, $new_name)) {
-                    $this->error('Could not rename FTP repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
-                    $renameState = $renameState & false;
-                }
-            }
 
             // Rename system FRS
             if (! $backendSystem->renameFileReleasedDirectory($project, $new_name)) {

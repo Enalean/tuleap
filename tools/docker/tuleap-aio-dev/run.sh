@@ -34,10 +34,6 @@ fi
 # Align data ownership with images uids/gids
 /usr/share/tuleap/tools/docker/tuleap-aio/fix-owners.sh
 
-# Update DB location
-[ -f /etc/libnss-mysql.cfg ] && sed -i "s/^host.*/host db/" /etc/libnss-mysql.cfg
-sed -i "s/^\$sys_dbhost.*/\$sys_dbhost=\"db\";/" /etc/tuleap/conf/database.inc
-
 # Update LDAP location
 sed -i "s/^\$sys_ldap_server.*/\$sys_ldap_server = \"ldap:\/\/ldap\";/" /etc/tuleap/plugins/ldap/etc/ldap.inc
 sed -i "s/^\$sys_ldap_write_server.*/\$sys_ldap_write_server = \"ldap:\/\/ldap\";/" /etc/tuleap/plugins/ldap/etc/ldap.inc

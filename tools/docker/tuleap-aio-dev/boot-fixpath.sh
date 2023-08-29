@@ -6,10 +6,7 @@ set -x
 [ -f /etc/aliases ]               && rm -f /etc/aliases
 [ -f /etc/aliases.codendi ]       && rm -f /etc/aliases.codendi
 [ -f /etc/logrotate.d/httpd ]     && rm -f /etc/logrotate.d/httpd
-[ -f /etc/libnss-mysql-root.cfg ] && rm -f /etc/libnss-mysql-root.cfg
-[ -f /etc/libnss-mysql.cfg ]      && rm -f /etc/libnss-mysql.cfg
 [ -f /etc/my.cnf ]                && rm -f /etc/my.cnf
-[ -f /etc/nsswitch.conf ]         && rm -f /etc/nsswitch.conf
 [ -d /etc/tuleap ]                && rm -rf /etc/tuleap
 [ -d /svnroot ]                   && rm -f /svnroot
 [ -d /etc/httpd/conf ]            && rm -rf /etc/httpd/conf
@@ -26,10 +23,7 @@ cd /etc
 ln -s /data/etc/tuleap tuleap
 ln -s /data/etc/aliases aliases
 ln -s /data/etc/aliases.codendi aliases.codendi
-[ -f /data/etc/libnss-mysql-root.cfg ] && ln -s /data/etc/libnss-mysql-root.cfg libnss-mysql-root.cfg
-[ -f /data/etc/libnss-mysql.cfg ]      && ln -s /data/etc/libnss-mysql.cfg libnss-mysql.cfg
 ln -s /data/etc/my.cnf my.cnf
-ln -s /data/etc/nsswitch.conf nsswitch.conf
 
 cd /etc/logrotate.d
 ln -s /data/etc/logrotate.d/httpd httpd

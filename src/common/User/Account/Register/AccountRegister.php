@@ -48,7 +48,6 @@ final class AccountRegister
         string $mail_va,
         string $timezone,
         string $lang_id,
-        string $unix_status,
         int|string $expiry_date,
         RegisterFormContext $context,
     ): ?\PFUser {
@@ -69,7 +68,6 @@ final class AccountRegister
         $user->setMailVA($mail_va);
         $user->setTimezone($timezone);
         $user->setLanguageID($lang_id);
-        $user->setUnixStatus($unix_status);
         $user->setExpiryDate($expiry_date);
 
         $created_user = $this->account_creator->createAccount($user);

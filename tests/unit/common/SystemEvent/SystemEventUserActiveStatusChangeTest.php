@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\SystemEvent;
 
 use Backend;
-use BackendSystem;
 use ForgeAccess;
 use ForgeConfig;
 use PFUser;
@@ -33,7 +32,6 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserGroupDao;
 use UserManager;
-use function PHPUnit\Framework\assertEquals;
 
 final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,10 +51,6 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
      * @var UserRemover&\PHPUnit\Framework\MockObject\Stub
      */
     private $user_remover;
-    /**
-     * @var BackendSystem&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $backend_system;
 
     protected function setUp(): void
     {
@@ -78,9 +72,6 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
         $this->user_remover   = $this->createStub(UserRemover::class);
 
         $this->system_event->injectDependencies($this->user_manager, $this->user_group_dao, $this->user_remover);
-
-        $this->backend_system = $this->createStub(BackendSystem::class);
-        $this->backend_system->expects(self::once())->method('flushNscdAndFsCache');
     }
 
     protected function tearDown(): void
@@ -91,9 +82,6 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
     public function testUserBecomingRestrictedIsRemovedFromProjectNotIncludingRestricted(): void
     {
         $user = UserTestBuilder::aUser()->withId(self::USER_ID)->withStatus(PFUser::STATUS_RESTRICTED)->build();
-
-        $this->backend_system->expects(self::once())->method('createUserHome')->willReturn(true);
-        Backend::setInstance('System', $this->backend_system);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -106,25 +94,5 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
         $this->user_remover->expects(self::once())->method('removeUserFromProject');
 
         $this->assertTrue($this->system_event->process());
-    }
-
-    public function testUserLogAMessageIfCreateUserHomeDoesntWork(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(self::USER_ID)->withUserName("666")->build();
-
-        $this->backend_system->expects(self::once())->method('createUserHome')->willReturn(false);
-        Backend::setInstance('System', $this->backend_system);
-
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('homedir_prefix', "/home/user");
-
-        $this->user_manager->method('getUserById')->willReturn($user);
-
-        $this->user_group_dao->method('searchActiveProjectsByUserIdAndAccessType')->willReturn(
-            TestHelper::arrayToDar(['group_id' => '400'])
-        );
-
-        $this->assertFalse($this->system_event->process());
-        assertEquals("Could not create user home 666 id: 102. The login is numeric, this is not compatible with unix users.", $this->system_event->getLog());
     }
 }

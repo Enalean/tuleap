@@ -67,12 +67,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public const STATUS_VALIDATED_RESTRICTED = 'W';
 
-    public const UNIX_STATUS_SITEADMIN_SPECIAL = '0';
-    public const UNIX_STATUS_NO_UNIX_ACCOUNT   = 'N';
-    public const UNIX_STATUS_ACTIVE            = 'A';
-    public const UNIX_STATUS_SUSPENDED         = 'S';
-    public const UNIX_STATUS_DELETED           = 'D';
-
     public const PREFERENCE_DISPLAY_DENSITY = 'display_density';
     public const DISPLAY_DENSITY_CONDENSED  = 'condensed';
 
@@ -123,11 +117,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $realname;
     protected $register_purpose;
     protected $status;
-    protected $shell;
-    protected $unix_pw;
-    protected $unix_status;
-    protected $unix_uid;
-    protected $unix_box;
     protected $ldap_id;
     protected $add_date;
     protected $confirm_hash;
@@ -225,11 +214,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->realname          = isset($row['realname'])           ? $row['realname']           : null;
         $this->register_purpose  = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
         $this->status            = isset($row['status'])             ? $row['status']             : null;
-        $this->shell             = isset($row['shell'])              ? $row['shell']              : null;
-        $this->unix_pw           = isset($row['unix_pw'])            ? $row['unix_pw']            : null;
-        $this->unix_status       = isset($row['unix_status'])        ? $row['unix_status']        : null;
-        $this->unix_uid          = isset($row['unix_uid'])           ? $row['unix_uid']           : null;
-        $this->unix_box          = isset($row['unix_box'])           ? $row['unix_box']           : null;
         $this->ldap_id           = isset($row['ldap_id'])            ? $row['ldap_id']            : null;
         $this->add_date          = isset($row['add_date'])           ? $row['add_date']           : null;
         $this->confirm_hash      = isset($row['confirm_hash'])       ? $row['confirm_hash']       : null;
@@ -277,11 +261,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             'realname'           => $this->realname,
             'register_purpose'   => $this->register_purpose,
             'status'             => $this->status,
-            'shell'              => $this->shell,
-            'unix_pw'            => $this->unix_pw,
-            'unix_status'        => $this->unix_status,
-            'unix_uid'           => $this->unix_uid,
-            'unix_box'           => $this->unix_box,
             'ldap_id'            => $this->ldap_id,
             'add_date'           => $this->add_date,
             'confirm_hash'       => $this->confirm_hash,
@@ -686,76 +665,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->sticky_login;
     }
 
-    /**
-     * @return string the Status of the user
-     * '0' = (number zero) special value for the site admin
-     * 'N' = No Unix Account
-     * 'A' = Active
-     * 'S' = Suspended
-     * 'D' = Deleted
-     */
-    public function getUnixStatus()
-    {
-        return $this->unix_status;
-    }
-
-    public function hasUnixAccount()
-    {
-        return $this->getUnixStatus() !== self::UNIX_STATUS_NO_UNIX_ACCOUNT;
-    }
-
-    public function getUnixUid()
-    {
-        return $this->unix_uid;
-    }
-
-    /**
-     * @psalm-taint-escape shell
-     */
-    public function getUnixHomeDir(): string
-    {
-        $username = $this->getUserName();
-        if (strpos($username, DIRECTORY_SEPARATOR) !== false) {
-            throw new RuntimeException('$username is not expected to contain a directory separator, got ' . $username);
-        }
-        return ForgeConfig::get('homedir_prefix') . "/" . $username;
-    }
-
-    /**
-     * Return user unix uid as it is on the unix system (with ID shift)
-     * @return int
-     */
-    public function getSystemUnixUid()
-    {
-        return $this->getUnixUid() + ForgeConfig::get('unix_uid_add');
-    }
-
-    /**
-     * Return user unix gid as it is on the unix system (with ID shift)
-     * @return int
-     */
-    public function getSystemUnixGid()
-    {
-        return $this->getSystemUnixUid();
-    }
-
-    /**
-     * @return string unix box of the user
-     */
-    public function getUnixBox()
-    {
-        return $this->unix_box;
-    }
-
-    /**
-     * @return real unix ID of the user (not the one in the DB!)
-     */
-    public function getRealUnixUID()
-    {
-        $unix_id = $this->unix_uid + ForgeConfig::get('unix_uid_add');
-        return $unix_id;
-    }
-
     public function getAuthorizedKeysRaw(): ?string
     {
         return $this->authorized_keys;
@@ -783,14 +692,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUserPw(): ?string
     {
         return $this->user_pw;
-    }
-
-    /**
-     * @return String User shell
-     */
-    public function getShell()
-    {
-        return $this->shell;
     }
 
     /**
@@ -897,46 +798,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function isSuspended()
     {
         return ($this->getStatus() == 'S');
-    }
-
-    /**
-     * hasActiveUnixAccount - test if the unix account of the user is active or not
-     *
-     * @return bool true if the unix account of the user is active, false otherwise
-     */
-    public function hasActiveUnixAccount()
-    {
-        return ($this->getUnixStatus() == 'A');
-    }
-
-    /**
-     * hasSuspendedUnixAccount - test if the unix account of the user is suspended or not
-     *
-     * @return bool true if the unix account of the user is suspended, false otherwise
-     */
-    public function hasSuspendedUnixAccount()
-    {
-        return ($this->getUnixStatus() == 'S');
-    }
-
-    /**
-     * hasDeletedUnixAccount - test if the unix account of the user is deleted or not
-     *
-     * @return bool true if the unix account of the user is deleted, false otherwise
-     */
-    public function hasDeletedUnixAccount()
-    {
-        return ($this->getUnixStatus() == 'D');
-    }
-
-    /**
-     * hasNoUnixAccount - test if the user doesn't have a unix account
-     *
-     * @return bool true if the user doesn't have a unix account, false otherwise
-     */
-    public function hasNoUnixAccount()
-    {
-        return ($this->getUnixStatus() == 'N');
     }
 
     /**
@@ -1117,44 +978,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * @param string the Status of the user
-     * '0' = (number zero) special value for the site admin
-     * 'N' = No Unix Account
-     * 'A' = Active
-     * 'S' = Suspended
-     * 'D' = Deleted
-     */
-    public function setUnixStatus($unixStatus)
-    {
-        $allowedStatus = [0 => true,
-            '0' => true,
-            'N' => true,
-            'A' => true,
-            'S' => true,
-            'D' => true,
-        ];
-        if (isset($allowedStatus[$unixStatus])) {
-            $this->unix_status = $unixStatus;
-        }
-    }
-
-    /**
-     * @param int $unixUid Unix uid
-     */
-    public function setUnixUid($unixUid)
-    {
-        $this->unix_uid = $unixUid;
-    }
-
-    /**
-     * @param string unix box of the user
-     */
-    public function setUnixBox($unixBox)
-    {
-        $this->unix_box = $unixBox;
-    }
-
-    /**
      * @param string authorized keys of the user
      */
     public function setAuthorizedKeys($authorizedKeys)
@@ -1168,14 +991,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setUserPw($userPw)
     {
         $this->user_pw = $userPw;
-    }
-
-    /**
-     * @param String User shell
-     */
-    public function setShell($shell)
-    {
-        $this->shell = $shell;
     }
 
     /**
@@ -1387,26 +1202,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getSessionId()
     {
         return $this->session_id;
-    }
-
-     /**
-      * Return all valid status
-      *
-      * @return Array
-      */
-    public static function getAllUnixStatus()
-    {
-        return ['N', 'A', 'S', 'D'];
-    }
-
-     /**
-      * Return all possible shells
-      *
-      * @return Array
-      */
-    public static function getAllUnixShells()
-    {
-        return file('/etc/shells', FILE_IGNORE_NEW_LINES);
     }
 
      /**

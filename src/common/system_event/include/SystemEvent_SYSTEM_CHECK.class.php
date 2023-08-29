@@ -53,15 +53,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $backendSVN = Backend::instanceSVN();
 
         //TODO:
-        // User: unix_status vs status??
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), Web...
         // TODO: log event in syslog?
         // TODO: check that there is no pending event??? What about lower priority events??
-
-        // First, force NSCD refresh to be sure that uid/gid will exist on next
-        // actions
-
-        $backendSystem->flushNscdAndFsCache();
 
         // Force global updates: aliases, SVN roots
         $backendAliases->setNeedUpdateMailAliases();

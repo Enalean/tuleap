@@ -101,8 +101,6 @@ class ForgeConfig
         self::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
         self::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
         self::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
-        self::setNewDefault(ConfigurationVariables::HOMEDIR_PREFIX, '');
-        self::setNewDefault(ConfigurationVariables::GRPDIR_PREFIX, '');
         self::setNewDefault(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
         self::setNewDefault(ConfigurationVariables::DISABLE_SUBDOMAINS, ConfigKeyLegacyBool::TRUE);
     }
@@ -325,16 +323,6 @@ class ForgeConfig
     public static function getApplicationUserLogin()
     {
         return self::get('sys_http_user');
-    }
-
-    public static function areUnixGroupsAvailableOnSystem()
-    {
-        return trim(self::get('grpdir_prefix')) !== '';
-    }
-
-    public static function areUnixUsersAvailableOnSystem()
-    {
-        return trim(self::get('homedir_prefix')) !== '' && ! self::get(BackendSystem::UNIX_USER_ARE_DISABLED);
     }
 
     public static function getCacheDir()

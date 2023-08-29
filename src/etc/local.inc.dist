@@ -124,9 +124,6 @@ $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts 
 // This directory must be world reachable, but writable only by the web-server
 $codendi_cache_dir = $tmp_dir . '/tuleap_cache';
 
-$homedir_prefix = '/home/users'; // prefix to add to the user's homedir
-$grpdir_prefix  = '/home/groups';// prefix to add to the project's homedir
-
 // Subversion paths
 $svn_prefix    = '/var/lib/tuleap/svnroot';// prefix to add to the subversion root directory
 $svnadmin_cmd  = '/usr/bin/svnadmin';     // SVN Admin binary
@@ -143,7 +140,6 @@ $dump_dir         = '/var/lib/tuleap/dumps';// Where should we stick files we're
 
 // Paths for backend scripts
 $codendi_log        = '/var/log/tuleap';   // Tuleap log dir
-$codendi_shell_skel = '/etc/skel_codendi';  // Tuleap Shell skeleton files directory
 
 // Sendmail alias
 $alias_file           = '/etc/aliases.codendi';
@@ -155,13 +151,6 @@ $sys_pluginspath       = '/plugins';
 $sys_custompluginspath = '/customplugins';
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
-
-// How much to add to the database unix_uid to get the actual unix uid
-// NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
-$unix_uid_add	= '20000';
-// How much to add to the database group_id to get the unix gid
-// NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
-$unix_gid_add	= '1000';
 
 // Users
 $sys_http_user  = 'codendiadm'; // Unix user running the HTTP server

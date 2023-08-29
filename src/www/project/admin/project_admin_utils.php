@@ -90,7 +90,6 @@ function get_history_entries()
             'access',
             'group_type',
             'http_domain',
-            'unix_box',
             'changed_public_info',
             'changed_trove',
             'membership_request_updated',

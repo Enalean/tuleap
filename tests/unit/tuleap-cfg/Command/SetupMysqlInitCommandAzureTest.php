@@ -25,7 +25,6 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
@@ -124,22 +123,6 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'%'", $this->db_wrapper->statements);
     }
 
-    public function testGrantNssUserWithMiddleAt(): void
-    {
-        $this->command_tester->execute([
-            '--admin-password' => 'welcome0',
-            '--nss-password'   => 'another complex password',
-            '--nss-user'       => 'dbauthuser',
-            '--azure-suffix'   => 'some-id',
-            '--tuleap-fqdn'    => 'localhost',
-        ]);
-
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-
-        $this->db_wrapper->assertContains("CREATE USER IF NOT EXISTS 'dbauthuser'@'%' IDENTIFIED BY 'another complex password'");
-        $this->db_wrapper->assertContains("GRANT CREATE,SELECT ON 'tuleap'.'user' TO 'dbauthuser'@'%'");
-    }
-
     public function testGrantMediawikiPerProjectAccessToApplicationUserWithMiddleAt(): void
     {
         $this->command_tester->execute([
@@ -170,24 +153,5 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(0, $this->command_tester->getStatusCode());
 
         $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap_mediawiki'.* TO 'tuleap'@'%'");
-    }
-
-    public function testItWritesDBAuthUserCredentials(): void
-    {
-        $this->command_tester->execute([
-            '--admin-password' => 'welcome0',
-            '--nss-password'   => 'another complex password',
-            '--azure-suffix'   => 'some-id',
-            '--tuleap-fqdn'    => 'localhost',
-        ]);
-
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-
-        $first_insert_pos = array_search("REPLACE INTO 'tuleap'.forgeconfig (name, value) VALUES (?, ?)", $this->db_wrapper->statements, true);
-        self::assertEquals(DBAuthUserConfig::USER, $this->db_wrapper->statements_params[$first_insert_pos][0]);
-        self::assertEquals('dbauthuser@some-id', $this->db_wrapper->statements_params[$first_insert_pos][1]);
-
-        self::assertEquals(DBAuthUserConfig::PASSWORD, $this->db_wrapper->statements_params[$first_insert_pos + 1][0]);
-        self::assertNotEmpty($this->db_wrapper->statements_params[$first_insert_pos + 1][1]);
     }
 }

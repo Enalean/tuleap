@@ -46,7 +46,6 @@ abstract class SystemEvent
     public const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";
     public const TYPE_UGROUP_MODIFY                            = "UGROUP_MODIFY";
     public const TYPE_USER_ACTIVE_STATUS_CHANGE                = "ACTIVE_USER_STATUS_CHANGE";
-    public const TYPE_USER_DELETE                              = "USER_DELETE";
     public const TYPE_USER_MODIFY                              = "USER_MODIFY";
     public const TYPE_USER_RENAME                              = "USER_RENAME";
     public const TYPE_MEMBERSHIP_CREATE                        = "MEMBERSHIP_CREATE";

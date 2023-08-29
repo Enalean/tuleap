@@ -40,28 +40,14 @@ class DiskUsageRouter
      */
     private $projects_builder;
 
-    /**
-     * @var DiskUsageTopUsersPresenterBuilder
-     */
-    private $top_users_builder;
-
-    /**
-     * @var DiskUsageUserDetailsPresenterBuilder
-     */
-    private $user_details_builder;
-
     public function __construct(
         DiskUsageServicesPresenterBuilder $services_builder,
         DiskUsageProjectsPresenterBuilder $projects_builder,
-        DiskUsageTopUsersPresenterBuilder $top_users_builder,
         DiskUsageGlobalPresenterBuilder $global_builder,
-        DiskUsageUserDetailsPresenterBuilder $user_details_builder,
     ) {
-        $this->services_builder     = $services_builder;
-        $this->projects_builder     = $projects_builder;
-        $this->top_users_builder    = $top_users_builder;
-        $this->global_builder       = $global_builder;
-        $this->user_details_builder = $user_details_builder;
+        $this->services_builder = $services_builder;
+        $this->projects_builder = $projects_builder;
+        $this->global_builder   = $global_builder;
     }
 
     public function route(HTTPRequest $request)
@@ -77,14 +63,8 @@ class DiskUsageRouter
                     case 'projects':
                         $this->displayProjects($request);
                         break;
-                    case 'top_users':
-                        $this->displayTopUsers($request);
-                        break;
                     case 'global':
                         $this->displayGlobalData();
-                        break;
-                    case 'one_user_details':
-                        $this->displayUserDetails($request);
                         break;
                 }
             } catch (StartDateGreaterThanEndDateException $exception) {
@@ -160,26 +140,6 @@ class DiskUsageRouter
         );
     }
 
-    public function displayTopUsers(HTTPRequest $request)
-    {
-        $end_date = $request->get('end_date');
-
-        $title = dgettext('tuleap-statistics', 'Statistics');
-
-        $top_users_presenter = $this->top_users_builder->build(
-            $title,
-            $end_date
-        );
-
-        $admin_page_renderer = new AdminPageRenderer();
-        $admin_page_renderer->renderANoFramedPresenter(
-            $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-            'disk-usage-top-users',
-            $top_users_presenter
-        );
-    }
-
     private function displayGlobalData()
     {
         $title = dgettext('tuleap-statistics', 'Statistics');
@@ -192,32 +152,6 @@ class DiskUsageRouter
             ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
             'disk-usage-global',
             $disk_usage_global_presenter
-        );
-    }
-
-    public function displayUserDetails(HTTPRequest $request)
-    {
-        $user              = $request->get('user');
-        $selected_group_by = $request->get('group_by');
-        $start_date        = $request->get('start_date');
-        $end_date          = $request->get('end_date');
-
-        $title = dgettext('tuleap-statistics', 'Statistics');
-
-        $user_details_presenter = $this->user_details_builder->build(
-            $title,
-            $user,
-            $selected_group_by,
-            $start_date,
-            $end_date
-        );
-
-        $admin_page_renderer = new AdminPageRenderer();
-        $admin_page_renderer->renderANoFramedPresenter(
-            $title,
-            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-            'disk-usage-user-details',
-            $user_details_presenter
         );
     }
 }

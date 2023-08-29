@@ -45,19 +45,8 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         $logger = BackendLogger::getDefaultLogger();
         $logger->info(self::class . ' Start');
 
-        // Re-dumping ssh keys should be done only once a day as:
-        // - It's I/O intensive
-        // - It's stress gitolite backend
-        // - SSH keys should already be dumped via EDIT_SSH_KEY event
-        $backend_system = Backend::instance('System');
-        assert($backend_system instanceof BackendSystem);
-        $backend_system->dumpSSHKeys();
-
-        // User home sanity check should be done only once a day as
-        // it is slooow (due to libnss-mysql)
         $warnings = [];
 
-        $this->userHomeSanityCheck($backend_system, $warnings);
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
@@ -87,19 +76,6 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
         $logger->info(self::class . ' Completed');
         return true;
-    }
-
-    private function userHomeSanityCheck(BackendSystem $backend_system, array &$warnings)
-    {
-        $dao       = new UserDao();
-        $user_rows = $dao
-            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED]);
-
-        $user_manager = UserManager::instance();
-
-        foreach ($user_rows as $user_row) {
-            $backend_system->userHomeSanityCheck($user_manager->getUserInstanceFromRow($user_row), $warnings);
-        }
     }
 
     private function purgeSystemEventsDataOlderThanOneYear()

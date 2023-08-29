@@ -96,22 +96,6 @@ class SearchFieldsPresenterBuilder
         );
     }
 
-    public function buildSearchFieldsForUserDetails(
-        $user_name_value,
-        $group_by_value,
-        $start_date_value,
-        $end_date_value,
-    ) {
-        $group_by_options = $this->getListOfGroupByValuePresenter($group_by_value);
-
-        return new DiskUsageUserDetailsSearchFieldsPresenter(
-            $user_name_value,
-            $group_by_options,
-            $start_date_value,
-            $end_date_value
-        );
-    }
-
     private function buildUrlParamsForServices(
         array $service_values,
         $start_date_value,
@@ -171,24 +155,6 @@ class SearchFieldsPresenterBuilder
         }
 
         return $group_by_values[0]['key'];
-    }
-
-    private function getListOfGroupByValuePresenter($group_by_value)
-    {
-        $all_group_by = [
-            'day'   => dgettext('tuleap-statistics', 'Day'),
-            'week'  => dgettext('tuleap-statistics', 'Week'),
-            'month' => dgettext('tuleap-statistics', 'Month'),
-            'year'  => dgettext('tuleap-statistics', 'Year'),
-        ];
-
-        $group_by_options = [];
-
-        foreach ($all_group_by as $group_by => $label) {
-            $group_by_options[] = $this->getValuePresenter($group_by, [$group_by_value], $label);
-        }
-
-        return $group_by_options;
     }
 
     private function getListOfTypeValuePresenter(array $type_values)

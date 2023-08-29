@@ -26,9 +26,7 @@ use Tuleap\Statistics\DiskUsageGlobalPresenterBuilder;
 use Tuleap\Statistics\DiskUsageRouter;
 use Tuleap\Statistics\SearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
-use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
-use Tuleap\Statistics\DiskUsageUserDetailsPresenterBuilder;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 
@@ -85,24 +83,10 @@ $disk_usage_global_builder = new DiskUsageGlobalPresenterBuilder(
     $disk_usage_output
 );
 
-$top_users_builder = new DiskUsageTopUsersPresenterBuilder(
-    $duMgr,
-    $disk_usage_output
-);
-
-$user_details_builder = new DiskUsageUserDetailsPresenterBuilder(
-    $duMgr,
-    $disk_usage_output,
-    $disk_usage_search_fields_builder,
-    UserManager::instance()
-);
-
 $disk_usage_router = new DiskUsageRouter(
     $disk_usage_services_builder,
     $disk_usage_projects_builder,
-    $top_users_builder,
     $disk_usage_global_builder,
-    $user_details_builder
 );
 
 $disk_usage_router->route($request);

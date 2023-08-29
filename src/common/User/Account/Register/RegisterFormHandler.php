@@ -193,7 +193,6 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             (string) $request->get('form_mail_va'),
             $timezone,
             $request->getCurrentUser()->getLocale(),
-            'A',
             $expiry_date,
             $context,
         );

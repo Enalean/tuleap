@@ -122,7 +122,6 @@ class LDAP_DirectorySynchronization
                 // User not found in LDAP directory
                 $modified = true;
                 $user->setStatus('S');
-                $user->setUnixStatus('D');
             }
 
             if ($modified) {

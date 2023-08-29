@@ -116,15 +116,11 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         $this->access_file_history_creator->method('useAVersion')->willReturn(true);
         $this->repository_manager->method('getRepositoryById')->willReturn($this->createMock(Repository::class));
 
-        $backend_system = $this->createMock(\BackendSystem::class);
-        $backend_system->method('flushNscdAndFsCache');
-
         $system_event->injectDependencies(
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $backend_system,
             $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
@@ -145,15 +141,11 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
         $this->backend_svn->method('createRepositorySVN')->willThrowException(new SVNRepositoryCreationException());
 
-        $backend_system = $this->createMock(\BackendSystem::class);
-        $backend_system->method('flushNscdAndFsCache');
-
         $system_event->injectDependencies(
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $backend_system,
             $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
@@ -175,15 +167,11 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
         $this->backend_svn->method('createRepositorySVN')->willThrowException(new SVNRepositoryLayoutInitializationException());
 
-        $backend_system = $this->createMock(\BackendSystem::class);
-        $backend_system->method('flushNscdAndFsCache');
-
         $system_event->injectDependencies(
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $backend_system,
             $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 

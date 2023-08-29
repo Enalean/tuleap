@@ -41,8 +41,7 @@ setup_database() {
         --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD" \
         --tuleap-fqdn="localhost" \
-        --site-admin-password="welcome0" \
-        --nss-password="welcome0"
+        --site-admin-password="welcome0"
 
     TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc

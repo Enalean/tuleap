@@ -54,7 +54,6 @@ class AccountRegisterTest extends TestCase
                 'mail_va',
                 'timezone',
                 'lang_id',
-                'unix_status',
                 'expiry_date',
                 RegisterFormContext::forAdmin(),
             )
@@ -86,7 +85,6 @@ class AccountRegisterTest extends TestCase
                 'mail_va',
                 'timezone',
                 'lang_id',
-                'unix_status',
                 'expiry_date',
                 RegisterFormContext::forAdmin(),
             )

@@ -22,12 +22,10 @@
 namespace Tuleap\Config;
 
 use BackendLogger;
-use BackendSystem;
 use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
-use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
@@ -75,8 +73,6 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class,
         DBConfig::class,
-        DBAuthUserConfig::class,
-        BackendSystem::class,
         ConfigurationVariables::class,
         ServerHostname::class,
         ProjectExportController::class,

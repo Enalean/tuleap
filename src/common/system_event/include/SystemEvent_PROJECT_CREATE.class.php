@@ -56,17 +56,15 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
         $groups = explode(',', $this->parameters);
 
         $backendSystem = Backend::instance('System');
+        assert($backendSystem instanceof BackendSystem);
 
-        // Force NSCD flush (otherwise uid & gid will not exist)
-        $backendSystem->flushNscdAndFsCache();
 
         foreach ($groups as $group_id) {
             if ($project = $this->getProject($group_id)) {
-                if (! $backendSystem->createProjectHome($project)) {
-                    $this->error("Could not create project home");
+                if (! $backendSystem->createProjectFRSDirectory($project)) {
+                    $this->error("Could not project FRS repository");
                     return false;
                 }
-
                 if ($project->usesSVN()) {
                     $backendSVN = Backend::instanceSVN();
                     if (! $backendSVN->createProjectSVN((int) $group_id)) {

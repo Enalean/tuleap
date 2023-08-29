@@ -48,10 +48,6 @@ class XMLRepositoryImporter
      * @var \BackendSVN
      */
     private $backend_svn;
-    /**
-     * @var \BackendSystem
-     */
-    private $backend_system;
 
     /** @var string */
     private $dump_file_path;
@@ -102,7 +98,6 @@ class XMLRepositoryImporter
         $extraction_path,
         RepositoryCreator $repository_creator,
         \BackendSVN $backend_svn,
-        \BackendSystem $backend_system,
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
@@ -130,7 +125,6 @@ class XMLRepositoryImporter
         $this->references                   = $xml_repo->references;
         $this->repository_creator           = $repository_creator;
         $this->backend_svn                  = $backend_svn;
-        $this->backend_system               = $backend_system;
         $this->access_file_history_creator  = $access_file_history_creator;
         $this->repository_manager           = $repository_manager;
         $this->user_manager                 = $user_manager;
@@ -177,7 +171,6 @@ class XMLRepositoryImporter
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->backend_system,
             $this->repository_copier
         );
         $sysevent->process();

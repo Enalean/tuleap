@@ -38,11 +38,6 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
      * @var RepositoryCopier
      */
     private $repository_copier;
-
-    /**
-     * @var \BackendSystem
-     */
-    private $backend_system;
     /**
      * @var \BackendSVN
      */
@@ -66,14 +61,12 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         \BackendSVN $backend_svn,
-        \BackendSystem $backend_system,
         RepositoryCopier $repository_copier,
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
         $this->user_manager                = $user_manager;
         $this->backend_svn                 = $backend_svn;
-        $this->backend_system              = $backend_system;
         $this->repository_copier           = $repository_copier;
     }
 
@@ -98,9 +91,6 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         if ($user === null) {
             $user = $this->user_manager->getUserAnonymous();
         }
-
-        // Force NSCD flush (otherwise uid & gid will not exist)
-        $this->backend_system->flushNscdAndFsCache();
 
         try {
             $this->backend_svn->createRepositorySVN(

@@ -38,9 +38,6 @@ class AdminHeaderPresenter
     public $disk_usage_services_menu_span_label;
     public $disk_usage_services_menu_label;
     public $disk_usage_projects_menu_label;
-    public $disk_usage_users_menu_span_label;
-    public $disk_usage_users_top_users_menu_label;
-    public $disk_usage_users_user_details_label;
     public $disk_usage_global_menu_span_label;
     public $disk_usage_global_menu_label;
     public $project_over_quota_tab_label;
@@ -65,13 +62,10 @@ class AdminHeaderPresenter
         $this->project_over_quota_tab_label = dgettext('tuleap-statistics', 'Projects over quota');
         $this->data_export_tab_label        = dgettext('tuleap-statistics', 'Data export');
 
-        $this->disk_usage_services_menu_span_label   = dgettext('tuleap-statistics', 'Services/Projects');
-        $this->disk_usage_services_menu_label        = dgettext('tuleap-statistics', 'Usage per service');
-        $this->disk_usage_projects_menu_label        = dgettext('tuleap-statistics', 'Usage per project');
-        $this->disk_usage_users_menu_span_label      = dgettext('tuleap-statistics', 'Users');
-        $this->disk_usage_users_top_users_menu_label = dgettext('tuleap-statistics', 'Top 10 users');
-        $this->disk_usage_users_user_details_label   = dgettext('tuleap-statistics', 'One user details');
-        $this->disk_usage_global_menu_span_label     = dgettext('tuleap-statistics', 'Global');
-        $this->disk_usage_global_menu_label          = dgettext('tuleap-statistics', 'Global usage');
+        $this->disk_usage_services_menu_span_label = dgettext('tuleap-statistics', 'Services/Projects');
+        $this->disk_usage_services_menu_label      = dgettext('tuleap-statistics', 'Usage per service');
+        $this->disk_usage_projects_menu_label      = dgettext('tuleap-statistics', 'Usage per project');
+        $this->disk_usage_global_menu_span_label   = dgettext('tuleap-statistics', 'Global');
+        $this->disk_usage_global_menu_label        = dgettext('tuleap-statistics', 'Global usage');
     }
 }

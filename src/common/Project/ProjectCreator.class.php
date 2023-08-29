@@ -475,7 +475,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'unix_group_name'     => "'" . db_es($data->getUnixName()) . "'",
             'http_domain'         => "'" . db_es($http_domain) . "'",
             'status'              => "'P'",
-            'unix_box'            => "'shell1'",
             'short_description'   => "'" . db_es($data->getShortDescription()) . "'",
             'register_time'       => time(),
             'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",

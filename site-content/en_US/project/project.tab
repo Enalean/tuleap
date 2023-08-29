@@ -227,7 +227,6 @@ project_admin_utils	deleted	Deleted
 project_admin_utils	is_public	Is public
 project_admin_utils	type	Type
 project_admin_utils	http_domain	HTTP domain
-project_admin_utils	unix_box	Unix box
 project_admin_utils	feedback_history	feedback history
 project_admin_utils	changed_personal_email_notif	Changed Personal Notification Email Settings
 project_admin_utils	changed_bts_form_message	Changed BTS bug form message

@@ -350,7 +350,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getRepositoryManager(),
                     $this->getUserManager(),
                     $this->getBackendSVN(),
-                    $this->getBackendSystem(),
                     $this->getCopier(),
                 ];
                 break;
@@ -549,7 +548,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $extraction_path,
             $this->getRepositoryCreator(),
             $this->getBackendSVN(),
-            $this->getBackendSystem(),
             $this->getAccessFileHistoryCreator(),
             $this->getRepositoryManager(),
             $user_manager,
@@ -1105,13 +1103,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getProjectHistoryDao(),
             $this->getImmutableTagFactory()
         );
-    }
-
-    private function getBackendSystem(): BackendSystem
-    {
-        $backend = Backend::instance('System');
-        assert($backend instanceof BackendSystem);
-        return $backend;
     }
 
     private function getProjectHistoryDao(): ProjectHistoryDao

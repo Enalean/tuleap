@@ -61,9 +61,6 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent
             // SVN access file
             (new UpdateProjectAccessFilesScheduler(SystemEventManager::instance()))->scheduleUpdateOfProjectAccessFiles($project);
 
-            // Need to update system group cache
-            Backend::instance('System')->setNeedRefreshGroupCache();
-
             $this->done();
             return true;
         }

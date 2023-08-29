@@ -61,38 +61,6 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($u4->isRestricted());
     }
 
-    public function testUnixStatus(): void
-    {
-        $u1 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u1->shouldReceive('getUnixStatus')->andReturns('A');
-        $u2 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u2->shouldReceive('getUnixStatus')->andReturns('S');
-        $u3 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u3->shouldReceive('getUnixStatus')->andReturns('D');
-        $u4 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u4->shouldReceive('getUnixStatus')->andReturns('N');
-
-        $this->assertTrue($u1->hasActiveUnixAccount());
-        $this->assertFalse($u1->hasSuspendedUnixAccount());
-        $this->assertFalse($u1->hasDeletedUnixAccount());
-        $this->assertFalse($u1->hasNoUnixAccount());
-
-        $this->assertFalse($u2->hasActiveUnixAccount());
-        $this->assertTrue($u2->hasSuspendedUnixAccount());
-        $this->assertFalse($u2->hasDeletedUnixAccount());
-        $this->assertFalse($u2->hasNoUnixAccount());
-
-        $this->assertFalse($u3->hasActiveUnixAccount());
-        $this->assertFalse($u3->hasSuspendedUnixAccount());
-        $this->assertTrue($u3->hasDeletedUnixAccount());
-        $this->assertFalse($u3->hasNoUnixAccount());
-
-        $this->assertFalse($u4->hasActiveUnixAccount());
-        $this->assertFalse($u4->hasSuspendedUnixAccount());
-        $this->assertFalse($u4->hasDeletedUnixAccount());
-        $this->assertTrue($u4->hasNoUnixAccount());
-    }
-
     public function testPreferences(): void
     {
         $dao = \Mockery::spy(\UserPreferencesDao::class);

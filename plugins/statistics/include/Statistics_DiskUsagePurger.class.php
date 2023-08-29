@@ -40,7 +40,6 @@ class Statistics_DiskUsagePurger
     public static $STATISTIC_TABLES = [
         'plugin_statistics_diskusage_group',
         'plugin_statistics_diskusage_site',
-        'plugin_statistics_diskusage_user',
     ];
 
     public function __construct(Statistics_DiskUsageDao $disk_usage_dao, \Psr\Log\LoggerInterface $logger)

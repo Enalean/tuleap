@@ -120,12 +120,6 @@ if ($request->isPost()) {
                 }
             }
 
-            $vShell = new Valid_WhiteList('form_shell', $user->getAllUnixShells());
-            $vShell->required();
-            if ($request->valid($vShell)) {
-                $user->setShell($request->get('form_shell'));
-            }
-
             $vEmail = new Valid_Email('email');
             $vEmail->required();
             if ($request->valid($vEmail)) {
@@ -136,14 +130,6 @@ if ($request->isPost()) {
             $vRealName->required();
             if ($request->valid($vRealName)) {
                 $user->setRealName($request->get('form_realname'));
-            }
-
-            // form_unixstatus must be BEFORE form_status validation because
-            // form_status can constraint form_unixstatus
-            $vUnixStatus = new Valid_WhiteList('form_unixstatus', $user->getAllUnixStatus());
-            $vUnixStatus->required();
-            if ($request->valid($vUnixStatus)) {
-                $user->setUnixStatus($request->get('form_unixstatus'));
             }
 
             $has_user_just_been_changed_to_deleted_or_suspended = false;
@@ -183,14 +169,12 @@ if ($request->isPost()) {
 
                     case PFUser::STATUS_DELETED:
                         $user->setStatus($request->get('form_status'));
-                        $user->setUnixStatus($user->getStatus());
                         $has_user_just_been_changed_to_deleted_or_suspended = true;
                         $accountActivationEvent                             = 'project_admin_delete_user';
                         break;
 
                     case PFUser::STATUS_SUSPENDED:
                         $user->setStatus($request->get('form_status'));
-                        $user->setUnixStatus($user->getStatus());
                         $has_user_just_been_changed_to_deleted_or_suspended = true;
                         $accountActivationEvent                             = 'project_admin_suspend_user';
                         break;
@@ -247,10 +231,6 @@ if ($request->isPost()) {
                 if ($accountActivationEvent) {
                     $em->processEvent($accountActivationEvent, ['user_id' => $user->getId()]);
                 }
-            }
-
-            if ($user->getUnixStatus() != 'N' && ! $user->getUnixUid()) {
-                $um->assignNextUnixUid($user);
             }
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $user->getId());
         }
@@ -382,10 +362,8 @@ $siteadmin->renderAPresenter(
         $user_administration_csrf,
         $additional_details,
         $details_formatter->getMore($user),
-        $details_formatter->getShells($user),
         $details_formatter->getStatus($user),
         $restricted_projects_user_counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user),
-        $details_formatter->getUnixStatus($user),
         $user_has_rest_read_only_administration_delegation,
         $webauthn_enabled,
         $authenticators,

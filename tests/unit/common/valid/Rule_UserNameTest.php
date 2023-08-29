@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
-    use ForgeConfigSandbox;
 
     public function testReservedNames(): void
     {
@@ -81,9 +79,8 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider dataForUnixTestProvider
      */
-    public function testIsUnixValid(bool $expected_result, string $given_username, string $home_dir): void
+    public function testIsUnixValid(bool $expected_result, string $given_username): void
     {
-        ForgeConfig::set('homedir_prefix', $home_dir);
         $rules = new Rule_UserName();
         $this->assertEquals($expected_result, $rules->isUnixValid($given_username));
     }
@@ -231,64 +228,15 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($r->isAlreadyProjectName("usertest"));
     }
 
-    public function testUnixUserExists(): void
-    {
-        $backend = $this->createMock(\Backend::class);
-        $backend->method('unixUserExists')->willReturn(true);
-        $backend->method('unixGroupExists')->willReturn(false);
-
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
-        $r->method('_getBackend')->willReturn($backend);
-
-        $this->assertTrue($r->isSystemName("usertest"));
-    }
-
-    public function testUnixGroupExists(): void
-    {
-        $backend = $this->createMock(\Backend::class);
-        $backend->method('unixUserExists')->willReturn(false);
-        $backend->method('unixGroupExists')->willReturn(true);
-
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
-        $r->method('_getBackend')->willReturn($backend);
-
-        $this->assertTrue($r->isSystemName("usertest"));
-    }
-
-    public function testUnixUserAndGroupExists(): void
-    {
-        $backend = $this->createMock(\Backend::class);
-        $backend->method('unixUserExists')->willReturn(true);
-        $backend->method('unixGroupExists')->willReturn(true);
-
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
-        $r->method('_getBackend')->willReturn($backend);
-
-        $this->assertTrue($r->isSystemName("usertest"));
-    }
-
-    public function testNoUnixUserOrGroupExists(): void
-    {
-        $backend = $this->createMock(\Backend::class);
-        $backend->method('unixUserExists')->willReturn(false);
-        $backend->method('unixGroupExists')->willReturn(false);
-
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
-        $r->method('_getBackend')->willReturn($backend);
-
-        $this->assertFalse($r->isSystemName("usertest"));
-    }
-
     public static function dataForUnixTestProvider(): array
     {
         return [
-            'valid username'                         => [true, "coincoin", "/home/user/"],
-            'numeric login with unix users enabled'  => [false, "666", "/home/user/"],
-            'numeric login with unix users disabled' => [true, "666", ""],
-            'login with space'                       => [false, "coin coin", "/home/user/"],
-            'login without enough characters'        => [false, "co", "/home/user/"],
-            'login with illegal characters'          => [false, "coin@coin", "/home/user/"],
-            'login with to much characters'          => [false, "coincoincoincoincoincoincoincoin", "/home/user/"],
+            'valid username'                         => [true, "coincoin"],
+            'numeric login'                          => [true, "666"],
+            'login with space'                       => [false, "coin coin"],
+            'login without enough characters'        => [false, "co"],
+            'login with illegal characters'          => [false, "coin@coin"],
+            'login with to much characters'          => [false, "coincoincoincoincoincoincoincoin"],
         ];
     }
 }
