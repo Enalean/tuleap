@@ -59,7 +59,7 @@ final class AgileDashboardScrumConfigurationUpdaterTest extends \Tuleap\Test\PHP
             Mockery::mock(ScrumForMonoMilestoneChecker::class),
             Mockery::mock(ConfigurationUpdater::class),
             $event_dispatcher,
-            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
+            new \Tuleap\Kanban\CheckSplitKanbanConfiguration(),
         );
 
         $response->shouldNotReceive('scrumConfigurationUpdated');

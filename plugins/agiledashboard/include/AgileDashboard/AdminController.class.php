@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard;
 use Tuleap\Kanban\AdminKanbanPresenter;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
 use Tuleap\Kanban\KanbanFactory;
@@ -56,7 +57,6 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Service\KanbanService;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -303,7 +303,7 @@ class AdminController extends BaseController
                     $this->event_manager
                 ),
                 $this->event_manager,
-                new SplitKanbanConfigurationChecker(),
+                new CheckSplitKanbanConfiguration(),
             );
         }
 
