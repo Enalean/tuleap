@@ -28,6 +28,7 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Kanban\BreadCrumbBuilder;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\HierarchyChecker;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanColumnDao;
@@ -54,7 +55,6 @@ use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\Kanban\REST\ResourcesInjector;
 use Tuleap\Kanban\Service\KanbanService;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Kanban\Widget\MyKanban;
@@ -330,7 +330,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
-            new SplitKanbanConfigurationChecker(),
+            new CheckSplitKanbanConfiguration(),
             EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -367,7 +367,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )
             ),
-            new SplitKanbanConfigurationChecker(),
+            new CheckSplitKanbanConfiguration(),
         );
     }
 
@@ -747,7 +747,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         if ($service->getShortName() !== KanbanService::SERVICE_SHORTNAME) {
             return;
         }
-        $configuration_checker = new SplitKanbanConfigurationChecker();
+        $configuration_checker = new CheckSplitKanbanConfiguration();
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($service->getProject())) {
             $event->hideService();
         }
@@ -756,7 +756,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
     {
         $project               = $event->project;
-        $configuration_checker = new SplitKanbanConfigurationChecker();
+        $configuration_checker = new CheckSplitKanbanConfiguration();
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
             return;
         }

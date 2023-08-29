@@ -29,4 +29,14 @@ class AgileDashboardService extends \Service
     {
         return 'fas fa-tlp-taskboard';
     }
+
+    public function urlCanChange(): bool
+    {
+        return false;
+    }
+
+    public function getUrl(?string $url = null): string
+    {
+        return AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($this->project);
+    }
 }

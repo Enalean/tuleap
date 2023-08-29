@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_ConfigurationManager;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
 use AgileDashboard_XMLFullStructureExporter;
@@ -49,7 +50,6 @@ use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -158,7 +158,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(PlanningEditionPresenterBuilder::class),
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
-            new SplitKanbanConfigurationChecker(),
+            new CheckSplitKanbanConfiguration(),
         );
     }
 

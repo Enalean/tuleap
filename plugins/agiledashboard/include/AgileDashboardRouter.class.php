@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
@@ -369,6 +370,14 @@ class AgileDashboardRouter
                 break;
             case 'index':
             default:
+                $project = $request->getProject();
+                if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+                    $layout = $GLOBALS['Response'];
+                    assert($layout instanceof \Tuleap\Layout\BaseLayout);
+
+
+                    $layout->redirect(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));
+                }
                 $header_options = [
                     'body_class' => ['agiledashboard_homepage'],
                 ];
