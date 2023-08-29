@@ -40,14 +40,21 @@ class PullRequestPATCHRepresentation
      * @var string {@type string} {@required false}
      */
     public $description;
+    /**
+     * @psalm-var string | null
+     * {@type string} {@required false}
+     */
+    public string|null $description_format = null;
 
     public function __construct(
         string $status,
         string $title,
         string $description,
+        string|null $description_format,
     ) {
-        $this->status      = $status;
-        $this->title       = $title;
-        $this->description = $description;
+        $this->status             = $status;
+        $this->title              = $title;
+        $this->description        = $description;
+        $this->description_format = $description_format;
     }
 }

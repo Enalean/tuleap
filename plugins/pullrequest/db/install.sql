@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(256) NOT NULL,
     description TEXT NOT NULL,
+    description_format VARCHAR(10) NOT NULL,
     repository_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
     creation_date INT(11) NOT NULL,

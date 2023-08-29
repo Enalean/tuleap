@@ -316,11 +316,19 @@ class PullRequestsResource extends AuthenticatedResource
             $repository_src->getProject()
         );
 
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpretor = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             $this->status_retriever,
             $this->getGitoliteAccessURLGenerator(),
-            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance())
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
+            $purifier,
+            $content_interpretor
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(
@@ -799,7 +807,8 @@ class PullRequestsResource extends AuthenticatedResource
                 $branch_src,
                 $repository_dest,
                 $branch_dest,
-                $user
+                $user,
+                $content->description_format
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -914,11 +923,18 @@ class PullRequestsResource extends AuthenticatedResource
         }
         $updated_pull_request = $this->pull_request_factory->getPullRequestById($id);
 
+        $purifier                  = \Codendi_HTMLPurifier::instance();
+        $content_interpretor       = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             new CommitStatusRetriever(new CommitStatusDAO()),
             $this->getGitoliteAccessURLGenerator(),
-            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance())
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
+            $purifier,
+            $content_interpretor
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(

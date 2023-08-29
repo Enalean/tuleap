@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest;
 
 use EventManager;
 use GitRepository;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
@@ -31,11 +32,11 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 class PullRequestCreator
 {
     public function __construct(
-        private PullRequestCreatorChecker $creator_checker,
-        private Factory $pull_request_factory,
-        private PullRequestMerger $pull_request_merger,
-        private EventManager $event_manager,
-        private GitPullRequestReferenceCreator $git_pull_request_reference_creator,
+        private readonly PullRequestCreatorChecker $creator_checker,
+        private readonly Factory $pull_request_factory,
+        private readonly PullRequestMerger $pull_request_merger,
+        private readonly EventManager $event_manager,
+        private readonly GitPullRequestReferenceCreator $git_pull_request_reference_creator,
     ) {
     }
 
@@ -55,6 +56,7 @@ class PullRequestCreator
         GitRepository $repository_dest,
         string $branch_dest,
         \PFUser $creator,
+        string|null $description_format,
     ): PullRequest {
         $executor_repository_source      = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
         $executor_repository_destination = GitExec::buildFromRepository($repository_dest);
@@ -88,9 +90,10 @@ class PullRequestCreator
             $sha1_src,
             $repo_dest_id,
             $branch_dest,
-            $sha1_dest
+            $sha1_dest,
+            $description_format ?: Comment::FORMAT_TEXT
         );
-        $pull_request = $this->pull_request_factory->create($creator, $pull_request, $repository_src->getProjectId());
+        $pull_request = $this->pull_request_factory->create($creator, $pull_request, (int) $repository_src->getProjectId());
 
         $this->git_pull_request_reference_creator->createPullRequestReference(
             $pull_request,

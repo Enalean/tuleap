@@ -181,7 +181,8 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             '103e3d371a6f7ee7013ae64ba0d5879fc330af91',
             78,
             'master',
-            'f65cc8e2740a819af60c9f624ae378676291888d'
+            'f65cc8e2740a819af60c9f624ae378676291888d',
+            Comment::FORMAT_TEXT
         );
     }
 }

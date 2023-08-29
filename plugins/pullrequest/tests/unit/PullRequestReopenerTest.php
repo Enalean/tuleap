@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest;
 
 use GitRepository;
 use GitRepositoryFactory;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeReopen;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\GitReference\GitReferenceNotFound;
@@ -313,6 +314,7 @@ final class PullRequestReopenerTest extends TestCase
             $destination_repository_id,
             $destination_reference,
             $destination_reference_sha1,
+            Comment::FORMAT_TEXT,
             'A'
         );
     }
@@ -343,6 +345,7 @@ final class PullRequestReopenerTest extends TestCase
             $destination_repository_id,
             $destination_reference,
             $destination_reference_sha1,
+            Comment::FORMAT_TEXT,
             'R'
         );
     }
@@ -373,6 +376,7 @@ final class PullRequestReopenerTest extends TestCase
             $destination_repository_id,
             $destination_reference,
             $destination_reference_sha1,
+            Comment::FORMAT_TEXT,
             'M'
         );
     }

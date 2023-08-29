@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Info;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
@@ -63,11 +64,16 @@ final class PullRequestInfoUpdater
         }
 
         if ($body->description) {
+            $format = $body->description_format;
+            if ($format === null) {
+                $format = Comment::FORMAT_TEXT;
+            }
             $this->pull_request_factory->updateDescription(
                 $user,
                 $pull_request,
                 $project_id,
-                $body->description
+                $body->description,
+                $format
             );
         }
     }

@@ -44,4 +44,9 @@ class PullRequestPOSTRepresentation
      * @var string {@type string}
      */
     public $branch_dest;
+    /**
+     * @psalm-var string | null
+     * {@type string} {@required false}
+     */
+    public string|null $description_format;
 }

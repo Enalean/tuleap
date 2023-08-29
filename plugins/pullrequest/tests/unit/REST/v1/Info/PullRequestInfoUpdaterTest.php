@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Info;
 
 use Luracast\Restler\RestException;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
@@ -57,7 +58,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
     {
         $user           = UserTestBuilder::anActiveUser()->withId(1234)->build();
         $project_id     = 104;
-        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description");
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description", Comment::FORMAT_TEXT);
 
         $this->pull_request_is_mergeable_checker->expects(self::once())->method("checkUserCanMerge")->willThrowException(new RestException(403, 'Forbidden'));
         $this->factory->expects(self::never())->method("updateTitle");
@@ -72,7 +73,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
     {
         $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
         $project_id     = 104;
-        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description");
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description", Comment::FORMAT_TEXT);
 
         $this->pull_request_is_mergeable_checker->expects(self::never())->method("checkUserCanMerge");
         $this->factory->expects(self::once())->method("updateTitle");
@@ -85,7 +86,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
     {
         $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
         $project_id     = 104;
-        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "", "a description");
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "", "a description", Comment::FORMAT_TEXT);
 
         $this->expectExceptionCode(400);
 
@@ -96,10 +97,28 @@ final class PullRequestInfoUpdaterTest extends TestCase
     {
         $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
         $project_id     = 104;
-        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description");
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description", Comment::FORMAT_TEXT);
 
         $this->factory->expects(self::once())->method("updateTitle");
         $this->factory->expects(self::once())->method("updateDescription");
+
+        $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
+    }
+
+    public function testWhenNoFormatIsDefinedDefaultFormatIsText(): void
+    {
+        $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
+        $project_id     = 104;
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "a description", null);
+
+        $this->factory->expects(self::once())->method("updateTitle");
+        $this->factory->expects(self::once())->method("updateDescription")->with(
+            $user,
+            $this->pullrequest,
+            $project_id,
+            "a description",
+            Comment::FORMAT_TEXT
+        );
 
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }

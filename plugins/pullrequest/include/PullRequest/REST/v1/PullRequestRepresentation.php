@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
@@ -136,8 +138,12 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      */
     public ?PullRequestStatusInfoRepresentation $status_info;
     public bool $user_can_update_title_and_description;
+    public string $description_format;
+    public string $post_processed_description;
 
     public function build(
+        Codendi_HTMLPurifier $purifier,
+        ContentInterpretor $common_mark_interpreter,
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
@@ -154,9 +160,10 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     ) {
         $this->buildMinimal($pull_request, $repository, $repository_dest);
 
-        $project_id        = $repository->getProjectId();
-        $purifier          = Codendi_HTMLPurifier::instance();
-        $this->description = $purifier->purify($pull_request->getDescription(), Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+        $project_id                       = $repository->getProjectId();
+        $this->description_format         = $pull_request->getDescriptionFormat();
+        $this->description                = $purifier->purify($pull_request->getDescription(), Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
+        $this->post_processed_description = $this->getPurifiedDescriptionFromHTML($purifier, $common_mark_interpreter, $pull_request->getDescriptionFormat(), $project_id, $pull_request->getDescription());
 
         $this->reference_src  = $pull_request->getSha1Src();
         $this->reference_dest = $pull_request->getSha1Dest();
@@ -222,5 +229,22 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         ];
 
         return $status_name[$merge_status_acronym];
+    }
+
+    private function getPurifiedDescriptionFromHTML(
+        Codendi_HTMLPurifier $purifier,
+        ContentInterpretor $common_mark_interpreter,
+        string $description_format,
+        int $project_id,
+        string $description,
+    ): string {
+        if ($description_format === Comment::FORMAT_MARKDOWN) {
+            return $common_mark_interpreter->getInterpretedContentWithReferences(
+                $description,
+                $project_id
+            );
+        }
+
+        return $purifier->purify($description, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
     }
 }

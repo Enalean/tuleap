@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reference;
 
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -72,7 +73,7 @@ final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->html_url_builder
         );
 
-        $this->pull_request = new PullRequest(1, '', '', 42, 101, '', '', '', '', '', '');
+        $this->pull_request = new PullRequest(1, '', '', 42, 101, '', '', '', '', '', '', Comment::FORMAT_TEXT);
 
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->repository = $this->createMock(\GitRepository::class);

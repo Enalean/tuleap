@@ -22,22 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Builders;
 
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\PullRequest;
 
 final class PullRequestTestBuilder
 {
-    private int $id             = 15;
-    private string $title       = "This is a title";
-    private string $description = "This is a description";
-    private int $repository_id  = 5;
-    private int $user_id        = 105;
-    private int $creation_date  = 1679910276;
-    private string $branch_src  = "pr-1";
-    private string $branch_dest = "master";
-    private string $sha1_src    = "1b8e9594dc204eb9907f78df8bb60f564c389832";
-    private string $sha1_dest   = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
-    private int $repo_dest_id   = 5;
-    private int $merge_status   = PullRequest::FASTFORWARD_MERGE;
+    private int $id                    = 15;
+    private string $title              = "This is a title";
+    private string $description        = "This is a description";
+    private int $repository_id         = 5;
+    private int $user_id               = 105;
+    private int $creation_date         = 1679910276;
+    private string $branch_src         = "pr-1";
+    private string $branch_dest        = "master";
+    private string $sha1_src           = "1b8e9594dc204eb9907f78df8bb60f564c389832";
+    private string $sha1_dest          = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
+    private int $repo_dest_id          = 5;
+    private int $merge_status          = PullRequest::FASTFORWARD_MERGE;
+    private string $description_format = Comment::FORMAT_TEXT;
 
 
     private function __construct(
@@ -74,6 +76,7 @@ final class PullRequestTestBuilder
             $this->repo_dest_id,
             $this->branch_dest,
             $this->sha1_dest,
+            $this->description_format,
             $this->status,
             $this->merge_status
         );
