@@ -108,10 +108,12 @@ class ScrumPresenterBuilder
         $planning_administration_delegation = new PlanningAdministrationDelegation($project);
         $this->event_manager->dispatch($planning_administration_delegation);
 
-        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-
         $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
+
+        $service                  = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service  = $service !== null && $is_split_feature_flag_enabled;
+        $is_legacy_agiledashboard = ! $is_split_feature_flag_enabled;
+
 
         return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $project, $root_planning),
@@ -130,7 +132,7 @@ class ScrumPresenterBuilder
             $additional_scrum_sections->getAdditionalSectionsControllers(),
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
             $is_using_kanban_service,
-            $is_split_feature_flag_enabled,
+            $is_legacy_agiledashboard,
         );
     }
 

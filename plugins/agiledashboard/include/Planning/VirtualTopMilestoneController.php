@@ -98,9 +98,11 @@ final class VirtualTopMilestoneController extends BaseController
         $breadcrumb_dropdowns->addBreadCrumb(
             $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project)
         );
-        $breadcrumb_dropdowns->addBreadCrumb(
-            $this->top_milestone_crumb_builder->build($this->project)
-        );
+        if (! $this->flag_checker->isProjectAllowedToUseSplitKanban($this->project)) {
+            $breadcrumb_dropdowns->addBreadCrumb(
+                $this->top_milestone_crumb_builder->build($this->project)
+            );
+        }
 
         return $breadcrumb_dropdowns;
     }

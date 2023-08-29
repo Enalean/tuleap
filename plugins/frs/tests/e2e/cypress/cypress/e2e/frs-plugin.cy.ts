@@ -26,7 +26,7 @@ describe("FRS plugin", () => {
     it("user can link a frs release to an agiledashboard release", (): void => {
         cy.projectMemberSession();
         cy.getProjectId("frs-plugin").then((frs_project_id) => {
-            cy.visitProjectService("frs-plugin", "Agile Dashboard");
+            cy.visitProjectService("frs-plugin", "Backlog");
             cy.get("[data-test=expand-collapse-milestone]")
                 .should("have.attr", "data-artifact-id")
                 .as("release_id")

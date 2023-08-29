@@ -1,4 +1,11 @@
-<h1 class="agiledashboard-administration-title">{{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}</h1>
+<h1 class="agiledashboard-administration-title">
+    {{# is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+    {{^ is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+</h1>
 
 <div class="main-project-tabs">
     <nav class="tlp-tabs">

@@ -491,7 +491,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->importConfiguration();
         }
 
-        $presenter = new Planning_ImportTemplateFormPresenter($this->group_id);
+        $presenter = new Planning_ImportTemplateFormPresenter($project, $this->split_kanban_configuration_checker);
         return $this->renderToString('import', $presenter);
     }
 
@@ -641,7 +641,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $backlog_trackers_filtered,
             $planning_trackers_filtered,
             $cardwall_admin,
-            $this->getWarnings($planning)
+            $this->getWarnings($planning),
+            $this->request->getProject(),
+            $this->split_kanban_configuration_checker,
         );
     }
 

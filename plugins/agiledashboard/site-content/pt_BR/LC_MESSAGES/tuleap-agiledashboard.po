@@ -33,6 +33,12 @@ msgid ""
 "Dashboard by the field <strong>%1$s</strong>.</p>"
 msgstr ""
 
+#, php-format
+msgid ""
+"<p>The initial effort of this tracker will be represented in the Backlog by "
+"the field <strong>%1$s</strong>.</p>"
+msgstr ""
+
 msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
 msgstr ""
 
@@ -110,6 +116,12 @@ msgid "Back to semantics"
 msgstr ""
 
 msgid "Backlog"
+msgstr ""
+
+msgid "Backlog administration"
+msgstr ""
+
+msgid "Backlog service"
 msgstr ""
 
 msgid "Backlog title"
@@ -395,6 +407,9 @@ msgstr "Scrum"
 msgid "Scrum Administration of Agile Dashboard"
 msgstr ""
 
+msgid "Scrum Administration of Backlog"
+msgstr ""
+
 msgid "Scrum configuration successfully updated."
 msgstr ""
 
@@ -426,6 +441,9 @@ msgid ""
 msgstr ""
 
 msgid "Service Agiledashboard is disabled."
+msgstr ""
+
+msgid "Service Backlog is disabled."
 msgstr ""
 
 msgid "Some items are not linked to this milestone."
@@ -524,6 +542,9 @@ msgid ""
 msgstr ""
 
 msgid "This is used in the Agile Dashboard if enabled."
+msgstr ""
+
+msgid "This is used in the Backlog if enabled."
 msgstr ""
 
 msgid ""
@@ -666,6 +687,9 @@ msgid "open"
 msgstr ""
 
 msgid "the Agile Dashboard"
+msgstr ""
+
+msgid "the Backlog"
 msgstr ""
 
 msgid "there is no trackers in tracker service"

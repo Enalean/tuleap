@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "\"AddToTopBacklog\" post action cannot be used because the project does not "
@@ -39,6 +39,14 @@ msgstr "%s planification générale"
 msgid ""
 "<p>The initial effort of this tracker will be represented in the Agile "
 "Dashboard by the field <strong>%1$s</strong>.</p>"
+msgstr ""
+"<p>L'effort estimé sera représenté par le champ <strong>%1$s</strong> dans "
+"ce tracker.</p>"
+
+#, php-format
+msgid ""
+"<p>The initial effort of this tracker will be represented in the Backlog by "
+"the field <strong>%1$s</strong>.</p>"
 msgstr ""
 "<p>L'effort estimé sera représenté par le champ <strong>%1$s</strong> dans "
 "ce tracker.</p>"
@@ -134,6 +142,12 @@ msgstr "Retour aux sémantiques"
 
 msgid "Backlog"
 msgstr "Backlog"
+
+msgid "Backlog administration"
+msgstr "Administration du backlog"
+
+msgid "Backlog service"
+msgstr "Service Backlog"
 
 msgid "Backlog title"
 msgstr "Titre du backlog"
@@ -451,6 +465,9 @@ msgstr "Scrum"
 msgid "Scrum Administration of Agile Dashboard"
 msgstr "Administration Scrum du dashboard agile"
 
+msgid "Scrum Administration of Backlog"
+msgstr "Administration Scrum du Backlog"
+
 msgid "Scrum configuration successfully updated."
 msgstr "La configuration de Scrum a été mise à jour."
 
@@ -487,6 +504,9 @@ msgstr ""
 
 msgid "Service Agiledashboard is disabled."
 msgstr "Le service des tableaux de bords agile est désactivé."
+
+msgid "Service Backlog is disabled."
+msgstr "Le service Backlog est désactivé."
 
 msgid "Some items are not linked to this milestone."
 msgstr "Certains éléments n'ont pas été liés à ce jalon."
@@ -604,6 +624,9 @@ msgstr ""
 
 msgid "This is used in the Agile Dashboard if enabled."
 msgstr "Ce champ est utilisé dans le Tableau Agile si activé."
+
+msgid "This is used in the Backlog if enabled."
+msgstr "Ce champ est utilisé dans le Backlog si activé."
 
 msgid ""
 "This option will display all the burnup charts in the project with elements "
@@ -769,6 +792,9 @@ msgstr "ouverts"
 
 msgid "the Agile Dashboard"
 msgstr "le dashboard agile"
+
+msgid "the Backlog"
+msgstr "le Backlog"
 
 msgid "there is no trackers in tracker service"
 msgstr "parce qu'il n'y a pas de trackers"

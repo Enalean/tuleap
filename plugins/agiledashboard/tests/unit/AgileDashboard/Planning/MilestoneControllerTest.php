@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -132,11 +133,12 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->crumb_builder = new AllBreadCrumbsForMilestoneBuilder(
             $this->agile_dashboard_crumb_builder,
             $this->top_milestone_crumb_builder,
-            $this->milestone_crumb_builder
+            $this->milestone_crumb_builder,
+            new CheckSplitKanbanConfiguration(),
         );
 
         $this->service_breadcrumb     = new BreadCrumb(
-            new BreadCrumbLink('Agile Dashboard', '/fake_url')
+            new BreadCrumbLink('Backlog', '/fake_url')
         );
         $this->top_backlog_breadcrumb = new BreadCrumb(
             new BreadCrumbLink('Top backlog', '/fake_url')

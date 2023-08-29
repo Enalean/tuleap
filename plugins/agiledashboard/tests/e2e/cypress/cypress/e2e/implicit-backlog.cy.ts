@@ -20,7 +20,7 @@
 describe(`Planning view Implicit Backlog`, function () {
     it(`Project Member can browse the top backlog`, function () {
         cy.projectMemberSession();
-        cy.visitProjectService("implicit-backlog", "Agile Dashboard");
+        cy.visitProjectService("implicit-backlog", "Backlog");
 
         cy.get("[data-test=backlog]").within(() => {
             cy.contains("[data-test=backlog-item]", "Crossbow Everyday");

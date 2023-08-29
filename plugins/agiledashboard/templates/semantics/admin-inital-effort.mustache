@@ -18,7 +18,14 @@
                         {{> csrf_token_input }}
                      {{/ csrf_token }}
 
-                    <p>{{# dgettext }} tuleap-agiledashboard | This is used in the Agile Dashboard if enabled. {{/ dgettext }}</p>
+                    <p>
+                        {{# is_legacy_agiledashboard }}
+                            {{# dgettext }} tuleap-agiledashboard | This is used in the Agile Dashboard if enabled. {{/ dgettext }}
+                        {{/ is_legacy_agiledashboard }}
+                        {{^ is_legacy_agiledashboard }}
+                            {{# dgettext }} tuleap-agiledashboard | This is used in the Backlog if enabled. {{/ dgettext }}
+                        {{/ is_legacy_agiledashboard }}
+                    </p>
                     <div class="tlp-form-element">
 
                         <label class="tlp-label" for="semantic-initial_effort">

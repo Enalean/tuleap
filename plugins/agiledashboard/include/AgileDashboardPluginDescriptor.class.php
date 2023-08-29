@@ -25,6 +25,6 @@ class AgileDashboardPluginDescriptor extends PluginDescriptor
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-agiledashboard', 'Agile Dashboard'), dgettext('tuleap-agiledashboard', 'Agile Dashboard'));
+        parent::__construct(dgettext('tuleap-agiledashboard', 'Backlog'), dgettext('tuleap-agiledashboard', 'Backlog'));
     }
 }

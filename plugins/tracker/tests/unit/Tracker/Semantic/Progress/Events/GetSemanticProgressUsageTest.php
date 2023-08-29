@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress\Events;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,7 +36,9 @@ class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->event = new GetSemanticProgressUsageEvent();
+        $this->event = new GetSemanticProgressUsageEvent(
+            TrackerTestBuilder::aTracker()->build(),
+        );
     }
 
     public function testItReturnsAnEmptyStateMessageWhenNoPluginsIsUsingTheSemanticOrPlansToUseItInTheFuture(): void
