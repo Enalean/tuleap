@@ -52,7 +52,6 @@ const config = {
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
         webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
     ],
 };
 

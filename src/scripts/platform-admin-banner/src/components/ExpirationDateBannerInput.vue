@@ -82,7 +82,7 @@ export default class ExpirationDateBannerInput extends Vue {
         this.datepicker.setDate(new Date(this.value), false);
     }
 
-    private onDatePickerInput(event: Event): void {
+    onDatePickerInput(event: Event): void {
         const event_target = event.currentTarget;
         if (event_target instanceof HTMLInputElement) {
             this.$emit("input", event_target.value);
