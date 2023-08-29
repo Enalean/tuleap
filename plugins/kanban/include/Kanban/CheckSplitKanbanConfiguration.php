@@ -22,7 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-interface SplitKanbanConfigurationChecker
+final class CheckSplitKanbanConfiguration implements SplitKanbanConfigurationChecker
 {
-    public function isProjectAllowedToUseSplitKanban(\Project $project): bool;
+    public function isProjectAllowedToUseSplitKanban(\Project $project): bool
+    {
+        $list_of_project_ids_with_split_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplitKanbanConfiguration::FEATURE_FLAG);
+
+        if (! $list_of_project_ids_with_split_kanban) {
+            return false;
+        }
+
+        if ($list_of_project_ids_with_split_kanban === [1]) {
+            return true;
+        }
+
+        $is_activated = in_array((int) $project->getID(), $list_of_project_ids_with_split_kanban, true);
+
+        return $is_activated;
+    }
 }

@@ -120,7 +120,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $service_crumb_builder              = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
         $admin_crumb_builder                = new AdministrationCrumbBuilder();
         $header_options_inserter            = new CurrentContextSectionToHeaderOptionsInserter();
-        $split_kanban_configuration_checker = new \Tuleap\Kanban\SplitKanbanConfigurationChecker();
+        $split_kanban_configuration_checker = new \Tuleap\Kanban\CheckSplitKanbanConfiguration();
 
         $milestone_controller_factory = new MilestoneControllerFactory(
             ProjectManager::instance(),

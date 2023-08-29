@@ -26,7 +26,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class SplitKanbanConfigurationCheckerTest extends TestCase
+final class CheckSplitKanbanConfigurationTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -34,7 +34,7 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $checker = new SplitKanbanConfigurationChecker();
+        $checker = new CheckSplitKanbanConfiguration();
 
         self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -45,7 +45,7 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '0');
 
-        $checker = new SplitKanbanConfigurationChecker();
+        $checker = new CheckSplitKanbanConfiguration();
 
         self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -56,7 +56,7 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '123,456');
 
-        $checker = new SplitKanbanConfigurationChecker();
+        $checker = new CheckSplitKanbanConfiguration();
 
         self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -67,7 +67,7 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '123,456');
 
-        $checker = new SplitKanbanConfigurationChecker();
+        $checker = new CheckSplitKanbanConfiguration();
 
         self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -78,7 +78,7 @@ final class SplitKanbanConfigurationCheckerTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '1');
 
-        $checker = new SplitKanbanConfigurationChecker();
+        $checker = new CheckSplitKanbanConfiguration();
 
         self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
