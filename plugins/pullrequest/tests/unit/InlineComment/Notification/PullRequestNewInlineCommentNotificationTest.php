@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\PullRequest;
@@ -73,7 +74,8 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
                 false,
                 0,
                 "right",
-                ""
+                "",
+                Comment::FORMAT_TEXT
             ),
             $code_context_extractor
         );

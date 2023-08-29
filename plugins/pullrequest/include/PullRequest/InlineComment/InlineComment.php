@@ -36,6 +36,7 @@ final class InlineComment implements TimelineEvent
         private int $parent_id,
         private string $position,
         private string $color,
+        private string $format,
     ) {
     }
 
@@ -53,6 +54,7 @@ final class InlineComment implements TimelineEvent
             (int) $row['parent_id'],
             $row['position'],
             $row['color'],
+            $row['format']
         );
     }
 
@@ -119,5 +121,10 @@ final class InlineComment implements TimelineEvent
     public function getColor(): string
     {
         return $this->color;
+    }
+
+    public function getFormat(): string
+    {
+        return $this->format;
     }
 }

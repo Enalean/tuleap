@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -80,7 +81,8 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
             false,
             0,
             "right",
-            ""
+            "",
+            Comment::FORMAT_TEXT
         );
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 
@@ -104,7 +106,8 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
             false,
             0,
             "right",
-            ""
+            "",
+            Comment::FORMAT_TEXT
         );
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 

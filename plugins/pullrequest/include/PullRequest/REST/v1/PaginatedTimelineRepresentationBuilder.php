@@ -70,18 +70,21 @@ class PaginatedTimelineRepresentationBuilder
                 );
             case InlineComment::class:
                 assert($event instanceof InlineComment);
-                return new TimelineInlineCommentRepresentation(
+                return TimelineInlineCommentRepresentation::build(
+                    $this->purifier,
+                    $this->common_mark_interpreter,
                     $event->getFilePath(),
                     $event->getUnidiffOffset(),
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getContent(),
                     $event->isOutdated(),
-                    $project_id,
+                    (int) $project_id,
                     $event->getParentId(),
                     $event->getId(),
                     $event->getPosition(),
-                    $event->getColor()
+                    $event->getColor(),
+                    $event->getFormat()
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);

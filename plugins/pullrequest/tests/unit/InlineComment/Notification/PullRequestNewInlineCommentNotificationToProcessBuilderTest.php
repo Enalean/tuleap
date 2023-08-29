@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PFUser;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\InlineComment\InlineComment;
@@ -192,7 +193,8 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
             false,
             0,
             "right",
-            ""
+            "",
+            Comment::FORMAT_TEXT
         );
     }
 }

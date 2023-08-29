@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use GitRepositoryFactory;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineComment;
@@ -162,7 +163,8 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             false,
             0,
             'right',
-            ""
+            "",
+            Comment::FORMAT_TEXT
         );
     }
 
