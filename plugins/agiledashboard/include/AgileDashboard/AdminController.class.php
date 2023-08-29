@@ -56,6 +56,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -301,7 +302,8 @@ class AdminController extends BaseController
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                     $this->event_manager
                 ),
-                $this->event_manager
+                $this->event_manager,
+                new SplitKanbanConfigurationChecker(),
             );
         }
 

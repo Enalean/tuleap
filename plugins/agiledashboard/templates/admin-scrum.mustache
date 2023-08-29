@@ -28,23 +28,25 @@
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        <div class="tlp-form-element">
-                            <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox"
-                                    id="activate-scrum"
-                                    name="activate-scrum"
-                                    value="1"
-                                    {{# scrum_activated }} checked {{/ scrum_activated }}
-                                > {{ activate_scrum_label }}
-                            </label>
-                            {{^ scrum_activated }}
-                                {{^ has_plannings }}
-                                    <p class="tlp-text-info">
-                                        <i class="fa fa-info-circle"></i> {{ first_scrum_will_be_created }}
-                                    </p>
-                                {{/ has_plannings }}
-                            {{/ scrum_activated }}
-                        </div>
+                        {{^ is_using_kanban_service }}
+                            <div class="tlp-form-element">
+                                <label class="tlp-label tlp-checkbox">
+                                    <input type="checkbox"
+                                        id="activate-scrum"
+                                        name="activate-scrum"
+                                        value="1"
+                                        {{# scrum_activated }} checked {{/ scrum_activated }}
+                                    > {{ activate_scrum_label }}
+                                </label>
+                                {{^ scrum_activated }}
+                                    {{^ has_plannings }}
+                                        <p class="tlp-text-info">
+                                            <i class="fa fa-info-circle"></i> {{ first_scrum_will_be_created }}
+                                        </p>
+                                    {{/ has_plannings }}
+                                {{/ scrum_activated }}
+                            </div>
+                        {{/ is_using_kanban_service }}
 
                         {{# can_scrum_mono_milestone_be_enabled }}
                             <div class="tlp-form-element">

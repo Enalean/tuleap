@@ -72,6 +72,7 @@ class AgileDashboardScrumConfigurationUpdater
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ConfigurationUpdater $configuration_updater,
         \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');
@@ -145,8 +146,14 @@ class AgileDashboardScrumConfigurationUpdater
 
     private function getActivatedScrum()
     {
-        $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($this->request->getProject());
-        $scrum_is_activated  = $this->request->get('activate-scrum');
+        $project = $this->request->getProject();
+
+        $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($project);
+        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            return $scrum_was_activated;
+        }
+
+        $scrum_is_activated = $this->request->get('activate-scrum');
 
         if ($scrum_is_activated && ! $scrum_was_activated) {
             $this->response->scrumActivated();
