@@ -168,6 +168,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
             controller ??
             WritingZoneController({
                 document,
+                project_id: host.controller.getProjectId(),
                 focus_writing_zone_when_connected: true,
                 is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
             }),

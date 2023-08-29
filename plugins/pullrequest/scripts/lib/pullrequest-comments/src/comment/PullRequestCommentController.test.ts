@@ -192,4 +192,8 @@ describe("PullRequestCommentController", () => {
             ReplyCommentFormPresenter.buildNotSubmitted(reply_comment_presenter)
         );
     });
+
+    it("getProjectId() should return the current project id", () => {
+        expect(getController(SaveNewReplyToCommentStub.withDefault()).getProjectId()).toBe(105);
+    });
 });

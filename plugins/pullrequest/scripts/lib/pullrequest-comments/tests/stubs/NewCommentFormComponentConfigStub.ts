@@ -23,9 +23,11 @@ export const NewCommentFormComponentConfigStub = {
     withCancelActionAllowed: (): NewCommentFormComponentConfig => ({
         is_cancel_allowed: true,
         is_autofocus_enabled: true,
+        project_id: 105,
     }),
     withCancelActionDisallowed: (): NewCommentFormComponentConfig => ({
         is_cancel_allowed: false,
         is_autofocus_enabled: false,
+        project_id: 105,
     }),
 };

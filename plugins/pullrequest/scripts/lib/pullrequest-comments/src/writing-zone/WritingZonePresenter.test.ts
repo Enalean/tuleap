@@ -20,60 +20,79 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { WritingZonePresenter } from "./WritingZonePresenter";
 
+const project_id = 105;
+
 describe("WritingZonePresenter", () => {
     let initial_presenter: WritingZonePresenter;
 
     beforeEach(() => {
-        initial_presenter = WritingZonePresenter.buildInitial(true);
+        initial_presenter = WritingZonePresenter.buildInitial(project_id, true);
     });
 
     it("buildInitial() should return an initial presenter", () => {
         expect(initial_presenter).toStrictEqual({
             initial_content: "",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 
     it("buildFocused() should return a presenter with is_focused being true", () => {
         expect(WritingZonePresenter.buildFocused(initial_presenter)).toStrictEqual({
             initial_content: "",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: true,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 
     it("buildBlurred() should return a presenter with is_focused being false", () => {
         expect(WritingZonePresenter.buildBlurred(initial_presenter)).toStrictEqual({
             initial_content: "",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 
     it("buildWritingMode() should return a presenter with is_focused and is_in_writing_mode being true", () => {
         expect(WritingZonePresenter.buildWritingMode(initial_presenter)).toStrictEqual({
             initial_content: "",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: true,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 
-    it("buildPreviewMode() should return a presenter with is_focused and is_in_preview_mode being true", () => {
-        expect(WritingZonePresenter.buildPreviewMode(initial_presenter)).toStrictEqual({
+    it("buildPreviewMode() should return a presenter with is_focused and is_in_preview_mode being true + previewed_content set", () => {
+        expect(
+            WritingZonePresenter.buildPreviewMode(initial_presenter, "<p>Previewed content</p>")
+        ).toStrictEqual({
             initial_content: "",
+            previewed_content: "<p>Previewed content</p>",
+            has_preview_error: false,
             is_focused: true,
             is_in_writing_mode: false,
             is_in_preview_mode: true,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 
@@ -82,10 +101,13 @@ describe("WritingZonePresenter", () => {
             WritingZonePresenter.buildWithContent(initial_presenter, "This is new content")
         ).toStrictEqual({
             initial_content: "This is new content",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
             is_comments_markdown_mode_enabled: true,
+            project_id,
         });
     });
 });

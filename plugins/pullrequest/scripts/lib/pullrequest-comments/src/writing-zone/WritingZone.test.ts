@@ -30,6 +30,9 @@ type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
     _some_attribute: never;
 }>;
 
+const project_id = 105;
+const is_comments_markdown_mode_enabled = true;
+
 describe("WritingZone", () => {
     let doc: Document,
         focus_writing_zone_when_connected: boolean,
@@ -51,7 +54,8 @@ describe("WritingZone", () => {
         writing_zone_controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
-            is_comments_markdown_mode_enabled: true,
+            is_comments_markdown_mode_enabled,
+            project_id,
         });
 
         focusWritingZone = vi.spyOn(writing_zone_controller, "focusWritingZone");
@@ -90,6 +94,8 @@ describe("WritingZone", () => {
                 writing_zone_controller: WritingZoneController({
                     document: doc,
                     focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
+                    is_comments_markdown_mode_enabled,
+                    project_id,
                 }),
             };
 

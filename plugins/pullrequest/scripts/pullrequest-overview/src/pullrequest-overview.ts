@@ -34,13 +34,15 @@ import {
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
     IS_COMMENTS_MARKDOWN_MODE_ENABLED,
+    PROJECT_ID,
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
+    const project_id = getDatasetItemOrThrow(mount_point, "projectId");
     const base_url = buildBaseUrl(
         window.location,
         getDatasetItemOrThrow(mount_point, "repositoryId"),
-        getDatasetItemOrThrow(mount_point, "projectId")
+        project_id
     );
 
     createApp(OverviewApp)
@@ -51,6 +53,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
             CURRENT_USER_ID,
             Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10)
         )
+        .provide(PROJECT_ID, project_id)
         .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,

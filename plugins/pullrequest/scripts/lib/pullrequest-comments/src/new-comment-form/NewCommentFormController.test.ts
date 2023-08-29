@@ -166,4 +166,8 @@ describe("NewCommentFormController", () => {
             );
         });
     });
+
+    it("getProjectId() should return the project id provided in the configuration", () => {
+        expect(getController().getProjectId()).toBe(105);
+    });
 });

@@ -26,6 +26,9 @@ import { WritingZonePresenter } from "./WritingZonePresenter";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
+const project_id = 105;
+const is_comments_markdown_mode_enabled = true;
+
 describe("WritingZoneTemplate", () => {
     let controller: ControlWritingZone, textarea: HTMLTextAreaElement;
 
@@ -33,6 +36,8 @@ describe("WritingZoneTemplate", () => {
         controller = WritingZoneController({
             document: document.implementation.createHTMLDocument(),
             focus_writing_zone_when_connected: false,
+            project_id,
+            is_comments_markdown_mode_enabled,
         });
 
         textarea = document.implementation.createHTMLDocument().createElement("textarea");
@@ -53,7 +58,10 @@ describe("WritingZoneTemplate", () => {
     it("should display tabs", () => {
         const writing_zone = renderWritingZone({
             controller,
-            presenter: WritingZonePresenter.buildInitial(true),
+            presenter: WritingZonePresenter.buildInitial(
+                project_id,
+                is_comments_markdown_mode_enabled
+            ),
         } as HostElement);
 
         const writing_tab = selectOrThrow(writing_zone, "[data-test=writing-tab]");
@@ -67,7 +75,7 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(true)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
             ),
             textarea,
         } as HostElement);
@@ -82,7 +90,8 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildPreviewMode(
-                WritingZonePresenter.buildInitial(true)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                "<p>Previewed content</p>"
             ),
             textarea,
         } as HostElement);
@@ -90,6 +99,24 @@ describe("WritingZoneTemplate", () => {
         const preview_element = selectOrThrow(writing_zone, "[data-test=writing-zone-preview]");
 
         expect(preview_element).toBeDefined();
+        expect(preview_element.innerHTML).toBe("<p>Previewed content</p>");
         expect(writing_zone.querySelector("[data-test=writing-zone-textarea]")).toBeNull();
+    });
+
+    it("when the WritingZone is in preview mode with error, then the preview should display an error", () => {
+        const writing_zone = renderWritingZone({
+            controller,
+            presenter: WritingZonePresenter.buildPreviewWithError(
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+            ),
+            textarea,
+        } as HostElement);
+
+        const preview_element = selectOrThrow(
+            writing_zone,
+            "[data-test=writing-zone-preview-error]"
+        );
+
+        expect(preview_element).toBeDefined();
     });
 });

@@ -19,4 +19,5 @@
 
 export interface PullRequestPresenter {
     readonly pull_request_id: number;
+    readonly project_id: number;
 }

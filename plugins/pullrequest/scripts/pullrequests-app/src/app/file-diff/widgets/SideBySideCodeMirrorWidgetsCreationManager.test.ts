@@ -54,6 +54,8 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/NewInlineCommentContextBuilder";
 
+const project_id = 105;
+
 describe("side-by-side-code-mirror-widgets-creation-manager", () => {
     let left_code_mirror: Editor,
         right_code_mirror: Editor,
@@ -560,6 +562,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_LEFT,
                 pull_request_id,
+                project_id,
                 user_id,
                 user_avatar_url,
                 file_path,
@@ -569,6 +572,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_RIGHT,
                 pull_request_id,
+                project_id,
                 user_id,
                 user_avatar_url,
                 file_path,
@@ -587,6 +591,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,
@@ -600,6 +605,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     code_mirror: left_code_mirror,
                     line_number: code_mirror_line_number,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     context: NewInlineCommentContextBuilder.fromContext(
@@ -636,6 +642,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,
@@ -682,6 +689,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,
@@ -704,6 +712,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,
@@ -717,6 +726,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     code_mirror: right_code_mirror,
                     line_number: code_mirror_line_number,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     context: NewInlineCommentContextBuilder.fromContext(
@@ -753,6 +763,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,
@@ -799,6 +810,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    project_id,
                     user_id,
                     user_avatar_url,
                     file_path,

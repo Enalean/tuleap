@@ -73,6 +73,7 @@ export interface InlineCommentWidgetCreationParams extends CommentWidgetCreation
 
 export interface NewInlineCommentFormWidgetCreationParams extends CommentWidgetCreationParams {
     readonly pull_request_id: number;
+    readonly project_id: number;
     readonly user_id: number;
     readonly user_avatar_url: string;
     readonly context: InlineCommentContext;

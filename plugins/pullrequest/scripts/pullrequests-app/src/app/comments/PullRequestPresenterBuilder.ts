@@ -18,15 +18,11 @@
  */
 
 import type { PullRequestPresenter } from "@tuleap/plugin-pullrequest-comments";
-
-interface PullRequestRepresentation {
-    readonly id: number;
-}
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export const PullRequestPresenterBuilder = {
-    fromPullRequest: (
-        pull_request_representation: PullRequestRepresentation
-    ): PullRequestPresenter => ({
-        pull_request_id: pull_request_representation.id,
+    fromPullRequest: (pull_request: PullRequest): PullRequestPresenter => ({
+        pull_request_id: pull_request.id,
+        project_id: pull_request.repository.project.id,
     }),
 };

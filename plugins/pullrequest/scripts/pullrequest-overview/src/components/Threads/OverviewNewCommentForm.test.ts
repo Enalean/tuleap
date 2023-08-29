@@ -29,6 +29,7 @@ import {
     DISPLAY_TULEAP_API_ERROR,
     IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
+    PROJECT_ID,
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
 import * as strict_inject from "@tuleap/vue-strict-inject";
@@ -58,6 +59,8 @@ describe("OverviewNewCommentForm", () => {
                     return noop;
                 case IS_COMMENTS_MARKDOWN_MODE_ENABLED:
                     return true;
+                case PROJECT_ID:
+                    return 105;
                 default:
                     throw new Error("Tried to strictInject a value while it was not mocked");
             }

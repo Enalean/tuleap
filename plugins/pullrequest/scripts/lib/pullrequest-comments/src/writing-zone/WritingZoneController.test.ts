@@ -18,10 +18,16 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { okAsync, errAsync } from "neverthrow";
+import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./WritingZone";
 import type { WritingZoneConfig } from "./WritingZoneController";
 import { PARENT_ELEMENT_ACTIVE_CLASS, WritingZoneController } from "./WritingZoneController";
 import { WritingZonePresenter } from "./WritingZonePresenter";
+import * as preview_fetcher from "./WritingZoneCommonMarkPreviewFetcher";
+
+const project_id = 105;
+const is_comments_markdown_mode_enabled = true;
 
 describe("WritingZoneController", () => {
     let doc: Document, textarea: HTMLTextAreaElement, config: WritingZoneConfig;
@@ -32,24 +38,29 @@ describe("WritingZoneController", () => {
         config = {
             document: doc,
             focus_writing_zone_when_connected: false,
-            is_comments_markdown_mode_enabled: true,
+            is_comments_markdown_mode_enabled,
+            project_id,
         };
     });
 
     it("initWritingZone() should assign the WritingZone a default presenter", () => {
         const host = {
             presenter: undefined,
-            is_comments_markdown_mode_enabled: true,
+            is_comments_markdown_mode_enabled,
+            project_id,
         } as unknown as HostElement;
 
         WritingZoneController(config).initWritingZone(host);
 
         expect(host.presenter).toStrictEqual({
             initial_content: "",
+            previewed_content: "",
+            has_preview_error: false,
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: config.is_comments_markdown_mode_enabled,
+            is_comments_markdown_mode_enabled,
+            project_id,
         });
     });
 
@@ -76,7 +87,9 @@ describe("WritingZoneController", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
-            presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+            presenter: WritingZonePresenter.buildBlurred(
+                WritingZonePresenter.buildInitial(project_id)
+            ),
             parentElement: parent_element,
         } as unknown as HostElement;
 
@@ -102,7 +115,9 @@ describe("WritingZoneController", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
-            presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
+            presenter: WritingZonePresenter.buildFocused(
+                WritingZonePresenter.buildInitial(project_id)
+            ),
             parentElement: parent_element,
         } as unknown as HostElement;
 
@@ -113,6 +128,8 @@ describe("WritingZoneController", () => {
                 ...doc,
                 activeElement: textarea,
             },
+            is_comments_markdown_mode_enabled,
+            project_id,
         }).blurWritingZone(host);
 
         expect(blur).toHaveBeenCalledOnce();
@@ -126,7 +143,8 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildPreviewMode(
-                WritingZonePresenter.buildInitial(true)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                "<p>Previewed content</p>"
             ),
         } as HostElement;
 
@@ -141,29 +159,83 @@ describe("WritingZoneController", () => {
         expect(host.presenter.is_in_writing_mode).toBe(true);
     });
 
-    it("switchToPreviewMode() should focus WritingZone and set the presenter to preview_mode", () => {
+    it(`switchToPreviewMode() should:
+        - fetch the previewed content in commonmark
+        - then set the presenter to Preview
+        - Load the tooltips`, async () => {
         vi.useFakeTimers();
 
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(true)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
             ),
         } as HostElement;
 
-        WritingZoneController(config).switchToPreviewMode(host);
+        const content_to_preview = "Content to preview";
+        const previewed_content = "<p>Previewed content</p>";
+        textarea.value = content_to_preview;
+
+        vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
+            okAsync(previewed_content)
+        );
+        vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
+            // do nothing
+        });
+
+        await WritingZoneController(config).switchToPreviewMode(host);
 
         vi.advanceTimersToNextTimer();
 
-        expect(host.presenter.is_focused).toBe(true);
-        expect(host.presenter.is_in_preview_mode).toBe(true);
+        expect(preview_fetcher.fetchCommonMarkPreview).toHaveBeenCalledWith(
+            project_id,
+            content_to_preview
+        );
+        expect(host.presenter).toStrictEqual(
+            WritingZonePresenter.buildPreviewMode(host.presenter, previewed_content)
+        );
+        expect(tooltip.loadTooltips).toHaveBeenCalledOnce();
+    });
+
+    it(`When an error occurres while the preview is fetched, then switchToPreviewMode() should:
+        - then set the presenter to PreviewWithError
+        - not load the tooltips`, async () => {
+        vi.useFakeTimers();
+
+        const host = {
+            textarea,
+            presenter: WritingZonePresenter.buildWritingMode(
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+            ),
+        } as HostElement;
+
+        textarea.value = "Content to preview";
+
+        vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
+            errAsync("Some error we cannot display")
+        );
+        vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
+            // do nothing
+        });
+
+        await WritingZoneController(config).switchToPreviewMode(host);
+
+        vi.advanceTimersToNextTimer();
+
+        expect(host.presenter).toStrictEqual(
+            WritingZonePresenter.buildPreviewWithError(host.presenter)
+        );
+        expect(tooltip.loadTooltips).not.toHaveBeenCalled();
     });
 
     it("resetWritingZone() should empty + blur the <textarea/> and display back the writing mode", () => {
         const parent_element = doc.createElement("div");
         const host = {
             textarea,
-            presenter: WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial()),
+            presenter: WritingZonePresenter.buildPreviewMode(
+                WritingZonePresenter.buildInitial(project_id),
+                "<p>Please rebase!</p>"
+            ),
             parentElement: parent_element,
         } as unknown as HostElement;
 
@@ -176,6 +248,8 @@ describe("WritingZoneController", () => {
                 ...doc,
                 activeElement: textarea,
             },
+            project_id,
+            is_comments_markdown_mode_enabled,
         }).resetWritingZone(host);
 
         expect(textarea.value).toBe("");
@@ -194,6 +268,8 @@ describe("WritingZoneController", () => {
             expect(
                 WritingZoneController({
                     document: doc,
+                    is_comments_markdown_mode_enabled,
+                    project_id,
                     focus_writing_zone_when_connected: should_focus_when_writing_zone_once_rendered,
                 }).shouldFocusWritingZoneWhenConnected()
             ).toBe(expected);
@@ -202,12 +278,14 @@ describe("WritingZoneController", () => {
 
     it("setWritingZoneContent() should set the WritingZone initial_content", () => {
         const host = {
-            presenter: WritingZonePresenter.buildInitial(),
+            presenter: WritingZonePresenter.buildInitial(project_id),
         } as unknown as HostElement;
         const new_content = "This is new content";
 
         WritingZoneController({
             document: doc,
+            is_comments_markdown_mode_enabled,
+            project_id,
             focus_writing_zone_when_connected: true,
         }).setWritingZoneContent(host, new_content);
 

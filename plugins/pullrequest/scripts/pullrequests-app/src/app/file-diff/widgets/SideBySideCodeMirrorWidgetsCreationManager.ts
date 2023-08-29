@@ -38,6 +38,7 @@ export interface ManageCodeMirrorWidgetsCreation {
     displayNewInlineCommentForm: (
         position: InlineCommentPosition,
         pull_request_id: number,
+        project_id: number,
         user_id: number,
         user_avatar_url: string,
         file_path: string,
@@ -131,6 +132,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
         displayNewInlineCommentForm: (
             position: InlineCommentPosition,
             pull_request_id: number,
+            project_id: number,
             user_id: number,
             user_avatar_url: string,
             file_path: string,
@@ -156,6 +158,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                 code_mirror,
                 line_number: code_mirror_line_number,
                 pull_request_id,
+                project_id,
                 user_id,
                 user_avatar_url,
                 context: NewInlineCommentContextBuilder.fromContext(

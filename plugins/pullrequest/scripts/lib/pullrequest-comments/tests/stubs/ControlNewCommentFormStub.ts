@@ -29,4 +29,5 @@ export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
         // Do nothing
     },
     shouldFocusWritingZoneOnceRendered: () => true,
+    getProjectId: () => 105,
 });

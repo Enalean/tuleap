@@ -70,6 +70,7 @@ import {
     DISPLAY_TULEAP_API_ERROR,
     DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
     IS_COMMENTS_MARKDOWN_MODE_ENABLED,
+    PROJECT_ID,
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
@@ -109,6 +110,7 @@ const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const user_id: number = strictInject(CURRENT_USER_ID);
+const project_id: number = strictInject(PROJECT_ID);
 const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
 const user_locale: string = strictInject(USER_LOCALE_KEY);
@@ -131,6 +133,7 @@ const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
 });
 const current_pull_request_presenter = ref<PullRequestPresenter>({
     pull_request_id,
+    project_id,
 });
 const description_comment_presenter = ref<null | PullRequestDescriptionCommentPresenter>(null);
 const description_comment_controller = ref<ControlPullRequestDescriptionComment>(
@@ -153,7 +156,8 @@ watch(
         description_comment_presenter.value =
             DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(
                 props.pull_request_info,
-                props.pull_request_author
+                props.pull_request_author,
+                project_id
             );
 
         fetchPullRequestTimelineItems(pull_request_id)
