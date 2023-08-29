@@ -97,7 +97,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public $merge_status;
 
     /**
-     * @var array {@type PullRequestShortStatRepresentation}
+     * @var PullRequestShortStatRepresentation {@type PullRequestShortStatRepresentation}
      */
     public $short_stat;
 

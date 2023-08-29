@@ -51,12 +51,12 @@ class PullRequestMinimalRepresentation
     public $uri;
 
     /**
-     * @var int {@type GitRepositoryReference}
+     * @var GitRepositoryReference {@type GitRepositoryReference}
      */
     public $repository;
 
     /**
-     * @var int {@type GitRepositoryReference}
+     * @var GitRepositoryReference {@type GitRepositoryReference}
      */
     public $repository_dest;
 

@@ -117,9 +117,11 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
 
-        $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
-        $admin_crumb_builder          = new AdministrationCrumbBuilder();
-        $header_options_inserter      = new CurrentContextSectionToHeaderOptionsInserter();
+        $service_crumb_builder              = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
+        $admin_crumb_builder                = new AdministrationCrumbBuilder();
+        $header_options_inserter            = new CurrentContextSectionToHeaderOptionsInserter();
+        $split_kanban_configuration_checker = new \Tuleap\Kanban\SplitKanbanConfigurationChecker();
+
         $milestone_controller_factory = new MilestoneControllerFactory(
             ProjectManager::instance(),
             $milestone_factory,
@@ -150,7 +152,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 ),
                 $header_options_inserter
             ),
-            new \Tuleap\Kanban\SplitKanbanConfigurationChecker(),
+            $split_kanban_configuration_checker,
         );
 
         $ugroup_manager = new UGroupManager();
@@ -200,7 +202,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $event_manager,
                 $this->getPlanningFactory(),
                 $project_explicit_backlog_dao,
-                new AddToTopBacklogPostActionDao()
+                new AddToTopBacklogPostActionDao(),
+                $split_kanban_configuration_checker,
             ),
             $event_manager,
             new PlanningUpdater(
@@ -229,7 +232,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 Tracker_HierarchyFactory::instance(),
                 TrackerFactory::instance(),
                 BackendLogger::getDefaultLogger(),
-            )
+            ),
+            $split_kanban_configuration_checker,
         );
     }
 

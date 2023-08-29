@@ -75,6 +75,7 @@ class ScrumPresenterBuilder
         PlanningFactory $planning_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         $this->config_manager                     = $config_manager;
         $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
@@ -107,7 +108,7 @@ class ScrumPresenterBuilder
         $this->event_manager->dispatch($planning_administration_delegation);
 
         $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $service !== null;
+        $is_using_kanban_service = $service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
 
         return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $project, $root_planning),
