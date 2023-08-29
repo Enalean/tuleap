@@ -44,6 +44,7 @@ import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentW
 import {
     INLINE_COMMENT_POSITION_LEFT,
     TYPE_INLINE_COMMENT,
+    FORMAT_TEXT,
 } from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
 
@@ -223,6 +224,8 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 position: INLINE_COMMENT_POSITION_LEFT,
                 parent_id: 0,
                 content: "Please give more precisions",
+                post_processed_content: "Please give more precisions",
+                format: FORMAT_TEXT,
                 file_path: "README.md",
                 user: {
                     id: 102,

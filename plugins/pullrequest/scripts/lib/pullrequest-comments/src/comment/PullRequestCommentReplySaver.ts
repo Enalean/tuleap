@@ -25,34 +25,39 @@ import type {
     NewCommentOnFile,
     NewGlobalComment,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import { getContentFormat } from "../helpers/content-format";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type {
     PullRequestCommentPresenter,
     PullRequestGlobalCommentPresenter,
     PullRequestInlineCommentPresenter,
 } from "./PullRequestCommentPresenter";
-import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface SaveNewReplyToComment {
     saveReply(
         root_comment: PullRequestCommentPresenter,
-        new_reply: ReplyCommentFormPresenter
+        new_reply: ReplyCommentFormPresenter,
+        is_comments_markdown_mode_enabled: boolean
     ): ResultAsync<PullRequestComment, Fault>;
 }
 
 const saveReplyToComment = (
     root_comment: PullRequestGlobalCommentPresenter,
-    new_reply: ReplyCommentFormPresenter
+    new_reply: ReplyCommentFormPresenter,
+    is_comments_markdown_mode_enabled: boolean
 ): ResultAsync<PullRequestComment, Fault> =>
     postJSON<NewGlobalComment>(uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
         user_id: new_reply.comment_author.user_id,
         parent_id: root_comment.id,
         content: new_reply.comment_content,
+        format: getContentFormat(is_comments_markdown_mode_enabled),
     }).map((new_comment) => ({ ...new_comment }));
 
 const saveReplyToInlineComment = (
     root_comment: PullRequestInlineCommentPresenter,
-    new_reply: ReplyCommentFormPresenter
+    new_reply: ReplyCommentFormPresenter,
+    is_comments_markdown_mode_enabled: boolean
 ): ResultAsync<PullRequestComment, Fault> => {
     return postJSON<NewCommentOnFile>(
         uri`/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
@@ -63,6 +68,7 @@ const saveReplyToInlineComment = (
             file_path: root_comment.file.file_path,
             position: root_comment.file.position,
             unidiff_offset: root_comment.file.unidiff_offset,
+            format: getContentFormat(is_comments_markdown_mode_enabled),
         }
     ).map((new_inline_comment) => ({
         type: TYPE_INLINE_COMMENT,
@@ -74,9 +80,10 @@ const saveReplyToInlineComment = (
 export const PullRequestCommentNewReplySaver = (): SaveNewReplyToComment => ({
     saveReply: (
         root_comment: PullRequestCommentPresenter,
-        new_reply: ReplyCommentFormPresenter
+        new_reply: ReplyCommentFormPresenter,
+        is_comments_markdown_mode_enabled: boolean
     ): ResultAsync<PullRequestComment, Fault> =>
         root_comment.type === TYPE_INLINE_COMMENT
-            ? saveReplyToInlineComment(root_comment, new_reply)
-            : saveReplyToComment(root_comment, new_reply),
+            ? saveReplyToInlineComment(root_comment, new_reply, is_comments_markdown_mode_enabled)
+            : saveReplyToComment(root_comment, new_reply, is_comments_markdown_mode_enabled),
 });

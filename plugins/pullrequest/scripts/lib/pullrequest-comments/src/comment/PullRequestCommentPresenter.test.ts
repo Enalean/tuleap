@@ -21,7 +21,11 @@ import { describe, expect, it } from "vitest";
 import type { User, CommentOnFile, GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import {
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+    FORMAT_COMMONMARK,
+} from "@tuleap/plugin-pullrequest-constants";
 
 describe("PullRequestCommentPresenterBuilder", () => {
     it("should build a CommentReplyPresenter from a GlobalComment", () => {
@@ -31,6 +35,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
             type: TYPE_GLOBAL_COMMENT,
             post_date: "2020/07/13 16:16",
             content: "",
+            post_processed_content: "",
+            format: FORMAT_COMMONMARK,
             user: {} as User,
             parent_id: 12,
             color: "",
@@ -53,6 +59,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
             type: TYPE_INLINE_COMMENT,
             post_date: "2020/07/13 16:16",
             content: "",
+            post_processed_content: "",
+            format: FORMAT_COMMONMARK,
             user: {} as User,
             parent_id: 12,
             color: "",

@@ -20,6 +20,7 @@
 import {
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
+    FORMAT_COMMONMARK,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { CommentOnFile, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenterBuilder } from "./PullRequestCommentPresenterBuilder";
@@ -42,6 +43,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
             id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment",
+            post_processed_content: "<p>my comment</p>",
+            format: FORMAT_COMMONMARK,
             user,
             file_path: "README.md",
             unidiff_offset: 8,

@@ -58,18 +58,20 @@ export const NewCommentFormController = (
     saveNewComment: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildSavingComment(host.presenter);
 
-        comment_saver.postComment(host.presenter.comment).match(
-            (payload: PullRequestComment) => {
-                post_submit_callback(payload);
+        comment_saver
+            .postComment(host.presenter.comment, host.is_comments_markdown_mode_enabled)
+            .match(
+                (payload: PullRequestComment) => {
+                    post_submit_callback(payload);
 
-                host.writing_zone_controller.resetWritingZone(host.writing_zone);
-                host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
-            },
-            (fault) => {
-                host.presenter = NewCommentFormPresenter.buildNotSavingComment(host.presenter);
-                on_error_callback(fault);
-            }
-        );
+                    host.writing_zone_controller.resetWritingZone(host.writing_zone);
+                    host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
+                },
+                (fault) => {
+                    host.presenter = NewCommentFormPresenter.buildNotSavingComment(host.presenter);
+                    on_error_callback(fault);
+                }
+            );
     },
     handleWritingZoneContentChange: (host: NewCommentForm, new_comment: string): void => {
         host.presenter = NewCommentFormPresenter.buildWithUpdatedComment(

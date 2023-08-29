@@ -20,6 +20,7 @@
 import {
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
+    FORMAT_TEXT,
 } from "@tuleap/plugin-pullrequest-constants";
 
 import type {
@@ -46,6 +47,8 @@ const comment_presenter_base: PullRequestInlineCommentPresenter = {
     },
     post_date: "a moment ago",
     content: "Please rebase",
+    post_processed_content: "Please rebase",
+    format: FORMAT_TEXT,
     parent_id: 0,
     type: TYPE_INLINE_COMMENT,
     color: "",

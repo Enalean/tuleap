@@ -26,6 +26,7 @@ import {
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
+    FORMAT_COMMONMARK,
 } from "@tuleap/plugin-pullrequest-constants";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
@@ -37,7 +38,9 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
         user_url: "https://example.com/John/Doe/profile.html",
     },
     post_date: "a moment ago",
-    content: "Please rebase",
+    content: "** Please rebase **",
+    post_processed_content: "<b>Please rebase</b>",
+    format: FORMAT_COMMONMARK,
     parent_id: 0,
     type: TYPE_GLOBAL_COMMENT,
     color: "",

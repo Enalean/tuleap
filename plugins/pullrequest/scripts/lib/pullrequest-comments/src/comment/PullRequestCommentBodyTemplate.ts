@@ -21,10 +21,10 @@ import DOMPurify from "dompurify";
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
-import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import { TYPE_INLINE_COMMENT, FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
+import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
-import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -93,6 +93,14 @@ const getBodyClasses = (host: PullRequestCommentComponentType): MapOfClasses => 
         host.comment.type === TYPE_INLINE_COMMENT && host.comment.is_outdated,
 });
 
+const getContent = (comment: PullRequestCommentPresenter): string => {
+    if (comment.format === FORMAT_COMMONMARK) {
+        return DOMPurify.sanitize(comment.post_processed_content);
+    }
+
+    return DOMPurify.sanitize(comment.content);
+};
+
 export const buildBodyForComment = (
     host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
@@ -109,7 +117,7 @@ export const buildBodyForComment = (
         <p
             class="pull-request-comment-text"
             data-test="pull-request-comment-text"
-            innerHTML="${DOMPurify.sanitize(comment.content)}"
+            innerHTML="${getContent(comment)}"
         ></p>
     </div>
 `;

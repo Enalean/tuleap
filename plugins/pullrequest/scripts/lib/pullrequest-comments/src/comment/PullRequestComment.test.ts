@@ -147,10 +147,10 @@ describe("PullRequestComment", () => {
                 relative_date_helper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([
                     PullRequestCommentPresenterStub.buildInlineCommentWithData({
-                        content: "First reply",
+                        post_processed_content: "First reply",
                     }),
                     PullRequestCommentPresenterStub.buildInlineCommentWithData({
-                        content: last_reply_text,
+                        post_processed_content: last_reply_text,
                     }),
                 ]),
                 content: () => target,

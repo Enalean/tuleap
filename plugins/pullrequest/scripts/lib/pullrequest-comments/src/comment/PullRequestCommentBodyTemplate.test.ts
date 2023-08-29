@@ -19,12 +19,17 @@
 
 import { describe, beforeEach, expect, it } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import { getCommentBody } from "./PullRequestCommentBodyTemplate";
-import type { HostElement } from "./PullRequestComment";
+import {
+    TYPE_INLINE_COMMENT,
+    FORMAT_COMMONMARK,
+    FORMAT_TEXT,
+} from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
-import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
+import { getCommentBody } from "./PullRequestCommentBodyTemplate";
+import type { HostElement } from "./PullRequestComment";
+import type { CommonComment } from "./PullRequestCommentPresenter";
 
 describe("PullRequestCommentBodyTemplate", () => {
     let target: ShadowRoot;
@@ -113,5 +118,27 @@ describe("PullRequestCommentBodyTemplate", () => {
             target.querySelector("[data-test=pullrequest-comment-with-link-to-file]")
         ).toBeNull();
         expect(target.querySelector("[data-test=pullrequest-comment-only-file-name]")).toBeNull();
+    });
+
+    it.each([
+        ["post_processed_content" as keyof CommonComment, FORMAT_COMMONMARK],
+        ["content" as keyof CommonComment, FORMAT_TEXT],
+    ])(`should display the comment's %s when its format is %s`, (expected_content_key, format) => {
+        const host = {
+            relative_date_helper: RelativeDateHelperStub,
+            comment: PullRequestCommentPresenterStub.buildInlineCommentWithData({
+                content: "Text content",
+                post_processed_content: "Processed commonmark content",
+                format,
+            }),
+        } as unknown as HostElement;
+
+        const render = getCommentBody(host, GettextProviderStub);
+
+        render(host, target);
+
+        const content = selectOrThrow(target, "[data-test=pull-request-comment-text]");
+
+        expect(content.textContent?.trim()).toBe(host.comment[expected_content_key]);
     });
 });
