@@ -55,11 +55,15 @@ const displayPreviewMode = (
         `;
     }
 
+    const sanitized_content = DOMPurify.sanitize(host.presenter.previewed_content, {
+        ADD_TAGS: ["tlp-syntax-highlighting"],
+    });
+
     return html`
         <div
             class="pull-request-comment-writing-zone-commonmark-preview pull-request-comment-text"
             data-test="writing-zone-preview"
-            innerHTML="${DOMPurify.sanitize(host.presenter.previewed_content)}"
+            innerHTML="${sanitized_content}"
         ></div>
     `;
 };

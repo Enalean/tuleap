@@ -26,6 +26,7 @@ use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -64,6 +65,13 @@ class PullrequestDisplayer
             new CssAssetWithoutVariantDeclinaisons(
                 $assets,
                 'pull-requests-style'
+            )
+        );
+
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeCoreAssets(),
+                'syntax-highlight.js'
             )
         );
 

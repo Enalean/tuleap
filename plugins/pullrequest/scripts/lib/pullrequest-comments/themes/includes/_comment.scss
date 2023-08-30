@@ -129,6 +129,26 @@ $thread-border-width: 2px;
     font-size: 0.875rem;
     line-height: 1.375rem;
     word-break: break-word;
+
+    pre:not([class*="language-"]) {
+        border-color: var(--tlp-neutral-normal-color);
+        background-color: var(--tlp-fade-background-color);
+        white-space: pre-wrap;
+
+        > code {
+            color: var(--tlp-typo-default-text-color);
+        }
+    }
+
+    pre[class*="language-"] {
+        border-color: var(--tlp-neutral-normal-color);
+        background-color: var(--tlp-fade-background-color);
+        white-space: pre-wrap;
+
+        > code[class*="language-"] {
+            white-space: pre-wrap;
+        }
+    }
 }
 
 .pull-request-comment-file-path,
