@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "8.0.0",
+            "version": "8.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "65c7e6110de0096c951f9efed585980de2c1ee35"
+                "reference": "f922907123625d940adbba7be403a2e620d0a8e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/65c7e6110de0096c951f9efed585980de2c1ee35",
-                "reference": "65c7e6110de0096c951f9efed585980de2c1ee35",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/f922907123625d940adbba7be403a2e620d0a8e5",
+                "reference": "f922907123625d940adbba7be403a2e620d0a8e5",
                 "shasum": ""
             },
             "require": {
@@ -87,9 +87,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/issues",
-                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/8.0.0"
+                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/8.0.2"
             },
-            "time": "2022-11-06T16:06:22+00:00"
+            "time": "2023-08-23T13:29:02+00:00"
         }
     ],
     "packages-dev": [],
