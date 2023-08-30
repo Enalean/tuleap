@@ -1042,16 +1042,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.5.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "b635f279edd83fc275f822a1188157ffea568ff6"
+                "reference": "be45764272e8873c72dbe3d2edcfdfcc3bc9f727"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/b635f279edd83fc275f822a1188157ffea568ff6",
-                "reference": "b635f279edd83fc275f822a1188157ffea568ff6",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/be45764272e8873c72dbe3d2edcfdfcc3bc9f727",
+                "reference": "be45764272e8873c72dbe3d2edcfdfcc3bc9f727",
                 "shasum": ""
             },
             "require": {
@@ -1138,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.5.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.6.1"
             },
             "funding": [
                 {
@@ -1154,20 +1154,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-17T16:11:26+00:00"
+            "time": "2023-08-27T10:13:57+00:00"
         },
         {
             "name": "intervention/image",
-            "version": "2.6.0",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "a2d7238069bb01322f9c2a661449955434fec9c6"
+                "reference": "04be355f8d6734c826045d02a1079ad658322dad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/a2d7238069bb01322f9c2a661449955434fec9c6",
-                "reference": "a2d7238069bb01322f9c2a661449955434fec9c6",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/04be355f8d6734c826045d02a1079ad658322dad",
+                "reference": "04be355f8d6734c826045d02a1079ad658322dad",
                 "shasum": ""
             },
             "require": {
@@ -1210,8 +1210,8 @@
             "authors": [
                 {
                     "name": "Oliver Vogel",
-                    "email": "oliver@olivervogel.com",
-                    "homepage": "http://olivervogel.com/"
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
                 }
             ],
             "description": "Image handling and manipulation library with support for Laravel integration",
@@ -1226,11 +1226,11 @@
             ],
             "support": {
                 "issues": "https://github.com/Intervention/image/issues",
-                "source": "https://github.com/Intervention/image/tree/2.6.0"
+                "source": "https://github.com/Intervention/image/tree/2.7.2"
             },
             "funding": [
                 {
-                    "url": "https://www.paypal.me/interventionphp",
+                    "url": "https://paypal.me/interventionio",
                     "type": "custom"
                 },
                 {
@@ -1238,7 +1238,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-06T13:35:54+00:00"
+            "time": "2022-05-21T17:30:32+00:00"
         },
         {
             "name": "laminas/laminas-cache",
@@ -2112,31 +2112,29 @@
         },
         {
             "name": "lasserafn/php-initial-avatar-generator",
-            "version": "4.2.1",
+            "version": "4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LasseRafn/php-initial-avatar-generator.git",
-                "reference": "49d0b10cc8819af831e0f6fb1056a7d5ed9512d0"
+                "reference": "ffe43d8df3f18646d7b23011272cce2d71400e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LasseRafn/php-initial-avatar-generator/zipball/49d0b10cc8819af831e0f6fb1056a7d5ed9512d0",
-                "reference": "49d0b10cc8819af831e0f6fb1056a7d5ed9512d0",
+                "url": "https://api.github.com/repos/LasseRafn/php-initial-avatar-generator/zipball/ffe43d8df3f18646d7b23011272cce2d71400e1f",
+                "reference": "ffe43d8df3f18646d7b23011272cce2d71400e1f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "intervention/image": "^2.3",
                 "lasserafn/php-initials": "^3.0",
-                "lasserafn/php-string-script-language": "^0.3.0",
+                "lasserafn/php-string-script-language": "^0.4",
                 "meyfa/php-svg": "^0.9.0",
                 "overtrue/pinyin": "^4.0",
-                "php": "^7.0|^7.1|^7.2|^7.3|^7.4|^8.0"
+                "php": "^7.0|^7.1|^7.2|^7.3|^7.4|^8.0|^8.1|^8.2"
             },
             "require-dev": {
-                "doctrine/instantiator": "1.0.*",
-                "phpunit/phpunit": "^6.5",
-                "satooshi/php-coveralls": "^1.0"
+                "phpunit/phpunit": "^8.5"
             },
             "type": "library",
             "autoload": {
@@ -2163,7 +2161,7 @@
             ],
             "support": {
                 "issues": "https://github.com/LasseRafn/php-initial-avatar-generator/issues",
-                "source": "https://github.com/LasseRafn/php-initial-avatar-generator/tree/4.2.1"
+                "source": "https://github.com/LasseRafn/php-initial-avatar-generator/tree/4.3"
             },
             "funding": [
                 {
@@ -2171,7 +2169,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-12-24T13:12:12+00:00"
+            "time": "2023-07-26T19:17:56+00:00"
         },
         {
             "name": "lasserafn/php-initials",
@@ -2223,20 +2221,20 @@
         },
         {
             "name": "lasserafn/php-string-script-language",
-            "version": "0.3",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LasseRafn/php-string-script-language.git",
-                "reference": "49a09d4a5e38c1e59a2656ac05b601d615c7cddb"
+                "reference": "cab5612d4382067de855fcecc7c09108dca77fb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LasseRafn/php-string-script-language/zipball/49a09d4a5e38c1e59a2656ac05b601d615c7cddb",
-                "reference": "49a09d4a5e38c1e59a2656ac05b601d615c7cddb",
+                "url": "https://api.github.com/repos/LasseRafn/php-string-script-language/zipball/cab5612d4382067de855fcecc7c09108dca77fb5",
+                "reference": "cab5612d4382067de855fcecc7c09108dca77fb5",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6|^7.0|^7.1|^8.0"
+                "php": "^5.6|^7.0|^7.1|^8.0|^8.1|^8.2"
             },
             "require-dev": {
                 "doctrine/instantiator": "1.0.5",
@@ -2269,9 +2267,9 @@
             ],
             "support": {
                 "issues": "https://github.com/LasseRafn/php-string-script-language/issues",
-                "source": "https://github.com/LasseRafn/php-string-script-language/tree/0.3"
+                "source": "https://github.com/LasseRafn/php-string-script-language/tree/0.4"
             },
-            "time": "2020-12-24T12:43:59+00:00"
+            "time": "2023-07-26T07:23:39+00:00"
         },
         {
             "name": "lcobucci/clock",
@@ -3228,16 +3226,16 @@
         },
         {
             "name": "overtrue/pinyin",
-            "version": "4.0.7",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/pinyin.git",
-                "reference": "083de406907d42df2e0feaaeb83f1a3c2e0095eb"
+                "reference": "4d0fb4f27f0c79e81c9489e0c0ae4a4f8837eae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/pinyin/zipball/083de406907d42df2e0feaaeb83f1a3c2e0095eb",
-                "reference": "083de406907d42df2e0feaaeb83f1a3c2e0095eb",
+                "url": "https://api.github.com/repos/overtrue/pinyin/zipball/4d0fb4f27f0c79e81c9489e0c0ae4a4f8837eae7",
+                "reference": "4d0fb4f27f0c79e81c9489e0c0ae4a4f8837eae7",
                 "shasum": ""
             },
             "require": {
@@ -3262,12 +3260,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Overtrue\\Pinyin\\": "src/"
-                },
                 "files": [
                     "src/const.php"
-                ]
+                ],
+                "psr-4": {
+                    "Overtrue\\Pinyin\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3289,15 +3287,15 @@
             ],
             "support": {
                 "issues": "https://github.com/overtrue/pinyin/issues",
-                "source": "https://github.com/overtrue/pinyin/tree/4.0.7"
+                "source": "https://github.com/overtrue/pinyin/tree/4.1.0"
             },
             "funding": [
                 {
-                    "url": "https://www.patreon.com/overtrue",
-                    "type": "patreon"
+                    "url": "https://github.com/overtrue",
+                    "type": "github"
                 }
             ],
-            "time": "2021-04-16T11:13:48+00:00"
+            "time": "2023-04-27T10:17:12+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
