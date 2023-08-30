@@ -95,7 +95,9 @@ const getBodyClasses = (host: PullRequestCommentComponentType): MapOfClasses => 
 
 const getContent = (comment: PullRequestCommentPresenter): string => {
     if (comment.format === FORMAT_COMMONMARK) {
-        return DOMPurify.sanitize(comment.post_processed_content);
+        return DOMPurify.sanitize(comment.post_processed_content, {
+            ADD_TAGS: ["tlp-syntax-highlighting"],
+        });
     }
 
     return DOMPurify.sanitize(comment.content);

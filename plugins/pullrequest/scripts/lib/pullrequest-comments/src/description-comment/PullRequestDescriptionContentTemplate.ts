@@ -28,12 +28,16 @@ const getContent = (
     host: PullRequestDescriptionComment,
     gettext_provider: GettextProvider
 ): UpdateFunction<PullRequestDescriptionComment> => {
+    const sanitized_content = DOMPurify.sanitize(host.description.content, {
+        ADD_TAGS: ["tlp-syntax-highlighting"],
+    });
+
     if (host.description.content !== "") {
         return html`
             <p
                 class="pull-request-comment-text"
                 data-test="description-content"
-                innerHTML="${DOMPurify.sanitize(host.description.content)}"
+                innerHTML="${sanitized_content}"
             ></p>
         `;
     }
