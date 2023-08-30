@@ -21,6 +21,7 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import DOMPurify from "dompurify";
 import type { GettextProvider } from "@tuleap/gettext";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
 import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 
@@ -28,11 +29,14 @@ const getContent = (
     host: PullRequestDescriptionComment,
     gettext_provider: GettextProvider
 ): UpdateFunction<PullRequestDescriptionComment> => {
-    const sanitized_content = DOMPurify.sanitize(host.description.content, {
-        ADD_TAGS: ["tlp-syntax-highlighting"],
-    });
-
     if (host.description.content !== "") {
+        const sanitized_content =
+            host.description.format === FORMAT_COMMONMARK
+                ? DOMPurify.sanitize(host.description.post_processed_content, {
+                      ADD_TAGS: ["tlp-syntax-highlighting"],
+                  })
+                : DOMPurify.sanitize(host.description.content);
+
         return html`
             <p
                 class="pull-request-comment-text"

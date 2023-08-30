@@ -22,18 +22,23 @@ import { patchJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { DescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
+import { getContentFormat } from "../helpers/content-format";
 
 export interface SaveDescriptionComment {
     saveDescriptionComment: (
-        description: DescriptionCommentFormPresenter
+        description: DescriptionCommentFormPresenter,
+        is_comments_markdown_mode_enabled: boolean
     ) => ResultAsync<PullRequest, Fault>;
 }
 
 export const PullRequestDescriptionCommentSaver = (): SaveDescriptionComment => ({
     saveDescriptionComment: (
-        description: DescriptionCommentFormPresenter
-    ): ResultAsync<PullRequest, Fault> =>
-        patchJSON<PullRequest>(uri`/api/v1/pull_requests/${description.pull_request_id}`, {
+        description: DescriptionCommentFormPresenter,
+        is_comments_markdown_mode_enabled: boolean
+    ): ResultAsync<PullRequest, Fault> => {
+        return patchJSON<PullRequest>(uri`/api/v1/pull_requests/${description.pull_request_id}`, {
             description: description.description_content,
-        }),
+            description_format: getContentFormat(is_comments_markdown_mode_enabled),
+        });
+    },
 });

@@ -18,6 +18,7 @@
  */
 
 import type { User, PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { CommentTextFormat } from "@tuleap/plugin-pullrequest-constants";
 
 export interface PullRequestDescriptionCommentPresenter {
     readonly pull_request_id: number;
@@ -25,6 +26,8 @@ export interface PullRequestDescriptionCommentPresenter {
     readonly author: User;
     readonly post_date: string;
     readonly content: string;
+    readonly post_processed_content: string;
+    readonly format: CommentTextFormat;
     readonly raw_content: string;
     readonly can_user_update_description: boolean;
 }
@@ -37,5 +40,7 @@ export const PullRequestDescriptionCommentPresenter = {
         ...presenter,
         content: pull_request.description,
         raw_content: pull_request.raw_description,
+        post_processed_content: pull_request.post_processed_description,
+        format: pull_request.description_format,
     }),
 };

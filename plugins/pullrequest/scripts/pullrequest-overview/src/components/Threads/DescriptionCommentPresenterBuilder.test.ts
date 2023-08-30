@@ -19,6 +19,7 @@
 
 import { describe, it, expect } from "vitest";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresenterBuilder";
 
 describe("DescriptionCommentPresenterBuilder", () => {
@@ -30,6 +31,8 @@ describe("DescriptionCommentPresenterBuilder", () => {
             creation_date: "2023-03-13T15:13:00Z",
             user_can_merge: true,
             user_can_update_title_and_description: true,
+            post_processed_description: "<p>This commit fixes bug #123</p>",
+            description_format: FORMAT_COMMONMARK,
         } as PullRequest;
 
         const author = {
@@ -53,6 +56,8 @@ describe("DescriptionCommentPresenterBuilder", () => {
             author,
             content: pull_request.description,
             raw_content: pull_request.raw_description,
+            post_processed_content: pull_request.post_processed_description,
+            format: pull_request.description_format,
             post_date: pull_request.creation_date,
             can_user_update_description: pull_request.user_can_update_title_and_description,
         });

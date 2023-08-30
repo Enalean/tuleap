@@ -35,6 +35,8 @@ export const DescriptionCommentPresenterBuilder = {
         pull_request_id: pull_request.id,
         project_id,
         content: pull_request.description,
+        post_processed_content: pull_request.post_processed_description,
+        format: pull_request.description_format,
         raw_content: pull_request.raw_description,
         post_date: pull_request.creation_date,
         can_user_update_description:

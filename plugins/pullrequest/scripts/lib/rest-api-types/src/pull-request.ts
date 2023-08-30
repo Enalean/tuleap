@@ -24,6 +24,7 @@ import type {
     PullRequestStatusMergedType,
     PullRequestStatusReviewType,
     PullRequestStatusType,
+    CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -55,6 +56,8 @@ interface CommonPullRequest {
     };
     readonly head_reference: string;
     readonly description: string;
+    readonly post_processed_description: string;
+    readonly description_format: CommentTextFormat;
     readonly raw_description: string;
     readonly user_can_merge: boolean;
     readonly user_can_reopen: boolean;
