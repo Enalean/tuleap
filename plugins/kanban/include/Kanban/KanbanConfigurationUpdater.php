@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban;
 
-use AgileDashboardConfigurationResponse;
+use Tuleap\AgileDashboard\ServiceAdministration\ConfigurationResponse;
 use Codendi_Request;
 use Tuleap\Kanban\Legacy\LegacyKanbanActivator;
 use Tuleap\Kanban\Legacy\LegacyKanbanDeactivator;
@@ -35,7 +35,7 @@ final class KanbanConfigurationUpdater
         private readonly LegacyKanbanRetriever $legacy_kanban_retriever,
         private readonly LegacyKanbanActivator $legacy_kanban_activator,
         private readonly LegacyKanbanDeactivator $legacy_kanban_deactivator,
-        private readonly AgileDashboardConfigurationResponse $response,
+        private readonly ConfigurationResponse $response,
         private readonly FirstKanbanCreator $first_kanban_creator,
     ) {
         $this->project_id = (int) $this->request->get('group_id');

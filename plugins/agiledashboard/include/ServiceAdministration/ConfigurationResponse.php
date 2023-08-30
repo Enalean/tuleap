@@ -18,31 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardConfigurationResponse
+namespace Tuleap\AgileDashboard\ServiceAdministration;
+
+class ConfigurationResponse
 {
-    /** @var Project */
-    private $project;
-
-    /** @var bool */
-    private $redirect_to_home_on_success;
-
-    public function __construct(Project $project, $redirect_to_home_on_success)
+    public function __construct(private readonly \Project $project, private readonly bool $redirect_to_home_on_success)
     {
-        $this->project                     = $project;
-        $this->redirect_to_home_on_success = $redirect_to_home_on_success;
     }
 
-    public function missingScrumTitle()
+    public function missingScrumTitle(): void
     {
         $this->notifyErrorAndRedirectToAdmin('scrum');
     }
 
-    public function deactivateExplicitTopBacklogNotAllowed()
-    {
-        $this->notifyErrorAndRedirectToAdmin('scrum');
-    }
-
-    public function kanbanConfigurationUpdated()
+    public function kanbanConfigurationUpdated(): void
     {
         if ($this->redirect_to_home_on_success) {
             $this->redirectToHome();
@@ -52,7 +41,7 @@ class AgileDashboardConfigurationResponse
         $this->redirectToAdmin('kanban');
     }
 
-    public function scrumConfigurationUpdated()
+    public function scrumConfigurationUpdated(): void
     {
         if ($this->redirect_to_home_on_success) {
             $this->redirectToHome();
@@ -62,48 +51,48 @@ class AgileDashboardConfigurationResponse
         $this->redirectToAdmin('scrum');
     }
 
-    public function kanbanActivated()
+    public function kanbanActivated(): void
     {
         $this->info(dgettext('tuleap-agiledashboard', 'Kanban successfully activated.'));
     }
 
-    public function scrumActivated()
+    public function scrumActivated(): void
     {
         $this->info(dgettext('tuleap-agiledashboard', 'Scrum successfully activated.'));
     }
 
-    public function emptyScrumTitle()
+    public function emptyScrumTitle(): void
     {
         $this->warn(dgettext('tuleap-agiledashboard', 'Scrum title is empty.'));
     }
 
-    public function scrumTitleChanged()
+    public function scrumTitleChanged(): void
     {
         $this->info(dgettext('tuleap-agiledashboard', 'Scrum title successfully modified.'));
     }
 
-    private function notifyErrorAndRedirectToAdmin($pane)
+    private function notifyErrorAndRedirectToAdmin(string $pane): void
     {
         $this->error(dgettext('tuleap-agiledashboard', 'The request is invalid.'));
         $this->redirectToAdmin($pane);
     }
 
-    private function info($message)
+    private function info(string $message): void
     {
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $message);
+        $GLOBALS['Response']->addFeedback(\Feedback::INFO, $message);
     }
 
-    private function warn($message)
+    private function warn(string $message): void
     {
-        $GLOBALS['Response']->addFeedback(Feedback::WARN, $message);
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, $message);
     }
 
-    private function error($message)
+    private function error(string $message): void
     {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
+        $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $message);
     }
 
-    private function redirectToAdmin($pane)
+    private function redirectToAdmin(string $pane): void
     {
         $query_parts = [
             'group_id' => $this->project->getId(),
@@ -113,7 +102,7 @@ class AgileDashboardConfigurationResponse
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }
 
-    private function redirectToHome()
+    private function redirectToHome(): void
     {
         $query_parts = [
             'group_id' => $this->project->getId(),
