@@ -27,7 +27,6 @@ describe(`Planning view Explicit Backlog`, function () {
     context("Explicit backlog project", () => {
         it(`Project Member can use Planning view`, function () {
             cy.log("Browse the top backlog");
-            cy.get("[data-test=go-to-top-backlog]").click();
             cy.get("[data-test=backlog]").within(() => {
                 cy.contains("[data-test=backlog-item]", "Crossbow Everyday");
                 cy.contains("[data-test=backlog-item]", "Raw Wrench");
@@ -70,8 +69,6 @@ describe(`Planning view Explicit Backlog`, function () {
 
     context("+New", () => {
         it("redirects to previous A.D pane", function () {
-            cy.get("[data-test=go-to-top-backlog]").click();
-
             // Browse the sprint planning
             cy.contains("[data-test=milestone]", "Summer Swift").within(() => {
                 cy.get("[data-test=expand-collapse-milestone]").click();
@@ -96,8 +93,6 @@ describe(`Planning view Explicit Backlog`, function () {
         });
 
         it("open the pv2 modal", function () {
-            cy.get("[data-test=go-to-top-backlog]").click();
-
             //wait for the page to be loaded
             cy.get("[data-test=backlog-fully-loaded]");
 
@@ -126,7 +121,6 @@ describe(`Planning view Explicit Backlog`, function () {
 
             cy.log("Items are automatically linked to top backlog");
             cy.visitProjectService(project_name, "Agile Dashboard");
-            cy.get("[data-test=go-to-top-backlog]").click();
             cy.get("[data-test=add-item]").click();
             cy.get("[data-test='add-User Stories']").click();
             cy.get("[data-test=string-field-input]").type("Perfect World");
@@ -140,7 +134,6 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.get("[data-test=artifact-submit-button]").click();
 
             cy.visitProjectService(project_name, "Agile Dashboard");
-            cy.get("[data-test=go-to-top-backlog]").click();
 
             cy.get("[data-test=backlog]").within(() => {
                 cy.contains("[data-test=backlog-item]", "Perfect World");
