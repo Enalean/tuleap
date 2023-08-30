@@ -18,36 +18,27 @@
   -
   -->
 <template>
-    <div>
+    <div v-if="is_created_from_jira && from_jira_data.credentials">
         <input
             type="hidden"
             name="jira_server"
             data-test="jira-server"
-            v-if="is_created_from_jira"
             v-bind:value="from_jira_data.credentials.server_url"
         />
         <input
             type="hidden"
             name="jira_user"
-            v-if="is_created_from_jira"
             v-bind:value="from_jira_data.credentials.user_email"
         />
-        <input
-            type="hidden"
-            name="jira_token"
-            v-if="is_created_from_jira"
-            v-bind:value="from_jira_data.credentials.token"
-        />
+        <input type="hidden" name="jira_token" v-bind:value="from_jira_data.credentials.token" />
         <input
             type="hidden"
             name="jira_project"
-            v-if="is_created_from_jira"
             v-bind:value="JSON.stringify(from_jira_data.project)"
         />
         <input
             type="hidden"
             name="jira_tracker_name"
-            v-if="is_created_from_jira"
             v-bind:value="JSON.stringify(from_jira_data.tracker)"
         />
     </div>

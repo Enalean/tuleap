@@ -87,8 +87,8 @@ export default class FieldChosenTemplate extends Vue {
     @Getter
     readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
 
-    private selected_template_name = "";
-    private selected_template_project_name = "";
+    selected_template_name = "";
+    selected_template_project_name = "";
 
     mounted(): void {
         if (this.is_created_from_default_template) {

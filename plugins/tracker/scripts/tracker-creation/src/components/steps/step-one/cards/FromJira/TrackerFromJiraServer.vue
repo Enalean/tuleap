@@ -80,6 +80,6 @@ import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 })
 export default class TrackerFromJiraServer extends Vue {
     @Prop({ required: true })
-    readonly value!: Credentials[];
+    readonly value!: Credentials;
 }
 </script>

@@ -18,6 +18,9 @@
  */
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "node:process";
+
+env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineJestConfiguration();
 export default {

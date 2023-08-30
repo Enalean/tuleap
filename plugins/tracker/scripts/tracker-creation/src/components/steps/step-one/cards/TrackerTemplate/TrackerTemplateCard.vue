@@ -46,6 +46,6 @@ import TrackerTemplateCardDescription from "./TrackerTemplateCardDescription.vue
     },
 })
 export default class TrackerTemplateCard extends Vue {
-    private option_name = TRACKER_TEMPLATE;
+    option_name = TRACKER_TEMPLATE;
 }
 </script>

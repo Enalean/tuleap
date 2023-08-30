@@ -65,7 +65,7 @@ export default class TrackerTemplateSelector extends Vue {
     @Mutation
     readonly setSelectedTrackerTemplate!: (tracker_id: string) => void;
 
-    private model = "";
+    model = "";
 
     mounted(): void {
         if (this.selected_tracker_template) {

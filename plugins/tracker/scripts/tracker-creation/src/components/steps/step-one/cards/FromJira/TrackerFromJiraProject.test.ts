@@ -35,14 +35,18 @@ describe("TrackerFromJiraProject", () => {
     let state: State;
     let wrapper: Wrapper<TrackerFromJiraProject>;
     beforeEach(async () => {
+        const tracker_list: TrackerList[] = [];
         state = {
             from_jira_data: {
                 credentials: {
                     server_url: "https://example.com",
                     user_email: "user-email@example.com",
                     token: "azerty1234",
-                } as Credentials,
-            } as JiraImportData,
+                },
+                project: null,
+                tracker_list,
+                tracker: null,
+            },
         } as State;
 
         wrapper = shallowMount(TrackerFromJiraProject, {

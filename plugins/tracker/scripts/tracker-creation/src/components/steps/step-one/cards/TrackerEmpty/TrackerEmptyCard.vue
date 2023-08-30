@@ -41,6 +41,6 @@ import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
     },
 })
 export default class TrackerEmptyCard extends Vue {
-    private option_name = TRACKER_EMPTY;
+    option_name = TRACKER_EMPTY;
 }
 </script>
