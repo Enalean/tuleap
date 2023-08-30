@@ -1,22 +1,74 @@
-<h2>{{ adminTitle }}</h2>
-<div class="agiledashboard">
-    <h3>{{ importTemplateHeader }}</h3>
-    <form method="post" action="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" enctype="multipart/form-data" >
-        <p>
-            {{{ importInstructions }}}
-        </p>
-        <p>
-            <b>
-                {{{ importNotes }}}
-            </b>
-        </p>
-        <p>
-            <br/>
-            <input type="file" name="template_file" id="template_file" />
-        </p>
-        <p>
-            <br />
-            <input type="submit" value="{{ btnSubmit }}" class="btn btn-primary"/>
-        </p>
-    </form>
+<h1 class="agiledashboard-administration-title">
+    {{# is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+    {{^ is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+</h1>
+
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a class="tlp-tab tlp-tab-active"
+           href="?group_id={{ group_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
+        </a>
+        {{^ is_using_kanban_service }}
+            <a class="tlp-tab"
+               href="?group_id={{ group_id }}&action=admin&pane=kanban" data-test="admin-kanban-pane">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}
+            </a>
+        {{/ is_using_kanban_service }}
+        <a class="tlp-tab"
+           href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
+        </a>
+    </nav>
+</div>
+
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Import a configuration from a template file
+                    {{/ dgettext }}
+                </h1>
+            </div>
+            <form method="post" action="{{ import_url }}" enctype="multipart/form-data" class="tlp-pane-section">
+                <p>
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        You can import configuration from an XML template.
+                    {{/ dgettext }}
+
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Tuleap provides a %sstandard template%s. |
+                        <a href="{{ template_url }}"> |
+                        </a>
+                    {{/ dgettext }}
+
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Alternatively, you can export the configuration of an existing project and re-use it here.
+                    {{/ dgettext }}
+                </p>
+                <p class="tlp-alert-info">
+                    {{# dgettext }}
+                        tuleap-agiledashboard | Importing a template will create new trackers. The import will not work if any existing tracker match those in the template
+                    {{/ dgettext }}
+                </p>
+                <p>
+                    <input type="file" required name="template_file" id="template_file" />
+                </p>
+
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }} tuleap-agiledashboard | Import {{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
 </div>

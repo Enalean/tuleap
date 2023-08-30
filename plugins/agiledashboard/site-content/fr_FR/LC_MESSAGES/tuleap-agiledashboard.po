@@ -111,6 +111,13 @@ msgid ""
 "All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
 msgstr "Les actions workflow de type \"AddToTopBacklog\" ont été supprimées."
 
+msgid ""
+"Alternatively, you can export the configuration of an existing project and "
+"re-use it here."
+msgstr ""
+"Il est également possible d'exporter la configuration d'un projet existant "
+"et de la réutiliser ici."
+
 msgid "An error occurred while trying to solve inconsistencies."
 msgstr "Une erreur s'est produite pendant la résolution des inconsistences."
 
@@ -296,6 +303,14 @@ msgstr "Les importer dans le backlog"
 msgid "Import/Export"
 msgstr "Import/Export"
 
+msgid ""
+"Importing a template will create new trackers. The import will not work if "
+"any existing tracker match those in the template"
+msgstr ""
+"Cette opération va créer des trackers. L'opération ne pourra aboutir si la "
+"configuration contient des trackers dénommés identiquement à des trackers "
+"existants"
+
 msgid "In milestone"
 msgstr "Dans le jalon"
 
@@ -377,14 +392,6 @@ msgstr "Aucun tracker n'est disponible."
 
 msgid "Note: kanban is being moved to its %s dedicated page%s."
 msgstr "Note : kanban est déplacé dans sa %s page dédiée%s."
-
-msgid ""
-"Note:<br>Importing a template will create new trackers. The import will not "
-"work if any existing tracker match those in the template"
-msgstr ""
-"Note:<br>Cette opération va créer des trackers. L'opération ne pourra "
-"aboutir si la configuration contient des trackers denommés identiquement à "
-"des trackers existants"
 
 msgid "Nothing to see here."
 msgstr "Il n'y a rien ici."
@@ -684,6 +691,9 @@ msgstr ""
 "L'outil de suivi %s ne peut être défini en tant qu'enfant de l'outil de "
 "suivi %s car ils font partis de la même planification (%s)"
 
+msgid "Tuleap provides a %sstandard template%s."
+msgstr "Tuleap fournit une %sconfiguration standard%s."
+
 msgid "Unable to export the configuration"
 msgstr "Impossible d'exporter la configuration"
 
@@ -752,6 +762,10 @@ msgstr ""
 "permanent (pas de retour en arrière possible). Le backlog de plus haut "
 "niveau sera vide après la suppresion du planning de plus niveau. Merci de "
 "confirmer votre action."
+
+msgid "You can import configuration from an XML template."
+msgstr ""
+"Il est possible d'importer une configuration à partir d'un fichier XML."
 
 msgid "You cannot create more than one planning in scrum V2."
 msgstr "Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2."
