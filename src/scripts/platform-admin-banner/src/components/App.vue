@@ -41,7 +41,7 @@
                 v-bind:expiration_date="expiration_date"
                 v-bind:loading="banner_presenter_is_loading"
                 v-on:delete-banner="deleteBanner"
-                v-on:save-banner="saveBanner(...arguments)"
+                v-on:save-banner="saveBanner"
             />
         </div>
     </div>
@@ -117,7 +117,7 @@ export default class App extends Vue {
             });
     }
 
-    private deleteBanner(): void {
+    deleteBanner(): void {
         deleteBannerForPlatform()
             .then(() => {
                 this.refreshOnSuccessChange();

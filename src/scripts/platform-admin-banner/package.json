@@ -21,6 +21,7 @@
     "vue-property-decorator": "^9.1.2"
   },
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
