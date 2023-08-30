@@ -87,6 +87,10 @@ export default {
             type: Array,
             mandatory: true,
         },
+        is_split_feature_flag_enabled: {
+            type: Boolean,
+            mandatory: true,
+        },
     },
 
     computed: {
@@ -116,6 +120,10 @@ export default {
     mounted() {
         this.$store.dispatch("loadTracker", this.trackerId);
         this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
+        this.$store.dispatch(
+            "transitionModal/setIsSplitFeatureFlagEnabled",
+            this.is_split_feature_flag_enabled
+        );
     },
 };
 </script>

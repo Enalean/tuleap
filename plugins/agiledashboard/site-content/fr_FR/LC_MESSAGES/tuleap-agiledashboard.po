@@ -562,9 +562,20 @@ msgid "There is no item yet"
 msgstr "Il n’y a aucun élément pour l'instant"
 
 msgid ""
+"This artifact has been successfully added to the backlog of the project."
+msgstr "Cet artéfact a été ajouté avec succès au backlog du projet."
+
+msgid ""
 "This artifact has been successfully added to the top backlog of the project."
 msgstr ""
 "Cet artéfact a été ajouté avec succès à la planification générale du projet."
+
+msgid ""
+"This artifact has not been added to the backlog of the project because it's "
+"already planned in sub milestone of the project."
+msgstr ""
+"Cet artéfact n'a pas été ajouté au backlog car il est déjà présent dans un "
+"sous jalon."
 
 msgid ""
 "This artifact has not been added to the top backlog of the project because "

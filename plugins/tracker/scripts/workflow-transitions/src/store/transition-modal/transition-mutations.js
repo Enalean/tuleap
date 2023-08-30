@@ -42,6 +42,7 @@ export {
     updateFrozenFieldsPostActionFieldIds,
     updateHiddenFieldsetsPostActionFieldsetIds,
     setUsedServiceName,
+    setIsSplitFeatureFlagEnabled,
 };
 
 function showModal(state) {
@@ -194,4 +195,8 @@ function deletePostAction(state, post_action) {
 
 function setUsedServiceName(state, used_service_name) {
     state.used_services_names = used_service_name;
+}
+
+function setIsSplitFeatureFlagEnabled(state, is_split_feature_flag_enabled) {
+    state.is_split_feature_flag_enabled = is_split_feature_flag_enabled;
 }

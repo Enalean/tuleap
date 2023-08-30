@@ -25,6 +25,12 @@ msgstr "Ajouter une action"
 msgid "Add another action"
 msgstr "Ajouter une nouvelle action"
 
+msgid "Add to the backlog"
+msgstr "Ajouter au backlog"
+
+msgid "Add to the backlog (already used)"
+msgstr "Ajouter au backlog (déjà utilisé)"
+
 msgid "Add to the top backlog"
 msgstr "Ajouter à la planification générale"
 
@@ -245,9 +251,15 @@ msgid "Switch to simple configuration"
 msgstr "Passer à la configuration simple"
 
 msgid ""
+"The artifact is added to Scrum backlog (Agile Dashboard). If it's already "
+"present, nothing is done."
+msgstr ""
+"L'artéfact est ajouté au backlog de Scrum (Tableau de bord agile). S'il est "
+"déjà présent, rien ne sera fait."
+
+msgid ""
 "The artifact is added to Scrum top backlog (Agile Dashboard). If it's "
-"already\n"
-"            present, nothing is done."
+"already present, nothing is done."
 msgstr ""
 "L'artéfact est ajouté à la planification générale de scrum (Tableau de bord "
 "agile). S'il est déjà présent, rien ne sera fait."

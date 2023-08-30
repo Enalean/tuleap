@@ -22,15 +22,14 @@ namespace Tuleap\Tracker\Workflow;
 
 class WorkflowMenuTabPresenter
 {
-    public $tabs_menu;
-    public $tracker_id;
-    /** @var string */
-    public $used_services_names;
+    public readonly string $used_services_names;
 
-    public function __construct(array $tabs_menu, $tracker_id, array $used_services_names)
-    {
-        $this->tabs_menu           = $tabs_menu;
-        $this->tracker_id          = $tracker_id;
+    public function __construct(
+        public readonly array $tabs_menu,
+        public readonly int $tracker_id,
+        array $used_services_names,
+        public readonly bool $is_split_feature_flag_enabled,
+    ) {
         $this->used_services_names = json_encode($used_services_names);
     }
 }

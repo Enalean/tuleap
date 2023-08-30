@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const used_services_names = JSON.parse(service_name_list);
 
+    const is_split_feature_flag_enabled = vue_mount_point.dataset.isSplitFeatureFlagEnabled === "1";
     Vue.use(Vuex);
     await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
         import("../po/" + getPOFileFromLocale(locale))
@@ -49,6 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     new RootComponent({
         store,
-        propsData: { trackerId, used_services_names },
+        propsData: { trackerId, used_services_names, is_split_feature_flag_enabled },
     }).$mount(vue_mount_point);
 });

@@ -30,6 +30,7 @@ use Transition;
 use Transition_PostAction;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklog extends Transition_PostAction
@@ -88,11 +89,16 @@ class AddToTopBacklog extends Transition_PostAction
      */
     public function after(Tracker_Artifact_Changeset $changeset)
     {
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($changeset->getTracker()->getProject());
         try {
             $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
+
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                dgettext(
+                $is_split_feature_flag_enabled ? dgettext(
+                    'tuleap-agiledashboard',
+                    'This artifact has been successfully added to the backlog of the project.',
+                ) : dgettext(
                     'tuleap-agiledashboard',
                     'This artifact has been successfully added to the top backlog of the project.',
                 )
@@ -101,7 +107,10 @@ class AddToTopBacklog extends Transition_PostAction
             //Do nothing
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                dgettext(
+                $is_split_feature_flag_enabled ? dgettext(
+                    'tuleap-agiledashboard',
+                    "This artifact has not been added to the backlog of the project because it's already planned in sub milestone of the project."
+                ) : dgettext(
                     'tuleap-agiledashboard',
                     "This artifact has not been added to the top backlog of the project because it's already planned in sub milestone of the project."
                 )

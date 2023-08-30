@@ -18,6 +18,12 @@ msgstr ""
 msgid "Add another action"
 msgstr ""
 
+msgid "Add to the backlog"
+msgstr ""
+
+msgid "Add to the backlog (already used)"
+msgstr ""
+
 msgid "Add to the top backlog"
 msgstr ""
 
@@ -219,9 +225,13 @@ msgid "Switch to simple configuration"
 msgstr ""
 
 msgid ""
+"The artifact is added to Scrum backlog (Agile Dashboard). If it's already "
+"present, nothing is done."
+msgstr ""
+
+msgid ""
 "The artifact is added to Scrum top backlog (Agile Dashboard). If it's "
-"already\n"
-"            present, nothing is done."
+"already present, nothing is done."
 msgstr ""
 
 msgid ""
