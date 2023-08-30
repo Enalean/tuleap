@@ -23,7 +23,8 @@ import type { PullRequestDescriptionCommentPresenter } from "@tuleap/plugin-pull
 export const DescriptionCommentPresenterBuilder = {
     fromPullRequestAndItsAuthor: (
         pull_request: PullRequest,
-        author: User
+        author: User,
+        project_id: number
     ): PullRequestDescriptionCommentPresenter => ({
         author: {
             id: author.id,
@@ -32,6 +33,7 @@ export const DescriptionCommentPresenterBuilder = {
             display_name: author.display_name,
         },
         pull_request_id: pull_request.id,
+        project_id,
         content: pull_request.description,
         raw_content: pull_request.raw_description,
         post_date: pull_request.creation_date,

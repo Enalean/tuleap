@@ -35,6 +35,7 @@ export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
 export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: StrictInjectionKey<RelativeDatesDisplayPreference> =
     Symbol("user_relative_date_display_preference");
 export const CURRENT_USER_ID: StrictInjectionKey<number> = Symbol("current_user");
+export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
 export const CURRENT_USER_AVATAR_URL: StrictInjectionKey<string> = Symbol("current_user_avatar");
 export const DISPLAY_TULEAP_API_ERROR: StrictInjectionKey<DisplayErrorCallback> =
     Symbol("display_tuleap_api");

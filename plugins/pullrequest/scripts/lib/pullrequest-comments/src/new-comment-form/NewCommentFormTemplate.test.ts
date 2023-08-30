@@ -36,6 +36,9 @@ import {
     TAG as WRITING_ZONE_TAG_NAME,
 } from "../writing-zone/WritingZone";
 
+const project_id = 105;
+const is_comments_markdown_mode_enabled = true;
+
 describe("NewCommentFormTemplate", () => {
     let target: ShadowRoot;
 
@@ -63,6 +66,8 @@ describe("NewCommentFormTemplate", () => {
             writing_zone_controller: WritingZoneController({
                 document: document.implementation.createHTMLDocument(),
                 focus_writing_zone_when_connected: true,
+                is_comments_markdown_mode_enabled,
+                project_id,
             }),
         } as HostElement;
 

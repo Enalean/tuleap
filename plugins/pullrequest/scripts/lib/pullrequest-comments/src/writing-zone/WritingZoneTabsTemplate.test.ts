@@ -26,6 +26,9 @@ import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
+const project_id = 105;
+const is_comments_markdown_mode_enabled = true;
+
 describe("WritingZoneTabsTemplate", () => {
     let target: ShadowRoot, controller: ControlWritingZone;
 
@@ -36,6 +39,8 @@ describe("WritingZoneTabsTemplate", () => {
         controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: false,
+            project_id,
+            is_comments_markdown_mode_enabled,
         });
     });
 
@@ -50,7 +55,9 @@ describe("WritingZoneTabsTemplate", () => {
         it("should be active when the WritingZone has the focus and is in writing mode", () => {
             const tab = getWritingTab({
                 controller,
-                presenter: WritingZonePresenter.buildFocused(WritingZonePresenter.buildInitial()),
+                presenter: WritingZonePresenter.buildFocused(
+                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                ),
             } as HostElement);
 
             expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab", "tlp-tab-active"]);
@@ -59,7 +66,9 @@ describe("WritingZoneTabsTemplate", () => {
         it("should not be active when the WritingZone has not the focus", () => {
             const tab = getWritingTab({
                 controller,
-                presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+                presenter: WritingZonePresenter.buildBlurred(
+                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                ),
             } as HostElement);
 
             expect(Array.from(tab.classList)).toStrictEqual(["tlp-tab"]);
@@ -71,7 +80,9 @@ describe("WritingZoneTabsTemplate", () => {
             const switchToWritingMode = vi.spyOn(controller, "switchToWritingMode");
             const tab = getWritingTab({
                 controller,
-                presenter: WritingZonePresenter.buildBlurred(WritingZonePresenter.buildInitial()),
+                presenter: WritingZonePresenter.buildBlurred(
+                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                ),
                 textarea: document.implementation.createHTMLDocument().createElement("textarea"),
             } as HostElement);
 
@@ -95,7 +106,11 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getPreviewTab({
                 controller,
                 presenter: WritingZonePresenter.buildPreviewMode(
-                    WritingZonePresenter.buildInitial(true)
+                    WritingZonePresenter.buildInitial(
+                        project_id,
+                        is_comments_markdown_mode_enabled
+                    ),
+                    "<p>Previewed content</p>"
                 ),
             } as HostElement);
 
@@ -106,7 +121,13 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getPreviewTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial(true))
+                    WritingZonePresenter.buildPreviewMode(
+                        WritingZonePresenter.buildInitial(
+                            project_id,
+                            is_comments_markdown_mode_enabled
+                        ),
+                        "<p>Previewed content</p>"
+                    )
                 ),
             } as HostElement);
 
@@ -120,7 +141,13 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getPreviewTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildPreviewMode(WritingZonePresenter.buildInitial(true))
+                    WritingZonePresenter.buildPreviewMode(
+                        WritingZonePresenter.buildInitial(
+                            project_id,
+                            is_comments_markdown_mode_enabled
+                        ),
+                        "<p>Previewed content</p>"
+                    )
                 ),
             } as HostElement);
 

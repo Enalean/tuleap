@@ -174,6 +174,7 @@ function controller($element, $scope, SharedPropertiesService) {
             widget_creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_LEFT,
                 self.pullRequestId,
+                SharedPropertiesService.getProjectId(),
                 SharedPropertiesService.getUserId(),
                 SharedPropertiesService.getUserAvatarUrl(),
                 self.filePath,
@@ -184,6 +185,7 @@ function controller($element, $scope, SharedPropertiesService) {
             widget_creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_RIGHT,
                 self.pullRequestId,
+                SharedPropertiesService.getProjectId(),
                 SharedPropertiesService.getUserId(),
                 SharedPropertiesService.getUserAvatarUrl(),
                 self.filePath,

@@ -63,6 +63,7 @@ export const NewInlineCommentFormComponent = define<NewCommentForm>({
             controller ??
             WritingZoneController({
                 document,
+                project_id: Number(host.controller.getProjectId()),
                 focus_writing_zone_when_connected:
                     host.controller.shouldFocusWritingZoneOnceRendered(),
                 is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,

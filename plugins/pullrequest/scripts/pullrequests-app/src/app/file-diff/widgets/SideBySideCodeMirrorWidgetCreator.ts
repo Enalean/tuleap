@@ -179,6 +179,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 {
                     is_cancel_allowed: true,
                     is_autofocus_enabled: true,
+                    project_id: widget_params.project_id,
                 },
                 post_submit_callback,
                 (fault) => {

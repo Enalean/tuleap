@@ -18,8 +18,10 @@
  */
 
 import { dispatch } from "hybrids";
+import { loadTooltips } from "@tuleap/tooltip";
 import type { HostElement, InternalWritingZone } from "./WritingZone";
 import { WritingZonePresenter } from "./WritingZonePresenter";
+import { fetchCommonMarkPreview } from "./WritingZoneCommonMarkPreviewFetcher";
 
 export type ControlWritingZone = {
     onTextareaInput(host: HostElement): void;
@@ -31,11 +33,12 @@ export type ControlWritingZone = {
     initWritingZone(host: HostElement): void;
     setWritingZoneContent(host: HostElement, content: string): void;
     shouldFocusWritingZoneWhenConnected(): boolean;
-    getDocument: () => Document;
+    getDocument(): Document;
 };
 
 export type WritingZoneConfig = {
     document: Document;
+    project_id: number;
     focus_writing_zone_when_connected?: boolean;
     is_comments_markdown_mode_enabled?: boolean;
 };
@@ -71,6 +74,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
     return {
         initWritingZone: (host: HostElement): void => {
             host.presenter = WritingZonePresenter.buildInitial(
+                config.project_id,
                 config.is_comments_markdown_mode_enabled
             );
         },
@@ -92,11 +96,27 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         },
 
         switchToPreviewMode: (host: HostElement): void => {
-            host.presenter = WritingZonePresenter.buildPreviewMode(host.presenter);
+            fetchCommonMarkPreview(host.presenter.project_id, host.textarea.value)
+                .match(
+                    (previewed_content: string) => {
+                        host.presenter = WritingZonePresenter.buildPreviewMode(
+                            host.presenter,
+                            previewed_content
+                        );
 
-            setTimeout(() => {
-                focusWritingZone(host);
-            });
+                        setTimeout(() => {
+                            loadTooltips(host);
+                        });
+                    },
+                    () => {
+                        host.presenter = WritingZonePresenter.buildPreviewWithError(host.presenter);
+                    }
+                )
+                .finally(() => {
+                    setTimeout(() => {
+                        focusWritingZone(host);
+                    });
+                });
         },
 
         focusWritingZone,

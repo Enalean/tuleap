@@ -21,6 +21,7 @@ import type { User, PullRequest } from "@tuleap/plugin-pullrequest-rest-api-type
 
 export interface PullRequestDescriptionCommentPresenter {
     readonly pull_request_id: number;
+    readonly project_id: number;
     readonly author: User;
     readonly post_date: string;
     readonly content: string;

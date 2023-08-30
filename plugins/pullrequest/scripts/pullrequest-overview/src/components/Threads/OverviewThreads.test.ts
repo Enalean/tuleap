@@ -37,6 +37,7 @@ import {
     DISPLAY_TULEAP_API_ERROR,
     IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
+    PROJECT_ID,
     PULL_REQUEST_ID_KEY,
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
@@ -89,6 +90,8 @@ describe("OverviewThreads", () => {
                     return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
                 case IS_COMMENTS_MARKDOWN_MODE_ENABLED:
                     return true;
+                case PROJECT_ID:
+                    return 105;
                 default:
                     throw new Error("Tried to strictInject a value while it was not mocked");
             }

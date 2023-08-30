@@ -82,6 +82,7 @@ export const PullRequestCommentDescriptionComponent = define<PullRequestDescript
                 document,
                 focus_writing_zone_when_connected: true,
                 is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
+                project_id: host.description.project_id,
             }),
     },
     writing_zone: {

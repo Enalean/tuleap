@@ -27,6 +27,7 @@ import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 export interface NewCommentFormComponentConfig {
     readonly is_cancel_allowed: boolean;
     readonly is_autofocus_enabled: boolean;
+    readonly project_id: number;
 }
 
 export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentForm> & {
@@ -35,6 +36,7 @@ export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentFor
     cancelNewComment: (host: NewCommentForm) => void;
     triggerPostSubmitCallback: NewCommentPostSubmitCallback;
     shouldFocusWritingZoneOnceRendered: () => boolean;
+    getProjectId: () => number;
 };
 
 export type NewCommentCancelCallback = () => void;
@@ -87,4 +89,5 @@ export const NewCommentFormController = (
         post_submit_callback(new_comment_payload);
     },
     shouldFocusWritingZoneOnceRendered: () => config.is_autofocus_enabled,
+    getProjectId: () => config.project_id,
 });

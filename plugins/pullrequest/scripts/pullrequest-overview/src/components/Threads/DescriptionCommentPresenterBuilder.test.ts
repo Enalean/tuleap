@@ -39,10 +39,17 @@ describe("DescriptionCommentPresenterBuilder", () => {
             display_name: "Joe l'asticot",
         } as User;
 
+        const project_id = 105;
+
         expect(
-            DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(pull_request, author)
+            DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(
+                pull_request,
+                author,
+                project_id
+            )
         ).toStrictEqual({
             pull_request_id: pull_request.id,
+            project_id,
             author,
             content: pull_request.description,
             raw_content: pull_request.raw_description,

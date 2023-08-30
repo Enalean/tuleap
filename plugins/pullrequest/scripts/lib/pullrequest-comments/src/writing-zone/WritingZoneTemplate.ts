@@ -19,6 +19,7 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import DOMPurify from "dompurify";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { InternalWritingZone } from "./WritingZone";
 import { buildPreviewTab, buildWriteTab } from "./WritingZoneTabsTemplate";
@@ -31,18 +32,35 @@ const displayWritingMode = (host: InternalWritingZone): UpdateFunction<InternalW
     return html`${host.textarea}`;
 };
 
-const displayPreviewMode = (host: InternalWritingZone): UpdateFunction<InternalWritingZone> => {
+const displayPreviewMode = (
+    host: InternalWritingZone,
+    gettext_provider: GettextProvider
+): UpdateFunction<InternalWritingZone> => {
     if (!host.presenter.is_comments_markdown_mode_enabled || !host.presenter.is_in_preview_mode) {
         return html``;
     }
 
+    if (host.presenter.has_preview_error) {
+        return html`
+            <div
+                class="pull-request-comment-writing-zone-commonmark-preview"
+                data-test="writing-zone-preview-error"
+            >
+                <div class="tlp-alert-danger">
+                    ${gettext_provider.gettext(
+                        "Oops, an error occurred. Unable to generate the preview."
+                    )}
+                </div>
+            </div>
+        `;
+    }
+
     return html`
         <div
-            class="pull-request-comment-writing-zone-commonmark-preview"
+            class="pull-request-comment-writing-zone-commonmark-preview pull-request-comment-text"
             data-test="writing-zone-preview"
-        >
-            <div class="tlp-alert-info">This feature is under implementation.</div>
-        </div>
+            innerHTML="${DOMPurify.sanitize(host.presenter.previewed_content)}"
+        ></div>
     `;
 };
 
@@ -51,11 +69,11 @@ export const getWritingZoneTemplate = (
     gettext_provider: GettextProvider
 ): UpdateFunction<InternalWritingZone> => {
     return html`
-        <div class="pull-request-comment-write-mode-header">
-            <div class="tlp-tabs pull-request-comment-write-mode-header-tabs">
+        <div class="pull-request-comment-writing-zone-header">
+            <div class="tlp-tabs pull-request-comment-writing-zone-header-tabs">
                 ${buildWriteTab(host, gettext_provider)} ${buildPreviewTab(host, gettext_provider)}
             </div>
         </div>
-        ${displayWritingMode(host)} ${displayPreviewMode(host)}
+        ${displayWritingMode(host)} ${displayPreviewMode(host, gettext_provider)}
     `;
 };

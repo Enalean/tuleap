@@ -150,6 +150,7 @@ function controller($element, $scope, SharedPropertiesService) {
             code_mirror,
             line_number,
             pull_request_id: self.pullRequestId,
+            project_id: SharedPropertiesService.getProjectId(),
             user_id: SharedPropertiesService.getUserId(),
             user_avatar_url: SharedPropertiesService.getUserAvatarUrl(),
             context: NewInlineCommentContextBuilder.fromContext(

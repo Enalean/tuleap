@@ -24,6 +24,9 @@ msgstr "Éditer"
 msgid "No commit description has been provided yet."
 msgstr "Aucune description de commit n'a encore été fournie."
 
+msgid "Oops, an error occurred. Unable to generate the preview."
+msgstr "Oups, une erreur est survenue. Impossible de générer l'aperçu."
+
 msgid "Outdated"
 msgstr "Obsolète"
 

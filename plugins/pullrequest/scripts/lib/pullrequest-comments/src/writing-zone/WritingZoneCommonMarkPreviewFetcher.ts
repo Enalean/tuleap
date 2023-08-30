@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi } from "vitest";
-import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import type { ResultAsync } from "neverthrow";
+import { postFormWithTextResponse, uri } from "@tuleap/fetch-result";
 
-export const PullRequestCommentControllerStub = (): ControlPullRequestComment => ({
-    hideReplyForm: vi.fn(),
-    showReplyForm: vi.fn(),
-    displayReplies: vi.fn(),
-    handleWritingZoneContentChange: vi.fn(),
-    saveReply: vi.fn(),
-    getRelativeDateHelper: () => RelativeDateHelperStub,
-    shouldFocusWritingZoneOnceRendered: () => true,
-    getProjectId: () => 105,
-});
+export const fetchCommonMarkPreview = (
+    project_id: number,
+    commonmark: string
+): ResultAsync<string, unknown> => {
+    const form_data = new FormData();
+    form_data.set("content", commonmark);
+
+    return postFormWithTextResponse(uri`/project/${project_id}/interpret-commonmark`, form_data);
+};

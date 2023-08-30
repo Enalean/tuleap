@@ -18,16 +18,23 @@
  */
 
 import { PullRequestPresenterBuilder } from "./PullRequestPresenterBuilder";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("PullRequestPresenterBuilder", () => {
     it("should build from a pull request representation", () => {
         const pull_request = {
             id: 144,
             title: "Add feature flag",
-        };
+            repository: {
+                project: {
+                    id: 105,
+                },
+            },
+        } as PullRequest;
 
         expect(PullRequestPresenterBuilder.fromPullRequest(pull_request)).toStrictEqual({
             pull_request_id: 144,
+            project_id: 105,
         });
     });
 });

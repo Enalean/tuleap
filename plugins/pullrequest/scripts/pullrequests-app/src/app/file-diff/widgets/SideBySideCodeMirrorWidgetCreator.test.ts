@@ -53,6 +53,8 @@ type EditorThatCanHaveWidgets = Editor & {
     getLineHandle: () => FileLineHandle;
 };
 
+const project_id = 105;
+
 describe("side-by-side-code-mirror-widget-creator", () => {
     let doc: Document,
         createElement: jest.SpyInstance,
@@ -85,6 +87,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             getRelativeDateHelper: (): void => {
                 // do nothing
             },
+            getProjectId: () => project_id,
         } as unknown as ControlPullRequestComment;
         comments_store = PullRequestCommentRepliesStore([]);
     });
@@ -198,6 +201,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             getWidgetCreator().displayNewInlineCommentFormWidget({
                 code_mirror,
                 pull_request_id: 1,
+                project_id: 105,
                 user_id: 102,
                 user_avatar_url: "url/to/user_avatar.png",
                 line_number: 15,

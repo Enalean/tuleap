@@ -39,6 +39,7 @@ import {
     DISPLAY_TULEAP_API_ERROR,
     IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
+    PROJECT_ID,
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
@@ -52,6 +53,7 @@ const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const displayNewlyCreatedGlobalComment = strictInject(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const is_comments_markdown_mode_enabled: boolean = strictInject(IS_COMMENTS_MARKDOWN_MODE_ENABLED);
+const project_id: number = strictInject(PROJECT_ID);
 
 const post_submit_callback = (new_comment: PullRequestComment): void => {
     if (new_comment.type !== TYPE_GLOBAL_COMMENT) {
@@ -70,7 +72,7 @@ const controller = NewCommentFormController(
         pull_request_id: pull_request_id,
     }),
     { avatar_url },
-    { is_cancel_allowed: false, is_autofocus_enabled: false },
+    { is_cancel_allowed: false, is_autofocus_enabled: false, project_id },
     post_submit_callback,
     displayTuleapAPIFault
 );
