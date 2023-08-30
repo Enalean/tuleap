@@ -18,72 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\ServiceAdministration;
+
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 
-class AgileDashboardScrumConfigurationUpdater
+class ScrumConfigurationUpdater
 {
-    /** @var int */
-    private $project_id;
-
-    /** @var Codendi_Request */
-    private $request;
-
-    /** @var AgileDashboard_ConfigurationManager */
-    private $config_manager;
-
-    /** @var AgileDashboardConfigurationResponse */
-    private $response;
-
-    /** @var AgileDashboard_FirstScrumCreator */
-    private $first_scrum_creator;
-    /**
-     * @var ScrumForMonoMilestoneEnabler
-     */
-    private $scrum_mono_milestone_enabler;
-    /**
-     * @var ScrumForMonoMilestoneDisabler
-     */
-    private $scrum_mono_milestone_disabler;
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-
-    /**
-     * @var ConfigurationUpdater
-     */
-    private $configuration_updater;
-    /**
-     * @var \Psr\EventDispatcher\EventDispatcherInterface
-     */
-    private $event_dispatcher;
+    private readonly int $project_id;
 
     public function __construct(
-        Codendi_Request $request,
-        AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboardConfigurationResponse $response,
-        AgileDashboard_FirstScrumCreator $first_scrum_creator,
-        ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
-        ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ConfigurationUpdater $configuration_updater,
-        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
+        private readonly \Codendi_Request $request,
+        private readonly \AgileDashboard_ConfigurationManager $config_manager,
+        private readonly ConfigurationResponse $response,
+        private readonly \AgileDashboard_FirstScrumCreator $first_scrum_creator,
+        private readonly ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
+        private readonly ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
+        private readonly ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        private readonly ConfigurationUpdater $configuration_updater,
+        private readonly EventDispatcherInterface $event_dispatcher,
         private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
-        $this->request                       = $request;
-        $this->project_id                    = (int) $this->request->get('group_id');
-        $this->config_manager                = $config_manager;
-        $this->response                      = $response;
-        $this->first_scrum_creator           = $first_scrum_creator;
-        $this->scrum_mono_milestone_enabler  = $scrum_mono_milestone_enabler;
-        $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
-        $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
-        $this->configuration_updater         = $configuration_updater;
-        $this->event_dispatcher              = $event_dispatcher;
+        $this->project_id = (int) $this->request->get('group_id');
     }
 
     public function updateConfiguration(): void
@@ -144,7 +104,7 @@ class AgileDashboardScrumConfigurationUpdater
         $this->response->scrumConfigurationUpdated();
     }
 
-    private function getActivatedScrum()
+    private function getActivatedScrum(): bool|string
     {
         $project = $this->request->getProject();
 
@@ -162,7 +122,7 @@ class AgileDashboardScrumConfigurationUpdater
         return $scrum_is_activated;
     }
 
-    private function getScrumTitle()
+    private function getScrumTitle(): string
     {
         $old_scrum_title = $this->config_manager->getScrumTitle($this->project_id);
         $scrum_title     = trim($this->request->get('scrum-title-admin'));

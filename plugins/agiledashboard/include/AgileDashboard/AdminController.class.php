@@ -20,17 +20,9 @@
 
 namespace Tuleap\AgileDashboard;
 
-use Tuleap\Kanban\AdminKanbanPresenter;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanManager;
-use AgileDashboardConfigurationResponse;
-use Tuleap\Kanban\KanbanConfigurationUpdater;
-use AgileDashboardScrumConfigurationUpdater;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
@@ -55,18 +47,26 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
-use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
-use Tuleap\Kanban\Service\KanbanService;
-use Tuleap\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
+use Tuleap\AgileDashboard\ServiceAdministration\ConfigurationResponse;
+use Tuleap\AgileDashboard\ServiceAdministration\ScrumConfigurationUpdater;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Kanban\AdminKanbanPresenter;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
+use Tuleap\Kanban\FirstKanbanCreator;
+use Tuleap\Kanban\KanbanConfigurationUpdater;
+use Tuleap\Kanban\KanbanFactory;
+use Tuleap\Kanban\KanbanManager;
+use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
+use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -238,7 +238,7 @@ class AdminController extends BaseController
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $token->check();
 
-        $response = new AgileDashboardConfigurationResponse(
+        $response = new ConfigurationResponse(
             $this->request->getProject(),
             $this->request->exist('home-ease-onboarding')
         );
@@ -271,7 +271,7 @@ class AdminController extends BaseController
             );
         } else {
             $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
-            $updater                  = new AgileDashboardScrumConfigurationUpdater(
+            $updater                  = new ScrumConfigurationUpdater(
                 $this->request,
                 $this->config_manager,
                 $response,
