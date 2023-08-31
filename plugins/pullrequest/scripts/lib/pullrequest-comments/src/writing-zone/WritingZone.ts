@@ -69,7 +69,7 @@ export const WritingZoneElement = define<InternalWritingZone>({
             return controller;
         },
         connect: (host) => {
-            const onClickInDocumentHandler = (event: MouseEvent): void => {
+            const onMouseDownInDocumentHandler = (event: MouseEvent): void => {
                 if (!event.composedPath().includes(host)) {
                     host.controller.blurWritingZone(host);
                     return;
@@ -78,7 +78,9 @@ export const WritingZoneElement = define<InternalWritingZone>({
                 host.controller.focusWritingZone(host);
             };
 
-            host.controller.getDocument().addEventListener("click", onClickInDocumentHandler);
+            host.controller
+                .getDocument()
+                .addEventListener("mousedown", onMouseDownInDocumentHandler, true);
 
             setTimeout(() => {
                 if (host.controller.shouldFocusWritingZoneWhenConnected()) {
@@ -90,7 +92,7 @@ export const WritingZoneElement = define<InternalWritingZone>({
                 host.controller.resetWritingZone(host);
                 host.controller
                     .getDocument()
-                    .removeEventListener("click", onClickInDocumentHandler);
+                    .removeEventListener("mousedown", onMouseDownInDocumentHandler, true);
             };
         },
     },
