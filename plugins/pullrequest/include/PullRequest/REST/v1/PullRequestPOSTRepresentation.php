@@ -48,5 +48,5 @@ class PullRequestPOSTRepresentation
      * @psalm-var string | null
      * {@type string} {@required false}
      */
-    public string|null $description_format;
+    public string|null $description_format = null;
 }
