@@ -57,7 +57,5 @@ final class KanbanConfigurationUpdater
                 $this->legacy_kanban_deactivator->deactivateKanban($this->project_id);
             }
         }
-
-        $this->response->kanbanConfigurationUpdated();
     }
 }

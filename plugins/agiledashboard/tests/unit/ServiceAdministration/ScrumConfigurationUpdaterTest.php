@@ -30,14 +30,11 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
-use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalResponseMock;
-
     private const PROJECT_ID = 165;
 
     private \Codendi_Request & Stub $request;
@@ -96,7 +93,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
 
-        $this->response->expects(self::never())->method('scrumConfigurationUpdated');
+        $this->expectNotToPerformAssertions();
         $this->update();
     }
 
@@ -113,7 +110,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager->expects(self::once())->method('updateConfiguration');
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
 
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
         $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
         $this->update();
@@ -133,7 +129,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager->expects(self::once())->method('updateConfiguration');
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(true);
 
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
         $this->mono_milestone_disabler->expects(self::once())->method('disableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
         $this->update();
@@ -154,7 +149,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
         $this->config_manager->expects(self::once())->method('updateConfiguration');
 
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
         $this->response->expects(self::once())->method('scrumActivated');
         $this->mono_milestone_enabler->expects(self::never())->method('enableScrumForMonoMilestones');
         $this->update();
@@ -174,7 +168,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager->expects(self::once())->method('updateConfiguration');
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
 
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
         $this->response->expects(self::once())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
         $this->update();
@@ -202,7 +195,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
         $this->response->expects(self::once())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
         $this->update();

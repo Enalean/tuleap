@@ -28,16 +28,16 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\GlobalResponseMock;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use GlobalResponseMock;
     use GlobalLanguageMock;
 
     private const PROJECT_ID = 123;
@@ -88,6 +88,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(AdministrationCrumbBuilder::class),
             $this->count_element_mode_checker,
             $this->createStub(ScrumPresenterBuilder::class),
+            new TestLayout(new LayoutInspector())
         );
         $controller->updateConfiguration();
     }
@@ -100,9 +101,10 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->request->method('exist')->willReturnMap(['activate-ad-service' => true]);
         $this->request->method('get')->willReturnMap([
-            'activate-ad-service' => '',
-            'group_id'            => self::PROJECT_ID,
+            ['activate-ad-service', ''],
+            ['group_id', self::PROJECT_ID],
         ]);
+        $GLOBALS['Language']->method('getText')->willReturn('Permission denied');
 
         $this->config_manager->expects(self::never())->method('updateConfiguration');
 

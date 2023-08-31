@@ -87,7 +87,6 @@ final class KanbanConfigurationUpdaterTest extends TestCase
         $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID], ['activate-kanban', '1']]);
 
         $this->response->expects(self::once())->method('kanbanActivated');
-        $this->response->expects(self::once())->method('kanbanConfigurationUpdated');
 
         $this->update();
 
@@ -100,7 +99,6 @@ final class KanbanConfigurationUpdaterTest extends TestCase
         $this->kanban_retriever = LegacyKanbanRetrieverStub::withActivatedKanban();
 
         $this->response->expects(self::never())->method('kanbanActivated');
-        $this->response->expects(self::once())->method('kanbanConfigurationUpdated');
 
         $this->update();
 
@@ -112,8 +110,6 @@ final class KanbanConfigurationUpdaterTest extends TestCase
         $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
         $this->kanban_retriever = LegacyKanbanRetrieverStub::withActivatedKanban();
 
-        $this->response->expects(self::once())->method('kanbanConfigurationUpdated');
-
         $this->update();
 
         self::assertSame(self::PROJECT_ID, $this->kanban_deactivator->getDeactivatedProjectId());
@@ -122,8 +118,6 @@ final class KanbanConfigurationUpdaterTest extends TestCase
     public function testItDoesNothingWhenToldToDeactivateKanbanAndItIsAlreadyInactive(): void
     {
         $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
-
-        $this->response->expects(self::once())->method('kanbanConfigurationUpdated');
 
         $this->update();
 

@@ -581,9 +581,6 @@ msgstr ""
 "Les trackers \"planning\" potentiels sont déterminés à partir de la "
 "configuration de %1$s et de sa hiérarchie."
 
-msgid "The request is invalid."
-msgstr "La requête n'est pas valide."
-
 #, php-format
 msgid "The tracker %s is not found"
 msgstr "L'outil de suivi %s n'a pas été trouvé"
