@@ -110,6 +110,7 @@ class Dao extends DataAccessObject
         $branch_dest,
         $sha1_dest,
         $merge_status,
+        string $format,
     ) {
         $this->getDB()->insert(
             'plugin_pullrequest_review',
@@ -125,6 +126,7 @@ class Dao extends DataAccessObject
                 'branch_dest'   => $branch_dest,
                 'sha1_dest'     => $sha1_dest,
                 'merge_status'  => $merge_status,
+                'description_format' => $format,
             ]
         );
 
@@ -230,13 +232,13 @@ class Dao extends DataAccessObject
         $this->getDB()->run($sql, $new_title, $pull_request_id);
     }
 
-    public function updateDescription(int $pull_request_id, string $new_description): void
+    public function updateDescription(int $pull_request_id, string $new_description, string $format): void
     {
         $sql = 'UPDATE plugin_pullrequest_review
-                SET description = ?
+                SET description = ?,  description_format = ?
                 WHERE id = ?';
 
-        $this->getDB()->run($sql, $new_description, $pull_request_id);
+        $this->getDB()->run($sql, $new_description, $format, $pull_request_id);
     }
 
     public function deleteAllPullRequestsOfRepository($repository_id)

@@ -29,20 +29,8 @@ use ReferenceManager;
 
 class Factory
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-
-    public function __construct(Dao $dao, ReferenceManager $reference_manager)
+    public function __construct(private readonly Dao $dao, private readonly ReferenceManager $reference_manager)
     {
-        $this->dao               = $dao;
-        $this->reference_manager = $reference_manager;
     }
 
     /**
@@ -92,10 +80,7 @@ class Factory
         return new PullRequestCount($nb_open, $nb_closed);
     }
 
-    /**
-     * @return PullRequest
-     */
-    public function getInstanceFromRow(array $row)
+    public function getInstanceFromRow(array $row): PullRequest
     {
         return new PullRequest(
             $row['id'],
@@ -109,8 +94,9 @@ class Factory
             $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
+            $row["description_format"],
             $row['status'],
-            $row['merge_status']
+            $row['merge_status'],
         );
     }
 
@@ -130,10 +116,7 @@ class Factory
         return $prs;
     }
 
-    /**
-     * @return PullRequest
-     */
-    public function create(PFUser $user, PullRequest $pull_request, $project_id)
+    public function create(PFUser $user, PullRequest $pull_request, int $project_id): PullRequest
     {
         try {
             $new_pull_request_id = $this->dao->create(
@@ -147,7 +130,8 @@ class Factory
                 $pull_request->getRepoDestId(),
                 $pull_request->getBranchDest(),
                 $pull_request->getSha1Dest(),
-                $pull_request->getMergeStatus()
+                $pull_request->getMergeStatus(),
+                $pull_request->getDescriptionFormat()
             );
         } catch (\Exception $ex) {
             throw new PullRequestNotCreatedException();
@@ -207,11 +191,11 @@ class Factory
         );
     }
 
-    public function updateDescription(PFUser $user, PullRequest $pull_request, int $project_id, string $new_description): void
+    public function updateDescription(PFUser $user, PullRequest $pull_request, int $project_id, string $new_description, string $format): void
     {
         $pull_request_id = $pull_request->getId();
 
-        $this->dao->updateDescription($pull_request_id, $new_description);
+        $this->dao->updateDescription($pull_request_id, $new_description, $format);
 
         $this->reference_manager->extractCrossRef(
             $new_description,

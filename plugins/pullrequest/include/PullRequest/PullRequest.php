@@ -36,51 +36,22 @@ class PullRequest implements Labelable
     public const FASTFORWARD_MERGE    = 2;
     public const CONFLICT_MERGE       = 3;
 
-    private $id;
-    private $title;
-    private $description;
-    private $repository_id;
-    private $user_id;
-    private $creation_date;
-    private $branch_src;
-    /**
-     * @var string
-     */
-    private $sha1_src;
-    private $repo_dest_id;
-    private $branch_dest;
-    private $sha1_dest;
-    private $status;
-    private $merge_status;
-
     public function __construct(
-        $id,
-        $title,
-        $description,
-        $repository_id,
-        $user_id,
-        $creation_date,
-        $branch_src,
-        string $sha1_src,
-        $repo_dest_id,
-        $branch_dest,
-        $sha1_dest,
-        $status = 'R',
-        $merge_status = self::UNKNOWN_MERGE,
+        private $id,
+        private $title,
+        private $description,
+        private $repository_id,
+        private $user_id,
+        private $creation_date,
+        private $branch_src,
+        private string $sha1_src,
+        private $repo_dest_id,
+        private $branch_dest,
+        private $sha1_dest,
+        private string $description_format,
+        private $status = 'R',
+        private $merge_status = self::UNKNOWN_MERGE,
     ) {
-        $this->id            = $id;
-        $this->title         = $title;
-        $this->description   = $description;
-        $this->repository_id = $repository_id;
-        $this->user_id       = $user_id;
-        $this->creation_date = $creation_date;
-        $this->branch_src    = $branch_src;
-        $this->sha1_src      = $sha1_src;
-        $this->repo_dest_id  = $repo_dest_id;
-        $this->branch_dest   = $branch_dest;
-        $this->sha1_dest     = $sha1_dest;
-        $this->status        = $status;
-        $this->merge_status  = $merge_status;
     }
 
     public function createWithNewID(int $new_pull_request_id): self
@@ -162,5 +133,10 @@ class PullRequest implements Labelable
     public function getCreationDate()
     {
         return $this->creation_date;
+    }
+
+    public function getDescriptionFormat(): string
+    {
+        return $this->description_format;
     }
 }

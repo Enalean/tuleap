@@ -26,6 +26,7 @@ use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusWithKnownStatus;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequestWithGitReference;
@@ -74,11 +75,15 @@ final class PullRequestRepresentationFactoryTest extends TestCase
         $url_generator->method('getHTTPURL')->willReturn("an_http_url/");
         $url_generator->method('getSSHURL')->willReturn("an_ssh_url");
 
+        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
+        $purifier->method('purify')->willReturn("");
         $this->representation_factory = new PullRequestRepresentationFactory(
             $this->access_controll_verifier,
             $commit_status_retriever,
             $url_generator,
-            $status_info_builder
+            $status_info_builder,
+            $purifier,
+            $this->createMock(ContentInterpretor::class)
         );
 
 

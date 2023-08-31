@@ -20,9 +20,11 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestWithGitReference;
@@ -39,6 +41,8 @@ class PullRequestRepresentationFactory
         private readonly CommitStatusRetriever $commit_status_retriever,
         private readonly GitoliteAccessURLGenerator $gitolite_access_URL_generator,
         private readonly PullRequestStatusInfoRepresentationBuilder $status_info_representation_builder,
+        private readonly Codendi_HTMLPurifier $purifier,
+        private readonly ContentInterpretor $common_mark_interpreter,
     ) {
     }
 
@@ -76,6 +80,8 @@ class PullRequestRepresentationFactory
 
         $pull_request_representation = new PullRequestRepresentation($this->gitolite_access_URL_generator);
         $pull_request_representation->build(
+            $this->purifier,
+            $this->common_mark_interpreter,
             $pull_request,
             $repository_src,
             $repository_dest,

@@ -26,6 +26,7 @@ use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use GitRepository;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
@@ -107,9 +108,9 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pr_merger->method('detectMergeabilityStatus');
         $this->timeline_event_creator->method('storeUpdateEvent');
 
-        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
-        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0);
-        $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0);
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0, Comment::FORMAT_TEXT);
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0, Comment::FORMAT_TEXT);
+        $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0, Comment::FORMAT_TEXT);
 
         $git_repo = $this->createMock(GitRepository::class);
         $git_repo->method('getId')->willReturn(1);
@@ -139,8 +140,8 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pr_merger->method('detectMergeabilityStatus');
         $this->timeline_event_creator->method('storeUpdateEvent');
 
-        $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0);
-        $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0);
+        $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0, Comment::FORMAT_TEXT);
+        $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0, Comment::FORMAT_TEXT);
 
         $git_repo = $this->createMock(GitRepository::class);
         $git_repo->method('getId')->willReturn(1);
@@ -168,8 +169,8 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pr_merger->method('detectMergeabilityStatus');
         $this->timeline_event_creator->method('storeUpdateEvent');
 
-        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
-        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2', 0);
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0, Comment::FORMAT_TEXT);
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2', 0, Comment::FORMAT_TEXT);
 
         $this->dao->markAsMerged($pr1_id);
         $this->dao->markAsAbandoned($pr2_id);

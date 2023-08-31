@@ -156,6 +156,7 @@ class PullRequestUpdater
             $pr->getRepoDestId(),
             $pr->getBranchDest(),
             $pr->getSha1Dest(),
+            $pr->getDescriptionFormat(),
             $pr->getStatus(),
             $pr->getMergeStatus()
         );
