@@ -104,8 +104,12 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     {
         $html = dgettext('tuleap-tracker', 'The contributor(s)/assignee(s) are the person(s) who are responsible for the work needed to complete the artifact.');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
-            $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= sprintf(dgettext('tuleap-tracker', 'One will be considered as a contributor/assignee of this artifact if her name appears in the field %1$s.'), $purifier->purify($field->getLabel()));
+            $purifier    = Codendi_HTMLPurifier::instance();
+            $field_label = '<strong>' . $purifier->purify($field->getLabel()) . '</strong>';
+            $html       .= sprintf(
+                dgettext('tuleap-tracker', 'One will be considered as a contributor/assignee of this artifact if her name appears in the field %1$s.'),
+                $field_label
+            );
         } else {
             $html .= dgettext('tuleap-tracker', 'The artifacts of this tracker does not have any contributor/assignee yet.');
         }
