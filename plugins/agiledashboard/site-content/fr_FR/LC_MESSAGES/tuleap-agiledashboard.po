@@ -28,6 +28,10 @@ msgid "%1$s backlog"
 msgstr "Backlog de %1$s"
 
 #, php-format
+msgid "%s backlog"
+msgstr "%s backlog"
+
+#, php-format
 msgid "%s top backlog"
 msgstr "%s planification générale"
 
@@ -57,6 +61,9 @@ msgstr "Activer le mode comptage d'éléments pour le burnup"
 
 msgid "Add a kanban"
 msgstr "Ajouter un kanban"
+
+msgid "Add to backlog"
+msgstr "Ajouter au backlog"
 
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
@@ -124,6 +131,9 @@ msgstr ""
 
 msgid "Back to semantics"
 msgstr "Retour aux sémantiques"
+
+msgid "Backlog"
+msgstr "Backlog"
 
 msgid "Backlog title"
 msgstr "Titre du backlog"
@@ -218,8 +228,17 @@ msgstr "Éditer le planning : %s"
 msgid "Enable Scrum V2"
 msgstr "Activer Scrum V2"
 
+msgid "Explicit backlog"
+msgstr "Backlog explicite"
+
 msgid "Explicit backlog actions"
 msgstr "Actions de planification générale explicite"
+
+msgid ""
+"Explicit backlog allows to select, item per item, what goes in Scrum backlog."
+msgstr ""
+"Le backlog explicite permet de choisir élément par élément ce qui doit aller "
+"dans le backlog de Scrum."
 
 msgid ""
 "Explicit backlog allows to select, item per item, what goes in Scrum top "
@@ -413,6 +432,9 @@ msgid ""
 msgstr ""
 "La PostAction de type %s ne peut être définie sans la gestion explicite de "
 "la planification générale."
+
+msgid "Remove from backlog"
+msgstr "Supprimer du backlog"
 
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"

@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -612,17 +613,18 @@ class AgileDashboardRouter
             );
         }
 
-        $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
-        $header_options = array_merge(
+        $controller                    = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
+        $header_options                = array_merge(
             ['body_class' => ['agiledashboard_planning']],
             $controller->getHeaderOptions($user)
         );
-        $breadcrumbs    = $controller->getBreadcrumbs();
+        $breadcrumbs                   = $controller->getBreadcrumbs();
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($service->getProject());
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', []);
         $service->displayHeader(
             sprintf(
-                dgettext('tuleap-agiledashboard', '%s top backlog'),
+                $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', '%s backlog') : dgettext('tuleap-agiledashboard', '%s top backlog'),
                 $service->getProject()->getPublicName()
             ),
             $breadcrumbs,

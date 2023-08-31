@@ -94,11 +94,11 @@
                                        value="1"
                                     {{# explicit_top_backlog_enabled }} checked {{/ explicit_top_backlog_enabled }}
                                     {{# is_planning_administration_delegated }} disabled {{/ is_planning_administration_delegated }}
-                                > {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
+                                > {{explicit_backlog_checkbox_title}}
                             </label>
                             <p class="tlp-text-info">
                                 <i class="fa fa-info-circle"></i>
-                                {{# dgettext }}tuleap-agiledashboard | Explicit backlog allows to select, item per item, what goes in Scrum top backlog.{{/ dgettext }}
+                                    {{explicit_backlog_checkbox_info}}
                                 <a href="/doc/en/user-guide/agile-dashboard.html?#explicit-backlog">
                                     {{# dgettext }}tuleap-agiledashboard | See documentation for more details. {{/ dgettext }}
                                 </a>

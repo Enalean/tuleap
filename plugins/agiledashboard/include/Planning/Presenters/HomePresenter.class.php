@@ -71,6 +71,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         public readonly \Tuleap\CSRFSynchronizerTokenPresenter $csrf_token,
         bool $is_using_kanban_service,
         public readonly ?string $kanban_service_url,
+        private readonly bool $is_split_feature_flag_enabled,
     ) {
         parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled, $is_planning_management_delegated, $is_using_kanban_service);
         $this->milestone_presenters            = $milestone_access_presenters;
@@ -224,7 +225,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function top_backlog_planning()
     {
-        return dgettext('tuleap-agiledashboard', 'Top Backlog Planning');
+        return $this->is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Backlog') : dgettext('tuleap-agiledashboard', 'Top Backlog Planning');
     }
 
     public function content()

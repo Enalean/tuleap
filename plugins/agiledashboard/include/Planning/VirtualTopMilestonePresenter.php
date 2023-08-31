@@ -29,6 +29,7 @@ final class VirtualTopMilestonePresenter
     public function __construct(
         public readonly ?PlanningV2Presenter $planning_presenter,
         public readonly bool $is_admin,
+        public readonly string $backlog_title,
     ) {
     }
 }

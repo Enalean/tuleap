@@ -20,6 +20,10 @@ msgid "%1$s backlog"
 msgstr ""
 
 #, php-format
+msgid "%s backlog"
+msgstr ""
+
+#, php-format
 msgid "%s top backlog"
 msgstr ""
 
@@ -44,6 +48,9 @@ msgid "Activate count elements mode for burnup chart"
 msgstr ""
 
 msgid "Add a kanban"
+msgstr ""
+
+msgid "Add to backlog"
 msgstr ""
 
 msgid "Add to top backlog"
@@ -100,6 +107,9 @@ msgid ""
 msgstr ""
 
 msgid "Back to semantics"
+msgstr ""
+
+msgid "Backlog"
 msgstr ""
 
 msgid "Backlog title"
@@ -189,7 +199,14 @@ msgstr ""
 msgid "Enable Scrum V2"
 msgstr ""
 
+msgid "Explicit backlog"
+msgstr ""
+
 msgid "Explicit backlog actions"
+msgstr ""
+
+msgid ""
+"Explicit backlog allows to select, item per item, what goes in Scrum backlog."
 msgstr ""
 
 msgid ""
@@ -358,6 +375,9 @@ msgstr ""
 #, php-format
 msgid ""
 "PostAction of type %s cannot be defined without explicit backlog management."
+msgstr ""
+
+msgid "Remove from backlog"
 msgstr ""
 
 msgid "Remove from top backlog"

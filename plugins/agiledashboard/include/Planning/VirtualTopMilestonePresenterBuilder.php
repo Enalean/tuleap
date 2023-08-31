@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\VerifyProjectUsesExplicitBacklog;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Option\Option;
 
 final class VirtualTopMilestonePresenterBuilder
@@ -34,6 +35,7 @@ final class VirtualTopMilestonePresenterBuilder
     public function __construct(
         private readonly EventDispatcherInterface $event_dispatcher,
         private readonly VerifyProjectUsesExplicitBacklog $explicit_backlog_verifier,
+        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
     }
 
@@ -58,6 +60,7 @@ final class VirtualTopMilestonePresenterBuilder
             );
         }, null);
         $is_project_admin   = $user->isAdmin((int) $project->getID());
-        return new VirtualTopMilestonePresenter($planning_presenter, $is_project_admin);
+        $backlog_title      = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext("tuleap-agiledashboard", "Backlog") : dgettext("tuleap-agiledashboard", "Top Backlog Planning");
+        return new VirtualTopMilestonePresenter($planning_presenter, $is_project_admin, $backlog_title);
     }
 }

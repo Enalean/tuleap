@@ -197,6 +197,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
         $is_using_kanban_service = $this->isUsingKanbanService($project, $service);
 
+        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->project);
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($configuration->getPlannings()),
             $this->group_id,
@@ -218,6 +220,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             ),
             $is_using_kanban_service,
             $service?->getUrl(),
+            $is_split_feature_flag_enabled
         );
         return $this->renderToString('home', $presenter);
     }

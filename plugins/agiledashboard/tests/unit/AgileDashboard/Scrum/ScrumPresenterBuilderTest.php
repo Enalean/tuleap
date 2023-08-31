@@ -74,6 +74,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
      */
     private $add_to_top_backlog_post_action_dao;
+    private bool $is_split_feature_flag_enabled;
 
     protected function setUp(): void
     {
@@ -97,6 +98,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->andReturnTrue();
+        $this->is_split_feature_flag_enabled = false;
     }
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
@@ -148,6 +150,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
+            $this->is_split_feature_flag_enabled
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -213,6 +216,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
+            $this->is_split_feature_flag_enabled
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -280,6 +284,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
+            $this->is_split_feature_flag_enabled
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -345,6 +350,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
+            $this->is_split_feature_flag_enabled
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
