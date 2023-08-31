@@ -612,16 +612,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function tracker_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $tracker    = $params['tracker'];
+        $tracker = $params['tracker'];
+        assert($tracker instanceof Tracker);
         $tracker_id = $tracker->getId();
 
         $is_used_in_planning = PlanningFactory::build()->isTrackerIdUsedInAPlanning($tracker_id);
         $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
 
         if ($is_used_in_planning || $is_used_in_backlog) {
-            $result['can_be_deleted'] = false;
-            $result['message']        = 'Agile Dashboard';
-            $params['result']         = $result;
+            $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+                ->isProjectAllowedToUseSplitKanban($tracker->getProject());
+            $result['can_be_deleted']               = false;
+            $result['message']                      = $is_project_allowed_to_use_split_kanban ? dgettext('tuleap-agiledashboard', 'Backlog') : 'Agile Dashboard';
+            $params['result']                       = $result;
         }
     }
 
@@ -834,7 +837,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function statisticsServiceUsage(StatisticsServiceUsage $event): void
     {
         $dao = new AgileDashboard_Dao();
-        $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
+        $event->csv_exporter->buildDatas($dao->getProjectsWithADActivated(), "Backlog activated");
     }
 
     /**
@@ -1308,13 +1311,14 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function getAllBreadCrumbsForMilestoneBuilder(): AllBreadCrumbsForMilestoneBuilder
     {
         return new AllBreadCrumbsForMilestoneBuilder(
-            new AgileDashboardCrumbBuilder($this->getPluginPath()),
+            new AgileDashboardCrumbBuilder($this->getPluginPath(), new \Tuleap\Kanban\CheckSplitKanbanConfiguration()),
             new VirtualTopMilestoneCrumbBuilder($this->getPluginPath()),
             new MilestoneCrumbBuilder(
                 $this->getPluginPath(),
                 $this->getMilestonePaneFactory(),
                 $this->getMilestoneFactory()
-            )
+            ),
+            new CheckSplitKanbanConfiguration(),
         );
     }
 
@@ -1745,8 +1749,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getSemanticProgressUsageEvent(GetSemanticProgressUsageEvent $event): void
     {
+        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+            ->isProjectAllowedToUseSplitKanban($event->tracker->getProject());
+
         $event->addFutureUsageLocation(
-            dgettext('tuleap-agiledashboard', 'the Agile Dashboard')
+            $is_project_allowed_to_use_split_kanban
+                ? dgettext('tuleap-agiledashboard', 'the Backlog')
+                : dgettext('tuleap-agiledashboard', 'the Agile Dashboard')
         );
     }
 
@@ -1756,10 +1765,14 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
+        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+            ->isProjectAllowedToUseSplitKanban($project);
 
         $event->setExternalServicesDescriptions(
             new SemanticDoneUsedExternalService(
-                dgettext('tuleap-agiledashboard', 'AgileDashboard service'),
+                $is_project_allowed_to_use_split_kanban
+                    ? dgettext('tuleap-agiledashboard', 'Backlog service')
+                    : dgettext('tuleap-agiledashboard', 'AgileDashboard service'),
                 dgettext('tuleap-agiledashboard', 'burnup and velocity charts')
             )
         );

@@ -1,4 +1,11 @@
-<h2 class="almost-tlp-title project-header-title">{{# dgettext }}tuleap-agiledashboard | Agile Dashboard Administration{{/ dgettext }}</h2>
+<h2 class="almost-tlp-title project-header-title">
+    {{# is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+    {{^ is_legacy_agiledashboard }}
+        {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
+    {{/ is_legacy_agiledashboard }}
+</h2>
 <div class="agiledashboard agiledashboard-content">
     <h3>{{# dgettext }}tuleap-agiledashboard | Edit planning: %s | {{ planning_name }}{{/ dgettext }}</h3>
     <form method="post" action="/plugins/agiledashboard/?group_id={{ project_id }}&planning_id={{ planning_id }}&action=update">

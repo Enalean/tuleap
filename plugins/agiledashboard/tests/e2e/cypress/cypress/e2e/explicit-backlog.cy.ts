@@ -20,7 +20,7 @@
 describe(`Planning view Explicit Backlog`, function () {
     beforeEach(function () {
         cy.projectMemberSession();
-        cy.visitProjectService("explicit-backlog", "Agile Dashboard");
+        cy.visitProjectService("explicit-backlog", "Backlog");
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").as("body");
     });
@@ -120,7 +120,7 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.createNewPublicProject(project_name, "scrum");
 
             cy.log("Items are automatically linked to top backlog");
-            cy.visitProjectService(project_name, "Agile Dashboard");
+            cy.visitProjectService(project_name, "Backlog");
             cy.get("[data-test=add-item]").click();
             cy.get("[data-test='add-User Stories']").click();
             cy.get("[data-test=string-field-input]").type("Perfect World");
@@ -133,7 +133,7 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.get("[data-test=i_want_to]").type("Unrealistic Hobby");
             cy.get("[data-test=artifact-submit-button]").click();
 
-            cy.visitProjectService(project_name, "Agile Dashboard");
+            cy.visitProjectService(project_name, "Backlog");
 
             cy.get("[data-test=backlog]").within(() => {
                 cy.contains("[data-test=backlog-item]", "Perfect World");

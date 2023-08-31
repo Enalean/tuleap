@@ -398,10 +398,17 @@ class AgileDashboardRouter
      */
     private function getHeaderTitle(Codendi_Request $request, $action_name)
     {
+        $is_project_allowed_to_use_split_kanban = $this->split_kanban_configuration_checker
+            ->isProjectAllowedToUseSplitKanban($request->getProject());
+
         $header_title = [
             'index'               => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
-            'exportToFile'        => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
-            'adminScrum'          => dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard'),
+            'exportToFile'        => $is_project_allowed_to_use_split_kanban
+                ? dgettext('tuleap-agiledashboard', 'Backlog')
+                : dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
+            'adminScrum'          => $is_project_allowed_to_use_split_kanban
+                ? dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog')
+                : dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard'),
             'adminKanban'         => dgettext('tuleap-agiledashboard', 'Kanban Administration of Agile Dashboard'),
             'adminCharts'         => dgettext("tuleap-agiledashboard", "Charts configuration"),
             'new_'                => dgettext('tuleap-agiledashboard', 'New Planning'),
@@ -451,7 +458,9 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    dgettext('tuleap-agiledashboard', 'Agile Dashboard')
+                    $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())
+                        ? dgettext('tuleap-agiledashboard', 'Backlog')
+                        : dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
         }
@@ -608,7 +617,9 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    dgettext('tuleap-agiledashboard', 'Agile Dashboard')
+                    $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())
+                        ? dgettext('tuleap-agiledashboard', 'Backlog')
+                        : dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
         }

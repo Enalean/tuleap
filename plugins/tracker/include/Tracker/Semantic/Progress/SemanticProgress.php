@@ -183,7 +183,7 @@ class SemanticProgress extends \Tracker_Semantic
 
     private function getSemanticUsage(): string
     {
-        $event         = new GetSemanticProgressUsageEvent();
+        $event         = new GetSemanticProgressUsageEvent($this->tracker);
         $event_manager = \EventManager::instance();
 
         $event_manager->processEvent($event);

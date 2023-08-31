@@ -190,7 +190,7 @@ function createIteration(): void {
 
 function planUserStory(team_project_name: string, program_project_name: string): void {
     cy.log("plan the user story in team");
-    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.visitProjectService(team_project_name, "Backlog");
     cy.get("[data-test=milestone]").click().get("[data-test=go-to-submilestone-planning]").click();
     cy.get("[data-test=backlog-item-details-link]")
         .invoke("data", "artifact-id")
@@ -231,7 +231,7 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.get("[data-test=program-increment-content]").contains("My awesome feature");
 
     cy.log("Check sidebar for team");
-    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.visitProjectService(team_project_name, "Backlog");
     cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
         program_project_name
     );
@@ -240,13 +240,13 @@ function checkThatProgramAndTeamsAreCorrect(
     checkMirrorIterationExistsInSprint("My first PI", "Iteration One", team_project_name);
 
     cy.log("Check that user story linked to feature has been planned in mirror program increment");
-    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.visitProjectService(team_project_name, "Backlog");
     cy.get("[data-test=expand-collapse-milestone]").click();
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
 }
 
 function checkPIExistsInReleases(expected_text: string, team_project_name: string): void {
-    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
+    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Backlog");
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
             `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
@@ -273,7 +273,7 @@ function checkMirrorIterationExistsInSprint(
         .get("[data-test=go-to-submilestone-planning]")
         .click();
 
-    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
+    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Backlog");
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
             `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
@@ -308,7 +308,7 @@ function updateProgramIncrementAndIteration(program_project_name: string): void 
 
 function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.log("Check that mirror program increment is synchronized");
-    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.visitProjectService(team_project_name, "Backlog");
 
     checkPIExistsInReleases("My first PI updated", team_project_name);
     checkMirrorIterationExistsInSprint(
@@ -342,7 +342,7 @@ function linkANewTeamToProgram(
     cy.get("[data-test=synchronize-team-button]").click();
 
     cy.log("Check sidebar for team");
-    cy.visitProjectService(other_team_project_name, "Agile Dashboard");
+    cy.visitProjectService(other_team_project_name, "Backlog");
     cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
         program_project_name
     );

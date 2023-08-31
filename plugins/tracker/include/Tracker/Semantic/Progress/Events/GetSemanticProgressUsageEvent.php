@@ -29,6 +29,10 @@ class GetSemanticProgressUsageEvent implements Dispatchable
 {
     public const NAME = 'getSemanticProgressUsageEvent';
 
+    public function __construct(public readonly \Tracker $tracker)
+    {
+    }
+
     /**
      * @var array
      */

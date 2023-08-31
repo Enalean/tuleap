@@ -104,11 +104,27 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
+        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+            ->isProjectAllowedToUseSplitKanban($this->tracker->getProject());
+
         $html = dgettext('tuleap-agiledashboard', 'This is used in the Agile Dashboard if enabled.');
+        if ($is_project_allowed_to_use_split_kanban) {
+            $html = dgettext('tuleap-agiledashboard', 'This is used in the Backlog if enabled.');
+        }
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
+
+            $html .= sprintf(
+                dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'),
+                $purifier->purify($field->getLabel())
+            );
+            if ($is_project_allowed_to_use_split_kanban) {
+                $html .= sprintf(
+                    dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Backlog by the field <strong>%1$s</strong>.</p>'),
+                    $purifier->purify($field->getLabel())
+                );
+            }
         } else {
             $html .= dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
         }

@@ -22,16 +22,22 @@ class Planning_ImportTemplateFormPresenter
 {
     public const TULEAP_TEMPLATE_URL = __DIR__ . '/../../resources/templates/scrum_dashboard_template.xml';
 
-    public $group_id;
+    public int $group_id;
 
 
-    public function __construct($group_id)
-    {
-        $this->group_id = $group_id;
+    public function __construct(
+        private readonly Project $project,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
+    ) {
+        $this->group_id = (int) $this->project->getID();
     }
 
     public function adminTitle()
     {
+        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->project)) {
+            return dgettext('tuleap-agiledashboard', 'Backlog administration');
+        }
+
         return dgettext('tuleap-agiledashboard', 'Agile Dashboard Administration');
     }
 

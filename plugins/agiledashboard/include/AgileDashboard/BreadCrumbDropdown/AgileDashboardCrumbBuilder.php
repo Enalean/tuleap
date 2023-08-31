@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
 use PFUser;
 use Project;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -31,15 +32,10 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class AgileDashboardCrumbBuilder
 {
-    /** @var string */
-    private $plugin_path;
-
-    /**
-     * @param string $plugin_path
-     */
-    public function __construct($plugin_path)
-    {
-        $this->plugin_path = $plugin_path;
+    public function __construct(
+        private readonly string $plugin_path,
+        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
+    ) {
     }
 
     /**
@@ -48,9 +44,14 @@ class AgileDashboardCrumbBuilder
      */
     public function build(PFUser $user, Project $project)
     {
+        $label = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
+        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            $label = dgettext('tuleap-agiledashboard', 'Backlog');
+        }
+
         $agile_breadcrumb = new BreadCrumb(
             new BreadCrumbLinkWithIcon(
-                dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
+                $label,
                 $this->plugin_path . '/?' . http_build_query(['group_id' => $project->getID()]),
                 'fa-table'
             )

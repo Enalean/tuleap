@@ -30,27 +30,12 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class AllBreadCrumbsForMilestoneBuilder
 {
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $agile_dashboard_crumb_builder;
-    /**
-     * @var VirtualTopMilestoneCrumbBuilder
-     */
-    private $top_milestone_crumb_builder;
-    /**
-     * @var MilestoneCrumbBuilder
-     */
-    private $milestone_crumb_builder;
-
     public function __construct(
-        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
-        VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        MilestoneCrumbBuilder $milestone_crumb_builder,
+        private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
+        private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
+        private readonly MilestoneCrumbBuilder $milestone_crumb_builder,
+        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
-        $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
-        $this->top_milestone_crumb_builder   = $top_milestone_crumb_builder;
-        $this->milestone_crumb_builder       = $milestone_crumb_builder;
     }
 
     public function getBreadcrumbs(PFUser $user, Project $project, Planning_Milestone $milestone): BreadCrumbCollection
@@ -59,9 +44,11 @@ class AllBreadCrumbsForMilestoneBuilder
         $breadcrumbs->addBreadCrumb(
             $this->agile_dashboard_crumb_builder->build($user, $project)
         );
-        $breadcrumbs->addBreadCrumb(
-            $this->top_milestone_crumb_builder->build($project)
-        );
+        if (! $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            $breadcrumbs->addBreadCrumb(
+                $this->top_milestone_crumb_builder->build($project)
+            );
+        }
 
         if ($milestone->getArtifact()) {
             foreach (array_reverse($milestone->getAncestors()) as $ancestor) {

@@ -23,11 +23,49 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
+
 class AgileDashboardService extends \Service
 {
     public function getIconName(): string
     {
-        return 'fas fa-tlp-taskboard';
+        if ($this->isLegacyAgileDashboard()) {
+            return 'fa-solid fa-tlp-taskboard';
+        }
+
+        return 'fa-solid fa-tlp-backlog';
+    }
+
+    public function getInternationalizedName(): string
+    {
+        if ($this->isLegacyAgileDashboard()) {
+            return parent::getInternationalizedName();
+        }
+
+        return dgettext('tuleap-agiledashboard', 'Backlog');
+    }
+
+    public function getProjectAdministrationName(): string
+    {
+        if ($this->isLegacyAgileDashboard()) {
+            return parent::getProjectAdministrationName();
+        }
+
+        return dgettext('tuleap-agiledashboard', 'Backlog');
+    }
+
+    public function getInternationalizedDescription(): string
+    {
+        if ($this->isLegacyAgileDashboard()) {
+            return parent::getInternationalizedDescription();
+        }
+
+        return dgettext('tuleap-agiledashboard', 'Backlog');
+    }
+
+    private function isLegacyAgileDashboard(): bool
+    {
+        return ! (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($this->project);
     }
 
     public function urlCanChange(): bool
