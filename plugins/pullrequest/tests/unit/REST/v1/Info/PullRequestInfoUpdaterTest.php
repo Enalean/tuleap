@@ -105,6 +105,18 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }
 
+    public function testIntegratorCanClearPullRequestDescriptionPullRequest(): void
+    {
+        $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
+        $project_id     = 104;
+        $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, "My PR", "", Comment::FORMAT_TEXT);
+
+        $this->factory->expects(self::once())->method("updateTitle");
+        $this->factory->expects(self::once())->method("updateDescription");
+
+        $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
+    }
+
     public function testWhenNoFormatIsDefinedDefaultFormatIsText(): void
     {
         $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
