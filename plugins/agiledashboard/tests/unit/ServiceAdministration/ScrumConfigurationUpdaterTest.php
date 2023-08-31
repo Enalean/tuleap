@@ -30,35 +30,56 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use GlobalResponseMock;
+
+    private const PROJECT_ID      = 165;
+    private const OLD_SCRUM_TITLE = 'Scrum';
+
     private \Codendi_Request & Stub $request;
     private ConfigurationResponse & MockObject $response;
     private EventDispatcherStub $event_dispatcher;
+    private ScrumForMonoMilestoneEnabler & MockObject $mono_milestone_enabler;
+    private ScrumForMonoMilestoneDisabler & MockObject $mono_milestone_disabler;
+    private ConfigurationUpdater & MockObject $explicit_backlog_updater;
+    private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
+    private ScrumForMonoMilestoneChecker & Stub $mono_milestone_checker;
+    private \AgileDashboard_FirstScrumCreator & MockObject $first_scrum_creator;
 
     protected function setUp(): void
     {
         $this->request = $this->createStub(\Codendi_Request::class);
-        $project       = ProjectTestBuilder::aProject()->build();
-        $this->request->method('get')->willReturnMap(['group_id' => $project->getID()]);
+        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->request->method('getProject')->willReturn($project);
         $this->response = $this->createMock(ConfigurationResponse::class);
+
+        $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
+
+        $this->mono_milestone_enabler   = $this->createMock(ScrumForMonoMilestoneEnabler::class);
+        $this->mono_milestone_disabler  = $this->createMock(ScrumForMonoMilestoneDisabler::class);
+        $this->explicit_backlog_updater = $this->createMock(ConfigurationUpdater::class);
+        $this->config_manager           = $this->createMock(\AgileDashboard_ConfigurationManager::class);
+        $this->config_manager->method('getScrumTitle')->willReturn(self::OLD_SCRUM_TITLE);
+        $this->mono_milestone_checker = $this->createStub(ScrumForMonoMilestoneChecker::class);
+        $this->first_scrum_creator    = $this->createMock(\AgileDashboard_FirstScrumCreator::class);
     }
 
     private function update(): void
     {
         $configuration_updater = new ScrumConfigurationUpdater(
             $this->request,
-            $this->createStub(\AgileDashboard_ConfigurationManager::class),
+            $this->config_manager,
             $this->response,
-            $this->createStub(\AgileDashboard_FirstScrumCreator::class),
-            $this->createStub(ScrumForMonoMilestoneEnabler::class),
-            $this->createStub(ScrumForMonoMilestoneDisabler::class),
-            $this->createStub(ScrumForMonoMilestoneChecker::class),
-            $this->createStub(ConfigurationUpdater::class),
+            $this->first_scrum_creator,
+            $this->mono_milestone_enabler,
+            $this->mono_milestone_disabler,
+            $this->mono_milestone_checker,
+            $this->explicit_backlog_updater,
             $this->event_dispatcher,
             new \Tuleap\Kanban\CheckSplitKanbanConfiguration(),
         );
@@ -75,8 +96,177 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $event;
             }
         );
+        $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
 
         $this->response->expects(self::never())->method('scrumConfigurationUpdated');
+        $this->update();
+    }
+
+    public function testItRedirectsWithFeedbackWhenScrumTitleIsMissing(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', false]]);
+        $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
+
+        $this->response->expects(self::once())->method('missingScrumTitle');
+        $this->update();
+    }
+
+    public function testItChangesScrumTitle(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $new_title = 'Planification';
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', $new_title],
+            ['activate-scrum', '1'],
+        ]);
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
+
+        $this->response->expects(self::once())->method('scrumTitleChanged');
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->config_manager->expects(self::once())
+            ->method('updateConfiguration')
+            ->with(self::PROJECT_ID, '1', $new_title);
+        $this->update();
+    }
+
+    public function testItDiscardsEmptyScrumTitle(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', ''],
+            ['activate-scrum', '1'],
+        ]);
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->response->expects(self::once())->method('scrumTitleChanged');
+        $this->response->expects(self::once())->method('emptyScrumTitle');
+        $this->config_manager->expects(self::once())
+            ->method('updateConfiguration')
+            ->with(self::PROJECT_ID, '1', self::OLD_SCRUM_TITLE);
+        $this->update();
+    }
+
+    public function testItEnablesScrumV2MonoMilestoneMode(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
+            ['activate-scrum', '1'],
+            ['activate-scrum-v2', '1'],
+            ['home-ease-onboarding', false],
+        ]);
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager->expects(self::once())->method('updateConfiguration');
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
+        $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
+        $this->update();
+    }
+
+    public function testItDisablesScrumV2MonoMilestoneMode(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
+            ['activate-scrum', '1'],
+            ['activate-scrum-v2', '0'],
+            ['home-ease-onboarding', false],
+        ]);
+
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager->expects(self::once())->method('updateConfiguration');
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(true);
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->mono_milestone_disabler->expects(self::once())->method('disableScrumForMonoMilestones');
+        $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
+        $this->update();
+    }
+
+    public function testItDiscardsActivationOfScrumV2MonoMilestoneModeFromAgileDashboardHomepage(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
+            ['activate-scrum', '1'],
+            ['activate-scrum-v2', '1'],
+            ['home-ease-onboarding', '1'],
+        ]);
+
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager->expects(self::once())->method('updateConfiguration');
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->response->expects(self::once())->method('scrumActivated');
+        $this->mono_milestone_enabler->expects(self::never())->method('enableScrumForMonoMilestones');
+        $this->update();
+    }
+
+    public function testItCreatesFirstScrum(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
+            ['activate-scrum', '1'],
+            ['activate-scrum-v2', '0'],
+        ]);
+
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager->expects(self::once())->method('updateConfiguration');
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->response->expects(self::once())->method('scrumActivated');
+        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
+        $this->update();
+    }
+
+    public function testWhenPlanningAdministrationIsDelegatedItDoesNotCreateFirstScrum(): void
+    {
+        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
+        $this->request->method('get')->willReturnMap([
+            ['group_id', self::PROJECT_ID],
+            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
+            ['activate-scrum', '1'],
+            ['activate-scrum-v2', '0'],
+        ]);
+
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager->expects(self::once())->method('updateConfiguration');
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+        $this->event_dispatcher = EventDispatcherStub::withCallback(
+            function (PlanningAdministrationDelegation|BlockScrumAccess $event) {
+                if ($event instanceof PlanningAdministrationDelegation) {
+                    $event->enablePlanningAdministrationDelegation();
+                }
+                return $event;
+            }
+        );
+
+        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
+        $this->response->expects(self::once())->method('scrumActivated');
+        $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
         $this->update();
     }
 }
