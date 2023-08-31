@@ -91,6 +91,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
+use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -750,6 +751,17 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         $configuration_checker = new CheckSplitKanbanConfiguration();
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($service->getProject())) {
             $event->hideService();
+        }
+    }
+
+
+    #[ListeningToEventClass]
+    public function enableSplitFeatureFlagIfNeeded(SplitBacklogFeatureFlagEvent $event): void
+    {
+        $project               = $event->project;
+        $configuration_checker = new CheckSplitKanbanConfiguration();
+        if ($configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+            $event->enableSplitFeatureFlag();
         }
     }
 

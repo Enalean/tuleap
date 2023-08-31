@@ -34,6 +34,7 @@ export default {
         post_actions_by_unique_id: null,
         new_post_action_unique_id_index: 0,
         used_services_names: [],
+        is_split_feature_flag_enabled: false,
     },
     getters,
     mutations,

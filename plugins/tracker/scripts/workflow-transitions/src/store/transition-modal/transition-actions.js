@@ -34,6 +34,7 @@ export {
     loadPostActions,
     saveTransitionRules,
     setUsedServiceName,
+    setIsSplitFeatureFlagEnabled,
 };
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
@@ -98,4 +99,8 @@ async function saveTransitionRules({ commit, state, getters }) {
 
 function setUsedServiceName({ commit }, used_service_name) {
     commit("setUsedServiceName", used_service_name);
+}
+
+function setIsSplitFeatureFlagEnabled({ commit }, is_split_feature_flag_enabled) {
+    commit("setIsSplitFeatureFlagEnabled", is_split_feature_flag_enabled);
 }
