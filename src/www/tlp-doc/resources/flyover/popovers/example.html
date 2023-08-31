@@ -55,7 +55,7 @@
     );
 </script>
 
-<p>Popovers have a header, a body and optionally a footer. Footer is usefull
+<p>Popovers have a header, a body and optionally a footer. Footer is useful
     for user interaction like confirmation or cancel buttons
     <a href="#"
        class="popover-example"
@@ -73,7 +73,7 @@
     <div class="tlp-popover-body">
         <p>
             This is an example of sentence that you can find on a popover.
-            You can add an action and and close button. To close this popover just click out
+            You can add an action and a close button. To close this popover just click out
             or click on Cancel button below.
         </p>
     </div>
@@ -87,6 +87,38 @@
     tlp.createPopover(
         document.getElementById("popover-example-footer"),
         document.getElementById("popover-example-footer-content")
+    );
+</script>
+
+<p>
+    By default, popovers have a white background, but if you append them the <code class="code-inline">.tlp-popover-dark</code> class, they will have
+    <a href="#"
+       class="popover-example"
+       id="popover-example-dark"
+       data-placement="right-start"
+       data-trigger="click"
+    >
+        a dark background.
+    </a>
+</p>
+
+<section class="tlp-popover tlp-popover-dark" id="popover-example-dark-content">
+    <div class="tlp-popover-arrow"></div>
+    <div class="tlp-popover-header">
+        <h1 class="tlp-popover-title">Hello darkness my old friend</h1>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a dark popover.
+            To close this popover just click out or click on the trigger button.
+        </p>
+    </div>
+</section>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-example-dark-trigger"),
+        document.getElementById("popover-example-dark-content")
     );
 </script>
 
