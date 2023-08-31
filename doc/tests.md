@@ -139,15 +139,15 @@ hello world test.
 
 This ensures that packaging and installation process is not broken.
 
-### Taint analysis
+### Taint analysis (<abbr title="Static Application Security Testing">SAST</abbr>)
 
 Taint analysis attempt to keep trac of user inputs throughout the execution flow. The goal is to identify places
 where such inputs are not properly escaped before going to another system like a database. In that case it
 helps to prevent SQL injections.
 
-See [psalm section on taint analysis](https://psalm.dev/docs/security_analysis/).
+See [Psalm section on taint analysis](https://psalm.dev/docs/security_analysis/).
 
-### Dependencies vulnerabilities scanner
+### Dependencies vulnerabilities scanner (<abbr title="Software Composition Analysis">SCA</abbr>)
 
 Dependencies vulnerabilities scanner uses [OSV Scanner](https://google.github.io/osv-scanner/) to identify
 dependencies (php, javascript, rust, go) that are affected by a published vulnerability.
@@ -158,19 +158,19 @@ All automations are centralized on https://ci.tuleap.org/jenkins/. The jobs that
 - [Gerrit tests](https://ci.tuleap.org/jenkins/job/tuleap-gerrit-tests/): run on every patcheset submitted on gerrit. Everything must pass prior review and integration.
 - [Master tests](https://ci.tuleap.org/jenkins/job/tuleap-master-tests/): run after each merge on master. Everything must pass prior to generating packages & docker images.
 - [Nightly tests](https://ci.tuleap.org/jenkins/job/TuleapNightlyTests/): run each night, not blocking but team must act on a timely manner (step of daily review).
-- [Taint analysis](https://ci.tuleap.org/jenkins/job/tuleap-security-taint-analysis/): run each night, not blocking but team must act on a timely manner (step of daily review).
-- [Scan vuln deps](https://ci.tuleap.org/jenkins/job/tuleap-security-scan-vuln-deps/): run each night, not blocking but team must act on a timely manner (step of daily review).
+- [Taint analysis (SAST)](https://ci.tuleap.org/jenkins/job/tuleap-security-taint-analysis/): run each night, not blocking but team must act on a timely manner (step of daily review).
+- [Scan vuln deps (SCA)](https://ci.tuleap.org/jenkins/job/tuleap-security-scan-vuln-deps/): run each night, not blocking but team must act on a timely manner (step of daily review).
 - [Monthly Validation](https://ci.tuleap.org/jenkins/job/TuleapMonthlyValidation/): run each month. Blocking for monthly release.
 
-| | Gerrit tests | Master tests | Nightly tests | Taint analysis | Scan vuln deps | Monthly Validation |
-|-| ------------ | ------------ | ------------- | -------------- | -------------- | ------------------ |
-| Unit tests | x | x | x |  |  |  |
-| Integration tests | x | x | x |  |  |  |
-| Automated e2e tests |  |  | x |  |  | x |
-| Manual e2e tests |  |  |  |  |  | x |
-| Coding standards | x | x |  |  |  |  |
-| Psalm | x | x |  |  |  |  |
-| Deptrac | x | x |  |  |  |  |
-| Build & run | x | x | x |  |  |  |
-| Taint analysis |  |  |  | x |  |  |
-| Dependencies vulnerabilities scanner |  |  |  |  | x |  |
+|                                            | Gerrit tests | Master tests | Nightly tests | Taint analysis | Scan vuln deps | Monthly Validation |
+|--------------------------------------------| ------------ | ------------ | ------------- | -------------- | -------------- | ------------------ |
+| Unit tests                                 | x | x | x |  |  |  |
+| Integration tests                          | x | x | x |  |  |  |
+| Automated e2e tests                        |  |  | x |  |  | x |
+| Manual e2e tests                           |  |  |  |  |  | x |
+| Coding standards                           | x | x |  |  |  |  |
+| Psalm                                      | x | x |  |  |  |  |
+| Deptrac                                    | x | x |  |  |  |  |
+| Build & run                                | x | x | x |  |  |  |
+| Taint analysis (SAST)                      |  |  |  | x |  |  |
+| Dependencies vulnerabilities scanner (SCA) |  |  |  |  | x |  |
