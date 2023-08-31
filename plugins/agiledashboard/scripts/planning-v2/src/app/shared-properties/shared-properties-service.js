@@ -18,13 +18,14 @@
  */
 
 export default function SharedPropertiesService() {
-    var property = {
+    let property = {
         user_id: undefined,
         view_mode: undefined,
         project_id: undefined,
         milestone_id: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
+        is_split_feature_flag_enabled: false,
     };
 
     return {
@@ -40,6 +41,8 @@ export default function SharedPropertiesService() {
         setIsInExplicitTopBacklogManagement,
         setAllowedAdditionalPanesToDisplay,
         getAllowedAdditionalPanesToDisplay,
+        isSplitFeatureFlagEnabled,
+        setIsSplitFeatureFlagEnabled,
     };
 
     function getUserId() {
@@ -88,5 +91,12 @@ export default function SharedPropertiesService() {
 
     function getAllowedAdditionalPanesToDisplay() {
         return property.allowed_additional_panes_to_display;
+    }
+
+    function isSplitFeatureFlagEnabled() {
+        return property.is_split_feature_flag_enabled;
+    }
+    function setIsSplitFeatureFlagEnabled(is_split_feature_flag_enabled) {
+        property.is_split_feature_flag_enabled = is_split_feature_flag_enabled;
     }
 }

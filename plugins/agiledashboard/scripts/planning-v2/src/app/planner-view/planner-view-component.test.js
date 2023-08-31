@@ -151,7 +151,7 @@ describe("PlannerView", () => {
     });
 
     describe("$onInit", () => {
-        describe("Given we were in a Project context (Top backlog)", () => {
+        describe("Given we were in a Project context (Backlog)", () => {
             beforeEach(() => {
                 SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
             });

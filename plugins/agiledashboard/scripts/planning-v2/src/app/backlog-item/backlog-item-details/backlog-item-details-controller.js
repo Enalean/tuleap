@@ -34,6 +34,7 @@ function BacklogItemDetailsController(
         canBeAddedToChildren,
         getCardColorName,
         canShowRemoveFromExplicitBacklog,
+        getRemoveFromBacklogText,
     });
 
     function showAddChildModal($event, item_type) {
@@ -104,5 +105,12 @@ function BacklogItemDetailsController(
         return self.backlog_item.background_color_name
             ? self.backlog_item.background_color_name
             : self.backlog_item.color;
+    }
+
+    function getRemoveFromBacklogText() {
+        const $is_split_feature_flag_enabled = SharedPropertiesService.isSplitFeatureFlagEnabled();
+        return $is_split_feature_flag_enabled
+            ? gettextCatalog.getString("Remove from backlog")
+            : gettextCatalog.getString("Remove from top backlog");
     }
 }
