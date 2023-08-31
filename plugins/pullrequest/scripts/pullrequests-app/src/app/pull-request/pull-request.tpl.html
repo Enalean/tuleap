@@ -1,5 +1,5 @@
-<div class="tlp-framed">
-    <div class="tlp-pane">
+<div class="tlp-framed pull-request-file-diff-container">
+    <div class="tlp-pane pull-request-file-diff-pane">
         <div class="tlp-pane-container">
             <pull-request-header pull-request-id="{{ pull_request.$state.params.id }}"></pull-request-header>
 
@@ -23,7 +23,7 @@
             </nav>
 
             <div ui-view="commits" ng-show="pull_request.$state.includes('commits')"></div>
-            <div ui-view="files" ng-show="pull_request.$state.includes('files')" class="tlp-pane-section"></div>
+            <div ui-view="files" ng-show="pull_request.$state.includes('files')" class="tlp-pane-section pull-request-file-diff-view"></div>
         </div>
     </div>
 </div>
