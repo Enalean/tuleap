@@ -26,8 +26,8 @@ describe("FRS plugin", () => {
     it("user can link a frs release to an agiledashboard release", (): void => {
         cy.projectMemberSession();
         cy.getProjectId("frs-plugin").then((frs_project_id) => {
-            cy.visit(`https://tuleap/plugins/agiledashboard/?group_id=${frs_project_id}`)
-                .get("[data-test=expand-collapse-milestone]")
+            cy.visitProjectService("frs-plugin", "Agile Dashboard");
+            cy.get("[data-test=expand-collapse-milestone]")
                 .should("have.attr", "data-artifact-id")
                 .as("release_id")
                 .then(function () {

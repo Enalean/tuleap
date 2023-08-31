@@ -86,13 +86,11 @@ describe("Test plan", function () {
 
 function goToTestPlanOfMilestone(milestone_label: string): void {
     cy.visitProjectService("test-testplan-project", "Agile Dashboard");
-    cy.contains(milestone_label)
-        .parent()
+    cy.getContains("[data-test=milestone]", milestone_label)
         .click()
-        .get("[data-test=go-to-submilestone-planning]")
+        .get("[data-test=milestone-info")
+        .get("[data-test=testplan]")
         .click();
-
-    cy.get("[data-test=tab-testplan]").click();
 }
 
 function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string): void {
