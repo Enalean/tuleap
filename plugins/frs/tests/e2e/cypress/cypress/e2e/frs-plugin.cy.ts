@@ -27,7 +27,7 @@ describe("FRS plugin", () => {
         cy.projectMemberSession();
         cy.getProjectId("frs-plugin").then((frs_project_id) => {
             cy.visit(`https://tuleap/plugins/agiledashboard/?group_id=${frs_project_id}`)
-                .get("[data-test=release-id]")
+                .get("[data-test=expand-collapse-milestone]")
                 .should("have.attr", "data-artifact-id")
                 .as("release_id")
                 .then(function () {

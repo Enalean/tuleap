@@ -37,7 +37,7 @@ describe(`Artifact Modal`, function () {
 
     it(`can create an artifact with all fields`, function () {
         cy.projectMemberSession();
-        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
+        cy.visitProjectService("kanban-artifact-modal", "Kanban");
         cy.get("[data-test=go-to-kanban]").first().click();
         cy.get("[data-test=kanban-add-artifact]").click();
 
@@ -202,7 +202,7 @@ describe(`Artifact Modal`, function () {
 
     it(`can edit an artifact with all fields`, function () {
         cy.projectMemberSession();
-        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
+        cy.visitProjectService("kanban-artifact-modal", "Kanban");
         cy.get("[data-test=go-to-kanban]").first().click();
 
         getKanbanCard("Editable Artifact").within(() => {

@@ -191,7 +191,7 @@ function createIteration(): void {
 function planUserStory(team_project_name: string, program_project_name: string): void {
     cy.log("plan the user story in team");
     cy.visitProjectService(team_project_name, "Agile Dashboard");
-    cy.get("[data-test=go-to-planning]").click();
+    cy.get("[data-test=milestone]").click().get("[data-test=go-to-submilestone-planning]").click();
     cy.get("[data-test=backlog-item-details-link]")
         .invoke("data", "artifact-id")
         .then((user_story_id) => {
@@ -237,10 +237,10 @@ function checkThatProgramAndTeamsAreCorrect(
     );
 
     checkPIExistsInReleases("My first PI", team_project_name);
-    checkMirrorIterationExistsInSprint("Iteration One", team_project_name);
+    checkMirrorIterationExistsInSprint("My first PI", "Iteration One", team_project_name);
 
     cy.log("Check that user story linked to feature has been planned in mirror program increment");
-    cy.get("[data-test=go-to-top-backlog]").click();
+    cy.visitProjectService(team_project_name, "Agile Dashboard");
     cy.get("[data-test=expand-collapse-milestone]").click();
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
 }
@@ -252,8 +252,8 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
             `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
         );
         return cy
-            .get("[data-test=home-releases]")
-            .then((home_releases) => home_releases.text().includes(expected_text));
+            .get("[data-test=milestone]")
+            .then((milestone) => milestone.text().includes(expected_text));
     };
     cy.reloadUntilCondition(
         reloadCallback,
@@ -263,16 +263,23 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
 }
 
 function checkMirrorIterationExistsInSprint(
+    parent_pi: string,
     expected_text: string,
     team_project_name: string
 ): void {
+    cy.get("[data-test=milestone]")
+        .contains(parent_pi)
+        .click()
+        .get("[data-test=go-to-submilestone-planning]")
+        .click();
+
     const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
             `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
         );
         return cy
-            .get("[data-test=home-sprint-title]")
+            .get("[data-test=milestone]")
             .then((home_sprints) => home_sprints.text().includes(expected_text));
     };
     cy.reloadUntilCondition(
@@ -304,7 +311,11 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.visitProjectService(team_project_name, "Agile Dashboard");
 
     checkPIExistsInReleases("My first PI updated", team_project_name);
-    checkMirrorIterationExistsInSprint("Iteration One updated", team_project_name);
+    checkMirrorIterationExistsInSprint(
+        "My first PI updated",
+        "Iteration One updated",
+        team_project_name
+    );
 }
 
 function selectLabelInListPickerDropdown(

@@ -88,9 +88,9 @@ function goToTestPlanOfMilestone(milestone_label: string): void {
     cy.visitProjectService("test-testplan-project", "Agile Dashboard");
     cy.contains(milestone_label)
         .parent()
-        .within(() => {
-            cy.get("[data-test=go-to-planning]").click();
-        });
+        .click()
+        .get("[data-test=go-to-submilestone-planning]")
+        .click();
 
     cy.get("[data-test=tab-testplan]").click();
 }

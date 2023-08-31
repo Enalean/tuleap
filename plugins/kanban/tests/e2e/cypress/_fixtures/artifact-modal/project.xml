@@ -23,7 +23,7 @@
     <service shortname="summary" enabled="1"/>
     <service shortname="admin" enabled="1"/>
     <service shortname="plugin_tracker" enabled="1"/>
-    <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_kanban" enabled="1"/>
   </services>
   <ugroups>
     <ugroup name="project_members" description="">
