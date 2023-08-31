@@ -64,6 +64,35 @@ describe("WritingZoneController", () => {
         });
     });
 
+    it("When there is some unsaved content, initWritingZone() should assign the WritingZone a default presenter containing the unsaved content", () => {
+        const host = {
+            presenter: undefined,
+            is_comments_markdown_mode_enabled,
+            project_id,
+            textarea,
+            dispatchEvent: () => {
+                // Do nothing
+            },
+        } as unknown as HostElement;
+
+        textarea.value = "Some unsaved content, before the WritingZone disconnects";
+
+        const controller = WritingZoneController(config);
+        controller.onTextareaInput(host);
+        controller.initWritingZone(host);
+
+        expect(host.presenter).toStrictEqual({
+            initial_content: textarea.value,
+            previewed_content: "",
+            has_preview_error: false,
+            is_focused: false,
+            is_in_writing_mode: true,
+            is_in_preview_mode: false,
+            is_comments_markdown_mode_enabled,
+            project_id,
+        });
+    });
+
     it(`onTextAreaInput() should dispatch a "writing-zone-input" containing the WritingZone's <textarea/> content`, () => {
         const host = Object.assign(doc.createElement("div"), {
             textarea,

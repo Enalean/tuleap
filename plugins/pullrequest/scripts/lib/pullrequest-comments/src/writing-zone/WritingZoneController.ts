@@ -71,15 +71,27 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         }
     };
 
+    let unsaved_content = "";
+
     return {
         initWritingZone: (host: HostElement): void => {
-            host.presenter = WritingZonePresenter.buildInitial(
+            const presenter = WritingZonePresenter.buildInitial(
                 config.project_id,
                 config.is_comments_markdown_mode_enabled
             );
+
+            if (unsaved_content) {
+                host.presenter = WritingZonePresenter.buildWithContent(presenter, unsaved_content);
+
+                return;
+            }
+
+            host.presenter = presenter;
         },
 
         onTextareaInput: (host: HostElement): void => {
+            unsaved_content = host.textarea.value;
+
             dispatch(host, "writing-zone-input", {
                 detail: {
                     content: host.textarea.value,
