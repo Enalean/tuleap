@@ -19,10 +19,15 @@
 
 import { describe, it, expect } from "vitest";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { FORMAT_COMMONMARK, FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 
 describe("PullRequestDescriptionCommentPresenter", () => {
-    it(`fromPullRequestWithUpdatedDescription() should return a clone of the given presenter with only description and raw_description updated`, () => {
+    it(`fromPullRequestWithUpdatedDescription() should return a clone of the given presenter with updated:
+        - content
+        - raw_content
+        - post_processed_content
+        - format`, () => {
         const old_description_presenter: PullRequestDescriptionCommentPresenter = {
             pull_request_id: 15,
             project_id: 105,
@@ -36,11 +41,15 @@ describe("PullRequestDescriptionCommentPresenter", () => {
             can_user_update_description: true,
             content: '<a class="cross-reference">bug #123</a>',
             raw_content: "bug #123",
+            post_processed_content: `<a class="cross-reference">bug #123</a>`,
+            format: FORMAT_TEXT,
         };
 
         const updated_pull_request = {
             description: '<a class="cross-reference">bug #456</a>',
             raw_description: "bug #456",
+            post_processed_description: `<p><a class="cross-reference">bug #456</a></p>`,
+            description_format: FORMAT_COMMONMARK,
         } as PullRequest;
 
         expect(
@@ -52,6 +61,8 @@ describe("PullRequestDescriptionCommentPresenter", () => {
             ...old_description_presenter,
             raw_content: updated_pull_request.raw_description,
             content: updated_pull_request.description,
+            post_processed_content: updated_pull_request.post_processed_description,
+            format: updated_pull_request.description_format,
         });
     });
 });

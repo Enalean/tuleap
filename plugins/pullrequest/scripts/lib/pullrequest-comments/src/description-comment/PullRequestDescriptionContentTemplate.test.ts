@@ -19,6 +19,7 @@
 
 import { describe, it, beforeEach, expect } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
+import { FORMAT_COMMONMARK, FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
 import type { HostElement } from "./PullRequestDescriptionComment";
 import { getDescriptionContentTemplate } from "./PullRequestDescriptionContentTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
@@ -39,21 +40,43 @@ describe("PullRequestDescriptionContentTemplate", () => {
         } as HostElement;
     });
 
-    it("Given that the description comment is NOT empty, Then it should return it", () => {
+    it("Given that the description comment is NOT empty, and is in text format, Then it should display it as text", () => {
         const host = {
             ...base_host,
             description: {
                 author: DescriptionAuthorStub.withDefault(),
                 post_date: "2023-03-15T11:20:00Z",
                 content: "This commit fixes an old bug.",
+                post_processed_content: "<p>This commit fixes an old bug.</p>",
+                format: FORMAT_TEXT,
             },
         } as HostElement;
 
         const render = getDescriptionContentTemplate(host, GettextProviderStub);
         render(host, target);
 
-        expect(selectOrThrow(target, "[data-test=description-content]").textContent?.trim()).toBe(
-            "This commit fixes an old bug."
+        expect(selectOrThrow(target, "[data-test=description-content]").innerHTML.trim()).toBe(
+            host.description.content
+        );
+    });
+
+    it("Given that the description comment is NOT empty, and is in commonmark format, Then it should display it as commonmark", () => {
+        const host = {
+            ...base_host,
+            description: {
+                author: DescriptionAuthorStub.withDefault(),
+                post_date: "2023-03-15T11:20:00Z",
+                content: "This commit fixes an old bug.",
+                post_processed_content: "<p>This commit fixes an old bug.</p>",
+                format: FORMAT_COMMONMARK,
+            },
+        } as HostElement;
+
+        const render = getDescriptionContentTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        expect(selectOrThrow(target, "[data-test=description-content]").innerHTML.trim()).toBe(
+            host.description.post_processed_content
         );
     });
 

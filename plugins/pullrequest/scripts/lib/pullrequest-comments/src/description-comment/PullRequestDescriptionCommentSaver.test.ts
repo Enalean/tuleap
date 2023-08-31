@@ -22,13 +22,14 @@ import { okAsync } from "neverthrow";
 import * as tuleap_api from "@tuleap/fetch-result";
 import { PullRequestDescriptionCommentSaver } from "./PullRequestDescriptionCommentSaver";
 import { uri } from "@tuleap/fetch-result";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 
 vi.mock("@tuleap/fetch-result");
 
 describe("PullRequestDescriptionCommentSaver", () => {
-    it("should save the ew description comment", () => {
+    it("should save the new description comment", () => {
         const pull_request_id = 15;
         const patchSpy = vi
             .spyOn(tuleap_api, "patchJSON")
@@ -39,13 +40,16 @@ describe("PullRequestDescriptionCommentSaver", () => {
             raw_content: "This commit fixes bug #456",
             content: `This commit fixes <a class="cross-reference">bug #456</a>`,
         } as PullRequestDescriptionCommentPresenter;
+        const is_comments_markdown_mode_enabled = true;
 
         PullRequestDescriptionCommentSaver().saveDescriptionComment(
-            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(current_description)
+            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(current_description),
+            is_comments_markdown_mode_enabled
         );
 
         expect(patchSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/${pull_request_id}`, {
             description: current_description.raw_content,
+            description_format: FORMAT_COMMONMARK,
         });
     });
 });

@@ -20,6 +20,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestDescriptionCommentController } from "./PullRequestDescriptionCommentController";
 import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
@@ -126,6 +127,9 @@ describe("PullRequestDescriptionCommentController", () => {
                 id: 15,
                 description: 'This commit fixes <a class="cross-reference">bug #456</a>',
                 raw_description: "This commit fixes bug #456",
+                post_processed_description:
+                    '<p>This commit fixes <a class="cross-reference">bug #456</a></p>',
+                description_format: FORMAT_COMMONMARK,
             } as PullRequest;
 
             const host = {
@@ -143,6 +147,10 @@ describe("PullRequestDescriptionCommentController", () => {
             expect(host.edition_form_presenter).toBeNull();
             expect(host.description.raw_content).toStrictEqual(updated_pullrequest.raw_description);
             expect(host.description.content).toStrictEqual(updated_pullrequest.description);
+            expect(host.description.post_processed_content).toStrictEqual(
+                updated_pullrequest.post_processed_description
+            );
+            expect(host.description.format).toStrictEqual(updated_pullrequest.description_format);
             expect(host.post_description_form_close_callback).toHaveBeenCalledOnce();
         });
 
