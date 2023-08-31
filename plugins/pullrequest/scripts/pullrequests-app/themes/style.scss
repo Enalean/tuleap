@@ -27,3 +27,20 @@
 @use "./includes/file-diff";
 @use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
+
+main[role="main"] {
+    display: flex;
+    flex-direction: column;
+}
+
+#pullrequest-app {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.pull-requests-app-ui-view {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}

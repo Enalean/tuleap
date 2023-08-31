@@ -20,7 +20,7 @@
 @use "codemirror/addon/scroll/simplescrollbars";
 
 .pull-request-unidiff {
-    height: 50vh;
+    height: 100%;
 
     /* stylelint-disable-next-line selector-class-pattern */
     .CodeMirror-gutter-wrapper:hover > .CodeMirror-gutter-elt {
@@ -33,7 +33,7 @@
 
 .pull-request-side-by-side-diff {
     width: 50%;
-    height: 50vh;
+    height: 100%;
     float: left;
 
     /* stylelint-disable-next-line selector-class-pattern */
@@ -63,9 +63,10 @@
 }
 
 .pull-request-file-diff {
+    flex: 1;
+
     /* stylelint-disable selector-class-pattern */
     .CodeMirror {
-        height: 400px;
         border: 1px solid var(--tlp-neutral-normal-color);
         border-radius: var(--tlp-medium-radius);
     }
@@ -147,4 +148,17 @@
         padding: var(--tlp-medium-spacing) $horizontal-padding;
         font-family: var(--tlp-font-family);
     }
+}
+
+#files,
+.pull-request-file-diff-container,
+.pull-request-file-diff-view {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.pull-request-file-diff-pane {
+    flex: 1;
+    margin: 0;
 }
