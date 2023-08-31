@@ -162,19 +162,19 @@ describe("WritingZone", () => {
             expect(writing_zone.textarea.value).toBe(content);
         });
 
-        it("When the WritingZone is added to the DOM tree, then it should add a click event listener on document", async () => {
+        it("When the WritingZone is added to the DOM tree, then it should add a mousedown event listener on document", async () => {
             const writing_zone = getBuiltWritingZoneElement();
             const addEventListener = vi.spyOn(doc, "addEventListener");
 
             await doc.body.append(writing_zone);
             vi.advanceTimersToNextTimer();
 
-            expect(addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
+            expect(addEventListener).toHaveBeenCalledWith("mousedown", expect.any(Function), true);
         });
 
         it(`When the WritingZone element is removed from the DOM tree
             Then it should reset the textarea
-            And remove the click event listener it has set on document`, async () => {
+            And remove the mousedown event listener it has set on document`, async () => {
             const writing_zone = getBuiltWritingZoneElement();
             const removeEventListener = vi.spyOn(doc, "removeEventListener");
 
@@ -182,7 +182,11 @@ describe("WritingZone", () => {
             await doc.body.removeChild(writing_zone);
 
             expect(resetWritingZone).toHaveBeenCalledOnce();
-            expect(removeEventListener).toHaveBeenCalledWith("click", expect.any(Function));
+            expect(removeEventListener).toHaveBeenCalledWith(
+                "mousedown",
+                expect.any(Function),
+                true
+            );
         });
     });
 
@@ -206,24 +210,24 @@ describe("WritingZone", () => {
     });
 
     describe("Focus management", () => {
-        it("Should focus the WritingZone when one if its inner elements is clicked", async () => {
+        it("Should focus the WritingZone when one if its inner elements dispatches a mousedown event", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
             await doc.body.append(writing_zone);
             vi.advanceTimersToNextTimer();
 
-            writing_zone.click();
+            writing_zone.dispatchEvent(new Event("mousedown"));
 
             expect(focusWritingZone).toHaveBeenCalledTimes(2);
         });
 
-        it("Should blur the WritingZone when an outside element is clicked", async () => {
+        it("Should blur the WritingZone when an outside element dispatches a mousedown event", async () => {
             const writing_zone = getBuiltWritingZoneElement();
 
             await doc.body.append(writing_zone);
             vi.advanceTimersToNextTimer();
 
-            doc.body.click();
+            doc.body.dispatchEvent(new MouseEvent("mousedown"));
 
             expect(blurWritingZone).toHaveBeenCalledOnce();
         });
