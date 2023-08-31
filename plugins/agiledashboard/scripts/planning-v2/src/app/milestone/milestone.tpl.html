@@ -65,9 +65,7 @@
         >{{ milestoneController.milestone.status_value }}</span>
     </div>
 
-    <div class="milestone-info"
-        ng-if="! milestoneController.milestone.collapsed"
-    >
+    <div class="milestone-info" ng-if="! milestoneController.milestone.collapsed" data-test="milestone-info">
         <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             translate
             ng-if="milestoneController.milestone.capacity"
@@ -114,6 +112,7 @@
            href="{{ pane.uri }}"
            title="{{ pane.title }}"
            class="milestone-info-link"
+           data-test="{{ pane.identifier }}"
         ><i class="milestone-info-link-icon fa {{ pane.icon_name }}"></i><span>{{ pane.title }}</span></a>
     </div>
 
