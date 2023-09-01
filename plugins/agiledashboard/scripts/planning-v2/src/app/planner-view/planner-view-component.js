@@ -103,6 +103,7 @@ function controller(
         getOpenMilestones,
         isMilestoneContext,
         loadInitialMilestones,
+        loadOpenAndClosedMilestones,
         refreshSubmilestone,
         showAddItemToSubMilestoneModal,
         showAddSubmilestoneModal,
@@ -121,7 +122,11 @@ function controller(
         self.milestone_id = parseInt(SharedPropertiesService.getMilestoneId(), 10);
 
         initViewModes(SharedPropertiesService.getViewMode());
-        self.loadInitialMilestones();
+        if (SharedPropertiesService.shouldloadOpenAndClosedMilestones()) {
+            self.loadOpenAndClosedMilestones();
+        } else {
+            self.loadInitialMilestones();
+        }
 
         $document.find(`[data-shortcut-create-option]`).on("click", ($event) => {
             if (
@@ -198,6 +203,29 @@ function controller(
             self.milestones.loading = false;
             self.milestones.closed_milestones_fully_loaded = true;
         });
+    }
+
+    function loadOpenAndClosedMilestones() {
+        const open_promise = !self.isMilestoneContext()
+            ? getOpenTopMilestones(self.project_id, milestoneProgressCallback)
+            : getOpenSubMilestones(self.milestone_id, milestoneProgressCallback);
+
+        const closed_promise = !self.isMilestoneContext()
+            ? getClosedTopMilestones(self.project_id, milestoneProgressCallback)
+            : getClosedSubMilestones(self.milestone_id, milestoneProgressCallback);
+
+        self.milestones.loading = true;
+        $q.all([open_promise, closed_promise]).then(
+            () => {
+                self.milestones.loading = false;
+                self.milestones.open_milestones_fully_loaded = true;
+                self.milestones.closed_milestones_fully_loaded = true;
+            },
+            async (error) => {
+                const message = await extractErrorMessage(error);
+                ErrorState.setError(message);
+            }
+        );
     }
 
     function getOpenMilestones() {

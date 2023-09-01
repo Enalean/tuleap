@@ -41,6 +41,11 @@ function MainController($element, $window, SharedPropertiesService, amMoment, ge
         }
         const planning_init_data = $element[0].querySelector(".planning-init-data").dataset;
 
+        const params = new URL($window.location.href).searchParams;
+        if (params.get("load-all") === "1") {
+            SharedPropertiesService.setShouldloadOpenAndClosedMilestones(true);
+        }
+
         const user_id = planning_init_data.userId;
         SharedPropertiesService.setUserId(user_id);
         const project_id = planning_init_data.projectId;
