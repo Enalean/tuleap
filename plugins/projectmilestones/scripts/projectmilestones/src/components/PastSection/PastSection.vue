@@ -65,9 +65,9 @@ export default class PastSection extends Vue {
 
     get past_release_link(): string {
         return (
-            "/plugins/agiledashboard/?group_id=" +
+            "/plugins/agiledashboard/?action=show-top&group_id=" +
             encodeURIComponent(this.project_id) +
-            "&period=past"
+            "&pane=topplanning-v2&load-all=1"
         );
     }
 

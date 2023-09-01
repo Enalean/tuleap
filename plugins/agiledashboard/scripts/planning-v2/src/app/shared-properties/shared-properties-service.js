@@ -26,6 +26,7 @@ export default function SharedPropertiesService() {
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
         is_split_feature_flag_enabled: false,
+        should_load_open_and_closed_milestones: false,
     };
 
     return {
@@ -43,6 +44,8 @@ export default function SharedPropertiesService() {
         getAllowedAdditionalPanesToDisplay,
         isSplitFeatureFlagEnabled,
         setIsSplitFeatureFlagEnabled,
+        setShouldloadOpenAndClosedMilestones,
+        shouldloadOpenAndClosedMilestones,
     };
 
     function getUserId() {
@@ -98,5 +101,12 @@ export default function SharedPropertiesService() {
     }
     function setIsSplitFeatureFlagEnabled(is_split_feature_flag_enabled) {
         property.is_split_feature_flag_enabled = is_split_feature_flag_enabled;
+    }
+
+    function shouldloadOpenAndClosedMilestones() {
+        return property.should_load_open_and_closed_milestones;
+    }
+    function setShouldloadOpenAndClosedMilestones(should_load_open_and_closed_milestones) {
+        property.should_load_open_and_closed_milestones = should_load_open_and_closed_milestones;
     }
 }

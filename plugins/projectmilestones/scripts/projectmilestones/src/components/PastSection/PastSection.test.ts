@@ -65,7 +65,9 @@ describe("PastSection", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.get("[data-test=past-releases-link]").attributes("href")).toContain(
-            "/plugins/agiledashboard/?group_id=" + encodeURIComponent(project_id) + "&period=past"
+            "/plugins/agiledashboard/?action=show-top&group_id=" +
+                encodeURIComponent(project_id) +
+                "&pane=topplanning-v2&load-all=1"
         );
     });
 

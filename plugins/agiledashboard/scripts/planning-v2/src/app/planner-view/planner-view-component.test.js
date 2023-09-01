@@ -80,6 +80,10 @@ describe("PlannerView", () => {
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
             jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
+            jest.spyOn(
+                SharedPropertiesService,
+                "shouldloadOpenAndClosedMilestones"
+            ).mockReturnValue(false);
 
             var returnPromise = function (method) {
                 var self = this;
@@ -174,10 +178,56 @@ describe("PlannerView", () => {
 
                 expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
+                expect(PlanningController.milestones.open_milestones_fully_loaded).toBeTruthy();
+                expect(PlanningController.milestones.closed_milestones_fully_loaded).toBeFalsy();
                 expect(PlanningController.milestones.content).toStrictEqual([
                     { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                     { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
                     { id: 184, start_date: null },
+                ]);
+            });
+
+            it(`when we are asked to load all milestones on init, then open and closed milestone will be retrieved`, () => {
+                SharedPropertiesService.shouldloadOpenAndClosedMilestones.mockReturnValue(true);
+
+                const getTopMilestones = jest
+                    .spyOn(rest_querier, "getOpenTopMilestones")
+                    .mockImplementation((id, callback) => {
+                        callback([
+                            { id: 184, start_date: null },
+                            { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                            { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                        ]);
+                        return $q.when();
+                    });
+
+                const getClosedTopMilestones = jest
+                    .spyOn(rest_querier, "getClosedTopMilestones")
+                    .mockImplementation((id, callback) => {
+                        callback([
+                            { id: 1295, start_date: "2017-01-01T01:00:00+01:00" },
+                            { id: 1184, start_date: null },
+                            { id: 1307, start_date: "2016-11-12T01:00:00+01:00" },
+                        ]);
+                        return $q.when();
+                    });
+
+                PlanningController.$onInit();
+                expect(PlanningController.milestones.loading).toBeTruthy();
+                $scope.$apply();
+
+                expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
+                expect(getClosedTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
+                expect(PlanningController.milestones.loading).toBeFalsy();
+                expect(PlanningController.milestones.open_milestones_fully_loaded).toBeTruthy();
+                expect(PlanningController.milestones.closed_milestones_fully_loaded).toBeTruthy();
+                expect(PlanningController.milestones.content).toStrictEqual([
+                    { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                    { id: 1307, start_date: "2016-11-12T01:00:00+01:00" },
+                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 1295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 184, start_date: null },
+                    { id: 1184, start_date: null },
                 ]);
             });
         });
