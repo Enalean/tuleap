@@ -92,6 +92,11 @@ msgid ""
 "All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
 msgstr ""
 
+msgid ""
+"Alternatively, you can export the configuration of an existing project and "
+"re-use it here."
+msgstr ""
+
 msgid "An error occurred while trying to solve inconsistencies."
 msgstr ""
 
@@ -258,6 +263,11 @@ msgstr ""
 msgid "Import/Export"
 msgstr ""
 
+msgid ""
+"Importing a template will create new trackers. The import will not work if "
+"any existing tracker match those in the template"
+msgstr ""
+
 msgid "In milestone"
 msgstr ""
 
@@ -330,11 +340,6 @@ msgid "No tracker is available."
 msgstr ""
 
 msgid "Note: kanban is being moved to its %s dedicated page%s."
-msgstr ""
-
-msgid ""
-"Note:<br>Importing a template will create new trackers. The import will not "
-"work if any existing tracker match those in the template"
 msgstr ""
 
 msgid "Nothing to see here."
@@ -579,6 +584,9 @@ msgid ""
 "the same backlog (%s)"
 msgstr ""
 
+msgid "Tuleap provides a %sstandard template%s."
+msgstr ""
+
 msgid "Unable to export the configuration"
 msgstr ""
 
@@ -640,6 +648,9 @@ msgid ""
 "You are going to remove the top backlog planning permanently (no possible "
 "rollback). Top backlog will be empty after the deletion of the top level "
 "planning. Please confirm your action."
+msgstr ""
+
+msgid "You can import configuration from an XML template."
 msgstr ""
 
 msgid "You cannot create more than one planning in scrum V2."

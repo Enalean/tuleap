@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfiguration
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
+use Tuleap\AgileDashboard\Planning\ImportTemplateFormPresenter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
@@ -48,6 +49,8 @@ use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -491,7 +494,26 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->importConfiguration();
         }
 
-        $presenter = new Planning_ImportTemplateFormPresenter($project, $this->split_kanban_configuration_checker);
+        $service                  = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $is_using_kanban_service  = $this->isUsingKanbanService($project, $service);
+        $is_legacy_agiledashboard = ! $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
+
+        $presenter = new ImportTemplateFormPresenter(
+            $project,
+            $is_using_kanban_service,
+            $is_legacy_agiledashboard,
+        );
+
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/administration/frontend-assets',
+                    '/assets/agiledashboard/administration'
+                ),
+                'src/main.ts'
+            )
+        );
+
         return $this->renderToString('import', $presenter);
     }
 

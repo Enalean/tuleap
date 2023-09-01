@@ -1,3 +1,2 @@
 plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Dashboard agile
-plugin_agiledashboard	import_instructions	Il est possible d'importer une configuration entière de l'Agile Dashboard à partir d'un fichier XML. Tuleap fournit une <a href="$1">configuration standard</a>. Il est également possible d'exporter la configuration d'un projet existantet de la réutiliser ici.

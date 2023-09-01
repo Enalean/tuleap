@@ -99,7 +99,8 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     public static function isScrumAdminURL(HTTPRequest $request): bool
     {
-        return $request->get('action') === 'admin'
+        return $request->get('action') === 'import-form'
+            || $request->get('action') === 'admin'
             && $request->get('pane') !== 'kanban'
             && $request->get('pane') !== 'charts';
     }
