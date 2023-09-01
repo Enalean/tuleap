@@ -26,15 +26,8 @@ use PFUser;
  */
 class UserRepresentation extends MinimalUserRepresentation
 {
-    /**
-     * @var string | null {@type string}
-     */
-    public $email;
-
-    /**
-     * @var String | null {@type string}
-     */
-    public $status;
+    public ?string $email;
+    public ?string $status;
 
     private function __construct(MinimalUserRepresentation $minimal_user_representation, ?string $email, ?string $status)
     {

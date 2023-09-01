@@ -12,6 +12,7 @@ import definition_module from "../definition/definition.js";
 import artifact_links_module from "../artifact-links-graph/artifact-links-graph.js";
 import socket_module from "../socket/socket.js";
 import campaign_module from "../campaign/campaign.js";
+import mercure_module from "../realtime/mercure";
 
 import ExecutionConfig from "./execution-config.js";
 import ExecutionListCtrl from "./execution-list-controller.js";
@@ -41,6 +42,7 @@ export default angular
         shared_props_module,
         socket_module,
         ui_router,
+        mercure_module,
     ])
     .config(ExecutionConfig)
     .controller("ExecutionListCtrl", ExecutionListCtrl)

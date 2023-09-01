@@ -28,6 +28,8 @@ function TestManagementCtrl(
         const uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
         SharedPropertiesService.setNodeServerVersion("2.0.0");
+        const mercure_enable = testmanagement_init_data.testmanagementMercureEnabled;
+        SharedPropertiesService.setMercureEnabled(mercure_enable);
         var current_user = JSON.parse(testmanagement_init_data.currentUser);
         current_user.uuid = uuid;
         SharedPropertiesService.setCurrentUser(current_user);

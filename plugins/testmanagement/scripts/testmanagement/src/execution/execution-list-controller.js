@@ -39,6 +39,7 @@ ExecutionListCtrl.$inject = [
     "SocketService",
     "SharedPropertiesService",
     "ExecutionRestService",
+    "MercureService",
 ];
 
 function ExecutionListCtrl(
@@ -52,6 +53,7 @@ function ExecutionListCtrl(
     SocketService,
     SharedPropertiesService,
     ExecutionRestService,
+    MercureService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -79,7 +81,7 @@ function ExecutionListCtrl(
     }
 
     function viewTestExecution(current_execution) {
-        var old_execution,
+        let old_execution,
             old_execution_id = "";
 
         if (has(ExecutionService.executions, $scope.execution_id)) {
@@ -97,7 +99,7 @@ function ExecutionListCtrl(
     }
 
     $scope.$on("$destroy", function () {
-        var toolbar = angular.element(".toolbar");
+        let toolbar = angular.element(".toolbar");
         if (toolbar) {
             toolbar.removeClass("hide-toolbar");
         }
@@ -121,28 +123,41 @@ function ExecutionListCtrl(
         initialization();
     });
 
-    SocketService.listenNodeJSServer().then(
-        function () {
-            SocketService.listenTokenExpired();
-            SocketService.listenToExecutionViewed();
-            SocketService.listenToExecutionCreated();
-            SocketService.listenToExecutionUpdated();
-            SocketService.listenToExecutionDeleted(function () {
+    if (SharedPropertiesService.getMercureEnabled()) {
+        MercureService.init(
+            $state.params.id,
+            function () {
                 hideDetailsForRemovedTestExecution();
-            });
-            SocketService.listenToExecutionLeft();
-            SocketService.listenToCampaignUpdated(function (campaign) {
+            },
+            function (campaign) {
                 $scope.campaign = campaign;
                 ExecutionService.updateCampaign(campaign);
-            });
-        },
-        () => {
-            // ignore the fact that there is no nodejs server
-        },
-    );
+            },
+        );
+    } else {
+        SocketService.listenNodeJSServer().then(
+            function () {
+                SocketService.listenTokenExpired();
+                SocketService.listenToExecutionViewed();
+                SocketService.listenToExecutionCreated();
+                SocketService.listenToExecutionUpdated();
+                SocketService.listenToExecutionDeleted(function () {
+                    hideDetailsForRemovedTestExecution();
+                });
+                SocketService.listenToExecutionLeft();
+                SocketService.listenToCampaignUpdated(function (campaign) {
+                    $scope.campaign = campaign;
+                    ExecutionService.updateCampaign(campaign);
+                });
+            },
+            () => {
+                // ignore the fact that there is no nodejs server
+            },
+        );
+    }
 
     function initialization() {
-        var toolbar = angular.element(".toolbar");
+        let toolbar = angular.element(".toolbar");
         if (toolbar) {
             toolbar.addClass("hide-toolbar");
         }
@@ -229,7 +244,7 @@ function ExecutionListCtrl(
 
     function hideDetailsForRemovedTestExecution() {
         if ($state.includes("campaigns.executions.detail")) {
-            var campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
+            let campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
                 current_execution_exists = some(campaign_executions, checkActiveClassOnExecution);
 
             if (!current_execution_exists) {

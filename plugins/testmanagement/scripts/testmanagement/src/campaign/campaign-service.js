@@ -21,10 +21,13 @@ import { get, post, patch } from "@tuleap/tlp-fetch";
 
 export default CampaignService;
 
-CampaignService.$inject = ["$q"];
+CampaignService.$inject = ["$q", "SharedPropertiesService"];
 
-function CampaignService($q) {
-    const headers = { "content-type": "application/json" };
+function CampaignService($q, SharedPropertiesService) {
+    const headers = {
+        "content-type": "application/json",
+        "X-Client-UUID": SharedPropertiesService.getUUID(),
+    };
 
     return {
         getCampaign,

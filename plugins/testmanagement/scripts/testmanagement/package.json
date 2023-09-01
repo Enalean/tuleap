@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/ckeditor-image-upload": "workspace:*",

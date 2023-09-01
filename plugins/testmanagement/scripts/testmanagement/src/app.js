@@ -38,6 +38,7 @@ import execution from "./execution/execution.js";
 import definition from "./definition/definition.js";
 import graph from "./graph/graph.js";
 import artifact_links_graph from "./artifact-links-graph/artifact-links-graph.js";
+import mercure from "./realtime/mercure";
 
 import TestManagementConfig from "./app-config.js";
 import AutoFocusDirective from "./app-directive.js";
@@ -66,6 +67,7 @@ export default angular
         definition,
         graph,
         artifact_links_graph,
+        mercure,
     ])
     .config(TestManagementConfig)
     .run([
