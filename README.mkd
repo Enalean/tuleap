@@ -30,7 +30,6 @@ be added.
 
 ### Integrators
 
-* Benjamin Dauton
 * Sandra Echinard
 * Marie Ange Garnier
 * Thomas Gerbet
@@ -51,8 +50,9 @@ be added.
 * Thomas Piras
 * Kevin Traini
 
-### Previous contributors (no longer active commiters)
+### Previous contributors (no longer active committers)
 
+* Benjamin Dauton
 * Romain Lorentz
 * Benjamin Bouillot
 * Lydéric Dubut
