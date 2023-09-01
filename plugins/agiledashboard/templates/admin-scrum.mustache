@@ -71,22 +71,6 @@
                             </div>
                         {{/ can_scrum_mono_milestone_be_enabled }}
 
-                        <div class="tlp-form-element">
-                            <label class="tlp-label" for="scrum-title-admin">{{ title_label }}</label>
-                            <input type="text"
-                                class="tlp-input"
-                                id="scrum-title-admin"
-                                name="scrum-title-admin"
-                                value="{{ scrum_title }}"
-                                placeholder="{{ title_label }}"
-                                size="30"
-                                required
-                            >
-                            <p class="tlp-text-info">
-                                <i class="fa fa-info-circle"></i> {{ title_label_help }}
-                            </p>
-                        </div>
-
                         {{# additional_scrum_sections_controllers }}
                             {{{ content }}}
                         {{/ additional_scrum_sections_controllers }}

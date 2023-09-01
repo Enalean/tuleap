@@ -26,11 +26,6 @@ class ConfigurationResponse
     {
     }
 
-    public function missingScrumTitle(): void
-    {
-        $this->notifyErrorAndRedirectToAdmin('scrum');
-    }
-
     public function kanbanConfigurationUpdated(): void
     {
         if ($this->redirect_to_home_on_success) {
@@ -59,16 +54,6 @@ class ConfigurationResponse
     public function scrumActivated(): void
     {
         $this->info(dgettext('tuleap-agiledashboard', 'Scrum successfully activated.'));
-    }
-
-    public function emptyScrumTitle(): void
-    {
-        $this->warn(dgettext('tuleap-agiledashboard', 'Scrum title is empty.'));
-    }
-
-    public function scrumTitleChanged(): void
-    {
-        $this->info(dgettext('tuleap-agiledashboard', 'Scrum title successfully modified.'));
     }
 
     private function notifyErrorAndRedirectToAdmin(string $pane): void

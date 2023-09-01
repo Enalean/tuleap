@@ -419,12 +419,6 @@ msgstr ""
 msgid "Scrum successfully activated."
 msgstr ""
 
-msgid "Scrum title is empty."
-msgstr ""
-
-msgid "Scrum title successfully modified."
-msgstr ""
-
 msgid "See documentation for more details."
 msgstr ""
 
@@ -572,14 +566,6 @@ msgstr ""
 
 msgid "This tracker is not a planning tracker"
 msgstr ""
-
-msgid ""
-"This will be used to identify the Scrum section from the Agile Dashboard "
-"homepage."
-msgstr ""
-
-msgid "Title"
-msgstr "Título"
 
 msgid "Top Backlog Planning"
 msgstr ""

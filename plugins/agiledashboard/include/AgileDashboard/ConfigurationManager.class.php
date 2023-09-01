@@ -66,12 +66,10 @@ class AgileDashboard_ConfigurationManager
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,
-        $scrum_title,
     ): void {
         $this->dao->updateConfiguration(
             $project_id,
             $scrum_is_activated,
-            $scrum_title,
         );
     }
 
