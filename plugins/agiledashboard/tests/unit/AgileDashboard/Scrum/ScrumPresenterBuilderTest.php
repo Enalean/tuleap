@@ -112,7 +112,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($root_planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnFalse();
-        $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getId')->andReturn(42);
@@ -138,7 +137,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             [],
             false,
-            "Scrum",
             false,
             false,
             true,
@@ -176,7 +174,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
-        $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
 
@@ -204,7 +201,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "tracker name",
             [],
             true,
-            "Scrum",
             true,
             false,
             false,
@@ -242,7 +238,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
-        $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
         $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
@@ -272,7 +267,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "tracker name",
             [],
             true,
-            "Scrum",
             true,
             true,
             true,
@@ -311,7 +305,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
-        $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
         $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
@@ -338,7 +331,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "tracker name",
             [],
             true,
-            "Scrum",
             false,
             false,
             false,

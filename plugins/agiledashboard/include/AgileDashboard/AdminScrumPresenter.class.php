@@ -91,7 +91,6 @@ class AdminScrumPresenter
         $root_planning_name,
         array $hierarchy,
         $scrum_activated,
-        $scrum_title,
         $can_scrum_mono_milestone_be_enabled,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
@@ -108,7 +107,6 @@ class AdminScrumPresenter
         $this->can_create_planning                         = $can_create_planning;
         $this->root_planning_name                          = $root_planning_name;
         $this->scrum_activated                             = $scrum_activated;
-        $this->scrum_title                                 = $scrum_title;
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
@@ -212,16 +210,6 @@ class AdminScrumPresenter
     public function activate_scrum_label()
     {
         return dgettext('tuleap-agiledashboard', 'Activate Scrum');
-    }
-
-    public function title_label()
-    {
-        return dgettext('tuleap-agiledashboard', 'Title');
-    }
-
-    public function title_label_help()
-    {
-        return dgettext('tuleap-agiledashboard', 'This will be used to identify the Scrum section from the Agile Dashboard homepage.');
     }
 
     public function first_scrum_will_be_created()

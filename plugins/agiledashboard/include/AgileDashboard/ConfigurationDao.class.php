@@ -23,14 +23,12 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,
-        $scrum_title,
     ) {
         $project_id         = $this->da->escapeInt($project_id);
         $scrum_is_activated = $this->da->escapeInt($scrum_is_activated);
-        $scrum_title        = $this->da->quoteSmart($scrum_title);
 
-        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum, scrum_title)
-                VALUES ($project_id, $scrum_is_activated, $scrum_title)";
+        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum)
+                VALUES ($project_id, $scrum_is_activated)";
 
         return $this->update($sql);
     }

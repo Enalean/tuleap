@@ -54,18 +54,11 @@ class ScrumConfigurationUpdater
             return;
         }
 
-        if (! $this->request->exist('scrum-title-admin')) {
-            $this->response->missingScrumTitle();
-
-            return;
-        }
-
         $scrum_is_activated = $this->getActivatedScrum();
 
         $this->config_manager->updateConfiguration(
             $this->project_id,
             $scrum_is_activated,
-            $this->getScrumTitle(),
         );
 
         $this->configuration_updater->updateScrumConfiguration($this->request);
@@ -120,22 +113,5 @@ class ScrumConfigurationUpdater
         }
 
         return $scrum_is_activated;
-    }
-
-    private function getScrumTitle(): string
-    {
-        $old_scrum_title = $this->config_manager->getScrumTitle($this->project_id);
-        $scrum_title     = trim($this->request->get('scrum-title-admin'));
-
-        if ($scrum_title !== $old_scrum_title) {
-            $this->response->scrumTitleChanged();
-        }
-
-        if ($scrum_title == '') {
-            $this->response->emptyScrumTitle();
-            $scrum_title = $old_scrum_title;
-        }
-
-        return $scrum_title;
     }
 }

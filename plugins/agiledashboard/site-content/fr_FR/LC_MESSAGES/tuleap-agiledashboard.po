@@ -477,12 +477,6 @@ msgstr "Scrum jalon unique"
 msgid "Scrum successfully activated."
 msgstr "Scrum activé avec succès."
 
-msgid "Scrum title is empty."
-msgstr "Le titre Scrum est vide."
-
-msgid "Scrum title successfully modified."
-msgstr "Le titre Scrum modifié avec succès."
-
 msgid "See documentation for more details."
 msgstr "Voir la documentation pour plus de détails."
 
@@ -659,16 +653,6 @@ msgstr ""
 
 msgid "This tracker is not a planning tracker"
 msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
-
-msgid ""
-"This will be used to identify the Scrum section from the Agile Dashboard "
-"homepage."
-msgstr ""
-"Titre affiché sur la page d'accueil du service AgileDashboard pour la partie "
-"Scrum."
-
-msgid "Title"
-msgstr "Titre"
 
 msgid "Top Backlog Planning"
 msgstr "Planification Générale"

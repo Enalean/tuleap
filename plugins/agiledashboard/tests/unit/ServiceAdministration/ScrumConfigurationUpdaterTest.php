@@ -38,8 +38,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
-    private const PROJECT_ID      = 165;
-    private const OLD_SCRUM_TITLE = 'Scrum';
+    private const PROJECT_ID = 165;
 
     private \Codendi_Request & Stub $request;
     private ConfigurationResponse & MockObject $response;
@@ -64,9 +63,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mono_milestone_disabler  = $this->createMock(ScrumForMonoMilestoneDisabler::class);
         $this->explicit_backlog_updater = $this->createMock(ConfigurationUpdater::class);
         $this->config_manager           = $this->createMock(\AgileDashboard_ConfigurationManager::class);
-        $this->config_manager->method('getScrumTitle')->willReturn(self::OLD_SCRUM_TITLE);
-        $this->mono_milestone_checker = $this->createStub(ScrumForMonoMilestoneChecker::class);
-        $this->first_scrum_creator    = $this->createMock(\AgileDashboard_FirstScrumCreator::class);
+        $this->mono_milestone_checker   = $this->createStub(ScrumForMonoMilestoneChecker::class);
+        $this->first_scrum_creator      = $this->createMock(\AgileDashboard_FirstScrumCreator::class);
     }
 
     private function update(): void
@@ -102,65 +100,10 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->update();
     }
 
-    public function testItRedirectsWithFeedbackWhenScrumTitleIsMissing(): void
-    {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', false]]);
-        $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
-
-        $this->response->expects(self::once())->method('missingScrumTitle');
-        $this->update();
-    }
-
-    public function testItChangesScrumTitle(): void
-    {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $new_title = 'Planification';
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', $new_title],
-            ['activate-scrum', '1'],
-        ]);
-        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
-        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
-        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
-        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
-
-        $this->response->expects(self::once())->method('scrumTitleChanged');
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
-        $this->config_manager->expects(self::once())
-            ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, '1', $new_title);
-        $this->update();
-    }
-
-    public function testItDiscardsEmptyScrumTitle(): void
-    {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', ''],
-            ['activate-scrum', '1'],
-        ]);
-        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
-        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
-        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
-        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
-
-        $this->response->expects(self::once())->method('scrumConfigurationUpdated');
-        $this->response->expects(self::once())->method('scrumTitleChanged');
-        $this->response->expects(self::once())->method('emptyScrumTitle');
-        $this->config_manager->expects(self::once())
-            ->method('updateConfiguration')
-            ->with(self::PROJECT_ID, '1', self::OLD_SCRUM_TITLE);
-        $this->update();
-    }
-
     public function testItEnablesScrumV2MonoMilestoneMode(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
         $this->request->method('get')->willReturnMap([
             ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
             ['activate-scrum', '1'],
             ['activate-scrum-v2', '1'],
             ['home-ease-onboarding', false],
@@ -178,10 +121,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDisablesScrumV2MonoMilestoneMode(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
         $this->request->method('get')->willReturnMap([
             ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
             ['activate-scrum', '1'],
             ['activate-scrum-v2', '0'],
             ['home-ease-onboarding', false],
@@ -203,7 +144,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
         $this->request->method('get')->willReturnMap([
             ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
             ['activate-scrum', '1'],
             ['activate-scrum-v2', '1'],
             ['home-ease-onboarding', '1'],
@@ -225,7 +165,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
         $this->request->method('get')->willReturnMap([
             ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
             ['activate-scrum', '1'],
             ['activate-scrum-v2', '0'],
         ]);
@@ -246,7 +185,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
         $this->request->method('get')->willReturnMap([
             ['group_id', self::PROJECT_ID],
-            ['scrum-title-admin', self::OLD_SCRUM_TITLE],
             ['activate-scrum', '1'],
             ['activate-scrum-v2', '0'],
         ]);

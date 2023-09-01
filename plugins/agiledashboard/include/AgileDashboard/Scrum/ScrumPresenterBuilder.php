@@ -122,7 +122,6 @@ class ScrumPresenterBuilder
             $root_planning_name,
             $potential_planning_trackers,
             $scrum_activated,
-            $this->config_manager->getScrumTitle($group_id),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
