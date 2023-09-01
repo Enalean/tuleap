@@ -118,7 +118,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
 
         $split_kanban_configuration_checker = new \Tuleap\Kanban\CheckSplitKanbanConfiguration();
-        $service_crumb_builder              = new AgileDashboardCrumbBuilder($plugin->getPluginPath(), $split_kanban_configuration_checker);
+        $service_crumb_builder              = new AgileDashboardCrumbBuilder($split_kanban_configuration_checker);
         $admin_crumb_builder                = new AdministrationCrumbBuilder();
         $header_options_inserter            = new CurrentContextSectionToHeaderOptionsInserter();
 

@@ -1311,7 +1311,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function getAllBreadCrumbsForMilestoneBuilder(): AllBreadCrumbsForMilestoneBuilder
     {
         return new AllBreadCrumbsForMilestoneBuilder(
-            new AgileDashboardCrumbBuilder($this->getPluginPath(), new \Tuleap\Kanban\CheckSplitKanbanConfiguration()),
+            new AgileDashboardCrumbBuilder(new \Tuleap\Kanban\CheckSplitKanbanConfiguration()),
             new VirtualTopMilestoneCrumbBuilder($this->getPluginPath()),
             new MilestoneCrumbBuilder(
                 $this->getPluginPath(),
