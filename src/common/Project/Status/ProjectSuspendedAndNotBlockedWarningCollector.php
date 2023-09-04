@@ -28,15 +28,15 @@ class ProjectSuspendedAndNotBlockedWarningCollector implements Dispatchable
 
     /** @var \Project */
     private $project;
-    /** @var string[] */
-    private $warnings = [];
+    /** @var list<string> */
+    private array $warnings = [];
 
     public function __construct(\Project $project)
     {
         $this->project = $project;
     }
 
-    public function addWarning($warning)
+    public function addWarning(string $warning): void
     {
         $this->warnings[] = $warning;
     }
@@ -50,9 +50,9 @@ class ProjectSuspendedAndNotBlockedWarningCollector implements Dispatchable
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
-    public function getWarnings()
+    public function getWarnings(): array
     {
         return $this->warnings;
     }
