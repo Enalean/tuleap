@@ -52,7 +52,7 @@ export default {
         ...abstract_baseline_content.getters,
         filterArtifacts: (state) => (artifacts) =>
             artifacts.filter(
-                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1,
             ),
     },
 };

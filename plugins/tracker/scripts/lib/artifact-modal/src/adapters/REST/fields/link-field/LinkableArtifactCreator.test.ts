@@ -46,7 +46,7 @@ describe(`LinkableArtifactCreator`, () => {
         });
         artifact_creator = CreateArtifactStub.withArtifactCreated({ id: ARTIFACT_ID });
         artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(
-            okAsync(LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE }))
+            okAsync(LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE })),
         );
     });
 
@@ -54,7 +54,7 @@ describe(`LinkableArtifactCreator`, () => {
         const creator = LinkableArtifactCreator(
             tracker_retriever,
             artifact_creator,
-            artifact_retriever
+            artifact_retriever,
         );
         return creator.createLinkableArtifact(TrackerIdentifierStub.withId(TRACKER_ID), TITLE);
     };
@@ -72,7 +72,7 @@ describe(`LinkableArtifactCreator`, () => {
 
     it(`when there is an error during the retrieval of the tracker, it will return a Fault`, async () => {
         tracker_retriever = RetrieveTrackerWithTitleSemanticStub.withFault(
-            Fault.fromMessage("Something happened")
+            Fault.fromMessage("Something happened"),
         );
         const result = await create();
         expect(result.isErr()).toBe(true);
@@ -86,7 +86,7 @@ describe(`LinkableArtifactCreator`, () => {
 
     it(`when there is an error during the retrieval of the newly created artifact, it will return a Fault`, async () => {
         artifact_retriever = RetrieveMatchingArtifactStub.withFault(
-            Fault.fromMessage("Something happened")
+            Fault.fromMessage("Something happened"),
         );
         const result = await create();
         expect(result.isErr()).toBe(true);

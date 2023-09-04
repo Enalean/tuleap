@@ -61,7 +61,7 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
     ExecutionRestService,
-    TlpModalService
+    TlpModalService,
 ) {
     var execution_id,
         campaign_id,
@@ -137,7 +137,7 @@ function ExecutionDetailCtrl(
             ExecutionRestService.leaveTestExecution(execution_id);
             ExecutionService.removeViewTestExecution(
                 execution_id,
-                SharedPropertiesService.getCurrentUser()
+                SharedPropertiesService.getCurrentUser(),
             );
         }
     });
@@ -188,10 +188,10 @@ function ExecutionDetailCtrl(
                         ExecutionService.displayErrorMessage(
                             $scope.execution,
                             gettextCatalog.getString(
-                                "Error while refreshing the list of linked bugs"
-                            )
+                                "Error while refreshing the list of linked bugs",
+                            ),
                         );
-                    }
+                    },
                 );
         }
 
@@ -231,7 +231,7 @@ function ExecutionDetailCtrl(
             issue_tracker_id,
             null,
             callback,
-            prefill_values
+            prefill_values,
         );
     }
 
@@ -310,7 +310,7 @@ function ExecutionDetailCtrl(
                     current_user_id,
                     artifact.tracker.id,
                     artifact.id,
-                    callback
+                    callback,
                 );
             });
         }
@@ -375,7 +375,7 @@ function ExecutionDetailCtrl(
 
         let uploaded_file_ids = [].concat(
             ExecutionService.getUsedUploadedFilesIds(execution),
-            ExecutionService.getUploadedFilesThroughAttachmentAreaIds(execution)
+            ExecutionService.getUploadedFilesThroughAttachmentAreaIds(execution),
         );
 
         const deleted_file_ids = ExecutionService.getFilesIdToRemove(execution);
@@ -385,19 +385,19 @@ function ExecutionDetailCtrl(
             new_status,
             comment,
             uploaded_file_ids,
-            deleted_file_ids
+            deleted_file_ids,
         )
             .then(
                 function (data) {
                     ExecutionService.updateTestExecution(
                         data,
-                        SharedPropertiesService.getCurrentUser()
+                        SharedPropertiesService.getCurrentUser(),
                     );
                     handleCommentBox(has_test_comment, execution);
                 },
                 (error) => {
                     ExecutionService.displayErrorMessage(execution, error.message);
-                }
+                },
             )
             .finally(function () {
                 execution.saving = false;
@@ -457,7 +457,7 @@ function ExecutionDetailCtrl(
         var execution_already_placed = executionAlreadyPlaced(
             $scope.execution,
             ExecutionService.categories,
-            category_updated
+            category_updated,
         );
 
         if (!execution_already_placed) {
@@ -494,7 +494,7 @@ function ExecutionDetailCtrl(
         $scope.displayTestCommentEditor = true;
         ExecutionService.viewTestExecutionIfRTEAlreadyExists(
             execution.id,
-            SharedPropertiesService.getCurrentUser()
+            SharedPropertiesService.getCurrentUser(),
         );
         ExecutionService.setCommentOnEditor(execution.previous_result.result);
     }
@@ -524,9 +524,9 @@ function ExecutionDetailCtrl(
     function getWarningTestCommentHasBeenUpdatedMessage(execution) {
         return sprintf(
             gettextCatalog.getString(
-                "The comment has been updated by %s. Do you want to continue to edit your comment, or discard it and load the new one?"
+                "The comment has been updated by %s. Do you want to continue to edit your comment, or discard it and load the new one?",
             ),
-            execution.previous_result.submitted_by.real_name
+            execution.previous_result.submitted_by.real_name,
         );
     }
 

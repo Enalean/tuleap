@@ -22,7 +22,7 @@ import { ITERATION_SELECT_ID } from "./init-preview-labels-helper";
 export function disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
     doc: Document,
     program_increment_value: string,
-    plannable_trackers_values: string[]
+    plannable_trackers_values: string[],
 ): void {
     const iteration_tracker_element = doc.getElementById(ITERATION_SELECT_ID);
 
@@ -34,7 +34,7 @@ export function disabledIterationTrackersFromProgramIncrementAndPlannableTracker
         iteration_tracker.disabled = isDisabled(
             iteration_tracker.value,
             program_increment_value,
-            plannable_trackers_values
+            plannable_trackers_values,
         );
     }
 }
@@ -42,7 +42,7 @@ export function disabledIterationTrackersFromProgramIncrementAndPlannableTracker
 function isDisabled(
     iteration_tracker_id: string,
     program_increment_value: string,
-    plannable_trackers_values: string[]
+    plannable_trackers_values: string[],
 ): boolean {
     if (iteration_tracker_id === program_increment_value) {
         return true;

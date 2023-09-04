@@ -39,7 +39,7 @@ describe("WritingZoneCommonMarkPreviewFetcher", () => {
 
         expect(post_spy).toHaveBeenCalledWith(
             uri`/project/${project_id}/interpret-commonmark`,
-            expect.any(Object)
+            expect.any(Object),
         );
         expect(result.value).toBe(interpreted_commonmark);
     });

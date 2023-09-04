@@ -105,7 +105,7 @@ describe("WritingZone", () => {
             }
 
             expect(writing_zone.controller).toBe(
-                component_needing_a_writing_zone.writing_zone_controller
+                component_needing_a_writing_zone.writing_zone_controller,
             );
 
             const writing_zone_content = "Please rebase!";
@@ -114,14 +114,14 @@ describe("WritingZone", () => {
                     detail: {
                         content: writing_zone_content,
                     },
-                })
+                }),
             );
 
             expect(
-                component_needing_a_writing_zone.controller.handleWritingZoneContentChange
+                component_needing_a_writing_zone.controller.handleWritingZoneContentChange,
             ).toHaveBeenCalledOnce();
             expect(
-                component_needing_a_writing_zone.controller.handleWritingZoneContentChange
+                component_needing_a_writing_zone.controller.handleWritingZoneContentChange,
             ).toHaveBeenCalledWith(component_needing_a_writing_zone, writing_zone_content);
         });
     });
@@ -185,7 +185,7 @@ describe("WritingZone", () => {
             expect(removeEventListener).toHaveBeenCalledWith(
                 "mousedown",
                 expect.any(Function),
-                true
+                true,
             );
         });
     });
@@ -199,7 +199,7 @@ describe("WritingZone", () => {
             const textarea = selectOrThrow(
                 writing_zone,
                 "[data-test=writing-zone-textarea]",
-                HTMLTextAreaElement
+                HTMLTextAreaElement,
             );
 
             textarea.value = "This is a description comment for bug #123";

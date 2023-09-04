@@ -20,19 +20,21 @@ describe("ReportsModalController -", function () {
 
         var $controller, $rootScope;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _SharedPropertiesService_,
-            _DiagramRestService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            DiagramRestService = _DiagramRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _SharedPropertiesService_,
+                _DiagramRestService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                DiagramRestService = _DiagramRestService_;
+            },
+        );
 
         $scope = $rootScope.$new();
 
@@ -54,7 +56,7 @@ describe("ReportsModalController -", function () {
             },
         });
         jest.spyOn(DiagramRestService, "getCumulativeFlowDiagram").mockReturnValue(
-            $q(angular.noop)
+            $q(angular.noop),
         );
 
         ReportsModalController = $controller(BaseController, {
@@ -103,7 +105,7 @@ describe("ReportsModalController -", function () {
                 ],
             };
             DiagramRestService.getCumulativeFlowDiagram.mockReturnValue(
-                $q.when(cumulative_flow_data)
+                $q.when(cumulative_flow_data),
             );
 
             ReportsModalController.$onInit();
@@ -119,7 +121,7 @@ describe("ReportsModalController -", function () {
                 kanban_id,
                 expect.stringMatching(YYYY_MM_DD_regexp),
                 expect.stringMatching(YYYY_MM_DD_regexp),
-                interval_between_points
+                interval_between_points,
             );
 
             expect(ReportsModalController.kanban_label).toEqual(kanban_label);

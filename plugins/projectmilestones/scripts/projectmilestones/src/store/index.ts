@@ -38,7 +38,7 @@ export function createStore(
     label_start_date: string,
     label_timeframe: string,
     user_can_view_sub_milestones_planning: boolean,
-    burnup_mode: BurnupMode
+    burnup_mode: BurnupMode,
 ): Store<State> {
     const state: State = {
         project_id,

@@ -34,7 +34,7 @@ import { createColumnModule } from "./column";
 export function createStore(
     initial_root_state: RootState,
     initial_user_state: UserState,
-    initial_column_state: ColumnState
+    initial_column_state: ColumnState,
 ): Store<RootState> {
     const user = createUserModule(initial_user_state);
     const column = createColumnModule(initial_column_state);

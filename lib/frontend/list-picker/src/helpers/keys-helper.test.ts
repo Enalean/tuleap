@@ -36,7 +36,7 @@ describe("keys-helper", () => {
             [{ key: "Escape" }, { key: "Esc" }, { keyCode: 27 }].forEach(
                 (event_init: KeyboardEventInit) => {
                     expect(isEscapeKey(new KeyboardEvent("keyup", event_init))).toBe(true);
-                }
+                },
             );
         });
 

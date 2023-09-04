@@ -31,12 +31,12 @@ describe("DependencyArrow", () => {
         tasks: Task[],
         percentage: string,
         is_text_displayed_outside_bar: boolean,
-        is_error_sign_displayed_outside_bar: boolean
+        is_error_sign_displayed_outside_bar: boolean,
     ): Wrapper<DependencyArrow> {
         const time_period = new TimePeriodMonth(
             new Date("2020-04-09T22:00:00.000Z"),
             new Date("2020-04-24T22:00:00.000Z"),
-            "en-US"
+            "en-US",
         );
 
         return shallowMount(DependencyArrow, {
@@ -45,7 +45,7 @@ describe("DependencyArrow", () => {
                 dependency,
                 dimensions_map: getDimensionsMap(
                     tasks.map((task): TaskRow => ({ task, is_shown: true })),
-                    time_period
+                    time_period,
                 ),
                 percentage,
                 is_text_displayed_outside_bar,
@@ -171,14 +171,14 @@ describe("DependencyArrow", () => {
         expect((wrapper.element as HTMLElement).style.left).toBe("33px");
         expect((wrapper.element as HTMLElement).style.width).toBe("34px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
-            "roadmap-gantt-task-dependency-line-ends-after-start"
+            "roadmap-gantt-task-dependency-line-ends-after-start",
         );
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
         expect((wrapper.element as HTMLElement).style.left).toBe("33px");
         expect((wrapper.element as HTMLElement).style.width).toBe("64px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
-            "roadmap-gantt-task-dependency-line-ends-after-start"
+            "roadmap-gantt-task-dependency-line-ends-after-start",
         );
     });
 
@@ -200,14 +200,14 @@ describe("DependencyArrow", () => {
         expect((wrapper.element as HTMLElement).style.left).toBe("33px");
         expect((wrapper.element as HTMLElement).style.width).toBe("56px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
-            "roadmap-gantt-task-dependency-line-ends-after-start"
+            "roadmap-gantt-task-dependency-line-ends-after-start",
         );
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
         expect((wrapper.element as HTMLElement).style.left).toBe("33px");
         expect((wrapper.element as HTMLElement).style.width).toBe("56px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
-            "roadmap-gantt-task-dependency-line-ends-after-start"
+            "roadmap-gantt-task-dependency-line-ends-after-start",
         );
     });
 });

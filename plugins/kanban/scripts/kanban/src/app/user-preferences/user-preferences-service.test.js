@@ -42,7 +42,7 @@ describe(`UserPreferencesService`, () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -54,7 +54,7 @@ describe(`UserPreferencesService`, () => {
             const promise = UserPreferencesService.setPreference(
                 110,
                 "agiledashboard_kanban_item_view_mode_16",
-                "compact-view"
+                "compact-view",
             );
 
             await expect(wrapPromise(promise)).resolves.toBeTruthy();

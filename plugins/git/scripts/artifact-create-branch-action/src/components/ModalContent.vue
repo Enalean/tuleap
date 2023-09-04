@@ -89,7 +89,7 @@
                     />
                     {{
                         $gettext(
-                            "Create a pull request based on this new branch to the default branch"
+                            "Create a pull request based on this new branch to the default branch",
                         )
                     }}
                 </label>
@@ -160,7 +160,7 @@ let selected_repository = computed({
 
 const must_create_pr = ref(props.are_pullrequest_endpoints_available);
 const button_label = computed((): string =>
-    must_create_pr.value ? $gettext("Create branch and pull request") : $gettext("Create branch")
+    must_create_pr.value ? $gettext("Create branch and pull request") : $gettext("Create branch"),
 );
 
 onMounted((): void => {
@@ -184,7 +184,7 @@ onBeforeUnmount(() => {
 
 const createPullRequest = (
     repository: GitRepository,
-    branch_name: string
+    branch_name: string,
 ): ResultAsync<void, Fault> =>
     postPullRequestOnDefaultBranch(repository, branch_name)
         .map(() => {
@@ -202,14 +202,14 @@ function onClickCreateBranch(): Promise<void> {
         .andThen((created_branch) => {
             const success_message = interpolate(
                 $gettext(
-                    'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
+                    'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>',
                 ),
                 {
                     branch_name: props.branch_name_preview,
                     branch_url: created_branch.html_url,
                     repo_url: repository.html_url,
                     repo_name: repository.name,
-                }
+                },
             );
 
             addFeedback("info", success_message);
@@ -228,20 +228,20 @@ function onClickCreateBranch(): Promise<void> {
                 if (isPullRequestCreationFault(fault)) {
                     error_message.value = interpolate(
                         $gettext(
-                            "An error occurred while creating the associated pull request: %{ error }"
+                            "An error occurred while creating the associated pull request: %{ error }",
                         ),
-                        { error: String(fault) }
+                        { error: String(fault) },
                     );
                 } else {
                     error_message.value = interpolate(
                         $gettext(
-                            "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
+                            "An error occurred while creating the Git branch %{ branch_name }: %{ error }",
                         ),
-                        { branch_name: props.branch_name_preview, error: String(fault) }
+                        { branch_name: props.branch_name_preview, error: String(fault) },
                     );
                 }
                 is_creating_branch.value = false;
-            }
+            },
         );
 }
 </script>

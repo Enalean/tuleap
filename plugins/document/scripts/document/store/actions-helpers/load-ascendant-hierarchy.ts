@@ -25,7 +25,7 @@ import type { Item, RootState } from "../../type";
 export async function loadAscendantHierarchy(
     context: ActionContext<RootState, RootState>,
     folder_id: number,
-    loading_current_folder_promise: Promise<Item>
+    loading_current_folder_promise: Promise<Item>,
 ): Promise<void> {
     try {
         context.commit("beginLoadingAscendantHierarchy");

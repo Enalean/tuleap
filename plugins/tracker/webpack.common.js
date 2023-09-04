@@ -24,7 +24,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets/"),
-    "/assets/trackers/"
+    "/assets/trackers/",
 );
 
 const webpack_config_for_burndown_chart = {

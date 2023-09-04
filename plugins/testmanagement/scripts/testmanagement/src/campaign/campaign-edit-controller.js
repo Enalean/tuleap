@@ -52,7 +52,7 @@ function CampaignEditCtrl(
     DefinitionService,
     ExecutionService,
     NewTuleapArtifactModalService,
-    editCampaignCallback
+    editCampaignCallback,
 ) {
     let project_id, campaign_id;
     const self = this;
@@ -165,7 +165,7 @@ function CampaignEditCtrl(
         return _($scope.tests_list)
             .map(function (category) {
                 return Object.values(category.tests).filter(
-                    (test) => test.execution === null && test.selected === true
+                    (test) => test.execution === null && test.selected === true,
                 );
             })
             .flatten()
@@ -197,7 +197,7 @@ function CampaignEditCtrl(
             Object.values($scope.tests_list).forEach((category) => {
                 Object.values(category.tests).forEach((test) => {
                     test.selected = definitions.some(
-                        (definition) => definition.id === test.definition.id
+                        (definition) => definition.id === test.definition.id,
                     );
                 });
             });
@@ -218,7 +218,7 @@ function CampaignEditCtrl(
             definition_tracker_id,
             null,
             callback,
-            []
+            [],
         );
     }
 
@@ -251,7 +251,7 @@ function CampaignEditCtrl(
                 }
 
                 modal_instance.tlp_modal.hide();
-            }
+            },
         );
     }
 }

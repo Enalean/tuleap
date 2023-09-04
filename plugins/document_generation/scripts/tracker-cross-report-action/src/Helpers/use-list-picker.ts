@@ -24,7 +24,7 @@ import "@tuleap/list-picker/style";
 
 export function useListPicker(
     target: Ref<HTMLSelectElement | undefined>,
-    options: ListPickerOptions
+    options: ListPickerOptions,
 ): void {
     let list_picker: ListPicker | null = null;
 
@@ -43,7 +43,7 @@ export function useListPicker(
                 list_picker = createListPicker(source_select_box, options);
             }
         },
-        { immediate: true, flush: "post" }
+        { immediate: true, flush: "post" },
     );
 
     onScopeDispose((): void => {

@@ -49,7 +49,7 @@ describe("API querier", () => {
                         id: 102,
                         label: "Project name",
                     },
-                ])
+                ]),
             );
 
             expectOkResult(await getProjectList());
@@ -73,7 +73,7 @@ describe("API querier", () => {
                         id: 10,
                         label: "Tracker name",
                     },
-                ])
+                ]),
             );
 
             expectOkResult(await getTrackerList(project_id));

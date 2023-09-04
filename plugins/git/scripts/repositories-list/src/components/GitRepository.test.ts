@@ -93,7 +93,7 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
-            "This is my description."
+            "This is my description.",
         );
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeFalsy();
@@ -116,7 +116,7 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
-            "This is my description."
+            "This is my description.",
         );
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeFalsy();
     });
@@ -184,7 +184,7 @@ describe("GitRepository", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toBe(
-            "https://example.com/MyPath/MyRepo"
+            "https://example.com/MyPath/MyRepo",
         );
     });
 
@@ -207,7 +207,7 @@ describe("GitRepository", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toBe(
-            "plugins/git/MyPath/MyRepo"
+            "plugins/git/MyPath/MyRepo",
         );
     });
 
@@ -273,7 +273,7 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
-            "This is my description."
+            "This is my description.",
         );
         expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeFalsy();

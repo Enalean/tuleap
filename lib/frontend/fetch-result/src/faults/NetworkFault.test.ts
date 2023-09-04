@@ -32,6 +32,6 @@ describe(`NetworkFault`, () => {
             const fault = NetworkFault.fromError(error);
             expect(isFault(fault)).toBe(true);
             expect(isNetworkFault(fault)).toBe(true);
-        }
+        },
     );
 });

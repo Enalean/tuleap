@@ -20,7 +20,7 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
                 window.location,
                 pull_request,
                 SharedPropertiesService.getProjectId(),
-                SharedPropertiesService.getRepositoryId()
+                SharedPropertiesService.getRepositoryId(),
             ).toString();
         },
     });

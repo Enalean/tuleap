@@ -91,7 +91,7 @@ import { initModals } from "./modal.js";
             [].forEach.call(example_links, (link) => {
                 link.addEventListener(
                     "click",
-                    (event) => event.preventDefault() && event.stopPropagation()
+                    (event) => event.preventDefault() && event.stopPropagation(),
                 );
             });
 
@@ -101,7 +101,7 @@ import { initModals } from "./modal.js";
             });
 
             var popover_anchor_example_trigger = document.getElementById(
-                "popover-anchor-example-trigger"
+                "popover-anchor-example-trigger",
             );
             if (popover_anchor_example_trigger) {
                 createPopover(
@@ -109,12 +109,12 @@ import { initModals } from "./modal.js";
                     document.getElementById("popover-anchor-example-content"),
                     {
                         anchor: document.getElementById("popover-anchor-example"),
-                    }
+                    },
                 );
             }
 
             var popover_example_dom_update_button = document.getElementById(
-                "popover-example-dom-update-button"
+                "popover-example-dom-update-button",
             );
             if (popover_example_dom_update_button) {
                 popover_example_dom_update_button.addEventListener("click", function () {
@@ -131,33 +131,33 @@ import { initModals } from "./modal.js";
             }
 
             var dropdown_trigger_options_submenu_1 = document.getElementById(
-                "dropdown-menu-example-options-submenu-1"
+                "dropdown-menu-example-options-submenu-1",
             );
             if (dropdown_trigger_options_submenu_1) {
                 createDropdown(dropdown_trigger_options_submenu_1, {
                     keyboard: false,
                     trigger: "hover-and-click",
                     dropdown_menu: document.getElementById(
-                        "dropdown-menu-example-options-submenu-options-1"
+                        "dropdown-menu-example-options-submenu-options-1",
                     ),
                 });
             }
 
             var dropdown_trigger_options_submenu_2 = document.getElementById(
-                "dropdown-menu-example-options-submenu-2"
+                "dropdown-menu-example-options-submenu-2",
             );
             if (dropdown_trigger_options_submenu_2) {
                 createDropdown(dropdown_trigger_options_submenu_2, {
                     keyboard: false,
                     trigger: "hover-and-click",
                     dropdown_menu: document.getElementById(
-                        "dropdown-menu-example-options-submenu-options-2"
+                        "dropdown-menu-example-options-submenu-options-2",
                     ),
                 });
             }
 
             var dropdown_trigger_disabled_options = document.getElementById(
-                "dropdown-disable-options"
+                "dropdown-disable-options",
             );
             if (dropdown_trigger_disabled_options) {
                 createDropdown(dropdown_trigger_disabled_options, {
@@ -183,7 +183,7 @@ import { initModals } from "./modal.js";
             }
 
             var dropdown_trigger_large_split_example_options = document.getElementById(
-                "dropdown-large-split-example"
+                "dropdown-large-split-example",
             );
             if (dropdown_trigger_large_split_example_options) {
                 createDropdown(dropdown_trigger_large_split_example_options, {

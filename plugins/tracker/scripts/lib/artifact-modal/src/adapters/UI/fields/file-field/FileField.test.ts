@@ -298,7 +298,7 @@ describe(`FileField`, () => {
             it will dispatch a "description-changed" event with added info`, () => {
             const DESCRIPTION = "acidify aminoid";
             triggerEvent(
-                new CustomEvent("description-changed", { detail: { description: DESCRIPTION } })
+                new CustomEvent("description-changed", { detail: { description: DESCRIPTION } }),
             );
 
             expect(value_model.temporary_files[0].description).toBe(DESCRIPTION);

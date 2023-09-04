@@ -27,7 +27,7 @@ const message = "Internal server error";
 
 export async function handleGlobalModalError(
     context: ActionContext<State, State>,
-    rest_error: FetchWrapperError
+    rest_error: FetchWrapperError,
 ): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
@@ -39,7 +39,7 @@ export async function handleGlobalModalError(
 
 export async function handleErrorsForModal(
     context: ActionContext<ErrorState, RootState>,
-    exception: unknown
+    exception: unknown,
 ): Promise<void> {
     if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
         context.commit("setModalError", message);
@@ -55,7 +55,7 @@ export async function handleErrorsForModal(
 
 export async function handleErrorsForLock(
     context: ActionContext<ErrorState, ErrorState>,
-    exception: unknown
+    exception: unknown,
 ): Promise<void> {
     try {
         if (!(exception instanceof FetchWrapperError)) {

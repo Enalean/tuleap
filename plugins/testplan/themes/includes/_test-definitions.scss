@@ -62,7 +62,9 @@
     width: 100%;
     margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing);
-    transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+    transition:
+        border-color 150ms ease-in-out,
+        background-color 150ms ease-in-out;
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
@@ -73,7 +75,9 @@
     }
 
     &.test-plan-test-definition-is-just-refreshed {
-        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        transition:
+            border-color 150ms ease-in-out,
+            background-color 150ms ease-in-out;
         animation: pulse-test-definition 500ms ease-in-out;
         border-color: var(--tlp-success-color-transparent-50);
         background: var(--tlp-success-color-lighter-90);

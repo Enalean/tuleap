@@ -29,7 +29,7 @@ import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
 
 async function createWrapper(
     columns: ColumnDefinition[],
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<Wrapper<InvalidMappingSwimlane>> {
     return shallowMount(InvalidMappingSwimlane, {
         localVue: await createTaskboardLocalVue(),

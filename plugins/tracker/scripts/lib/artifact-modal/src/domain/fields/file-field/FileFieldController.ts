@@ -33,7 +33,7 @@ export interface FileFieldControllerType {
     setFileOfNewFileToAttach(file: NewFileToAttach, new_file: File): NewFileToAttachCollection;
     setDescriptionOfNewFileToAttach(
         file: NewFileToAttach,
-        description: string
+        description: string,
     ): NewFileToAttachCollection;
     reset(file: NewFileToAttach): NewFileToAttachCollection;
     addNewFileToAttach(): NewFileToAttachCollection;
@@ -44,7 +44,7 @@ export interface FileFieldControllerType {
 export const FileFieldController = (
     field: FileFieldType,
     value_model: FileFieldValueModel,
-    event_dispatcher: EventDispatcher
+    event_dispatcher: EventDispatcher,
 ): FileFieldControllerType => {
     let attached_files: AttachedFileCollection = field.file_descriptions;
 
@@ -65,7 +65,7 @@ export const FileFieldController = (
         }
         value_model.value = [event.image.id].concat(value_model.value);
         value_model.images_added_by_text_fields = [event.image].concat(
-            value_model.images_added_by_text_fields
+            value_model.images_added_by_text_fields,
         );
         event.handled = true;
     });
@@ -87,7 +87,7 @@ export const FileFieldController = (
 
         setDescriptionOfNewFileToAttach(
             file: NewFileToAttach,
-            description: string
+            description: string,
         ): NewFileToAttachCollection {
             value_model.temporary_files = value_model.temporary_files.map((existing_file) => {
                 if (existing_file !== file) {

@@ -57,6 +57,6 @@ describe("formatExistingValue", () => {
 
             expect(text_field_value.content).toStrictEqual(expected_content);
             expect(text_field_value.format).toStrictEqual(expected_format);
-        }
+        },
     );
 });

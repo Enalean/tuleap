@@ -12,7 +12,7 @@ export default function controller($scope) {
                 if (steps !== undefined) {
                     steps.sort((a, b) => a.rank - b.rank);
                 }
-            }
+            },
         );
     }
 }

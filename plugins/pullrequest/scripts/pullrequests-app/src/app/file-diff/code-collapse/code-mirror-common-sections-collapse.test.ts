@@ -65,7 +65,7 @@ describe("code-mirror-common-sections-collapse", () => {
             expect(editor.markText).toHaveBeenCalledWith(
                 { line: 10, ch: 0 },
                 { line: 20, ch: 150 },
-                { replacedWith: collapsed_label }
+                { replacedWith: collapsed_label },
             );
 
             collapsed_label.dispatchEvent(new Event("click"));
@@ -119,18 +119,18 @@ describe("code-mirror-common-sections-collapse", () => {
                 doc,
                 left_codemirror,
                 right_codemirror,
-                synchronized_sections
+                synchronized_sections,
             );
 
             expect(left_codemirror.markText).toHaveBeenCalledWith(
                 { line: 10, ch: 0 },
                 { line: 20, ch: 150 },
-                { replacedWith: left_editor_collapsed_label }
+                { replacedWith: left_editor_collapsed_label },
             );
             expect(right_codemirror.markText).toHaveBeenCalledWith(
                 { line: 25, ch: 0 },
                 { line: 35, ch: 150 },
-                { replacedWith: right_editor_collapsed_label }
+                { replacedWith: right_editor_collapsed_label },
             );
 
             right_editor_collapsed_label.dispatchEvent(new Event("click"));

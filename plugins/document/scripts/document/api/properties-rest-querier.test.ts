@@ -48,7 +48,7 @@ describe("properties rest querier", () => {
             owner_id,
             status,
             obsolescence_date,
-            properties
+            properties,
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_files/${id}/metadata`, {
@@ -75,7 +75,7 @@ describe("properties rest querier", () => {
             owner_id,
             status,
             obsolescence_date,
-            properties
+            properties,
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_embedded_files/${id}/metadata`, {
@@ -102,7 +102,7 @@ describe("properties rest querier", () => {
             owner_id,
             status,
             obsolescence_date,
-            properties
+            properties,
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_links/${id}/metadata`, {
@@ -129,7 +129,7 @@ describe("properties rest querier", () => {
             owner_id,
             status,
             obsolescence_date,
-            properties
+            properties,
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_empty_documents/${id}/metadata`, {
@@ -156,7 +156,7 @@ describe("properties rest querier", () => {
             owner_id,
             status,
             obsolescence_date,
-            properties
+            properties,
         );
 
         expect(tlpPut).toHaveBeenCalledWith(`/api/docman_folders/${id}/metadata`, {
@@ -186,7 +186,7 @@ describe("properties rest querier", () => {
                     limit: 50,
                     offset: 0,
                 },
-            }
+            },
         );
     });
 });

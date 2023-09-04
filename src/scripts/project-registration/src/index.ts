@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
     const can_user_choose_project_visibility = Boolean(
-        vue_mount_point.dataset.canUserChoosePrivacy
+        vue_mount_point.dataset.canUserChoosePrivacy,
     );
 
     const company_templates_json = vue_mount_point.dataset.companyTemplates;

@@ -69,7 +69,8 @@ module.exports = {
         // Plugins
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
-        "scss/dollar-variable-colon-space-before": null,
+        "scss/dollar-variable-colon-space-after": null, // Managed by Prettier
+        "scss/dollar-variable-colon-space-before": null, // Managed by Prettier
         "scss/operator-no-unspaced": true,
         "font-family-no-missing-generic-family-keyword": null,
         "no-descending-specificity": null, // Need a lot of work with existing files

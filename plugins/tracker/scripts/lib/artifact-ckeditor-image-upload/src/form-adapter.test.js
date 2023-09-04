@@ -39,7 +39,7 @@ describe(`form-adapter`, () => {
             findAllHiddenInputByNames(form, [first_field_name, second_field_name]);
 
             expect(form.querySelectorAll).toHaveBeenCalledWith(
-                `input[type=hidden][name=sonnikins],input[type=hidden][name=ebon]`
+                `input[type=hidden][name=sonnikins],input[type=hidden][name=ebon]`,
             );
         });
 
@@ -49,7 +49,7 @@ describe(`form-adapter`, () => {
             findAllHiddenInputByNames(form, [field_name]);
 
             expect(form.querySelectorAll).toHaveBeenCalledWith(
-                `input[type=hidden][name=Phlebodium]`
+                `input[type=hidden][name=Phlebodium]`,
             );
         });
     });
@@ -95,7 +95,7 @@ describe(`form-adapter`, () => {
         it(`keeps in memory that a file is uploading`, () => {
             const increaseCurrentlyUploadingFilesNumber = jest.spyOn(
                 forms_being_uploaded_state,
-                "increaseCurrentlyUploadingFilesNumber"
+                "increaseCurrentlyUploadingFilesNumber",
             );
             disableFormSubmit(form);
 
@@ -115,7 +115,7 @@ describe(`form-adapter`, () => {
         it(`sets in state that the file is no longer uploading`, () => {
             const decreaseCurrentlyUploadingFilesNumber = jest.spyOn(
                 forms_being_uploaded_state,
-                "decreaseCurrentlyUploadingFilesNumber"
+                "decreaseCurrentlyUploadingFilesNumber",
             );
             enableFormSubmit(form);
 
@@ -125,7 +125,7 @@ describe(`form-adapter`, () => {
         it(`when there were 2 files being uploaded, it does nothing`, () => {
             const isThereAFileCurrentlyUploading = jest.spyOn(
                 forms_being_uploaded_state,
-                "isThereAFileCurrentlyUploading"
+                "isThereAFileCurrentlyUploading",
             );
             isThereAFileCurrentlyUploading.mockReturnValue(true);
 
@@ -138,7 +138,7 @@ describe(`form-adapter`, () => {
             beforeEach(() => {
                 jest.spyOn(
                     forms_being_uploaded_state,
-                    "isThereAFileCurrentlyUploading"
+                    "isThereAFileCurrentlyUploading",
                 ).mockReturnValue(false);
             });
 
@@ -158,7 +158,7 @@ describe(`form-adapter`, () => {
 
                 expect(form.removeEventListener).toHaveBeenCalledWith(
                     "submit",
-                    expect.any(Function)
+                    expect.any(Function),
                 );
             });
         });

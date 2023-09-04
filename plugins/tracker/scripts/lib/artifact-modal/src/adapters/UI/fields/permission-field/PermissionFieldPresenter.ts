@@ -39,7 +39,7 @@ export const PermissionFieldPresenter = {
         is_field_disabled: boolean,
         is_used: boolean,
         is_select_box_required: boolean,
-        is_select_box_disabled: boolean
+        is_select_box_disabled: boolean,
     ): PermissionFieldPresenter => ({
         field_id: field.field_id,
         label: field.label,

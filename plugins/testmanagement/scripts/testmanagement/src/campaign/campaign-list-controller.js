@@ -72,8 +72,8 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
             setError(
                 gettextCatalog.getString(
                     "An error occurred while loading the campaigns. Please refresh the page. {{ message }}",
-                    { message }
-                )
+                    { message },
+                ),
             );
         });
     }

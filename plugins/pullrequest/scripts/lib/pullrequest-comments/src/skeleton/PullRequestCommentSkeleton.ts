@@ -30,7 +30,7 @@ interface PullRequestCommentSkeleton {
 }
 
 const getFollowUpsSkeletons = (
-    host: PullRequestCommentSkeleton
+    host: PullRequestCommentSkeleton,
 ): UpdateFunction<PullRequestCommentSkeleton> => {
     if (!host.has_replies) {
         return html``;

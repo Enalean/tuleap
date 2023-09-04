@@ -103,6 +103,6 @@ describe("LabelsCreationManager", () => {
             manager.registerLabelsToCreate(buildTemporaryProjectLabels(registered_labels));
 
             expect(manager.canLabelBeCreated(label)).toBe(can_be_created);
-        }
+        },
     );
 });

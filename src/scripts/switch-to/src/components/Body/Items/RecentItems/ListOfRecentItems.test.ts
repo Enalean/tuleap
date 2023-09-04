@@ -39,7 +39,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: false,
                     is_history_loaded: true,
                     history: { entries: [] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
                 is_in_search_mode: (): boolean => false,
@@ -66,7 +66,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: true,
                     is_history_loaded: false,
                     history: { entries: [] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
                 is_in_search_mode: (): boolean => false,
@@ -94,7 +94,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: false,
                     is_history_loaded: true,
                     history: { entries: [{}, {}] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [{}, {}] as ItemDefinition[] }),
                 is_in_search_mode: (): boolean => false,
@@ -124,7 +124,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: false,
                     is_history_loaded: true,
                     history: { entries: [{}, {}] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
                 is_in_search_mode: (): boolean => true,
@@ -149,7 +149,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: false,
                     is_history_loaded: true,
                     history: { entries: [{}, {}] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [{}] as ItemDefinition[] }),
                 is_in_search_mode: (): boolean => true,
@@ -177,7 +177,7 @@ describe("ListOfRecentItems", () => {
                     is_loading_history: true,
                     is_history_loaded: false,
                     history: { entries: [] as ItemDefinition[] },
-                } as State),
+                }) as State,
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
                 is_in_search_mode: (): boolean => false,

@@ -33,7 +33,7 @@ export type RepositoryCallback = (repositories: Repository[]) => void;
 
 export const setDisplayMode = async (
     context: ActionContext<State, State>,
-    new_mode: string
+    new_mode: string,
 ): Promise<void> => {
     context.commit("setDisplayMode", new_mode);
 
@@ -59,7 +59,7 @@ export const showAddRepositoryModal = (context: ActionContext<State, State>): vo
 
 export const changeRepositories = async (
     context: ActionContext<State, State>,
-    new_owner_id: string | number
+    new_owner_id: string | number,
 ): Promise<void> => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
@@ -83,7 +83,7 @@ export const changeRepositories = async (
                 getProjectId(),
                 String(context.state.selected_owner_id),
                 order_by,
-                callback
+                callback,
             );
         await getAsyncRepositoryList(context, getForkedRepositories);
     }
@@ -91,7 +91,7 @@ export const changeRepositories = async (
 
 export async function getAsyncRepositoryList(
     context: ActionContext<State, State>,
-    getRepositories: (callback: RepositoryCallback) => Promise<Array<Repository>>
+    getRepositories: (callback: RepositoryCallback) => Promise<Array<Repository>>,
 ): Promise<Array<Repository>> {
     context.commit("setIsLoadingInitial", true);
     context.commit("setIsLoadingNext", true);

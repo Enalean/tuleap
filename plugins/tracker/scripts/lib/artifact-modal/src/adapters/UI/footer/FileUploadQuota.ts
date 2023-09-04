@@ -44,7 +44,7 @@ export const FileUploadQuota = define<FileUploadQuota>({
         }
         const quota_message = sprintf(
             getMaxAllowedUploadSizeText(),
-            prettyKibibytes(host.max_upload_size_in_bytes)
+            prettyKibibytes(host.max_upload_size_in_bytes),
         );
         return html`<div class="tlp-text-info">${quota_message}</div>`;
     },

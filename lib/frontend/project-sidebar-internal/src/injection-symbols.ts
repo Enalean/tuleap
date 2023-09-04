@@ -27,5 +27,5 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 export const SIDEBAR_CONFIGURATION: StrictInjectionKey<DeepReadonly<Ref<Configuration>>> =
     Symbol("sidebar_configuration");
 export const TRIGGER_SHOW_PROJECT_ANNOUNCEMENT: StrictInjectionKey<() => void> = Symbol(
-    "trigger_show_project_announcement"
+    "trigger_show_project_announcement",
 );

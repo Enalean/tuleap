@@ -36,7 +36,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
 
     function getWrapper(
         preferencies: PreferenciesState,
-        currently_previewed_item: Item | null
+        currently_previewed_item: Item | null,
     ): VueWrapper<InstanceType<typeof EmbeddedFileEditionSwitcher>> {
         return shallowMount(EmbeddedFileEditionSwitcher, {
             global: {
@@ -65,14 +65,14 @@ describe("EmbeddedFileEditionSwitcher", () => {
             {
                 is_embedded_in_large_view: false,
             },
-            null
+            null,
         );
 
         expect(
-            wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked
+            wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked,
         ).toBe(true);
         expect(
-            wrapper.get<HTMLInputElement>("[data-test=view-switcher-large]").element.checked
+            wrapper.get<HTMLInputElement>("[data-test=view-switcher-large]").element.checked,
         ).toBe(false);
     });
 
@@ -81,14 +81,14 @@ describe("EmbeddedFileEditionSwitcher", () => {
             {
                 is_embedded_in_large_view: true,
             },
-            null
+            null,
         );
 
         expect(
-            wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked
+            wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked,
         ).toBe(false);
         expect(
-            wrapper.get<HTMLInputElement>("[data-test=view-switcher-large]").element.checked
+            wrapper.get<HTMLInputElement>("[data-test=view-switcher-large]").element.checked,
         ).toBe(true);
     });
 
@@ -98,7 +98,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
             {
                 is_embedded_in_large_view: false,
             },
-            item
+            item,
         );
 
         wrapper.get("[data-test=view-switcher-narrow]").trigger("click");
@@ -111,7 +111,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
             {
                 is_embedded_in_large_view: true,
             },
-            item
+            item,
         );
 
         wrapper.get("[data-test=view-switcher-large]").trigger("click");

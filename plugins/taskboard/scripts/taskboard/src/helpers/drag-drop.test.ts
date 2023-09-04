@@ -103,7 +103,7 @@ describe(`drag-drop helper`, () => {
             jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(true);
 
             expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
+                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell }),
             ).toBe(false);
         });
 
@@ -118,7 +118,7 @@ describe(`drag-drop helper`, () => {
             jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(false);
 
             expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
+                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell }),
             ).toBe(true);
         });
 
@@ -135,12 +135,12 @@ describe(`drag-drop helper`, () => {
             target_cell.setAttribute("data-column-id", "2");
 
             expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
+                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell }),
             ).toBe(false);
 
             expect(store.commit).toHaveBeenCalledWith(
                 "swimlane/setDropZoneRejectingDrop",
-                target_cell
+                target_cell,
             );
         });
 
@@ -157,7 +157,7 @@ describe(`drag-drop helper`, () => {
             target_cell.setAttribute("data-accepted-trackers-ids", "10,11,12");
 
             expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
+                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell }),
             ).toBe(true);
         });
     });

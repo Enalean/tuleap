@@ -64,7 +64,7 @@ describe("ModalContent", () => {
         const create_gitlab_branch = vi.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
             okAsync({
                 branch_name: "prefix01/tuleap-123-artifact-title",
-            } as GitLabIntegrationCreatedBranchInformation)
+            } as GitLabIntegrationCreatedBranchInformation),
         );
 
         const create_pull_request = vi
@@ -75,7 +75,7 @@ describe("ModalContent", () => {
 
         expect(
             (wrapper.get("[data-test=create-merge-request-checkbox]").element as HTMLInputElement)
-                .checked
+                .checked,
         ).toBe(true);
 
         const submit_button = wrapper.find("[data-test=create-branch-submit-button]")
@@ -95,7 +95,7 @@ describe("ModalContent", () => {
         const create_gitlab_branch = vi.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
             okAsync({
                 branch_name: "prefix01/tuleap-123-artifact-title",
-            } as GitLabIntegrationCreatedBranchInformation)
+            } as GitLabIntegrationCreatedBranchInformation),
         );
 
         const wrapper = mountComponent();

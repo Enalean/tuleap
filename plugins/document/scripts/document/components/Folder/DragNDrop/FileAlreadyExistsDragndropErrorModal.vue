@@ -22,7 +22,7 @@
         <p>
             {{
                 $gettext(
-                    "A document already exists with the same title. However you can create a new version of this document by dropping the item on the file you want to update."
+                    "A document already exists with the same title. However you can create a new version of this document by dropping the item on the file you want to update.",
                 )
             }}
         </p>

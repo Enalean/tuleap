@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     (error: unknown): Fault =>
                         error instanceof Error
                             ? Fault.fromError(error)
-                            : Fault.fromMessage("Failed to authenticate with your passkey")
+                            : Fault.fromMessage("Failed to authenticate with your passkey"),
                 );
             })
             .match(
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     button.disabled = false;
                     error.innerText = fault.toString();
                     error.classList.remove(HIDDEN_CLASS);
-                }
+                },
             );
     });
 

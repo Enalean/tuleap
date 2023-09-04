@@ -44,7 +44,7 @@ export default class FieldDescription extends Vue {
         return this.$gettextInterpolate(
             this.$gettext("My %{ tracker_name } tracker description..."),
             { tracker_name: this.tracker_to_be_created.name },
-            true
+            true,
         );
     }
 }

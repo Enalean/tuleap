@@ -25,7 +25,7 @@ function MilestoneController(
     DroppedService,
     MilestoneCollectionService,
     BacklogItemSelectedService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -99,7 +99,7 @@ function MilestoneController(
 
         compared_to = DroppedService.defineComparedToBeFirstItem(
             self.milestone.content,
-            moved_items
+            moved_items,
         );
 
         self.reorderMilestoneContent(self.milestone.id, moved_items, compared_to);
@@ -122,7 +122,7 @@ function MilestoneController(
         self.get_content_promise.then(function () {
             compared_to = DroppedService.defineComparedToBeLastItem(
                 self.milestone.content,
-                moved_items
+                moved_items,
             );
 
             backlog_item.moving_to = false;
@@ -133,12 +133,12 @@ function MilestoneController(
 
     function initDragularForMilestone() {
         var milestone_element = angular.element(
-            'div.submilestone[data-submilestone-id="' + self.milestone.id + '"]'
+            'div.submilestone[data-submilestone-id="' + self.milestone.id + '"]',
         );
 
         self.dragular_instance_for_milestone = dragularService(
             milestone_element,
-            self.dragularOptionsForMilestone()
+            self.dragularOptionsForMilestone(),
         );
 
         $document.bind("keyup", function (event) {
@@ -195,7 +195,7 @@ function MilestoneController(
         source_model,
         initial_index,
         target_model,
-        target_index
+        target_index,
     ) {
         event.stopPropagation();
 
@@ -218,7 +218,7 @@ function MilestoneController(
         var compared_to = DroppedService.defineComparedTo(
             target_model,
             target_model[target_index],
-            dropped_items
+            dropped_items,
         );
 
         saveChangesInBackend();
@@ -236,19 +236,19 @@ function MilestoneController(
 
                     MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(
                         source_milestone_id,
-                        dropped_items
+                        dropped_items,
                     );
                     MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(
                         target_milestone_id,
                         dropped_items,
-                        compared_to
+                        compared_to,
                     );
 
                     DroppedService.moveFromSubmilestoneToSubmilestone(
                         dropped_item_ids,
                         compared_to,
                         source_milestone_id,
-                        target_milestone_id
+                        target_milestone_id,
                     )
                         .then(function () {
                             BacklogItemSelectedService.deselectAllBacklogItems();
@@ -263,7 +263,7 @@ function MilestoneController(
                 case droppedToBacklog(target_list_element):
                     MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(
                         source_milestone_id,
-                        dropped_items
+                        dropped_items,
                     );
                     BacklogService.addOrReorderBacklogItemsInBacklog(dropped_items, compared_to);
 
@@ -271,7 +271,7 @@ function MilestoneController(
                         dropped_item_ids,
                         compared_to,
                         source_milestone_id,
-                        BacklogService.backlog
+                        BacklogService.backlog,
                     )
                         .then(function () {
                             BacklogItemSelectedService.deselectAllBacklogItems();
@@ -289,13 +289,13 @@ function MilestoneController(
         MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(
             milestone_id,
             backlog_items,
-            compared_to
+            compared_to,
         );
 
         return DroppedService.reorderSubmilestone(
             backlog_items.map((backlog_item) => backlog_item.id),
             compared_to,
-            milestone_id
+            milestone_id,
         )
             .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();
@@ -360,7 +360,7 @@ function MilestoneController(
 
     function additionalPanesToDisplay() {
         return self.milestone.resources.additional_panes.filter((pane) =>
-            SharedPropertiesService.getAllowedAdditionalPanesToDisplay().includes(pane.identifier)
+            SharedPropertiesService.getAllowedAdditionalPanesToDisplay().includes(pane.identifier),
         );
     }
 }

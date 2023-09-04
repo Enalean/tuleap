@@ -45,7 +45,7 @@ describe(`Modal Opener`, () => {
             createAndAppendElementById(doc, "button", "button_id");
 
             expect(() => openTargetModalIdOnClick(doc, "button_id")).toThrow(
-                "Missing data-target-modal-id attribute on button"
+                "Missing data-target-modal-id attribute on button",
             );
         });
 
@@ -54,7 +54,7 @@ describe(`Modal Opener`, () => {
             button.dataset.targetModalId = "unknown_modal_id";
 
             expect(() => openTargetModalIdOnClick(doc, "button_id")).toThrow(
-                "Could not find the element referenced by data-target-modal-id"
+                "Could not find the element referenced by data-target-modal-id",
             );
         });
 
@@ -109,7 +109,7 @@ describe(`Modal Opener`, () => {
             createAndAppendButtonWithClassName(doc);
 
             expect(() => openAllTargetModalsOnClick(doc, ".button-class")).toThrow(
-                "Missing data-target-modal-id attribute on button"
+                "Missing data-target-modal-id attribute on button",
             );
         });
 
@@ -118,7 +118,7 @@ describe(`Modal Opener`, () => {
             button.dataset.targetModalId = "unknown_modal_id";
 
             expect(() => openAllTargetModalsOnClick(doc, ".button-class")).toThrow(
-                "Could not find the element referenced by data-target-modal-id"
+                "Could not find the element referenced by data-target-modal-id",
             );
         });
 
@@ -229,7 +229,7 @@ describe(`Modal Opener`, () => {
                 expect(createModal).toHaveBeenCalledWith(
                     doc,
                     modal_element,
-                    expect.objectContaining({ destroy_on_hide: true })
+                    expect.objectContaining({ destroy_on_hide: true }),
                 );
                 expect(modal.show).toHaveBeenCalled();
             });
@@ -261,6 +261,6 @@ function simulateClick(button: HTMLElement): void {
             if (handler instanceof Function) {
                 handler(new Event("click"));
             }
-        }
+        },
     );
 }

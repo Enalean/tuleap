@@ -255,7 +255,7 @@ describe("Root store", () => {
                     });
 
                     expect(store.is_in_search_mode).toBe(expected_is_in_search_mode);
-                }
+                },
             );
         });
     });

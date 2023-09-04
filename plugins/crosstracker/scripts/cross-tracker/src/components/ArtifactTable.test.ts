@@ -80,7 +80,7 @@ describe("ArtifactTable", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                "An error occurred"
+                "An error occurred",
             );
         });
 
@@ -96,7 +96,7 @@ describe("ArtifactTable", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                "Error while parsing the query"
+                "Error while parsing the query",
             );
         });
 
@@ -105,7 +105,7 @@ describe("ArtifactTable", () => {
             getReportContent.mockImplementation(function (
                 report_id: number,
                 limit: number,
-                offset: number
+                offset: number,
             ): Promise<ArtifactsCollection> {
                 if (offset === 0) {
                     return Promise.resolve({

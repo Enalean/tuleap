@@ -27,7 +27,7 @@ describe("ArtifactCrossReference", () => {
         const option = ArtifactCrossReference.fromCurrentArtifact(
             Option.fromValue(CurrentArtifactIdentifierStub.withId(150)),
             TrackerShortnameStub.withShortname("story"),
-            "acid-green"
+            "acid-green",
         );
 
         const reference = option.unwrapOr(null);

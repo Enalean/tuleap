@@ -40,7 +40,7 @@ const isUserHasNoRegisteredPasskey = (fault: Fault): boolean =>
  */
 export function openTargetModalIdAfterAuthentication(
     doc: Document,
-    button_id: string
+    button_id: string,
 ): ResultAsync<Modal | null, Fault> {
     const button = selectOrThrow(doc, `#${button_id}`, HTMLButtonElement);
     button.disabled = true;
@@ -52,7 +52,7 @@ export function openTargetModalIdAfterAuthentication(
             const gettext_provider = initGettextSync(
                 "tuleap-webauthn",
                 { fr_FR, pt_BR },
-                doc.body.dataset.userLocale ?? en_US_LOCALE
+                doc.body.dataset.userLocale ?? en_US_LOCALE,
             );
 
             const target_modal = getTargetModal(doc, button);

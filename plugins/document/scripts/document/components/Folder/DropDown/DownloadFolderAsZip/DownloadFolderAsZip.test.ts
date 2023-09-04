@@ -46,7 +46,7 @@ describe("DownloadFolderAsZip", () => {
     });
 
     function getWrapper(
-        max_archive_size = 1
+        max_archive_size = 1,
     ): VueWrapper<InstanceType<typeof DownloadFolderAsZip>> {
         return shallowMount(DownloadFolderAsZip, {
             props: { item },
@@ -181,7 +181,7 @@ describe("DownloadFolderAsZip", () => {
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
-            "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
+            "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
         );
     });
 });

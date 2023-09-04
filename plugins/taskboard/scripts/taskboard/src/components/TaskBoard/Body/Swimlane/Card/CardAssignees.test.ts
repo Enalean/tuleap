@@ -33,7 +33,7 @@ jest.useFakeTimers();
 
 async function getWrapper(
     card: Card,
-    tracker: Tracker = { assigned_to_field: null } as Tracker
+    tracker: Tracker = { assigned_to_field: null } as Tracker,
 ): Promise<Wrapper<CardAssignees>> {
     return shallowMount(CardAssignees, {
         localVue: await createTaskboardLocalVue(),
@@ -95,7 +95,7 @@ describe("CardAssignees", () => {
     it("adds additional class if assignees are editable", async () => {
         const wrapper = await getWrapper(
             { assignees: [] as User[], is_in_edit_mode: true } as Card,
-            { assigned_to_field: { id: 123 } } as Tracker
+            { assigned_to_field: { id: 123 } } as Tracker,
         );
 
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
@@ -107,7 +107,7 @@ describe("CardAssignees", () => {
     it("Displays an icon user-add if assignees are editable and the current list is empty", async () => {
         const wrapper = await getWrapper(
             { assignees: [] as User[], is_in_edit_mode: true } as Card,
-            { assigned_to_field: { id: 123 } } as Tracker
+            { assigned_to_field: { id: 123 } } as Tracker,
         );
 
         const icon = wrapper.get("[data-test=icon]");
@@ -127,7 +127,7 @@ describe("CardAssignees", () => {
                 assignees: [steeve],
                 is_in_edit_mode: true,
             } as Card,
-            { assigned_to_field: { id: 123 } } as Tracker
+            { assigned_to_field: { id: 123 } } as Tracker,
         );
 
         const icon = wrapper.get("[data-test=icon]");
@@ -143,7 +143,7 @@ describe("CardAssignees", () => {
                 assignees: [] as User[],
                 is_in_edit_mode: true,
             } as Card,
-            tracker
+            tracker,
         );
         wrapper.vm.$store.getters["swimlane/assignable_users"] = (): UserForPeoplePicker[] =>
             [{ id: 1, display_name: "Steeve" }] as UserForPeoplePicker[];
@@ -153,7 +153,7 @@ describe("CardAssignees", () => {
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/loadPossibleAssignees",
-            tracker
+            tracker,
         );
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
@@ -173,7 +173,7 @@ describe("CardAssignees", () => {
                 assignees: [] as User[],
                 is_in_edit_mode: false,
             } as Card,
-            { assigned_to_field: { id: 123 } } as Tracker
+            { assigned_to_field: { id: 123 } } as Tracker,
         );
 
         wrapper.trigger("click");

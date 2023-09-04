@@ -42,7 +42,7 @@ export default {
                 const artifacts_loading = dispatch(
                     "loadArtifacts",
                     { artifact_ids },
-                    { root: true }
+                    { root: true },
                 );
 
                 await users_loading;
@@ -74,7 +74,7 @@ export default {
         },
         delete: (state, baseline_to_delete) => {
             state.baselines = state.baselines.filter(
-                (baseline) => baseline.id !== baseline_to_delete.id
+                (baseline) => baseline.id !== baseline_to_delete.id,
             );
         },
     },

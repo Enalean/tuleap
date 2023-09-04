@@ -56,7 +56,7 @@ describe("build-advanced-search-params", () => {
             sort: { name: "update_date", order: "desc" },
         };
         expect(
-            buildAdvancedSearchParams({ title: "lorem", type: "folder", field_2: "ipsum" })
+            buildAdvancedSearchParams({ title: "lorem", type: "folder", field_2: "ipsum" }),
         ).toStrictEqual(expected);
     });
 });

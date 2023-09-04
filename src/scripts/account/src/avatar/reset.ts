@@ -23,7 +23,7 @@ export function loadAvatarReset(): void {
     const btn = document.getElementById("account-information-avatar-modal-use-default-button");
     if (!(btn instanceof HTMLButtonElement)) {
         throw Error(
-            "#account-information-avatar-modal-use-default-button not found or not a button"
+            "#account-information-avatar-modal-use-default-button not found or not a button",
         );
     }
 
@@ -42,7 +42,7 @@ export function loadAvatarReset(): void {
         }
 
         const use_default_avatar = document.getElementById(
-            "account-information-avatar-modal-use-default"
+            "account-information-avatar-modal-use-default",
         );
         if (!(use_default_avatar instanceof HTMLInputElement)) {
             throw Error("#account-information-avatar-modal-use-default not found");

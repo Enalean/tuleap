@@ -36,11 +36,11 @@ describe("SelectBoxHighlighter", () => {
         } as HostElement);
 
         expect(
-            list_picker_element.classList.contains("select-box-allowed-values-updated-highlight")
+            list_picker_element.classList.contains("select-box-allowed-values-updated-highlight"),
         ).toBe(true);
         jest.advanceTimersByTime(2000);
         expect(
-            list_picker_element.classList.contains("select-box-allowed-values-updated-highlight")
+            list_picker_element.classList.contains("select-box-allowed-values-updated-highlight"),
         ).toBe(false);
     });
 });

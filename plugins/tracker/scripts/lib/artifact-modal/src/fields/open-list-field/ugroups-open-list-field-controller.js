@@ -13,7 +13,7 @@ function UgroupsOpenListFieldController($element) {
 
     function init() {
         const open_list_element = $element[0].querySelector(
-            ".tuleap-artifact-modal-open-list-ugroups"
+            ".tuleap-artifact-modal-open-list-ugroups",
         );
         if (!open_list_element) {
             return;
@@ -22,7 +22,7 @@ function UgroupsOpenListFieldController($element) {
         initOpenListFieldLabelAndSelectIds(
             $element[0],
             open_list_element,
-            self.value_model.field_id
+            self.value_model.field_id,
         );
         select2(open_list_element, {
             placeholder: self.field.hint,

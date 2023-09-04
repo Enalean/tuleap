@@ -32,7 +32,7 @@ describe("FeatureCard", () => {
         feature?: Partial<Feature>,
         configuration?: Partial<ConfigurationState>,
         user_can_plan = true,
-        ongoing_move_elements_id: number[] = []
+        ongoing_move_elements_id: number[] = [],
     ): Promise<Wrapper<FeatureCard>> => {
         const defaulted_feature = {
             id: 100,
@@ -77,7 +77,7 @@ describe("FeatureCard", () => {
     it("Displays a draggable card with accessibility pattern", async () => {
         const wrapper = await getWrapper(
             { background_color: "peggy_pink_text" },
-            { accessibility: true }
+            { accessibility: true },
         );
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -102,7 +102,7 @@ describe("FeatureCard", () => {
         const wrapper = await getWrapper(
             { has_user_story_planned: true, has_user_story_linked: true },
             {},
-            false
+            false,
         );
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
     });

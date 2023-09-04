@@ -52,7 +52,7 @@ describe("Create an export report", () => {
             "Real Name",
             new Date(2020),
             [],
-            []
+            [],
         );
 
         expect(report).toStrictEqual({

@@ -77,7 +77,7 @@ describe("ConfirmReplaceTokenModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled
+            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
@@ -115,10 +115,10 @@ describe("ConfirmReplaceTokenModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-patch-edit-token]").text()).toBe(
-            "Error message"
+            "Error message",
         );
         expect(
-            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled
+            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled,
         ).toBeTruthy();
     });
 
@@ -167,7 +167,7 @@ describe("ConfirmReplaceTokenModal", () => {
                 status: 404,
                 json: (): Promise<{ error: { code: number; message: string } }> =>
                     Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-            } as Response)
+            } as Response),
         );
 
         jest.spyOn(gitlab_error_handler, "handleError");

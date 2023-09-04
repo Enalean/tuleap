@@ -61,7 +61,7 @@ describe(`TextAndFormat`, () => {
             controller: FormattedTextController(
                 DispatchEventsStub.buildNoOp(),
                 interpreter,
-                TEXT_FORMAT_TEXT
+                TEXT_FORMAT_TEXT,
             ),
         } as HostElement;
         return Object.assign(element, host);
@@ -126,8 +126,8 @@ describe(`TextAndFormat`, () => {
 
             expect(
                 getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
+                    "tuleap-artifact-modal-hidden",
+                ),
             ).toBe(false);
             expect(target.querySelector("[data-test=text-field-commonmark-preview]")).toBeNull();
             expect(target.querySelector("[data-test=text-field-error]")).toBeNull();
@@ -140,11 +140,11 @@ describe(`TextAndFormat`, () => {
 
             expect(
                 getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
+                    "tuleap-artifact-modal-hidden",
+                ),
             ).toBe(true);
             expect(
-                target.querySelector("[data-test=text-field-commonmark-preview]")
+                target.querySelector("[data-test=text-field-commonmark-preview]"),
             ).not.toBeNull();
             expect(target.querySelector("[data-test=text-field-error]")).toBeNull();
         });
@@ -160,12 +160,12 @@ describe(`TextAndFormat`, () => {
 
             expect(
                 getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
+                    "tuleap-artifact-modal-hidden",
+                ),
             ).toBe(true);
             expect(target.querySelector("[data-test=text-field-commonmark-preview]")).toBeNull();
             expect(getSelector("[data-test=text-field-error]").textContent).toContain(
-                "Interpretation failed !!!!!!!!"
+                "Interpretation failed !!!!!!!!",
             );
         });
     });
@@ -179,7 +179,7 @@ describe(`TextAndFormat`, () => {
             (disabled_entity, is_field_disabled, is_preview_loading) => {
                 const host = getHost({ disabled: is_field_disabled, is_preview_loading });
                 expect(isDisabled(host)).toBe(true);
-            }
+            },
         );
 
         it(`enables the text field when the field is not disabled and when it is not loading`, () => {

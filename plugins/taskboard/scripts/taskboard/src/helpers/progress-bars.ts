@@ -21,7 +21,7 @@ import type { RemainingEffort } from "../type";
 
 export function getWidthPercentage(
     initial_effort: number | null,
-    remaining_effort: RemainingEffort | null
+    remaining_effort: RemainingEffort | null,
 ): number {
     if (
         initial_effort === null ||

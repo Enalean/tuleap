@@ -27,7 +27,7 @@ describe("disabledIterationTrackerHelper", () => {
             const doc = createDocument();
 
             expect(() =>
-                disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(doc, "", [])
+                disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(doc, "", []),
             ).toThrowError("Iteration tracker element does not exist");
         });
 

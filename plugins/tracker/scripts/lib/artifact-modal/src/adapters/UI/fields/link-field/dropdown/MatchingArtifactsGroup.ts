@@ -29,7 +29,7 @@ import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 export const MatchingArtifactsGroup = {
     fromMatchingArtifact: (
         link_verifier: VerifyIsAlreadyLinked,
-        artifact: LinkableArtifact
+        artifact: LinkableArtifact,
     ): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),

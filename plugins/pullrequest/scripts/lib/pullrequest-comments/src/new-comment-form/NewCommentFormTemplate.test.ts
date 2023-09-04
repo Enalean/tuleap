@@ -49,14 +49,14 @@ describe("NewCommentFormTemplate", () => {
     });
 
     const getPresenter = (
-        config = NewCommentFormComponentConfigStub.withCancelActionAllowed()
+        config = NewCommentFormComponentConfigStub.withCancelActionAllowed(),
     ): NewCommentFormPresenter =>
         NewCommentFormPresenter.buildWithUpdatedComment(
             NewCommentFormPresenter.buildFromAuthor(
                 { avatar_url: "url/to/user_avatar.png" },
-                config
+                config,
             ),
-            "This is a new comment"
+            "This is a new comment",
         );
 
     it("When some content has been updated in the writing zone, then the controller should update the template", () => {
@@ -85,7 +85,7 @@ describe("NewCommentFormTemplate", () => {
         }
 
         writing_zone.dispatchEvent(
-            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
         );
 
         expect(host.controller.handleWritingZoneContentChange).toHaveBeenCalledOnce();
@@ -95,7 +95,7 @@ describe("NewCommentFormTemplate", () => {
         it("When the Cancel action is not allowed, then it should not be rendered", () => {
             const host = {
                 presenter: getPresenter(
-                    NewCommentFormComponentConfigStub.withCancelActionDisallowed()
+                    NewCommentFormComponentConfigStub.withCancelActionDisallowed(),
                 ),
             } as HostElement;
 
@@ -129,8 +129,8 @@ describe("NewCommentFormTemplate", () => {
 
             expect(
                 selectOrThrow(target, "[data-test=cancel-new-comment-button]").getAttribute(
-                    "disabled"
-                )
+                    "disabled",
+                ),
             ).toBeDefined();
         });
     });
@@ -146,8 +146,8 @@ describe("NewCommentFormTemplate", () => {
 
             expect(
                 selectOrThrow(target, "[data-test=submit-new-comment-button]").getAttribute(
-                    "disabled"
-                )
+                    "disabled",
+                ),
             ).toBeDefined();
             expect(selectOrThrow(target, "[data-test=comment-being-saved-spinner]")).toBeDefined();
         });
@@ -162,8 +162,8 @@ describe("NewCommentFormTemplate", () => {
 
             expect(
                 selectOrThrow(target, "[data-test=submit-new-comment-button]").getAttribute(
-                    "disabled"
-                )
+                    "disabled",
+                ),
             ).toBeDefined();
         });
 

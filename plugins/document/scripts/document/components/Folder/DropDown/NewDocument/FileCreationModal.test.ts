@@ -37,7 +37,7 @@ describe("FileCreationModal", () => {
 
     function getWrapper(
         dropped_file: File,
-        has_modal_error: boolean
+        has_modal_error: boolean,
     ): VueWrapper<InstanceType<typeof FileCreationModal>> {
         return shallowMount(FileCreationModal, {
             props: {

@@ -51,7 +51,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
             (expected_format: string) => {
                 createHiddenInput(doc, expected_format);
                 expect(getFormatOrDefault(doc, "123")).toStrictEqual(expected_format);
-            }
+            },
         );
     });
 
@@ -71,11 +71,11 @@ describe(`edit-follow-up-comment-helpers`, () => {
                 "beforeend",
                 `<div class="tracker_artifact_followup_comment_body">
                         <p>Some <strong>HTML</strong> content</p>
-                    </div>`
+                    </div>`,
             );
 
             expect(getTextAreaValue(comment_panel, TEXT_FORMAT_HTML)).toBe(
-                `<p>Some <strong>HTML</strong> content</p>`
+                `<p>Some <strong>HTML</strong> content</p>`,
             );
         });
 
@@ -85,7 +85,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     "beforeend",
                     `<div class="tracker_artifact_followup_comment_body">
                             Some Text content
-                        </div>`
+                        </div>`,
                 );
                 expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toBe("Some Text content");
             });
@@ -93,7 +93,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
             it(`defaults the textContent to empty string`, () => {
                 comment_panel.insertAdjacentHTML(
                     "beforeend",
-                    `<div class="tracker_artifact_followup_comment_body"></div>`
+                    `<div class="tracker_artifact_followup_comment_body"></div>`,
                 );
 
                 expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toBe("");
@@ -107,18 +107,18 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     `<div
                             class="tracker_artifact_followup_comment_body"
                             data-commonmark-source="Some **Markdown** content"
-                        ><p>Some <strong>Markdown</strong> content</p></div>`
+                        ><p>Some <strong>Markdown</strong> content</p></div>`,
                 );
 
                 expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toBe(
-                    "Some **Markdown** content"
+                    "Some **Markdown** content",
                 );
             });
 
             it(`defaults the attribute to empty string`, () => {
                 comment_panel.insertAdjacentHTML(
                     "beforeend",
-                    `<div class="tracker_artifact_followup_comment_body"><p>Some <strong>Markdown</strong> content</p></div>`
+                    `<div class="tracker_artifact_followup_comment_body"><p>Some <strong>Markdown</strong> content</p></div>`,
                 );
 
                 expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toBe("");
@@ -162,6 +162,6 @@ describe(`edit-follow-up-comment-helpers`, () => {
 function createHiddenInput(doc: Document, value: string): void {
     doc.body.insertAdjacentHTML(
         "beforeend",
-        `<input id="tracker_artifact_followup_comment_body_format_123" value="${value}">`
+        `<input id="tracker_artifact_followup_comment_body_format_123" value="${value}">`,
     );
 }

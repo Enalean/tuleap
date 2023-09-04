@@ -65,7 +65,7 @@ describe("Semantics store:", () => {
                         new Promise((resolve, reject) => {
                             resolveGetTracker = resolve;
                             rejectGetTracker = reject;
-                        })
+                        }),
                     );
 
                     state.is_field_by_tracker_id_loading[1] = false;
@@ -108,7 +108,7 @@ describe("Semantics store:", () => {
                     it("does not update fields", () => {
                         expect(context.commit).not.toHaveBeenCalledWith(
                             "update",
-                            expect.anything()
+                            expect.anything(),
                         );
                     });
                     it("stop loading", () => {
@@ -148,7 +148,7 @@ describe("Semantics store:", () => {
                                     field_id: 22,
                                 },
                             },
-                        })
+                        }),
                     );
                 });
 
@@ -187,7 +187,7 @@ describe("Semantics store:", () => {
                 });
                 it("returns false", () => {
                     expect(
-                        store.getters.is_field_label_available(state, getters)(1, "description")
+                        store.getters.is_field_label_available(state, getters)(1, "description"),
                     ).toBeFalsy();
                 });
             });
@@ -205,7 +205,10 @@ describe("Semantics store:", () => {
                     });
                     it("returns true", () => {
                         expect(
-                            store.getters.is_field_label_available(state, getters)(1, "description")
+                            store.getters.is_field_label_available(state, getters)(
+                                1,
+                                "description",
+                            ),
                         ).toBeTruthy();
                     });
                 });
@@ -216,7 +219,10 @@ describe("Semantics store:", () => {
                     });
                     it("returns false", () => {
                         expect(
-                            store.getters.is_field_label_available(state, getters)(1, "description")
+                            store.getters.is_field_label_available(state, getters)(
+                                1,
+                                "description",
+                            ),
                         ).toBeFalsy();
                     });
                 });

@@ -110,7 +110,7 @@ const postPullRequestUpdateCallback = strictInject(POST_PULL_REQUEST_UPDATE_CALL
 const can_user_edit_title = computed(
     (): boolean =>
         props.pull_request_info !== null &&
-        props.pull_request_info.user_can_update_title_and_description
+        props.pull_request_info.user_can_update_title_and_description,
 );
 
 watch(
@@ -130,7 +130,7 @@ watch(
 
             modal_instance.value.addEventListener(EVENT_TLP_MODAL_HIDDEN, close);
         }
-    }
+    },
 );
 
 onBeforeUnmount(() => {
@@ -156,7 +156,7 @@ async function saveTitle(): Promise<void> {
         (fault) => {
             is_saving.value = false;
             displayTuleapAPIFault(fault);
-        }
+        },
     );
 }
 

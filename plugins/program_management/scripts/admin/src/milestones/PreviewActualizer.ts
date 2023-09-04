@@ -35,7 +35,7 @@ export class PreviewActualizer {
         private readonly new_label: ReactiveLabel,
         private readonly example_labels: ReactiveLabelCollection,
         private readonly default_label_value: string,
-        private readonly default_sub_label_value: string
+        private readonly default_sub_label_value: string,
     ) {}
 
     static fromContainerAndTimeboxLabels(
@@ -44,22 +44,22 @@ export class PreviewActualizer {
         label_input: TimeboxLabel,
         sub_label_input: TimeboxLabel,
         default_label_value: string,
-        default_sub_label_value: string
+        default_sub_label_value: string,
     ): PreviewActualizer {
         const timebox_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
             retriever,
             LABEL_SELECTOR,
-            label_input
+            label_input,
         );
         const new_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
             retriever,
             NEW_LABEL_SELECTOR,
-            sub_label_input
+            sub_label_input,
         );
         const example_labels = ReactiveLabelCollection.fromSelectorAndTimeboxLabel(
             retriever,
             EXAMPLE_LABEL_SELECTOR,
-            sub_label_input
+            sub_label_input,
         );
         return new PreviewActualizer(
             gettext_provider,
@@ -67,7 +67,7 @@ export class PreviewActualizer {
             new_label,
             example_labels,
             default_label_value,
-            default_sub_label_value
+            default_sub_label_value,
         );
     }
 
@@ -77,10 +77,10 @@ export class PreviewActualizer {
 
     initTimeboxPreview(): void {
         this.timebox_label.reactOnLabelChange((value: string) =>
-            value !== "" ? value : this.default_label_value
+            value !== "" ? value : this.default_label_value,
         );
         this.new_label.reactOnLabelChange((text) =>
-            sprintf(this.gettext_provider.gettext("New %s"), this.defaultSubLabelValue(text))
+            sprintf(this.gettext_provider.gettext("New %s"), this.defaultSubLabelValue(text)),
         );
         this.example_labels.reactOnLabelChange((text, index, length) => {
             const defaulted_value = this.defaultSubLabelValue(text);

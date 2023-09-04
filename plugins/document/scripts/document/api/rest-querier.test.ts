@@ -217,7 +217,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "folder",
                 } as RestFolder,
-                2
+                2,
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/folders", {
@@ -242,7 +242,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "file",
                 } as PostRestItemFile,
-                2
+                2,
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/files", {
@@ -268,7 +268,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "empty",
                 } as RestEmpty,
-                2
+                2,
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/empties", {
@@ -294,7 +294,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "wiki",
                 } as RestWiki,
-                2
+                2,
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/wikis", {
@@ -322,7 +322,7 @@ describe("rest-querier", () => {
                     type: "link",
                     link_properties: { link_url: "http://example.test" },
                 } as RestLink,
-                2
+                2,
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/links", {
@@ -354,7 +354,7 @@ describe("rest-querier", () => {
                 version_title,
                 change_log,
                 should_lock_file,
-                approval_table_action
+                approval_table_action,
             );
         });
     });
@@ -400,7 +400,7 @@ describe("rest-querier", () => {
                 version_title,
                 change_log,
                 should_lock_file,
-                approval_table_action
+                approval_table_action,
             );
         });
     });
@@ -413,7 +413,7 @@ describe("rest-querier", () => {
             const result = await getProjectUserGroups(102);
 
             expect(tlpGet).toHaveBeenCalledWith(
-                "/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
+                "/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D",
             );
             expect(result).toEqual([]);
         });
@@ -466,7 +466,7 @@ describe("rest-querier", () => {
                     },
                     sort: null,
                 },
-                170
+                170,
             );
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
@@ -567,7 +567,7 @@ describe("rest-querier", () => {
             await searchInFolder(
                 101,
                 buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-                170
+                170,
             );
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {

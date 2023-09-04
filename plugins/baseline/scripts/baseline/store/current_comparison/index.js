@@ -62,7 +62,7 @@ export default {
 
         async compareArtifacts(
             { commit, dispatch, getters },
-            { base_artifacts, compared_to_artifacts }
+            { base_artifacts, compared_to_artifacts },
         ) {
             const artifacts_comparison = compareArtifacts(base_artifacts, compared_to_artifacts);
             commit("incrementStatistics", artifacts_comparison);
@@ -70,17 +70,17 @@ export default {
             let comparisons = artifacts_comparison.identical_or_modified.map(
                 async ({ base, compared_to }) => {
                     const linked_base_artifacts = getters["base/findArtifactsByIds"](
-                        base.linked_artifact_ids
+                        base.linked_artifact_ids,
                     );
                     const linked_compared_to_artifacts = getters["compared_to/findArtifactsByIds"](
-                        compared_to.linked_artifact_ids
+                        compared_to.linked_artifact_ids,
                     );
 
                     await dispatch("compareArtifacts", {
                         base_artifacts: linked_base_artifacts,
                         compared_to_artifacts: linked_compared_to_artifacts,
                     });
-                }
+                },
             );
             await Promise.all(comparisons);
         },
@@ -111,11 +111,11 @@ export default {
         all_trackers: (state, getters) =>
             ArrayUtils.uniqueByAttribute(
                 [...getters["base/all_trackers"], ...getters["compared_to/all_trackers"]],
-                "id"
+                "id",
             ),
         filterArtifacts: (state) => (artifacts) =>
             artifacts.filter(
-                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1,
             ),
     },
 

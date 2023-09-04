@@ -19,7 +19,10 @@
  */
 
 #project-creation-success-modal {
-    transition: opacity 100ms ease-out, transform 200ms ease-out, box-shadow 100ms ease-out;
+    transition:
+        opacity 100ms ease-out,
+        transform 200ms ease-out,
+        box-shadow 100ms ease-out;
 
     &.tlp-modal-shown {
         transform: translateY(30%);

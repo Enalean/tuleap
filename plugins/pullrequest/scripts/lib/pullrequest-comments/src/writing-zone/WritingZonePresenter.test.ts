@@ -83,7 +83,7 @@ describe("WritingZonePresenter", () => {
 
     it("buildPreviewMode() should return a presenter with is_focused and is_in_preview_mode being true + previewed_content set", () => {
         expect(
-            WritingZonePresenter.buildPreviewMode(initial_presenter, "<p>Previewed content</p>")
+            WritingZonePresenter.buildPreviewMode(initial_presenter, "<p>Previewed content</p>"),
         ).toStrictEqual({
             initial_content: "",
             previewed_content: "<p>Previewed content</p>",
@@ -98,7 +98,7 @@ describe("WritingZonePresenter", () => {
 
     it("buildWithContent() should return a presenter with initial_content being the provided string", () => {
         expect(
-            WritingZonePresenter.buildWithContent(initial_presenter, "This is new content")
+            WritingZonePresenter.buildWithContent(initial_presenter, "This is new content"),
         ).toStrictEqual({
             initial_content: "This is new content",
             previewed_content: "",

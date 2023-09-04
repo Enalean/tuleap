@@ -22,7 +22,7 @@ interface GettextCatalog {
         nb_items: number,
         singular_form: string,
         plural_form: string,
-        params: Record<string, string>
+        params: Record<string, string>,
     ) => string;
 }
 
@@ -37,5 +37,5 @@ export const getCollapsibleSectionLabel = (nb_lines: number): string =>
         nb_lines,
         "... Skipped 1 common line",
         "... Skipped {{ $count }} common lines",
-        {}
+        {},
     );

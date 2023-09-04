@@ -104,12 +104,12 @@ function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string
             if (new_status === "blocked" || new_status === "failed") {
                 cy.get("[data-test=backlog-item-icon]").should(
                     "have.class",
-                    "test-plan-backlog-item-coverage-icon-" + new_status
+                    "test-plan-backlog-item-coverage-icon-" + new_status,
                 );
             } else {
                 cy.get("[data-test=backlog-item-icon]").should(
                     "have.class",
-                    "test-plan-backlog-item-coverage-icon-notrun"
+                    "test-plan-backlog-item-coverage-icon-notrun",
                 );
             }
         })
@@ -119,7 +119,7 @@ function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string
         .within(() => {
             cy.get("[data-test=test-status-icon]").should(
                 "have.class",
-                `test-plan-test-definition-icon-status-${new_status}`
+                `test-plan-test-definition-icon-status-${new_status}`,
             );
         });
 }

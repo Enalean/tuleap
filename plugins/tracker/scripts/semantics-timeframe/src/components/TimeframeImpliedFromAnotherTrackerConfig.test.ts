@@ -66,7 +66,7 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
         expect(
             wrapper
                 .find("[data-test=error-message-other-trackers-implying-their-timeframe]")
-                .exists()
+                .exists(),
         ).toBe(true);
     });
 

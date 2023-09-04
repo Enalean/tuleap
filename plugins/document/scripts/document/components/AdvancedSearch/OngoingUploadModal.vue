@@ -91,7 +91,7 @@ const progress = computed((): number => {
             }
 
             return sum_progress;
-        }, 0) / files_uploads_list.value.length
+        }, 0) / files_uploads_list.value.length,
     );
 });
 

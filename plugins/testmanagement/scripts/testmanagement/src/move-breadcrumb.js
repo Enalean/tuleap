@@ -22,7 +22,7 @@ export function moveBreadCrumbs(
     project_url,
     project_icon,
     ttm_admin_url,
-    ttm_admin_label
+    ttm_admin_label,
 ) {
     window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");

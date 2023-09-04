@@ -69,7 +69,7 @@ export class OptionsBuilder {
 
     withNewItemButton(
         clicked_callback: LazyboxNewItemClickedCallback,
-        label_callback: LazyboxNewItemLabelCallback
+        label_callback: LazyboxNewItemLabelCallback,
     ): this {
         this.#new_item_clicked_callback = clicked_callback;
         this.#new_item_label_callback = label_callback;

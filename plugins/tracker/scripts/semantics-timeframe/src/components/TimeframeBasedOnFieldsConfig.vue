@@ -146,7 +146,7 @@ onMounted((): void => {
     user_selected_end_date_field_id.value = props.selected_end_date_field_id;
     user_selected_duration_field_id.value = props.selected_duration_field_id;
     is_in_start_date_duration_mode.value = Boolean(
-        props.selected_start_date_field_id !== "" && props.selected_duration_field_id !== ""
+        props.selected_start_date_field_id !== "" && props.selected_duration_field_id !== "",
     );
 });
 
@@ -156,13 +156,13 @@ function toggleTimeframeMode(mode: string): void {
 
 const suitable_start_date_fields = computed((): TrackerField[] => {
     return props.usable_date_fields.filter(
-        (date_field) => date_field.id !== user_selected_end_date_field_id.value
+        (date_field) => date_field.id !== user_selected_end_date_field_id.value,
     );
 });
 
 const suitable_end_date_fields = computed((): TrackerField[] => {
     return props.usable_date_fields.filter(
-        (date_field) => date_field.id !== user_selected_start_date_field_id.value
+        (date_field) => date_field.id !== user_selected_start_date_field_id.value,
     );
 });
 </script>

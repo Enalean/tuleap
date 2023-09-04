@@ -38,7 +38,7 @@ export function isMatchingFilterValue(s: string | null, keywords: string): boole
     const regex = new RegExp(
         "(?:^|\\W)(?:" +
             lower_case_keywords.map((keyword) => escape(keyword)).join("|") +
-            ")(?:\\W|$)"
+            ")(?:\\W|$)",
     );
 
     return regex.test(lower_case_string);

@@ -22,7 +22,7 @@ import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export function formatDateUsingPreferredUserFormat(
     date: string,
-    user_preferred_format: string
+    user_preferred_format: string,
 ): string {
     return moment(date).format(formatFromPhpToMoment(user_preferred_format));
 }

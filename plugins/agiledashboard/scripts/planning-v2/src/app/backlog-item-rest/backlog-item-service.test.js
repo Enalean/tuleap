@@ -49,7 +49,7 @@ describe("BacklogItemService", () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -185,7 +185,7 @@ describe("BacklogItemService", () => {
                 {
                     direction: "after",
                     item_id: 265,
-                }
+                },
             );
 
             await expect(wrapPromise(promise)).resolves.toBeTruthy();

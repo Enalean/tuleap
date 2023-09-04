@@ -32,7 +32,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/core/platform-admin-banner/"
+        "/assets/core/platform-admin-banner/",
     ),
     externals: {
         tlp: "tlp",

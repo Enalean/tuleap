@@ -90,13 +90,13 @@ describe(`FileFieldsUploader`, () => {
             {
                 file_id: THIRD_FILE_ID,
                 upload_href: `/uploads/tracker/file/${THIRD_FILE_ID}`,
-            }
+            },
         );
 
         upload_finisher = FinishFileUploadStub.withSuccessiveFiles(
             { file_id: FIRST_FILE_ID },
             { file_id: SECOND_FILE_ID },
-            { file_id: THIRD_FILE_ID }
+            { file_id: THIRD_FILE_ID },
         );
     });
 
@@ -177,7 +177,7 @@ describe(`FileFieldsUploader`, () => {
 
     it(`when there is an error while creating any file upload, it returns a specialized Fault`, async () => {
         upload_creator = CreateFileUploadStub.withFault(
-            Fault.fromMessage("Error while creating a new file upload")
+            Fault.fromMessage("Error while creating a new file upload"),
         );
 
         const result = await uploadAll();
@@ -193,7 +193,7 @@ describe(`FileFieldsUploader`, () => {
 
     it(`when there is an error while uploading any file, it returns a specialized Fault`, async () => {
         upload_finisher = FinishFileUploadStub.withFault(
-            Fault.fromMessage("Error during file upload")
+            Fault.fromMessage("Error during file upload"),
         );
 
         const result = await uploadAll();

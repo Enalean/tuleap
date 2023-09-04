@@ -265,7 +265,7 @@ export default class ProjectInformation extends Vue {
                 "/projects/" +
                     encodeURIComponent(this.name_properties.slugified_name) +
                     "/?" +
-                    params
+                    params,
             );
         } else {
             this.$router.push("approval");

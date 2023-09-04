@@ -26,7 +26,7 @@ import type {
 
 export function getTraceabilityMatrix(
     executions_map: ExecutionsForCampaignMap,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
 ): TraceabilityMatrixElement[] {
     const matrix_map: Map<number, TraceabilityMatrixElement> = new Map();
 

@@ -25,7 +25,7 @@ import type { VueGettextProvider } from "../../../vue-gettext-provider";
 export function downloadXLSX(
     gettext_provider: VueGettextProvider,
     milestone_title: string,
-    report: ExportReport
+    report: ExportReport,
 ): void {
     const book = utils.book_new();
     const sheet = transformAReportIntoASheet(report);
@@ -34,8 +34,8 @@ export function downloadXLSX(
         book,
         gettext_provider.interpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
-            { milestone_title }
+            { milestone_title },
         ) + ".xlsx",
-        { bookSST: true }
+        { bookSST: true },
     );
 }

@@ -21,7 +21,7 @@ import type { Card, Swimlane } from "../type";
 
 export function isDraggedOverTheSourceCell(
     target_cell: HTMLElement,
-    source_cell: HTMLElement
+    source_cell: HTMLElement,
 ): boolean {
     return (
         target_cell.dataset.columnId === source_cell.dataset.columnId &&
@@ -31,7 +31,7 @@ export function isDraggedOverTheSourceCell(
 
 export function isDraggedOverAnotherSwimlane(
     target_cell: HTMLElement,
-    source_cell: HTMLElement
+    source_cell: HTMLElement,
 ): boolean {
     return target_cell.dataset.swimlaneId !== source_cell.dataset.swimlaneId;
 }
@@ -42,7 +42,7 @@ export function getCardFromSwimlane(swimlane: Swimlane, card_element?: HTMLEleme
     }
 
     const card = swimlane.children_cards.find(
-        (card) => card.id === Number(card_element.dataset.cardId)
+        (card) => card.id === Number(card_element.dataset.cardId),
     );
 
     return card || null;

@@ -32,7 +32,7 @@ export function build(
     is_user_administrator: boolean,
     user_locale: string,
     owners: Array<RepositoryOwner>,
-    external_plugins_enabled: Array<ExternalPlugins>
+    external_plugins_enabled: Array<ExternalPlugins>,
 ): void {
     current_user_id = user_id;
     current_project_id = project_id;

@@ -71,14 +71,14 @@
                             <p class="tlp-text-info gitlab-test-info-form-token-modal">
                                 {{
                                     $gettext(
-                                        "The access token will be used to fetch repositories, configure project hooks and automatically write comments on GitLab commit and merge requests. It will also be used to extract references to Tuleap from GitLab tags."
+                                        "The access token will be used to fetch repositories, configure project hooks and automatically write comments on GitLab commit and merge requests. It will also be used to extract references to Tuleap from GitLab tags.",
                                     )
                                 }}
                             </p>
                             <p class="tlp-text-info">
                                 {{
                                     $gettext(
-                                        "GitLab access token scope must contain at least: api."
+                                        "GitLab access token scope must contain at least: api.",
                                     )
                                 }}
                             </p>
@@ -145,7 +145,7 @@ const is_fetching_groups = ref(false);
 const form: Ref<HTMLFormElement | null> = ref(null);
 
 const is_fetching_gitlab_groups_disabled = computed(
-    () => !gitlab_server_url.value || !gitlab_access_token.value || is_fetching_groups.value
+    () => !gitlab_server_url.value || !gitlab_access_token.value || is_fetching_groups.value,
 );
 
 const isNetworkFault = (fault: Fault): boolean =>
@@ -192,14 +192,14 @@ function onClickFetchGitLabGroups(event: Event): void {
             (fault) => {
                 if (isNetworkFault(fault)) {
                     error_message.value = $gettext(
-                        "Network error while fetching the GitLab groups. Please verify your GitLab server url validity."
+                        "Network error while fetching the GitLab groups. Please verify your GitLab server url validity.",
                     );
                     return;
                 }
 
                 if (isGitLabCredentialsFault(fault)) {
                     error_message.value = $gettext(
-                        "Unable to connect to the GitLab server, please check your credentials."
+                        "Unable to connect to the GitLab server, please check your credentials.",
                     );
 
                     return;
@@ -208,9 +208,9 @@ function onClickFetchGitLabGroups(event: Event): void {
                 error_message.value = interpolate(
                     $gettext("Unable to reach the GitLab server: %{ error }"),
                     { error: String(fault) },
-                    true
+                    true,
                 );
-            }
+            },
         )
         .finally(() => {
             is_fetching_groups.value = false;

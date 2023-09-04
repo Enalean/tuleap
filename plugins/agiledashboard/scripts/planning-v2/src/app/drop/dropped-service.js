@@ -13,7 +13,7 @@ function DroppedService(
     ProjectService,
     MilestoneService,
     BacklogItemService,
-    RestErrorService
+    RestErrorService,
 ) {
     return {
         defineComparedTo: defineComparedTo,
@@ -32,7 +32,7 @@ function DroppedService(
         const diff_item_list = item_list.filter(
             (item) =>
                 !dropped_items.some((dropped_item) => dropped_item.id === item.id) ||
-                dragged_item.id === item.id
+                dragged_item.id === item.id,
         );
         var compared_to = {};
 
@@ -92,13 +92,13 @@ function DroppedService(
             promise = ProjectService.reorderBacklog(
                 backlog.rest_route_id,
                 dropped_item_ids,
-                compared_to
+                compared_to,
             );
         } else if (backlog.rest_base_route === "milestones" && compared_to) {
             promise = MilestoneService.reorderBacklog(
                 backlog.rest_route_id,
                 dropped_item_ids,
-                compared_to
+                compared_to,
             );
         }
 
@@ -112,7 +112,7 @@ function DroppedService(
         var promise = MilestoneService.reorderContent(
             submilestone_id,
             dropped_item_ids,
-            compared_to
+            compared_to,
         );
 
         catchRestError(promise);
@@ -124,7 +124,7 @@ function DroppedService(
         var promise = BacklogItemService.reorderBacklogItemChildren(
             backlog_item_id,
             dropped_item_ids,
-            compared_to
+            compared_to,
         );
 
         catchRestError(promise);
@@ -139,7 +139,7 @@ function DroppedService(
             promise = MilestoneService.addReorderToContent(
                 submilestone_id,
                 dropped_item_ids,
-                compared_to
+                compared_to,
             );
         } else {
             promise = MilestoneService.addToContent(submilestone_id, dropped_item_ids);
@@ -154,7 +154,7 @@ function DroppedService(
         dropped_item_ids,
         compared_to,
         source_backlog_item_id,
-        dest_backlog_item_id
+        dest_backlog_item_id,
     ) {
         var promise;
 
@@ -163,13 +163,13 @@ function DroppedService(
                 source_backlog_item_id,
                 dest_backlog_item_id,
                 dropped_item_ids,
-                compared_to
+                compared_to,
             );
         } else {
             promise = BacklogItemService.removeAddBacklogItemChildren(
                 source_backlog_item_id,
                 dest_backlog_item_id,
-                dropped_item_ids
+                dropped_item_ids,
             );
         }
 
@@ -182,7 +182,7 @@ function DroppedService(
         dropped_item_ids,
         compared_to,
         submilestone_id,
-        backlog
+        backlog,
     ) {
         var promise;
 
@@ -192,13 +192,13 @@ function DroppedService(
                     submilestone_id,
                     backlog.rest_route_id,
                     dropped_item_ids,
-                    compared_to
+                    compared_to,
                 );
             } else {
                 promise = ProjectService.removeAddToBacklog(
                     submilestone_id,
                     backlog.rest_route_id,
-                    dropped_item_ids
+                    dropped_item_ids,
                 );
             }
         } else if (backlog.rest_base_route === "milestones") {
@@ -207,13 +207,13 @@ function DroppedService(
                     submilestone_id,
                     backlog.rest_route_id,
                     dropped_item_ids,
-                    compared_to
+                    compared_to,
                 );
             } else {
                 promise = MilestoneService.removeAddToBacklog(
                     submilestone_id,
                     backlog.rest_route_id,
-                    dropped_item_ids
+                    dropped_item_ids,
                 );
             }
         }
@@ -228,7 +228,7 @@ function DroppedService(
         dropped_item_ids,
         compared_to,
         source_submilestone_id,
-        dest_submilestone_id
+        dest_submilestone_id,
     ) {
         var promise;
 
@@ -237,13 +237,13 @@ function DroppedService(
                 source_submilestone_id,
                 dest_submilestone_id,
                 dropped_item_ids,
-                compared_to
+                compared_to,
             );
         } else {
             promise = MilestoneService.removeAddToContent(
                 source_submilestone_id,
                 dest_submilestone_id,
-                dropped_item_ids
+                dropped_item_ids,
             );
         }
 

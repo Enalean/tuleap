@@ -75,7 +75,7 @@ export async function updateTransitionRulesEnforcement(context, new_enforcement)
         const tracker_id = context.getters.current_tracker_id;
         const updated_tracker = await restUpdateTransitionRulesEnforcement(
             tracker_id,
-            new_enforcement
+            new_enforcement,
         );
         context.commit("saveCurrentTracker", updated_tracker);
     } catch (exception) {
@@ -91,7 +91,7 @@ export async function changeWorkflowMode(context, is_workflow_advanced) {
         context.commit("beginWorkflowModeChange");
         const updated_tracker = await restChangeWorkflowMode(
             context.getters.current_tracker_id,
-            is_workflow_advanced
+            is_workflow_advanced,
         );
         context.commit("saveCurrentTracker", updated_tracker);
     } catch (exception) {
@@ -109,7 +109,7 @@ export async function createTransition(context, transition) {
         const response = await restCreateTransition(
             tracker_id,
             transition.from_id,
-            transition.to_id
+            transition.to_id,
         );
         const new_transition = {
             id: response.id,

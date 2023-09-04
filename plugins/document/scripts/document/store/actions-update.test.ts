@@ -123,7 +123,7 @@ describe("actions-update", () => {
                 "",
                 dropped_file,
                 NO_LOCK,
-                null
+                null,
             );
         });
     });
@@ -181,7 +181,7 @@ describe("actions-update", () => {
             expect(createNewVersion).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
             expect(uploadVersion).not.toHaveBeenCalled();
         });
@@ -207,7 +207,7 @@ describe("actions-update", () => {
             expect(createNewVersion).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
             expect(uploadVersion).not.toHaveBeenCalled();
         });
@@ -251,7 +251,7 @@ describe("actions-update", () => {
             expect(postEmbeddedFile).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
         });
     });
@@ -297,7 +297,7 @@ describe("actions-update", () => {
             expect(postWiki).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
         });
     });
@@ -345,7 +345,7 @@ describe("actions-update", () => {
             expect(postLinkVersion).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
         });
     });
@@ -392,16 +392,16 @@ describe("actions-update", () => {
             });
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                updated_item
+                updated_item,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                updated_item
+                updated_item,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
-                updated_item
+                updated_item,
             );
         });
 
@@ -432,16 +432,16 @@ describe("actions-update", () => {
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", { item });
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                updated_item
+                updated_item,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                updated_item
+                updated_item,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
-                updated_item
+                updated_item,
             );
         });
 
@@ -476,16 +476,16 @@ describe("actions-update", () => {
             expect(emit).toHaveBeenCalledWith("item-is-being-uploaded");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                updated_item
+                updated_item,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                updated_item
+                updated_item,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
-                updated_item
+                updated_item,
             );
         });
 
@@ -514,20 +514,20 @@ describe("actions-update", () => {
             expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
-                expect.anything()
+                expect.anything(),
             );
             expect(getItem).not.toHaveBeenCalled();
             expect(context.commit).not.toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                updated_item
+                updated_item,
             );
             expect(context.commit).not.toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                updated_item
+                updated_item,
             );
             expect(context.commit).not.toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
-                updated_item
+                updated_item,
             );
         });
     });

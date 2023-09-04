@@ -130,7 +130,7 @@ export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldV
 
 export type TransformStepDefFieldValue<StepDefFieldValue> = (
     base_url: string,
-    value: ArtifactReportResponseStepDefinitionFieldValue
+    value: ArtifactReportResponseStepDefinitionFieldValue,
 ) => StepDefFieldValue;
 
 export type ArtifactFieldValue<StepDefFieldValue> =

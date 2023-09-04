@@ -23,7 +23,7 @@ export { WEB_UI_SESSION } from "./commands";
 export type ReloadCallback = () => void;
 export type ConditionPredicate = (
     number_of_attempts: number,
-    max_attempts: number
+    max_attempts: number,
 ) => PromiseLike<boolean>;
 
 declare global {
@@ -63,7 +63,7 @@ declare global {
 
             postFromTuleapApi(
                 url: string,
-                payload: Record<string, unknown>
+                payload: Record<string, unknown>,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ): Chainable<Response<any>>;
 
@@ -75,7 +75,7 @@ declare global {
                 reloadCallback: ReloadCallback,
                 conditionCallback: ConditionPredicate,
                 max_attempts_reached_message: string,
-                number_of_attempts?: number
+                number_of_attempts?: number,
             ): PromiseLike<void>;
 
             createNewPublicProject(project_name: string, xml_template: string): Chainable<number>;
@@ -96,16 +96,16 @@ declare global {
 
             searchItemInLazyboxDropdown(
                 query: string,
-                dropdown_item_label: string
+                dropdown_item_label: string,
             ): Chainable<JQuery<HTMLElement>>;
 
             searchItemInListPickerDropdown(
-                dropdown_item_label: string
+                dropdown_item_label: string,
             ): Chainable<JQuery<HTMLElement>>;
 
             assertUserMessagesReceivedByWithSpecificContent(
                 email: string,
-                specific_content_of_mail: string
+                specific_content_of_mail: string,
             ): void;
         }
     }

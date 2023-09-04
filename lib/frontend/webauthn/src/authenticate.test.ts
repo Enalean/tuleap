@@ -40,7 +40,7 @@ describe("authenticate", () => {
         it(`returns Ok with null`, async () => {
             vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                okAsync({} as PublicKeyCredentialRequestOptionsJSON)
+                okAsync({} as PublicKeyCredentialRequestOptionsJSON),
             );
 
             const result = await canUserDoWebAuthn();
@@ -62,7 +62,7 @@ describe("authenticate", () => {
             it will return a special Fault`, async () => {
             vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(TuleapAPIFault.fromCodeAndMessage(403, "Forbidden"))
+                errAsync(TuleapAPIFault.fromCodeAndMessage(403, "Forbidden")),
             );
 
             const result = await canUserDoWebAuthn();
@@ -75,7 +75,7 @@ describe("authenticate", () => {
         it(`returns a special Fault when the call to authentication-challenge returns another error`, async () => {
             vi.spyOn(simplewebauthn, "browserSupportsWebAuthn").mockReturnValue(true);
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(Fault.fromMessage("Network error"))
+                errAsync(Fault.fromMessage("Network error")),
             );
 
             const result = await canUserDoWebAuthn();
@@ -93,7 +93,7 @@ describe("authenticate", () => {
             const EXPECTED_TIMEOUT_IN_MILLISECONDS = 30_000;
             const response_JSON = AuthenticationResponseJSONStub();
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                okAsync({} as PublicKeyCredentialRequestOptionsJSON)
+                okAsync({} as PublicKeyCredentialRequestOptionsJSON),
             );
             const startAuthentication = vi
                 .spyOn(simplewebauthn, "startAuthentication")
@@ -109,7 +109,7 @@ describe("authenticate", () => {
             and the call to authentication-challenge returns Forbidden error code,
             it will return Ok`, async () => {
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(TuleapAPIFault.fromCodeAndMessage(403, "Forbidden"))
+                errAsync(TuleapAPIFault.fromCodeAndMessage(403, "Forbidden")),
             );
 
             const result = await getAuthenticationResult();
@@ -118,7 +118,7 @@ describe("authenticate", () => {
 
         it(`returns Err when the call to authentication-challenge returns an error`, async () => {
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                errAsync(Fault.fromMessage("Ooops"))
+                errAsync(Fault.fromMessage("Ooops")),
             );
 
             const result = await getAuthenticationResult();
@@ -130,7 +130,7 @@ describe("authenticate", () => {
 
         it(`returns Err when passkey authentication failed`, async () => {
             vi.spyOn(fetch_result, "postJSON").mockReturnValue(
-                okAsync({} as PublicKeyCredentialRequestOptionsJSON)
+                okAsync({} as PublicKeyCredentialRequestOptionsJSON),
             );
             vi.spyOn(simplewebauthn, "startAuthentication").mockRejectedValue(new Error("failed"));
 

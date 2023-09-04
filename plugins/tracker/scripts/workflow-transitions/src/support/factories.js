@@ -123,7 +123,7 @@ const evaluateAttributesAsFunction = (instance) =>
 function getDefaultAttributes(factory_name) {
     if (!Object.prototype.hasOwnProperty.call(factories, factory_name)) {
         throw new Error(
-            `No factory found with name [${factory_name}]. Did you register this new factory?`
+            `No factory found with name [${factory_name}]. Did you register this new factory?`,
         );
     }
     const factory = factories[factory_name];

@@ -37,7 +37,7 @@
                         v-dompurify-html="step.raw_expected_results"
                         v-bind:class="{
                             'ttm-definition-step-description-text': is_text(
-                                step.description_format
+                                step.description_format,
                             ),
                         }"
                     ></div>

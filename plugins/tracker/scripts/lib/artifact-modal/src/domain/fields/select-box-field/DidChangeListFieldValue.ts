@@ -27,7 +27,7 @@ export type DidChangeListFieldValue = DomainEvent<"DidChangeListFieldValue"> & {
 
 export const DidChangeListFieldValue = (
     field_id: number,
-    bind_value_ids: ReadonlyArray<BindValueId>
+    bind_value_ids: ReadonlyArray<BindValueId>,
 ): DidChangeListFieldValue => ({
     type: "DidChangeListFieldValue",
     field_id,

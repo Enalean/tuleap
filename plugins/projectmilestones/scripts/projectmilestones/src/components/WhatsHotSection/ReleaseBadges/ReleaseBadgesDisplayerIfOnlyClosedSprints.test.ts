@@ -36,7 +36,7 @@ describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseBadgesDisplayerIfOnlyClosedSprints>> {
         store = createStoreMock(store_options);
 

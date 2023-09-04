@@ -43,7 +43,7 @@ describe("FileDiffPlaceholder", () => {
 
             const placeholder = selectOrThrow(
                 target,
-                "[data-test=pullrequest-file-diff-placeholder]"
+                "[data-test=pullrequest-file-diff-placeholder]",
             );
 
             expect(Array.from(placeholder.classList)).toStrictEqual([
@@ -64,7 +64,7 @@ describe("FileDiffPlaceholder", () => {
 
             const placeholder = selectOrThrow(
                 target,
-                "[data-test=pullrequest-file-diff-placeholder]"
+                "[data-test=pullrequest-file-diff-placeholder]",
             );
 
             expect(Array.from(placeholder.classList)).toStrictEqual([

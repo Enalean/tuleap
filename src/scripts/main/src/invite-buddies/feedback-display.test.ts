@@ -50,7 +50,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(2);
@@ -72,7 +72,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
             displaySuccess(
                 ["wendy@example.com"],
@@ -83,7 +83,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
@@ -105,7 +105,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
@@ -129,7 +129,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
@@ -153,7 +153,7 @@ describe("feedback-display", () => {
                     known_users_not_alive: [],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
@@ -177,7 +177,7 @@ describe("feedback-display", () => {
                     ],
                     known_users_are_restricted: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
@@ -202,7 +202,7 @@ describe("feedback-display", () => {
                         { email: "peter@example.com", display_name: "Peter Pan (pan)" },
                     ],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);

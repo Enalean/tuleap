@@ -25,12 +25,12 @@ import { EditorAreaState } from "./EditorAreaState";
 export class FlamingParrotEditorAreaBuilder implements FormatSelectorInterface {
     constructor(
         private readonly doc: FlamingParrotDocumentAdapter,
-        private readonly renderer: EditorAreaRenderer
+        private readonly renderer: EditorAreaRenderer,
     ) {}
 
     public insertFormatSelectbox(
         textarea: HTMLTextAreaElement,
-        presenter: FormatSelectorPresenter
+        presenter: FormatSelectorPresenter,
     ): void {
         const mount_point = this.doc.createAndInsertMountPoint(textarea);
         const state = new EditorAreaState(mount_point, textarea, presenter);

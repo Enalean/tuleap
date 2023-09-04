@@ -41,7 +41,7 @@ describe("DropDownContentRenderer", () => {
             select,
             dropdown_list,
             items_map_manager,
-            gettext_provider
+            gettext_provider,
         );
     }
 
@@ -58,7 +58,7 @@ describe("DropDownContentRenderer", () => {
         beforeEach(() => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
                 doc,
-                select
+                select,
             ).renderBaseComponent();
 
             dropdown = dropdown_element;
@@ -95,7 +95,7 @@ describe("DropDownContentRenderer", () => {
             renderer.renderListPickerDropdownContent();
 
             const disabled_list_item = dropdown.querySelector(
-                ".list-picker-dropdown-option-value-disabled"
+                ".list-picker-dropdown-option-value-disabled",
             );
 
             expect(disabled_list_item).not.toBeNull();
@@ -109,7 +109,7 @@ describe("DropDownContentRenderer", () => {
                 select,
                 {
                     is_filterable: true,
-                }
+                },
             ).renderBaseComponent();
 
             dropdown = dropdown_element;
@@ -179,7 +179,7 @@ describe("DropDownContentRenderer", () => {
         beforeEach(() => {
             const { dropdown_list_element } = new BaseComponentRenderer(
                 doc,
-                select
+                select,
             ).renderBaseComponent();
 
             dropdown_list = dropdown_list_element;

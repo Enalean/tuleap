@@ -207,7 +207,7 @@ describe("CrossTrackerWidget", () => {
             expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "switchReportToSaved",
-                expect.any(String)
+                expect.any(String),
             );
         });
     });

@@ -22,7 +22,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 export function getInternationalizedTestStatus(
     gettext_provider: GettextProvider,
-    test_status: ArtifactFieldValueStatus
+    test_status: ArtifactFieldValueStatus,
 ): string {
     switch (test_status) {
         case null:

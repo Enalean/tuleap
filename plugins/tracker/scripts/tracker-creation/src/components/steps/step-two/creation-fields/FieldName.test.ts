@@ -29,7 +29,7 @@ describe("FieldName", () => {
 
     async function getWrapper(
         can_display_slugify_mode: boolean,
-        is_name_already_used = false
+        is_name_already_used = false,
     ): Promise<Wrapper<FieldName>> {
         return shallowMount(FieldName, {
             mocks: {
@@ -78,7 +78,7 @@ describe("FieldName", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setTrackerName",
-            input_element.value
+            input_element.value,
         );
     });
 

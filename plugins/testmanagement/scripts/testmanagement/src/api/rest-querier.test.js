@@ -51,7 +51,7 @@ describe("rest querier", () => {
                         limit: 10,
                         query: '{"status":"open","milestone_id":26}',
                     },
-                }
+                },
             );
             expect(result).toEqual(campaigns);
         });
@@ -79,7 +79,7 @@ describe("rest querier", () => {
                         limit: 100,
                         report_id,
                     },
-                }
+                },
             );
             expect(result).toEqual(definitions);
         });
@@ -103,7 +103,7 @@ describe("rest querier", () => {
                     params: {
                         limit: 100,
                     },
-                }
+                },
             );
         });
     });

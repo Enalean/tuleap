@@ -30,17 +30,14 @@ describe("PullRequestRestService -", function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$httpBackend_,
-            _ErrorModalService_,
-            _PullRequestRestService_
-        ) {
-            $rootScope = _$rootScope_;
-            $httpBackend = _$httpBackend_;
-            ErrorModalService = _ErrorModalService_;
-            PullRequestRestService = _PullRequestRestService_;
-        });
+        angular.mock.inject(
+            function (_$rootScope_, _$httpBackend_, _ErrorModalService_, _PullRequestRestService_) {
+                $rootScope = _$rootScope_;
+                $httpBackend = _$httpBackend_;
+                ErrorModalService = _ErrorModalService_;
+                PullRequestRestService = _PullRequestRestService_;
+            },
+        );
 
         jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
@@ -99,7 +96,7 @@ describe("PullRequestRestService -", function () {
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
-                })
+                }),
             );
         });
     });

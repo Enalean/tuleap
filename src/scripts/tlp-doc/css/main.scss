@@ -181,8 +181,11 @@ $nav-margin: 30px;
         }
 
         > i {
-            text-shadow: -5px -5px 0 $tlp-background-color, 5px -5px 0 $tlp-background-color,
-                -5px 5px 0 $tlp-background-color, 5px 5px 0 $tlp-background-color;
+            text-shadow:
+                -5px -5px 0 $tlp-background-color,
+                5px -5px 0 $tlp-background-color,
+                -5px 5px 0 $tlp-background-color,
+                5px 5px 0 $tlp-background-color;
 
             &:not(:hover) {
                 color: color.adjust($tlp-dimmed-color, $alpha: - 0.2);

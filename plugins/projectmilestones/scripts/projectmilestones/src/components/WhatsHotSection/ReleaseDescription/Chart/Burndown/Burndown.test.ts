@@ -32,7 +32,7 @@ describe("Burndown", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<Burndown>> {
         store = createStoreMock(store_options);
 

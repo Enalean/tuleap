@@ -58,7 +58,7 @@ describe("list-pickers-creator", () => {
 
     function createArtifactFormElementFieldInEditionModeOfType(
         type: string,
-        is_in_edition_mode = false
+        is_in_edition_mode = false,
     ): HTMLSelectElement {
         const field = doc.createElement("div");
         field.setAttribute("class", `tracker_artifact_field-${type}`);
@@ -109,7 +109,7 @@ describe("list-pickers-creator", () => {
                     is_filterable: true,
                     none_value: null,
                 });
-            }
+            },
         );
 
         it("when the field has targets (field dependencies), then it should initialize the target fields recursively", () => {
@@ -181,7 +181,7 @@ describe("list-pickers-creator", () => {
                     is_filterable: true,
                     none_value: null,
                 });
-            }
+            },
         );
     });
 
@@ -202,7 +202,7 @@ describe("list-pickers-creator", () => {
                     is_filterable: true,
                     none_value: null,
                 });
-            }
+            },
         );
 
         it.each([["sb"], ["msb"]])(
@@ -222,7 +222,7 @@ describe("list-pickers-creator", () => {
                     is_filterable: true,
                     none_value: "100",
                 });
-            }
+            },
         );
     });
 });

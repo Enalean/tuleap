@@ -52,7 +52,7 @@ watch(
         setTimeout(() => {
             loadTooltips(pull_request_title.value, false);
         });
-    }
+    },
 );
 </script>
 

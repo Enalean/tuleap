@@ -23,7 +23,7 @@ export class DocumentEventsHandler implements AfterDropListener {
     constructor(
         event_source: AfterDropEventSource,
         private readonly handlers: DragDropHandlers,
-        private readonly document: Document
+        private readonly document: Document,
     ) {
         event_source.attachAfterDropListener(this);
     }

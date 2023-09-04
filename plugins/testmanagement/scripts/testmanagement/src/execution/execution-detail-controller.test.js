@@ -43,25 +43,27 @@ describe("ExecutionDetailController -", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _SharedPropertiesService_,
-            _ExecutionService_,
-            _TlpModalService_,
-            _NewTuleapArtifactModalService_,
-            _ExecutionRestService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            ExecutionService = _ExecutionService_;
-            TlpModalService = _TlpModalService_;
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            ExecutionRestService = _ExecutionRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _SharedPropertiesService_,
+                _ExecutionService_,
+                _TlpModalService_,
+                _NewTuleapArtifactModalService_,
+                _ExecutionRestService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                ExecutionService = _ExecutionService_;
+                TlpModalService = _TlpModalService_;
+                NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+                ExecutionRestService = _ExecutionRestService_;
+            },
+        );
 
         $state = {
             params: {},
@@ -118,7 +120,7 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
                 (user_id, tracker_id, b, callback) => {
                     callback(artifact.id);
-                }
+                },
             );
             jest.spyOn(ExecutionRestService, "linkIssueWithoutComment").mockReturnValue($q.when());
             jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
@@ -132,7 +134,7 @@ describe("ExecutionDetailController -", () => {
             expect(artifact.tracker.color_name).toBe("acid-green");
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith(
                 $scope.execution.id,
-                artifact
+                artifact,
             );
         });
     });
@@ -157,7 +159,7 @@ describe("ExecutionDetailController -", () => {
             expect($scope.linkedIssueAlertVisible).toBe(true);
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith(
                 $scope.execution.id,
-                artifact
+                artifact,
             );
         });
     });
@@ -177,10 +179,10 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "setCommentOnEditor").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "viewTestExecutionIfRTEAlreadyExists").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
-                $q.when(execution)
+                $q.when(execution),
             );
             ExecutionService.editor = ckeditorGetData;
             execution.results = "psychoanalyzer rupture solidish";
@@ -201,7 +203,7 @@ describe("ExecutionDetailController -", () => {
                     "passed",
                     execution.results,
                     [],
-                    []
+                    [],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -220,7 +222,7 @@ describe("ExecutionDetailController -", () => {
 
                 expect(ExecutionService.displayErrorMessage).toHaveBeenCalledWith(
                     execution,
-                    "error"
+                    "error",
                 );
             });
 
@@ -235,12 +237,12 @@ describe("ExecutionDetailController -", () => {
                     "passed",
                     execution.results,
                     [],
-                    []
+                    [],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect(ExecutionService.viewTestExecutionIfRTEAlreadyExists).toHaveBeenCalledWith(
                     execution.id,
-                    user
+                    user,
                 );
                 expect(ExecutionService.setCommentOnEditor).toHaveBeenCalledWith("old comment");
                 expect($scope.displayTestCommentEditor).toBeTruthy();
@@ -258,7 +260,7 @@ describe("ExecutionDetailController -", () => {
                     "passed",
                     execution.results,
                     [],
-                    []
+                    [],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.displayTestCommentEditor).toBeFalsy();
@@ -290,7 +292,7 @@ describe("ExecutionDetailController -", () => {
                     "failed",
                     execution.results,
                     [],
-                    []
+                    [],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -306,7 +308,7 @@ describe("ExecutionDetailController -", () => {
                     "blocked",
                     execution.results,
                     [],
-                    []
+                    [],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -353,7 +355,7 @@ describe("ExecutionDetailController -", () => {
                     "notrun",
                     execution.results,
                     [13, 15],
-                    [18]
+                    [18],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -379,7 +381,7 @@ describe("ExecutionDetailController -", () => {
                     "notrun",
                     execution.results,
                     [13, 15],
-                    [18]
+                    [18],
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -402,7 +404,7 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
-                $q.when(execution)
+                $q.when(execution),
             );
             ExecutionService.editor = ckeditorGetData;
             $scope.execution = execution;
@@ -422,7 +424,7 @@ describe("ExecutionDetailController -", () => {
                 status,
                 execution.results,
                 [],
-                []
+                [],
             );
             expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             expect(execution.status).toEqual(status);
@@ -442,7 +444,7 @@ describe("ExecutionDetailController -", () => {
             execution.previous_result.result = "";
             $scope.displayTestCommentEditor = true;
             jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(
-                () => "A comment in editing mode"
+                () => "A comment in editing mode",
             );
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockImplementation(() => {
                 return { id: 120 };
@@ -450,7 +452,7 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
             jest.spyOn(
                 ExecutionService,
-                "clearFilesUploadedThroughAttachmentArea"
+                "clearFilesUploadedThroughAttachmentArea",
             ).mockImplementation(() => {});
         });
 

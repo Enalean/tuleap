@@ -57,7 +57,7 @@ describe("getTraceabilityMatrix", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
         expect(matrix).toStrictEqual([]);
     });
@@ -116,7 +116,7 @@ describe("getTraceabilityMatrix", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
 
         expect(matrix).toHaveLength(3);
@@ -206,7 +206,7 @@ describe("getTraceabilityMatrix", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
 
         expect(matrix).toHaveLength(1);
@@ -282,7 +282,7 @@ describe("getTraceabilityMatrix", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
 
         expect(matrix).toHaveLength(2);
@@ -380,7 +380,7 @@ describe("getTraceabilityMatrix", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
 
         expect(matrix).toHaveLength(1);
@@ -424,7 +424,7 @@ describe("getTraceabilityMatrix", () => {
                 time_of_passed_test: string | null,
                 time_of_failed_test: string | null,
                 expected_status: string | null,
-                expected_submitted_on_time: string | null
+                expected_submitted_on_time: string | null,
             ): void => {
                 const date_of_passed_test = time_of_passed_test
                     ? `2020-06-23T${time_of_passed_test}:04-04:00`
@@ -505,7 +505,7 @@ describe("getTraceabilityMatrix", () => {
                     {
                         locale: "en-US",
                         timezone: "UTC",
-                    }
+                    },
                 );
 
                 expect(matrix).toHaveLength(1);
@@ -526,7 +526,7 @@ describe("getTraceabilityMatrix", () => {
                         : null,
                     status: expected_status,
                 });
-            }
+            },
         );
     });
 });

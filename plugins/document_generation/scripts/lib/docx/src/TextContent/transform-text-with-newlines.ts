@@ -22,7 +22,7 @@ import { TextRun } from "docx";
 
 export function transformTextWithNewlines(
     content: string,
-    properties: IRunPropertiesOptions
+    properties: IRunPropertiesOptions,
 ): TextRun[] {
     return content.split("\n").map((text: string, index: number) => {
         const is_first_line = index === 0;

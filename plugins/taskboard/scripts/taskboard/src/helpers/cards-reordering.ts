@@ -23,7 +23,7 @@ import { AFTER, BEFORE } from "../type";
 export function getCardPosition(
     card: Card,
     sibling: Card | null,
-    cards_in_cell: Card[]
+    cards_in_cell: Card[],
 ): CardPosition {
     const ids = [card.id];
 
@@ -42,7 +42,7 @@ export function getCardPosition(
 
 function getCardToCompareWith(
     cards_in_cell: Card[],
-    sibling: Card
+    sibling: Card,
 ): { direction: Direction; compared_to: number } {
     const index = cards_in_cell.findIndex((column_card) => column_card.id === sibling.id);
 

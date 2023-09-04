@@ -21,10 +21,10 @@ import type { ShortcutsGroup } from "../type";
 
 export function removeShortcutsGroupFromShortcutsModal(
     doc: Document,
-    shortcuts_group: ShortcutsGroup
+    shortcuts_group: ShortcutsGroup,
 ): void {
     const shortcuts_group_container = doc.querySelector(
-        `[data-shortcuts-group="${shortcuts_group.title}"]`
+        `[data-shortcuts-group="${shortcuts_group.title}"]`,
     );
     if (!shortcuts_group_container) {
         return;

@@ -30,7 +30,7 @@ describe("ModalContent", () => {
             vi.spyOn(export_document, "downloadXLSXDocument").mockImplementation(
                 (): Promise<void> => {
                     return new Promise(done);
-                }
+                },
             );
             const wrapper = shallowMount(ModalContent, {
                 global: getGlobalTestOptions(),

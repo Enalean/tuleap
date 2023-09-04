@@ -63,7 +63,7 @@ describe("Store actions", () => {
             context.state.times = times;
 
             jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
-                Promise.resolve({ times, total: 1 })
+                Promise.resolve({ times, total: 1 }),
             );
 
             await actions.loadFirstBatchOfTimes(context);

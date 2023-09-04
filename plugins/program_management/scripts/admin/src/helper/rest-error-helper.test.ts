@@ -25,7 +25,7 @@ describe("RestErrorHelper", () => {
     describe("resetRestErrorAlert", () => {
         it("Error is thrown When alert element does not exist", () => {
             expect(() => resetRestErrorAlert(createDocument(), "bad-id")).toThrowError(
-                "Rest Error Alert with id bad-id does not exist"
+                "Rest Error Alert with id bad-id does not exist",
             );
         });
         it("Text error is reset and hide When alert element exist", () => {
@@ -43,7 +43,7 @@ describe("RestErrorHelper", () => {
     describe("setRestErrorMessage", () => {
         it("Error is thrown When alert element does not exist", () => {
             expect(() => setRestErrorMessage(createDocument(), "bad-id", "error")).toThrowError(
-                "Rest Error Alert with id bad-id does not exist"
+                "Rest Error Alert with id bad-id does not exist",
             );
         });
         it("Text error is set and shown When alert element exist", () => {

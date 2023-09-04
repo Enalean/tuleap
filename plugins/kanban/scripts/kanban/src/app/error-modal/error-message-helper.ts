@@ -30,7 +30,7 @@ export function extractErrorMessage(error: Error): Promise<string> {
             },
             () => {
                 return Promise.resolve(error.message);
-            }
+            },
         );
     }
     return Promise.resolve(error.message);

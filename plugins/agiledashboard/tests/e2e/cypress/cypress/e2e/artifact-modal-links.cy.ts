@@ -74,7 +74,7 @@ describe(`Link field of Artifact Modal`, function () {
 
         cy.log("Open the Artifact modal");
         cy.visit(
-            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`
+            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`,
         );
         cy.getContains("[data-test=backlog-item]", ARTIFACT_TITLE).within(() => {
             cy.get("[data-test=backlog-item-details-link]").click();
@@ -88,7 +88,7 @@ describe(`Link field of Artifact Modal`, function () {
             });
             cy.searchItemInLazyboxDropdown(HISTORY_ARTIFACT_TITLE, HISTORY_ARTIFACT_TITLE).should(
                 "contain",
-                HISTORY_ARTIFACT_TITLE
+                HISTORY_ARTIFACT_TITLE,
             );
         });
         cy.log("Close the modal");
@@ -99,7 +99,7 @@ describe(`Link field of Artifact Modal`, function () {
         cy.projectMemberSession();
         cy.log("Open the Artifact modal");
         cy.visit(
-            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`
+            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`,
         );
         cy.getContains("[data-test=backlog-item]", ARTIFACT_TITLE).within(() => {
             cy.get("[data-test=backlog-item-details-link]").click();
@@ -113,7 +113,7 @@ describe(`Link field of Artifact Modal`, function () {
                     .select("is Parent of");
                 cy.searchItemInLazyboxDropdown(
                     String(this.parent_artifact_id),
-                    PARENT_TITLE
+                    PARENT_TITLE,
                 ).click();
                 cy.getContains("[data-test=link-row]", PARENT_TITLE)
                     .find("[data-test=link-type-select]")
@@ -130,7 +130,7 @@ describe(`Link field of Artifact Modal`, function () {
         cy.projectMemberSession();
         cy.log("Open the Artifact modal");
         cy.visit(
-            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`
+            `/plugins/agiledashboard/?action=show-top&group_id=${this.project_id}&pane=topplanning-v2`,
         );
         cy.getContains("[data-test=backlog-item]", ARTIFACT_TITLE).within(() => {
             cy.get("[data-test=backlog-item-details-link]").click();

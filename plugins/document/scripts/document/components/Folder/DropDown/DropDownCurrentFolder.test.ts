@@ -30,7 +30,7 @@ describe("DropDownCurrentFolder", () => {
         can_user_manage: boolean,
         parent_id: number,
         forbid_writers_to_update: boolean,
-        forbid_writers_to_delete: boolean
+        forbid_writers_to_delete: boolean,
     ): VueWrapper<InstanceType<typeof DropDownCurrentFolder>> {
         return shallowMount(DropDownCurrentFolder, {
             global: {
@@ -65,7 +65,7 @@ describe("DropDownCurrentFolder", () => {
         const wrapper = createWrapper(false, false, false, 3, false, false);
 
         expect(
-            wrapper.find("[data-test=document-new-folder-creation-button]").exists()
+            wrapper.find("[data-test=document-new-folder-creation-button]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();

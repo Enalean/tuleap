@@ -41,11 +41,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const milestone_url = vue_mount_point.dataset.milestoneUrl || "";
     const expand_backlog_item_id = Number.parseInt(
         vue_mount_point.dataset.expandBacklogItemId || "0",
-        10
+        10,
     );
     let highlight_test_definition_id: number | null = Number.parseInt(
         vue_mount_point.dataset.highlightTestDefinitionId || "0",
-        10
+        10,
     );
     if (highlight_test_definition_id === 0) {
         highlight_test_definition_id = null;
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
     let testdefinition_tracker_id: number | null = Number.parseInt(
         vue_mount_point.dataset.testDefinitionTrackerId || "0",
-        10
+        10,
     );
     if (testdefinition_tracker_id === 0) {
         testdefinition_tracker_id = null;
@@ -74,8 +74,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         await initVueGettext(
             createGettext,
             (locale: string) =>
-                import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
-        )
+                import(
+                    /* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale)
+                ),
+        ),
     );
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions

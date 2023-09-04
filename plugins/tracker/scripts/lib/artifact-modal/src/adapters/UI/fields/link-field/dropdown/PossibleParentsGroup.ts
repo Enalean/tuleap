@@ -37,12 +37,12 @@ export const PossibleParentsGroup = {
 
     fromPossibleParents: (
         link_verifier: VerifyIsAlreadyLinked,
-        possible_parents: readonly LinkableArtifact[]
+        possible_parents: readonly LinkableArtifact[],
     ): GroupOfItems => ({
         label: getPossibleParentsLabel(),
         empty_message: getPossibleParentsEmptyState(),
         items: possible_parents.map((artifact) =>
-            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact),
         ),
         is_loading: false,
         footer_message: "",

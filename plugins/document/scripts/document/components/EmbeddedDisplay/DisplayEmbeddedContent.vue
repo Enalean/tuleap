@@ -109,7 +109,7 @@ const props = withDefaults(
         content_to_display: string;
         specific_version_number?: number | null;
     }>(),
-    { specific_version_number: null }
+    { specific_version_number: null },
 );
 
 const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
@@ -136,7 +136,7 @@ const specific_version_warning = computed((): string => {
 
     return interpolate(
         $gettext("You are viewing an old version (%{ version_number }) of this document."),
-        { version_number: props.specific_version_number }
+        { version_number: props.specific_version_number },
     );
 });
 const go_to_last_version = computed((): string => {
@@ -206,25 +206,25 @@ export default defineComponent({
             () =>
                 import(
                     /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
-                )
+                ),
         ),
         "create-new-embedded-file-version-modal": defineAsyncComponent(
             () =>
                 import(
                     /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                )
+                ),
         ),
         "confirm-deletion-modal": defineAsyncComponent(
             () =>
                 import(
                     /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
-                )
+                ),
         ),
         "update-properties-modal": defineAsyncComponent(
             () =>
                 import(
                     /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                )
+                ),
         ),
     },
 });

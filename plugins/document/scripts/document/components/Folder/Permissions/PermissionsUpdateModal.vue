@@ -141,7 +141,7 @@ export default {
             try {
                 await this.$store.dispatch(
                     "permissions/loadProjectUserGroupsIfNeeded",
-                    this.project_id
+                    this.project_id,
                 );
             } catch (e) {
                 await handleErrors(this.$store, e);

@@ -41,6 +41,6 @@ describe("url-sanitize", () => {
         "blocks not allowed URLs",
         (url: string) => {
             expect(sanitizeURL(url)).toBe("");
-        }
+        },
     );
 });

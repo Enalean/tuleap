@@ -34,7 +34,7 @@ describe("ReleaseDisplayer", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseDisplayer>> {
         store = createStoreMock(store_options);
 

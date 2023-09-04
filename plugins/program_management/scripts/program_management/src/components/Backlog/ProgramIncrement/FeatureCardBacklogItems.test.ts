@@ -127,7 +127,7 @@ describe("FeatureCardBacklogItems", () => {
                         label: "project",
                     },
                 } as UserStory,
-            ])
+            ]),
         );
 
         const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);

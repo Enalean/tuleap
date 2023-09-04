@@ -29,13 +29,13 @@ interface ListPickersCreatorType {
 
 export const ListPickersCreator = (
     doc: Document,
-    store: SelectWrappedByListPickerStoreType
+    store: SelectWrappedByListPickerStoreType,
 ): ListPickersCreatorType => {
     const locale = doc.body.dataset.userLocale ?? "en_US";
 
     function listenToggleEditionEvents(): void {
         doc.querySelectorAll(
-            ".tracker_artifact_field-sb > .tracker_formelement_edit, .tracker_artifact_field-msb > .tracker_formelement_edit"
+            ".tracker_artifact_field-sb > .tracker_formelement_edit, .tracker_artifact_field-msb > .tracker_formelement_edit",
         ).forEach((edit_button) => {
             if (!edit_button.parentElement) {
                 return;
@@ -70,16 +70,16 @@ export const ListPickersCreator = (
     function initListPickersInArtifactCreationView(): void {
         initListPickers(
             doc.querySelectorAll(
-                ".tracker_artifact_field-sb > select, .tracker_artifact_field-msb > select"
-            )
+                ".tracker_artifact_field-sb > select, .tracker_artifact_field-msb > select",
+            ),
         );
     }
 
     function initListPickersPostUpdateErrorView(): void {
         initListPickers(
             doc.querySelectorAll(
-                ".tracker_artifact_field-sb.in-edition select, .tracker_artifact_field-msb.in-edition select"
-            )
+                ".tracker_artifact_field-sb.in-edition select, .tracker_artifact_field-msb.in-edition select",
+            ),
         );
     }
 

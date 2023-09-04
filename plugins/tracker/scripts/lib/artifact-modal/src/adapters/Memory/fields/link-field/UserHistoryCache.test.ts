@@ -39,7 +39,7 @@ describe(`UserHistoryCache`, () => {
 
     const getCache = (): RetrieveUserHistory => {
         const current_retriever = RetrieveUserHistoryStub.withUserHistory(
-            okAsync([first_entry, second_entry])
+            okAsync([first_entry, second_entry]),
         );
         return UserHistoryCache(current_retriever);
     };

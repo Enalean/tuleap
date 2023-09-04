@@ -123,14 +123,14 @@
         <p>
             {{
                 $gettext(
-                    "Artifacts of the selected tracker will appear in the upper part of the Roadmap, below the Quarters/Months/Weeks."
+                    "Artifacts of the selected tracker will appear in the upper part of the Roadmap, below the Quarters/Months/Weeks.",
                 )
             }}
         </p>
         <p>
             {{
                 $gettext(
-                    "Selected trackers are expected to have continuous time (i.e. artifacts timeframe do not overlap)."
+                    "Selected trackers are expected to have continuous time (i.e. artifacts timeframe do not overlap).",
                 )
             }}
         </p>
@@ -230,10 +230,10 @@ const { $gettext } = useGettext();
 
 const user_selected_tracker_ids = ref<number[]>(props.selected_tracker_ids);
 const user_selected_lvl1_iteration_tracker_id = ref<number | "">(
-    props.selected_lvl1_iteration_tracker_id
+    props.selected_lvl1_iteration_tracker_id,
 );
 const user_selected_lvl2_iteration_tracker_id = ref<number | "">(
-    props.selected_lvl2_iteration_tracker_id
+    props.selected_lvl2_iteration_tracker_id,
 );
 const user_selected_default_timescale = ref<TimeScale>(props.selected_default_timescale);
 const user_selected_title = ref<string>(props.title);
@@ -282,22 +282,22 @@ const lvl1_id = computed((): string => "lvl1-" + props.widget_id);
 const lvl2_id = computed((): string => "lvl2-" + props.widget_id);
 
 const subtitle_class = computed((): string =>
-    props.is_in_creation ? "roadmap-widget-configuration-subtitle" : ""
+    props.is_in_creation ? "roadmap-widget-configuration-subtitle" : "",
 );
 
 const suitable_trackers = computed((): Tracker[] =>
     props.trackers.filter(
         (tracker) =>
             tracker.id !== user_selected_lvl1_iteration_tracker_id.value &&
-            tracker.id !== user_selected_lvl2_iteration_tracker_id.value
-    )
+            tracker.id !== user_selected_lvl2_iteration_tracker_id.value,
+    ),
 );
 
 const suitable_lvl1_iteration_trackers = computed((): Tracker[] => {
     return props.trackers.filter(
         (tracker) =>
             !user_selected_tracker_ids.value.some((id) => tracker.id === id) &&
-            tracker.id !== user_selected_lvl2_iteration_tracker_id.value
+            tracker.id !== user_selected_lvl2_iteration_tracker_id.value,
     );
 });
 
@@ -305,7 +305,7 @@ const suitable_lvl2_iteration_trackers = computed((): Tracker[] => {
     return props.trackers.filter(
         (tracker) =>
             !user_selected_tracker_ids.value.some((id) => tracker.id === id) &&
-            tracker.id !== user_selected_lvl1_iteration_tracker_id.value
+            tracker.id !== user_selected_lvl1_iteration_tracker_id.value,
     );
 });
 
@@ -343,7 +343,7 @@ function loadReportsAccordingToSelectedTracker(): void {
                 }
 
                 return public_reports;
-            }, [])
+            }, []),
         )
         .andThen((reports: ReportDefinition[]) => {
             is_loading_reports.value = false;
@@ -357,9 +357,9 @@ function loadReportsAccordingToSelectedTracker(): void {
             },
             () => {
                 load_reports_error.value = $gettext(
-                    "An error occurred while loading the reports for the filter"
+                    "An error occurred while loading the reports for the filter",
                 );
-            }
+            },
         );
 }
 </script>

@@ -30,7 +30,7 @@ describe("update-artifact", () => {
     describe("getPutArtifactBody", () => {
         it("Raises an error if the title_field is not present", () => {
             expect(() =>
-                getPutArtifactBody({ tracker: { title_field: null } } as UpdateCardPayload)
+                getPutArtifactBody({ tracker: { title_field: null } } as UpdateCardPayload),
             ).toThrow();
         });
 
@@ -139,8 +139,8 @@ describe("update-artifact", () => {
                     {
                         swimlane: { card: { tracker_id: 42 } },
                     } as NewCardPayload,
-                    [] as Tracker[]
-                )
+                    [] as Tracker[],
+                ),
             ).toThrow();
         });
 
@@ -150,8 +150,8 @@ describe("update-artifact", () => {
                     {
                         swimlane: { card: { tracker_id: 42 } },
                     } as NewCardPayload,
-                    [{ id: 42, add_in_place: null } as Tracker]
-                )
+                    [{ id: 42, add_in_place: null } as Tracker],
+                ),
             ).toThrow();
         });
 
@@ -169,8 +169,8 @@ describe("update-artifact", () => {
                                 parent_artifact_link_field_id: 103,
                             },
                         } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -189,8 +189,8 @@ describe("update-artifact", () => {
                             },
                         } as Tracker,
                         { id: 69, title_field: null } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -212,8 +212,8 @@ describe("update-artifact", () => {
                             },
                         } as Tracker,
                         { id: 69, title_field: { id: 123, is_string_field: true } } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -239,8 +239,8 @@ describe("update-artifact", () => {
                             title_field: { id: 123, is_string_field: true },
                             artifact_link_field: null,
                         } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -266,8 +266,8 @@ describe("update-artifact", () => {
                             title_field: { id: 123, is_string_field: true },
                             artifact_link_field: { id: 111 },
                         } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -295,8 +295,8 @@ describe("update-artifact", () => {
                             title_field: { id: 123, is_string_field: true },
                             artifact_link_field: { id: 111 },
                         } as Tracker,
-                    ]
-                )
+                    ],
+                ),
             ).toThrow();
         });
 
@@ -319,7 +319,7 @@ describe("update-artifact", () => {
                         title_field: { id: 123, is_string_field: true },
                         artifact_link_field: { id: 111 },
                     } as Tracker,
-                ]
+                ],
             );
 
             expect(body).toStrictEqual({
@@ -358,7 +358,7 @@ describe("update-artifact", () => {
                         title_field: { id: 123, is_string_field: true },
                         artifact_link_field: { id: 111 },
                     } as Tracker,
-                ]
+                ],
             );
 
             expect(body).toStrictEqual({
@@ -397,7 +397,7 @@ describe("update-artifact", () => {
                         title_field: { id: 123, is_string_field: false },
                         artifact_link_field: { id: 111 },
                     } as Tracker,
-                ]
+                ],
             );
 
             expect(body).toStrictEqual({
@@ -439,7 +439,7 @@ describe("update-artifact", () => {
                         title_field: { id: 123, is_string_field: false },
                         artifact_link_field: { id: 111 },
                     } as Tracker,
-                ]
+                ],
             );
 
             expect(body).toStrictEqual({
@@ -472,8 +472,8 @@ describe("update-artifact", () => {
                     } as NewCardPayload,
                     [] as Tracker[],
                     1001,
-                    [] as Values
-                )
+                    [] as Values,
+                ),
             ).toThrow();
         });
 
@@ -485,8 +485,8 @@ describe("update-artifact", () => {
                     } as NewCardPayload,
                     [{ id: 42, add_in_place: null } as Tracker],
                     1001,
-                    [] as Values
-                )
+                    [] as Values,
+                ),
             ).toThrow();
         });
 
@@ -502,7 +502,7 @@ describe("update-artifact", () => {
                     } as Tracker,
                 ],
                 1001,
-                [] as Values
+                [] as Values,
             );
 
             expect(body).toStrictEqual({
@@ -532,7 +532,7 @@ describe("update-artifact", () => {
                     } as Tracker,
                 ],
                 1001,
-                [{ field_id: 103, links: [{ id: 999, type: "custom" }] }] as Values
+                [{ field_id: 103, links: [{ id: 999, type: "custom" }] }] as Values,
             );
 
             expect(body).toStrictEqual({

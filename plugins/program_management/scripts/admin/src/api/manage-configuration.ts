@@ -35,6 +35,6 @@ export function saveConfiguration(configuration: ProgramConfiguration): Promise<
                 program_increment_sub_label: configuration.program_increment_sub_label,
                 iteration: configuration.iteration,
             }),
-        }
+        },
     );
 }

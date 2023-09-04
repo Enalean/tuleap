@@ -74,7 +74,7 @@ describe("PullRequestDescriptionComment", () => {
 
             expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
             expect(
-                selectOrThrow(target, "[data-test=pull-request-description-read-mode]")
+                selectOrThrow(target, "[data-test=pull-request-description-read-mode]"),
             ).toBeDefined();
         });
 
@@ -87,7 +87,7 @@ describe("PullRequestDescriptionComment", () => {
 
             expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
             expect(
-                selectOrThrow(target, "[data-test=pull-request-description-write-mode]")
+                selectOrThrow(target, "[data-test=pull-request-description-write-mode]"),
             ).toBeDefined();
         });
     });

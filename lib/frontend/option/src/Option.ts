@@ -21,18 +21,18 @@ type IOption<TypeOfValue> = {
     apply(fn: (value: TypeOfValue) => void): void;
     match<TypeOfMapped>(
         value_fn: (value: TypeOfValue) => TypeOfMapped,
-        nothing_fn: () => TypeOfMapped
+        nothing_fn: () => TypeOfMapped,
     ): TypeOfMapped;
 };
 
 type Some<TypeOfValue> = IOption<TypeOfValue> & {
     andThen<NewTypeOfValue>(
-        fn: (value: TypeOfValue) => Option<NewTypeOfValue>
+        fn: (value: TypeOfValue) => Option<NewTypeOfValue>,
     ): Option<NewTypeOfValue>;
     map<TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped): Some<TypeOfMapped>;
     mapOr<TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
-        default_value: TypeOfDefault
+        default_value: TypeOfDefault,
     ): TypeOfMapped;
     unwrapOr<TypeOfDefault>(default_value: TypeOfDefault): TypeOfValue;
     isValue(): true;
@@ -41,12 +41,12 @@ type Some<TypeOfValue> = IOption<TypeOfValue> & {
 
 type None<TypeOfValue> = IOption<TypeOfValue> & {
     andThen<NewTypeOfValue>(
-        fn: (value: TypeOfValue) => Option<NewTypeOfValue>
+        fn: (value: TypeOfValue) => Option<NewTypeOfValue>,
     ): None<NewTypeOfValue>;
     map<TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped): None<TypeOfMapped>;
     mapOr<TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
-        default_value: TypeOfDefault
+        default_value: TypeOfDefault,
     ): TypeOfDefault;
     unwrapOr<TypeOfDefault>(default_value: TypeOfDefault): TypeOfDefault;
     isValue(): false;

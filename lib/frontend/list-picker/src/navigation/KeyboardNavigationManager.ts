@@ -24,7 +24,7 @@ import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 export class KeyboardNavigationManager {
     constructor(
         private readonly dropdown_list_element: Element,
-        private readonly list_item_highlighter: ListItemHighlighter
+        private readonly list_item_highlighter: ListItemHighlighter,
     ) {}
 
     public navigate(event: KeyboardEvent): void {

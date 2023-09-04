@@ -45,7 +45,7 @@ describe("PermissionFieldPresenter", () => {
             false,
             true,
             false,
-            false
+            false,
         );
 
         expect(presenter.field_id).toBe(1060);

@@ -33,7 +33,7 @@ describe("ReleaseButtonsDescription", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseButtonsDescription>> {
         store = createStoreMock(store_options);
 
@@ -110,7 +110,7 @@ describe("ReleaseButtonsDescription", () => {
         expect(taskboard_element.attributes("href")).toBe("/taskboard/project/6");
         expect(taskboard_element.attributes("data-tlp-tooltip")).toBe("Taskboard");
         expect(wrapper.get("[data-test=pane-icon-taskboard]").classes()).toContain(
-            "fa-tlp-taskboard"
+            "fa-tlp-taskboard",
         );
     });
 
@@ -125,7 +125,7 @@ describe("ReleaseButtonsDescription", () => {
                 encodeURIComponent(release_data.planning.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(release_data.id) +
-                "&pane=details"
+                "&pane=details",
         );
     });
 
@@ -140,7 +140,7 @@ describe("ReleaseButtonsDescription", () => {
                 encodeURIComponent(release_data.planning.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(release_data.id) +
-                "&pane=cardwall"
+                "&pane=cardwall",
         );
     });
 

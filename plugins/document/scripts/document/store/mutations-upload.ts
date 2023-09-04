@@ -41,7 +41,7 @@ export function removeFileFromUploadsList(state: State, uploaded_file: FakeItem 
 
     if (state.files_uploads_list.length === 0) {
         const folder_index = state.folder_content.findIndex(
-            (item) => item.id === uploaded_file.parent_id
+            (item) => item.id === uploaded_file.parent_id,
         );
         if (folder_index === -1) {
             const folder_content_item = state.folder_content[folder_index];
@@ -78,10 +78,10 @@ export interface CollapseFolderPayload {
 
 export function toggleCollapsedFolderHasUploadingContent(
     state: State,
-    payload: CollapseFolderPayload
+    payload: CollapseFolderPayload,
 ): void {
     const folder_index = state.folder_content.findIndex(
-        (item) => item.id === payload.collapsed_folder.id
+        (item) => item.id === payload.collapsed_folder.id,
     );
     if (folder_index === -1) {
         return;
@@ -142,7 +142,7 @@ export function replaceFileWithNewVersion(state: State, payload: ReplaceFilePayl
 
 function replaceApprovalTables(
     existing_item: ApprovableDocument,
-    new_version: ApprovableDocument
+    new_version: ApprovableDocument,
 ): void {
     existing_item.has_approval_table = new_version.has_approval_table;
     existing_item.is_approval_table_enabled = new_version.is_approval_table_enabled;

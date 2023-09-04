@@ -11,7 +11,7 @@ PullRequestCollectionService.$inject = [
 function PullRequestCollectionService(
     SharedPropertiesService,
     PullRequestService,
-    PullRequestCollectionRestService
+    PullRequestCollectionRestService,
 ) {
     const self = this;
 
@@ -58,7 +58,7 @@ function PullRequestCollectionService(
 
                 open_pull_requests_loaded = true;
                 closed_pull_requests_loaded = true;
-            }
+            },
         );
     }
 
@@ -72,7 +72,7 @@ function PullRequestCollectionService(
 
         return PullRequestCollectionRestService.getAllOpenPullRequests(
             repository_id,
-            callback
+            callback,
         ).then(function (open_pull_requests) {
             if (!self.areClosedPullRequestsFullyLoaded()) {
                 resetAllPullRequests(open_pull_requests);
@@ -88,7 +88,7 @@ function PullRequestCollectionService(
 
         return PullRequestCollectionRestService.getAllClosedPullRequests(
             repository_id,
-            progressivelyLoadCallback
+            progressivelyLoadCallback,
         ).then(function (closed_pull_requests) {
             there_is_at_least_one_closed_pull_request = closed_pull_requests.length > 0;
             closed_pull_requests_loaded = true;

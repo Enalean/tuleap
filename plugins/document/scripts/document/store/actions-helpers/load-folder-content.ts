@@ -25,7 +25,7 @@ import type { Folder, RootState } from "../../type";
 export async function loadFolderContent(
     context: ActionContext<RootState, RootState>,
     folder_id: number,
-    loading_current_folder_promise: Promise<Folder>
+    loading_current_folder_promise: Promise<Folder>,
 ): Promise<void> {
     try {
         context.commit("beginLoading");

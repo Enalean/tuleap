@@ -59,7 +59,7 @@ describe(`BaseProjectAdminEdit`, () => {
             },
             {
                 "edit-modal": modal,
-            }
+            },
         );
     });
 

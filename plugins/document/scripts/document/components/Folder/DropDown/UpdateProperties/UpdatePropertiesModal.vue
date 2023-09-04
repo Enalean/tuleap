@@ -103,7 +103,7 @@ export default {
             }
 
             const obsolescence_date = this.item.properties.find(
-                (property) => property.short_name === "obsolescence_date"
+                (property) => property.short_name === "obsolescence_date",
             );
 
             if (!obsolescence_date || !obsolescence_date.value) {
@@ -124,7 +124,7 @@ export default {
     beforeUnmount() {
         emitter.off(
             "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue
+            this.updateMultiplePropertiesListValue,
         );
         emitter.off("update-status-property", this.updateStatusValue);
         emitter.off("update-title-property", this.updateTitleValue);
@@ -180,7 +180,7 @@ export default {
                 return;
             }
             const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.detail.id
+                (property) => property.short_name === event.detail.id,
             );
             item_properties.list_value = event.detail.value;
         },
@@ -201,7 +201,7 @@ export default {
                 return;
             }
             const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.property_short_name
+                (property) => property.short_name === event.property_short_name,
             );
             item_properties.value = event.value;
         },

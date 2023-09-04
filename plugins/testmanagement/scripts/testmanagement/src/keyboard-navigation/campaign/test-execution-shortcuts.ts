@@ -26,7 +26,7 @@ import { BLOCKED, NOTRUN, PASSED } from "../type";
 
 export function createTestExecutionShortcutsGroup(
     doc: Document,
-    gettextCatalog: GettextProvider
+    gettextCatalog: GettextProvider,
 ): ShortcutsGroup {
     const mark_as_success: Shortcut = {
         keyboard_inputs: "m + p",

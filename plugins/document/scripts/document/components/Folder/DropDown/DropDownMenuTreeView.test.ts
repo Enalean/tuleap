@@ -28,7 +28,7 @@ describe("DropDownMenuTreeView", () => {
     function createWrapper(
         item: Item,
         forbid_writers_to_update: boolean,
-        forbid_writers_to_delete: boolean
+        forbid_writers_to_delete: boolean,
     ): VueWrapper<InstanceType<typeof DropDownMenuTreeView>> {
         return shallowMount(DropDownMenuTreeView, {
             props: { item },
@@ -57,14 +57,14 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as Folder,
             false,
-            false
+            false,
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
@@ -78,16 +78,16 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as ItemFile,
             false,
-            false
+            false,
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
@@ -102,10 +102,10 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as ItemFile,
             false,
-            false
+            false,
         );
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists(),
         ).toBeTruthy();
     });
 
@@ -119,10 +119,10 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as Folder,
             false,
-            false
+            false,
         );
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists(),
         ).toBeFalsy();
     });
 
@@ -136,7 +136,7 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as ItemFile,
             false,
-            false
+            false,
         );
         await nextTick();
 
@@ -144,10 +144,10 @@ describe("DropDownMenuTreeView", () => {
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
@@ -161,16 +161,16 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
             } as ItemFile,
             false,
-            false
+            false,
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
@@ -184,16 +184,16 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: false,
             } as ItemFile,
             false,
-            false
+            false,
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
     });
@@ -207,14 +207,14 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: false,
             } as Folder,
             false,
-            false
+            false,
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists()
+            wrapper.find("[data-test=document-dropdown-create-new-version-button]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
     });
@@ -232,7 +232,7 @@ describe("DropDownMenuTreeView", () => {
                 can_user_manage: false,
             } as ItemFile,
             true,
-            false
+            false,
         );
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
@@ -251,7 +251,7 @@ describe("DropDownMenuTreeView", () => {
                 can_user_manage: true,
             } as ItemFile,
             true,
-            false
+            false,
         );
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
@@ -270,7 +270,7 @@ describe("DropDownMenuTreeView", () => {
                 can_user_manage: false,
             } as ItemFile,
             true,
-            true
+            true,
         );
 
         expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeFalsy();
@@ -289,7 +289,7 @@ describe("DropDownMenuTreeView", () => {
                 can_user_manage: true,
             } as ItemFile,
             true,
-            true
+            true,
         );
 
         expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeTruthy();

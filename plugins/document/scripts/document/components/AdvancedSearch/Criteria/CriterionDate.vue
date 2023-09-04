@@ -63,7 +63,7 @@ watch(
         date.value = value?.date ?? "";
         operator.value = value?.operator ?? ">";
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const id = computed((): string => {

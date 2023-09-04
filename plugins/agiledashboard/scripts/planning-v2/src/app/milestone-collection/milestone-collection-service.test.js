@@ -24,7 +24,7 @@ describe("MilestoneCollectionService -", function () {
             MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(
                 8,
                 [{ id: 69 }, { id: 70 }],
-                null
+                null,
             );
 
             expect(milestone.content).toEqual([{ id: 69 }, { id: 70 }]);
@@ -70,7 +70,7 @@ describe("MilestoneCollectionService -", function () {
             MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(
                 8,
                 [{ id: 98 }, { id: 99 }],
-                { item_id: 69, direction: "after" }
+                { item_id: 69, direction: "after" },
             );
 
             expect(milestone.content).toEqual([{ id: 48 }, { id: 69 }, { id: 98 }, { id: 99 }]);

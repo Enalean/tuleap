@@ -45,7 +45,7 @@ describe(`RichTextEditorsCreatorWithoutImageUpload`, () => {
         it(`creates the text editor`, () => {
             doc.body.insertAdjacentHTML(
                 "beforeend",
-                `<textarea id="artifact_masschange_followup_comment"/>`
+                `<textarea id="artifact_masschange_followup_comment"/>`,
             );
             creator.createTextFieldEditorForMassChange();
             expect(editor_factory.createRichTextEditor).toHaveBeenCalled();

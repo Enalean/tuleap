@@ -28,7 +28,7 @@ import AddCard from "../Card/Add/AddCard.vue";
 function createWrapper(
     swimlane: Swimlane,
     is_collapsed: boolean,
-    can_add_in_place = false
+    can_add_in_place = false,
 ): Wrapper<InvalidMappingCell> {
     const column_done = { id: 3, label: "Done", is_collapsed } as ColumnDefinition;
 

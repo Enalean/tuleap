@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(
                 /* webpackChunkName: "project-admin-po-" */ "../po/" +
                     getPOFileFromLocale(user_locale)
-            )
+            ),
     );
 
     initModals();
@@ -69,7 +69,7 @@ function initModals(): void {
             "project-admin-remove-user-from-group",
         ];
         const is_button_classlist_contain_allowed_class = allowed_classes.some((classname) =>
-            button.classList.contains(classname)
+            button.classList.contains(classname),
         );
 
         if (is_button_id_allowed || is_button_classlist_contain_allowed_class) {
@@ -97,7 +97,7 @@ function initModals(): void {
 
 function updateDeleteModalContent(button: HTMLElement): void {
     const modal_remove_user = document.getElementById(
-        "project-admin-remove-user-from-group-modal-user-id"
+        "project-admin-remove-user-from-group-modal-user-id",
     );
     if (!(modal_remove_user instanceof HTMLInputElement)) {
         throw new Error("No modal to remove user from group");
@@ -113,7 +113,7 @@ function updateDeleteModalContent(button: HTMLElement): void {
 
 function updateDeleteModalDescription(button: HTMLElement): void {
     const modal_description = document.getElementById(
-        "project-admin-remove-user-from-group-modal-description"
+        "project-admin-remove-user-from-group-modal-description",
     );
 
     if (!(modal_description instanceof HTMLParagraphElement)) {
@@ -137,19 +137,19 @@ function updateDeleteModalDescription(button: HTMLElement): void {
         sanitize(
             sprintf(
                 gettext_provider.gettext(
-                    "You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action."
+                    "You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action.",
                 ),
                 escaper.html(user_name),
-                escaper.html(ugroup_name)
-            )
-        )
+                escaper.html(ugroup_name),
+            ),
+        ),
     );
 }
 
 function updateDeleteModalButtons(button: HTMLElement): void {
     const user_is_admin = button.dataset.userIsProjectAdmin === "1";
     const delete_from_project_button = document.getElementById(
-        "project-admin-remove-user-from-group-modal-remove-from-project"
+        "project-admin-remove-user-from-group-modal-remove-from-project",
     );
     if (!(delete_from_project_button instanceof HTMLElement)) {
         throw new Error("No button to delete ugroup from project");
@@ -157,7 +157,7 @@ function updateDeleteModalButtons(button: HTMLElement): void {
 
     delete_from_project_button.classList.toggle(
         "project-admin-remove-user-from-group-and-project-hidden-button",
-        user_is_admin
+        user_is_admin,
     );
 }
 
@@ -169,7 +169,7 @@ function initModalAddUserToUGroupAndProjectMembers(): void {
 
     button.addEventListener("click", async () => {
         const selected_user_element = document.getElementById(
-            "project-admin-members-add-user-select"
+            "project-admin-members-add-user-select",
         );
         if (!(selected_user_element instanceof HTMLSelectElement)) {
             throw new Error("No select element to add user");
@@ -181,7 +181,7 @@ function initModalAddUserToUGroupAndProjectMembers(): void {
         const selected_user_label =
             selected_user_element.options[selected_user_element.selectedIndex].text;
         const icon = document.getElementById(
-            "project-administration-add-to-ugroup-and-project-members-icon"
+            "project-administration-add-to-ugroup-and-project-members-icon",
         );
         if (!(icon instanceof HTMLElement)) {
             throw new Error("No icon to select element to add user");
@@ -219,7 +219,7 @@ function openConfirmationModal(selected_user_label: string): void {
     }
     const ugroup_name = ugroup_name_element.value;
     const icon = document.getElementById(
-        "project-administration-add-to-ugroup-and-project-members-icon"
+        "project-administration-add-to-ugroup-and-project-members-icon",
     );
     if (!(icon instanceof HTMLElement)) {
         throw new Error("No icon to add user");
@@ -232,11 +232,11 @@ function openConfirmationModal(selected_user_label: string): void {
     confirmation_message = sprintf(
         gettext_provider.gettext("You are about to add <b>%s</b> in <b>%s</b> users group."),
         escaper.html(selected_user_label),
-        escaper.html(ugroup_name)
+        escaper.html(ugroup_name),
     );
 
     const message_confirmation_add_element = document.getElementById(
-        "add-user-to-ugroup-and-project-members-confirmation-message"
+        "add-user-to-ugroup-and-project-members-confirmation-message",
     );
     if (!(message_confirmation_add_element instanceof HTMLElement)) {
         throw new Error("No message confirmation after add user");

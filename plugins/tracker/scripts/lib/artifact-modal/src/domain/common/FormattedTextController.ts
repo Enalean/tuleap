@@ -41,7 +41,7 @@ export type FormattedTextControllerType = {
 export const FormattedTextController = (
     event_dispatcher: DispatchEvents,
     commonmark_retriever: InterpretCommonMark,
-    default_text_format: TextFieldFormat
+    default_text_format: TextFieldFormat,
 ): FormattedTextControllerType => ({
     getDefaultTextFormat: () => default_text_format,
 

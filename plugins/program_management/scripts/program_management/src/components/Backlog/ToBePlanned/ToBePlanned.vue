@@ -91,7 +91,7 @@ export default class ToBePlanned extends Vue {
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(
-                "The retrieval of the elements to be planned in program has failed"
+                "The retrieval of the elements to be planned in program has failed",
             );
             throw e;
         } finally {

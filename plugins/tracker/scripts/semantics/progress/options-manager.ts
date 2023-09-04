@@ -23,7 +23,7 @@ export function init(
     effort_based_config_section: HTMLElement,
     total_effort_selector: HTMLSelectElement,
     remaining_effort_selector: HTMLSelectElement,
-    links_count_based_config_section: HTMLElement
+    links_count_based_config_section: HTMLElement,
 ): void {
     toggleComputationMethodConfigSection(
         update_semantic_progress_button,
@@ -31,7 +31,7 @@ export function init(
         effort_based_config_section,
         total_effort_selector,
         remaining_effort_selector,
-        links_count_based_config_section
+        links_count_based_config_section,
     );
     disableAlreadySelectedOptions(total_effort_selector, remaining_effort_selector);
     disableAlreadySelectedOptions(remaining_effort_selector, total_effort_selector);
@@ -43,7 +43,7 @@ export function init(
             effort_based_config_section,
             total_effort_selector,
             remaining_effort_selector,
-            links_count_based_config_section
+            links_count_based_config_section,
         );
     });
 
@@ -58,7 +58,7 @@ export function init(
 
 function disableAlreadySelectedOptions(
     current_selectbox: HTMLSelectElement,
-    target_selectbox: HTMLSelectElement
+    target_selectbox: HTMLSelectElement,
 ): void {
     const current_selectbox_value = current_selectbox.value;
 
@@ -84,7 +84,7 @@ function toggleComputationMethodConfigSection(
     effort_based_config_section: HTMLElement,
     total_effort_selector: HTMLSelectElement,
     remaining_effort_selector: HTMLSelectElement,
-    links_count_based_config_section: HTMLElement
+    links_count_based_config_section: HTMLElement,
 ): void {
     const selected_method = computation_method_selector.value;
     toggleEffortBasedConfigSection(
@@ -92,13 +92,13 @@ function toggleComputationMethodConfigSection(
         effort_based_config_section,
         total_effort_selector,
         remaining_effort_selector,
-        update_semantic_progress_button
+        update_semantic_progress_button,
     );
 
     toggleLinksCountBasedConfigSection(
         selected_method,
         links_count_based_config_section,
-        update_semantic_progress_button
+        update_semantic_progress_button,
     );
 }
 
@@ -107,7 +107,7 @@ function toggleEffortBasedConfigSection(
     effort_based_config_section: HTMLElement,
     total_effort_selector: HTMLSelectElement,
     remaining_effort_selector: HTMLSelectElement,
-    update_semantic_progress_button: HTMLElement
+    update_semantic_progress_button: HTMLElement,
 ): void {
     if (selected_method !== "effort-based") {
         total_effort_selector.setAttribute("disabled", "disabled");
@@ -125,7 +125,7 @@ function toggleEffortBasedConfigSection(
 function toggleLinksCountBasedConfigSection(
     selected_method: string,
     links_count_based_config_section: HTMLElement,
-    update_semantic_progress_button: HTMLElement
+    update_semantic_progress_button: HTMLElement,
 ): void {
     if (selected_method !== "artifacts-links-count-based") {
         links_count_based_config_section.classList.remove("selected-computation-method-config");

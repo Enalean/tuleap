@@ -46,7 +46,7 @@ export function getTrackerList(project_id: number): ResultAsync<ReadonlyArray<Tr
 
 export function moveDryRunArtifact(
     artifact_id: number,
-    tracker_id: number
+    tracker_id: number,
 ): ResultAsync<DryRunResultPayload, Fault> {
     return patchJSON<DryRunResultPayload>(uri`/api/artifacts/${artifact_id}`, {
         move: { tracker_id, dry_run: true },

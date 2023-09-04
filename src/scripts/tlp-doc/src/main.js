@@ -45,7 +45,7 @@
             if (!this.classList.contains("active")) {
                 var color = this.classList[0].replace("switch-to-background-", "");
                 var active_color_switcher = document.querySelector(
-                    ".background-color-switcher > a.active"
+                    ".background-color-switcher > a.active",
                 );
 
                 active_color_switcher.classList.remove("active");
@@ -55,7 +55,7 @@
                 document.body.classList.remove(
                     "doc-background-white",
                     "doc-background-grey",
-                    "doc-background-dark"
+                    "doc-background-dark",
                 );
                 document.body.classList.add("doc-background-" + color);
             }

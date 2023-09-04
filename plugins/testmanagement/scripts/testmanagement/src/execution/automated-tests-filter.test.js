@@ -30,7 +30,7 @@ describe("ExecutionListFilter", function () {
     beforeEach(
         angular.mock.inject(function ($filter) {
             ngFilter = $filter;
-        })
+        }),
     );
 
     var list = [

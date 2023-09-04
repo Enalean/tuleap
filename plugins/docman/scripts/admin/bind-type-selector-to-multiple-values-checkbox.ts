@@ -23,7 +23,7 @@ export function bindTypeSelectorToMultipleValuesCheckbox(doc: Document): void {
         return;
     }
     const multiple_values = doc.getElementById(
-        "docman-admin-properties-create-multiplevalues-allowed"
+        "docman-admin-properties-create-multiplevalues-allowed",
     );
     if (!(multiple_values instanceof HTMLInputElement)) {
         return;

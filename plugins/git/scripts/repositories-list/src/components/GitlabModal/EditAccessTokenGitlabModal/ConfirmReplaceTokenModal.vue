@@ -89,12 +89,12 @@ export default class ConfirmReplaceTokenModal extends Vue {
     get confirmation_message(): string {
         return this.$gettextInterpolate(
             this.$gettext(
-                "You are about to update the token used to integrate %{ label } repository of %{ instance_url }."
+                "You are about to update the token used to integrate %{ label } repository of %{ instance_url }.",
             ),
             {
                 label: this.repository.normalized_path,
                 instance_url: this.instance_url,
-            }
+            },
         );
     }
 
@@ -104,7 +104,7 @@ export default class ConfirmReplaceTokenModal extends Vue {
         }
         return this.repository.gitlab_data.gitlab_repository_url.replace(
             this.repository.normalized_path,
-            ""
+            "",
         );
     }
 

@@ -42,7 +42,7 @@ export interface UserPreferenciesFolderSetPayload {
 
 export const setUserPreferenciesForFolder = async (
     context: ActionContext<PreferenciesState, RootState>,
-    payload: UserPreferenciesFolderSetPayload
+    payload: UserPreferenciesFolderSetPayload,
 ): Promise<void> => {
     const user_id = parseInt(context.rootState.configuration.user_id, 10);
     const project_id = parseInt(context.rootState.configuration.project_id, 10);
@@ -64,7 +64,7 @@ export const setUserPreferenciesForFolder = async (
 
 export const displayEmbeddedInNarrowMode = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item
+    item: Item,
 ): Promise<void> => {
     try {
         const user_id = parseInt(context.rootState.configuration.user_id, 10);
@@ -78,7 +78,7 @@ export const displayEmbeddedInNarrowMode = async (
 
 export const displayEmbeddedInLargeMode = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item
+    item: Item,
 ): Promise<void> => {
     try {
         const user_id = parseInt(context.rootState.configuration.user_id, 10);
@@ -92,7 +92,7 @@ export const displayEmbeddedInLargeMode = async (
 
 export const getEmbeddedFileDisplayPreference = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item
+    item: Item,
 ): Promise<"narrow" | false | null> => {
     try {
         const user_id = parseInt(context.rootState.configuration.user_id, 10);

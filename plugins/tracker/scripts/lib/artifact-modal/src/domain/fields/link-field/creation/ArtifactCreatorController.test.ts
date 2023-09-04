@@ -56,15 +56,15 @@ describe(`ArtifactCreatorController`, () => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         projects_retriever = RetrieveProjectsStub.withProjects(
             ProjectStub.withDefaults({ id: 184 }),
-            ProjectStub.withDefaults({ id: 198 })
+            ProjectStub.withDefaults({ id: 198 }),
         );
 
         tracker_retriever = RetrieveProjectTrackersStub.withTrackers(
             TrackerStub.withDefaults({ id: 86 }),
-            TrackerStub.withDefaults({ id: 98 })
+            TrackerStub.withDefaults({ id: 98 }),
         );
         artifact_creator = CreateLinkableArtifactStub.withArtifact(
-            LinkableArtifactStub.withDefaults()
+            LinkableArtifactStub.withDefaults(),
         );
     });
 
@@ -76,7 +76,7 @@ describe(`ArtifactCreatorController`, () => {
             artifact_creator,
             CurrentProjectIdentifierStub.withId(CURRENT_PROJECT_ID),
             CurrentTrackerIdentifierStub.withId(CURRENT_TRACKER_ID),
-            en_US_LOCALE
+            en_US_LOCALE,
         );
 
     describe(`getSelectedProject()`, () => {
@@ -91,7 +91,7 @@ describe(`ArtifactCreatorController`, () => {
 
             controller.selectProjectAndGetItsTrackers(
                 project_id,
-                WillDisableSubmit("Retrieving trackers")
+                WillDisableSubmit("Retrieving trackers"),
             );
 
             expect(controller.getSelectedProject()).toBe(project_id);
@@ -106,7 +106,7 @@ describe(`ArtifactCreatorController`, () => {
 
         it(`will return the current tracker id`, () => {
             expect(getController().getSelectedTracker().unwrapOr(null)?.id).toBe(
-                CURRENT_TRACKER_ID
+                CURRENT_TRACKER_ID,
             );
         });
 
@@ -127,7 +127,7 @@ describe(`ArtifactCreatorController`, () => {
 
             await controller.selectProjectAndGetItsTrackers(
                 ProjectIdentifierStub.withId(835),
-                event
+                event,
             );
 
             expect(controller.getSelectedTracker().isNothing()).toBe(true);
@@ -151,7 +151,7 @@ describe(`ArtifactCreatorController`, () => {
                 TrackerStub.withDefaults({
                     id: CURRENT_TRACKER_ID,
                     cannot_create_reason: "Another field is required",
-                })
+                }),
             );
             const controller = getController();
 
@@ -222,7 +222,7 @@ describe(`ArtifactCreatorController`, () => {
             it will call the previously registered Fault listener
             and it will return an empty array`, async () => {
             tracker_retriever = RetrieveProjectTrackersStub.withFault(
-                Fault.fromMessage("Not found")
+                Fault.fromMessage("Not found"),
             );
             const handler = jest.fn();
             const controller = getController();
@@ -262,7 +262,7 @@ describe(`ArtifactCreatorController`, () => {
             const controller = getController();
             await controller.selectProjectAndGetItsTrackers(
                 ProjectIdentifierStub.withId(835),
-                WillDisableSubmit("Retrieving trackers")
+                WillDisableSubmit("Retrieving trackers"),
             );
 
             const result = await controller.createArtifact(title, event);
@@ -275,7 +275,7 @@ describe(`ArtifactCreatorController`, () => {
             it will call the previously registered Fault listener
             and will return Nothing`, async () => {
             artifact_creator = CreateLinkableArtifactStub.withFault(
-                Fault.fromMessage("Bad Request")
+                Fault.fromMessage("Bad Request"),
             );
             const handler = jest.fn();
             const controller = getController();

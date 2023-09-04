@@ -27,6 +27,6 @@ export function getExecutions(campaign: Campaign): Promise<TestExecutionResponse
         `/api/v1/testmanagement_campaigns/${encodeURIComponent(id)}/testmanagement_executions`,
         {
             params: { limit: 50 },
-        }
+        },
     );
 }

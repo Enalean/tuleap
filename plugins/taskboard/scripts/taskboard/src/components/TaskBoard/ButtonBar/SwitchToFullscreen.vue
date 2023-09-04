@@ -61,7 +61,7 @@ export default class SwitchToFullscreen extends Vue {
             () => {
                 this.setIsTaskboardInFullscreenMode(fscreen.fullscreenElement !== null);
             },
-            false
+            false,
         );
     }
 

@@ -35,7 +35,7 @@ export const SaveDescriptionCommentStub = {
         return {
             getLastCallParams: () => last_call_params,
             saveDescriptionComment: (
-                description: DescriptionCommentFormPresenter
+                description: DescriptionCommentFormPresenter,
             ): ResultAsync<PullRequest, Fault> => {
                 last_call_params = description;
 
@@ -50,8 +50,8 @@ export const SaveDescriptionCommentStub = {
         saveDescriptionComment: (): ResultAsync<PullRequest, Fault> =>
             errAsync(
                 Fault.fromMessage(
-                    "SaveDescriptionCommentStub::saveDescriptionComment was called while it's not configured"
-                )
+                    "SaveDescriptionCommentStub::saveDescriptionComment was called while it's not configured",
+                ),
             ),
     }),
 };

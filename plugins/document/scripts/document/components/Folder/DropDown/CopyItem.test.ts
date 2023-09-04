@@ -64,7 +64,7 @@ describe("CopyItem", () => {
                             },
                         },
                     },
-                    pinia
+                    pinia,
                 ),
             },
         });

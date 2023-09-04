@@ -23,14 +23,14 @@ import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 export interface TransformUsersToLazyboxItems {
     buildForDropdown(
         users: ReadonlyArray<User>,
-        currently_selected_users: ReadonlyArray<User>
+        currently_selected_users: ReadonlyArray<User>,
     ): ReadonlyArray<LazyboxItem>;
     buildForSelection(users: ReadonlyArray<User>): ReadonlyArray<LazyboxItem>;
 }
 
 const transformUsersToLazyboxItems = (
     users: ReadonlyArray<User>,
-    is_user_selected: (user: User) => boolean
+    is_user_selected: (user: User) => boolean,
 ): ReadonlyArray<LazyboxItem> =>
     users.map((user) => ({
         id: String(user.id),
@@ -43,14 +43,14 @@ const transformUsersToLazyboxItems = (
 export const UsersToLazyboxItemsTransformer = (): TransformUsersToLazyboxItems => ({
     buildForDropdown(
         users: ReadonlyArray<User>,
-        currently_selected_users: ReadonlyArray<User>
+        currently_selected_users: ReadonlyArray<User>,
     ): ReadonlyArray<LazyboxItem> {
         return transformUsersToLazyboxItems(
             users,
             (user: User) =>
                 currently_selected_users.findIndex(
-                    (selected_user) => selected_user.id === user.id
-                ) !== -1
+                    (selected_user) => selected_user.id === user.id,
+                ) !== -1,
         );
     },
     buildForSelection(users: ReadonlyArray<User>): ReadonlyArray<LazyboxItem> {

@@ -42,7 +42,7 @@ export default {
         openModal() {
             this.$store.dispatch(
                 "transitionModal/showTransitionConfigurationModal",
-                this.transition
+                this.transition,
             );
         },
     },

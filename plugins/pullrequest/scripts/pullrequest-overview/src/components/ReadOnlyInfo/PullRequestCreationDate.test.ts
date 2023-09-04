@@ -52,7 +52,7 @@ describe("PullRequestCreationDate", () => {
         expect(
             wrapper
                 .find("[data-test=pullrequest-creation-date-as-relative-date]")
-                .attributes("date")
+                .attributes("date"),
         ).toBe("2023-02-17T11:00:00Z");
     });
 });

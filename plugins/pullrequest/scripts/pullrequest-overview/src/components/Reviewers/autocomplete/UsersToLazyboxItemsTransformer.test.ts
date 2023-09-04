@@ -48,7 +48,7 @@ describe("UsersToLazyboxItemsTransformer", () => {
 
     it(`buildForDropdown() should build items for lazybox's dropdown, disabling already selected users`, () => {
         expect(
-            UsersToLazyboxItemsTransformer().buildForDropdown([user_1, user_2], [user_2])
+            UsersToLazyboxItemsTransformer().buildForDropdown([user_1, user_2], [user_2]),
         ).toStrictEqual([
             {
                 id: String(user_1.id),

@@ -174,7 +174,7 @@ describe(`event-handler-factory`, () => {
                 options,
                 event_source,
                 ongoing_drag,
-                drop_ghost
+                drop_ghost,
             ).dragEnterHandler;
         });
 
@@ -330,7 +330,7 @@ describe(`event-handler-factory`, () => {
                 options,
                 event_source,
                 ongoing_drag,
-                drop_ghost
+                drop_ghost,
             ).dragLeaveHandler;
         });
 
@@ -406,7 +406,7 @@ describe(`event-handler-factory`, () => {
                 options,
                 event_source,
                 ongoing_drag,
-                drop_ghost
+                drop_ghost,
             ).dragOverHandler;
         });
 
@@ -532,7 +532,7 @@ describe(`event-handler-factory`, () => {
                 options,
                 after_drop_dispatcher,
                 ongoing_drag,
-                drop_ghost
+                drop_ghost,
             ).dropHandler;
         });
 
@@ -632,7 +632,7 @@ describe(`event-handler-factory`, () => {
                 options,
                 after_drop_dispatcher,
                 ongoing_drag,
-                drop_ghost
+                drop_ghost,
             ).dragEndHandler;
         });
 

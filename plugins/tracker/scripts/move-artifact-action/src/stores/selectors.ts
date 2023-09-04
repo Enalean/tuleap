@@ -86,7 +86,7 @@ export const useSelectorsStore = defineStore("selectors", {
             return getProjectList()
                 .match((project_list) => {
                     this.projects = [...project_list].sort((a: Project, b: Project) =>
-                        a.label.localeCompare(b.label)
+                        a.label.localeCompare(b.label),
                     );
                 }, useModalStore().setErrorMessage)
                 .finally(() => this.stopLoadingProjects());

@@ -32,7 +32,7 @@
             <p class="tlp-text-warning">
                 {{
                     $gettext(
-                        "Please note that if you check this option, the referenced wiki page will no longer exist in the wiki service too."
+                        "Please note that if you check this option, the referenced wiki page will no longer exist in the wiki service too.",
                     )
                 }}
             </p>
@@ -79,9 +79,9 @@ const { $gettext } = useGettext();
 const wiki_deletion_warning = computed((): string => {
     return sprintf(
         $gettext(
-            'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
+            'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:',
         ),
-        props.item.wiki_properties.page_name
+        props.item.wiki_properties.page_name,
     );
 });
 
@@ -103,7 +103,7 @@ function processInput($event: Event): void {
 
 function getWikiPageUrl(referencer: ItemPath): string {
     return `/plugins/docman/?group_id=${encodeURIComponent(
-        project_id.value
+        project_id.value,
     )}&action=show&id=${encodeURIComponent(referencer.id)}`;
 }
 </script>

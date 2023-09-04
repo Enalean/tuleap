@@ -52,7 +52,7 @@ function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformat
                         },
                     },
                 },
-                pinia
+                pinia,
             ),
         },
     });
@@ -86,7 +86,7 @@ describe("ClipboardContentInformation", () => {
 
             const result_copy = wrapper.html();
             expect(result_copy).toContain(expected_message);
-        }
+        },
     );
 
     it.each([
@@ -106,6 +106,6 @@ describe("ClipboardContentInformation", () => {
 
             const result_copy = wrapper.html();
             expect(result_copy).toContain(expected_message);
-        }
+        },
     );
 });

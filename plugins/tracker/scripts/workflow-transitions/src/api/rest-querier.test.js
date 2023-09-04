@@ -65,7 +65,7 @@ describe("Rest queries:", () => {
 
             it("calls project API", () =>
                 expect(get).toHaveBeenCalledWith(
-                    "/api/projects/266/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
+                    "/api/projects/266/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D",
                 ));
             it("returns the user groups", () => expect(result).toEqual(return_json));
         });
@@ -89,7 +89,7 @@ describe("Rest queries:", () => {
             put = jest.spyOn(tlp_fetch, "put").mockReturnValue(
                 Promise.resolve({
                     json: () => json_result,
-                })
+                }),
             );
         });
         describe("putPostActions()", () => {
@@ -100,7 +100,7 @@ describe("Rest queries:", () => {
             it("calls PUT actions with json headers", () =>
                 expect(put).toHaveBeenCalledWith(
                     "/api/tracker_workflow_transitions/9/actions",
-                    expect.objectContaining({ headers: json_headers })
+                    expect.objectContaining({ headers: json_headers }),
                 ));
 
             it("does not send unique_ids", () => {
@@ -118,7 +118,7 @@ describe("Rest queries:", () => {
             patch = jest.spyOn(tlp_fetch, "patch").mockReturnValue(
                 Promise.resolve({
                     json: () => json_result,
-                })
+                }),
             );
         });
 
@@ -129,7 +129,7 @@ describe("Rest queries:", () => {
 
             it("calls api tracker", () =>
                 expect(patch).toHaveBeenCalledWith(
-                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D"
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D",
                 ));
         });
 
@@ -140,7 +140,7 @@ describe("Rest queries:", () => {
 
             it("calls api tracker", () =>
                 expect(patch).toHaveBeenCalledWith(
-                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D"
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D",
                 ));
         });
 
@@ -153,7 +153,7 @@ describe("Rest queries:", () => {
 
             it("calls PATCH", () =>
                 expect(patch).toHaveBeenCalledWith(
-                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22is_used%22%3Atrue%7D%7D%7D"
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22is_used%22%3Atrue%7D%7D%7D",
                 ));
             it("returns PATCH response", () => {
                 expect(returned_value).toBe(json_result);
@@ -167,7 +167,7 @@ describe("Rest queries:", () => {
 
             it("calls api tracker", () =>
                 expect(patch).toHaveBeenCalledWith(
-                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22is_legacy%22%3Afalse%7D%7D"
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22is_legacy%22%3Afalse%7D%7D",
                 ));
         });
 
@@ -175,7 +175,7 @@ describe("Rest queries:", () => {
             it("calls tracker API with given workflow mode", () => {
                 changeWorkflowMode(49, true);
                 expect(patch).toHaveBeenCalledWith(
-                    "/api/trackers/49?query=%7B%22workflow%22%3A%7B%22is_advanced%22%3Atrue%7D%7D"
+                    "/api/trackers/49?query=%7B%22workflow%22%3A%7B%22is_advanced%22%3Atrue%7D%7D",
                 );
             });
         });
@@ -210,7 +210,7 @@ describe("Rest queries:", () => {
                         expect.anything(),
                         expect.objectContaining({
                             body: expect.stringMatching(/"authorized_user_group_ids":\[\]/),
-                        })
+                        }),
                     ));
             });
 
@@ -226,7 +226,7 @@ describe("Rest queries:", () => {
                         expect.anything(),
                         expect.objectContaining({
                             body: expect.stringMatching(/"not_empty_field_ids":\[\]/),
-                        })
+                        }),
                     ));
             });
         });
@@ -240,7 +240,7 @@ describe("Rest queries:", () => {
             post = jest.spyOn(tlp_fetch, "post").mockReturnValue(
                 Promise.resolve({
                     json: () => new_transition,
-                })
+                }),
             );
         });
 

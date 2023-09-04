@@ -39,7 +39,7 @@ describe("Error Handler", () => {
                 new FetchWrapperError("Error", {
                     json: (): Promise<{ message: string }> => Promise.resolve({ message: "" }),
                 } as Response),
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("Oops, an error occurred!");
         });
@@ -58,7 +58,7 @@ describe("Error Handler", () => {
                             },
                         }),
                 } as Response),
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("My i18n Message");
         });
@@ -76,7 +76,7 @@ describe("Error Handler", () => {
                             },
                         }),
                 } as Response),
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("404 not found");
         });
@@ -102,7 +102,7 @@ describe("Error Handler", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "setModalErrorMessage",
-                "500 Internal Server Error"
+                "500 Internal Server Error",
             );
         });
 

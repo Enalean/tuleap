@@ -28,7 +28,7 @@ function MercureService(
     jwtHelper,
     KanbanItemRestService,
     KanbanService,
-    gettextCatalog
+    gettextCatalog,
 ) {
     const self = this;
     let realtime_mercure;
@@ -55,10 +55,10 @@ function MercureService(
                     listenKanbanItemUpdate,
                     listenKanbanItemMoved,
                     listenKanbanItemCreate,
-                    listenKanbanStructuralUpdate
+                    listenKanbanStructuralUpdate,
                 ),
                 errCallback,
-                sucessCallback
+                sucessCallback,
             );
         });
         loadColumnsFunction = loadColumns;
@@ -66,8 +66,8 @@ function MercureService(
     function getToken(id) {
         return $q.when(
             post(encodeURI(`/kanban/${id}/mercure-realtime-token`)).then((response) =>
-                response.text()
-            )
+                response.text(),
+            ),
         );
     }
     function requestJWTToRefreshToken() {
@@ -150,7 +150,7 @@ function MercureService(
             event.data.artifact_id,
             source_column,
             destination_column,
-            event.data.ordered_destination_column_items_ids
+            event.data.ordered_destination_column_items_ids,
         );
         $rootScope.$applyAsync();
     }
@@ -162,8 +162,8 @@ function MercureService(
             get(encodeURI("/api/v1/kanban/" + SharedPropertiesService.getKanban().id)).then(
                 (response) => {
                     return response.json();
-                }
-            )
+                },
+            ),
         );
     }
     function listenKanbanStructuralUpdate() {
@@ -190,7 +190,7 @@ function MercureService(
         SharedPropertiesService.getKanban().columns.splice(
             0,
             kanban.columns.length,
-            ...kanban.columns
+            ...kanban.columns,
         );
         callLoadColumn();
     }
@@ -199,8 +199,8 @@ function MercureService(
         if (mercureRetryNumber > 1) {
             setError(
                 gettextCatalog.getString(
-                    "You are disconnected from real time. Please reload your page."
-                )
+                    "You are disconnected from real time. Please reload your page.",
+                ),
             );
             SharedPropertiesService.setIsMercureServerConnected(false);
         }

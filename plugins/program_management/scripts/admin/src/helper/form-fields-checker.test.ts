@@ -36,7 +36,7 @@ describe("form-fields-checker", function () {
             resetErrorOnSelectField = jest.spyOn(formFieldErrorHelper, "resetErrorOnSelectField");
             setErrorMessageOnSelectField = jest.spyOn(
                 formFieldErrorHelper,
-                "setErrorMessageOnSelectField"
+                "setErrorMessageOnSelectField",
             );
         });
 
@@ -48,8 +48,8 @@ describe("form-fields-checker", function () {
             expect(
                 checkAllFieldAreFilledAndSetErrorMessage(
                     createDocumentWithSelectorWithoutEmptyField(),
-                    gettext
-                )
+                    gettext,
+                ),
             ).toBeTruthy();
 
             expect(resetErrorOnSelectField).toHaveBeenCalledTimes(3);
@@ -60,8 +60,8 @@ describe("form-fields-checker", function () {
             expect(
                 checkAllFieldAreFilledAndSetErrorMessage(
                     createDocumentWithSelectorWithEmptyField(),
-                    gettext
-                )
+                    gettext,
+                ),
             ).toBeFalsy();
 
             expect(resetErrorOnSelectField).toHaveBeenCalledTimes(3);

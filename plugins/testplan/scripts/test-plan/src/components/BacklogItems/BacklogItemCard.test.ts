@@ -160,7 +160,7 @@ describe("BacklogItemCard", () => {
 
         expect(remove_is_just_refreshed_flag_on_backlog_item_spy).toHaveBeenCalledWith(
             expect.any(Object),
-            backlog_item
+            backlog_item,
         );
     });
 });

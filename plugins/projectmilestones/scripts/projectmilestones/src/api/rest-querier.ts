@@ -31,7 +31,7 @@ function recursiveGetProjectMilestonesWithQuery(
     project_id: number,
     query: string,
     limit: number,
-    offset: number
+    offset: number,
 ): Promise<MilestoneData[]> {
     return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
         params: {
@@ -56,7 +56,7 @@ export function getCurrentMilestones({
 
 export function getAllSprints(
     milestone_id: number,
-    { limit, offset }: ParametersRequestWithoutId
+    { limit, offset }: ParametersRequestWithoutId,
 ): Promise<MilestoneData[]> {
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`, {
         params: {
@@ -68,7 +68,7 @@ export function getAllSprints(
 
 export function getMilestonesContent(
     id_release: number,
-    { limit, offset }: ParametersRequestWithoutId
+    { limit, offset }: ParametersRequestWithoutId,
 ): Promise<MilestoneContent[]> {
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
         params: {
@@ -80,7 +80,7 @@ export function getMilestonesContent(
 
 export function getMilestonesBacklog(
     id_release: number,
-    { limit, offset }: ParametersRequestWithoutId
+    { limit, offset }: ParametersRequestWithoutId,
 ): Promise<MilestoneContent[]> {
     const query = JSON.stringify({
         status: "all",
@@ -124,7 +124,7 @@ export async function getNbOfPastRelease({ project_id }: ParametersRequestWithId
 
 export async function getLastRelease(
     project_id: number,
-    nb_past_releases: number
+    nb_past_releases: number,
 ): Promise<MilestoneData[] | null> {
     const query = JSON.stringify({
         status: "closed",
@@ -146,7 +146,7 @@ export async function getLastRelease(
 
 export function getTestManagementCampaigns(
     release_id: number,
-    { limit, offset, project_id }: ParametersRequestWithId
+    { limit, offset, project_id }: ParametersRequestWithId,
 ): Promise<TestManagementCampaign[]> {
     const query = JSON.stringify({
         milestone_id: release_id,
@@ -160,6 +160,6 @@ export function getTestManagementCampaigns(
                 limit,
                 offset,
             },
-        }
+        },
     );
 }

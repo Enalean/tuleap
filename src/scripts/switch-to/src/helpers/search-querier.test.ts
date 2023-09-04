@@ -52,7 +52,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -81,7 +81,7 @@ describe("search-querier", () => {
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
             querier(
@@ -95,7 +95,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -144,7 +144,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -178,7 +178,7 @@ describe("search-querier", () => {
                             { title: "toto", html_url: "/toto" },
                             { title: "tata", html_url: "/tata" },
                         ] as ItemDefinition[]),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
             querier(
@@ -195,7 +195,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -232,7 +232,7 @@ describe("search-querier", () => {
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
             const addItemToCollection = jest.fn();
@@ -247,7 +247,7 @@ describe("search-querier", () => {
                 addItemToCollection,
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             await expected_results;
@@ -274,7 +274,7 @@ describe("search-querier", () => {
                             { title: "toto", html_url: "/toto" },
                             { title: "toto", html_url: "/toto" },
                         ] as ItemDefinition[]),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
             querier(
@@ -288,7 +288,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -309,7 +309,7 @@ describe("search-querier", () => {
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
-                    options: OptionsWithAutoEncodedParameters
+                    options: OptionsWithAutoEncodedParameters,
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([
                         [
@@ -364,7 +364,7 @@ describe("search-querier", () => {
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);
-                }
+                },
             );
 
             querier(
@@ -378,7 +378,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -413,7 +413,7 @@ describe("search-querier", () => {
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
-                    options: OptionsWithAutoEncodedParameters
+                    options: OptionsWithAutoEncodedParameters,
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([
                         [
@@ -457,7 +457,7 @@ describe("search-querier", () => {
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);
-                }
+                },
             );
 
             querier(
@@ -471,7 +471,7 @@ describe("search-querier", () => {
                 jest.fn(),
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
-                }
+                },
             ).run();
 
             if (!expected_results) {
@@ -502,7 +502,7 @@ describe("search-querier", () => {
                     next_offset: 0,
                 },
                 jest.fn(),
-                jest.fn()
+                jest.fn(),
             );
 
             const post_spy = jest.spyOn(fetch_result, "post");
@@ -523,7 +523,7 @@ describe("search-querier", () => {
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
             query.stop();
@@ -542,14 +542,14 @@ describe("search-querier", () => {
                     next_offset: 0,
                 },
                 jest.fn(),
-                jest.fn()
+                jest.fn(),
             );
 
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
-                    options: OptionsWithAutoEncodedParameters
+                    options: OptionsWithAutoEncodedParameters,
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([
                         [0, [] as ItemDefinition[]],
@@ -578,7 +578,7 @@ describe("search-querier", () => {
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);
-                }
+                },
             );
 
             query.run();

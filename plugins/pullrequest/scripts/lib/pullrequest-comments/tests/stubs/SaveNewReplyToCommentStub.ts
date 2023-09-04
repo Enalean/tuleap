@@ -40,7 +40,7 @@ export const SaveNewReplyToCommentStub = {
             getLastCallParams: () => last_call_params,
             saveReply: (
                 comment: PullRequestCommentPresenter,
-                new_reply: ReplyCommentFormPresenter
+                new_reply: ReplyCommentFormPresenter,
             ): ResultAsync<PullRequestComment, Fault> => {
                 nb_calls++;
                 last_call_params = new_reply;
@@ -54,8 +54,8 @@ export const SaveNewReplyToCommentStub = {
         saveReply: (): ResultAsync<PullRequestComment, Fault> =>
             errAsync(
                 Fault.fromMessage(
-                    "SaveNewReplyToCommentStub::saveReply was called while it's not configured"
-                )
+                    "SaveNewReplyToCommentStub::saveReply was called while it's not configured",
+                ),
             ),
     }),
 

@@ -58,7 +58,7 @@ describe(`rest-querier`, () => {
         const result = await postGitlabMergeRequest(
             GITLAB_INTEGRATION_ID,
             ARTIFACT_ID,
-            "prefix/tuleap-123"
+            "prefix/tuleap-123",
         );
 
         expect(postSpy).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe(`rest-querier`, () => {
                 gitlab_integration_id: GITLAB_INTEGRATION_ID,
                 artifact_id: ARTIFACT_ID,
                 source_branch: "prefix/tuleap-123",
-            }
+            },
         );
         expect(result.isOk()).toBe(true);
     });
@@ -81,7 +81,7 @@ describe(`rest-querier`, () => {
             const result = await getGitLabRepositoryBranchInformation(GITLAB_INTEGRATION_ID);
 
             expect(getSpy).toHaveBeenCalledWith(
-                uri`/api/v1/gitlab_repositories/${GITLAB_INTEGRATION_ID}/branches`
+                uri`/api/v1/gitlab_repositories/${GITLAB_INTEGRATION_ID}/branches`,
             );
             expect(result.isOk()).toBe(true);
         });

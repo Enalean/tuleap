@@ -38,7 +38,7 @@ describe("OtherInformationPropertiesForCreate", () => {
     function createWrapper(
         value: string,
         is_obsolescence_date_property_used: boolean,
-        has_loaded_properties: boolean
+        has_loaded_properties: boolean,
     ): VueWrapper<InstanceType<typeof OtherInformationPropertiesForCreate>> {
         load_properties.mockReset();
         const properties: Array<Property> = [];
@@ -98,7 +98,7 @@ describe("OtherInformationPropertiesForCreate", () => {
 
         expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-other-information-spinner]").exists()
+            wrapper.find("[data-test=document-other-information-spinner]").exists(),
         ).toBeTruthy();
     });
 

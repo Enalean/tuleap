@@ -70,13 +70,13 @@ describe("GitRepositoryTableSimplePermissions", () => {
         const wrapper = instantiateComponent();
 
         expect(
-            wrapper.find("[data-test=git-permission-badge-project_members_readers]").exists()
+            wrapper.find("[data-test=git-permission-badge-project_members_readers]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=git-permission-badge-project_members_writers]").exists()
+            wrapper.find("[data-test=git-permission-badge-project_members_writers]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=git-permission-badge-project_members_rewinders]").exists()
+            wrapper.find("[data-test=git-permission-badge-project_members_rewinders]").exists(),
         ).toBeTruthy();
     });
 });

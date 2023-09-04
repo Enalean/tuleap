@@ -22,7 +22,7 @@ function PullRequestService(PullRequestRestService) {
     function merge(pull_request) {
         return PullRequestRestService.updateStatus(
             pull_request.id,
-            self.valid_status_keys.merge
+            self.valid_status_keys.merge,
         ).then(function () {
             pull_request.status = self.valid_status_keys.merge;
         });
@@ -31,7 +31,7 @@ function PullRequestService(PullRequestRestService) {
     function abandon(pull_request) {
         return PullRequestRestService.updateStatus(
             pull_request.id,
-            self.valid_status_keys.abandon
+            self.valid_status_keys.abandon,
         ).then(function () {
             pull_request.status = self.valid_status_keys.abandon;
         });
@@ -40,7 +40,7 @@ function PullRequestService(PullRequestRestService) {
     function reopen(pull_request) {
         return PullRequestRestService.updateStatus(
             pull_request.id,
-            self.valid_status_keys.review
+            self.valid_status_keys.review,
         ).then(function () {
             pull_request.status = self.valid_status_keys.review;
         });
@@ -51,7 +51,7 @@ function PullRequestService(PullRequestRestService) {
         return PullRequestRestService.updateTitleAndDescription(
             pull_request.id,
             title,
-            new_description
+            new_description,
         ).then(function (response) {
             pull_request.title = response.data.title;
             pull_request.description = response.data.description;

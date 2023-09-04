@@ -22,7 +22,7 @@ import type { BacklogItem, TestDefinition } from "../../type";
 export function buildCreateNewTestDefinitionLink(
     testdefinition_tracker_id: number,
     milestone_id: number,
-    backlog_item: BacklogItem
+    backlog_item: BacklogItem,
 ): string {
     const url_params = new URLSearchParams({
         tracker: String(testdefinition_tracker_id),
@@ -41,7 +41,7 @@ export function buildEditBacklogItemLink(milestone_id: number, backlog_item: Bac
 export function buildEditTestDefinitionItemLink(
     milestone_id: number,
     test_definition: TestDefinition,
-    backlog_item: BacklogItem
+    backlog_item: BacklogItem,
 ): string {
     return buildEditArtifactLink(test_definition.id, backlog_item.id, milestone_id);
 }
@@ -49,7 +49,7 @@ export function buildEditTestDefinitionItemLink(
 function buildEditArtifactLink(
     id: number,
     ttm_backlog_item_id: number,
-    ttm_milestone_id: number
+    ttm_milestone_id: number,
 ): string {
     const url_params = new URLSearchParams({
         aid: String(id),
@@ -63,17 +63,17 @@ function buildEditArtifactLink(
 export function buildGoToTestExecutionLink(
     project_id: number,
     milestone_id: number,
-    test_definition: TestDefinition
+    test_definition: TestDefinition,
 ): string | null {
     if (test_definition.test_status === null) {
         return null;
     }
 
     return `/plugins/testmanagement/?group_id=${encodeURIComponent(
-        project_id
+        project_id,
     )}&milestone_id=${encodeURIComponent(milestone_id)}#!/campaigns/${encodeURIComponent(
-        test_definition.test_campaign_defining_status.id
+        test_definition.test_campaign_defining_status.id,
     )}/${encodeURIComponent(
-        test_definition.test_execution_used_to_define_status.id
+        test_definition.test_execution_used_to_define_status.id,
     )}/${encodeURIComponent(test_definition.id)}`;
 }

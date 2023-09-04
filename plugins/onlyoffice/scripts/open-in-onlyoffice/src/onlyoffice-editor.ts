@@ -40,7 +40,7 @@ declare global {
 function addOnlyOfficeAPIScript(
     document: Document,
     window: Window,
-    document_server_base_url: string
+    document_server_base_url: string,
 ): Promise<OnlyOfficeDocsAPI> {
     return new Promise((resolve, reject) => {
         const api_script_url = new URL(ONLYOFFICE_API_SCRIPT_PATH, document_server_base_url);
@@ -51,13 +51,13 @@ function addOnlyOfficeAPIScript(
                 throw new Error(
                     "ONLYOFFICE script " +
                         api_script_url.href +
-                        " did not expose DocsAPI on window as expected"
+                        " did not expose DocsAPI on window as expected",
                 );
             }
             resolve(window.DocsAPI);
         });
         onlyoffice_api_script_element.addEventListener("error", (error_event: ErrorEvent) =>
-            reject(error_event.error)
+            reject(error_event.error),
         );
         document.body.appendChild(onlyoffice_api_script_element);
     });
@@ -139,7 +139,7 @@ export async function main(document: Document, window: Window): Promise<void> {
             refreshCallbackURLToken,
             refresh_interval_in_ms,
             window,
-            token_payload.editorConfig.callbackUrl
+            token_payload.editorConfig.callbackUrl,
         );
     } catch (e) {
         document.body.innerText = "Error while loading ONLYOFFICE editor content";

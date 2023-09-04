@@ -193,7 +193,7 @@ describe("BacklogItem state actions", () => {
                 {
                     params: { milestone_id: 42, limit: 30 },
                     getCollectionCallback: expect.any(Function),
-                }
+                },
             );
             expect(context.commit).toHaveBeenCalledWith("addTestDefinitions", {
                 backlog_item,
@@ -204,7 +204,7 @@ describe("BacklogItem state actions", () => {
             });
             expect(context.commit).toHaveBeenCalledWith(
                 "markTestDefinitionsAsBeingLoaded",
-                backlog_item
+                backlog_item,
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
         });
@@ -228,7 +228,7 @@ describe("BacklogItem state actions", () => {
                 {
                     params: { milestone_id: 42, limit: 30 },
                     getCollectionCallback: expect.any(Function),
-                }
+                },
             );
             expect(context.commit).toHaveBeenCalledWith("addTestDefinitions", {
                 backlog_item,
@@ -240,7 +240,7 @@ describe("BacklogItem state actions", () => {
             });
             expect(context.commit).toHaveBeenCalledWith(
                 "markTestDefinitionsAsBeingLoaded",
-                backlog_item
+                backlog_item,
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
         });
@@ -256,7 +256,7 @@ describe("BacklogItem state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
             expect(context.commit).toHaveBeenCalledWith(
                 "loadingErrorHasBeenCatchedForTestDefinition",
-                backlog_item
+                backlog_item,
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
         });
@@ -272,7 +272,7 @@ describe("BacklogItem state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
             expect(context.commit).not.toHaveBeenCalledWith(
                 "loadingErrorHasBeenCatchedForTestDefinition",
-                backlog_item
+                backlog_item,
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
         });

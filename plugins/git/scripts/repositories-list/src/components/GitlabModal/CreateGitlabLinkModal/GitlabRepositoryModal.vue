@@ -109,7 +109,7 @@ export default class GitlabRepositoryModal extends Vue {
             this.$gettext("GitLab repository %{ label } has been successfully integrated!"),
             {
                 label: repository.path_with_namespace,
-            }
+            },
         );
         this.$store.commit("setSuccessMessage", success_message);
     }

@@ -19,7 +19,7 @@
 
 export function extractAggregatedTeamIds(doc: Document): number[] {
     const buttons_open_modal_to_remove_team = doc.getElementsByClassName(
-        "program-management-admin-remove-teams-open-modal-button"
+        "program-management-admin-remove-teams-open-modal-button",
     );
 
     const team_ids: number[] = [];

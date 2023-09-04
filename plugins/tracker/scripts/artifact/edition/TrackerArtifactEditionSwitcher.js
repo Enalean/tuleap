@@ -114,7 +114,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                 if (field.querySelectorAll(selector + ":checked").length === 0) {
                     [].forEach.call(checkboxes, function (checkbox) {
                         checkbox.setCustomValidity(
-                            codendi.getText("tracker_artifact", "please_select_at_least_one")
+                            codendi.getText("tracker_artifact", "please_select_at_least_one"),
                         );
                     });
                 } else {
@@ -168,7 +168,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 
         var bindClickOnAutocomputeInMassChange = function () {
             $(".field-masschange.tracker_artifact_field-computed").each(
-                bindEditionBackToAutocomputeMassChange
+                bindEditionBackToAutocomputeMassChange,
             );
         };
 
@@ -249,7 +249,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 
         var switchValueToManualMode = function (element, field_id) {
             var field_computed_is_autocomputed = document.getElementsByName(
-                "artifact[" + field_id + "][is_autocomputed]"
+                "artifact[" + field_id + "][is_autocomputed]",
             );
             if (field_computed_is_autocomputed[0] !== undefined) {
                 field_computed_is_autocomputed[0].value = "0";
@@ -258,10 +258,10 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 
         var switchValueToAutoComputedMode = function (element, field_id) {
             var field_computed_manual_value = document.getElementsByName(
-                "artifact[" + field_id + "][manual_value]"
+                "artifact[" + field_id + "][manual_value]",
             );
             var field_computed_is_autocomputed = document.getElementsByName(
-                "artifact[" + field_id + "][is_autocomputed]"
+                "artifact[" + field_id + "][is_autocomputed]",
             );
             if (
                 field_computed_manual_value[0] !== undefined &&
@@ -293,7 +293,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                     } else {
                         section.style.display = "block";
                     }
-                }
+                },
             );
             $(element).find(".auto-computed-label").hide();
             $(element).find(".back-to-autocompute").hide();
@@ -336,7 +336,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
             var field = $(
                 ".tracker_artifact_field .tracker_hidden_edition_field[data-field-id=" +
                     target_field_id +
-                    "]"
+                    "]",
             );
 
             if (field) {
@@ -347,7 +347,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
         var removeReadOnlyElements = function (element) {
             $(element)
                 .children(
-                    ":not(.tracker_formelement_label,.tracker_hidden_edition_field, .tracker_formelement_read_and_edit, .artifact-link-value-reverse, .tracker_formelement_edit, .auto-computed-label,.back-to-autocompute)"
+                    ":not(.tracker_formelement_label,.tracker_hidden_edition_field, .tracker_formelement_read_and_edit, .artifact-link-value-reverse, .tracker_formelement_edit, .auto-computed-label,.back-to-autocompute)",
                 )
                 .remove();
             $(element).find(".tracker_formelement_read_and_edit_read_section").hide();

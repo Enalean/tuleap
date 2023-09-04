@@ -34,7 +34,7 @@ describe("TestManagement", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<TestManagement>> {
         store = createStoreMock(store_options);
 

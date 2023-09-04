@@ -34,7 +34,7 @@ export const getProgramIncrementFromId =
     (state: State) =>
     (increment_id: number): ProgramIncrement => {
         const program_increment = state.program_increments.find(
-            (increment) => increment.id === increment_id
+            (increment) => increment.id === increment_id,
         );
 
         if (!program_increment) {
@@ -54,11 +54,11 @@ export const getFeatureInProgramIncrement =
     (state: State) =>
     (feature_id_with_program_increment_id: FeatureIdWithProgramIncrementId): Feature => {
         const program_increment = getProgramIncrementFromId(state)(
-            feature_id_with_program_increment_id.program_increment_id
+            feature_id_with_program_increment_id.program_increment_id,
         );
 
         const feature = program_increment.features.find(
-            (feature) => feature.id === feature_id_with_program_increment_id.feature_id
+            (feature) => feature.id === feature_id_with_program_increment_id.feature_id,
         );
 
         if (!feature) {
@@ -66,7 +66,7 @@ export const getFeatureInProgramIncrement =
                 "Could not find feature with id #" +
                     feature_id_with_program_increment_id.feature_id +
                     " in program increment #" +
-                    program_increment.id
+                    program_increment.id,
             );
         }
 
@@ -77,7 +77,7 @@ export const getToBePlannedElementFromId =
     (state: State) =>
     (to_be_planned_element_id: number): Feature => {
         const to_be_planned_element = state.to_be_planned_elements.find(
-            (to_be_planned_element) => to_be_planned_element.id === to_be_planned_element_id
+            (to_be_planned_element) => to_be_planned_element.id === to_be_planned_element_id,
         );
 
         if (!to_be_planned_element) {

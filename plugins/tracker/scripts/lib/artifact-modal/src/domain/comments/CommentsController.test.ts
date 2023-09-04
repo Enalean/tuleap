@@ -39,7 +39,7 @@ describe(`CommentsController`, () => {
     beforeEach(() => {
         comments_retriever = RetrieveCommentsStub.withComments(
             FollowUpCommentBuilder.aComment().withBody(FIRST_COMMENT_BODY).build(),
-            FollowUpCommentBuilder.aComment().withBody(SECOND_COMMENT_BODY).build()
+            FollowUpCommentBuilder.aComment().withBody(SECOND_COMMENT_BODY).build(),
         );
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         user_preferences = CommentUserPreferencesBuilder.userPreferences().build();
@@ -50,7 +50,7 @@ describe(`CommentsController`, () => {
             comments_retriever,
             event_dispatcher,
             CurrentArtifactIdentifierStub.withId(45),
-            user_preferences
+            user_preferences,
         );
 
     describe(`getPreferences()`, () => {
@@ -71,7 +71,7 @@ describe(`CommentsController`, () => {
 
         it(`when there is an error, it will notify the fault and return an empty array`, async () => {
             comments_retriever = RetrieveCommentsStub.withFault(
-                Fault.fromMessage("Internal server error")
+                Fault.fromMessage("Internal server error"),
             );
             const comments = await getController().getComments();
 

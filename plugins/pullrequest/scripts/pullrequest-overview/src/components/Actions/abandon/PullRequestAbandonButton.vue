@@ -64,7 +64,7 @@ const props = defineProps<{
 const { $gettext } = useGettext();
 const is_abandon_in_progress = ref(false);
 const is_button_displayed = computed(
-    () => isPullRequestInReview(props.pull_request) && props.pull_request.user_can_abandon
+    () => isPullRequestInReview(props.pull_request) && props.pull_request.user_can_abandon,
 );
 
 function proceedPullRequestAbandon(): void {

@@ -31,7 +31,7 @@ export interface ListPickerOptions {
     items_template_formatter?: (
         html: typeof HTMLTemplateStringProcessor,
         value_id: string,
-        item_label: string
+        item_label: string,
     ) => TemplateResult;
 }
 

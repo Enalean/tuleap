@@ -26,14 +26,14 @@ export const lvl1_iterations_to_display = (
     root_getters: {
         "timeperiod/first_date": Date;
         "timeperiod/last_date": Date;
-    }
+    },
 ): Iteration[] => {
     return state.lvl1_iterations.filter((iteration) =>
         isIterationBetweenFirstDateAndLastDate(
             iteration,
             root_getters["timeperiod/first_date"],
-            root_getters["timeperiod/last_date"]
-        )
+            root_getters["timeperiod/last_date"],
+        ),
     );
 };
 
@@ -44,21 +44,21 @@ export const lvl2_iterations_to_display = (
     root_getters: {
         "timeperiod/first_date": Date;
         "timeperiod/last_date": Date;
-    }
+    },
 ): Iteration[] => {
     return state.lvl2_iterations.filter((iteration) =>
         isIterationBetweenFirstDateAndLastDate(
             iteration,
             root_getters["timeperiod/first_date"],
-            root_getters["timeperiod/last_date"]
-        )
+            root_getters["timeperiod/last_date"],
+        ),
     );
 };
 
 function isIterationBetweenFirstDateAndLastDate(
     iteration: Iteration,
     first_date: Date,
-    last_date: Date
+    last_date: Date,
 ): boolean {
     return first_date <= iteration.start && iteration.end <= last_date;
 }

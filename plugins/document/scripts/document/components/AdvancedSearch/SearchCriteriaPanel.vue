@@ -68,7 +68,7 @@ const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
 const { root_id, criteria } = useNamespacedState<Pick<ConfigurationState, "root_id" | "criteria">>(
     "configuration",
-    ["root_id", "criteria"]
+    ["root_id", "criteria"],
 );
 
 const new_query: Ref<AdvancedSearchParams | null> = ref(null);

@@ -29,6 +29,6 @@ import type { CampaignState } from "../../store/campaign/type";
 
 const { has_refreshing_error } = useNamespacedState<Pick<CampaignState, "has_refreshing_error">>(
     "campaign",
-    ["has_refreshing_error"]
+    ["has_refreshing_error"],
 );
 </script>

@@ -23,7 +23,7 @@ import { extent } from "d3-array";
 
 export function getCoordinatesScaleLines(
     { x_scale, y_scale }: XYScale,
-    y_axis_maximum: number
+    y_axis_maximum: number,
 ): null | XYMinMaxCoordinates {
     const [x_minimum, x_maximum] = extent(x_scale.domain());
 

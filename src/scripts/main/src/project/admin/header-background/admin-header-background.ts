@@ -52,7 +52,7 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
     const form_submit_button_icon = mount_point.getElementById(FORM_SUBMIT_BUTTON_ICON_ID);
     if (form_submit_button_icon === null) {
         throw new Error(
-            `Submit button icon #${FORM_SUBMIT_BUTTON_ICON_ID} is missing from the DOM`
+            `Submit button icon #${FORM_SUBMIT_BUTTON_ICON_ID} is missing from the DOM`,
         );
     }
 
@@ -70,7 +70,7 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
         const new_background_identifier = String(form_data.get("new-background"));
 
         const update_header_background_url = `/api/v1/projects/${encodeURI(
-            project_id
+            project_id,
         )}/header_background`;
 
         disableSubmitButton(form_submit_button, form_submit_button_icon);
@@ -100,7 +100,7 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
 
 function disableSubmitButton(
     submit_button: HTMLButtonElement,
-    submit_button_icon: HTMLElement
+    submit_button_icon: HTMLElement,
 ): void {
     submit_button.disabled = true;
     submit_button.classList.add("tlp-button-disabled");
@@ -109,7 +109,7 @@ function disableSubmitButton(
 }
 function enableSubmitButton(
     submit_button: HTMLButtonElement,
-    submit_button_icon: HTMLElement
+    submit_button_icon: HTMLElement,
 ): void {
     submit_button.disabled = false;
     submit_button.classList.remove("tlp-button-disabled");

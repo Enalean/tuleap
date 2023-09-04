@@ -40,7 +40,7 @@ describe("isWildCardAndNotQuestionMark()", () => {
     it(`returns true if required keyboard input is wildcard * key but pressed key is not ?`, () => {
         const is_wildcard_and_not_question_mark = isWildCardAndNotQuestionMark(
             wildcard_shortcut,
-            not_question_mark_keyboard_event
+            not_question_mark_keyboard_event,
         );
         expect(is_wildcard_and_not_question_mark).toBe(true);
     });
@@ -48,7 +48,7 @@ describe("isWildCardAndNotQuestionMark()", () => {
     it(`returns false if required keyboard input is not wildcard * key`, () => {
         const is_wildcard_and_not_question_mark = isWildCardAndNotQuestionMark(
             not_wildcard_shortcut,
-            not_question_mark_keyboard_event
+            not_question_mark_keyboard_event,
         );
         expect(is_wildcard_and_not_question_mark).toBe(false);
     });
@@ -56,7 +56,7 @@ describe("isWildCardAndNotQuestionMark()", () => {
     it(`returns false if pressed key is ?`, () => {
         const is_wildcard_and_not_question_mark = isWildCardAndNotQuestionMark(
             wildcard_shortcut,
-            question_mark_keyboard_event
+            question_mark_keyboard_event,
         );
         expect(is_wildcard_and_not_question_mark).toBe(false);
     });

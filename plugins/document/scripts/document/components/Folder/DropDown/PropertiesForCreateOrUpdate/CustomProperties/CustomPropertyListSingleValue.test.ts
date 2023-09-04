@@ -32,7 +32,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
     const store_options = { state: { properties: {} } };
 
     function createWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof CustomPropertyListSingleValue>> {
         return shallowMount(CustomPropertyListSingleValue, {
             props: { currentlyUpdatedItemProperty: property },

@@ -29,7 +29,7 @@ export function hasNoUploadingContent(item: ItemFile): boolean {
 
 export function isItemUploadingInQuickLookMode(
     item: ItemFile,
-    is_quicklook_displayed: boolean
+    is_quicklook_displayed: boolean,
 ): boolean {
     if (!is_quicklook_displayed) {
         return false;
@@ -39,7 +39,7 @@ export function isItemUploadingInQuickLookMode(
 
 export function isItemUploadingInTreeView(
     item: ItemFile,
-    is_quicklook_displayed: boolean
+    is_quicklook_displayed: boolean,
 ): boolean {
     if (is_quicklook_displayed) {
         return false;
@@ -50,7 +50,7 @@ export function isItemUploadingInTreeView(
 
 export function isItemInTreeViewWithoutUpload(
     item: ItemFile,
-    is_quicklook_displayed: boolean
+    is_quicklook_displayed: boolean,
 ): boolean {
     if (is_quicklook_displayed) {
         return false;

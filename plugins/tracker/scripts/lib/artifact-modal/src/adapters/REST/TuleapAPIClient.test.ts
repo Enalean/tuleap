@@ -162,7 +162,7 @@ describe(`TuleapAPIClient`, () => {
             expect(types).toContain(parent_type);
             expect(types).toContain(child_type);
             expect(getSpy.mock.calls[0][0]).toStrictEqual(
-                uri`/api/v1/artifacts/${ARTIFACT_ID}/links`
+                uri`/api/v1/artifacts/${ARTIFACT_ID}/links`,
             );
         });
     });
@@ -177,7 +177,7 @@ describe(`TuleapAPIClient`, () => {
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
             return getClient().getLinkedArtifactsByLinkType(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
-                link_type
+                link_type,
             );
         };
 
@@ -251,7 +251,7 @@ describe(`TuleapAPIClient`, () => {
             expect(second_returned_artifact.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(getAllSpy).toHaveBeenCalledWith(
                 uri`/api/v1/trackers/${TRACKER_ID}/parent_artifacts`,
-                { params: { limit: 1000 } }
+                { params: { limit: 1000 } },
             );
         });
     });
@@ -282,7 +282,7 @@ describe(`TuleapAPIClient`, () => {
                 okAsync({
                     id: FILE_ID,
                     upload_href: UPLOAD_HREF,
-                })
+                }),
             );
 
             const result = await createFileUpload();
@@ -294,7 +294,7 @@ describe(`TuleapAPIClient`, () => {
             expect(result.value.upload_href).toBe(UPLOAD_HREF);
             const first_call_arguments = postJSON.mock.calls[0];
             expect(first_call_arguments[0]).toStrictEqual(
-                uri`/api/v1/tracker_fields/${FILE_FIELD_ID}/files`
+                uri`/api/v1/tracker_fields/${FILE_FIELD_ID}/files`,
             );
             expect(first_call_arguments[1]).toStrictEqual({
                 name: FILE_NAME,
@@ -382,7 +382,7 @@ describe(`TuleapAPIClient`, () => {
         const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
             return getClient().getComments(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
-                is_order_inverted
+                is_order_inverted,
             );
         };
 
@@ -403,7 +403,7 @@ describe(`TuleapAPIClient`, () => {
 
             expect(getAllSpy).toHaveBeenCalledWith(
                 uri`/api/v1/artifacts/${ARTIFACT_ID}/changesets`,
-                { params: { limit: 50, fields: "comments", order: "asc" } }
+                { params: { limit: 50, fields: "comments", order: "asc" } },
             );
         });
 
@@ -480,7 +480,7 @@ describe(`TuleapAPIClient`, () => {
 
             return getClient().createArtifact(
                 TrackerIdentifierStub.withId(TRACKER_ID),
-                changeset_values
+                changeset_values,
             );
         };
 
@@ -559,7 +559,7 @@ describe(`TuleapAPIClient`, () => {
         const TRACKER_ID = 32;
         const getTracker = (): ResultAsync<TrackerWithTitleSemantic, Fault> => {
             return getClient().getTrackerWithTitleSemantic(
-                TrackerIdentifierStub.withId(TRACKER_ID)
+                TrackerIdentifierStub.withId(TRACKER_ID),
             );
         };
 
@@ -595,7 +595,7 @@ describe(`TuleapAPIClient`, () => {
             }
             expect(result.value).toBe(HTML_STRING);
             expect(postSpy.mock.calls[0][0]).toStrictEqual(
-                uri`/project/${PROJECT_ID}/interpret-commonmark`
+                uri`/project/${PROJECT_ID}/interpret-commonmark`,
             );
             const request_body = postSpy.mock.calls[0][1];
             expect(request_body.get("content")).toBe(MARKDOWN_STRING);
@@ -605,17 +605,17 @@ describe(`TuleapAPIClient`, () => {
 
 function getMockLinkedArtifactsRetrieval(
     recursiveGetSpy: jest.SpyInstance,
-    linked_artifacts: LinkedArtifactCollection
+    linked_artifacts: LinkedArtifactCollection,
 ): void {
     recursiveGetSpy.mockImplementation(
         <TypeOfLinkedArtifact>(
             url: string,
-            options?: GetAllOptions<TypeOfLinkedArtifact, LinkedArtifactCollection>
+            options?: GetAllOptions<TypeOfLinkedArtifact, LinkedArtifactCollection>,
         ): ResultAsync<readonly TypeOfLinkedArtifact[], Fault> => {
             if (!options || !options.getCollectionCallback) {
                 throw new Error("Unexpected options for getAllJSON");
             }
             return okAsync(options.getCollectionCallback(linked_artifacts));
-        }
+        },
     );
 }

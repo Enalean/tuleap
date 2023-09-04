@@ -80,17 +80,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -106,17 +106,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -132,17 +132,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -158,17 +158,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -184,17 +184,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -210,17 +210,17 @@ describe("UpdatePermissions()", () => {
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
         expect(context.commit).toHaveBeenCalledWith(
             "updateCurrentItemForQuickLokDisplay",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 
@@ -274,11 +274,11 @@ describe("loadProjectUserGroupsIfNeeded", () => {
     it("Retrieve the project user groups when they are never been loaded", async () => {
         const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jest.spyOn(
             permissions_groups,
-            "getProjectUserGroupsWithoutServiceSpecialUGroups"
+            "getProjectUserGroupsWithoutServiceSpecialUGroups",
         );
         const project_ugroups = [{ id: "102_3", label: "Project members" }];
         getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.mockReturnValue(
-            Promise.resolve(project_ugroups)
+            Promise.resolve(project_ugroups),
         );
 
         await loadProjectUserGroupsIfNeeded(context, 102);
@@ -290,7 +290,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
     it("Does not retrieve the project user groups when they have already been retrieved", async () => {
         const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jest.spyOn(
             permissions_groups,
-            "getProjectUserGroupsWithoutServiceSpecialUGroups"
+            "getProjectUserGroupsWithoutServiceSpecialUGroups",
         );
 
         context.rootState.permissions.project_ugroups = [{ id: "102_3", label: "Project members" }];

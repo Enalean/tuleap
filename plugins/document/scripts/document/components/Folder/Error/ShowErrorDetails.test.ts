@@ -61,7 +61,7 @@ describe("ShowErrorDetails", () => {
             Then the original error message is displayed in a info`, async () => {
             const wrapper = show_error_details_factory();
             expect(
-                wrapper.find("[data-test=error-details-show-more-button]").exists()
+                wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             await nextTick();
@@ -74,7 +74,7 @@ describe("ShowErrorDetails", () => {
             const wrapper = show_error_details_factory();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeFalsy();
             expect(
-                wrapper.find("[data-test=error-details-show-more-button]").exists()
+                wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
         });
 
@@ -152,7 +152,7 @@ describe("ShowErrorDetails", () => {
             Then the original error message is displayed in a info`, async () => {
             const wrapper = show_error_details_factory();
             expect(
-                wrapper.find("[data-test=error-details-show-more-button]").exists()
+                wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             await nextTick();
@@ -165,7 +165,7 @@ describe("ShowErrorDetails", () => {
             const wrapper = show_error_details_factory();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeFalsy();
             expect(
-                wrapper.find("[data-test=error-details-show-more-button]").exists()
+                wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
         });
 

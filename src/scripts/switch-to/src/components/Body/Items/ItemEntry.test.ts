@@ -170,7 +170,7 @@ describe("ItemEntry", () => {
                 entry,
                 key,
             });
-        }
+        },
     );
 
     it("Forces the focus from the outside", async () => {
@@ -178,7 +178,7 @@ describe("ItemEntry", () => {
             state: (): KeyboardNavigationState =>
                 ({
                     programmatically_focused_element: null,
-                } as KeyboardNavigationState),
+                }) as KeyboardNavigationState,
         });
 
         const pinia = createTestingPinia();
@@ -227,7 +227,7 @@ describe("ItemEntry", () => {
                             filter_value: "plop",
                         },
                     },
-                })
+                }),
             ),
             props: {
                 entry: {
@@ -263,7 +263,7 @@ describe("ItemEntry", () => {
                             filter_value: "kanban",
                         },
                     },
-                })
+                }),
             ),
             props: {
                 entry: {
@@ -299,7 +299,7 @@ describe("ItemEntry", () => {
                             filter_value: "unmatch",
                         },
                     },
-                })
+                }),
             ),
             props: {
                 entry: {
@@ -335,7 +335,7 @@ describe("ItemEntry", () => {
                             filter_value: "unmatch",
                         },
                     },
-                })
+                }),
             ),
             props: {
                 entry: {
@@ -372,7 +372,7 @@ describe("ItemEntry", () => {
                             filter_value: "plop",
                         },
                     },
-                })
+                }),
             ),
             props: {
                 entry: {

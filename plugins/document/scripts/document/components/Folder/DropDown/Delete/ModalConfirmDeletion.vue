@@ -48,7 +48,7 @@
             >
                 {{
                     $gettext(
-                        "When you delete a folder, all its content is also deleted. Please think wisely!"
+                        "When you delete a folder, all its content is also deleted. Please think wisely!",
                     )
                 }}
             </div>
@@ -165,7 +165,7 @@ const router = useRouter();
 const close_title = $gettext("Close");
 const modal_description = interpolate(
     $gettext('You are about to delete "%{ title }" permanently. Please confirm your action.'),
-    { title: props.item.title }
+    { title: props.item.title },
 );
 
 const delete_modal = ref<InstanceType<typeof HTMLElement>>();

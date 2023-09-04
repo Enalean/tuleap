@@ -29,7 +29,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
                 start: new Date("2020-04-14T22:00:00.000Z"),
                 end: null,
-            } as Task)
+            } as Task),
         ).toBe(true);
     });
 
@@ -38,7 +38,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
                 start: new Date("2020-04-14T22:00:00.000Z"),
                 end: new Date("2020-04-14T22:00:00.000Z"),
-            } as Task)
+            } as Task),
         ).toBe(true);
     });
 
@@ -47,7 +47,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
                 start: new Date("2020-04-14T22:00:00.000Z"),
                 end: new Date("2020-04-16T22:00:00.000Z"),
-            } as Task)
+            } as Task),
         ).toBe(true);
     });
 
@@ -56,7 +56,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
                 start: null,
                 end: null,
-            } as Task)
+            } as Task),
         ).toBe(false);
     });
 
@@ -65,7 +65,7 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
             doesTaskHaveEndDateGreaterOrEqualToStartDate({
                 start: new Date("2020-04-14T22:00:00.000Z"),
                 end: new Date("2020-04-10T22:00:00.000Z"),
-            } as Task)
+            } as Task),
         ).toBe(false);
     });
 });

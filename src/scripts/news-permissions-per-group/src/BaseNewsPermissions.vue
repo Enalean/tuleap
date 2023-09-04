@@ -125,7 +125,7 @@ export default {
 
                 this.news_list = await getNewsPermissions(
                     this.selectedProjectId,
-                    this.selectedUgroupId
+                    this.selectedUgroupId,
                 );
 
                 this.is_loaded = true;

@@ -42,12 +42,12 @@
             <p>
                 {{
                     $gettext(
-                        "You are about to allow access to the server for every projects on the platform."
+                        "You are about to allow access to the server for every projects on the platform.",
                     )
                 }}
                 {{
                     $gettext(
-                        "The list of projects that were previously whitelisted will be permanently lost."
+                        "The list of projects that were previously whitelisted will be permanently lost.",
                     )
                 }}
             </p>

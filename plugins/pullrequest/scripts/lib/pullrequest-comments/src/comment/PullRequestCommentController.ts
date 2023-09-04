@@ -47,12 +47,12 @@ export const PullRequestCommentController = (
     new_comment_saver: SaveNewReplyToComment,
     current_user: CurrentPullRequestUserPresenter,
     current_pull_request: PullRequestPresenter,
-    on_error_callback?: PullRequestCommentErrorCallback
+    on_error_callback?: PullRequestCommentErrorCallback,
 ): ControlPullRequestComment => ({
     showReplyForm: (host: PullRequestCommentComponentType): void => {
         host.reply_comment_presenter = ReplyCommentFormPresenter.buildEmpty(
             current_user,
-            current_pull_request
+            current_pull_request,
         );
     },
     hideReplyForm: (host: PullRequestCommentComponentType): void => {
@@ -60,24 +60,24 @@ export const PullRequestCommentController = (
     },
     handleWritingZoneContentChange: (
         host: PullRequestCommentComponentType,
-        reply_content: string
+        reply_content: string,
     ): void => {
         const comment_reply = getExistingCommentReplyPresenter(host);
         host.reply_comment_presenter = ReplyCommentFormPresenter.updateContent(
             comment_reply,
-            reply_content
+            reply_content,
         );
     },
     saveReply: (host: PullRequestCommentComponentType): void => {
         host.reply_comment_presenter = ReplyCommentFormPresenter.buildSubmitted(
-            getExistingCommentReplyPresenter(host)
+            getExistingCommentReplyPresenter(host),
         );
 
         new_comment_saver
             .saveReply(
                 host.comment,
                 host.reply_comment_presenter,
-                host.is_comments_markdown_mode_enabled
+                host.is_comments_markdown_mode_enabled,
             )
             .match(
                 (comment_payload: PullRequestComment) => {
@@ -85,7 +85,7 @@ export const PullRequestCommentController = (
 
                     replies_store.addReplyToComment(
                         host.comment,
-                        PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload)
+                        PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload),
                     );
 
                     host.replies = replies_store.getCommentReplies(host.comment);
@@ -94,7 +94,7 @@ export const PullRequestCommentController = (
                 },
                 (fault) => {
                     host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
-                        getExistingCommentReplyPresenter(host)
+                        getExistingCommentReplyPresenter(host),
                     );
 
                     if (on_error_callback) {
@@ -103,7 +103,7 @@ export const PullRequestCommentController = (
                     }
                     // eslint-disable-next-line no-console
                     console.error(String(fault));
-                }
+                },
             );
     },
     displayReplies: (host: PullRequestCommentComponentType): void => {
@@ -113,7 +113,7 @@ export const PullRequestCommentController = (
         RelativeDatesHelper(
             current_user.preferred_date_format,
             current_user.preferred_relative_date_display,
-            current_user.user_locale
+            current_user.user_locale,
         ),
     shouldFocusWritingZoneOnceRendered: () => true,
 
@@ -121,12 +121,12 @@ export const PullRequestCommentController = (
 });
 
 function getExistingCommentReplyPresenter(
-    host: PullRequestCommentComponentType
+    host: PullRequestCommentComponentType,
 ): ReplyCommentFormPresenter {
     const comment_reply = host.reply_comment_presenter;
     if (comment_reply === null) {
         throw new Error(
-            "Attempting to get the new comment being created while none has been created."
+            "Attempting to get the new comment being created while none has been created.",
         );
     }
     return comment_reply;

@@ -54,7 +54,7 @@ describe(`LicenseModalController`, () => {
     describe(`init`, () => {
         it(`will publish platform license information`, () => {
             expect(LicenseModalController.exchange_policy_url).toBe(
-                "https://phacochoerid.com/antiblastic/smutchy"
+                "https://phacochoerid.com/antiblastic/smutchy",
             );
             expect(LicenseModalController.organisation_name).toBe("Phlegmasia");
             expect(LicenseModalController.contact_email).toBe("scaldera@example.com");

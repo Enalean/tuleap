@@ -27,10 +27,10 @@ export function validateArtifactFieldsValues(
     field_values,
     creation_mode,
     followup_value_model,
-    link_field_value_formatter
+    link_field_value_formatter,
 ) {
     const text_field_value_models = Object.values(field_values).filter(
-        ({ type }) => type === TEXT_FIELD
+        ({ type }) => type === TEXT_FIELD,
     );
 
     return Object.values(field_values)

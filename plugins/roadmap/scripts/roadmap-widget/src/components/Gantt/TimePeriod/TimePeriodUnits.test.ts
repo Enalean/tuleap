@@ -26,7 +26,7 @@ describe("TimePeriodUnits", () => {
         const time_period = new TimePeriodMonth(
             new Date("2020-03-31T22:00:00.000Z"),
             new Date("2020-04-30T22:00:00.000Z"),
-            "en-US"
+            "en-US",
         );
 
         const time_units = [...time_period.units, ...time_period.additionalUnits(2)];

@@ -33,7 +33,7 @@ describe("Empty Followup", () => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("not.exist");
                 cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
-                    "This is hidden"
+                    "This is hidden",
                 );
             });
 
@@ -44,7 +44,7 @@ describe("Empty Followup", () => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
                 cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
-                    "This comment is only seen by admin"
+                    "This comment is only seen by admin",
                 );
             });
 
@@ -55,7 +55,7 @@ describe("Empty Followup", () => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
                 cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
-                    "Changes are shown but comment is hidden"
+                    "Changes are shown but comment is hidden",
                 );
             });
 
@@ -66,7 +66,7 @@ describe("Empty Followup", () => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
                 cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
-                    "This comment is shown"
+                    "This comment is shown",
                 );
             });
     });
@@ -93,7 +93,7 @@ describe("Empty Followup", () => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
                 cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
-                    "This comment is shown"
+                    "This comment is shown",
                 );
             });
     });

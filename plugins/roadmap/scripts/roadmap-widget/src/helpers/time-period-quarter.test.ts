@@ -100,7 +100,7 @@ describe("TimePeriodQuarter", () => {
             const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
             expect(period.additionalUnits(nb_missing_quarters)).toStrictEqual([]);
-        }
+        },
     );
 
     it("Returns an array of additional quarters", () => {

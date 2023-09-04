@@ -88,7 +88,7 @@ export default {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
-                    )
+                    ),
                 );
             }
 
@@ -96,7 +96,7 @@ export default {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
-                    )
+                    ),
                 );
             }
 
@@ -104,7 +104,7 @@ export default {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
-                    )
+                    ),
                 );
             }
 
@@ -112,7 +112,7 @@ export default {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
-                    )
+                    ),
                 );
             }
 
@@ -120,20 +120,20 @@ export default {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
-                    )
+                    ),
                 );
             }
             if (this.error_modal_shown === this.FILENAME_PATTERN_IS_SET_ERROR) {
                 return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
-                    )
+                    ),
                 );
             }
             return defineAsyncComponent(() =>
                 import(
                     /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
-                )
+                ),
             );
         },
     },
@@ -251,7 +251,7 @@ export default {
                         (item) =>
                             item.title === file.name &&
                             !isFolder(item) &&
-                            item.parent_id === dropzone_item.id
+                            item.parent_id === dropzone_item.id,
                     )
                 ) {
                     this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
@@ -310,7 +310,7 @@ export default {
                     "document-file-highlighted",
                     "document-tree-item-hightlighted-forbidden",
                     "quick-look-pane-highlighted",
-                    "quick-look-pane-highlighted-forbidden"
+                    "quick-look-pane-highlighted-forbidden",
                 );
             }
 
@@ -411,12 +411,12 @@ export default {
         getDragErrorReason() {
             if (this.is_filename_pattern_enforced && this.number_of_dragged_files > 1) {
                 return this.$gettext(
-                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once.",
                 );
             }
             return sprintf(
                 this.$gettext("Dropping files in %s is forbidden."),
-                this.current_folder.title
+                this.current_folder.title,
             );
         },
     },

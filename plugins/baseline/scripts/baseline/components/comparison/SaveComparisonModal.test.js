@@ -67,7 +67,7 @@ describe("SaveComparisonModal", () => {
                 new Promise((resolve, reject) => {
                     createComparisonResolve = resolve;
                     createComparisonReject = reject;
-                })
+                }),
             );
             wrapper.vm.saveComparison();
         });
@@ -104,7 +104,7 @@ describe("SaveComparisonModal", () => {
             it("notify user with successful message", () => {
                 expect($store.commit).toHaveBeenCalledWith(
                     "dialog_interface/notify",
-                    expect.objectContaining({ class: "success" })
+                    expect.objectContaining({ class: "success" }),
                 );
             });
             it("hides modal", () => {

@@ -37,7 +37,7 @@ function KanbanService(
     gettextCatalog,
     SharedPropertiesService,
     RestErrorService,
-    FilterTrackerReportService
+    FilterTrackerReportService,
 ) {
     const headers = {
         "content-type": "application/json",
@@ -81,7 +81,7 @@ function KanbanService(
                 return response.json().then((items) => {
                     return { results: augmentItems(items.collection), total };
                 });
-            })
+            }),
         );
     }
 
@@ -89,7 +89,7 @@ function KanbanService(
         return $q.when(
             head(encodeURI(url), { params }).then((response) => {
                 return Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
-            })
+            }),
         );
     }
 
@@ -145,7 +145,7 @@ function KanbanService(
                 body: JSON.stringify({
                     order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to),
                 }),
-            }).catch(catchRestError)
+            }).catch(catchRestError),
         );
     }
 
@@ -153,7 +153,7 @@ function KanbanService(
         return reorderAnyColumn(
             `/api/v1/kanban/${kanban_id}/items?column_id=${column_id}`,
             dropped_item_id,
-            compared_to
+            compared_to,
         );
     }
 
@@ -161,7 +161,7 @@ function KanbanService(
         return reorderAnyColumn(
             `/api/v1/kanban/${kanban_id}/backlog`,
             dropped_item_id,
-            compared_to
+            compared_to,
         );
     }
 
@@ -169,7 +169,7 @@ function KanbanService(
         return reorderAnyColumn(
             `/api/v1/kanban/${kanban_id}/archive`,
             dropped_item_id,
-            compared_to
+            compared_to,
         );
     }
 
@@ -188,7 +188,7 @@ function KanbanService(
             patch(encodeURI(url), {
                 headers,
                 body: JSON.stringify(patch_arguments),
-            }).catch(catchRestError)
+            }).catch(catchRestError),
         );
     }
 
@@ -197,7 +197,7 @@ function KanbanService(
             `/api/v1/kanban/${kanban_id}/backlog`,
             dropped_item_id,
             compared_to,
-            from_column
+            from_column,
         );
     }
 
@@ -206,7 +206,7 @@ function KanbanService(
             `/api/v1/kanban/${kanban_id}/archive`,
             dropped_item_id,
             compared_to,
-            from_column
+            from_column,
         );
     }
 
@@ -215,7 +215,7 @@ function KanbanService(
             `/api/v1/kanban/${kanban_id}/items?column_id=${column_id}`,
             dropped_item_id,
             compared_to,
-            from_column
+            from_column,
         );
     }
 
@@ -232,7 +232,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ label: kanban_label }),
-            })
+            }),
         );
     }
 
@@ -245,7 +245,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_column: { column_id, value: false } }),
-            })
+            }),
         );
     }
 
@@ -254,7 +254,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_column: { column_id, value: true } }),
-            })
+            }),
         );
     }
 
@@ -263,7 +263,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_backlog: false }),
-            })
+            }),
         );
     }
 
@@ -272,7 +272,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_backlog: true }),
-            })
+            }),
         );
     }
 
@@ -281,7 +281,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_archive: false }),
-            })
+            }),
         );
     }
 
@@ -290,7 +290,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_archive: true }),
-            })
+            }),
         );
     }
 
@@ -299,7 +299,7 @@ function KanbanService(
             post(encodeURI(`/api/v1/kanban/${kanban_id}/columns`), {
                 headers,
                 body: JSON.stringify({ label: column_label }),
-            }).then((response) => response.json())
+            }).then((response) => response.json()),
         );
     }
 
@@ -308,7 +308,7 @@ function KanbanService(
             put(encodeURI(`/api/v1/kanban/${kanban_id}/columns`), {
                 headers,
                 body: JSON.stringify(sorted_columns_ids),
-            })
+            }),
         );
     }
 
@@ -316,7 +316,7 @@ function KanbanService(
         return $q.when(
             del(encodeURI(`/api/v1/kanban_columns/${column_id}?kanban_id=${kanban_id}`), {
                 headers,
-            })
+            }),
         );
     }
 
@@ -325,7 +325,7 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban_columns/${column.id}?kanban_id=${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ label: column.label, wip_limit: column.limit_input || 0 }),
-            })
+            }),
         );
     }
 
@@ -363,7 +363,7 @@ function KanbanService(
             put(encodeURI(`/api/v1/kanban/${kanban_id}/tracker_reports`), {
                 headers,
                 body: JSON.stringify({ tracker_report_ids: selectable_report_ids }),
-            })
+            }),
         );
     }
 }

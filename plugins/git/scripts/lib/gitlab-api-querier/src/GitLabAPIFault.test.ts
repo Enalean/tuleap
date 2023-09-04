@@ -38,6 +38,6 @@ describe(`GitLabAPIFault`, () => {
             expect(isFault(fault)).toBe(true);
             expect(isGitLabAPIFault(fault)).toBe(true);
             expect(isUnauthenticated(fault)).toBe(expected_unauthenticated);
-        }
+        },
     );
 });

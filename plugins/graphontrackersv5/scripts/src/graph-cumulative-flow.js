@@ -180,7 +180,7 @@ export function cumulativeflow(id, graph) {
                     month: "2-digit",
                     day: "2-digit",
                     year: "2-digit",
-                })
+                }),
             )
             .tickValues(ticks);
 
@@ -220,7 +220,7 @@ export function cumulativeflow(id, graph) {
             return graph.data.reduce(
                 (previous_sum, current_column) =>
                     previous_sum + current_column.values[day_index].count,
-                0
+                0,
             );
         }
     }

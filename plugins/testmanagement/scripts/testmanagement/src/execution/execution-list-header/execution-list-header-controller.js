@@ -30,7 +30,7 @@ export default function controller(
     TlpModalService,
     ExecutionService,
     SharedPropertiesService,
-    CampaignService
+    CampaignService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -69,7 +69,7 @@ export default function controller(
                 SharedPropertiesService.getBaseUrl(),
                 SharedPropertiesService.getProjectId(),
                 SharedPropertiesService.getDefinitionTrackerId() || null,
-                SharedPropertiesService.getArtifactLinksTypes() || []
+                SharedPropertiesService.getArtifactLinksTypes() || [],
             );
         } catch (e) {
             TlpModalService.open({
@@ -91,7 +91,7 @@ export default function controller(
             resolve: {
                 editCampaignCallback: () => {
                     ExecutionService.synchronizeExecutions(ExecutionService.campaign.id).then(
-                        self.handleRemovedExecutionsCallback
+                        self.handleRemovedExecutionsCallback,
                     );
                 },
             },
@@ -160,13 +160,13 @@ export default function controller(
                             "The job at URL {{ job_url }} has been succesfully launched.",
                             {
                                 job_url: ExecutionService.campaign.job_configuration.url,
-                            }
-                        )
+                            },
+                        ),
                     );
                 },
                 (error) => {
                     setError(error.message);
-                }
+                },
             )
             .finally(() => {
                 self.triggered = false;

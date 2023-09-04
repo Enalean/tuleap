@@ -48,10 +48,10 @@ export function getAsyncGitlabRepositoryList(credentials: GitLabCredentials): Pr
 }
 
 export function deleteIntegrationGitlab(
-    repository_deletion: GitLabRepositoryDeletion
+    repository_deletion: GitLabRepositoryDeletion,
 ): Promise<Response> {
     return del(
-        "/api/v1/gitlab_repositories/" + encodeURIComponent(repository_deletion.integration_id)
+        "/api/v1/gitlab_repositories/" + encodeURIComponent(repository_deletion.integration_id),
     );
 }
 
@@ -65,7 +65,7 @@ export function buildGitlabCollectionCallback(displayCallback: RepositoryCallbac
 export function getGitlabRepositoryList(
     project_id: number,
     order_by: string,
-    displayCallback: RepositoryCallback
+    displayCallback: RepositoryCallback,
 ): Promise<Array<Repository>> {
     return recursiveGet("/api/projects/" + project_id + "/gitlab_repositories", {
         params: {
@@ -95,7 +95,7 @@ export function postGitlabRepository(repository: GitLabRepositoryCreation): Prom
 
 export function patchGitlabRepository(
     integration_id: number | string,
-    body: GitLabRepositoryUpdate
+    body: GitLabRepositoryUpdate,
 ): Promise<Response> {
     const headers = {
         "content-type": "application/json",

@@ -125,7 +125,7 @@ describe("ToBePlannedBacklogItems", () => {
                         label: "project",
                     },
                 } as UserStory,
-            ])
+            ]),
         );
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);

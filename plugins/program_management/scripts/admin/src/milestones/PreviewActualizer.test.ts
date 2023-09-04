@@ -39,7 +39,7 @@ describe(`PreviewActualizer`, () => {
             timebox_label_element,
             doc.createElement("span"),
             doc.createElement("span"),
-            doc.createElement("span")
+            doc.createElement("span"),
         );
         getActualizer().initTimeboxPreview();
 
@@ -56,7 +56,7 @@ describe(`PreviewActualizer`, () => {
             doc.createElement("span"),
             new_label_element,
             first_example_element,
-            second_example_element
+            second_example_element,
         );
         getActualizer().initTimeboxPreview();
 
@@ -76,7 +76,7 @@ describe(`PreviewActualizer`, () => {
             timebox_label_element,
             new_label_element,
             first_example_element,
-            second_example_element
+            second_example_element,
         );
         label_input_element.value = "";
         sub_label_input_element.value = "";
@@ -97,7 +97,7 @@ describe(`PreviewActualizer`, () => {
             timebox_label_element,
             new_label_element,
             first_example_element,
-            second_example_element
+            second_example_element,
         );
         label_input_element.value = "Iterations";
         sub_label_input_element.value = "iteration";
@@ -122,11 +122,11 @@ describe(`PreviewActualizer`, () => {
         };
         const label_input = TimeboxLabel.fromId(
             RetrieveElementStub.withElements(label_input_element),
-            "some_id"
+            "some_id",
         );
         const sub_label_input = TimeboxLabel.fromId(
             RetrieveElementStub.withElements(sub_label_input_element),
-            "some_id"
+            "some_id",
         );
         return PreviewActualizer.fromContainerAndTimeboxLabels(
             gettext_stub,
@@ -134,7 +134,7 @@ describe(`PreviewActualizer`, () => {
             label_input,
             sub_label_input,
             "Default Label",
-            "default label lowercase"
+            "default label lowercase",
         );
     }
 });

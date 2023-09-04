@@ -101,7 +101,7 @@ import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 const homepage_link = computed(() =>
-    sanitizeURL(config.value.instance_information.logo.logo_link_href)
+    sanitizeURL(config.value.instance_information.logo.logo_link_href),
 );
 const vDompurifyHtml = buildVueDompurifyHTMLDirective({
     default: {
@@ -114,18 +114,18 @@ const legacy_logo = ref<InstanceType<typeof HTMLElement>>();
 const updateLegacyLogoURLCssVar = (addresses: { normal: string; small: string } | null): void => {
     legacy_logo.value?.style.setProperty(
         "--logo-url",
-        `url(${sanitizeURL(addresses?.normal ?? "")})`
+        `url(${sanitizeURL(addresses?.normal ?? "")})`,
     );
     legacy_logo.value?.style.setProperty(
         "--logo-small-url",
-        `url(${sanitizeURL(addresses?.small ?? "")})`
+        `url(${sanitizeURL(addresses?.small ?? "")})`,
     );
 };
 onMounted(() => {
     watch(
         (): { normal: string; small: string } | null =>
             config.value.instance_information.logo.legacy_png_href,
-        updateLegacyLogoURLCssVar
+        updateLegacyLogoURLCssVar,
     );
     updateLegacyLogoURLCssVar(config.value.instance_information.logo.legacy_png_href);
 });

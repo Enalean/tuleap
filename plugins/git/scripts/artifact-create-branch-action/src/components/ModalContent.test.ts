@@ -48,7 +48,7 @@ describe("ModalContent", () => {
     });
 
     function mountComponent(
-        are_pullrequests_available: boolean
+        are_pullrequests_available: boolean,
     ): VueWrapper<InstanceType<typeof ModalContent>> {
         return shallowMount(ModalContent, {
             global: getGlobalTestOptions(),
@@ -64,7 +64,7 @@ describe("ModalContent", () => {
         const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
-            } as GitCreateBranchResponse)
+            } as GitCreateBranchResponse),
         );
 
         const create_pull_request = vi
@@ -72,13 +72,13 @@ describe("ModalContent", () => {
             .mockReturnValue(
                 okAsync({
                     json: () => Promise.resolve({ id: 123 }),
-                } as unknown as Response)
+                } as unknown as Response),
             );
 
         const wrapper = mountComponent(true);
 
         expect(
-            (wrapper.get("[data-test=create-pr-checkbox]").element as HTMLInputElement).checked
+            (wrapper.get("[data-test=create-pr-checkbox]").element as HTMLInputElement).checked,
         ).toBe(true);
 
         const submit_button = wrapper.find("[data-test=create-branch-submit-button]")
@@ -97,7 +97,7 @@ describe("ModalContent", () => {
         const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
-            } as GitCreateBranchResponse)
+            } as GitCreateBranchResponse),
         );
 
         const wrapper = mountComponent(true);
@@ -118,7 +118,7 @@ describe("ModalContent", () => {
         const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
-            } as GitCreateBranchResponse)
+            } as GitCreateBranchResponse),
         );
 
         const wrapper = mountComponent(false);

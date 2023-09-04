@@ -59,7 +59,7 @@ const getFollowUpClasses = (host: PullRequestCommentComponentType): MapOfClasses
 export const getCommentReplyTemplate = (
     host: PullRequestCommentComponentType,
     reply: PullRequestCommentPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getFollowUpClasses(host)}">
         <div class="pull-request-comment pull-request-comment-follow-up-content">

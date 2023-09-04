@@ -29,7 +29,7 @@ import { nextTick } from "vue";
 
 function checkSelectedDateIsCorrect(
     wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>>,
-    expected_value: string
+    expected_value: string,
 ): void {
     const select = wrapper.get("[data-test=document-obsolescence-date-select-update]");
     if (!(select.element instanceof HTMLSelectElement)) {
@@ -40,7 +40,7 @@ function checkSelectedDateIsCorrect(
 
 function checkDatePickerValueIsCorrect(
     wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>>,
-    expected_value: string
+    expected_value: string,
 ): void {
     const date_picker = wrapper.findComponent(DateFlatPicker);
 
@@ -49,7 +49,7 @@ function checkDatePickerValueIsCorrect(
 
 describe("ObsolescenceDatePropertyForUpdate", () => {
     function createWrapper(
-        is_obsolescence_date_property_used: boolean
+        is_obsolescence_date_property_used: boolean,
     ): VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>> {
         return shallowMount(ObsolescenceDatePropertyForUpdate, {
             props: { value: "" },

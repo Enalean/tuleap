@@ -55,7 +55,7 @@ describe("ExportButton", () => {
         campaign: CampaignState,
         error_handler: (e: unknown) => void = (e): void => {
             throw e;
-        }
+        },
     ): VueWrapper<InstanceType<typeof ExportButton>> {
         return shallowMount(ExportButton, {
             global: {
@@ -76,7 +76,7 @@ describe("ExportButton", () => {
                             },
                         },
                     },
-                    error_handler
+                    error_handler,
                 ),
             },
         });
@@ -91,7 +91,7 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
         );
         const export_button = wrapper.get("[data-test=testplan-export-button]");
         const xslx_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
@@ -100,14 +100,14 @@ describe("ExportButton", () => {
         expect(
             export_button
                 .get("[data-test=download-export-button-icon]")
-                .element.classList.contains("fa-spin")
+                .element.classList.contains("fa-spin"),
         ).toBe(false);
 
         downloadXlsxExportDocument.mockImplementation((): void => {
             expect(
                 export_button
                     .get("[data-test=download-export-button-icon]")
-                    .element.classList.contains("fa-spin")
+                    .element.classList.contains("fa-spin"),
             ).toBe(true);
 
             // This is here to make sure the user cannot spam-click the export button
@@ -129,11 +129,11 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
         );
 
         expect(
-            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -146,11 +146,11 @@ describe("ExportButton", () => {
             {
                 is_loading: true,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
         );
 
         expect(
-            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -163,11 +163,11 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
         );
 
         expect(
-            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -180,11 +180,11 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: true,
-            } as CampaignState
+            } as CampaignState,
         );
 
         expect(
-            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -202,7 +202,7 @@ describe("ExportButton", () => {
             } as CampaignState,
             (e): void => {
                 expect(e).toBe(error);
-            }
+            },
         );
 
         const download_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
@@ -215,7 +215,7 @@ describe("ExportButton", () => {
         }
 
         expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
-            "fa-spin"
+            "fa-spin",
         );
         expect(wrapper.findComponent(ExportError).exists()).toBe(true);
     });
@@ -235,7 +235,7 @@ describe("ExportButton", () => {
             } as CampaignState,
             (e): void => {
                 expect(e).toBe(error);
-            }
+            },
         );
 
         const download_button = wrapper.get("[data-test=testplan-export-docx-button]");
@@ -248,7 +248,7 @@ describe("ExportButton", () => {
         }
 
         expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
-            "fa-spin"
+            "fa-spin",
         );
         expect(wrapper.findComponent(ExportError).exists()).toBe(true);
     });

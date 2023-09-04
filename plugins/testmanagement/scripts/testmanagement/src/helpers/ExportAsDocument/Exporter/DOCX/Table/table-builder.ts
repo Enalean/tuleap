@@ -77,7 +77,7 @@ export function buildTableCellLabel(name: string): TableCell {
 }
 
 export function buildTableCellContent(
-    content: TextRun | ExternalHyperlink | InternalHyperlink
+    content: TextRun | ExternalHyperlink | InternalHyperlink,
 ): TableCell {
     return new TableCell({
         children: [
@@ -93,11 +93,11 @@ export function buildTableCellContent(
 export const buildCellContentResult = (
     status: ArtifactFieldValueStatus,
     gettext_provider: GettextProvider,
-    row_span: number
+    row_span: number,
 ): TableCell => {
     return buildCellContentStatus(
         status,
         (status) => getInternationalizedTestStatus(gettext_provider, status),
-        row_span
+        row_span,
     );
 };

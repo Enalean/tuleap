@@ -15,28 +15,30 @@ describe("PullRequestCollectionService -", function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            _PullRequestCollectionRestService_,
-            _PullRequestCollectionService_,
-            _SharedPropertiesService_
-        ) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            PullRequestCollectionRestService = _PullRequestCollectionRestService_;
-            PullRequestCollectionService = _PullRequestCollectionService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$q_,
+                _PullRequestCollectionRestService_,
+                _PullRequestCollectionService_,
+                _SharedPropertiesService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                PullRequestCollectionRestService = _PullRequestCollectionRestService_;
+                PullRequestCollectionService = _PullRequestCollectionService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         jest.spyOn(PullRequestCollectionRestService, "getAllPullRequests").mockImplementation(
-            () => {}
+            () => {},
         );
         jest.spyOn(PullRequestCollectionRestService, "getAllOpenPullRequests").mockImplementation(
-            () => {}
+            () => {},
         );
         jest.spyOn(PullRequestCollectionRestService, "getAllClosedPullRequests").mockImplementation(
-            () => {}
+            () => {},
         );
         jest.spyOn(SharedPropertiesService, "getRepositoryId").mockImplementation(() => {});
 
@@ -56,7 +58,7 @@ describe("PullRequestCollectionService -", function () {
                 { id: 4, status: "review" },
             ];
             PullRequestCollectionRestService.getAllPullRequests.mockReturnValue(
-                $q.when(pull_requests)
+                $q.when(pull_requests),
             );
 
             const promise = wrapPromise(PullRequestCollectionService.loadAllPullRequests());
@@ -70,7 +72,7 @@ describe("PullRequestCollectionService -", function () {
 
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
-                expected_pull_requests
+                expected_pull_requests,
             );
             expect(PullRequestCollectionService.areAllPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneClosedPullRequest()).toBe(true);
@@ -90,7 +92,7 @@ describe("PullRequestCollectionService -", function () {
                 { id: 4, status: "review" },
             ];
             PullRequestCollectionRestService.getAllPullRequests.mockReturnValue(
-                $q.when(updated_pull_requests)
+                $q.when(updated_pull_requests),
             );
 
             const promise = wrapPromise(PullRequestCollectionService.loadAllPullRequests());
@@ -116,19 +118,18 @@ describe("PullRequestCollectionService -", function () {
                 { id: 1, status: "review" },
                 { id: 2, status: "review" },
             ];
-            PullRequestCollectionRestService.getAllOpenPullRequests.mockImplementation(function (
-                repository_id,
-                callback
-            ) {
-                callback(open_pull_requests);
-                return $q.when(open_pull_requests);
-            });
+            PullRequestCollectionRestService.getAllOpenPullRequests.mockImplementation(
+                function (repository_id, callback) {
+                    callback(open_pull_requests);
+                    return $q.when(open_pull_requests);
+                },
+            );
 
             const promise = wrapPromise(PullRequestCollectionService.loadOpenPullRequests());
 
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
-                open_pull_requests
+                open_pull_requests,
             );
             expect(PullRequestCollectionService.areOpenPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneOpenpullRequest()).toBe(true);
@@ -137,11 +138,11 @@ describe("PullRequestCollectionService -", function () {
         it("Given that all open pull requests had already been loaded once but closed pull requests had not been loaded, when I load the open pull requests again, then the stored pull requests will be emptied and stored again", async function () {
             jest.spyOn(
                 PullRequestCollectionService,
-                "areOpenPullRequestsFullyLoaded"
+                "areOpenPullRequestsFullyLoaded",
             ).mockReturnValue(true);
             jest.spyOn(
                 PullRequestCollectionService,
-                "areClosedPullRequestsFullyLoaded"
+                "areClosedPullRequestsFullyLoaded",
             ).mockReturnValue(false);
 
             const all_pr_reference = (PullRequestCollectionService.all_pull_requests = [
@@ -154,7 +155,7 @@ describe("PullRequestCollectionService -", function () {
                 { id: 4, status: "review" },
             ];
             PullRequestCollectionRestService.getAllOpenPullRequests.mockReturnValue(
-                $q.when(updated_pull_requests)
+                $q.when(updated_pull_requests),
             );
 
             const promise = wrapPromise(PullRequestCollectionService.loadOpenPullRequests());
@@ -183,13 +184,12 @@ describe("PullRequestCollectionService -", function () {
                 { id: 3, status: "merge" },
                 { id: 4, status: "abandon" },
             ];
-            PullRequestCollectionRestService.getAllClosedPullRequests.mockImplementation(function (
-                repository_id,
-                callback
-            ) {
-                callback(closed_pull_requests);
-                return $q.when(closed_pull_requests);
-            });
+            PullRequestCollectionRestService.getAllClosedPullRequests.mockImplementation(
+                function (repository_id, callback) {
+                    callback(closed_pull_requests);
+                    return $q.when(closed_pull_requests);
+                },
+            );
 
             const promise = wrapPromise(PullRequestCollectionService.loadClosedPullRequests());
 
@@ -203,7 +203,7 @@ describe("PullRequestCollectionService -", function () {
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
             expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
-                expected_pull_requests
+                expected_pull_requests,
             );
             expect(PullRequestCollectionService.areClosedPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneClosedPullRequest()).toBe(true);

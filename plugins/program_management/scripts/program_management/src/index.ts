@@ -47,12 +47,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const program_id = parseInt(getDatasetItemOrThrow(vue_mount_point, "programId"), 10);
     const program_increment_tracker_id = parseInt(
         getDatasetItemOrThrow(vue_mount_point, "programIncrementTrackerId"),
-        10
+        10,
     );
     const program_increment_label = getDatasetItemOrThrow(vue_mount_point, "programIncrementLabel");
     const program_increment_sub_label = getDatasetItemOrThrow(
         vue_mount_point,
-        "programIncrementSubLabel"
+        "programIncrementSubLabel",
     );
     const iteration_label = getDatasetItemOrThrow(vue_mount_point, "iterationLabel");
 
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const AppComponent = Vue.extend(App);

@@ -54,7 +54,7 @@ describe("PullRequestCommentController", () => {
             save_new_comment,
             CurrentPullRequestUserPresenterStub.withDefault(),
             CurrentPullRequestPresenterStub.withDefault(),
-            on_error_callback
+            on_error_callback,
         );
 
     it("should show the reply to comment form and sets the focus on the textarea", () => {
@@ -87,7 +87,7 @@ describe("PullRequestCommentController", () => {
 
         getController(SaveNewReplyToCommentStub.withDefault()).handleWritingZoneContentChange(
             host,
-            "Please rebase"
+            "Please rebase",
         );
 
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
@@ -114,7 +114,7 @@ describe("PullRequestCommentController", () => {
 
         expect(new_comment_saver.getNbCalls()).toBe(1);
         expect(new_comment_saver.getLastCallParams()).toStrictEqual(
-            ReplyCommentFormPresenterStub.buildBeingSubmitted("Please don't")
+            ReplyCommentFormPresenterStub.buildBeingSubmitted("Please don't"),
         );
         expect(host.reply_comment_presenter).toBeNull();
         expect(host.replies).toStrictEqual([
@@ -189,7 +189,7 @@ describe("PullRequestCommentController", () => {
 
         expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
         expect(host.reply_comment_presenter).toStrictEqual(
-            ReplyCommentFormPresenter.buildNotSubmitted(reply_comment_presenter)
+            ReplyCommentFormPresenter.buildNotSubmitted(reply_comment_presenter),
         );
     });
 

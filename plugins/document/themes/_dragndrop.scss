@@ -80,7 +80,9 @@
     width: calc(100% - var(--tlp-medium-spacing));
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     transform: translateY(100%);
-    transition: background 100ms ease-in-out, transform 100ms ease-in-out;
+    transition:
+        background 100ms ease-in-out,
+        transform 100ms ease-in-out;
     background: transparent;
 }
 

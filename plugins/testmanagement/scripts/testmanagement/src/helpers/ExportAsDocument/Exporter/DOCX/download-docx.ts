@@ -44,11 +44,11 @@ export async function downloadDocx(
     gettext_provider: GettextProvider,
     global_export_properties: GenericGlobalExportProperties,
     datetime_locale_information: DateTimeLocaleInformation,
-    buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>
+    buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>,
 ): Promise<void> {
     const exported_formatted_date = new Date().toLocaleDateString(
         datetime_locale_information.locale,
-        { timeZone: datetime_locale_information.timezone }
+        { timeZone: datetime_locale_information.timezone },
     );
 
     const footers = {
@@ -84,7 +84,7 @@ export async function downloadDocx(
                         stylesWithLevels: [
                             new StyleLevel(
                                 HEADER_STYLE_SECTION_TITLE,
-                                Number(HEADER_STYLE_SECTION_TITLE.substr(-1))
+                                Number(HEADER_STYLE_SECTION_TITLE.substr(-1)),
                             ),
                         ],
                     }),
@@ -108,7 +108,7 @@ export async function downloadDocx(
                     ...(await buildMilestoneBacklog(
                         document,
                         gettext_provider,
-                        global_export_properties
+                        global_export_properties,
                     )),
                 ],
                 footers,
@@ -119,7 +119,7 @@ export async function downloadDocx(
                     ...(await buildMilestoneTestPlan(
                         document,
                         gettext_provider,
-                        global_export_properties
+                        global_export_properties,
                     )),
                 ],
                 footers,

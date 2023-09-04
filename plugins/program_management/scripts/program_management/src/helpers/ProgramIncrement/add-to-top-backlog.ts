@@ -23,7 +23,7 @@ import { formatOrderPositionForPatch } from "../order-position-for-patch-formatt
 
 export async function moveElementFromProgramIncrementToTopBackLog(
     project_id: number,
-    feature_moving: FeaturePlanningChange
+    feature_moving: FeaturePlanningChange,
 ): Promise<void> {
     await patch(`/api/projects/${encodeURIComponent(project_id)}/program_backlog`, {
         headers: {
@@ -40,13 +40,13 @@ export async function moveElementFromProgramIncrementToTopBackLog(
 
 export async function reorderElementInTopBacklog(
     project_id: number,
-    feature_position: FeaturePlanningChange
+    feature_position: FeaturePlanningChange,
 ): Promise<void> {
     const order_format = formatOrderPositionForPatch(feature_position);
 
     if (!order_format) {
         throw new Error(
-            "Cannot reorder element #" + feature_position.feature.id + " because order is null"
+            "Cannot reorder element #" + feature_position.feature.id + " because order is null",
         );
     }
 

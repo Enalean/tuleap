@@ -123,7 +123,7 @@ describe("DocumentTitleLockInfo", () => {
         expect(wrapper.find(".document-display-lock").exists()).toBeFalsy();
         expect(wrapper.find(".document-display-lock-icon").exists()).toBeFalsy();
         expect(
-            wrapper.find(".document-tree-item-toggle-quicklook-lock-icon").exists()
+            wrapper.find(".document-tree-item-toggle-quicklook-lock-icon").exists(),
         ).toBeTruthy();
     });
 });

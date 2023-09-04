@@ -50,7 +50,7 @@ describe("MoveModalSelectors", () => {
 
             expect(wrapper.findComponent(ProjectSelector).exists()).toBe(expected);
             expect(wrapper.findComponent(TrackerSelector).exists()).toBe(expected);
-        }
+        },
     );
 
     it.each([
@@ -69,9 +69,9 @@ describe("MoveModalSelectors", () => {
             expect(
                 wrapper
                     .find("[data-test=move-modal-selectors-spinner]")
-                    .classes("move-artifact-tracker-loader-spinner")
+                    .classes("move-artifact-tracker-loader-spinner"),
             ).toBe(are_trackers_loading);
-        }
+        },
     );
 
     it.each([
@@ -94,8 +94,8 @@ describe("MoveModalSelectors", () => {
             expect(
                 wrapper
                     .find("[data-test=move-modal-selectors]")
-                    .classes("move-artifact-selectors-preview")
+                    .classes("move-artifact-selectors-preview"),
             ).toBe(has_processed_dry_run);
-        }
+        },
     );
 });

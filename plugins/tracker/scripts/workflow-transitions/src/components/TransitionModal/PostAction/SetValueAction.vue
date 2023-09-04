@@ -93,7 +93,7 @@ export default {
         available_fields() {
             // Side effect is prevented with array duplication before sort
             return [...this.set_value_action_fields].sort((field1, field2) =>
-                compare(field1.label, field2.label)
+                compare(field1.label, field2.label),
             );
         },
         available_fields_by_groups() {
@@ -134,7 +134,7 @@ export default {
                     return null;
                 }
                 const matching_fields = this.available_fields.filter(
-                    (field) => field.field_id === this.post_action.field_id
+                    (field) => field.field_id === this.post_action.field_id,
                 );
                 if (matching_fields.length === 0) {
                     return null;

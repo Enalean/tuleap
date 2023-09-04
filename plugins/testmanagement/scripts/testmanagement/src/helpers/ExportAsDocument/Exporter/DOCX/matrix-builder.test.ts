@@ -76,7 +76,7 @@ describe("matrix-builder", () => {
                     ],
                     tests: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             const tree = JSON.stringify(section[1].prepForXml({} as IContext));
@@ -94,12 +94,12 @@ describe("matrix-builder", () => {
                     traceability_matrix: [],
                     tests: [],
                 },
-                gettext_provider
+                gettext_provider,
             );
 
             const tree = section[1].prepForXml({} as IContext);
             expect(JSON.stringify(tree)).toContain(
-                "There isn't any requirements to put in the traceability matrix."
+                "There isn't any requirements to put in the traceability matrix.",
             );
         });
     });

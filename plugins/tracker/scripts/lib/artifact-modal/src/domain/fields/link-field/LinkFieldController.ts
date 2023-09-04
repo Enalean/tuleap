@@ -93,7 +93,7 @@ export const LinkFieldController = (
     parent_tracker_identifier: Option<ParentTrackerIdentifier>,
     current_artifact_reference: Option<ArtifactCrossReference>,
     allowed_link_types_collection: LinkTypesCollection,
-    current_project_identifier: CurrentProjectIdentifier
+    current_project_identifier: CurrentProjectIdentifier,
 ): LinkFieldController => ({
     getCurrentArtifactReference: () => current_artifact_reference,
 
@@ -125,7 +125,7 @@ export const LinkFieldController = (
                     event_dispatcher.dispatch(WillNotifyFault(LinkRetrievalFault(fault)));
                 }
                 return [];
-            }
+            },
         );
     },
 
@@ -181,7 +181,7 @@ export const LinkFieldController = (
             (fault) => {
                 event_dispatcher.dispatch(WillNotifyFault(fault));
                 return [];
-            }
+            },
         );
     },
 

@@ -33,7 +33,7 @@ describe("AddToBacklogProgramManagementPostAction", () => {
         expect(
             wrapper
                 .find("[data-test=add-to-backlog-program-management-post-action-description]")
-                .exists()
+                .exists(),
         ).toBe(true);
     });
 });

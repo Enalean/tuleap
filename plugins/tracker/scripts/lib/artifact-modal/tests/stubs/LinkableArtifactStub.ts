@@ -37,7 +37,7 @@ export const LinkableArtifactStub = {
         id: number,
         title: string,
         xref: string,
-        color: ColorName
+        color: ColorName,
     ): LinkableArtifact => ({
         id,
         title,

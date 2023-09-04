@@ -52,7 +52,7 @@ export function getLastDate(elements: (Task | Iteration)[], now: Date): Date {
 
             return last;
         },
-        null
+        null,
     );
 
     if (!last_date) {

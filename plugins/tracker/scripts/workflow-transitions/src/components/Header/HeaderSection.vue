@@ -67,7 +67,7 @@ export default {
             set() {
                 this.$store.dispatch(
                     "updateTransitionRulesEnforcement",
-                    !this.are_transition_rules_enforced
+                    !this.are_transition_rules_enforced,
                 );
             },
         },

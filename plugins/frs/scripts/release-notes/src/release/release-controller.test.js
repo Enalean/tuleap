@@ -31,19 +31,21 @@ describe("ReleaseController", () => {
         let $controller, $rootScope;
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _$controller_,
-            _ReleaseRestService_,
-            _SharedPropertiesService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            ReleaseRestService = _ReleaseRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$rootScope_,
+                _$controller_,
+                _ReleaseRestService_,
+                _SharedPropertiesService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                ReleaseRestService = _ReleaseRestService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         jest.spyOn(SharedPropertiesService, "getProjectId").mockImplementation(() => {});
         jest.spyOn(SharedPropertiesService, "getRelease").mockImplementation(() => {});

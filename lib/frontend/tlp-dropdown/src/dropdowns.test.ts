@@ -73,7 +73,7 @@ describe(`Dropdowns`, () => {
             until it finds the dropdown menu`, () => {
             trigger_element.insertAdjacentHTML(
                 "afterend",
-                `<div></div><!-- comment element --><div></div>`
+                `<div></div><!-- comment element --><div></div>`,
             );
 
             const dropdown = createDropdown(doc, trigger_element);
@@ -87,7 +87,7 @@ describe(`Dropdowns`, () => {
             dropdown_element.remove();
 
             expect(() => createDropdown(doc, trigger_element)).toThrow(
-                "Could not find .tlp-dropdown-menu"
+                "Could not find .tlp-dropdown-menu",
             );
         });
 
@@ -95,7 +95,7 @@ describe(`Dropdowns`, () => {
             const svg_element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
             expect(() =>
-                createDropdown(doc, trigger_element, { dropdown_menu: svg_element })
+                createDropdown(doc, trigger_element, { dropdown_menu: svg_element }),
             ).toThrow("Dropdown menu must be an HTML element");
 
             svg_element.remove();
@@ -151,7 +151,7 @@ describe(`Dropdowns`, () => {
                     placement: expected_placement,
                     middleware: expect.anything(),
                 });
-            }
+            },
         );
     });
 

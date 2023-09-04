@@ -31,7 +31,7 @@ describe("ProjectShortName", () => {
     let store: Store;
 
     async function createWrapper(
-        data: DefaultData<ProjectShortName>
+        data: DefaultData<ProjectShortName>,
     ): Promise<Wrapper<ProjectShortName>> {
         const store_options = {
             getters: { has_error: false },
@@ -57,7 +57,7 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
@@ -74,7 +74,7 @@ describe("ProjectShortName", () => {
             const wrapper = await createWrapper(data);
 
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
@@ -91,7 +91,7 @@ describe("ProjectShortName", () => {
             const wrapper = await createWrapper(data);
 
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
-                true
+                true,
             );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",

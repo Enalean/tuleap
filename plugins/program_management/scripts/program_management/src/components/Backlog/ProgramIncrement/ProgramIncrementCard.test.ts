@@ -28,7 +28,7 @@ import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program
 describe("ProgramIncrementCard", () => {
     async function getWrapper(
         user_can_update = true,
-        is_iteration_tracker_defined = true
+        is_iteration_tracker_defined = true,
     ): Promise<Wrapper<ProgramIncrementCard>> {
         const increment = {
             id: 1,
@@ -62,10 +62,10 @@ describe("ProgramIncrementCard", () => {
         const wrapper = await getWrapper();
 
         expect(
-            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right")
+            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right"),
         ).toBe(true);
         expect(
-            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-down")
+            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-down"),
         ).toBe(false);
         expect(wrapper.find("[data-test=program-increment-info]").exists()).toBe(false);
         expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(false);
@@ -86,7 +86,7 @@ describe("ProgramIncrementCard", () => {
         const wrapper = await getWrapper(true, false);
 
         expect(wrapper.find("[data-test=program-increment-plan-iterations-link]").exists()).toBe(
-            false
+            false,
         );
     });
 
@@ -98,29 +98,29 @@ describe("ProgramIncrementCard", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right")
+            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right"),
         ).toBe(false);
         expect(
-            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-down")
+            wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-down"),
         ).toBe(true);
         expect(
             wrapper
                 .get("[data-test=program-increment-info]")
-                .classes("program-increment-info-hidden")
+                .classes("program-increment-info-hidden"),
         ).toBe(false);
         expect(
             wrapper
                 .get("[data-test=program-increment-content]")
-                .classes("program-increment-content-hidden")
+                .classes("program-increment-content-hidden"),
         ).toBe(false);
         expect(wrapper.get("[data-test=program-increment-info-edit-link]").attributes().href).toBe(
-            "/plugins/tracker/?aid=1&program_increment=update"
+            "/plugins/tracker/?aid=1&program_increment=update",
         );
         expect(
-            wrapper.get("[data-test=program-increment-plan-iterations-link]").attributes().href
+            wrapper.get("[data-test=program-increment-plan-iterations-link]").attributes().href,
         ).toBe("/program_management/guinea-pig/increments/1/plan");
         expect(wrapper.get("[data-test=program-increment-plan-iterations-link]").text()).toBe(
-            "Plan stuff"
+            "Plan stuff",
         );
     });
 });

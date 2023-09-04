@@ -27,7 +27,7 @@ import {
 export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const repository_id = Number(button.dataset.repositoryId);

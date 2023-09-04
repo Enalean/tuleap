@@ -82,7 +82,7 @@ const {
 
 const { has_any_loading_error } = useNamespacedGetters<Pick<ErrorGetters, "has_any_loading_error">>(
     "error",
-    ["has_any_loading_error"]
+    ["has_any_loading_error"],
 );
 
 const error_message = computed((): string | null => {

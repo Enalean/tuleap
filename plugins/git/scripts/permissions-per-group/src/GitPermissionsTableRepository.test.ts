@@ -52,10 +52,12 @@ describe("GitPermissionsTableRepository", () => {
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeTruthy();
         expect(
-            wrapper.findComponent(GitRepositoryTableSimplePermissions).props("repositoryPermission")
+            wrapper
+                .findComponent(GitRepositoryTableSimplePermissions)
+                .props("repositoryPermission"),
         ).toEqual({ repository_id: 1, has_fined_grained_permissions: false });
         expect(
-            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists()
+            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
         ).toBeFalsy();
         expect(wrapper.findComponent(GitRepositoryTableFineGrainedPermission).exists()).toBeFalsy();
     });
@@ -75,7 +77,7 @@ describe("GitPermissionsTableRepository", () => {
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(
-            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists()
+            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
         ).toBeFalsy();
         expect(wrapper.findComponent(GitRepositoryTableFineGrainedPermission).exists()).toBeFalsy();
     });
@@ -95,7 +97,7 @@ describe("GitPermissionsTableRepository", () => {
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(
-            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists()
+            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
         ).toBeFalsy();
         expect(wrapper.findComponent(GitRepositoryTableFineGrainedPermission).exists()).toBeFalsy();
     });
@@ -120,13 +122,13 @@ describe("GitPermissionsTableRepository", () => {
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(
-            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists()
+            wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=git-repository-fine-grained-permission-101]").exists()
+            wrapper.find("[data-test=git-repository-fine-grained-permission-101]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=git-repository-fine-grained-permission-102]").exists()
+            wrapper.find("[data-test=git-repository-fine-grained-permission-102]").exists(),
         ).toBeTruthy();
     });
 });

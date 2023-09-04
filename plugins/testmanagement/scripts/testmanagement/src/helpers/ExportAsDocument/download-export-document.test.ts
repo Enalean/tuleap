@@ -32,7 +32,7 @@ describe("Start download of export document", () => {
         const create_export_report = jest
             .spyOn(report_creator, "createExportReport")
             .mockResolvedValue(
-                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
             );
 
         await downloadExportDocument(
@@ -51,7 +51,7 @@ describe("Start download of export document", () => {
                 testdefinition_tracker_id: null,
             },
             download_document,
-            { label: "Tuleap 13.5" } as Campaign
+            { label: "Tuleap 13.5" } as Campaign,
         );
 
         expect(create_export_report).toHaveBeenCalledTimes(1);

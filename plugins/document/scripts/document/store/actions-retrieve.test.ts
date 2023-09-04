@@ -82,7 +82,7 @@ describe("actions-get", () => {
 
             const loadFolderContent = jest.spyOn(load_folder_content, "loadFolderContent");
             jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockResolvedValue(
-                service
+                service,
             );
             jest.spyOn(rest_querier, "getFolderContent").mockResolvedValue([item]);
             const handle_error = jest.spyOn(error_handler, "handleErrors");
@@ -97,7 +97,7 @@ describe("actions-get", () => {
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
             expect(handle_error).not.toHaveBeenCalled();
             await expect(
-                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2],
             ).resolves.toStrictEqual({
                 ...root_item,
                 properties: [],
@@ -117,8 +117,8 @@ describe("actions-get", () => {
                                     message: "User can't access project",
                                 },
                             }),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             await loadRootFolder(context);
@@ -141,15 +141,15 @@ describe("actions-get", () => {
                                     message: error_message,
                                 },
                             }),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             await loadRootFolder(context);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setFolderLoadingError",
-                error_message
+                error_message,
             );
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
@@ -168,15 +168,15 @@ describe("actions-get", () => {
                                     i18n_error_message: error_message,
                                 },
                             }),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             await loadRootFolder(context);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setFolderLoadingError",
-                error_message
+                error_message,
             );
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
@@ -218,10 +218,10 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).toHaveBeenCalled();
 
             await expect(
-                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(current_folder);
             await expect(
-                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(current_folder);
         });
 
@@ -246,10 +246,10 @@ describe("actions-get", () => {
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
             await expect(
-                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(folder_to_fetch);
             await expect(
-                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(folder_to_fetch);
         });
 
@@ -285,10 +285,10 @@ describe("actions-get", () => {
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
             await expect(
-                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(folder_to_fetch);
             await expect(
-                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2],
             ).resolves.toStrictEqual(folder_to_fetch);
         });
 
@@ -430,7 +430,7 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).toHaveBeenCalledWith(
                 context,
                 3,
-                retrieved_folder_promise
+                retrieved_folder_promise,
             );
         });
 
@@ -443,7 +443,7 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setItemLoadingError",
-                "Internal server error"
+                "Internal server error",
             );
         });
 
@@ -475,7 +475,7 @@ describe("actions-get", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setItemLoadingError",
-                "My translated error"
+                "My translated error",
             );
         });
 
@@ -490,7 +490,7 @@ describe("actions-get", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setItemLoadingError",
-                "Internal server error"
+                "Internal server error",
             );
         });
     });
@@ -532,7 +532,7 @@ describe("actions-get", () => {
         beforeEach(() => {
             getItemsReferencingSameWikiPage = jest.spyOn(
                 rest_querier,
-                "getItemsReferencingSameWikiPage"
+                "getItemsReferencingSameWikiPage",
             );
             getParents = jest.spyOn(rest_querier, "getParents");
         });
@@ -556,7 +556,7 @@ describe("actions-get", () => {
                         {
                             title: "Project documentation",
                         },
-                    ])
+                    ]),
                 )
                 .mockReturnValueOnce(
                     Promise.resolve([
@@ -566,7 +566,7 @@ describe("actions-get", () => {
                         {
                             title: "Folder 1",
                         },
-                    ])
+                    ]),
                 );
 
             const target_wiki = {

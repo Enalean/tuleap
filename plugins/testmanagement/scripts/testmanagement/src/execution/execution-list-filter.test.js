@@ -11,7 +11,7 @@ describe("ExecutionListFilter", function () {
     beforeEach(
         angular.mock.inject(function ($filter) {
             ngFilter = $filter;
-        })
+        }),
     );
 
     var list = [
@@ -111,7 +111,7 @@ describe("ExecutionListFilter", function () {
             list,
             "",
             { passed: true, failed: true },
-            null
+            null,
         );
         expect(results).toHaveLength(3);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
@@ -129,7 +129,7 @@ describe("ExecutionListFilter", function () {
             list,
             "",
             { passed: false, blocked: false, failed: false, notrun: false },
-            null
+            null,
         );
 
         expect(result).toHaveLength(0);

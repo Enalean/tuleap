@@ -40,7 +40,7 @@ describe("BurnupDisplayer", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<BurnupDisplayer>> {
         store = createStoreMock(store_options);
 

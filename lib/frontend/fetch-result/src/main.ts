@@ -267,5 +267,5 @@ export const del = buildDelete(response_retriever);
  */
 export const postFormWithTextResponse = buildSendFormAndReceiveText(
     response_retriever,
-    POST_METHOD
+    POST_METHOD,
 );

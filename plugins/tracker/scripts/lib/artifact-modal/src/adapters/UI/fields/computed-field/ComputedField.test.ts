@@ -74,7 +74,7 @@ describe(`ComputedField`, () => {
                 expect(custom_event.detail.field_id).toBe(FIELD_ID);
                 expect(custom_event.detail.autocomputed).toBe(false);
                 expect(custom_event.detail.manual_value).toBe(expected_manual_value);
-            }
+            },
         );
     });
 
@@ -157,7 +157,7 @@ describe(`ComputedField`, () => {
             const host = getHost({ value: computed_value, manualValue: manual_value });
             const rendered_value = getDisplayedValue(host);
             expect(rendered_value).toBe(expected_result);
-        }
+        },
     );
 
     describe(`validateInput()`, () => {

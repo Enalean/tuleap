@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var install_plugin_buttons = document.querySelectorAll(".install-plugin-button");
     [].forEach.call(install_plugin_buttons, function (install_plugin_button) {
         var dom_install_plugin_modal = document.getElementById(
-            install_plugin_button.dataset.modalId
+            install_plugin_button.dataset.modalId,
         );
         var tlp_install_plugin_modal = createModal(dom_install_plugin_modal);
 
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var uninstall_plugin_buttons = document.querySelectorAll(".uninstall-plugin-button");
     [].forEach.call(uninstall_plugin_buttons, function (uninstall_plugin_button) {
         var dom_uninstall_plugin_modal = document.getElementById(
-            uninstall_plugin_button.dataset.modalId
+            uninstall_plugin_button.dataset.modalId,
         );
         var tlp_uninstall_plugin_modal = createModal(dom_uninstall_plugin_modal);
 

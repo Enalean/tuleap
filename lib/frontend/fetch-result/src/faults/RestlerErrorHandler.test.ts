@@ -62,7 +62,7 @@ describe(`RestlerErrorHandler`, () => {
                 throw Error("Expected an Err");
             }
             expect(isTuleapAPIFault(result.error)).toBe(true);
-        }
+        },
     );
 
     it(`when there is an API error but its JSON cannot be parsed,

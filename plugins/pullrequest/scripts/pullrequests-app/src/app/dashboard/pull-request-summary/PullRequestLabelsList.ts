@@ -52,7 +52,7 @@ export const after_render_once_descriptor = {
             },
             (fault) => {
                 dispatch(host, "fetch-error", { detail: { fault } });
-            }
+            },
         );
     },
 };

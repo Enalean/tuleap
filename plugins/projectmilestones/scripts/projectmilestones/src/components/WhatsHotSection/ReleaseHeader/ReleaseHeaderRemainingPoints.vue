@@ -100,12 +100,12 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         if (initial_effort < remaining_effort) {
             return this.$gettextInterpolate(
                 this.$gettext(
-                    "Initial effort (%{initial_effort}) should be bigger or equal to remaining effort (%{remaining_effort})."
+                    "Initial effort (%{initial_effort}) should be bigger or equal to remaining effort (%{remaining_effort}).",
                 ),
                 {
                     initial_effort,
                     remaining_effort,
-                }
+                },
             );
         }
 

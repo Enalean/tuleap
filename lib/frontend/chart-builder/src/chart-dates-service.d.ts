@@ -30,5 +30,5 @@ export function getDaysToDisplay({
 export function getFormattedDates(dataset: PointsWithDate[]): PointsWithDate[];
 
 export function getFormattedDates(
-    dataset: PointsWithDateForGenericBurnup[]
+    dataset: PointsWithDateForGenericBurnup[],
 ): PointsWithDateForGenericBurnup[];

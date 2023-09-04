@@ -41,7 +41,7 @@ export function querier(
     keywords: string,
     previously_fetched_results: QueryResults,
     onItemReceived: (result: ItemDefinition) => void,
-    onComplete: (result: ResultAsync<QueryResults, Fault>) => void
+    onComplete: (result: ResultAsync<QueryResults, Fault>) => void,
 ): StoppableQuery {
     const PAGE_SIZE = 15;
     const MAX_PARALLEL_REQUESTS = 4;
@@ -81,12 +81,12 @@ export function querier(
 
         function getFistPage(): ResultAsync<Pagination, Fault> {
             return searchAt(previously_fetched_results.next_offset).andThen(
-                insertItemsAndGetPaginationFromFirstPage
+                insertItemsAndGetPaginationFromFirstPage,
             );
         }
 
         function insertItemsAndGetPaginationFromFirstPage(
-            response: Response
+            response: Response,
         ): ResultAsync<Pagination, Fault> {
             const pagination_size = response.headers.get("X-PAGINATION-SIZE");
             if (pagination_size === null) {
@@ -99,7 +99,7 @@ export function querier(
                 response
                     .json()
                     .then(insertItemsInDeduplicatedResults(previously_fetched_results.next_offset)),
-                JSONParseFault.fromError
+                JSONParseFault.fromError,
             ).map(() => ({ total }));
         }
 
@@ -111,7 +111,7 @@ export function querier(
             return limitConcurrencyPool(
                 MAX_PARALLEL_REQUESTS,
                 [...getAdditionalOffsets(previously_fetched_results.next_offset, limit, total)],
-                getPageIfNecessary
+                getPageIfNecessary,
             );
         }
 
@@ -127,13 +127,13 @@ export function querier(
             return searchAt(offset).andThen((response): ResultAsync<void, Fault> => {
                 return ResultAsync.fromPromise<void, Fault>(
                     response.json().then(insertItemsInDeduplicatedResults(offset)),
-                    JSONParseFault.fromError
+                    JSONParseFault.fromError,
                 );
             });
         }
 
         function insertItemsInDeduplicatedResults(
-            current_offset: number
+            current_offset: number,
         ): (json: ItemDefinition[]) => void {
             return (json: ItemDefinition[]): void => {
                 if (doWeHaveEnoughResults()) {
@@ -178,7 +178,7 @@ export function querier(
                     search_query: {
                         keywords,
                     },
-                }
+                },
             );
         }
     }

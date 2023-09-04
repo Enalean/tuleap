@@ -30,7 +30,7 @@
         >
             {{
                 $gettext(
-                    "This artifact cannot be moved to the selected tracker because none of its fields matches with it."
+                    "This artifact cannot be moved to the selected tracker because none of its fields matches with it.",
                 )
             }}
         </span>
@@ -66,9 +66,9 @@ const message = computed((): string => {
         $ngettext(
             "1 field does not match with the targeted tracker. If you confirm your action, its value will be lost forever:",
             "%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:",
-            not_migrated_fields_count.value
+            not_migrated_fields_count.value,
         ),
-        { not_migrated_fields_count: not_migrated_fields_count.value }
+        { not_migrated_fields_count: not_migrated_fields_count.value },
     );
 });
 </script>

@@ -28,7 +28,7 @@ describe("DropDownQuickLook", () => {
         item: Item,
         forbid_writers_to_update: boolean,
         forbid_writers_to_delete: boolean,
-        is_deletion_allowed: boolean
+        is_deletion_allowed: boolean,
     ): VueWrapper<InstanceType<typeof DropDownQuickLook>> {
         return shallowMount(DropDownQuickLook, {
             props: { item },
@@ -61,7 +61,7 @@ describe("DropDownQuickLook", () => {
             } as ItemFile,
             false,
             false,
-            false
+            false,
         );
 
         expect(wrapper.vm.should_display_new_version_button).toBeTruthy();
@@ -79,7 +79,7 @@ describe("DropDownQuickLook", () => {
             } as ItemFile,
             false,
             false,
-            false
+            false,
         );
 
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
@@ -100,11 +100,11 @@ describe("DropDownQuickLook", () => {
             } as ItemFile,
             true,
             false,
-            false
+            false,
         );
 
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists(),
         ).toBeFalsy();
     });
 
@@ -122,7 +122,7 @@ describe("DropDownQuickLook", () => {
             } as ItemFile,
             true,
             false,
-            false
+            false,
         );
 
         expect(wrapper.vm.should_display_update_properties).toBeTruthy();
@@ -140,14 +140,14 @@ describe("DropDownQuickLook", () => {
                 } as Folder,
                 false,
                 false,
-                false
+                false,
             );
 
             expect(
-                wrapper.find("[data-test=document-quicklook-action-button-new-version]").exists()
+                wrapper.find("[data-test=document-quicklook-action-button-new-version]").exists(),
             ).toBeFalsy();
             expect(
-                wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()
+                wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists(),
             ).toBeFalsy();
         });
 
@@ -162,14 +162,14 @@ describe("DropDownQuickLook", () => {
                 } as Folder,
                 false,
                 false,
-                false
+                false,
             );
 
             expect(
-                wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
+                wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists(),
             ).toBeFalsy();
             expect(
-                wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()
+                wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists(),
             ).toBeFalsy();
         });
     });
@@ -196,10 +196,10 @@ describe("DropDownQuickLook", () => {
                 } as Folder,
                 false,
                 forbid_writers_to_delete,
-                is_deletion_allowed
+                is_deletion_allowed,
             );
 
             expect(wrapper.vm.should_display_delete).toBe(expected);
-        }
+        },
     );
 });

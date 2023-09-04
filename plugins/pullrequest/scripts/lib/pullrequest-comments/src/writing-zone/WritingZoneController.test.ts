@@ -117,7 +117,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildBlurred(
-                WritingZonePresenter.buildInitial(project_id)
+                WritingZonePresenter.buildInitial(project_id),
             ),
             parentElement: parent_element,
         } as unknown as HostElement;
@@ -133,7 +133,7 @@ describe("WritingZoneController", () => {
         expect(setSelectionRange).toHaveBeenCalledOnce();
         expect(setSelectionRange).toHaveBeenCalledWith(
             textarea.value.length,
-            textarea.value.length
+            textarea.value.length,
         );
 
         expect(host.presenter.is_focused).toBe(true);
@@ -145,7 +145,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildFocused(
-                WritingZonePresenter.buildInitial(project_id)
+                WritingZonePresenter.buildInitial(project_id),
             ),
             parentElement: parent_element,
         } as unknown as HostElement;
@@ -173,7 +173,7 @@ describe("WritingZoneController", () => {
             textarea,
             presenter: WritingZonePresenter.buildPreviewMode(
                 WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
-                "<p>Previewed content</p>"
+                "<p>Previewed content</p>",
             ),
         } as HostElement;
 
@@ -197,7 +197,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
             ),
         } as HostElement;
 
@@ -206,7 +206,7 @@ describe("WritingZoneController", () => {
         textarea.value = content_to_preview;
 
         vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
-            okAsync(previewed_content)
+            okAsync(previewed_content),
         );
         vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
             // do nothing
@@ -218,10 +218,10 @@ describe("WritingZoneController", () => {
 
         expect(preview_fetcher.fetchCommonMarkPreview).toHaveBeenCalledWith(
             project_id,
-            content_to_preview
+            content_to_preview,
         );
         expect(host.presenter).toStrictEqual(
-            WritingZonePresenter.buildPreviewMode(host.presenter, previewed_content)
+            WritingZonePresenter.buildPreviewMode(host.presenter, previewed_content),
         );
         expect(tooltip.loadTooltips).toHaveBeenCalledOnce();
     });
@@ -234,14 +234,14 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
             ),
         } as HostElement;
 
         textarea.value = "Content to preview";
 
         vi.spyOn(preview_fetcher, "fetchCommonMarkPreview").mockReturnValue(
-            errAsync("Some error we cannot display")
+            errAsync("Some error we cannot display"),
         );
         vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
             // do nothing
@@ -252,7 +252,7 @@ describe("WritingZoneController", () => {
         vi.advanceTimersToNextTimer();
 
         expect(host.presenter).toStrictEqual(
-            WritingZonePresenter.buildPreviewWithError(host.presenter)
+            WritingZonePresenter.buildPreviewWithError(host.presenter),
         );
         expect(tooltip.loadTooltips).not.toHaveBeenCalled();
     });
@@ -263,7 +263,7 @@ describe("WritingZoneController", () => {
             textarea,
             presenter: WritingZonePresenter.buildPreviewMode(
                 WritingZonePresenter.buildInitial(project_id),
-                "<p>Please rebase!</p>"
+                "<p>Please rebase!</p>",
             ),
             parentElement: parent_element,
         } as unknown as HostElement;
@@ -300,9 +300,9 @@ describe("WritingZoneController", () => {
                     is_comments_markdown_mode_enabled,
                     project_id,
                     focus_writing_zone_when_connected: should_focus_when_writing_zone_once_rendered,
-                }).shouldFocusWritingZoneWhenConnected()
+                }).shouldFocusWritingZoneWhenConnected(),
             ).toBe(expected);
-        }
+        },
     );
 
     it("setWritingZoneContent() should set the WritingZone initial_content", () => {

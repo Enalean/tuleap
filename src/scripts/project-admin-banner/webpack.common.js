@@ -32,7 +32,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/core/project-admin-banner/"
+        "/assets/core/project-admin-banner/",
     ),
     externals: {
         ckeditor4: "CKEDITOR",

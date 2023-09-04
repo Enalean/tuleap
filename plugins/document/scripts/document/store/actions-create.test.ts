@@ -135,7 +135,7 @@ describe("actions-create", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                expect.any(Object)
+                expect.any(Object),
             );
             expect(context.dispatch).toHaveBeenCalledWith("error/handleErrorsForModal", Error());
         });
@@ -242,7 +242,7 @@ describe("actions-create", () => {
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 folder_of_created_item,
@@ -251,7 +251,7 @@ describe("actions-create", () => {
             ]);
             expect(context.commit).toHaveBeenCalledWith(
                 "addFileInUploadsList",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
         });
         it("not displays the created file when it is created in a collapsed folder and displays the progress bar along the folder", async () => {
@@ -300,7 +300,7 @@ describe("actions-create", () => {
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 collapsed_folder_of_created_item,
@@ -309,11 +309,11 @@ describe("actions-create", () => {
             ]);
             expect(context.commit).toHaveBeenCalledWith(
                 "addFileInUploadsList",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "toggleCollapsedFolderHasUploadingContent",
-                { collapsed_folder: collapsed_folder_of_created_item, toggle: true }
+                { collapsed_folder: collapsed_folder_of_created_item, toggle: true },
             );
         });
         it("displays the created file when it is created in a extanded sub folder and not displays the progress bar along the folder", async () => {
@@ -362,7 +362,7 @@ describe("actions-create", () => {
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 extended_folder_of_created_item,
@@ -371,11 +371,11 @@ describe("actions-create", () => {
             ]);
             expect(context.commit).toHaveBeenCalledWith(
                 "addFileInUploadsList",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "toggleCollapsedFolderHasUploadingContent",
-                { collapsed_folder: extended_folder_of_created_item, toggle: false }
+                { collapsed_folder: extended_folder_of_created_item, toggle: false },
             );
         });
     });
@@ -388,7 +388,7 @@ describe("actions-create", () => {
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
-                Promise.resolve(created_item_reference)
+                Promise.resolve(created_item_reference),
             );
             const uploader = {} as Upload;
             jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
@@ -413,7 +413,7 @@ describe("actions-create", () => {
             };
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader
+                expected_fake_item_with_uploader,
             );
         });
         it("Starts upload", async () => {
@@ -423,7 +423,7 @@ describe("actions-create", () => {
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
-                Promise.resolve(created_item_reference)
+                Promise.resolve(created_item_reference),
             );
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
@@ -451,7 +451,7 @@ describe("actions-create", () => {
                 dropped_file,
                 expected_fake_item,
                 created_item_reference,
-                parent
+                parent,
             );
         });
         it("Does not start upload nor create fake item if item reference already exist in the store", async () => {
@@ -461,7 +461,7 @@ describe("actions-create", () => {
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
-                Promise.resolve(created_item_reference)
+                Promise.resolve(created_item_reference),
             );
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
 
@@ -477,7 +477,7 @@ describe("actions-create", () => {
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
-                Promise.resolve(created_item_reference)
+                Promise.resolve(created_item_reference),
             );
 
             const created_item = { id: 66, parent_id: 42, type: "file" } as ItemFile;
@@ -489,7 +489,7 @@ describe("actions-create", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                created_item
+                created_item,
             );
             expect(uploadFile).not.toHaveBeenCalled();
         });
@@ -542,7 +542,7 @@ describe("actions-create", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                created_item
+                created_item,
             );
             expect(flagItemAsCreated).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
@@ -552,7 +552,7 @@ describe("actions-create", () => {
             ]);
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                created_item
+                created_item,
             );
         });
 
@@ -587,13 +587,13 @@ describe("actions-create", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                created_item
+                created_item,
             );
             expect(flagItemAsCreated).toHaveBeenCalled();
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                created_item
+                created_item,
             );
         });
 
@@ -628,13 +628,13 @@ describe("actions-create", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                created_item
+                created_item,
             );
             expect(flagItemAsCreated).toHaveBeenCalled();
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
-                created_item
+                created_item,
             );
         });
     });

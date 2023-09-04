@@ -22,22 +22,22 @@ import { TextCellWithMerges } from "../type";
 import { extractFieldsLabels } from "./report-fields-labels-extractor";
 
 export function formatTrackerNames(
-    organized_data: OrganizedReportsData
+    organized_data: OrganizedReportsData,
 ): ReadonlyArray<TextCellWithMerges> {
     const formatted_tracker_names: Array<TextCellWithMerges> = [];
     formatted_tracker_names.push(
         new TextCellWithMerges(
             organized_data.first_level.tracker_name,
-            extractFieldsLabels(organized_data.first_level.artifact_representations).length
-        )
+            extractFieldsLabels(organized_data.first_level.artifact_representations).length,
+        ),
     );
 
     if (organized_data.second_level) {
         formatted_tracker_names.push(
             new TextCellWithMerges(
                 organized_data.second_level.tracker_name,
-                extractFieldsLabels(organized_data.second_level.artifact_representations).length
-            )
+                extractFieldsLabels(organized_data.second_level.artifact_representations).length,
+            ),
         );
     }
 
@@ -45,8 +45,8 @@ export function formatTrackerNames(
         formatted_tracker_names.push(
             new TextCellWithMerges(
                 organized_data.third_level.tracker_name,
-                extractFieldsLabels(organized_data.third_level.artifact_representations).length
-            )
+                extractFieldsLabels(organized_data.third_level.artifact_representations).length,
+            ),
         );
     }
 

@@ -22,6 +22,6 @@ import type { Fault } from "@tuleap/fault";
 import { JSONParseFault } from "./faults/JSONParseFault";
 
 export const decodeJSON = <TypeOfJSONPayload>(
-    response: Response
+    response: Response,
 ): ResultAsync<TypeOfJSONPayload, Fault> =>
     ResultAsync.fromPromise<TypeOfJSONPayload, Fault>(response.json(), JSONParseFault.fromError);

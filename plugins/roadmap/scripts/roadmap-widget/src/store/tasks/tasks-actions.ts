@@ -26,7 +26,7 @@ import { SUBTASKS_WAITING_TO_BE_LOADED } from "../../type";
 
 export function toggleSubtasks(
     context: ActionContext<TasksState, RootState>,
-    task: Task
+    task: Task,
 ): Promise<void> {
     if (task.is_expanded) {
         context.commit("collapseTask", task);

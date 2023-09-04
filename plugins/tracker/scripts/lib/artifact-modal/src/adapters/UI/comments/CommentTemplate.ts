@@ -63,7 +63,7 @@ const isEdited = (comment: FollowUpComment): boolean =>
 
 export const getCommentTemplate = (
     comment: FollowUpComment,
-    preferences: CommentUserPreferences
+    preferences: CommentUserPreferences,
 ): UpdateFunction<ModalCommentsSection> => {
     return html`<div class="tuleap-artifact-modal-followups-comment">
         <div class="tuleap-artifact-modal-followups-comment-header">
@@ -101,7 +101,7 @@ export const getCommentTemplate = (
                         locale="${preferences.locale}"
                         >${getAbsoluteDate(
                             comment.last_modified_date,
-                            preferences
+                            preferences,
                         )}</tlp-relative-date
                     >
                 </div>`}

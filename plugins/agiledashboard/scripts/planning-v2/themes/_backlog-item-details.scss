@@ -52,8 +52,7 @@ $accessibility-pattern-right-margin: 6px;
                 --extra-padding-right: calc(
                     #{$accessibility-pattern-width} +
                         2 *
-                        #{$accessibility-pattern-right-margin} -
-                        var(--tlp-small-spacing)
+                        #{$accessibility-pattern-right-margin} - var(--tlp-small-spacing)
                 );
             }
 
@@ -72,7 +71,9 @@ $accessibility-pattern-right-margin: 6px;
     position: relative;
     flex-direction: column;
     width: 100%;
-    transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+    transition:
+        border-color 150ms ease-in-out,
+        background-color 150ms ease-in-out;
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
@@ -157,19 +158,25 @@ $accessibility-pattern-right-margin: 6px;
     }
 
     &.updating {
-        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        transition:
+            border-color 150ms ease-in-out,
+            background-color 150ms ease-in-out;
         animation: blink-backlog-item-card 1200ms ease-in-out alternate infinite;
     }
 
     &.updated {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        transition:
+            border-color 75ms ease-in-out,
+            background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
         border-color: var(--tlp-success-color);
         background: var(--tlp-success-color-transparent-90);
     }
 
     &.created {
-        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        transition:
+            border-color 150ms ease-in-out,
+            background-color 150ms ease-in-out;
         animation: pulse-backlog-item-card 500ms ease-in-out;
         border-color: var(--tlp-success-color-transparent-50);
         background: var(--tlp-success-color-lighter-90);

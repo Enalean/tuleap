@@ -26,7 +26,7 @@ export const NewLinkStub = {
     withDefaults: (id?: number, data?: Partial<NewLink>): NewLink =>
         NewLink.fromLinkableArtifactAndType(
             LinkableArtifactStub.withDefaults({ ...data, id: id ?? 806 }),
-            data?.link_type ?? LinkTypeStub.buildUntyped()
+            data?.link_type ?? LinkTypeStub.buildUntyped(),
         ),
 
     withIdAndType: (id: number, type: LinkType): NewLink =>

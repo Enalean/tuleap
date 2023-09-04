@@ -26,7 +26,7 @@ flatpickr.l10ns.default.firstDayOfWeek = 1;
 
 export function datePicker(
     element: HTMLInputElement,
-    options?: flatpickr.Options.Options
+    options?: flatpickr.Options.Options,
 ): DatePickerInstance {
     if (isNaN(Date.parse(element.value))) {
         element.value = "";

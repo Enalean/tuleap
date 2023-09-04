@@ -59,7 +59,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
         it("shows tracker load error message", async () => {
             const wrapper = await getWrapper();
             expect(
-                wrapper.find('[data-test-type="tracker-load-error-message"]').exists()
+                wrapper.find('[data-test-type="tracker-load-error-message"]').exists(),
             ).toBeTruthy();
         });
         it("does not show anything else", async () => {
@@ -101,7 +101,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 Vue.set(
                     store.state.current_tracker,
                     "workflow",
-                    create("workflow", "field_not_defined")
+                    create("workflow", "field_not_defined"),
                 );
             });
 
@@ -115,7 +115,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("does not show rules enforcement warning", async () => {
                 const wrapper = await getWrapper();
                 expect(
-                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists()
+                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists(),
                 ).toBeFalsy();
             });
 
@@ -125,7 +125,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 await wrapper.vm.$nextTick();
 
                 expect(
-                    wrapper.findComponent(FirstConfigurationImpossibleWarning).exists()
+                    wrapper.findComponent(FirstConfigurationImpossibleWarning).exists(),
                 ).toBeTruthy();
             });
         });
@@ -135,7 +135,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 Vue.set(
                     store.state.current_tracker,
                     "workflow",
-                    create("workflow", "field_defined")
+                    create("workflow", "field_defined"),
                 );
             });
             it("shows configuration header and matrix", async () => {
@@ -146,7 +146,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("shows rules enforcement warning", async () => {
                 const wrapper = await getWrapper();
                 expect(
-                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists()
+                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists(),
                 ).toBeTruthy();
             });
         });

@@ -120,7 +120,7 @@ const go_to_test_def_link = computed((): string => {
     return buildEditTestDefinitionItemLink(
         milestone_id.value,
         props.test_definition,
-        props.backlog_item
+        props.backlog_item,
     );
 });
 

@@ -48,7 +48,7 @@ function hide_references_to() {
                 codendi.getText("cross_ref_fact_include", "legend_referenced_by") +
                 ' <span><a href="#" onclick="show_references_to(); return false;">' +
                 codendi.getText("cross_ref_fact_include", "show_references_to") +
-                "</span></p>"
+                "</span></p>",
         );
     }
 }
@@ -72,7 +72,7 @@ function show_references_to() {
                 codendi.getText("cross_ref_fact_include", "legend") +
                 ' <span><a href="#" onclick="hide_references_to(); return false;">' +
                 codendi.getText("cross_ref_fact_include", "hide_references_to") +
-                "</span></p>"
+                "</span></p>",
         );
     }
 }

@@ -94,7 +94,7 @@ export default class CardAssignees extends Vue {
                 if (!is_in_edit_mode) {
                     this.is_in_edit_mode = false;
                 }
-            }
+            },
         );
     }
 
@@ -177,7 +177,7 @@ export default class CardAssignees extends Vue {
     get users(): UserForPeoplePicker[] {
         return this.possible_users.map((user): UserForPeoplePicker => {
             const selected = this.card.assignees.some(
-                (selected_user) => selected_user.id === user.id
+                (selected_user) => selected_user.id === user.id,
             );
 
             return { ...user, selected };
@@ -191,7 +191,7 @@ export default class CardAssignees extends Vue {
     set new_assignees_ids(value: number[]) {
         this.$emit(
             "input",
-            this.users.filter((user) => value.some((id) => id === user.id))
+            this.users.filter((user) => value.some((id) => id === user.id)),
         );
     }
 }

@@ -38,7 +38,7 @@ export function validateOpenListFieldValue(value_model) {
             } else if (value_model.bindings.type === LIST_BIND_USERS) {
                 return removeUsersValueUnusedAttributes(bind_value_object);
             }
-        }
+        },
     );
 
     return removeValueModelUnusedAttributes(value_model);

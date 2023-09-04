@@ -36,7 +36,7 @@ import type { Card, ColumnDefinition, Swimlane } from "../../type";
 
 export function handleDrop(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: HandleDropPayload
+    payload: HandleDropPayload,
 ): Promise<void> {
     context.commit("unsetDropZoneRejectingDrop");
 
@@ -45,7 +45,7 @@ export function handleDrop(
     }
 
     const { swimlane, column } = context.rootGetters.column_and_swimlane_of_cell(
-        payload.target_cell
+        payload.target_cell,
     );
     if (!swimlane || !column) {
         return Promise.resolve();
@@ -71,7 +71,7 @@ export function handleDrop(
             sibling,
             cards_in_cell,
             swimlane,
-            column
+            column,
         );
         return context.dispatch("reorderCardsInCell", reoder_payload);
     }
@@ -85,7 +85,7 @@ function getReorderCardsPayload(
     sibling: Card | null,
     cards_in_cell: Card[],
     swimlane: Swimlane,
-    column: ColumnDefinition
+    column: ColumnDefinition,
 ): ReorderCardsPayload {
     const position = getCardPosition(card, sibling, cards_in_cell);
 
@@ -102,7 +102,7 @@ function getMoveCardsPayload(
     sibling: Card | null,
     cards_in_cell: Card[],
     swimlane: Swimlane,
-    column: ColumnDefinition
+    column: ColumnDefinition,
 ): MoveCardsPayload {
     let position;
 
@@ -120,7 +120,7 @@ function getMoveCardsPayload(
 
 export async function reorderCardsInCell(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: ReorderCardsPayload
+    payload: ReorderCardsPayload,
 ): Promise<void> {
     context.commit("changeCardPosition", payload);
     try {
@@ -136,7 +136,7 @@ export async function reorderCardsInCell(
 
 export async function moveCardToCell(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: MoveCardsPayload
+    payload: MoveCardsPayload,
 ): Promise<void> {
     context.commit("moveCardToColumn", payload);
     try {
@@ -172,6 +172,6 @@ function getPATCHCellUrl(swimlane: Swimlane, column: ColumnDefinition): string {
     const column_id = column.id;
 
     return `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${encodeURIComponent(
-        column_id
+        column_id,
     )}`;
 }

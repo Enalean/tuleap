@@ -141,12 +141,12 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function (transport) {
 
         if (completion_bar != null) {
             milestone_initial_effort = parseFloat(
-                completion_bar.readAttribute("data-initial-effort")
+                completion_bar.readAttribute("data-initial-effort"),
             );
             new_completion = Math.ceil(
                 ((milestone_initial_effort - milestone_remaining_effort) /
                     milestone_initial_effort) *
-                    100
+                    100,
             );
 
             if (new_completion < 0) {
@@ -335,7 +335,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             in_place_editor._controls.editor.pattern = pattern;
             in_place_editor._controls.editor.title = message;
         },
-    }
+    },
 );
 
 tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
@@ -359,7 +359,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             editor = new Ajax.InPlaceMultiCollectionEditor(
                 container,
                 this.update_url,
-                this.options
+                this.options,
             );
 
             this.bindSelectedElementsToEditor(editor);
@@ -601,7 +601,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 container.insert(" ");
             }
         },
-    }
+    },
 );
 
 tuleap.agiledashboard.cardwall.updateBurndown = function () {
@@ -666,7 +666,7 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.x.domain(
             this.d3.extent(this.ideal_data, function (d, index) {
                 return index;
-            })
+            }),
         );
     },
 
@@ -693,7 +693,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .x(
                 function (d, index) {
                     return this.x(index);
-                }.bind(this)
+                }.bind(this),
             )
             .y(this.y);
         this.actual_line = this.d3

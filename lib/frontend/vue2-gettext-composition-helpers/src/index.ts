@@ -32,7 +32,7 @@ export function useGettext(): Language {
     const vm = getCurrentInstance();
     if (vm === null) {
         throw new Error(
-            "You must use this function within the `setup()` method or a <script setup> tag"
+            "You must use this function within the `setup()` method or a <script setup> tag",
         );
     }
 

@@ -44,14 +44,14 @@ export const getElementLeft = (doc: Document, current_element: HTMLElement): HTM
 type GetTargetElement = (element: HTMLElement) => HTMLElement | null;
 type GetFallbackElement = (
     element: HTMLElement | Document,
-    navigation_type: NavigationElement
+    navigation_type: NavigationElement,
 ) => HTMLElement | null;
 
 function getDownOrUpElement(
     doc: Document,
     current_element: HTMLElement,
     getTargetElement: GetTargetElement,
-    getFallbackElement: GetFallbackElement
+    getFallbackElement: GetFallbackElement,
 ): HTMLElement | null {
     const navigation_datatype = current_element.dataset.navigation;
 
@@ -83,7 +83,7 @@ function getRightOrLeftElement(
     doc: Document,
     current_element: HTMLElement,
     getTargetElement: GetTargetElement,
-    getFallbackElement: GetFallbackElement
+    getFallbackElement: GetFallbackElement,
 ): HTMLElement | null {
     const navigation_datatype = current_element.dataset.navigation;
     if (navigation_datatype !== CARD && navigation_datatype !== ADDFORM) {

@@ -57,7 +57,7 @@ describe("App", () => {
 
         expect(wrapper.findComponent(TimeframeBasedOnFieldsConfig).exists()).toBe(true);
         expect(wrapper.findComponent(TimeframeImpliedFromAnotherTrackerConfig).exists()).toBe(
-            false
+            false,
         );
 
         mode_selector.vm.$emit("timeframe-mode-selected", MODE_IMPLIED_FROM_ANOTHER_TRACKER);
@@ -73,7 +73,7 @@ describe("App", () => {
 
         expect(wrapper.findComponent(TimeframeBasedOnFieldsConfig).exists()).toBe(true);
         expect(wrapper.findComponent(TimeframeImpliedFromAnotherTrackerConfig).exists()).toBe(
-            false
+            false,
         );
     });
 });

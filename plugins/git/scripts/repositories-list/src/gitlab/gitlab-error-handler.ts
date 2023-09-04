@@ -23,7 +23,7 @@ import type { VueGettextProvider } from "./vue-gettext-provider";
 
 export async function handleError(
     rest_error: unknown,
-    gettext_provider: VueGettextProvider
+    gettext_provider: VueGettextProvider,
 ): Promise<string> {
     if (!(rest_error instanceof FetchWrapperError)) {
         return gettext_provider.$gettext("Oops, an error occurred!");

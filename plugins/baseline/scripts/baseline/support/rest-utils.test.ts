@@ -47,7 +47,7 @@ describe("RestUtils:", () => {
                 result = await getMessageFromException(
                     getFetchWrapperError({
                         error: { message: "non internationalized" },
-                    })
+                    }),
                 );
             });
 
@@ -62,7 +62,7 @@ describe("RestUtils:", () => {
                         error: {
                             i18n_error_message: "internationalized message",
                         },
-                    })
+                    }),
                 );
             });
 

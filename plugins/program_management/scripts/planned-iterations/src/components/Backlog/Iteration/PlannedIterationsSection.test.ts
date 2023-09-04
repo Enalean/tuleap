@@ -33,7 +33,7 @@ import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";
 
 describe("PlannedIterationsSection", () => {
     async function getWrapper(
-        iterations_labels: IterationLabels
+        iterations_labels: IterationLabels,
     ): Promise<Wrapper<PlannedIterationsSection>> {
         return shallowMount(PlannedIterationsSection, {
             localVue: await createPlanIterationsLocalVue(),
@@ -69,7 +69,7 @@ describe("PlannedIterationsSection", () => {
             await Vue.nextTick();
 
             expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toBe(
-                "Guinea Pigs"
+                "Guinea Pigs",
             );
         });
 
@@ -90,9 +90,9 @@ describe("PlannedIterationsSection", () => {
                 await Vue.nextTick();
 
                 expect(wrapper.find("[data-test=iteration-fetch-error]").text()).toEqual(
-                    expected_message
+                    expected_message,
                 );
-            }
+            },
         );
 
         it("should use the custom iteration sub_label in the [+ add iteration] button when it is defined", async () => {

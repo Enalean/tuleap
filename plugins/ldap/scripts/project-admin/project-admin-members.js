@@ -49,7 +49,7 @@ function initLdapGroupsAutocompleter() {
             display_name,
             select,
         },
-        getUsersToConfirm
+        getUsersToConfirm,
     );
 
     async function getUsersToConfirm(chosen_ldap_group) {

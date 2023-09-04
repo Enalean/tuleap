@@ -45,7 +45,7 @@ function handleBreadcrumbPrivacyPopover() {
                 project_flags.length > 0
                     ? project_privacy_element.dataset.projectName
                     : project_privacy_element.dataset.privacyTitle,
-        }
+        },
     );
 
     const content = mustache.render(
@@ -82,7 +82,7 @@ function handleBreadcrumbPrivacyPopover() {
             privacy_description: project_privacy_element.dataset.privacyDescription,
             project_flags,
             has_project_flags: project_flags.length > 0,
-        }
+        },
     );
 
     $(project_privacy_element).popover({

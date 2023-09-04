@@ -23,7 +23,7 @@ import type { Embedded, Item, Link, RootState, Wiki } from "../type";
 
 export const refreshLink = async (
     context: ActionContext<RootState, RootState>,
-    item_to_refresh: Link
+    item_to_refresh: Link,
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
@@ -32,7 +32,7 @@ export const refreshLink = async (
 
 export const refreshWiki = async (
     context: ActionContext<RootState, RootState>,
-    item_to_refresh: Wiki
+    item_to_refresh: Wiki,
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
@@ -41,7 +41,7 @@ export const refreshWiki = async (
 
 export const refreshEmbeddedFile = async (
     context: ActionContext<RootState, RootState>,
-    item_to_refresh: Embedded
+    item_to_refresh: Embedded,
 ): Promise<Item> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 

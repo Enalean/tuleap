@@ -27,7 +27,7 @@ import { ProjectProxy } from "../../ProjectProxy";
 export const LinkedArtifactProxy = {
     fromAPIArtifactAndType: (
         artifact: ArtifactWithStatus,
-        link_type: LinkType
+        link_type: LinkType,
     ): LinkedArtifact => ({
         identifier: LinkedArtifactIdentifierProxy.fromAPIArtifact(artifact),
         title: artifact.title,

@@ -32,7 +32,7 @@ import type { DrekkenovState } from "./DrekkenovState";
 
 export function dragStartFactory(
     options: DrekkenovInitOptions,
-    state: DrekkenovState
+    state: DrekkenovState,
 ): DragHandler {
     return (event: DragEvent): void => {
         const element = event.target;
@@ -77,7 +77,7 @@ export function dragStartFactory(
 function dragEnterFactory(
     options: DrekkenovInitOptions,
     ongoing_drag: OngoingDrag,
-    drop_ghost: DropGhost
+    drop_ghost: DropGhost,
 ): DragHandler {
     return (event: DragEvent): void => {
         if (
@@ -116,7 +116,7 @@ function dragEnterFactory(
 function dragLeaveFactory(
     options: DrekkenovInitOptions,
     ongoing_drag: OngoingDrag,
-    drop_ghost: DropGhost
+    drop_ghost: DropGhost,
 ): DragHandler {
     return (event: DragEvent): void => {
         if (!(event.target instanceof Node) || drop_ghost.contains(event.target)) {
@@ -140,7 +140,7 @@ function dragLeaveFactory(
 function dragOverFactory(
     options: DrekkenovInitOptions,
     ongoing_drag: OngoingDrag,
-    drop_ghost: DropGhost
+    drop_ghost: DropGhost,
 ): DragHandler {
     return (event: DragEvent): void => {
         if (!(event.target instanceof Node) || event.dataTransfer === null) {
@@ -172,7 +172,7 @@ function dropFactory(
     options: DrekkenovInitOptions,
     after_drop_dispatcher: AfterDropEventSource,
     ongoing_drag: OngoingDrag,
-    drop_ghost: DropGhost
+    drop_ghost: DropGhost,
 ): DragHandler {
     return (event: DragEvent): void => {
         if (
@@ -202,7 +202,7 @@ function dropFactory(
 
 function dragEndFactory(
     options: DrekkenovInitOptions,
-    after_drop_dispatcher: AfterDropEventSource
+    after_drop_dispatcher: AfterDropEventSource,
 ): DragHandler {
     return (event: DragEvent): void => {
         const dropped_element = event.target;
@@ -218,7 +218,7 @@ export function handlersFactory(
     options: DrekkenovInitOptions,
     after_drop_event_source: AfterDropEventSource,
     ongoing_drag: OngoingDrag,
-    drop_ghost: DropGhost
+    drop_ghost: DropGhost,
 ): DragDropHandlers {
     return {
         dragEnterHandler: dragEnterFactory(options, ongoing_drag, drop_ghost),

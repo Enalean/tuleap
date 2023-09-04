@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(
                 /* webpackChunkName: "tracker-artifact-po-" */ "../po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     createListPicker(select, {

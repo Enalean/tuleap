@@ -85,7 +85,7 @@ describe("CardWithChildren", () => {
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "setSelectedTemplate",
-            tuleap_template
+            tuleap_template,
         );
     });
 

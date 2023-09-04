@@ -57,7 +57,7 @@ const getPullRequest = (pull_request_data: Partial<PullRequest>): PullRequest =>
         reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
         reference_dest: "66728d6153adbd267f3b1b3a1250bab6bd2ee3d0",
         ...pull_request_data,
-    } as PullRequest);
+    }) as PullRequest;
 
 const isButtonDisabled = (wrapper: VueWrapper): boolean =>
     wrapper.find("[data-test=merge-button]").attributes("disabled") !== undefined;
@@ -159,7 +159,7 @@ describe("PullRequestMergeButton", () => {
                     merge_status: PULL_REQUEST_MERGE_STATUS_FF,
                 });
                 expect(isButtonDisabled(wrapper)).toBe(false);
-            }
+            },
         );
 
         it("When the pull-request is not fast-forward but merging not fast-forward pull-requests is allowed", () => {

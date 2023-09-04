@@ -66,7 +66,7 @@ function stopLoadingAscendantHierarchy(state) {
 
 function appendFolderToAscendantHierarchy(state, folder) {
     const parent_index_in_hierarchy = state.current_folder_ascendant_hierarchy.findIndex(
-        (item) => item.id === folder.parent_id
+        (item) => item.id === folder.parent_id,
     );
 
     if (parent_index_in_hierarchy !== -1) {
@@ -98,7 +98,7 @@ function setCurrentFolder(state, folder) {
 function replaceCurrentFolder(state, folder) {
     state.current_folder = folder;
     const folder_in_hierarchy_index = state.current_folder_ascendant_hierarchy.findIndex(
-        (item) => item.id === folder.id
+        (item) => item.id === folder.id,
     );
     if (folder_in_hierarchy_index >= 0) {
         state.current_folder_ascendant_hierarchy[folder_in_hierarchy_index] = folder;

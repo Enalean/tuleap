@@ -34,14 +34,14 @@ import {
 export function buildProgramConfiguration(doc: Document, program_id: number): ProgramConfiguration {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,
-        PROGRAM_INCREMENT_TRACKER_ID
+        PROGRAM_INCREMENT_TRACKER_ID,
     );
 
     return {
         program_id,
         program_increment_tracker_id: Number.parseInt(
             program_increment_tracker_element.selectedOptions[0].value,
-            10
+            10,
         ),
         permissions: { can_prioritize_features: extractOptionsFromPermissions(doc) },
         plannable_tracker_ids: extractOptionsFromPlannableTrackers(doc),
@@ -74,7 +74,7 @@ function extractOptionsFromPermissions(doc: Document): string[] {
 }
 
 function extractIterationConfigurationObject(
-    doc: Document
+    doc: Document,
 ): null | { iteration_tracker_id: number; iteration_label?: string; iteration_sub_label?: string } {
     const iteration_tracker_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
     if (iteration_tracker_element.value === "") {

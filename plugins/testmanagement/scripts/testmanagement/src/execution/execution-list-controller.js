@@ -51,7 +51,7 @@ function ExecutionListCtrl(
     CampaignService,
     SocketService,
     SharedPropertiesService,
-    ExecutionRestService
+    ExecutionRestService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -105,7 +105,7 @@ function ExecutionListCtrl(
             ExecutionRestService.leaveTestExecution($scope.execution_id);
             ExecutionService.removeViewTestExecution(
                 $scope.execution_id,
-                SharedPropertiesService.getCurrentUser()
+                SharedPropertiesService.getCurrentUser(),
             );
         }
 
@@ -138,7 +138,7 @@ function ExecutionListCtrl(
         },
         () => {
             // ignore the fact that there is no nodejs server
-        }
+        },
     );
 
     function initialization() {
@@ -187,7 +187,7 @@ function ExecutionListCtrl(
             (categories) => {
                 $scope.categories = sortAlphabetically(categories);
             },
-            true
+            true,
         );
     }
 
@@ -206,7 +206,7 @@ function ExecutionListCtrl(
                 ExecutionService.executions_loaded = true;
                 ExecutionService.displayPresencesForAllExecutions();
             },
-            () => setError(gettextCatalog.getString("An error occurred while loading the tests."))
+            () => setError(gettextCatalog.getString("An error occurred while loading the tests.")),
         );
     }
 
@@ -215,15 +215,15 @@ function ExecutionListCtrl(
 
         return ExecutionRestService.changePresenceOnTestExecution(
             current_execution_id,
-            old_execution_id
+            old_execution_id,
         ).then(function () {
             ExecutionService.removeViewTestExecution(
                 old_execution_id,
-                SharedPropertiesService.getCurrentUser()
+                SharedPropertiesService.getCurrentUser(),
             );
             ExecutionService.viewTestExecution(
                 current_execution_id,
-                SharedPropertiesService.getCurrentUser()
+                SharedPropertiesService.getCurrentUser(),
             );
             $scope.execution_id = current_execution_id;
         });
@@ -248,12 +248,12 @@ function ExecutionListCtrl(
         const filtered_executions = $filter("ExecutionListFilter")(
             category.executions,
             $scope.search,
-            $scope.status
+            $scope.status,
         );
 
         const filtered_auto_tests = $filter("AutomatedTestsFilter")(
             filtered_executions,
-            $scope.are_automated_tests_shown
+            $scope.are_automated_tests_shown,
         );
 
         return filtered_auto_tests.length > 0;

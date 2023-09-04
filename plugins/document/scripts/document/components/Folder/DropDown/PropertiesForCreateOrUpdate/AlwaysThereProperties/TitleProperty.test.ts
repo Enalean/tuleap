@@ -40,7 +40,7 @@ describe("TitleProperty", () => {
         value: string,
         isInUpdateContext: boolean,
         parent: Folder,
-        currentlyUpdatedItem: Item
+        currentlyUpdatedItem: Item,
     ): VueWrapper<InstanceType<typeof TitleProperty>> {
         const state = {
             folder_content: [
@@ -100,7 +100,7 @@ describe("TitleProperty", () => {
         }
         expect(input.element.disabled).toBe(true);
         expect(wrapper.get("[data-test=document-new-item-title-form-element]").classes()).toContain(
-            "tlp-form-element-disabled"
+            "tlp-form-element-disabled",
         );
     });
 

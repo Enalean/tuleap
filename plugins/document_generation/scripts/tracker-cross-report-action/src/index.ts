@@ -21,7 +21,7 @@ import type { GlobalExportProperties } from "./type";
 
 document.addEventListener("DOMContentLoaded", () => {
     const generate_document_link = document.getElementById(
-        "tracker-cross-report-action-generate-document"
+        "tracker-cross-report-action-generate-document",
     );
     if (!generate_document_link) {
         throw new Error("Missing generate cross tracker document button");
@@ -34,15 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Missing properties dataset");
         }
         const properties: GlobalExportProperties = JSON.parse(
-            generate_document_link.dataset.properties
+            generate_document_link.dataset.properties,
         );
 
         const modal_mount_point = document.getElementById(
-            "tracker-cross-report-generate-document-modal"
+            "tracker-cross-report-generate-document-modal",
         );
         if (modal_mount_point === null) {
             throw new Error(
-                "Cannot find the mount point for the cross report document export modal"
+                "Cannot find the mount point for the cross report document export modal",
             );
         }
 

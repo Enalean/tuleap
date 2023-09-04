@@ -34,7 +34,7 @@ type JustificationsSectionRow = readonly [
     TextCell,
     TextCell,
     DateCell,
-    HTMLCell | TextCell
+    HTMLCell | TextCell,
 ];
 
 export interface JustificationsSection {
@@ -46,31 +46,31 @@ export interface JustificationsSection {
         TextCell,
         TextCell,
         TextCell,
-        TextCell
+        TextCell,
     ];
     readonly rows: ReadonlyArray<JustificationsSectionRow>;
 }
 
 export async function buildJustificationsSection(
     gettext_provider: VueGettextProvider,
-    planned_test_cases: ReadonlyArray<PlannedTestCaseAssociatedWithTestExecAndCampaign>
+    planned_test_cases: ReadonlyArray<PlannedTestCaseAssociatedWithTestExecAndCampaign>,
 ): Promise<JustificationsSection> {
     const non_passed_test_cases = planned_test_cases.filter(
         (value: PlannedTestCaseAssociatedWithTestExecAndCampaign): boolean =>
-            value.test_exec_status !== "passed"
+            value.test_exec_status !== "passed",
     );
 
     const full_artifact_non_passed_test_execs: ReadonlyMap<number, Artifact> =
         await retrieveArtifacts(
             non_passed_test_cases.map(
                 (test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign): number =>
-                    test_case.test_exec_id
-            )
+                    test_case.test_exec_id,
+            ),
         );
 
     const rows = non_passed_test_cases.map(
         (
-            not_passed_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign
+            not_passed_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign,
         ): JustificationsSectionRow => {
             return [
                 new TextCell(String(not_passed_test_case.test_exec_id)),
@@ -81,17 +81,17 @@ export async function buildJustificationsSection(
                 new DateCell(not_passed_test_case.test_exec_date),
                 findJustificationCommentCell(
                     not_passed_test_case.test_exec_id,
-                    full_artifact_non_passed_test_execs
+                    full_artifact_non_passed_test_execs,
                 ),
             ];
-        }
+        },
     );
 
     return {
         title: new TextCell(
             gettext_provider.$gettext(
-                "Justifications (for planned tests that are not-run, failed, blocked)"
-            )
+                "Justifications (for planned tests that are not-run, failed, blocked)",
+            ),
         ),
         headers: [
             new TextCell(gettext_provider.$gettext("Test execution ID")),
@@ -108,7 +108,7 @@ export async function buildJustificationsSection(
 
 function findJustificationCommentCell(
     test_exec_id: number,
-    full_artifact_test_execs: ReadonlyMap<number, Artifact>
+    full_artifact_test_execs: ReadonlyMap<number, Artifact>,
 ): HTMLCell | TextCell {
     const test_exec = full_artifact_test_execs.get(test_exec_id);
 

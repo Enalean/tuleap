@@ -72,7 +72,7 @@ describe("getExecutionsForCampaigns", () => {
                 }
 
                 throw Error("Unknown campaign");
-            }
+            },
         );
 
         const executions_map = await getExecutionsForCampaigns([

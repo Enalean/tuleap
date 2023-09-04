@@ -56,15 +56,15 @@ export async function init(vue_mount_point: HTMLElement, component: Component): 
     app.provide(IS_TROVE_CAT_ENABLED, Boolean(vue_mount_point.dataset.isTroveCatEnabled));
     app.provide(
         ARE_RESTRICTED_USERS_ALLOWED,
-        Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed)
+        Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
     );
     app.provide(
         SEARCH_FORM,
         readonly(
             typeof vue_mount_point.dataset.searchForm !== "undefined"
                 ? JSON.parse(vue_mount_point.dataset.searchForm)
-                : { type_of_search: "soft", hidden_fields: [] }
-        )
+                : { type_of_search: "soft", hidden_fields: [] },
+        ),
     );
 
     const store = useRootStore();

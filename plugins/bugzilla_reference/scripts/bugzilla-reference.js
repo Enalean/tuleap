@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var bugzilla_modals_edit_buttons = document.querySelectorAll(".bugzilla-edit-modal");
     [].forEach.call(bugzilla_modals_edit_buttons, function (bugzilla_modals_edit_button) {
         var dom_bugzilla_modal_edit = document.getElementById(
-            bugzilla_modals_edit_button.getAttribute("data-edit-modal-id")
+            bugzilla_modals_edit_button.getAttribute("data-edit-modal-id"),
         );
         var tlp_bugzilla_modal_edit = createModal(dom_bugzilla_modal_edit);
 
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var bugzilla_modals_delete_buttons = document.querySelectorAll(".bugzilla-delete-modal");
     [].forEach.call(bugzilla_modals_delete_buttons, function (bugzilla_modals_delete_button) {
         var dom_bugzilla_modal_delete = document.getElementById(
-            bugzilla_modals_delete_button.getAttribute("data-delete-modal-id")
+            bugzilla_modals_delete_button.getAttribute("data-delete-modal-id"),
         );
         var tlp_bugzilla_modal_delete = createModal(dom_bugzilla_modal_delete);
 

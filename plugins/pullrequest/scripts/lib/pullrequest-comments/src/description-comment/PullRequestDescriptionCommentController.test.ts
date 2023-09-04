@@ -43,12 +43,12 @@ describe("PullRequestDescriptionCommentController", () => {
     });
 
     const getController = (
-        description_saver: SaveDescriptionComment
+        description_saver: SaveDescriptionComment,
     ): ControlPullRequestDescriptionComment =>
         PullRequestDescriptionCommentController(
             description_saver,
             CurrentPullRequestUserPresenterStub.withDefault(),
-            onErrorCallback
+            onErrorCallback,
         );
 
     it("showEditionForm() should assign a DescriptionCommentFormPresenter to the given host", () => {
@@ -75,11 +75,11 @@ describe("PullRequestDescriptionCommentController", () => {
         getController(SaveDescriptionCommentStub.withDefault()).showEditionForm(host);
 
         expect(host.edition_form_presenter).toStrictEqual(
-            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description)
+            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description),
         );
         expect(setWritingZoneContent).toHaveBeenCalledWith(
             writing_zone,
-            host.description.raw_content
+            host.description.raw_content,
         );
     });
 
@@ -110,7 +110,7 @@ describe("PullRequestDescriptionCommentController", () => {
             const new_description = "This commit fixes bug #123";
             getController(SaveDescriptionCommentStub.withDefault()).handleWritingZoneContentChange(
                 host,
-                new_description
+                new_description,
             );
 
             expect(host.edition_form_presenter?.description_content).toStrictEqual(new_description);
@@ -142,13 +142,13 @@ describe("PullRequestDescriptionCommentController", () => {
             await getController(description_saver).saveDescriptionComment(host);
 
             expect(description_saver.getLastCallParams()).toStrictEqual(
-                PullRequestDescriptionCommentFormPresenter.buildSubmitted(edition_form_presenter)
+                PullRequestDescriptionCommentFormPresenter.buildSubmitted(edition_form_presenter),
             );
             expect(host.edition_form_presenter).toBeNull();
             expect(host.description.raw_content).toStrictEqual(updated_pullrequest.raw_description);
             expect(host.description.content).toStrictEqual(updated_pullrequest.description);
             expect(host.description.post_processed_content).toStrictEqual(
-                updated_pullrequest.post_processed_description
+                updated_pullrequest.post_processed_description,
             );
             expect(host.description.format).toStrictEqual(updated_pullrequest.description_format);
             expect(host.post_description_form_close_callback).toHaveBeenCalledOnce();
@@ -171,7 +171,9 @@ describe("PullRequestDescriptionCommentController", () => {
             expect(onErrorCallback).toHaveBeenCalledOnce();
             expect(onErrorCallback).toHaveBeenCalledWith(tuleap_api_fault);
             expect(host.edition_form_presenter).toStrictEqual(
-                PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(edition_form_presenter)
+                PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(
+                    edition_form_presenter,
+                ),
             );
         });
     });

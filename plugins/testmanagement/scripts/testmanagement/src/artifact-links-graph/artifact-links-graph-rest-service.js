@@ -31,8 +31,8 @@ function ArtifactLinksGraphRestService($q) {
     function getArtifactGraph(artifact_id) {
         return $q.when(
             get(encodeURI(`/api/v1/testmanagement_nodes/${artifact_id}`)).then((response) =>
-                response.json()
-            )
+                response.json(),
+            ),
         );
     }
 }

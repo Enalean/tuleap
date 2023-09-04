@@ -100,14 +100,14 @@ watch(
     (query: AdvancedSearchParams): void => {
         search(query, props.offset);
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 watch(
     () => props.offset,
     (offset: number): void => {
         search(props.query, offset);
-    }
+    },
 );
 
 watch(
@@ -115,7 +115,7 @@ watch(
     (folder_id: number): void => {
         loadFolder(folder_id);
         search(props.query, props.offset);
-    }
+    },
 );
 
 function search(new_query: AdvancedSearchParams, offset: number): void {

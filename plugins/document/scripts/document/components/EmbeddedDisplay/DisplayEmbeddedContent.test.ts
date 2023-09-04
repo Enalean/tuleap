@@ -37,7 +37,7 @@ describe("DisplayEmbeddedContent", () => {
         embedded_file: Embedded,
         content_to_display: string,
         specific_version_number: number | null,
-        state: RootState
+        state: RootState,
     ): VueWrapper<InstanceType<typeof DisplayEmbeddedContent>> {
         return shallowMount(DisplayEmbeddedContent, {
             props: {
@@ -76,7 +76,7 @@ describe("DisplayEmbeddedContent", () => {
                 preferencies: {
                     is_embedded_in_large_view: false,
                 } as PreferenciesState,
-            } as unknown as RootState
+            } as unknown as RootState,
         );
 
         const element = wrapper.get("[data-test=display-embedded-content]");
@@ -99,7 +99,7 @@ describe("DisplayEmbeddedContent", () => {
                 preferencies: {
                     is_embedded_in_large_view: true,
                 } as PreferenciesState,
-            } as unknown as RootState
+            } as unknown as RootState,
         );
 
         const element = wrapper.get("[data-test=display-embedded-content]");

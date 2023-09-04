@@ -50,7 +50,7 @@ describe("SwimlaneSkeleton", () => {
             wrapper
                 .get(".taskboard-cell")
                 .find(".taskboard-card-parent.taskboard-card-skeleton")
-                .exists()
+                .exists(),
         ).toBe(true);
         const skeletons = wrapper.findAllComponents(ColumnsSkeleton);
         expect(skeletons).toHaveLength(8);

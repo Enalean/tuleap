@@ -138,7 +138,7 @@ describe("modal store", () => {
             moveDryRunArtifact.mockReturnValue(
                 okAsync({
                     dry_run: { fields },
-                })
+                }),
             );
 
             const modal_store = useModalStore();
@@ -155,7 +155,7 @@ describe("modal store", () => {
             expect(dry_run_store.has_processed_dry_run).toBe(true);
             expect(dry_run_store.fields_not_migrated).toStrictEqual(fields.fields_not_migrated);
             expect(dry_run_store.fields_partially_migrated).toStrictEqual(
-                fields.fields_partially_migrated
+                fields.fields_partially_migrated,
             );
             expect(dry_run_store.fields_migrated).toStrictEqual(fields.fields_migrated);
 
@@ -178,7 +178,7 @@ describe("modal store", () => {
             moveDryRunArtifact.mockReturnValue(
                 okAsync({
                     dry_run: { fields },
-                })
+                }),
             );
 
             const modal_store = useModalStore();
@@ -195,7 +195,7 @@ describe("modal store", () => {
             expect(dry_run_store.has_processed_dry_run).toBe(true);
             expect(dry_run_store.fields_not_migrated).toStrictEqual(fields.fields_not_migrated);
             expect(dry_run_store.fields_partially_migrated).toStrictEqual(
-                fields.fields_partially_migrated
+                fields.fields_partially_migrated,
             );
             expect(dry_run_store.fields_migrated).toStrictEqual(fields.fields_migrated);
 

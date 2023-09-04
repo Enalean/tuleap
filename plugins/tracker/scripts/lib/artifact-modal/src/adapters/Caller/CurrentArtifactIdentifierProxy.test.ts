@@ -33,7 +33,7 @@ describe(`CurrentArtifactIdentifierProxy`, () => {
 
     it(`returns nothing when Modal is in creation mode and its artifact id is undefined`, () => {
         expect(CurrentArtifactIdentifierProxy.fromModalArtifactId(undefined).isNothing()).toBe(
-            true
+            true,
         );
     });
 });

@@ -27,7 +27,7 @@ export type DidChangeAllowedValues = DomainEvent<"DidChangeAllowedValues"> & {
 
 export const DidChangeAllowedValues = (
     field_id: number,
-    allowed_values: ReadonlyArray<BindValueId>
+    allowed_values: ReadonlyArray<BindValueId>,
 ): DidChangeAllowedValues => ({
     type: "DidChangeAllowedValues",
     field_id,

@@ -79,7 +79,7 @@ export default {
 
                 this.tracker_permissions = await getTrackerPermissions(
                     this.selectedProjectId,
-                    this.selectedUgroupId
+                    this.selectedUgroupId,
                 );
 
                 this.is_loaded = true;

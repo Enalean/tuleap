@@ -37,7 +37,7 @@ const ITERATION_ILLUSTRATION_ID = "program-management-admin-iterations-illustrat
 
 export function initPreviewTrackerLabels(
     retriever: RetrieveElement,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): void {
     let program_increment_label: TimeboxLabel;
     try {
@@ -48,11 +48,11 @@ export function initPreviewTrackerLabels(
     }
     const program_increment_sub_label = TimeboxLabel.fromId(
         retriever,
-        PROGRAM_INCREMENT_SUB_LABEL_ID
+        PROGRAM_INCREMENT_SUB_LABEL_ID,
     );
     const program_increments_illustration = ElementAdapter.fromId(
         retriever,
-        PROGRAM_INCREMENTS_ILLUSTRATION_ID
+        PROGRAM_INCREMENTS_ILLUSTRATION_ID,
     );
     const program_increments_actualizer = PreviewActualizer.fromContainerAndTimeboxLabels(
         gettext_provider,
@@ -60,7 +60,7 @@ export function initPreviewTrackerLabels(
         program_increment_label,
         program_increment_sub_label,
         gettext_provider.gettext("Program Increments"),
-        gettext_provider.gettext("program increment")
+        gettext_provider.gettext("program increment"),
     );
 
     program_increments_actualizer.initTimeboxPreview();
@@ -75,13 +75,13 @@ export function initPreviewTrackerLabels(
         iterations_label,
         iterations_sub_label,
         gettext_provider.gettext("Iterations"),
-        gettext_provider.gettext("iteration")
+        gettext_provider.gettext("iteration"),
     );
     const iteration_activator = new IterationActivator(
         iterations_label,
         iterations_sub_label,
         iteration_selector,
-        iterations_preview_actualizer
+        iterations_preview_actualizer,
     );
 
     iteration_activator.watchIterationSelection();

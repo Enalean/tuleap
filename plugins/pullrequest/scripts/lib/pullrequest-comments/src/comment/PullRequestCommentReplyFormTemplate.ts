@@ -25,7 +25,7 @@ import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 
 export const getReplyFormTemplate = (
     host: PullRequestCommentComponentType,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => {
     if (!host.reply_comment_presenter) {
         return html``;

@@ -28,7 +28,7 @@ module.exports = [
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "./frontend-assets/"),
-            "/assets/cardwall/legacy/"
+            "/assets/cardwall/legacy/",
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],

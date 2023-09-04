@@ -25,13 +25,13 @@ export type LabelTextCallback = (text: string, label_index: number, length: numb
 export class ReactiveLabelCollection {
     private constructor(
         private readonly nodes: Node[],
-        private readonly label_input: TimeboxLabel
+        private readonly label_input: TimeboxLabel,
     ) {}
 
     static fromSelectorAndTimeboxLabel(
         retriever: RetrieveContainedNode,
         selector: string,
-        label_input: TimeboxLabel
+        label_input: TimeboxLabel,
     ): ReactiveLabelCollection {
         return new ReactiveLabelCollection(retriever.getAllNodesBySelector(selector), label_input);
     }

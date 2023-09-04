@@ -22,7 +22,7 @@ import { applyLayout } from "./dashboard-layout";
 
 function init(): void {
     const cogs = document.querySelectorAll(
-        ".dashboard-widget-actions, #dashboard-tabs-dropdown-trigger"
+        ".dashboard-widget-actions, #dashboard-tabs-dropdown-trigger",
     );
 
     for (const cog of cogs) {
@@ -126,7 +126,7 @@ function initLayoutChangeButtons(dropdown: HTMLElement, row: HTMLElement): void 
             const sibling_svg = radio_button.nextElementSibling;
             if (sibling_svg) {
                 const field_path = sibling_svg.querySelector(
-                    ".dashboard-dropdown-layout-field-path"
+                    ".dashboard-dropdown-layout-field-path",
                 );
                 if (!(field_path instanceof Element)) {
                     throw new Error("No element with class dashboard-dropdown-layout-field-path");
@@ -151,7 +151,7 @@ function markPathAsSelected(dropdown: HTMLElement, selected_path_element: Elemen
 function hideUnapplicableLayoutsAndCheckCurrentLayout(
     dropdown: HTMLElement,
     nb_columns: number,
-    current_layout: string
+    current_layout: string,
 ): void {
     toggleVisibilityOfTooManyColumnsLayoutText(dropdown, nb_columns);
 
@@ -193,10 +193,10 @@ function toggleVisibilityOfDropdownItem(dropdown_item: HTMLElement, nb_columns: 
 
 function toggleVisibilityOfTooManyColumnsLayoutText(
     dropdown: HTMLElement,
-    nb_columns: number
+    nb_columns: number,
 ): void {
     const too_many_columns_text = dropdown.querySelector(
-        ".dashboard-dropdown-too-many-columns-layout"
+        ".dashboard-dropdown-too-many-columns-layout",
     );
     if (!too_many_columns_text) {
         throw new Error("No element with class dashboard-dropdown-too-many-columns-layout");

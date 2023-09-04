@@ -134,20 +134,19 @@
 
                         return regex + path + "|" + path + "/";
                     }, "") +
-                    ")$"
+                    ")$",
             );
 
             var tags_elements = Object.keys(direct_access_to_node).reduce(function (
                 tags_elements,
-                path
+                path,
             ) {
                 if (path.match(regex)) {
                     tags_elements.push(direct_access_to_node[path].element);
                 }
 
                 return tags_elements;
-            },
-            []);
+            }, []);
 
             return tags_elements;
         }

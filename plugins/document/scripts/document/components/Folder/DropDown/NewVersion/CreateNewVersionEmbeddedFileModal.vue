@@ -128,7 +128,7 @@ export default {
             if (this.embedded_item.embedded_file_properties.content === undefined) {
                 this.embedded_item = await this.$store.dispatch(
                     "loadDocument",
-                    this.embedded_item.id
+                    this.embedded_item.id,
                 );
             }
 
@@ -160,7 +160,7 @@ export default {
             if (this.has_modal_error === false) {
                 this.embedded_item = this.$store.dispatch(
                     "refreshEmbeddedFile",
-                    this.embedded_item
+                    this.embedded_item,
                 );
                 this.embedded_file_model = null;
                 this.hide();

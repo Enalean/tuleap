@@ -30,17 +30,17 @@ export interface SynchronizedLineHandles {
 
 export interface MapSideBySideLines {
     buildLineToLineHandlesMap: (
-        line_to_group_map: Map<number, GroupOfLines>
+        line_to_group_map: Map<number, GroupOfLines>,
     ) => Map<FileLine, SynchronizedLineHandles>;
 }
 
 export const SideBySideLineMapper = (
     lines: readonly FileLine[],
     left_code_mirror: Editor,
-    right_code_mirror: Editor
+    right_code_mirror: Editor,
 ): MapSideBySideLines => ({
     buildLineToLineHandlesMap(
-        line_to_group_map: Map<number, GroupOfLines>
+        line_to_group_map: Map<number, GroupOfLines>,
     ): Map<FileLine, SynchronizedLineHandles> {
         function getDeletedGroupOppositeLineIndex(group: GroupOfLines): number {
             const group_last_line_unidiff_offset =

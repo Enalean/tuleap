@@ -23,7 +23,7 @@ import type { DocumentAdapter } from "../dom/DocumentAdapter";
 
 export function initSynchronizeTeamButtons(doc: DocumentAdapter, location: Location): void {
     const buttons_to_synchronize = doc.getElementsByClassName(
-        "program-management-admin-action-synchronize-button"
+        "program-management-admin-action-synchronize-button",
     );
 
     [].forEach.call(buttons_to_synchronize, function (button_to_synchronize: HTMLElement) {
@@ -41,7 +41,7 @@ export function initSynchronizeTeamButtons(doc: DocumentAdapter, location: Locat
 
 export async function triggerTeamSynchronization(
     button_to_synchronize: HTMLButtonElement,
-    location: Location
+    location: Location,
 ): Promise<void> {
     if (!button_to_synchronize.dataset.projectLabel || !button_to_synchronize.dataset.teamId) {
         return;
@@ -49,7 +49,7 @@ export async function triggerTeamSynchronization(
 
     await synchronizeTeamOfProgram(
         button_to_synchronize.dataset.projectLabel,
-        parseInt(button_to_synchronize.dataset.teamId, 10)
+        parseInt(button_to_synchronize.dataset.teamId, 10),
     );
 
     location.reload();

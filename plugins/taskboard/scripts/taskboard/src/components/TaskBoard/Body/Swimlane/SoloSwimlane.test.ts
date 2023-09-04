@@ -27,7 +27,7 @@ import type { RootState } from "../../../../store/type";
 
 async function createWrapper(
     columns: ColumnDefinition[],
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<Wrapper<SoloSwimlane>> {
     return shallowMount(SoloSwimlane, {
         localVue: await createTaskboardLocalVue(),

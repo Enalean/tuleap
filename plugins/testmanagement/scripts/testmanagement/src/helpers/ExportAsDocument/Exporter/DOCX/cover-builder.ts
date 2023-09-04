@@ -38,7 +38,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 export async function buildCoverPage(
     gettext_provider: GettextProvider,
     global_export_properties: GlobalExportProperties,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Promise<ReadonlyArray<XmlComponent>> {
     const {
         platform_name,
@@ -69,7 +69,7 @@ export async function buildCoverPage(
             campaign_name,
             campaign_url,
             user_display_name,
-            exported_formatted_date
+            exported_formatted_date,
         ),
         new Paragraph({ children: [new PageBreak()] }),
     ];
@@ -82,7 +82,7 @@ function buildCoverTable(
     campaign_name: string,
     campaign_url: string,
     user_name: string,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Table {
     return new Table({
         width: {
@@ -99,7 +99,7 @@ function buildCoverTable(
             buildCoverTableRow(gettext_provider.gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
                 gettext_provider.gettext("Exported on"),
-                new TextRun(exported_formatted_date)
+                new TextRun(exported_formatted_date),
             ),
             buildCoverTableRow(
                 gettext_provider.gettext("Campaign URL"),
@@ -111,7 +111,7 @@ function buildCoverTable(
                         }),
                     ],
                     link: campaign_url,
-                })
+                }),
             ),
         ],
     });

@@ -93,7 +93,7 @@ export function editCard(event: KeyboardEvent): ShortcutHandleOptions | void {
 
 export function handleFocusFirstSwimlane(
     doc: Document,
-    event: KeyboardEvent
+    event: KeyboardEvent,
 ): ShortcutHandleOptions | void {
     const first_swimlane = getFirstElement(doc, SWIMLANE);
     if (first_swimlane instanceof HTMLElement) {

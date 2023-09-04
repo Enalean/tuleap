@@ -24,11 +24,11 @@ export const PLATFORM_BANNER_HIDDEN_CLASS = "platform-banner-hidden";
 
 export function allowToHideAndShowPlatformBanner(
     mount_point: Document,
-    tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>
+    tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
 ): void {
     const platform_banner_navbar = mount_point.getElementById(PLATFORM_BANNER_NAVBAR_ID);
     const platform_banner_message_close_button = mount_point.getElementById(
-        PLATFORM_BANNER_MESSAGE_CLOSE_BUTTON_ID
+        PLATFORM_BANNER_MESSAGE_CLOSE_BUTTON_ID,
     );
 
     if (platform_banner_navbar === null || platform_banner_message_close_button === null) {
@@ -38,7 +38,7 @@ export function allowToHideAndShowPlatformBanner(
     const full_platform_banner = platform_banner_message_close_button.parentElement;
     if (full_platform_banner === null) {
         throw new Error(
-            "Platform banner close button is supposed to be contained in the platform banner"
+            "Platform banner close button is supposed to be contained in the platform banner",
         );
     }
 
@@ -47,13 +47,13 @@ export function allowToHideAndShowPlatformBanner(
             event,
             mount_point.body,
             platform_banner_navbar,
-            full_platform_banner
+            full_platform_banner,
         );
     });
     const user_id = platform_banner_message_close_button.dataset.userId;
     if (user_id === undefined) {
         throw new Error(
-            "Platform banner close button is supposed to have information about the current user"
+            "Platform banner close button is supposed to have information about the current user",
         );
     }
     platform_banner_message_close_button.addEventListener("click", async (): Promise<void> => {
@@ -62,7 +62,7 @@ export function allowToHideAndShowPlatformBanner(
             mount_point.body,
             platform_banner_navbar,
             full_platform_banner,
-            Number.parseInt(user_id, 10)
+            Number.parseInt(user_id, 10),
         );
     });
 }
@@ -71,7 +71,7 @@ function togglePlatformBannerMessage(
     event: Event,
     document_body: HTMLElement,
     platform_banner_navbar: HTMLElement,
-    full_platform_banner: HTMLElement
+    full_platform_banner: HTMLElement,
 ): void {
     event.preventDefault();
     window.scrollTo(0, 0);
@@ -85,7 +85,7 @@ async function hidePlatformBannerMessage(
     document_body: HTMLElement,
     platform_banner_navbar: HTMLElement,
     full_platform_banner: HTMLElement,
-    user_id: number
+    user_id: number,
 ): Promise<void> {
     document_body.classList.remove(PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS);
     platform_banner_navbar.classList.remove(PLATFORM_BANNER_HIDDEN_CLASS);

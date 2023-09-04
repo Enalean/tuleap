@@ -22,7 +22,7 @@ import type { Iteration, IterationLevel } from "../type";
 
 export function retrieveIterations(
     roadmap_id: number,
-    level: IterationLevel
+    level: IterationLevel,
 ): Promise<Iteration[]> {
     return recursiveGet<Array<Iteration>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
         params: { level },

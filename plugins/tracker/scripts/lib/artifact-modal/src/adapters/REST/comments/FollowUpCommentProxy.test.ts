@@ -43,7 +43,7 @@ describe(`FollowUpCommentProxy`, () => {
                     user_url: FIRST_PROFILE_URI,
                     is_anonymous: false,
                 } as RegisteredUserWithAvatar,
-                SUBMISSION_DATE
+                SUBMISSION_DATE,
             )
             .build();
 
@@ -77,7 +77,7 @@ describe(`FollowUpCommentProxy`, () => {
                     user_url: FIRST_PROFILE_URI,
                     is_anonymous: false,
                 } as RegisteredUserWithAvatar,
-                SUBMISSION_DATE
+                SUBMISSION_DATE,
             )
             .withUpdate(
                 {
@@ -86,7 +86,7 @@ describe(`FollowUpCommentProxy`, () => {
                     user_url: SECOND_PROFILE_URI,
                     is_anonymous: false,
                 } as RegisteredUserWithAvatar,
-                MODIFICATION_DATE
+                MODIFICATION_DATE,
             )
             .build();
 

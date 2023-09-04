@@ -34,7 +34,7 @@ export const CommentsPresenter = {
     }),
     fromCommentsAndPreferences: (
         comments: readonly FollowUpComment[],
-        preferences: CommentUserPreferences
+        preferences: CommentUserPreferences,
     ): CommentsPresenter => ({
         comments,
         preferences,

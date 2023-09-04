@@ -34,7 +34,7 @@
             <p data-test="document-folder-default-properties">
                 {{
                     $gettext(
-                        "All the properties values that you define here will be proposed as default values for the items that will be created within this folder."
+                        "All the properties values that you define here will be proposed as default values for the items that will be created within this folder.",
                     )
                 }}
             </p>

@@ -43,7 +43,10 @@ header {
     top: 0;
     right: 0;
     justify-content: space-between;
-    transition: background ease-in-out 100ms, box-shadow ease-in-out 100ms, top ease-in-out 50ms;
+    transition:
+        background ease-in-out 100ms,
+        box-shadow ease-in-out 100ms,
+        top ease-in-out 50ms;
 
     &.full-width {
         width: 100%;
@@ -101,7 +104,9 @@ header {
     button[class*="tlp-button"] {
         height: $button-height;
         margin: 0 0 0 var(--tlp-small-spacing);
-        transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
+        transition:
+            padding ease-in-out 100ms,
+            box-shadow ease-in-out 100ms;
         border-radius: 30px;
 
         > .tlp-button-icon {

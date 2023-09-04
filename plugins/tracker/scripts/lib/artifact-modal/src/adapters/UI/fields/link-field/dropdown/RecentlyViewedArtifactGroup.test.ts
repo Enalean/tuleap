@@ -33,7 +33,7 @@ describe(`RecentlyViewedArtifactGroup`, () => {
         const second_artifact = LinkableArtifactStub.withDefaults({ id: 572 });
         const group = RecentlyViewedArtifactGroup.fromUserHistory(
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
-            [first_artifact, second_artifact]
+            [first_artifact, second_artifact],
         );
 
         expect(group.is_loading).toBe(false);

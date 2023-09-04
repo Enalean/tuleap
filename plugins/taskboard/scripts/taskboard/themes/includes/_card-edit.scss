@@ -189,7 +189,9 @@
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card,
 .taskboard-card {
-    transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    transition:
+        border-color 75ms ease-in-out,
+        background-color 75ms ease-in-out;
 
     &.taskboard-card-is-being-saved {
         animation: blink-card 1200ms ease-in-out alternate infinite;

@@ -119,14 +119,14 @@ describe("OverviewThreads", () => {
             okAsync([
                 { id: 102, parent_id: 0, content: "What do you think?" } as TimelineItem,
                 { id: 103, parent_id: 102, content: "I'm ok with that" } as TimelineItem,
-            ])
+            ]),
         );
 
         const wrapper = getWrapper();
         expect(wrapper.find("[data-test=pull-request-threads]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pull-request-threads-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pull-request-description-comment-skeleton]").exists()).toBe(
-            true
+            true,
         );
 
         await setWrapperProps(wrapper);
@@ -135,7 +135,7 @@ describe("OverviewThreads", () => {
         expect(display_error_callback).not.toHaveBeenCalled();
         expect(wrapper.find("[data-test=pull-request-threads-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pull-request-description-comment-skeleton]").exists()).toBe(
-            false
+            false,
         );
 
         const threads = wrapper.find("[data-test=pull-request-threads]");

@@ -112,7 +112,7 @@ export default class Breadcrumb extends Vue {
 
     get plan_iterations_url(): string {
         return `/program_management/${encodeURIComponent(
-            this.program.program_shortname
+            this.program.program_shortname,
         )}/increments/${encodeURIComponent(this.program_increment.id)}/plan`;
     }
 

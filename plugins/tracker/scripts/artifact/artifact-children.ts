@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale) =>
             import(
                 /* webpackChunkName: "tracker-artifact-po-" */ "./po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     for (const container of containers) {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initHierarchyViewer(
     container: HTMLElement,
     gettext_provider: GetText,
-    artifact_id: number
+    artifact_id: number,
 ): void {
     const renderer = renderHierarchyViewer(container, gettext_provider);
     const provider = initHierarchyViewerItemProvider(renderer);
@@ -90,7 +90,7 @@ interface HierarchyViewerRenderer {
     readonly insertRoot: (root: ArtifactRepresentation) => Element;
     readonly insertChildAfter: (
         parent_element: Element,
-        child: ArtifactRepresentation
+        child: ArtifactRepresentation,
     ) => Element | null;
 }
 
@@ -99,7 +99,7 @@ interface HierarchyViewerRenderer {
  */
 function renderHierarchyViewer(
     container: HTMLElement,
-    gettext_provider: GetText
+    gettext_provider: GetText,
 ): HierarchyViewerRenderer {
     insertTable();
     const body = container.querySelector("tbody");
@@ -178,7 +178,7 @@ function renderHierarchyViewer(
 
     function insertChildAfter(
         parent_element: Element,
-        child: ArtifactRepresentation
+        child: ArtifactRepresentation,
     ): Element | null {
         parent_element.insertAdjacentElement("afterend", renderItem(child));
 
@@ -227,7 +227,7 @@ interface HierarchyViewerItemProvider {
  * Provide children of an item
  */
 function initHierarchyViewerItemProvider(
-    renderer: HierarchyViewerRenderer
+    renderer: HierarchyViewerRenderer,
 ): HierarchyViewerItemProvider {
     let nb_request = 0;
 
@@ -241,7 +241,7 @@ function initHierarchyViewerItemProvider(
         nb_request++;
         renderer.startSpinner();
         getJSON<ArtifactRepresentation[]>(
-            uri`/plugins/tracker/?aid=${item.getId()}&func=get-children`
+            uri`/plugins/tracker/?aid=${item.getId()}&func=get-children`,
         ).match(
             (children) => {
                 receiveChildren(item, children);
@@ -255,13 +255,13 @@ function initHierarchyViewerItemProvider(
                 if (nb_request <= 0) {
                     renderer.stopSpinner();
                 }
-            }
+            },
         );
     }
 
     function receiveChildren(
         parent: HierarchyViewerItem,
-        children: ArtifactRepresentation[]
+        children: ArtifactRepresentation[],
     ): void {
         children.forEach((child) => {
             const element = renderer.insertChildAfter(parent.getElement(), child);
@@ -288,7 +288,7 @@ interface HierarchyViewerItem {
 function initHierarchyViewerItem(
     id: number,
     element: Element,
-    item_provider: HierarchyViewerItemProvider
+    item_provider: HierarchyViewerItemProvider,
 ): HierarchyViewerItem {
     const children: HierarchyViewerItem[] = [];
     let is_open = false;

@@ -47,7 +47,7 @@ export class KeyboardShortcuts {
         this.moving_shortcuts_group = createNavigationShortcutsGroup(
             this.doc,
             this.gettextCatalog,
-            moving_cards_handler
+            moving_cards_handler,
         );
         addShortcutsGroup(this.doc, this.moving_shortcuts_group);
     }
@@ -55,7 +55,7 @@ export class KeyboardShortcuts {
     setQuickAccess(): void {
         this.quick_access_shortcuts_group = createQuickAccessShortcutsGroup(
             this.doc,
-            this.gettextCatalog
+            this.gettextCatalog,
         );
         addShortcutsGroup(this.doc, this.quick_access_shortcuts_group);
     }
@@ -64,7 +64,7 @@ export class KeyboardShortcuts {
 function createNavigationShortcutsGroup(
     doc: Document,
     gettext_provider: GettextProvider,
-    handler: (event: KeyboardEvent, direction: ArrowKey) => void
+    handler: (event: KeyboardEvent, direction: ArrowKey) => void,
 ): ShortcutsGroup {
     const next: Shortcut = {
         keyboard_inputs: "k,down",
@@ -146,7 +146,7 @@ function createNavigationShortcutsGroup(
 
 function createQuickAccessShortcutsGroup(
     doc: Document,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): ShortcutsGroup {
     const edit_card: Shortcut = {
         keyboard_inputs: "e",

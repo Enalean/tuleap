@@ -46,7 +46,7 @@ export function listenToPreferenceChange(doc: Document): void {
 
     applyDatesDisplayPreference(date_display_preference_select, tlp_relative_dates_component);
     date_display_preference_select.addEventListener("change", () =>
-        applyDatesDisplayPreference(date_display_preference_select, tlp_relative_dates_component)
+        applyDatesDisplayPreference(date_display_preference_select, tlp_relative_dates_component),
     );
 }
 
@@ -55,7 +55,7 @@ const isValidPreference = (preference: string): preference is RelativeDatesDispl
 
 function applyDatesDisplayPreference(
     date_display_preference_select: HTMLSelectElement,
-    tlp_relative_dates_component: RelativeDateElement
+    tlp_relative_dates_component: RelativeDateElement,
 ): void {
     const preference = date_display_preference_select.value;
     if (!isValidPreference(preference)) {

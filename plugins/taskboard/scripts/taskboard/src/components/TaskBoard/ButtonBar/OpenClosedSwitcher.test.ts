@@ -77,7 +77,7 @@ describe("OpenClosedSwitcher", () => {
         wrapper.get("#button-bar-show-closed").setChecked();
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "displayClosedItems",
-            expect.anything()
+            expect.anything(),
         );
     });
 
@@ -97,7 +97,7 @@ describe("OpenClosedSwitcher", () => {
         hide_button.trigger("change");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "hideClosedItems",
-            expect.anything()
+            expect.anything(),
         );
     });
 });

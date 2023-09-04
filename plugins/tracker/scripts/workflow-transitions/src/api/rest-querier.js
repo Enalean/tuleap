@@ -83,7 +83,7 @@ export function deleteTransition(transition_id) {
 export async function getUserGroups(project_id) {
     const query = JSON.stringify({ with_system_user_groups: true });
     const response = await get(
-        `/api/projects/${project_id}/user_groups?query=${encodeURIComponent(query)}`
+        `/api/projects/${project_id}/user_groups?query=${encodeURIComponent(query)}`,
     );
     return response.json();
 }

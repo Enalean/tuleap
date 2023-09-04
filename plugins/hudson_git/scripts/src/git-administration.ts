@@ -34,7 +34,7 @@ import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
             import(
                 /* webpackChunkName: "git-administration-po-" */ "../po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     function confirmDeletionPopover(): void {
@@ -90,7 +90,7 @@ import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
                 css_class = "text-error";
             }
             test_feedback_element.append(
-                "<span class='" + css_class + "'>" + data.message + "</span>"
+                "<span class='" + css_class + "'>" + data.message + "</span>",
             );
         });
     }

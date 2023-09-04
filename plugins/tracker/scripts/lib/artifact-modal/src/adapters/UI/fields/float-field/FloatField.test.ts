@@ -62,7 +62,7 @@ describe(`FloatField`, () => {
             expect(event.type).toBe("value-changed");
             expect(event.detail.field_id).toBe(FIELD_ID);
             expect(event.detail.value).toBe(expected_manual_value);
-        }
+        },
     );
 
     it(`dispatches a bubbling "change" event when its inner input is changed

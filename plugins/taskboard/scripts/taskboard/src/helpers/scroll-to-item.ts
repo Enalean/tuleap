@@ -24,7 +24,7 @@ const ITEM_MARGIN_IN_PX = 10;
 
 export function scrollToItemIfNeeded(
     taskboard_item: Element,
-    element_in_fullscreen: Element | null
+    element_in_fullscreen: Element | null,
 ): void {
     if (element_in_fullscreen !== null) {
         scrollToItemInAFullscreenTaskboard(taskboard_item, element_in_fullscreen);
@@ -54,7 +54,7 @@ function scrollToItemItem(taskboard_item: Element): void {
 
 function scrollToItemInAFullscreenTaskboard(
     taskboard_item: Element,
-    element_in_fullscreen: Element
+    element_in_fullscreen: Element,
 ): void {
     const current_top = taskboard_item.getBoundingClientRect().top;
 

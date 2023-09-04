@@ -68,7 +68,7 @@ describe("tuleap-rest-querier", () => {
             }
 
             expect(fetch_result.getJSON).toHaveBeenCalledWith(
-                uri`/api/v1/pull_requests/${pull_request_id}`
+                uri`/api/v1/pull_requests/${pull_request_id}`,
             );
             expect(result.value).toStrictEqual(pull_request_info);
         });
@@ -114,7 +114,7 @@ describe("tuleap-rest-querier", () => {
 
             expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/timeline`,
-                expect.any(Object)
+                expect.any(Object),
             );
 
             expect(result.value).toStrictEqual(timeline_items);
@@ -134,7 +134,7 @@ describe("tuleap-rest-querier", () => {
                 uri`/api/v1/pull_requests/${pull_request_id}`,
                 {
                     title: "new title",
-                }
+                },
             );
         });
     });
@@ -151,7 +151,7 @@ describe("tuleap-rest-querier", () => {
             }
 
             expect(fetch_result.getJSON).toHaveBeenCalledWith(
-                uri`/api/v1/pull_requests/${pull_request_id}/reviewers`
+                uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
             );
             expect(result.value).toStrictEqual(reviewers);
         });
@@ -162,14 +162,14 @@ describe("tuleap-rest-querier", () => {
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_MERGED,
-                })
+                }),
             );
 
             await mergePullRequest(pull_request_id);
 
             expect(fetch_result.patchJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}`,
-                { status: PULL_REQUEST_STATUS_MERGED }
+                { status: PULL_REQUEST_STATUS_MERGED },
             );
         });
     });
@@ -179,14 +179,14 @@ describe("tuleap-rest-querier", () => {
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_REVIEW,
-                })
+                }),
             );
 
             await reopenPullRequest(pull_request_id);
 
             expect(fetch_result.patchJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}`,
-                { status: PULL_REQUEST_STATUS_REVIEW }
+                { status: PULL_REQUEST_STATUS_REVIEW },
             );
         });
     });
@@ -196,14 +196,14 @@ describe("tuleap-rest-querier", () => {
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_ABANDON,
-                })
+                }),
             );
 
             await abandonPullRequest(pull_request_id);
 
             expect(fetch_result.patchJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}`,
-                { status: PULL_REQUEST_STATUS_ABANDON }
+                { status: PULL_REQUEST_STATUS_ABANDON },
             );
         });
     });
@@ -252,7 +252,7 @@ describe("tuleap-rest-querier", () => {
                 {},
                 {
                     users: [{ id: 101 }, { id: 102 }],
-                }
+                },
             );
         });
     });
@@ -282,7 +282,7 @@ describe("tuleap-rest-querier", () => {
 
             expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
-                expect.any(Object)
+                expect.any(Object),
             );
 
             expect(result.value).toStrictEqual(labels);
@@ -315,7 +315,7 @@ describe("tuleap-rest-querier", () => {
 
             expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
                 uri`/api/v1/projects/${project_id}/labels`,
-                expect.any(Object)
+                expect.any(Object),
             );
 
             expect(result.value).toStrictEqual(labels);
@@ -350,7 +350,7 @@ describe("tuleap-rest-querier", () => {
                 {},
                 {
                     add: [{ id: 12 }, { label: "gluten-free" }],
-                }
+                },
             );
         });
 
@@ -368,7 +368,7 @@ describe("tuleap-rest-querier", () => {
                             id: 12,
                         },
                     ],
-                }
+                },
             );
         });
 
@@ -392,7 +392,7 @@ describe("tuleap-rest-querier", () => {
                             id: 12,
                         },
                     ],
-                }
+                },
             );
         });
     });

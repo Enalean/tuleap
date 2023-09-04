@@ -23,7 +23,7 @@ function BacklogItemSelectedBarController($scope, BacklogItemSelectedService) {
                 self.nb_selected_backlog_items =
                     BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
             },
-            true
+            true,
         );
     }
 }

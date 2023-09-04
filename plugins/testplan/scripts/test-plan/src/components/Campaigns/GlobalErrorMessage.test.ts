@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("GlobalErrorMessage", () => {
     function createWrapper(
-        campaign: CampaignState
+        campaign: CampaignState,
     ): VueWrapper<InstanceType<typeof GlobalErrorMessage>> {
         return shallowMount(GlobalErrorMessage, {
             global: {

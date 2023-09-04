@@ -29,7 +29,7 @@ export async function getReport(report_id: number): Promise<Report> {
 export async function getReportContent(
     report_id: number,
     limit: number,
-    offset: number
+    offset: number,
 ): Promise<ArtifactsCollection> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
@@ -51,7 +51,7 @@ export async function getQueryResult(
     trackers_id: Array<number>,
     expert_query: string,
     limit: number,
-    offset: number
+    offset: number,
 ): Promise<ArtifactsCollection> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
@@ -73,7 +73,7 @@ export async function getQueryResult(
 export async function updateReport(
     report_id: number,
     trackers_id: Array<number>,
-    expert_query: string
+    expert_query: string,
 ): Promise<Report> {
     const response = await put("/api/v1/cross_tracker_reports/" + report_id, {
         headers: {
@@ -115,7 +115,7 @@ export function getCSVReport(report_id: number): Promise<string> {
 
 async function recursiveGetCSV(
     route: string,
-    params: { limit: number; offset: number }
+    params: { limit: number; offset: number },
 ): Promise<string> {
     const { limit = 50, offset = 0 } = params;
     const response = await get(route, {

@@ -50,15 +50,15 @@ describe("OverviewTabs", () => {
         });
 
         expect(
-            wrapper.findComponent<typeof RouterLinkStub>("[data-test=tab-overview]").props().to
+            wrapper.findComponent<typeof RouterLinkStub>("[data-test=tab-overview]").props().to,
         ).toStrictEqual({
             name: VIEW_OVERVIEW_NAME,
         });
         expect(wrapper.find("[data-test=tab-commits]").attributes("href")).toBe(
-            `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/commits`
+            `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/commits`,
         );
         expect(wrapper.find("[data-test=tab-changes]").attributes("href")).toBe(
-            `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/files`
+            `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/files`,
         );
     });
 });

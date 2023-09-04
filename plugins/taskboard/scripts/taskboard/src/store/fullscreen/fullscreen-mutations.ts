@@ -21,7 +21,7 @@ import type { FullscreenState } from "./type";
 
 export function setIsTaskboardInFullscreenMode(
     state: FullscreenState,
-    is_in_fullscreen_mode: boolean
+    is_in_fullscreen_mode: boolean,
 ): void {
     state.is_taskboard_in_fullscreen_mode = is_in_fullscreen_mode;
 }

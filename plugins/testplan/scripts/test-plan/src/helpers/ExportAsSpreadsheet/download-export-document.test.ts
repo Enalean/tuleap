@@ -39,7 +39,7 @@ describe("Start download of export document", () => {
             "Milestone",
             "User Name",
             [],
-            []
+            [],
         );
 
         expect(spyCreateReport).toHaveBeenCalledTimes(1);

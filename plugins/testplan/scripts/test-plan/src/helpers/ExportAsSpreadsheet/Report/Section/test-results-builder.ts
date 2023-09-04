@@ -29,7 +29,7 @@ type TestResultsSectionRow = readonly [
     TextCell,
     TextCell,
     TextCell,
-    DateCell
+    DateCell,
 ];
 
 export interface TestResultsSection {
@@ -42,18 +42,18 @@ export interface TestResultsSection {
         TextCell,
         TextCell,
         TextCell,
-        TextCell
+        TextCell,
     ];
     readonly rows: ReadonlyArray<TestResultsSectionRow>;
 }
 
 export function buildTestResultsSection(
     gettext_provider: VueGettextProvider,
-    planned_test_cases: ReadonlyArray<PlannedTestCaseAssociatedWithTestExecAndCampaign>
+    planned_test_cases: ReadonlyArray<PlannedTestCaseAssociatedWithTestExecAndCampaign>,
 ): TestResultsSection {
     const rows = planned_test_cases.map(
         (
-            planned_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign
+            planned_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign,
         ): TestResultsSectionRow => {
             return [
                 new TextCell(String(planned_test_case.campaign_id)),
@@ -65,7 +65,7 @@ export function buildTestResultsSection(
                 new TextCell(planned_test_case.test_exec_runner),
                 new DateCell(planned_test_case.test_exec_date),
             ];
-        }
+        },
     );
 
     return {

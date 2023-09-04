@@ -149,12 +149,12 @@ export default class ArtifactClosureModal extends Vue {
         if (allow_closure_artifact) {
             return this.$gettextInterpolate(
                 this.$gettext("Artifact closure is now allowed for '%{repository}'!"),
-                { repository: this.artifact_closure_repository.label }
+                { repository: this.artifact_closure_repository.label },
             );
         }
         return this.$gettextInterpolate(
             this.$gettext("Artifact closure is now disabled for '%{repository}'!"),
-            { repository: this.artifact_closure_repository.label }
+            { repository: this.artifact_closure_repository.label },
         );
     }
 
@@ -174,7 +174,7 @@ export default class ArtifactClosureModal extends Vue {
             }
 
             const success_message = this.getSuccessMessage(
-                updated_integration.allow_artifact_closure
+                updated_integration.allow_artifact_closure,
             );
             this.$store.commit("setSuccessMessage", success_message);
         } catch (rest_error) {

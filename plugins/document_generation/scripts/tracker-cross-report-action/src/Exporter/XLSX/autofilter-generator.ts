@@ -51,7 +51,7 @@ function getAutofilterStartingRange(): string {
 
 function getAutofilterEndingRange(
     all_headers: HeadersSection,
-    all_artifacts_rows: ReadonlyArray<ReadonlyArray<ReportCell>>
+    all_artifacts_rows: ReadonlyArray<ReadonlyArray<ReportCell>>,
 ): string {
     const ending_column: string = utils.encode_col(all_headers.reports_fields_labels.length - 1);
     const ending_row: number = all_artifacts_rows.length + STARTING_ROW;

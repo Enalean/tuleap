@@ -54,6 +54,6 @@ const { has_loading_error, campaigns } = useNamespacedState<{
 
 const should_button_be_displayed = computed(
     (): boolean =>
-        !has_loading_error.value && campaigns.value.length > 0 && user_can_create_campaign.value
+        !has_loading_error.value && campaigns.value.length > 0 && user_can_create_campaign.value,
 );
 </script>

@@ -39,10 +39,10 @@ function init() {
 
 function initializeTrackerReportQuery() {
     const tracker_report_expert_query_button = document.getElementById(
-        "tracker-report-expert-query-button"
+        "tracker-report-expert-query-button",
     );
     const tracker_report_normal_query_button = document.getElementById(
-        "tracker-report-normal-query-button"
+        "tracker-report-normal-query-button",
     );
     const tracker_report_expert_query = document.getElementById("tracker-report-expert-query");
     const tracker_report_normal_query = document.getElementById("tracker-report-normal-query");
@@ -80,7 +80,7 @@ function initializeTrackerReportAllowedFields() {
     }
 
     tracker_report_expert_allowed_fields.addEventListener("click", (event) =>
-        insertAllowedFieldInCodeMirror(event, query_rich_editor)
+        insertAllowedFieldInCodeMirror(event, query_rich_editor),
     );
 }
 

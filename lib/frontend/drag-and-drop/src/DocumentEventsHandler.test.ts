@@ -56,11 +56,11 @@ describe(`DocumentEventsHandler`, () => {
 
             expect(doc.addEventListener).toHaveBeenCalledWith(
                 "dragenter",
-                handlers.dragEnterHandler
+                handlers.dragEnterHandler,
             );
             expect(doc.addEventListener).toHaveBeenCalledWith(
                 "dragleave",
-                handlers.dragLeaveHandler
+                handlers.dragLeaveHandler,
             );
             expect(doc.addEventListener).toHaveBeenCalledWith("dragover", handlers.dragOverHandler);
             expect(doc.addEventListener).toHaveBeenCalledWith("dragend", handlers.dragEndHandler);
@@ -75,19 +75,19 @@ describe(`DocumentEventsHandler`, () => {
 
             expect(doc.removeEventListener).toHaveBeenCalledWith(
                 "dragenter",
-                handlers.dragEnterHandler
+                handlers.dragEnterHandler,
             );
             expect(doc.removeEventListener).toHaveBeenCalledWith(
                 "dragleave",
-                handlers.dragLeaveHandler
+                handlers.dragLeaveHandler,
             );
             expect(doc.removeEventListener).toHaveBeenCalledWith(
                 "dragover",
-                handlers.dragOverHandler
+                handlers.dragOverHandler,
             );
             expect(doc.removeEventListener).toHaveBeenCalledWith(
                 "dragend",
-                handlers.dragEndHandler
+                handlers.dragEndHandler,
             );
             expect(doc.removeEventListener).toHaveBeenCalledWith("drop", handlers.dropHandler);
         });

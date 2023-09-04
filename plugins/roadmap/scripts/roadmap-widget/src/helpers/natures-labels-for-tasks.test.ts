@@ -29,7 +29,7 @@ describe("getNatureLabelsForTasks", () => {
             new NaturesLabels([
                 ["", "Linked to"],
                 ["depends_on", "Depends on"],
-            ])
+            ]),
         );
 
         expect(labels.size).toBe(0);
@@ -45,7 +45,7 @@ describe("getNatureLabelsForTasks", () => {
             new NaturesLabels([
                 ["", "Linked to"],
                 ["depends_on", "Depends on"],
-            ])
+            ]),
         );
 
         expect(labels.size).toBe(0);
@@ -61,7 +61,7 @@ describe("getNatureLabelsForTasks", () => {
             new NaturesLabels([
                 ["", "Linked to"],
                 ["depends_on", "Depends on"],
-            ])
+            ]),
         );
 
         expect(labels.size).toBe(0);
@@ -77,7 +77,7 @@ describe("getNatureLabelsForTasks", () => {
             new NaturesLabels([
                 ["", "Linked to"],
                 ["depends_on", "Depends on"],
-            ])
+            ]),
         );
 
         expect(labels.get("depends_on")).toBe("Depends on");

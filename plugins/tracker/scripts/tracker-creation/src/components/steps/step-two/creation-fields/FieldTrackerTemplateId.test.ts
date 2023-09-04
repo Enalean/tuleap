@@ -26,7 +26,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 describe("FieldTrackerTemplateId", () => {
     function getWrapper(
         is_a_duplication: boolean,
-        is_created_from_default_template: boolean
+        is_created_from_default_template: boolean,
     ): Wrapper<FieldTrackerTemplateId> {
         return shallowMount(FieldTrackerTemplateId, {
             mocks: {

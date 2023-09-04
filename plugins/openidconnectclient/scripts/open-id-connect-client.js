@@ -85,7 +85,7 @@ import jQuery from "jquery";
                 .find(".provider-admin-modal-provider-button-preview > button");
             button.removeClass();
             button.addClass(
-                "tlp-button-primary tlp-button-large provider-admin-modal-provider-button"
+                "tlp-button-primary tlp-button-large provider-admin-modal-provider-button",
             );
 
             if ($(this).val()) {
@@ -96,7 +96,7 @@ import jQuery from "jquery";
 
     function initCreationModal() {
         var modal_generic_providers_config_element = document.getElementById(
-            "siteadmin-config-providers-modal-create-generic"
+            "siteadmin-config-providers-modal-create-generic",
         );
         var modal_generic_providers_config = createModal(modal_generic_providers_config_element);
 
@@ -107,7 +107,7 @@ import jQuery from "jquery";
             });
 
         var modal_azure_providers_config_element = document.getElementById(
-            "siteadmin-config-providers-modal-create-azure"
+            "siteadmin-config-providers-modal-create-azure",
         );
 
         var modal_azure_providers_config = createModal(modal_azure_providers_config_element);
@@ -122,11 +122,11 @@ import jQuery from "jquery";
 
     function initUpdateModals() {
         var update_modals_update_buttons = document.querySelectorAll(
-            ".provider-action-edit-button"
+            ".provider-action-edit-button",
         );
         [].forEach.call(update_modals_update_buttons, function (edit_button) {
             var dom_provider_modal_edit = document.getElementById(
-                edit_button.getAttribute("data-edit-modal-id")
+                edit_button.getAttribute("data-edit-modal-id"),
             );
             var tlp_providers_modal_edit = createModal(dom_provider_modal_edit);
 
@@ -138,11 +138,11 @@ import jQuery from "jquery";
 
     function initDeleteModals() {
         var provider_action_delete_buttons = document.querySelectorAll(
-            ".provider-action-delete-button"
+            ".provider-action-delete-button",
         );
         [].forEach.call(provider_action_delete_buttons, function (delete_button) {
             var dom_provider_modal_delete = document.getElementById(
-                delete_button.getAttribute("data-delete-modal-id")
+                delete_button.getAttribute("data-delete-modal-id"),
             );
             var tlp_providers_modal_delete = createModal(dom_provider_modal_delete);
 

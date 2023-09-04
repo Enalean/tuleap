@@ -66,7 +66,7 @@ export function finishCreatingCard(state: SwimlaneState, card: Card): void {
 
 export function startSavingRemainingEffort(
     state: SwimlaneState,
-    payload: NewRemainingEffortPayload
+    payload: NewRemainingEffortPayload,
 ): void {
     const state_card = findCard(state, payload.card);
     if (state_card.remaining_effort) {
@@ -100,7 +100,7 @@ function setSavedFlagsOnCard(card: Card): void {
 
 export function setPossibleAssigneesForFieldId(
     state: SwimlaneState,
-    payload: TrackerAssignableUsersPayload
+    payload: TrackerAssignableUsersPayload,
 ): void {
     state.possible_assignees.set(payload.assigned_to_field_id, payload.users);
 }

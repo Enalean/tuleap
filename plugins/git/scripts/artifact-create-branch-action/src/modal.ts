@@ -29,7 +29,7 @@ let app: App<Element> | null = null;
 export async function init(
     git_create_branch_link: HTMLElement,
     mount_point: Element,
-    gettext_provider: ReturnType<typeof createGettext>
+    gettext_provider: ReturnType<typeof createGettext>,
 ): Promise<void> {
     if (!git_create_branch_link.dataset.projectId) {
         throw new Error("Missing project id in dataset");
@@ -41,7 +41,7 @@ export async function init(
     const project_id = Number(git_create_branch_link.dataset.projectId);
     const branch_name_preview = git_create_branch_link.dataset.gitBranchNamePreview;
     const are_pullrequest_endpoints_available = Boolean(
-        git_create_branch_link.dataset.arePullrequestEndpointsAvailable
+        git_create_branch_link.dataset.arePullrequestEndpointsAvailable,
     );
 
     if (app !== null) {
@@ -63,11 +63,11 @@ export async function init(
                 "error",
                 gettext_provider.interpolate(
                     gettext_provider.$gettext(
-                        "Error while retrieving the Git project repositories: %{ error }"
+                        "Error while retrieving the Git project repositories: %{ error }",
                     ),
-                    { error: String(fault) }
-                )
+                    { error: String(fault) },
+                ),
             );
-        }
+        },
     );
 }

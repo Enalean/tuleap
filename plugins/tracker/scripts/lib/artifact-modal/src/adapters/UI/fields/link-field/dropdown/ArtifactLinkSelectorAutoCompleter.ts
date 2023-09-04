@@ -65,7 +65,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
     artifacts_searcher: SearchArtifacts,
     event_dispatcher: DispatchEvents,
     current_artifact_option: Option<CurrentArtifactIdentifier>,
-    user: UserIdentifier
+    user: UserIdentifier,
 ): ArtifactLinkSelectorAutoCompleterType => {
     const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
         const filter = LinkableArtifactFilter(query);
@@ -78,7 +78,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 (fault) => {
                     event_dispatcher.dispatch(WillNotifyFault(UserHistoryRetrievalFault(fault)));
                     return RecentlyViewedArtifactGroup.buildEmpty();
-                }
+                },
             );
     };
 
@@ -88,7 +88,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 return [
                     SearchResultsGroup.fromSearchResults(
                         link_verifier,
-                        ArtifactLinkListDuplicateRemover.removeDuplicateArtifact(artifacts)
+                        ArtifactLinkListDuplicateRemover.removeDuplicateArtifact(artifacts),
                     ),
                 ];
             },
@@ -98,22 +98,22 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 }
                 event_dispatcher.dispatch(WillNotifyFault(SearchArtifactsFault(fault)));
                 return [SearchResultsGroup.buildEmpty()];
-            }
+            },
         );
 
     const getMatchingArtifactsGroup = (
-        linkable_number: LinkableNumber
+        linkable_number: LinkableNumber,
     ): PromiseLike<GroupOfItems> =>
         retrieve_matching_artifact.getMatchingArtifact(linkable_number).match(
             (artifact) => MatchingArtifactsGroup.fromMatchingArtifact(link_verifier, artifact),
             (fault) => {
                 if (!isExpectedFault(fault)) {
                     event_dispatcher.dispatch(
-                        WillNotifyFault(MatchingArtifactRetrievalFault(fault))
+                        WillNotifyFault(MatchingArtifactRetrievalFault(fault)),
                     );
                 }
                 return MatchingArtifactsGroup.buildEmpty();
-            }
+            },
         );
 
     const getPossibleParentsGroup = (host: LinkField, query: string): PromiseLike<GroupOfItems> => {
@@ -137,7 +137,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                     getMatchingArtifactsGroup(linkable_number).then((group) => {
                         host.matching_artifact_section = [group];
                     });
-                }
+                },
             );
             if (!isParentSelected(host)) {
                 host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildLoadingState()];

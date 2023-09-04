@@ -70,7 +70,7 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
         expect(
             (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
-                .dataset.canPlan
+                .dataset.canPlan,
         ).toBe("true");
     });
 
@@ -118,7 +118,7 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(true);
         expect(
             (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
-                .dataset.canPlan
+                .dataset.canPlan,
         ).toBe("true");
     });
 
@@ -185,7 +185,7 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
         expect(
             (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
-                .dataset.canPlan
+                .dataset.canPlan,
         ).toBe("true");
     });
 
@@ -246,7 +246,7 @@ describe("ProgramIncrementFeatureList", () => {
                 start_date: "2020 Feb 6",
                 end_date: "2020 Feb 28",
                 user_can_plan: true,
-            }
+            },
         );
     });
 
@@ -298,7 +298,7 @@ describe("ProgramIncrementFeatureList", () => {
 
         expect(
             (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
-                .dataset.canPlan
+                .dataset.canPlan,
         ).toBeUndefined();
     });
 });

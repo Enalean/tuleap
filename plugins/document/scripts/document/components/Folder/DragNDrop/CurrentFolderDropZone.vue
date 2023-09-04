@@ -71,13 +71,13 @@ const success_message = computed((): string => {
         $ngettext(
             "Drop one file to upload it to %{folder}s (max size is %{size}s).",
             "Drop up to %{nb_files}s files to upload them to %{folder}s (max size is %{size}s).",
-            max_files_dragndrop.value
+            max_files_dragndrop.value,
         ),
         {
             nb_files: max_files_dragndrop.value,
             folder: current_folder_title.value,
             size: prettyKibibytes(max_size_upload.value),
-        }
+        },
     );
 });
 

@@ -23,7 +23,7 @@ describe("pinned-button", () => {
     describe("setupPinnedButton", () => {
         it("throws an error if submit section is not in the dom", () => {
             expect(() =>
-                setupPinnedButton(document.implementation.createHTMLDocument())
+                setupPinnedButton(document.implementation.createHTMLDocument()),
             ).toThrowError();
         });
 

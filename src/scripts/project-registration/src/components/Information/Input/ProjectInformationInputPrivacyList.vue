@@ -103,22 +103,22 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         switch (visibility) {
             case ACCESS_PUBLIC_UNRESTRICTED:
                 return this.$gettext(
-                    "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items."
+                    "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items.",
                 );
             case ACCESS_PUBLIC:
                 return this.$gettext(
-                    "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items."
+                    "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items.",
                 );
             case ACCESS_PRIVATE:
                 if (this.are_restricted_users_allowed) {
                     return this.$gettext(
-                        "Only project members can access project content. Restricted users can be added to the project."
+                        "Only project members can access project content. Restricted users can be added to the project.",
                     );
                 }
                 return this.$gettext("Only project members can access project content.");
             case ACCESS_PRIVATE_WO_RESTRICTED:
                 return this.$gettext(
-                    "Only project members can access project content. Restricted users can NOT be added in this project."
+                    "Only project members can access project content. Restricted users can NOT be added in this project.",
                 );
             default:
                 throw new Error("Unable to retrieve the selected visibility type");

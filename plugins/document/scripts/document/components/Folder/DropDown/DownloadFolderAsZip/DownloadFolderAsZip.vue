@@ -60,7 +60,7 @@ const is_retrieving_folder_size = ref(false);
 
 const folder_href = computed((): string => {
     return `/plugins/document/${project_name.value}/folders/${encodeURIComponent(
-        props.item.id
+        props.item.id,
     )}/download-folder-as-zip`;
 });
 

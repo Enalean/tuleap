@@ -41,7 +41,7 @@ describe("DeleteBaselineConfirmationModal", () => {
             new Promise((resolve, reject) => {
                 deleteBaselineResolve = resolve;
                 deleteBaselineReject = reject;
-            })
+            }),
         );
 
         $store = createStoreMock(store_options);
@@ -77,7 +77,7 @@ describe("DeleteBaselineConfirmationModal", () => {
             it("notifies user", () => {
                 expect($store.commit).toHaveBeenCalledWith(
                     "dialog_interface/notify",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
             });
             it("hides modal", () => {
@@ -93,13 +93,13 @@ describe("DeleteBaselineConfirmationModal", () => {
             it("does not delete baseline in store", () => {
                 expect($store.commit).not.toHaveBeenCalledWith(
                     "baselines/delete",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
             });
             it("does not notify user", () => {
                 expect($store.commit).not.toHaveBeenCalledWith(
                     "dialog_interface/notify",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
             });
         });

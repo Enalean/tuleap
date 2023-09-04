@@ -65,7 +65,7 @@ export default {
         submission_date() {
             return formatDateUsingPreferredUserFormat(
                 this.current_artifact.submission_date,
-                this.user_locale
+                this.user_locale,
             );
         },
     },

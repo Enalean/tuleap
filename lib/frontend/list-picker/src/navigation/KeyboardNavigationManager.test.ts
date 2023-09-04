@@ -44,7 +44,7 @@ describe("KeyboardNavigationManager", () => {
 
         const { dropdown_list_element } = new BaseComponentRenderer(
             doc,
-            source_select_box
+            source_select_box,
         ).renderBaseComponent();
 
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
@@ -55,7 +55,7 @@ describe("KeyboardNavigationManager", () => {
             item_map_manager,
             {
                 gettext: (english: string) => english,
-            } as GettextProvider
+            } as GettextProvider,
         );
 
         dropdown_list = dropdown_list_element;
@@ -79,7 +79,7 @@ describe("KeyboardNavigationManager", () => {
                 expect(
                     item_map_manager
                         .findListPickerItemInItemMap("list-picker-item-group1-value_1")
-                        .element.classList.contains("list-picker-item-highlighted")
+                        .element.classList.contains("list-picker-item-highlighted"),
                 ).toBe(true);
             });
 
@@ -92,7 +92,7 @@ describe("KeyboardNavigationManager", () => {
                 expect(
                     item_map_manager
                         .findListPickerItemInItemMap("list-picker-item-group2-value_4")
-                        .element.classList.contains("list-picker-item-highlighted")
+                        .element.classList.contains("list-picker-item-highlighted"),
                 ).toBe(true);
             });
         });
@@ -105,7 +105,7 @@ describe("KeyboardNavigationManager", () => {
                 expect(
                     item_map_manager
                         .findListPickerItemInItemMap("list-picker-item-group1-value_0")
-                        .element.classList.contains("list-picker-item-highlighted")
+                        .element.classList.contains("list-picker-item-highlighted"),
                 ).toBe(true);
             });
 
@@ -118,7 +118,7 @@ describe("KeyboardNavigationManager", () => {
                 expect(
                     item_map_manager
                         .findListPickerItemInItemMap("list-picker-item-group1-value_0")
-                        .element.classList.contains("list-picker-item-highlighted")
+                        .element.classList.contains("list-picker-item-highlighted"),
                 ).toBe(true);
             });
         });

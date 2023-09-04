@@ -18,7 +18,7 @@
  */
 
 export function getTableFirstChild(
-    table_body: HTMLTableSectionElement
+    table_body: HTMLTableSectionElement,
 ): HTMLTableRowElement | null {
     const table_first_child = table_body.firstElementChild;
     if (!(table_first_child instanceof HTMLTableRowElement)) {

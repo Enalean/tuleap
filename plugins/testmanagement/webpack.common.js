@@ -22,7 +22,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets/"),
-    "/assets/testmanagement/"
+    "/assets/testmanagement/",
 );
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 

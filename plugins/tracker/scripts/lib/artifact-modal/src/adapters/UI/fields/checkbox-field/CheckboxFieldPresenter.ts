@@ -35,7 +35,7 @@ export interface CheckboxFieldValuePresenter {
 
 function buildValues(
     values: readonly CheckboxFieldValue[],
-    bind_value_ids: ReadonlyArray<number | null>
+    bind_value_ids: ReadonlyArray<number | null>,
 ): readonly CheckboxFieldValuePresenter[] {
     return values.map((value, index) => ({
         ...value,
@@ -47,7 +47,7 @@ export const CheckboxFieldPresenter = {
     fromField: (
         field: CheckboxFieldType,
         bind_value_ids: ReadonlyArray<number | null>,
-        is_field_disabled: boolean
+        is_field_disabled: boolean,
     ): CheckboxFieldPresenter => ({
         field_id: field.field_id,
         field_label: field.label,

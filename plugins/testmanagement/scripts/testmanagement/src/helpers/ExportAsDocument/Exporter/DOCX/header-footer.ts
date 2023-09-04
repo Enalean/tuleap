@@ -24,7 +24,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 export function buildHeader(
     global_export_properties: GenericGlobalExportProperties,
-    document_name: string
+    document_name: string,
 ): Header {
     return new Header({
         children: [
@@ -55,7 +55,7 @@ export function buildHeader(
 export function buildFooter(
     gettext_provider: GettextProvider,
     global_export_properties: GenericGlobalExportProperties,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Footer {
     return new Footer({
         children: [

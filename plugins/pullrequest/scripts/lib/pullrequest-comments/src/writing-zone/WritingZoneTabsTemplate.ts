@@ -42,7 +42,7 @@ const isTabActive = (tab_name: WritingZoneTabName, presenter: WritingZonePresent
 
 export const buildWriteTab = (
     host: InternalWritingZone,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
     const tabs_classes = {
         "tlp-tab": true,
@@ -62,7 +62,7 @@ export const buildWriteTab = (
 
 export const buildPreviewTab = (
     host: InternalWritingZone,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
     if (!host.presenter.is_comments_markdown_mode_enabled) {
         return html``;

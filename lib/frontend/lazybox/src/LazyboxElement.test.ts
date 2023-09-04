@@ -103,7 +103,7 @@ describe(`LazyboxElement`, () => {
         const getHost = (): HostElement => {
             const dropdown_element = Object.assign(
                 doc.createElement("div") as HTMLElement,
-                { open: dropdown_open } as DropdownElement
+                { open: dropdown_open } as DropdownElement,
             );
             return Object.assign(doc.createElement("div"), {
                 dropdown_element,
@@ -334,7 +334,7 @@ describe(`LazyboxElement`, () => {
 
             expect(lock).toHaveBeenCalled();
             expect(host.selection_element.classList.contains("lazybox-with-open-dropdown")).toBe(
-                true
+                true,
             );
             expect(autoUpdate).toHaveBeenCalled();
             expect(focusSearch).toHaveBeenCalled();
@@ -343,7 +343,7 @@ describe(`LazyboxElement`, () => {
 
             expect(unlock).toHaveBeenCalledOnce();
             expect(host.selection_element.classList.contains("lazybox-with-open-dropdown")).toBe(
-                false
+                false,
             );
             expect(cleanup).toHaveBeenCalledOnce();
             expect(clearSearch).toHaveBeenCalledOnce();

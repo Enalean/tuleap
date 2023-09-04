@@ -37,14 +37,14 @@ export type ModalFeedback = {
 export type HostElement = ModalFeedback & HTMLElement;
 
 const displayParentIfNeeded = (
-    parent_option: Option<ParentArtifact>
+    parent_option: Option<ParentArtifact>,
 ): UpdateFunction<ModalFeedback> => {
     return parent_option.mapOr(
         (parent_artifact) =>
             html`<div class="tlp-alert-info" data-test="parent-feedback">
                 ${sprintf(getLinkedParentFeedback(), parent_artifact.title)}
             </div>`,
-        html``
+        html``,
     );
 };
 
@@ -52,7 +52,7 @@ const displayFaultIfNeeded = (message_option: Option<string>): UpdateFunction<Mo
     return message_option.mapOr(
         (message) =>
             html`<div class="tlp-alert-danger" data-test="fault-feedback">${message}</div>`,
-        html``
+        html``,
     );
 };
 

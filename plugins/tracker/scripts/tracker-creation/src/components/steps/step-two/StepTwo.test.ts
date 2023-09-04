@@ -32,7 +32,7 @@ describe("StepTwo", () => {
         is_created_from_empty = false,
         is_a_duplication_of_a_tracker_from_another_project = false,
         is_created_from_default_template = false,
-        is_created_from_jira = false
+        is_created_from_jira = false,
     ): Promise<Wrapper<StepTwo>> {
         return mount(StepTwo, {
             mocks: {
@@ -74,7 +74,7 @@ describe("StepTwo", () => {
 
         it("auto-fills the tracker name with the name of the selected tracker", () => {
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedTemplateName"
+                "initTrackerNameWithTheSelectedTemplateName",
             );
         });
 
@@ -84,7 +84,7 @@ describe("StepTwo", () => {
 
         it("Sets the right encoding type for the form", () => {
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
-                "application/x-www-form-urlencoded"
+                "application/x-www-form-urlencoded",
             );
         });
     });
@@ -93,7 +93,7 @@ describe("StepTwo", () => {
         it("auto-fills the tracker name with the name of the selected tracker", async () => {
             const wrapper = await getWrapper({} as State, false, false, false, false, true);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedTemplateName"
+                "initTrackerNameWithTheSelectedTemplateName",
             );
         });
 
@@ -112,7 +112,7 @@ describe("StepTwo", () => {
 
         it("auto-fills the tracker name with the name of the selected tracker", () => {
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedProjectTrackerTemplateName"
+                "initTrackerNameWithTheSelectedProjectTrackerTemplateName",
             );
         });
 
@@ -122,7 +122,7 @@ describe("StepTwo", () => {
 
         it("Sets the right encoding type for the form", () => {
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
-                "application/x-www-form-urlencoded"
+                "application/x-www-form-urlencoded",
             );
         });
     });
@@ -152,7 +152,7 @@ describe("StepTwo", () => {
 
         it("Sets the right encoding type for the form", () => {
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
-                "multipart/form-data"
+                "multipart/form-data",
             );
         });
     });
@@ -174,7 +174,7 @@ describe("StepTwo", () => {
                 } as State,
                 false,
                 false,
-                true
+                true,
             );
         });
 
@@ -186,7 +186,7 @@ describe("StepTwo", () => {
 
         it("Sets the right encoding type for the form", () => {
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
-                "application/x-www-form-urlencoded"
+                "application/x-www-form-urlencoded",
             );
         });
     });

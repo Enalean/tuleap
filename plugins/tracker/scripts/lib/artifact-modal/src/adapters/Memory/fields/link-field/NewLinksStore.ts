@@ -44,7 +44,7 @@ export const NewLinksStore = (): NewLinksStoreType => {
         changeNewLinkType(link, type): void {
             const updated_link = NewLink.fromNewLinkAndType(link, type);
             const index = links.findIndex(
-                (stored_link) => stored_link.identifier.id === updated_link.identifier.id
+                (stored_link) => stored_link.identifier.id === updated_link.identifier.id,
             );
             if (index === -1) {
                 return;

@@ -37,7 +37,7 @@ describe("SelectBoxFieldPresenter", () => {
             const presenter = SelectBoxFieldPresenter.fromField(field, [], true);
 
             expect(presenter.is_multiple_select_box).toBe(is_multiple);
-        }
+        },
     );
 
     it(`should build a presenter taking into account:

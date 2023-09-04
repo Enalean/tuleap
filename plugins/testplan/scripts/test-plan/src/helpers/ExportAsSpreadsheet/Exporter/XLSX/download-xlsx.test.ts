@@ -42,7 +42,7 @@ describe("download-xlsx", () => {
         expect(xlsx.writeFile).toHaveBeenCalledWith(
             expect.anything(),
             "Test Report %{ milestone_title }.xlsx",
-            expect.anything()
+            expect.anything(),
         );
     });
 });

@@ -77,7 +77,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         initWritingZone: (host: HostElement): void => {
             const presenter = WritingZonePresenter.buildInitial(
                 config.project_id,
-                config.is_comments_markdown_mode_enabled
+                config.is_comments_markdown_mode_enabled,
             );
 
             if (unsaved_content) {
@@ -113,7 +113,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
                     (previewed_content: string) => {
                         host.presenter = WritingZonePresenter.buildPreviewMode(
                             host.presenter,
-                            previewed_content
+                            previewed_content,
                         );
 
                         setTimeout(() => {
@@ -122,7 +122,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
                     },
                     () => {
                         host.presenter = WritingZonePresenter.buildPreviewWithError(host.presenter);
-                    }
+                    },
                 )
                 .finally(() => {
                     setTimeout(() => {
@@ -137,7 +137,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
         resetWritingZone: (host: HTMLElement & InternalWritingZone): void => {
             host.textarea.value = "";
             host.presenter = WritingZonePresenter.buildBlurred(
-                WritingZonePresenter.buildWritingMode(host.presenter)
+                WritingZonePresenter.buildWritingMode(host.presenter),
             );
             blurWritingZone(host);
         },

@@ -52,7 +52,7 @@ const onSelectChange = (host: PermissionField, event: Event): void => {
 };
 
 export const getIsUsedByDefaultCheckbox = (
-    host: PermissionField
+    host: PermissionField,
 ): UpdateFunction<PermissionField> => html`
     <input
         type="checkbox"
@@ -65,7 +65,7 @@ export const getIsUsedByDefaultCheckbox = (
 `;
 
 const getGrantedGroupsSelectLabelWithCheckboxIfNeeded = (
-    host: PermissionField
+    host: PermissionField,
 ): UpdateFunction<PermissionField> => {
     if (host.field_presenter.is_field_required) {
         return html`
@@ -83,7 +83,7 @@ const getGrantedGroupsSelectLabelWithCheckboxIfNeeded = (
 };
 
 export const getGrantedGroupsSelect = (
-    host: PermissionField
+    host: PermissionField,
 ): UpdateFunction<PermissionField> => html`
     <select
         id="tracker_field_${host.field_presenter.field_id}"
@@ -102,7 +102,7 @@ export const getGrantedGroupsSelect = (
                 >
                     ${group.label}
                 </option>
-            `
+            `,
         )}
     </select>
 `;

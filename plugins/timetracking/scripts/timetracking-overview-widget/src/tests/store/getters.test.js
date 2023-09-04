@@ -147,7 +147,7 @@ describe("Getters Timetracking Overview", () => {
             };
             mutations.setTrackersTimes(state, [trackers]);
             expect(
-                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user)
+                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user),
             ).toBeTruthy();
         });
 
@@ -167,7 +167,7 @@ describe("Getters Timetracking Overview", () => {
             };
             mutations.setTrackersTimes(state, [trackers]);
             expect(
-                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user)
+                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user),
             ).toBeFalsy();
         });
 

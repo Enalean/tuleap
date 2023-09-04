@@ -41,7 +41,7 @@ const getFormPresenter = (): ReplyCommentFormPresenter =>
         comment_author: {
             user_id: current_user_id,
         },
-    } as ReplyCommentFormPresenter);
+    }) as ReplyCommentFormPresenter;
 
 const is_comments_markdown_mode_enabled = true;
 
@@ -65,7 +65,7 @@ describe("PullRequestCommentReplySaver", () => {
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
             getFormPresenter(),
-            is_comments_markdown_mode_enabled
+            is_comments_markdown_mode_enabled,
         );
 
         if (!result.isOk()) {
@@ -107,7 +107,7 @@ describe("PullRequestCommentReplySaver", () => {
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
             form_presenter,
-            is_comments_markdown_mode_enabled
+            is_comments_markdown_mode_enabled,
         );
 
         if (!result.isOk()) {

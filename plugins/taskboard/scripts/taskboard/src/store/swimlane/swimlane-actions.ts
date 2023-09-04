@@ -29,7 +29,7 @@ export * from "./drag-drop-actions";
 export * from "./card/card-actions";
 
 export async function loadSwimlanes(
-    context: ActionContext<SwimlaneState, RootState>
+    context: ActionContext<SwimlaneState, RootState>,
 ): Promise<void> {
     context.commit("beginLoadingSwimlanes");
     try {
@@ -50,7 +50,7 @@ export async function loadSwimlanes(
                 swimlanes
                     .filter((swimlane) => swimlane.card.has_children)
                     .map((swimlane_with_children) =>
-                        context.dispatch("loadChildrenCards", swimlane_with_children)
+                        context.dispatch("loadChildrenCards", swimlane_with_children),
                     );
 
                 return swimlanes;
@@ -65,7 +65,7 @@ export async function loadSwimlanes(
 
 export async function loadChildrenCards(
     context: ActionContext<SwimlaneState, RootState>,
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<void> {
     context.commit("beginLoadingChildren", swimlane);
     try {
@@ -93,7 +93,7 @@ export async function loadChildrenCards(
 
 export function expandSwimlane(
     context: ActionContext<SwimlaneState, RootState>,
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<void> {
     context.commit("expandSwimlane", swimlane);
     const payload: UserPreference = {
@@ -105,7 +105,7 @@ export function expandSwimlane(
 
 export function collapseSwimlane(
     context: ActionContext<SwimlaneState, RootState>,
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<void> {
     context.commit("collapseSwimlane", swimlane);
     const payload: UserPreferenceValue = {
@@ -118,7 +118,7 @@ export function collapseSwimlane(
 
 function getPreferenceName(
     context: ActionContext<SwimlaneState, RootState>,
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): string {
     return `plugin_taskboard_collapse_${context.rootState.milestone_id}_${swimlane.card.id}`;
 }
@@ -132,30 +132,30 @@ async function getUpdatedCard(card_id: number, milestone_id: number): Promise<Ca
 
 export function refreshCardAndParent(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: RefreshCardActionPayload
+    payload: RefreshCardActionPayload,
 ): Promise<void> {
     const refreshCard = (refreshed_card: Card): void =>
         context.commit("refreshCard", { refreshed_card });
     const is_solo_card = !context.getters.is_there_at_least_one_children_to_display(
-        payload.swimlane
+        payload.swimlane,
     );
     if (is_solo_card) {
         return getUpdatedCard(payload.card.id, context.rootState.milestone_id).then(
             refreshCard,
-            (error) => context.dispatch("error/handleModalError", error, { root: true })
+            (error) => context.dispatch("error/handleModalError", error, { root: true }),
         );
     }
 
     const refresh_parent_promise = getUpdatedCard(
         payload.swimlane.card.id,
-        context.rootState.milestone_id
+        context.rootState.milestone_id,
     ).then(refreshCard);
     const refresh_child_promise = getUpdatedCard(
         payload.card.id,
-        context.rootState.milestone_id
+        context.rootState.milestone_id,
     ).then(refreshCard);
 
     return Promise.all([refresh_parent_promise, refresh_child_promise]).catch((error) =>
-        context.dispatch("error/handleModalError", error, { root: true })
+        context.dispatch("error/handleModalError", error, { root: true }),
     );
 }

@@ -52,7 +52,7 @@ export function getPutArtifactBodyToAddChild(
     payload: NewCardPayload,
     trackers: Tracker[],
     child_id: number,
-    parent_artifact_values: Values
+    parent_artifact_values: Values,
 ): PutBody {
     const parent_tracker = getParentTracker(payload.swimlane.card, trackers);
     if (!parent_tracker.add_in_place) {
@@ -73,7 +73,7 @@ export function getPostArtifactBody(payload: NewCardPayload, trackers: Tracker[]
     const child_tracker = trackers.find(
         (tracker) =>
             parent_tracker.add_in_place &&
-            tracker.id === parent_tracker.add_in_place.child_tracker_id
+            tracker.id === parent_tracker.add_in_place.child_tracker_id,
     );
     if (!child_tracker) {
         throw new Error("Unable to find the child tracker of a card");
@@ -84,7 +84,7 @@ export function getPostArtifactBody(payload: NewCardPayload, trackers: Tracker[]
     }
 
     const mapping = payload.column.mappings.find(
-        (mapping) => mapping.tracker_id === child_tracker.id
+        (mapping) => mapping.tracker_id === child_tracker.id,
     );
     if (!mapping || !mapping.field_id || mapping.accepts.length === 0) {
         throw new Error("Unable to create the card");
@@ -142,10 +142,10 @@ function getListField(field_id: number, value_id: number): ListField {
 function getLinkField(
     add_in_place: AddInPlace,
     child_id: number,
-    parent_artifact_values: Values
+    parent_artifact_values: Values,
 ): LinkField {
     const existing_links_value = parent_artifact_values.find(
-        (value) => value.field_id === add_in_place.parent_artifact_link_field_id
+        (value) => value.field_id === add_in_place.parent_artifact_link_field_id,
     );
     let existing_links: Link[] = [];
     if (existing_links_value && "links" in existing_links_value) {

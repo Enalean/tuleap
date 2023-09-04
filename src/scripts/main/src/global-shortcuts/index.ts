@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale) =>
             import(
                 /* webpackChunkName: "global-shortcuts-po-" */ "./po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     const global_shortcuts_group = createGlobalShortcutsGroup(gettext_provider);
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const access_services_shortcuts_group = getServicesShortcutsGroup(
         document.body,
-        gettext_provider
+        gettext_provider,
     );
     if (access_services_shortcuts_group) {
         addGlobalShortcutsGroup(document, access_services_shortcuts_group);

@@ -31,7 +31,7 @@ import { CouldNotCheckRegisteredPasskeysFault } from "./faults/CouldNotCheckRegi
 function beginAuth(): ResultAsync<AuthenticationResponseJSON, Fault> {
     return postJSON<PublicKeyCredentialRequestOptionsJSON>(
         uri`/webauthn/authentication-challenge`,
-        {}
+        {},
     ).andThen((options) => {
         options.timeout = 30_000; // ms
 
@@ -40,7 +40,7 @@ function beginAuth(): ResultAsync<AuthenticationResponseJSON, Fault> {
             (error: unknown): Fault =>
                 error instanceof Error
                     ? Fault.fromError(error)
-                    : Fault.fromMessage("Failed to authenticate with your passkey")
+                    : Fault.fromMessage("Failed to authenticate with your passkey"),
         );
     });
 }
@@ -66,7 +66,7 @@ export function canUserDoWebAuthn(): ResultAsync<null, Fault> {
 
     return postJSON<PublicKeyCredentialRequestOptionsJSON>(
         uri`/webauthn/authentication-challenge`,
-        {}
+        {},
     )
         .map(() => null)
         .mapErr((fault) => {

@@ -88,7 +88,7 @@ export class MermaidDiagramElement extends HTMLElement {
             const rendered_result = await render(
                 generateMermaidElementId(),
                 this.source_code,
-                this.container
+                this.container,
             );
 
             // We have to trust mermaid code to not produce broken svg
@@ -114,7 +114,7 @@ export class MermaidDiagramElement extends HTMLElement {
             this.source_wrapper.classList.add("diagram-mermaid-source-computing-error");
 
             const is_mermaid_probably_failed_to_parse = Boolean(
-                this.container.querySelector(".error-icon, .error-text")
+                this.container.querySelector(".error-icon, .error-text"),
             );
             this.container.remove();
 
@@ -124,13 +124,13 @@ export class MermaidDiagramElement extends HTMLElement {
                     "tlp-alert-danger",
                     "alert",
                     "alert-error",
-                    "diagram-mermaid-source-computing-explanation"
+                    "diagram-mermaid-source-computing-explanation",
                 );
                 alert.innerText = String(error);
 
                 this.source_wrapper.appendChild(alert);
                 this.source_wrapper.classList.add(
-                    "diagram-mermaid-source-computing-error-with-details"
+                    "diagram-mermaid-source-computing-error-with-details",
                 );
             } else {
                 throw error;

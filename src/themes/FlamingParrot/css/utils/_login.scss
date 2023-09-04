@@ -22,32 +22,38 @@
 body.login-page {
     &,
     &.FlamingParrot_Orange {
-        background: url("../images/login/login-background-orange.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-orange.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     &.FlamingParrot_Blue {
-        background: url("../images/login/login-background-blue.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-blue.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     &.FlamingParrot_Green {
-        background: url("../images/login/login-background-green.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-green.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     &.FlamingParrot_BlueGrey {
-        background: url("../images/login/login-background-bluegrey.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-bluegrey.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     &.FlamingParrot_Purple {
-        background: url("../images/login/login-background-purple.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-purple.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     &.FlamingParrot_Red {
-        background: url("../images/login/login-background-red.png") no-repeat center top,
+        background:
+            url("../images/login/login-background-red.png") no-repeat center top,
             linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 }

@@ -72,14 +72,14 @@ describe("FolderHeader", () => {
         it(`Does not display title information when folder is loading_ascendent_hierarchy`, () => {
             const wrapper = factory(true, true);
             expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toContain(
-                "document-folder-title-loading"
+                "document-folder-title-loading",
             );
         });
 
         it(`Display title information when folder is loaded`, () => {
             const wrapper = factory(false, true);
             expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toStrictEqual(
-                []
+                [],
             );
         });
     });
@@ -87,13 +87,13 @@ describe("FolderHeader", () => {
         it(`Does not display search box, when current folder has no content`, () => {
             const wrapper = factory(false, true);
             expect(
-                wrapper.find("[data-test=document-folder-harder-search-box]").exists()
+                wrapper.find("[data-test=document-folder-harder-search-box]").exists(),
             ).toBeFalsy();
         });
         it(`Display search box, when folder has content`, () => {
             const wrapper = factory(false, false);
             expect(
-                wrapper.find("[data-test=document-folder-harder-search-box]").exists()
+                wrapper.find("[data-test=document-folder-harder-search-box]").exists(),
             ).toBeTruthy();
         });
     });
@@ -135,14 +135,14 @@ describe("FolderHeader", () => {
             wrapper.vm.showUpdateItemPropertiesModal(event);
             await nextTick();
             expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
-                true
+                true,
             );
         });
 
         it(`Loads permission modal`, async () => {
             const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(
-                false
+                false,
             );
             const event = { detail: { current_item: { type: TYPE_EMPTY, properties: [] } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
@@ -153,21 +153,21 @@ describe("FolderHeader", () => {
         it("Loads the folder size threshold exceeded error modal", async () => {
             const wrapper = factory(false, true);
             expect(
-                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
+                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists(),
             ).toBe(false);
 
             const event = { detail: { current_folder_size: 100000 } };
             wrapper.vm.showMaxArchiveSizeThresholdExceededErrorModal(event);
             await nextTick();
             expect(
-                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
+                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists(),
             ).toBe(true);
         });
 
         it("Loads the folder size warning modal", async () => {
             const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
-                false
+                false,
             );
 
             const event = {
@@ -176,7 +176,7 @@ describe("FolderHeader", () => {
             wrapper.vm.showArchiveSizeWarningModal(event);
             await nextTick();
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
-                true
+                true,
             );
         });
 

@@ -20,7 +20,7 @@ fs.readFile(path.join(__dirname, "tql.pegjs"), function (err, data) {
 
     const output_dir = path.join(
         __dirname,
-        "../backend-assets/Tracker/Report/Query/Advanced/Grammar/"
+        "../backend-assets/Tracker/Report/Query/Advanced/Grammar/",
     );
     fs.mkdirSync(output_dir, { recursive: true });
     fs.writeFile(output_dir + "Parser.php", parser, function (err) {

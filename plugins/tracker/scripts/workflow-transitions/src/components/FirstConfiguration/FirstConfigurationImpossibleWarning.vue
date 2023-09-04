@@ -32,7 +32,7 @@ export default {
         ...mapGetters(["current_tracker_id"]),
         edit_fields_url() {
             return encodeURI(
-                `/plugins/tracker/?tracker=${this.current_tracker_id}&func=admin-formElements`
+                `/plugins/tracker/?tracker=${this.current_tracker_id}&func=admin-formElements`,
             );
         },
         message() {

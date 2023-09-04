@@ -36,7 +36,7 @@ describe("synchronize-team", () => {
             const doc = createDocument();
 
             expect(() =>
-                initSynchronizeTeamButtons(new DocumentAdapter(doc), location)
+                initSynchronizeTeamButtons(new DocumentAdapter(doc), location),
             ).not.toThrow();
         });
 

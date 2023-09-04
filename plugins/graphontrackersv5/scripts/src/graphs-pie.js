@@ -131,7 +131,7 @@ export function graphOnTrackerPie(id, graph) {
                         startAngle: 0,
                         endAngle: 0,
                     },
-                    b
+                    b,
                 );
 
                 return (t) => arc(i(t));

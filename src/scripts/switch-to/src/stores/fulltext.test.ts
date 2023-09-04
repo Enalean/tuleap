@@ -72,7 +72,7 @@ describe("FullText Store", () => {
                 expect(store.fulltext_search_is_loading).toBe(false);
                 expect(store.fulltext_search_is_error).toBe(false);
                 expect(store.fulltext_search_results).toStrictEqual({});
-            }
+            },
         );
 
         it("should indicate that search results are loading", () => {
@@ -89,7 +89,7 @@ describe("FullText Store", () => {
                 (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
                     run: (): void => onComplete(result),
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -114,7 +114,7 @@ describe("FullText Store", () => {
                 (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
                     run: (): void => onComplete(result),
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -143,7 +143,7 @@ describe("FullText Store", () => {
                 (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
                     run: (): void => onComplete(result),
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -177,7 +177,7 @@ describe("FullText Store", () => {
                 (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
                     run: (): void => onComplete(result),
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -218,7 +218,7 @@ describe("FullText Store", () => {
                         onComplete(result);
                     },
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -252,7 +252,7 @@ describe("FullText Store", () => {
                 (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
                     run: (): void => onComplete(result),
                     stop: jest.fn(),
-                })
+                }),
             );
 
             store.search("foobar");
@@ -331,7 +331,7 @@ describe("FullText Store", () => {
                         run: (): void => onComplete(result),
                         stop: jest.fn(),
                     };
-                }
+                },
             );
 
             store.more();
@@ -388,7 +388,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    first_search_result
+                    first_search_result,
                 );
             });
 
@@ -457,7 +457,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    first_search_result
+                    first_search_result,
                 );
             });
 
@@ -520,7 +520,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    another_entry
+                    another_entry,
                 );
             });
 
@@ -574,7 +574,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    another_project
+                    another_project,
                 );
             });
 
@@ -656,7 +656,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    second_search_result
+                    second_search_result,
                 );
             });
 
@@ -693,7 +693,7 @@ describe("FullText Store", () => {
                 });
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    second_search_result
+                    second_search_result,
                 );
             });
         });
@@ -730,7 +730,7 @@ describe("FullText Store", () => {
             fts.focusFirstSearchResult();
 
             expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                first_search_result
+                first_search_result,
             );
         });
     });

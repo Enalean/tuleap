@@ -30,7 +30,7 @@ vi.mock("@tuleap/plugin-git-gitlab-api-querier");
 
 function buildResponse<TypeOfJSONPayload>(
     payload: TypeOfJSONPayload,
-    next_url: string | null
+    next_url: string | null,
 ): Response {
     return {
         headers: {
@@ -84,8 +84,8 @@ describe("gitlab-api-querier", () => {
                     return okAsync(
                         buildResponse<readonly GitlabGroup[]>(
                             [group_1],
-                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
-                        )
+                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2",
+                        ),
                     );
                 }
                 return okAsync(buildResponse<readonly GitlabGroup[]>([group_2], null));
@@ -101,14 +101,14 @@ describe("gitlab-api-querier", () => {
             const [first_call, second_call] = getSpy.mock.calls;
             expect(first_call[0]).toStrictEqual(
                 uri`${rawUri(
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
-                )}`
+                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc",
+                )}`,
             );
             expect(first_call[1]).toBe(credentials);
             expect(second_call[0]).toStrictEqual(
                 uri`${rawUri(
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
-                )}`
+                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2",
+                )}`,
             );
             expect(second_call[1]).toBe(credentials);
 
@@ -123,8 +123,8 @@ describe("gitlab-api-querier", () => {
                     return okAsync(
                         buildResponse<readonly GitlabGroup[]>(
                             [group_1],
-                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
-                        )
+                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc",
+                        ),
                     );
                 }
                 if (number_of_calls === 2) {
@@ -133,8 +133,8 @@ describe("gitlab-api-querier", () => {
                 return okAsync(
                     buildResponse<readonly GitlabGroup[]>(
                         [],
-                        "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=3"
-                    )
+                        "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=3",
+                    ),
                 );
             });
 

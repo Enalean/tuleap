@@ -55,6 +55,6 @@ describe("CellFilename", () => {
             });
 
             expect(wrapper.text()).toBe("");
-        }
+        },
     );
 });

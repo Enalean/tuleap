@@ -29,7 +29,7 @@ export type ManageLabelsCreation = {
 };
 
 export const LabelsCreationManager = (
-    project_labels: ReadonlyArray<ProjectLabel>
+    project_labels: ReadonlyArray<ProjectLabel>,
 ): ManageLabelsCreation => {
     let labels_to_create: string[] = [];
 
@@ -40,10 +40,10 @@ export const LabelsCreationManager = (
             return (
                 label.trim() !== "" &&
                 !project_labels.find(
-                    (project_label) => project_label.label.toLowerCase() === lowercase_label
+                    (project_label) => project_label.label.toLowerCase() === lowercase_label,
                 ) &&
                 !labels_to_create.find(
-                    (label_to_create) => label_to_create.toLowerCase() === lowercase_label
+                    (label_to_create) => label_to_create.toLowerCase() === lowercase_label,
                 )
             );
         },

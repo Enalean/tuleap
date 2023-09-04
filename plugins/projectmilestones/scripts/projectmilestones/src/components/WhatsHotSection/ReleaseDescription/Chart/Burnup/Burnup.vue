@@ -60,7 +60,7 @@ export default class Burnup extends Vue {
 
         const generic_burnup_data = transformToGenericBurnupData(
             this.release_data.burnup_data,
-            this.burnup_mode
+            this.burnup_mode,
         );
         const chart_container = document.getElementById("chart-burnup-" + this.release_data.id);
 
@@ -68,7 +68,7 @@ export default class Burnup extends Vue {
             createBurnupChart(
                 chart_container,
                 this.getChartProps(chart_container.clientWidth, chart_container.clientHeight),
-                generic_burnup_data
+                generic_burnup_data,
             );
         }
     }

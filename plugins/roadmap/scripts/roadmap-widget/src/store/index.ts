@@ -29,7 +29,7 @@ import type { TimeScale } from "../type";
 
 export function createStore(
     initial_root_state: RootState,
-    default_timescale: TimeScale
+    default_timescale: TimeScale,
 ): Store<RootState> {
     const state: RootState = {
         ...initial_root_state,

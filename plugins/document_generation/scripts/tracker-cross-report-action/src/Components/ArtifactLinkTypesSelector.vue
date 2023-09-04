@@ -63,7 +63,7 @@ const select_element_id = generateElementID();
 
 const default_artifact_link_types: TrackerUsedArtifactLinkResponse[] = [];
 function getTrackerCurrentlyUsedArtifactLinkTypes(
-    tracker_id: number | null
+    tracker_id: number | null,
 ): Promise<TrackerUsedArtifactLinkResponse[]> {
     if (tracker_id === null) {
         return Promise.resolve(default_artifact_link_types);
@@ -73,7 +73,7 @@ function getTrackerCurrentlyUsedArtifactLinkTypes(
 
 const { is_processing, data: current_tracker_artifact_link_types } = usePromise(
     default_artifact_link_types,
-    computed(() => getTrackerCurrentlyUsedArtifactLinkTypes(props.tracker_id))
+    computed(() => getTrackerCurrentlyUsedArtifactLinkTypes(props.tracker_id)),
 );
 
 const { $gettext } = useGettext();
@@ -98,7 +98,7 @@ watch(
     () => current_tracker_artifact_link_types.value,
     (art_link_types) => {
         artifact_link_types.value = art_link_types.map((type) => type.shortname);
-    }
+    },
 );
 
 const art_link_select = ref<HTMLSelectElement>();

@@ -44,7 +44,7 @@ describe("side-by-side-code-placeholder-creation-manager", () => {
     const code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
         [],
         left_code_mirror,
-        right_code_mirror
+        right_code_mirror,
     );
     let create_placeholder_stub: StubCreatePlaceholderWidget;
 
@@ -86,9 +86,9 @@ describe("side-by-side-code-placeholder-creation-manager", () => {
                                     right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
                                 },
                             ],
-                        ])
+                        ]),
                     ).getState(),
-                    create_placeholder_stub.build()
+                    create_placeholder_stub.build(),
                 );
 
                 code_placeholder_builder.displayCodePlaceholderIfNeeded(second_line_deleted);
@@ -136,9 +136,9 @@ describe("side-by-side-code-placeholder-creation-manager", () => {
                                     right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
                                 },
                             ],
-                        ])
+                        ]),
                     ).getState(),
-                    create_placeholder_stub.build()
+                    create_placeholder_stub.build(),
                 );
 
                 code_placeholder_builder.displayCodePlaceholderIfNeeded(first_line_deleted);
@@ -187,9 +187,9 @@ describe("side-by-side-code-placeholder-creation-manager", () => {
                                         FileLineHandleStub.buildLineHandleWithNoWidgets(40),
                                 },
                             ],
-                        ])
+                        ]),
                     ).getState(),
-                    create_placeholder_stub.build()
+                    create_placeholder_stub.build(),
                 );
 
                 code_placeholder_builder.displayCodePlaceholderIfNeeded(second_line_added);
@@ -236,9 +236,9 @@ describe("side-by-side-code-placeholder-creation-manager", () => {
                                         FileLineHandleStub.buildLineHandleWithNoWidgets(20),
                                 },
                             ],
-                        ])
+                        ]),
                     ).getState(),
-                    create_placeholder_stub.build()
+                    create_placeholder_stub.build(),
                 );
 
                 code_placeholder_builder.displayCodePlaceholderIfNeeded(first_line_added);

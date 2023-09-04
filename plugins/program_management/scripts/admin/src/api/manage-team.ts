@@ -28,6 +28,6 @@ export function manageTeamOfProgram(manage_team: ManageTeamIdsOfProgram): Promis
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ team_ids: manage_team.team_ids }),
-        }
+        },
     );
 }

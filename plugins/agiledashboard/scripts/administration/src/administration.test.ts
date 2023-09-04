@@ -79,7 +79,7 @@ describe("administration", () => {
             displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();
 
             expect(submit_without_modal.classList).not.toContain(
-                "scrum-administration-submit-hidden"
+                "scrum-administration-submit-hidden",
             );
             expect(submit_with_modal.classList).toContain("scrum-administration-submit-hidden");
         });
@@ -91,7 +91,7 @@ describe("administration", () => {
             displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();
 
             expect(submit_without_modal.classList).not.toContain(
-                "scrum-administration-submit-hidden"
+                "scrum-administration-submit-hidden",
             );
             expect(submit_with_modal.classList).toContain("scrum-administration-submit-hidden");
         });

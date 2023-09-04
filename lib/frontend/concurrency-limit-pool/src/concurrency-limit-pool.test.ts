@@ -28,7 +28,7 @@ describe("concurrency-limit-pool", () => {
                 setTimeout(() => {
                     results.push(i);
                     resolve(i);
-                }, i)
+                }, i),
             );
 
         const wait_values = [50, 250, 150, 100];

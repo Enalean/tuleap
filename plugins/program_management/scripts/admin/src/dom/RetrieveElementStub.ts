@@ -27,7 +27,7 @@ export class RetrieveElementStub implements RetrieveElement {
             const element = this.elements.shift();
             if (!(element instanceof HTMLInputElement)) {
                 throw new Error(
-                    "Expected the stub to be prepared with an HTMLInputElement but it was not"
+                    "Expected the stub to be prepared with an HTMLInputElement but it was not",
                 );
             }
             return element;
@@ -40,7 +40,7 @@ export class RetrieveElementStub implements RetrieveElement {
             const element = this.elements.shift();
             if (!(element instanceof HTMLSelectElement)) {
                 throw new Error(
-                    "Expected the stub to be prepared with an HTMLSelectElement but it was not"
+                    "Expected the stub to be prepared with an HTMLSelectElement but it was not",
                 );
             }
             return element;

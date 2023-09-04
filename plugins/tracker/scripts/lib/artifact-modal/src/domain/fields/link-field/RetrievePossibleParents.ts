@@ -24,6 +24,6 @@ import type { CurrentTrackerIdentifier } from "../../CurrentTrackerIdentifier";
 
 export interface RetrievePossibleParents {
     getPossibleParents(
-        tracker_identifier: CurrentTrackerIdentifier
+        tracker_identifier: CurrentTrackerIdentifier,
     ): ResultAsync<readonly LinkableArtifact[], Fault>;
 }

@@ -111,10 +111,10 @@ export const useFullTextStore = defineStore("fulltext", () => {
                                 return;
                             }
                             fulltext_search_is_error.value = true;
-                        }
+                        },
                     );
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -122,7 +122,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
         const result_keys = Object.keys(fulltext_search_results.value);
         if (result_keys.length > 0) {
             useKeyboardNavigationStore().setProgrammaticallyFocusedElement(
-                fulltext_search_results.value[result_keys[0]]
+                fulltext_search_results.value[result_keys[0]],
             );
         }
     }
@@ -144,7 +144,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
         const root_store = useRootStore();
         const result_keys = Object.keys(fulltext_search_results.value);
         const current_index = result_keys.findIndex(
-            (html_url: string) => html_url === payload.entry.html_url
+            (html_url: string) => html_url === payload.entry.html_url,
         );
         const is_first_result = current_index === 0;
         if (is_first_result && key === "ArrowUp") {
@@ -152,11 +152,11 @@ export const useFullTextStore = defineStore("fulltext", () => {
                 navigation_store.setProgrammaticallyFocusedElement(
                     root_store.filtered_history.entries[
                         root_store.filtered_history.entries.length - 1
-                    ]
+                    ],
                 );
             } else if (root_store.filtered_projects.length > 0) {
                 navigation_store.setProgrammaticallyFocusedElement(
-                    root_store.filtered_projects[root_store.filtered_projects.length - 1]
+                    root_store.filtered_projects[root_store.filtered_projects.length - 1],
                 );
             } else {
                 navigation_store.setProgrammaticallyFocusedElement(null);
@@ -170,7 +170,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
     function navigateInsearchResults(
         current_index: number,
         key: "ArrowUp" | "ArrowDown",
-        result_keys: string[]
+        result_keys: string[],
     ): void {
         if (current_index === -1) {
             return;
@@ -185,7 +185,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
 
         const navigation_store = useKeyboardNavigationStore();
         navigation_store.setProgrammaticallyFocusedElement(
-            fulltext_search_results.value[result_keys[focused_index]]
+            fulltext_search_results.value[result_keys[focused_index]],
         );
     }
 

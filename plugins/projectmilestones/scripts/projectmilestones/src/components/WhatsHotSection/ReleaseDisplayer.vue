@@ -98,7 +98,7 @@ export default class ReleaseDisplayer extends Vue {
             this.is_open = this.isOpen;
             if (this.isPastRelease && this.is_testplan_activated) {
                 this.release_data_enhanced.campaign = await this.getTestManagementCampaigns(
-                    this.release_data_enhanced
+                    this.release_data_enhanced,
                 );
             }
         } catch (rest_error) {

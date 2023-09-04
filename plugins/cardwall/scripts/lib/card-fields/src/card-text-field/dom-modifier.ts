@@ -23,7 +23,7 @@ import type { ClassifierType } from "../highlight/Classifier";
 export const getHighlightedNodes = (
     doc: Document,
     classifier: ClassifierType,
-    content: string
+    content: string,
 ): ReadonlyArray<Text | HTMLSpanElement> =>
     classifier.classify(content).map((highlighted_text) => {
         if (!HighlightedText.isHighlight(highlighted_text)) {
@@ -38,7 +38,7 @@ export const getHighlightedNodes = (
 const replaceChildrenOfNode = (
     doc: Document,
     parent_node: Node,
-    classifier: ClassifierType
+    classifier: ClassifierType,
 ): void => {
     const child_nodes = Array.from(parent_node.childNodes);
     child_nodes.forEach((child_node) => {
@@ -70,14 +70,14 @@ const gatherNodesWithTextChildren = (content: DocumentFragment): Node[] => {
 export const getHighlightedDOM = (
     doc: Document,
     content: DocumentFragment,
-    classifier: ClassifierType
+    classifier: ClassifierType,
 ): DocumentFragment => {
     const clone = content.cloneNode(true);
     const result = doc.createDocumentFragment();
     result.append(...clone.childNodes);
 
     gatherNodesWithTextChildren(result).forEach((current_node) =>
-        replaceChildrenOfNode(doc, current_node, classifier)
+        replaceChildrenOfNode(doc, current_node, classifier),
     );
     return result;
 };

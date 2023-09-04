@@ -32,6 +32,6 @@ describe(`JSONParseFault`, () => {
             const fault = JSONParseFault.fromError(error);
             expect(isFault(fault)).toBe(true);
             expect(isJSONParseFault(fault)).toBe(true);
-        }
+        },
     );
 });

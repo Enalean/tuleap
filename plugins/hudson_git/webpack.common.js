@@ -24,7 +24,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = path.resolve(__dirname);
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/hudson_git/"
+    "/assets/hudson_git/",
 );
 
 const webpack_config_for_themes = {

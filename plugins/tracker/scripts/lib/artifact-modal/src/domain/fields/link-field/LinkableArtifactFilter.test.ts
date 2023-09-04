@@ -27,7 +27,7 @@ describe(`LinkableArtifactFilter`, () => {
     const matches = (query: string): boolean => {
         const filter = LinkableArtifactFilter(query);
         return filter.matchesQuery(
-            LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE })
+            LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID, title: TITLE }),
         );
     };
 

@@ -125,7 +125,7 @@ describe("ReadingMode", () => {
                 new FetchWrapperError("Not found", {
                     json: (): Promise<{ error: { code: number; message: string } }> =>
                         Promise.resolve({ error: { code: 404, message: "Report not found" } }),
-                } as Response)
+                } as Response),
             );
 
             const wrapper = await instantiateComponent();
@@ -137,7 +137,7 @@ describe("ReadingMode", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                "Report not found"
+                "Report not found",
             );
         });
     });

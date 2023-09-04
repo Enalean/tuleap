@@ -72,7 +72,7 @@ describe(`LinkedArtifactTemplate`, () => {
     const render = (linked_artifact_presenter: LinkedArtifactPresenter): void => {
         const host = {
             current_artifact_reference: Option.fromValue(
-                ArtifactCrossReferenceStub.withRef("art #136")
+                ArtifactCrossReferenceStub.withRef("art #136"),
             ),
             controller: {
                 canMarkForRemoval: (link) => (link ? true : true),
@@ -100,7 +100,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     link_type: LinkTypeStub.buildChildLinkType(),
                 }),
                 true,
-                false
+                false,
             ),
         ];
         yield [
@@ -116,7 +116,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     link_type: LinkTypeStub.buildUntyped(),
                 }),
                 false,
-                true
+                true,
             ),
         ];
         yield [
@@ -124,7 +124,7 @@ describe(`LinkedArtifactTemplate`, () => {
             LinkedArtifactPresenter.fromLinkedArtifact(
                 LinkedArtifactStub.withIdAndType(815, LinkTypeStub.buildChildLinkType()),
                 true,
-                false
+                false,
             ),
         ];
     }
@@ -150,7 +150,7 @@ describe(`LinkedArtifactTemplate`, () => {
             expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
             expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
             expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
-        }
+        },
     );
 
     it("will render a linked artifact with project label if the artifact is not in the current project", () => {
@@ -160,7 +160,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 label: "Corsa OPC",
             }),
             false,
-            true
+            true,
         );
         render(presenter);
 
@@ -175,7 +175,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 status: { value: "Open", color: null },
             }),
             false,
-            false
+            false,
         );
         render(presenter);
 
@@ -196,7 +196,7 @@ describe(`LinkedArtifactTemplate`, () => {
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
             const current_artifact_reference = Option.fromValue(
-                ArtifactCrossReferenceStub.withRef("story #72")
+                ArtifactCrossReferenceStub.withRef("story #72"),
             );
 
             const controller = LinkFieldController(
@@ -219,7 +219,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair(),
-                CurrentProjectIdentifierStub.withId(10)
+                CurrentProjectIdentifierStub.withId(10),
             );
 
             const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
@@ -248,12 +248,12 @@ describe(`LinkedArtifactTemplate`, () => {
             const render = (
                 host: HostElement,
                 linked_artifact: LinkedArtifact,
-                is_marked_for_removal: boolean
+                is_marked_for_removal: boolean,
             ): void => {
                 const linked_artifact_presenter = LinkedArtifactPresenter.fromLinkedArtifact(
                     linked_artifact,
                     false,
-                    is_marked_for_removal
+                    is_marked_for_removal,
                 );
                 const update = getActionButton(host, linked_artifact_presenter);
                 update(host, target);
@@ -262,7 +262,7 @@ describe(`LinkedArtifactTemplate`, () => {
             it(`will not render a button when the link can't be deleted`, () => {
                 const linked_artifact = LinkedArtifactStub.withIdAndType(
                     33,
-                    LinkTypeStub.buildMirrors()
+                    LinkTypeStub.buildMirrors(),
                 );
                 const host = getHost(linked_artifact);
                 render(host, linked_artifact, false);
@@ -277,14 +277,14 @@ describe(`LinkedArtifactTemplate`, () => {
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",
-                    HTMLButtonElement
+                    HTMLButtonElement,
                 );
                 button.click();
 
                 expect(
                     host.linked_artifact_presenters.some(
-                        (artifact) => artifact.is_marked_for_removal
-                    )
+                        (artifact) => artifact.is_marked_for_removal,
+                    ),
                 ).toBe(true);
                 const event = dispatchEvent.mock.calls[0][0];
                 expect(event.type).toBe("change");
@@ -301,14 +301,14 @@ describe(`LinkedArtifactTemplate`, () => {
                 const button = selectOrThrow(
                     target,
                     "[data-test=action-button]",
-                    HTMLButtonElement
+                    HTMLButtonElement,
                 );
                 button.click();
 
                 expect(
                     host.linked_artifact_presenters.some(
-                        (artifact) => artifact.is_marked_for_removal
-                    )
+                        (artifact) => artifact.is_marked_for_removal,
+                    ),
                 ).toBe(false);
                 const event = dispatchEvent.mock.calls[0][0];
                 expect(event.type).toBe("change");
@@ -321,7 +321,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
                     linked_artifact,
                     false,
-                    false
+                    false,
                 );
                 const update = getTypeTemplate(host, presenter);
                 update(host, target);
@@ -330,7 +330,7 @@ describe(`LinkedArtifactTemplate`, () => {
             it(`when I can't change the type of link, it returns a readonly type label`, () => {
                 const linked_artifact = LinkedArtifactStub.withIdAndType(
                     36,
-                    LinkTypeStub.buildMirroredBy()
+                    LinkTypeStub.buildMirroredBy(),
                 );
 
                 render(getHost(linked_artifact), linked_artifact);
@@ -340,7 +340,7 @@ describe(`LinkedArtifactTemplate`, () => {
             it(`when I can change the type of link, it returns a type selector`, () => {
                 const linked_artifact = LinkedArtifactStub.withIdAndType(
                     58,
-                    LinkTypeStub.buildUntyped()
+                    LinkTypeStub.buildUntyped(),
                 );
 
                 render(getHost(linked_artifact), linked_artifact);

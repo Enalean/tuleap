@@ -26,7 +26,7 @@ type ParentTrackerRepresentation = {
 
 export const ParentTrackerIdentifierProxy = {
     fromTrackerModel: (
-        tracker: ParentTrackerRepresentation | null
+        tracker: ParentTrackerRepresentation | null,
     ): Option<ParentTrackerIdentifier> => {
         if (tracker === null) {
             return Option.nothing();

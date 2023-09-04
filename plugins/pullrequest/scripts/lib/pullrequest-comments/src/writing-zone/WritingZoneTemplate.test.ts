@@ -60,7 +60,7 @@ describe("WritingZoneTemplate", () => {
             controller,
             presenter: WritingZonePresenter.buildInitial(
                 project_id,
-                is_comments_markdown_mode_enabled
+                is_comments_markdown_mode_enabled,
             ),
         } as HostElement);
 
@@ -75,7 +75,7 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
             ),
             textarea,
         } as HostElement);
@@ -91,7 +91,7 @@ describe("WritingZoneTemplate", () => {
             controller,
             presenter: WritingZonePresenter.buildPreviewMode(
                 WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
-                "<p>Previewed content</p>"
+                "<p>Previewed content</p>",
             ),
             textarea,
         } as HostElement);
@@ -107,14 +107,14 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildPreviewWithError(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
             ),
             textarea,
         } as HostElement);
 
         const preview_element = selectOrThrow(
             writing_zone,
-            "[data-test=writing-zone-preview-error]"
+            "[data-test=writing-zone-preview-error]",
         );
 
         expect(preview_element).toBeDefined();

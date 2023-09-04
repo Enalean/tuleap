@@ -26,7 +26,7 @@ window.onerror = (message, source, lineno, colno, error): void => {
             [JSON.stringify({ message, source, lineno, colno, error, href: window.location.href })],
             {
                 type: "application/json",
-            }
-        )
+            },
+        ),
     );
 };

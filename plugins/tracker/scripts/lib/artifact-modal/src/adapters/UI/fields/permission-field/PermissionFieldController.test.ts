@@ -34,7 +34,7 @@ function getField(is_field_required: boolean): PermissionFieldType {
 
 function getValueModel(
     is_used_by_default: boolean,
-    granted_groups: ReadonlyArray<string>
+    granted_groups: ReadonlyArray<string>,
 ): PermissionFieldValueModel {
     return {
         field_id: 1060,
@@ -71,16 +71,16 @@ describe("PermissionFieldController", () => {
                 is_field_required: boolean,
                 is_field_disabled: boolean,
                 is_used_by_default: boolean,
-                will_be_disabled: boolean
+                will_be_disabled: boolean,
             ) => {
                 const presenter = PermissionFieldController(
                     getField(is_field_required),
                     getValueModel(is_used_by_default, []),
-                    is_field_disabled
+                    is_field_disabled,
                 ).buildPresenter();
 
                 expect(presenter.is_select_box_disabled).toBe(will_be_disabled);
-            }
+            },
         );
     });
 
@@ -95,16 +95,16 @@ describe("PermissionFieldController", () => {
                 expectation: string,
                 is_field_required: boolean,
                 is_used_by_default: boolean,
-                will_be_required: boolean
+                will_be_required: boolean,
             ) => {
                 const presenter = PermissionFieldController(
                     getField(is_field_required),
                     getValueModel(is_used_by_default, []),
-                    false
+                    false,
                 ).buildPresenter();
 
                 expect(presenter.is_select_box_required).toBe(will_be_required);
-            }
+            },
         );
     });
 
@@ -115,11 +115,11 @@ describe("PermissionFieldController", () => {
                 const presenter = PermissionFieldController(
                     getField(true),
                     getValueModel(!is_used_by_default, []),
-                    false
+                    false,
                 ).setIsFieldUsedByDefault(is_used_by_default);
 
                 expect(presenter.is_used).toBe(is_used_by_default);
-            }
+            },
         );
 
         it("should clear the granted groups when is_used_by_default has been set to false", () => {
@@ -127,7 +127,7 @@ describe("PermissionFieldController", () => {
             const presenter = PermissionFieldController(
                 getField(true),
                 getValueModel(true, granted_groups),
-                false
+                false,
             ).setIsFieldUsedByDefault(false);
 
             expect(presenter.granted_groups).toHaveLength(0);
@@ -139,7 +139,7 @@ describe("PermissionFieldController", () => {
             const presenter = PermissionFieldController(
                 getField(true),
                 getValueModel(true, []),
-                false
+                false,
             ).setGrantedGroups(["101_3", "101_2"]);
 
             expect(presenter.granted_groups).toHaveLength(2);

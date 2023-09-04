@@ -130,7 +130,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             },
             displayable_data,
             line_name,
-            curveLinear
+            curveLinear,
         );
     }
 
@@ -157,10 +157,10 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
         tooltip_factory
             .addTooltip(target_column)
             .addTextLine(({ date }) =>
-                moment(date, moment.ISO_8601).format(properties.tooltip_date_format)
+                moment(date, moment.ISO_8601).format(properties.tooltip_date_format),
             )
             .addTextLine(({ remaining_effort }) =>
-                sprintf(gettext_provider.gettext("Remaining effort: %s"), remaining_effort)
+                sprintf(gettext_provider.gettext("Remaining effort: %s"), remaining_effort),
             );
     }
 
@@ -184,7 +184,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             {
                 line_start: first_ideal_line_point,
                 line_end: 0,
-            }
+            },
         );
     }
 
@@ -192,13 +192,13 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
         if (isThereARemainingEffort()) {
             return sprintf(
                 chart_props.left_legend_title,
-                moment(last_day_data.date).format(chart_props.left_legend_date_format)
+                moment(last_day_data.date).format(chart_props.left_legend_date_format),
             );
         }
 
         return sprintf(
             chart_props.left_legend_title,
-            moment().format(chart_props.left_legend_date_format)
+            moment().format(chart_props.left_legend_date_format),
         );
     }
 
@@ -212,7 +212,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
     function getMaxRemainingEffort({ points_with_date, capacity }) {
         const max_remaining_effort = max(
             points_with_date,
-            ({ remaining_effort }) => remaining_effort
+            ({ remaining_effort }) => remaining_effort,
         );
 
         const maximum = max([max_remaining_effort, capacity]);

@@ -47,7 +47,7 @@ const buildCollectionOfLineWidgetsWithNode = (widgets: FileDiffWidget[]): LineWi
 export const FileLineHandleStub = {
     buildLineHandleWithWidgets: (
         widgets: FileDiffWidget[],
-        height = 20
+        height = 20,
     ): LineHandleWithWidgets => ({
         ...line_handle_base,
         widgets: buildCollectionOfLineWidgetsWithNode(widgets),

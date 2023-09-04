@@ -31,7 +31,7 @@ export async function createPullrequest(
     source_repository_id,
     source_branch_name,
     destination_repository_id,
-    destination_branch_name
+    destination_branch_name,
 ) {
     const headers = {
         "content-type": "application/json",

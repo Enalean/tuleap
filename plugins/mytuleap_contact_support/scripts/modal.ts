@@ -21,13 +21,13 @@ import type { post } from "@tuleap/tlp-fetch";
 export function contactSupportModalShown(mount_point: Document, tlp_post: typeof post): () => void {
     return (): void => {
         const contact_support_modal_forms = mount_point.querySelectorAll(
-            ".contact-support-modal-form"
+            ".contact-support-modal-form",
         );
 
         for (const contact_support_modal_form of contact_support_modal_forms) {
             if (!(contact_support_modal_form instanceof HTMLFormElement)) {
                 throw new Error(
-                    "An element has the class .contact-support-modal-form but is not a form"
+                    "An element has the class .contact-support-modal-form but is not a form",
                 );
             }
             contact_support_modal_form.addEventListener(
@@ -36,15 +36,15 @@ export function contactSupportModalShown(mount_point: Document, tlp_post: typeof
                     event.preventDefault();
 
                     const contact_support_modal_submit = contact_support_modal_form.querySelector(
-                            ".contact-support-modal-submit"
+                            ".contact-support-modal-submit",
                         ),
                         contact_support_modal_success_message =
                             contact_support_modal_form.querySelector(
-                                ".contact-support-modal-success-message"
+                                ".contact-support-modal-success-message",
                             ),
                         contact_support_modal_error_message =
                             contact_support_modal_form.querySelector(
-                                ".contact-support-modal-error-message"
+                                ".contact-support-modal-error-message",
                             );
 
                     if (!(contact_support_modal_submit instanceof HTMLButtonElement)) {
@@ -55,7 +55,7 @@ export function contactSupportModalShown(mount_point: Document, tlp_post: typeof
                         !(contact_support_modal_error_message instanceof Element)
                     ) {
                         throw new Error(
-                            "Success or error message of the contact support modal is missing"
+                            "Success or error message of the contact support modal is missing",
                         );
                     }
 
@@ -80,7 +80,7 @@ export function contactSupportModalShown(mount_point: Document, tlp_post: typeof
                         switchSubmitButtonToNormalState(contact_support_modal_submit);
                         hideSuccessMessage(contact_support_modal_success_message);
                     }, 5000);
-                }
+                },
             );
         }
     };

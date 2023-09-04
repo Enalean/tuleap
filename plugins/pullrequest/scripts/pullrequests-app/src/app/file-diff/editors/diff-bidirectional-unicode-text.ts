@@ -28,28 +28,28 @@ interface Diff {
 }
 
 export function doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText(
-    diff: Readonly<Diff>
+    diff: Readonly<Diff>,
 ): boolean {
     if (diff.charset === "binary") {
         return false;
     }
     return diff.lines.some((line) =>
-        doesTextContentPotentiallyDangerousBidirectionalUnicodeText(line.content)
+        doesTextContentPotentiallyDangerousBidirectionalUnicodeText(line.content),
     );
 }
 
 function doesTextContentPotentiallyDangerousBidirectionalUnicodeText(text: string): boolean {
     return POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.some((character) =>
-        text.includes(character)
+        text.includes(character),
     );
 }
 
 export function getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible(
-    config: Readonly<CodeMirror.EditorConfiguration>
+    config: Readonly<CodeMirror.EditorConfiguration>,
 ): CodeMirror.EditorConfiguration {
     const special_chars_current: RegExp = config.specialChars || CodeMirror.defaults.specialChars;
     const regex_potentially_dangerous_bidirectional_characters = new RegExp(
-        "[" + POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]"
+        "[" + POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]",
     );
 
     return {
@@ -60,7 +60,7 @@ export function getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectiona
                 ")|(?:" +
                 regex_potentially_dangerous_bidirectional_characters.source +
                 ")",
-            special_chars_current.flags
+            special_chars_current.flags,
         ),
     };
 }

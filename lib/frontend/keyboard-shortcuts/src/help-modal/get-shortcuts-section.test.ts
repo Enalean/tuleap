@@ -60,7 +60,7 @@ describe("get-shortcuts-section.ts", () => {
         it("creates the specific shortcuts section in the help modal if this section was not found", () => {
             getSpecificShortcutsSection(doc);
             const specific_shortcuts_section_in_modal = shortcuts_modal.querySelector(
-                "[data-shortcuts-specific-section]"
+                "[data-shortcuts-specific-section]",
             );
 
             expect(specific_shortcuts_section_in_modal).not.toBeNull();

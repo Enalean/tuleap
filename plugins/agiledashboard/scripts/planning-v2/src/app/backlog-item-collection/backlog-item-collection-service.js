@@ -36,7 +36,7 @@ function BacklogItemCollectionService(
     $window,
     BacklogItemService,
     ItemAnimatorService,
-    gettextCatalog
+    gettextCatalog,
 ) {
     const self = this;
     Object.assign(self, {
@@ -55,7 +55,7 @@ function BacklogItemCollectionService(
                 SESSION_STORAGE_KEY,
                 sprintf(gettextCatalog.getString("Successfully updated %(artifact)s"), {
                     artifact: `${self.items[backlog_item_id].short_type} #${backlog_item_id}`,
-                })
+                }),
             );
             $window.location.reload();
             return $q.when();
@@ -102,13 +102,13 @@ function BacklogItemCollectionService(
     function addOrReorderBacklogItemsInCollection(
         backlog_items_collection,
         backlog_items_to_add_or_reorder,
-        compared_to
+        compared_to,
     ) {
         var index = 0;
 
         self.removeBacklogItemsFromCollection(
             backlog_items_collection,
-            backlog_items_to_add_or_reorder
+            backlog_items_to_add_or_reorder,
         );
 
         if (compared_to) {

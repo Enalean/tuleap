@@ -38,7 +38,7 @@ describe("SidebarLogo", () => {
         const logo_link = wrapper.find("a");
         const logo_link_element = logo_link.element;
         expect(logo_link_element.href).toStrictEqual(
-            example_config.instance_information.logo.logo_link_href
+            example_config.instance_information.logo.logo_link_href,
         );
         expect(logo_link.find("[data-test=default-normal-logo]").exists()).toBe(true);
         expect(logo_link.find("[data-test=default-small-logo]").exists()).toBe(true);
@@ -65,13 +65,13 @@ describe("SidebarLogo", () => {
         const logo_link = wrapper.find("a");
         const logo_link_element = logo_link.element;
         expect(logo_link_element.href).toStrictEqual(
-            config.instance_information.logo.logo_link_href
+            config.instance_information.logo.logo_link_href,
         );
         expect(logo_link.find("[data-test=custom-normal-logo]").element.innerHTML).toStrictEqual(
-            config.instance_information.logo.svg?.normal
+            config.instance_information.logo.svg?.normal,
         );
         expect(logo_link.find("[data-test=custom-small-logo]").element.innerHTML).toStrictEqual(
-            config.instance_information.logo.svg?.small
+            config.instance_information.logo.svg?.small,
         );
     });
 
@@ -96,10 +96,10 @@ describe("SidebarLogo", () => {
         const logo = wrapper.find("[data-test=legacy-logo]");
         expect(logo.exists()).toBe(true);
         expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-url")).toBe(
-            "url(https://example.com/logo.png)"
+            "url(https://example.com/logo.png)",
         );
         expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-small-url")).toBe(
-            "url(https://example.com/logo_small.png)"
+            "url(https://example.com/logo_small.png)",
         );
     });
 });

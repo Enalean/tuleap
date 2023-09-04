@@ -35,12 +35,12 @@
             $(".tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip").click(
                 function () {
                     self.toggleLeftSidePanel($(this));
-                }
+                },
             );
             $(".tuleap-modal-side-panel:last-child .tuleap-modal-side-panel-grip").click(
                 function () {
                     self.toggleRightSidePanel($(this));
-                }
+                },
             );
             $(".tuleap-modal-close").click(function () {
                 self.closeModal();
@@ -95,7 +95,7 @@
 
             $(".tuleap-modal-side-panel-content-actions").css(
                 "height",
-                $(".tuleap-modal-actions").outerHeight()
+                $(".tuleap-modal-actions").outerHeight(),
             );
         },
 

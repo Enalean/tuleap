@@ -19,7 +19,7 @@
 import type { FormattedGitLabRepository, Repository } from "../type";
 
 export function isRepositoryHandledByGerrit(
-    repository: FormattedGitLabRepository | Repository
+    repository: FormattedGitLabRepository | Repository,
 ): boolean {
     return "server" in repository && repository.server !== null;
 }

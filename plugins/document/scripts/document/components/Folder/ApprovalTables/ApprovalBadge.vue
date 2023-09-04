@@ -68,9 +68,9 @@ watch(
         approval_data.value = extractApprovalTableData(
             getTranslatedApprovalStatesMap(),
             props.item.approval_table.approval_state,
-            props.isInFolderContentRow
+            props.isInFolderContentRow,
         );
     },
-    { immediate: true }
+    { immediate: true },
 );
 </script>

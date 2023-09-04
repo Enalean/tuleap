@@ -33,7 +33,7 @@ interface ManageCodePlaceholdersCreation {
 export const SideBySideCodePlaceholderCreationManager = (
     code_mirrors_content_manager: ManageCodeMirrorsContent,
     file_lines_state: FileLinesState,
-    placeholder_widget_creator: CreatePlaceholderWidget
+    placeholder_widget_creator: CreatePlaceholderWidget,
 ): ManageCodePlaceholdersCreation => {
     const getCodeMirror = (group: GroupOfLines): Editor => {
         return group.type === ADDED_GROUP
@@ -81,7 +81,7 @@ function sumGroupLinesHeight(file_lines_state: FileLinesState, group: GroupOfLin
 function getAdjustedPlaceholderWidgetAndHeight(
     line: FileLine,
     placeholder_line_handle: FileLineHandle,
-    widget_height: number
+    widget_height: number,
 ): number {
     if (isFirstLineOfFile(line) && isAFileLineHandleWithAHeight(placeholder_line_handle)) {
         return Math.abs(widget_height - placeholder_line_handle.height);
@@ -95,7 +95,7 @@ function isFirstLineOfFile(line: FileLine): boolean {
 }
 
 function isAFileLineHandleWithAHeight(
-    handle: FileLineHandle | null
+    handle: FileLineHandle | null,
 ): handle is LineHandleWithAHeight {
     return handle !== null && "height" in handle;
 }

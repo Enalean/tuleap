@@ -74,7 +74,7 @@ describe("getProject() -", () => {
                     offset,
                     query,
                 },
-            }
+            },
         );
 
         expect(result).toEqual(milestones);
@@ -115,7 +115,7 @@ describe("getProject() -", () => {
                     limit,
                     offset,
                 },
-            }
+            },
         );
 
         expect(result).toEqual(user_stories);
@@ -161,7 +161,7 @@ describe("getProject() -", () => {
                     offset,
                     query,
                 },
-            }
+            },
         );
 
         expect(result).toEqual(backlog);
@@ -189,7 +189,7 @@ describe("getProject() -", () => {
         const result = await getChartData(milestone_id);
 
         expect(tlpGetMock).toHaveBeenCalledWith(
-            `/api/v1/artifacts/${encodeURIComponent(milestone_id)}`
+            `/api/v1/artifacts/${encodeURIComponent(milestone_id)}`,
         );
 
         expect(result).toEqual(artifact_chart);
@@ -219,7 +219,7 @@ describe("getProject() -", () => {
                     limit: 1,
                     offset: 0,
                 },
-            }
+            },
         );
 
         expect(result).toEqual(sprints);
@@ -244,7 +244,7 @@ describe("getProject() -", () => {
             "/api/v1/projects/" + project_id + "/milestones",
             {
                 params: { limit: 1, offset: 0, query },
-            }
+            },
         );
 
         expect(result).toBe(10);
@@ -276,7 +276,7 @@ describe("getProject() -", () => {
                 "/api/v1/projects/" + project_id + "/milestones",
                 {
                     params: { limit: 1, offset: 99, query },
-                }
+                },
             );
 
             expect(result).toEqual(last_release);
@@ -316,7 +316,7 @@ describe("getProject() -", () => {
                     offset,
                     query,
                 },
-            }
+            },
         );
 
         expect(result).toEqual(testmanagement_campaigns);

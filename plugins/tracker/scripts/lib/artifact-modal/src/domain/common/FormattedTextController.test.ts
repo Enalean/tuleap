@@ -42,7 +42,7 @@ describe(`FormattedTextController`, () => {
         FormattedTextController(
             dispatcher,
             InterpretCommonMarkStub.withHTML(HTML_STRING),
-            DEFAULT_TEXT_FORMAT
+            DEFAULT_TEXT_FORMAT,
         );
 
     describe(`getDefaultTextFormat()`, () => {

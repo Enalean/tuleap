@@ -113,7 +113,7 @@ export default class TaskHeader extends Vue {
         if (
             event.target instanceof HTMLElement &&
             event.target.closest(
-                ".roadmap-gantt-task-header-xref, .roadmap-gantt-task-header-title"
+                ".roadmap-gantt-task-header-xref, .roadmap-gantt-task-header-title",
             )
         ) {
             return;

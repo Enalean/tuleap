@@ -64,7 +64,7 @@ describe(`ArtifactCreatorElement`, () => {
 
         beforeEach(() => {
             artifact_creator = CreateLinkableArtifactStub.withArtifact(
-                LinkableArtifactStub.withDefaults()
+                LinkableArtifactStub.withDefaults(),
             );
         });
 
@@ -73,12 +73,12 @@ describe(`ArtifactCreatorElement`, () => {
                 DispatchEventsStub.buildNoOp(),
                 RetrieveProjectsStub.withProjects(ProjectStub.withDefaults()),
                 RetrieveProjectTrackersStub.withTrackers(
-                    TrackerStub.withDefaults({ id: TRACKER_ID })
+                    TrackerStub.withDefaults({ id: TRACKER_ID }),
                 ),
                 artifact_creator,
                 CurrentProjectIdentifierStub.withId(144),
                 CurrentTrackerIdentifierStub.withId(209),
-                en_US_LOCALE
+                en_US_LOCALE,
             );
 
         const getHost = (): HostElement => {
@@ -123,7 +123,7 @@ describe(`ArtifactCreatorElement`, () => {
                 const form = doc.createElement("form");
                 form.insertAdjacentHTML(
                     "afterbegin",
-                    `<input type="text" name="artifact_title" value="${TITLE}">`
+                    `<input type="text" name="artifact_title" value="${TITLE}">`,
                 );
                 form.dispatchEvent(inner_event);
                 return inner_event;
@@ -152,7 +152,7 @@ describe(`ArtifactCreatorElement`, () => {
             it(`and the creation fails for some reason,
                 it will NOT dispatch an "artifact-created" event`, async () => {
                 artifact_creator = CreateLinkableArtifactStub.withFault(
-                    Fault.fromMessage("Something happened")
+                    Fault.fromMessage("Something happened"),
                 );
                 const host = getHost();
                 const dispatchEvent = jest.spyOn(host, "dispatchEvent");
@@ -173,7 +173,7 @@ describe(`ArtifactCreatorElement`, () => {
             const select = doc.createElement("select");
             select.insertAdjacentHTML(
                 "afterbegin",
-                `<option selected value="${PROJECT_ID}"></option>`
+                `<option selected value="${PROJECT_ID}"></option>`,
             );
             const event = new Event("change");
             select.dispatchEvent(event);
@@ -193,7 +193,7 @@ describe(`ArtifactCreatorElement`, () => {
             const host = getHost();
             host.tracker_selectbox.insertAdjacentHTML(
                 "afterbegin",
-                `<option selected value="${TRACKER_ID}"></option>`
+                `<option selected value="${TRACKER_ID}"></option>`,
             );
             const event = new Event("change");
             host.tracker_selectbox.dispatchEvent(event);
@@ -210,7 +210,7 @@ describe(`ArtifactCreatorElement`, () => {
             host.tracker_selectbox.required = true;
             host.tracker_selectbox.insertAdjacentHTML(
                 "afterbegin",
-                `<option selected value=""></option>`
+                `<option selected value=""></option>`,
             );
             const event = new Event("change");
             host.tracker_selectbox.dispatchEvent(event);
@@ -269,12 +269,12 @@ describe(`ArtifactCreatorElement`, () => {
             const input = selectOrThrow(
                 target,
                 "[data-test=artifact-creator-title]",
-                HTMLInputElement
+                HTMLInputElement,
             );
             const submit = selectOrThrow(
                 target,
                 "[data-test=artifact-creator-submit]",
-                HTMLButtonElement
+                HTMLButtonElement,
             );
 
             expect(input.disabled).toBe(true);
@@ -290,7 +290,7 @@ describe(`ArtifactCreatorElement`, () => {
 
             const target = render();
             const options = target.querySelectorAll<HTMLOptionElement>(
-                "[data-test=artifact-modal-link-creator-projects-option]"
+                "[data-test=artifact-modal-link-creator-projects-option]",
             );
 
             expect(options).toHaveLength(2);
@@ -313,7 +313,7 @@ describe(`ArtifactCreatorElement`, () => {
             const renderOptions = (): NodeListOf<HTMLOptionElement> => {
                 const target = render();
                 return target.querySelectorAll<HTMLOptionElement>(
-                    "[data-test=artifact-modal-link-creator-trackers-option]"
+                    "[data-test=artifact-modal-link-creator-trackers-option]",
                 );
             };
 
@@ -353,7 +353,7 @@ describe(`ArtifactCreatorElement`, () => {
                 const classes = getTrackerSelectClasses(host);
                 expect(classes["tlp-form-element"]).toBe(true);
                 expect(classes["tlp-form-element-error"]).toBe(has_error);
-            }
+            },
         );
     });
 

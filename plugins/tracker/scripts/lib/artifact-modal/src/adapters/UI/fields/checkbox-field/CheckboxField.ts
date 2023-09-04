@@ -32,7 +32,7 @@ export type HostElement = CheckboxField & HTMLElement;
 export const buildCheckbox = (
     host: CheckboxField,
     checkbox_field_value: CheckboxFieldValuePresenter,
-    index: number
+    index: number,
 ): UpdateFunction<CheckboxField> => {
     const onCheckboxValueChange = (host: CheckboxField, event: Event): void => {
         const target = event.target;
@@ -43,7 +43,7 @@ export const buildCheckbox = (
         host.field_presenter = host.controller.setCheckboxValue(
             checkbox_field_value.id,
             index,
-            Boolean(target.checked)
+            Boolean(target.checked),
         );
     };
 
@@ -84,7 +84,7 @@ export const CheckboxField = define<CheckboxField>({
             </label>
 
             ${host.field_presenter.checkbox_values.map((value, index) =>
-                buildCheckbox(host, value, index)
+                buildCheckbox(host, value, index),
             )}
         </div>
     `,

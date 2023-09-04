@@ -144,8 +144,8 @@ function onClick(): void {
                 (server) =>
                     server.id !== props.server.id &&
                     server.project_restrictions.some(
-                        (already_allowed_project) => project.id === already_allowed_project.id
-                    )
+                        (already_allowed_project) => project.id === already_allowed_project.id,
+                    ),
             );
             if (previous_server) {
                 show_move_project_modal.value = {
@@ -170,7 +170,7 @@ function onClick(): void {
         (): void => {
             setError();
             is_loading.value = false;
-        }
+        },
     );
 }
 

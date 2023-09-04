@@ -35,7 +35,7 @@ describe(`auto-encoder`, () => {
 
             const encoded_uri = getURI(uri, params);
             expect(encoded_uri).toStrictEqual(
-                uriTag`https://example.com/auto-encoder-test?quinonyl=mem&R%26D=91&Jwahar=false`
+                uriTag`https://example.com/auto-encoder-test?quinonyl=mem&R%26D=91&Jwahar=false`,
             );
         });
 

@@ -24,7 +24,7 @@ import type { ErrorState } from "./type";
 
 export async function handleGlobalError(
     context: ActionContext<ErrorState, RootState>,
-    rest_error: FetchWrapperError
+    rest_error: FetchWrapperError,
 ): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
@@ -40,7 +40,7 @@ export async function handleGlobalError(
 
 export async function handleModalError(
     context: ActionContext<ErrorState, RootState>,
-    rest_error: FetchWrapperError
+    rest_error: FetchWrapperError,
 ): Promise<void> {
     try {
         const { error } = await rest_error.response.json();

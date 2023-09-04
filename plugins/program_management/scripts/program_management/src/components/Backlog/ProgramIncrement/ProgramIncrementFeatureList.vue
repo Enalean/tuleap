@@ -97,12 +97,12 @@ export default class ProgramIncrementFeatureList extends Vue {
             this.is_loading = true;
             this.features = await this.$store.dispatch(
                 "getFeatureAndStoreInProgramIncrement",
-                this.increment
+                this.increment,
             );
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(
-                "The retrieval of the elements to be planned in program has failed"
+                "The retrieval of the elements to be planned in program has failed",
             );
             throw e;
         } finally {

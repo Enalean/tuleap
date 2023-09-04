@@ -155,13 +155,13 @@ function transformFieldDependenciesRules(tracker) {
         const source_field = fields_bound_to_ugroups[rule.source_field_id];
         const replaced_source_field_rule = replaceSourceFieldValueIdWithUgroupReferenceId(
             rule,
-            source_field
+            source_field,
         );
 
         const target_field = fields_bound_to_ugroups[replaced_source_field_rule.target_field_id];
         return replaceTargetFieldValueIdWithUgroupReferenceId(
             replaced_source_field_rule,
-            target_field
+            target_field,
         );
     });
 }
@@ -207,7 +207,7 @@ function getListFieldsBoundToUgroups(fields) {
 
                 return field;
             }),
-        "field_id"
+        "field_id",
     );
 }
 

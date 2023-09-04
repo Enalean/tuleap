@@ -83,7 +83,7 @@ describe("AccessTokenFormModal", () => {
 
         expect(
             wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled
+                .disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
@@ -124,7 +124,7 @@ describe("AccessTokenFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
-            "Error message"
+            "Error message",
         );
     });
 
@@ -149,7 +149,7 @@ describe("AccessTokenFormModal", () => {
 
         expect(
             wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled
+                .disabled,
         ).toBeTruthy();
     });
 
@@ -179,7 +179,7 @@ describe("AccessTokenFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
-            "You must provide a valid GitLab API token"
+            "You must provide a valid GitLab API token",
         );
     });
 
@@ -210,7 +210,7 @@ describe("AccessTokenFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.error_message).toBe(
-            "Submitted token is invalid to access to this repository on this GitLab server."
+            "Submitted token is invalid to access to this repository on this GitLab server.",
         );
     });
     it("When user cancel, Then data are reset", async () => {

@@ -61,12 +61,12 @@ describe("table-builder", () => {
                 const table_cell = buildCellContentResult(
                     status,
                     createGettextProviderPassthrough(),
-                    1
+                    1,
                 );
 
                 const tree = table_cell.prepForXml({} as IContext);
                 expect(JSON.stringify(tree)).toContain(expected_label);
-            }
+            },
         );
     });
 });

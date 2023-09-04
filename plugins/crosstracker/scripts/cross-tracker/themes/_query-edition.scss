@@ -38,7 +38,9 @@ $expert-query-area-height: 75px;
 
     > .CodeMirror {
         height: $expert-query-area-height;
-        transition: border linear 0.2s, box-shadow linear 0.2s;
+        transition:
+            border linear 0.2s,
+            box-shadow linear 0.2s;
         border: 1px solid #cccccc;
         border-radius: var(--tlp-medium-radius);
 

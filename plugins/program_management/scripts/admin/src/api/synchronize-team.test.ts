@@ -33,7 +33,7 @@ describe("SynchronizeTeam", () => {
                 "/program_management/admin/my-program/synchronize/103",
                 {
                     headers: { "Content-Type": "application/json" },
-                }
+                },
             );
         });
     });

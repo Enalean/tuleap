@@ -39,7 +39,10 @@
     margin: auto;
     padding: 0;
     overflow: visible;
-    transition: border-radius 50ms, width 150ms, height 150ms;
+    transition:
+        border-radius 50ms,
+        width 150ms,
+        height 150ms;
     border-radius: 50%;
     box-shadow: var(--tlp-flyover-shadow);
 

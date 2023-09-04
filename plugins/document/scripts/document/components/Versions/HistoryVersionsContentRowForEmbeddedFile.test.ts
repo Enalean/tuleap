@@ -23,7 +23,7 @@ jest.mock("@tuleap/tlp-modal", () => {
         createModal: (): Modal =>
             ({
                 addEventListener: jest.fn(),
-            } as unknown as Modal),
+            }) as unknown as Modal,
     };
 });
 
@@ -51,7 +51,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
 
     function getWrapper(
         item: User,
-        has_more_than_one_version: boolean
+        has_more_than_one_version: boolean,
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRowForEmbeddedFile>> {
         return shallowMount(HistoryVersionsContentRowForEmbeddedFile, {
             props: {

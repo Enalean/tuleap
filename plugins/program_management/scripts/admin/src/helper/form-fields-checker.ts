@@ -26,11 +26,11 @@ import {
 
 export function checkAllFieldAreFilledAndSetErrorMessage(
     doc: Document,
-    gettext_provider: GetText
+    gettext_provider: GetText,
 ): boolean {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,
-        "admin-configuration-program-increment-tracker"
+        "admin-configuration-program-increment-tracker",
     );
 
     const plannable_trackers_element = getHTMLSelectElementFromId(doc, PLANNABLE_TRACKERS_ID);
@@ -46,8 +46,8 @@ export function checkAllFieldAreFilledAndSetErrorMessage(
         setErrorMessageOnSelectField(
             program_increment_tracker_element,
             gettext_provider.gettext(
-                "This field is mandatory, please choose a tracker as Program Increment in the list."
-            )
+                "This field is mandatory, please choose a tracker as Program Increment in the list.",
+            ),
         );
         are_filled = false;
     }
@@ -56,8 +56,8 @@ export function checkAllFieldAreFilledAndSetErrorMessage(
         setErrorMessageOnSelectField(
             plannable_trackers_element,
             gettext_provider.gettext(
-                "This field is mandatory, please choose one or several trackers in the list."
-            )
+                "This field is mandatory, please choose one or several trackers in the list.",
+            ),
         );
         are_filled = false;
     }
@@ -66,8 +66,8 @@ export function checkAllFieldAreFilledAndSetErrorMessage(
         setErrorMessageOnSelectField(
             permission_prioritize_element,
             gettext_provider.gettext(
-                "This field is mandatory, please choose one or several groups in the list."
-            )
+                "This field is mandatory, please choose one or several groups in the list.",
+            ),
         );
         are_filled = false;
     }

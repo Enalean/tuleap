@@ -48,7 +48,7 @@ export type PullRequestCommentErrorCallback = (fault: Fault) => void;
 export type WritingZoneInteractionsHandler<ElementType> = {
     handleWritingZoneContentChange(
         element: ElementContainingAWritingZone<ElementType>,
-        content: string
+        content: string,
     ): void;
     shouldFocusWritingZoneOnceRendered(): boolean;
 };

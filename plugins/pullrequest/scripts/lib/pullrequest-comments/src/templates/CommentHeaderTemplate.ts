@@ -27,7 +27,7 @@ type CommentAuthor = Pick<User, "user_url" | "display_name">;
 export const getHeaderTemplate = (
     comment_author: CommentAuthor,
     relative_date_helper: HelpRelativeDatesDisplay,
-    post_date: string
+    post_date: string,
 ): UpdateFunction<HTMLElement> => html`
     <div class="pull-request-comment-author-and-date" data-test="comment-header">
         <a
@@ -42,7 +42,7 @@ export const getHeaderTemplate = (
             class="pull-request-comment-date"
             date="${post_date}"
             absolute-date="${relative_date_helper.getFormattedDateUsingPreferredUserFormat(
-                post_date
+                post_date,
             )}"
             preference="${relative_date_helper.getRelativeDatePreference()}"
             locale="${relative_date_helper.getUserLocale()}"

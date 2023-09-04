@@ -98,14 +98,14 @@ export default class App extends Vue {
         this.saveBannerMessage(
             bannerState.message,
             bannerState.importance,
-            bannerState.expiration_date
+            bannerState.expiration_date,
         );
     }
 
     private saveBannerMessage(
         message: string,
         importance: Importance,
-        expiration_date: string
+        expiration_date: string,
     ): void {
         saveBannerForPlatform(message, importance, expiration_date)
             .then(() => {

@@ -55,7 +55,7 @@ watch(
             datepicker.value.setDate(value, false);
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 onMounted((): void => {

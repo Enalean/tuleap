@@ -30,7 +30,7 @@ export interface PermissionFieldControllerType {
 const isSelectBoxDisabled = (
     field: PermissionFieldType,
     value_model: PermissionFieldValueModel,
-    is_field_disabled: boolean
+    is_field_disabled: boolean,
 ): boolean => {
     if (field.required) {
         return is_field_disabled;
@@ -41,7 +41,7 @@ const isSelectBoxDisabled = (
 
 const isSelectBoxRequired = (
     field: PermissionFieldType,
-    value_model: PermissionFieldValueModel
+    value_model: PermissionFieldValueModel,
 ): boolean => {
     if (value_model.value.is_used_by_default) {
         return true;
@@ -53,7 +53,7 @@ const isSelectBoxRequired = (
 export const PermissionFieldController = (
     field: PermissionFieldType,
     value_model: PermissionFieldValueModel,
-    is_field_disabled: boolean
+    is_field_disabled: boolean,
 ): PermissionFieldControllerType => ({
     buildPresenter(): PermissionFieldPresenter {
         return PermissionFieldPresenter.fromField(
@@ -62,7 +62,7 @@ export const PermissionFieldController = (
             is_field_disabled,
             value_model.value.is_used_by_default,
             isSelectBoxRequired(field, value_model),
-            isSelectBoxDisabled(field, value_model, is_field_disabled)
+            isSelectBoxDisabled(field, value_model, is_field_disabled),
         );
     },
     setIsFieldUsedByDefault(is_used_by_default: boolean): PermissionFieldPresenter {

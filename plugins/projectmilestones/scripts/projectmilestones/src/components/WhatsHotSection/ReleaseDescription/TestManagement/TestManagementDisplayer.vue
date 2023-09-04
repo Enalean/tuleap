@@ -64,7 +64,7 @@ export default class TestManagementDisplayer extends Vue {
         if (!this.release_data.campaign) {
             try {
                 this.release_data.campaign = await this.getTestManagementCampaigns(
-                    this.release_data
+                    this.release_data,
                 );
             } catch (rest_error) {
                 await this.handle_error(rest_error);

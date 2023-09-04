@@ -30,11 +30,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 0,
@@ -47,11 +47,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 63,
@@ -64,11 +64,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 63,
@@ -81,11 +81,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 63,
@@ -101,11 +101,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date("2020-03-10T00:00:00.000Z"),
                 new Date("2020-03-30T00:00:00.000Z"),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 31,
@@ -118,11 +118,11 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             expect(
-                getDimensionsMap([{ task, is_shown: true }], time_period).get(task)
+                getDimensionsMap([{ task, is_shown: true }], time_period).get(task),
             ).toStrictEqual({
                 index: 0,
                 left: 30,
@@ -137,7 +137,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en-US"
+                "en-US",
             );
 
             const dimensions_map = getDimensionsMap(
@@ -148,7 +148,7 @@ describe("tasks-dimensions", () => {
                     { task: task_2, is_shown: true },
                     { parent: task_2, subtask, is_last_one: true, is_shown: true },
                 ],
-                time_period
+                time_period,
             );
             const dimensions_task_1 = getDimensions(task_1, dimensions_map);
             const dimensions_task_2 = getDimensions(task_2, dimensions_map);

@@ -26,7 +26,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 describe("CampaignEmptyState", () => {
     function createWrapper(
         user_can_create_campaign: boolean,
-        show_create_modal = jest.fn()
+        show_create_modal = jest.fn(),
     ): VueWrapper<InstanceType<typeof CampaignEmptyState>> {
         return shallowMount(CampaignEmptyState, {
             props: {

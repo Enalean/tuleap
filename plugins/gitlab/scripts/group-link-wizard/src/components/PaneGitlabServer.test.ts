@@ -49,7 +49,7 @@ function getWrapper(state: StateTree = {}): VueWrapper<InstanceType<typeof PaneG
 }
 
 function getFetchGroupsButton(
-    wrapper: VueWrapper<InstanceType<typeof PaneGitlabServer>>
+    wrapper: VueWrapper<InstanceType<typeof PaneGitlabServer>>,
 ): HTMLButtonElement {
     const fetch_groups_button = wrapper.get("[data-test=gitlab-fetch-groups-button]").element;
     if (!(fetch_groups_button instanceof HTMLButtonElement)) {
@@ -177,10 +177,10 @@ describe("PaneGitlabServer", () => {
 
         it("should fill the server_url and the token if they are defined in store during setup", () => {
             expect(
-                wrapper.get<HTMLInputElement>("[data-test=gitlab-server-url]").element.value
+                wrapper.get<HTMLInputElement>("[data-test=gitlab-server-url]").element.value,
             ).toStrictEqual(server_url);
             expect(
-                wrapper.get<HTMLInputElement>("[data-test=gitlab-access-token]").element.value
+                wrapper.get<HTMLInputElement>("[data-test=gitlab-access-token]").element.value,
             ).toStrictEqual(token);
         });
 

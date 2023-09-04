@@ -65,13 +65,13 @@ describe("cover-builder", () => {
                         width: 1,
                         height: 1,
                     },
-                })
+                }),
             );
 
             const cover_page = await buildCoverPage(
                 gettext_provider,
                 global_export_properties,
-                "25/11/2021"
+                "25/11/2021",
             );
 
             expect(spy_load_image).toHaveBeenCalledTimes(1);
@@ -81,7 +81,7 @@ describe("cover-builder", () => {
 
             const exported_file = context.file.Media.Array[0];
             expect(Buffer.from(exported_file.stream).toString("base64")).toStrictEqual(
-                one_px_image_as_base64
+                one_px_image_as_base64,
             );
             expect(JSON.stringify(tree)).toContain(exported_file.fileName);
         });
@@ -94,13 +94,13 @@ describe("cover-builder", () => {
                         width: 1,
                         height: 1,
                     },
-                })
+                }),
             );
 
             const cover_page = await buildCoverPage(
                 gettext_provider,
                 global_export_properties,
-                "25/11/2021"
+                "25/11/2021",
             );
 
             const tree = cover_page[1].prepForXml(context);

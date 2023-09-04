@@ -46,12 +46,12 @@ export interface RootActionsRetrieve {
 }
 
 export const loadRootFolder = async (
-    context: ActionContext<RootState, RootState>
+    context: ActionContext<RootState, RootState>,
 ): Promise<void> => {
     try {
         context.commit("beginLoading");
         const service = await getDocumentManagerServiceInformation(
-            Number(context.state.configuration.project_id)
+            Number(context.state.configuration.project_id),
         );
         const root: RestFolder = await service.root_item;
 
@@ -68,7 +68,7 @@ export const loadRootFolder = async (
 
 export const getSubfolderContent = async (
     context: ActionContext<RootState, RootState>,
-    folder_id: number
+    folder_id: number,
 ): Promise<void> => {
     try {
         const sub_items = await getFolderContent(folder_id);
@@ -81,7 +81,7 @@ export const getSubfolderContent = async (
 
 export const loadDocumentWithAscendentHierarchy = async (
     context: ActionContext<RootState, RootState>,
-    item_id: number
+    item_id: number,
 ): Promise<Item | void> => {
     try {
         const item = await getItem(item_id);
@@ -89,7 +89,7 @@ export const loadDocumentWithAscendentHierarchy = async (
         await loadAscendantHierarchy(
             context,
             Number(item.parent_id),
-            loading_current_folder_promise
+            loading_current_folder_promise,
         );
 
         return item;
@@ -100,7 +100,7 @@ export const loadDocumentWithAscendentHierarchy = async (
 
 export const loadDocument = async (
     context: ActionContext<RootState, RootState>,
-    item_id: number
+    item_id: number,
 ): Promise<Item | void> => {
     try {
         return await getItem(item_id);
@@ -111,7 +111,7 @@ export const loadDocument = async (
 
 export const loadFolder = (
     context: ActionContext<RootState, RootState>,
-    folder_id: number
+    folder_id: number,
 ): Promise<void[]> => {
     const { is_folder_found_in_hierarchy, current_folder } = getCurrentFolder();
     const loading_current_folder_promise = getLoadingCurrentFolderPromise(current_folder);
@@ -126,7 +126,7 @@ export const loadFolder = (
     function getCurrentFolder(): { is_folder_found_in_hierarchy: boolean; current_folder: Folder } {
         const index_of_folder_in_hierarchy =
             context.state.current_folder_ascendant_hierarchy.findIndex(
-                (item) => item.id === folder_id
+                (item) => item.id === folder_id,
             );
         const is_folder_found_in_hierarchy = index_of_folder_in_hierarchy !== -1;
         const current_folder = is_folder_found_in_hierarchy
@@ -144,8 +144,8 @@ export const loadFolder = (
             "saveAscendantHierarchy",
             context.state.current_folder_ascendant_hierarchy.slice(
                 0,
-                index_of_folder_in_hierarchy + 1
-            )
+                index_of_folder_in_hierarchy + 1,
+            ),
         );
 
         const folder_in_store = context.state.current_folder;
@@ -186,7 +186,7 @@ export const loadFolder = (
 
 export const getWikisReferencingSameWikiPage = async (
     context: ActionContext<RootState, RootState>,
-    item: Wiki
+    item: Wiki,
 ): Promise<ItemPath[] | null> => {
     if (item.wiki_properties.page_id === null) {
         return [];
@@ -194,13 +194,13 @@ export const getWikisReferencingSameWikiPage = async (
 
     try {
         const wiki_page_referencers = await getItemsReferencingSameWikiPage(
-            item.wiki_properties.page_id
+            item.wiki_properties.page_id,
         );
 
         return await Promise.all(
             wiki_page_referencers.map((item) =>
-                getParents(item.item_id).then((parents) => buildItemPath(item, parents))
-            )
+                getParents(item.item_id).then((parents) => buildItemPath(item, parents)),
+            ),
         );
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;

@@ -25,11 +25,11 @@ import type { BindValueId } from "../../../../domain/fields/select-box-field/Bin
 
 const getOptionsTemplates = (
     bind_value_ids: ReadonlyArray<BindValueId>,
-    select_box_options: ReadonlyArray<SelectBoxOptionPresenter>
+    select_box_options: ReadonlyArray<SelectBoxOptionPresenter>,
 ): UpdateFunction<SelectBoxField>[] => {
     return select_box_options.map((option) => {
         const is_selected = bind_value_ids.some(
-            (bind_value_id) => String(bind_value_id) === option.id
+            (bind_value_id) => String(bind_value_id) === option.id,
         );
         if ("value_color" in option) {
             return html`<option

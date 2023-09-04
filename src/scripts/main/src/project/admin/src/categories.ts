@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     const list_of_multiple_select = document.querySelectorAll(
-        ".project-admin-category-select[multiple]"
+        ".project-admin-category-select[multiple]",
     );
     for (const select_category of list_of_multiple_select) {
         if (!(select_category instanceof HTMLSelectElement)) {
@@ -69,7 +69,7 @@ function instantiateSelect2(select_category: HTMLSelectElement): void {
 }
 
 function checkMultipleSelectRespectsMaximumSelectionLength(
-    select_category: HTMLSelectElement
+    select_category: HTMLSelectElement,
 ): void {
     let nb_selected_values = 0;
     const n = select_category.options.length;

@@ -73,7 +73,7 @@ onMounted(() => {
         (): void => {
             is_in_error.value = true;
             is_loading.value = false;
-        }
+        },
     );
 });
 </script>

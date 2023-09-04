@@ -41,7 +41,7 @@ function StaticOpenListFieldController($element) {
         self.merged_values = [];
 
         const open_list_element = $element[0].querySelector(
-            ".tuleap-artifact-modal-open-list-static"
+            ".tuleap-artifact-modal-open-list-static",
         );
         if (!open_list_element) {
             return;
@@ -50,7 +50,7 @@ function StaticOpenListFieldController($element) {
         initOpenListFieldLabelAndSelectIds(
             $element[0],
             open_list_element,
-            self.value_model.field_id
+            self.value_model.field_id,
         );
 
         select2(open_list_element, {
@@ -73,7 +73,7 @@ function StaticOpenListFieldController($element) {
             ];
             self.merged_values = [
                 ...new Map(
-                    union_values.map((union_value) => [parseInt(union_value.id, 10), union_value])
+                    union_values.map((union_value) => [parseInt(union_value.id, 10), union_value]),
                 ).values(),
             ];
         }
@@ -86,7 +86,7 @@ function StaticOpenListFieldController($element) {
 
     function isStaticValueSelected(field_value) {
         return self.value_model.value.bind_value_objects.some(
-            (value_object) => value_object.id === field_value.id.toString()
+            (value_object) => value_object.id === field_value.id.toString(),
         );
     }
 
@@ -122,7 +122,7 @@ function StaticOpenListFieldController($element) {
         }
 
         const tag_already_exists = self.field.values.some(
-            (value) => value.label.toLowerCase() === term.toLowerCase()
+            (value) => value.label.toLowerCase() === term.toLowerCase(),
         );
         if (tag_already_exists === true) {
             return null;

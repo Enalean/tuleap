@@ -43,10 +43,10 @@ export default {
         add_to_backlog_agile_dashboard_post_action_detail() {
             return this.is_split_feature_flag_enabled
                 ? this.$gettext(
-                      "The artifact is added to Scrum backlog (Agile Dashboard). If it's already present, nothing is done."
+                      "The artifact is added to Scrum backlog (Agile Dashboard). If it's already present, nothing is done.",
                   )
                 : this.$gettext(
-                      "The artifact is added to Scrum top backlog (Agile Dashboard). If it's already present, nothing is done."
+                      "The artifact is added to Scrum top backlog (Agile Dashboard). If it's already present, nothing is done.",
                   );
         },
     },

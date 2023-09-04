@@ -41,9 +41,9 @@ describe("line-height-equalizer", () => {
                 FileLinesStateStub(
                     [line],
                     [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
-                    new Map([[line, handles]])
-                ).getState()
-            )
+                    new Map([[line, handles]]),
+                ).getState(),
+            ),
         );
     }
 

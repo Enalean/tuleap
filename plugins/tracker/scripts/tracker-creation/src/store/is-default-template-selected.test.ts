@@ -32,7 +32,7 @@ describe("isDefaultTemplateSelected", () => {
     it("returns true if default template is selected", () => {
         expect(isDefaultTemplateSelected({ active_option: "default-bug" } as State)).toBe(true);
         expect(isDefaultTemplateSelected({ active_option: "default-activity" } as State)).toBe(
-            true
+            true,
         );
     });
     it("returns false if default template is not selected", () => {

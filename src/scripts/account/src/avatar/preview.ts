@@ -23,7 +23,7 @@ export function loadAvatarPreview(): void {
     const input_file = document.getElementById("account-information-avatar-modal-select-file");
     if (!(input_file instanceof HTMLInputElement)) {
         throw Error(
-            "#account-information-avatar-modal-select-file not found or is not an input element"
+            "#account-information-avatar-modal-select-file not found or is not an input element",
         );
     }
 
@@ -88,7 +88,7 @@ function getResizedImageUrl(url: string): string {
         0,
         0,
         max_size,
-        max_size
+        max_size,
     );
 
     return canvas.toDataURL("image/png");

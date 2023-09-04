@@ -51,7 +51,7 @@ document.observe("dom:loaded", function () {
 
     function initExpandCollapseChildrenInArtifactLinkTable() {
         $$(
-            "#tracker_report_table_type__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact"
+            "#tracker_report_table_type__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact",
         ).each(function (link) {
             initRollupViewOfLink(link, 1);
         });
@@ -119,7 +119,7 @@ document.observe("dom:loaded", function () {
                     subrows.forEach(function (row) {
                         initRollupViewOfLink(
                             row.querySelector("a.direct-link-to-artifact"),
-                            depth + 1
+                            depth + 1,
                         );
                     });
                 } else {
@@ -246,7 +246,7 @@ document.observe("dom:loaded", function () {
             $$(
                 "#tracker-link-artifact-slow-way-content a.cross-reference",
                 "#tracker-link-artifact-slow-way-content a.direct-link-to-artifact",
-                "#tracker-link-artifact-slow-way-content a.link-to-user"
+                "#tracker-link-artifact-slow-way-content a.link-to-user",
             ).each(function (a) {
                 a.target = "_blank";
                 a.rel = "noreferrer";
@@ -287,7 +287,7 @@ document.observe("dom:loaded", function () {
                         onComplete: function () {
                             load_behaviors_in_slow_ways_panel();
                         },
-                    }
+                    },
                 );
             });
 
@@ -306,7 +306,7 @@ document.observe("dom:loaded", function () {
                             onComplete: function () {
                                 load_behaviors_in_slow_ways_panel();
                             },
-                        }
+                        },
                     );
                 });
             }
@@ -321,7 +321,7 @@ document.observe("dom:loaded", function () {
                         "?" +
                         new URLSearchParams({
                             tracker: document.getElementById("tracker_select_tracker").value,
-                        }).toString()
+                        }).toString(),
                 );
 
                 const body = new URLSearchParams($("tracker_report_query_form").serialize());
@@ -358,7 +358,7 @@ document.observe("dom:loaded", function () {
                 $$(
                     'input[name="artifact[' +
                         codendi.tracker.artifact.artifactLinker_currentField_id +
-                        '][new_values]"]'
+                        '][new_values]"]',
                 )[0].value.match(re)
             ) {
                 checkbox.checked = true;
@@ -384,7 +384,7 @@ document.observe("dom:loaded", function () {
             });
 
             var input_to_link = $("lightwindow_contents").down(
-                'input[name="link-artifact[manual]"]'
+                'input[name="link-artifact[manual]"]',
             );
             $("lightwindow_contents")
                 .select('input[name^="link-artifact[search]"]')
@@ -507,7 +507,7 @@ document.observe("dom:loaded", function () {
                             codendi.locales.tracker_artifact_link.advanced +
                             "<br />" +
                             input.title +
-                            "</em>"
+                            "</em>",
                     );
             }
 
@@ -521,7 +521,7 @@ document.observe("dom:loaded", function () {
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
-                            '<img src="' + codendi.imgroot + 'ic/clipboard-search-result.png" />'
+                            '<img src="' + codendi.imgroot + 'ic/clipboard-search-result.png" />',
                         );
 
                     var link_create = new Element("a", {
@@ -532,7 +532,7 @@ document.observe("dom:loaded", function () {
                         .update(
                             '<img src="' +
                                 codendi.imgroot +
-                                'ic/artifact-plus.png" style="vertical-align: middle;"/> '
+                                'ic/artifact-plus.png" style="vertical-align: middle;"/> ',
                         );
 
                     var preview_button = document.createElement("button");
@@ -551,7 +551,7 @@ document.observe("dom:loaded", function () {
                     input_append_element.insert(link).insert(link_create);
                     container.appendChild(preview_button);
                     container.insert(
-                        '<br /><em style="color:#666; font-size: 0.9em;">' + input.title + "</em>"
+                        '<br /><em style="color:#666; font-size: 0.9em;">' + input.title + "</em>",
                     );
                 }
             }
@@ -564,7 +564,7 @@ document.observe("dom:loaded", function () {
                             codendi.locales.tracker_artifact_link.advanced +
                             "<br />" +
                             input.title +
-                            "</em>"
+                            "</em>",
                     );
             }
 
@@ -575,7 +575,7 @@ document.observe("dom:loaded", function () {
                 link.up(".tracker_artifact_field");
             codendi.tracker.artifact.artifactLinker_currentField_id = input.name.gsub(
                 /artifact\[(\d+)\]\[new_values\]/,
-                "#{1}"
+                "#{1}",
             );
 
             //build an array to store the existing links
@@ -589,7 +589,7 @@ document.observe("dom:loaded", function () {
                     function (acc, e) {
                         acc[e.name.split("[")[3].gsub("]", "")] = 1;
                         return acc;
-                    }
+                    },
                 );
 
             link_create.observe("click", openCreateArtifactModalOnClickOnCreateButton);
@@ -630,7 +630,7 @@ document.observe("dom:loaded", function () {
                             // the function load_behavior_...
 
                             const panel = document.getElementById(
-                                "tracker-link-artifact-fast-ways"
+                                "tracker-link-artifact-fast-ways",
                             );
                             if (panel) {
                                 codendi.Tooltip.load(panel);
@@ -642,14 +642,14 @@ document.observe("dom:loaded", function () {
                             $$(
                                 "#tracker-link-artifact-fast-ways a.cross-reference",
                                 "#tracker-link-artifact-fast-ways a.direct-link-to-artifact",
-                                "#tracker-link-artifact-fast-ways a.link-to-user"
+                                "#tracker-link-artifact-fast-ways a.link-to-user",
                             ).each(function (a) {
                                 a.target = "_blank";
                                 a.rel = "noreferrer";
                             });
 
                             var input_to_link = $("lightwindow_contents").down(
-                                'input[name="link-artifact[manual]"]'
+                                'input[name="link-artifact[manual]"]',
                             );
 
                             //Checked/unchecked values are added/removed in the manual panel
@@ -693,18 +693,18 @@ document.observe("dom:loaded", function () {
 
                             //check already linked artifacts in recent panel
                             $$(
-                                '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]'
+                                '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]',
                             ).each(force_check);
 
                             var button = $("lightwindow_contents").down(
-                                "button[name=link-artifact-submit]"
+                                "button[name=link-artifact-submit]",
                             );
                             button.observe("click", function (evt) {
                                 var to_add = [];
 
                                 //manual ones
                                 var manual = $("lightwindow_contents").down(
-                                    'input[name="link-artifact[manual]"]'
+                                    'input[name="link-artifact[manual]"]',
                                 ).value;
                                 if (manual) {
                                     to_add.push(manual);
@@ -714,7 +714,7 @@ document.observe("dom:loaded", function () {
                                 if (to_add.size()) {
                                     var input_field =
                                         codendi.tracker.artifact.artifactLinker_currentField.down(
-                                            "input.tracker-form-element-artifactlink-new"
+                                            "input.tracker-form-element-artifactlink-new",
                                         );
                                     if (input_field.value) {
                                         input_field.value += ",";
@@ -757,7 +757,7 @@ document.observe("dom:loaded", function () {
         initSelectArtifactsModal();
 
         codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross(
-            $$(".tracker-form-element-artifactlink-list td.tracker_report_table_unlink")
+            $$(".tracker-form-element-artifactlink-list td.tracker_report_table_unlink"),
         );
         codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
         codendi.tracker.artifact.artifactLink.enable_mass_unlink();
@@ -785,7 +785,7 @@ document.observe("dom:loaded", function () {
                 var message = document.createElement("span");
                 message.innerText = codendi.getText(
                     "tracker_artifact",
-                    "artifactlink_async_loading"
+                    "artifactlink_async_loading",
                 );
 
                 var section_loading = document.createElement("div");
@@ -832,7 +832,7 @@ document.observe("dom:loaded", function () {
             var evt = document.createEvent("CustomEvent");
             evt.initCustomEvent("renderer-async-loaded", false, false, {
                 tracker_panel: renderer_to_load.up(
-                    ".tracker-form-element-artifactlink-trackerpanel"
+                    ".tracker-form-element-artifactlink-trackerpanel",
                 ),
             });
             document.dispatchEvent(evt);

@@ -58,13 +58,13 @@ describe(`TextEditor`, () => {
                 textarea,
                 getEmptyOptions(),
                 markdown_converter,
-                markdown_renderer
+                markdown_renderer,
             );
             textarea.value = `<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>`;
             editor.init(TEXT_FORMAT_HTML);
             expect(markdown_converter.convert).not.toHaveBeenCalled();
             expect(textarea.value).toBe(
-                "<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>"
+                "<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>",
             );
         });
 
@@ -97,14 +97,14 @@ describe(`TextEditor`, () => {
                     textarea,
                     options,
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 editor.onFormatChange(TEXT_FORMAT_HTML);
 
                 const expected_options = { language: "fr_FR", ...additional_options };
                 expect(replace).toHaveBeenCalledWith(
                     textarea,
-                    expect.objectContaining(expected_options)
+                    expect.objectContaining(expected_options),
                 );
             });
 
@@ -120,7 +120,7 @@ describe(`TextEditor`, () => {
                     textarea,
                     options,
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 editor.onFormatChange(TEXT_FORMAT_HTML);
                 const onDataReadyCallback = eventHandler.mock.calls[0][1];
@@ -141,7 +141,7 @@ describe(`TextEditor`, () => {
                     textarea,
                     options,
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 editor.onFormatChange(TEXT_FORMAT_HTML);
 
@@ -159,7 +159,7 @@ describe(`TextEditor`, () => {
                     textarea,
                     getEmptyOptions(),
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 textarea.value = "**markdown** content";
                 editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
@@ -180,14 +180,14 @@ describe(`TextEditor`, () => {
                     textarea,
                     getEmptyOptions(),
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 textarea.value = `<p><strong>HTML</strong> content</p>`;
                 editor.onFormatChange(TEXT_FORMAT_HTML);
                 editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
 
                 expect(markdown_converter.convert).toHaveBeenCalledWith(
-                    `<p><strong>HTML</strong> content</p>`
+                    `<p><strong>HTML</strong> content</p>`,
                 );
                 expect(textarea.value).toBe("**markdown** content");
             });
@@ -204,11 +204,11 @@ describe(`TextEditor`, () => {
                     textarea,
                     options,
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 editor.onFormatChange(format);
                 expect(options.onFormatChange).toHaveBeenCalledWith(format);
-            }
+            },
         );
     });
 
@@ -226,7 +226,7 @@ describe(`TextEditor`, () => {
                     textarea,
                     getEmptyOptions(),
                     markdown_converter,
-                    markdown_renderer
+                    markdown_renderer,
                 );
                 editor.onFormatChange(format);
                 if (format === TEXT_FORMAT_HTML) {
@@ -238,7 +238,7 @@ describe(`TextEditor`, () => {
                 }
 
                 expect(editor.getContent()).toEqual(expected_content);
-            }
+            },
         );
     });
 
@@ -256,7 +256,7 @@ describe(`TextEditor`, () => {
                 textarea,
                 getEmptyOptions(),
                 markdown_converter,
-                markdown_renderer
+                markdown_renderer,
             );
         });
 

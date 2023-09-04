@@ -241,7 +241,7 @@ describe(`Card mutations`, () => {
                             { id: 3, display_name: "Bob" },
                         ],
                     ],
-                ])
+                ]),
             );
         });
     });

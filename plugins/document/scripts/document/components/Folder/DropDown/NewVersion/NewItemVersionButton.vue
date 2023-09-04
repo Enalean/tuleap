@@ -53,7 +53,7 @@ let is_loading_item = ref(false);
 
 const { $gettext } = useGettext();
 const cannot_create_new_wiki_version_because_approval_table = $gettext(
-    "This wiki has a approval table, you can't update it."
+    "This wiki has a approval table, you can't update it.",
 );
 
 const is_item_a_wiki_with_approval_table = computed((): boolean => {

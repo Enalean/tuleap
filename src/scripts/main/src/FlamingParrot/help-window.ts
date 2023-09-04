@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const help_window = window.open(
                 href_value,
                 "HelpWindow",
-                "scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000"
+                "scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000",
             );
             if (help_window !== null) {
                 help_window.focus();

@@ -53,7 +53,7 @@ export interface TransformationOptions {
 
 export async function transformHTMLIntoParagraphs(
     content: string,
-    options: TransformationOptions
+    options: TransformationOptions,
 ): Promise<Paragraph[]> {
     const doc = dompurify.sanitize(content, { RETURN_DOM_FRAGMENT: true });
 
@@ -64,7 +64,7 @@ export async function transformHTMLIntoParagraphs(
             paragraph_builder: defaultParagraphBuilder,
             text_run_builder: defaultTextRunBuilder,
         }),
-        defaultParagraphBuilder
+        defaultParagraphBuilder,
     );
 }
 
@@ -84,7 +84,7 @@ function defaultTextRunBuilder(content: string, style: IRunPropertiesOptions): T
 
 function buildParagraphsFromTreeContent(
     tree_content: TreeContentChild[],
-    builder: ParagraphBuilder
+    builder: ParagraphBuilder,
 ): Paragraph[] {
     const paragraphs: Paragraph[] = [];
 
@@ -98,7 +98,7 @@ function buildParagraphsFromTreeContent(
 
         paragraphs.push(
             ...buildParagraphFromParagraphChildren(builder, top_level_paragraph_children),
-            child
+            child,
         );
         top_level_paragraph_children.splice(0);
     }
@@ -110,7 +110,7 @@ function buildParagraphsFromTreeContent(
 
 function buildParagraphFromParagraphChildren(
     builder: ParagraphBuilder,
-    paragraph_children: ParagraphChild[]
+    paragraph_children: ParagraphChild[],
 ): Paragraph[] {
     if (paragraph_children.length <= 0) {
         return [];
@@ -129,7 +129,7 @@ interface TreeContentState {
 async function parseTreeContent(
     options: TransformationOptions,
     tree: NodeListOf<ChildNode>,
-    source_state: Readonly<TreeContentState>
+    source_state: Readonly<TreeContentState>,
 ): Promise<TreeContentChild[]> {
     const content_children: TreeContentChild[] = [];
 
@@ -145,15 +145,15 @@ async function parseTreeContent(
         switch (child.nodeName) {
             case "DIV":
                 content_children.push(
-                    ...(await parseTreeContent(options, child.childNodes, state))
+                    ...(await parseTreeContent(options, child.childNodes, state)),
                 );
                 break;
             case "P":
                 content_children.push(
                     ...buildParagraphsFromTreeContent(
                         await parseTreeContent(options, child.childNodes, state),
-                        state.paragraph_builder
-                    )
+                        state.paragraph_builder,
+                    ),
                 );
                 break;
             case "BR":
@@ -161,7 +161,7 @@ async function parseTreeContent(
                 break;
             case "SPAN":
                 content_children.push(
-                    ...(await parseTreeContent(options, child.childNodes, state))
+                    ...(await parseTreeContent(options, child.childNodes, state)),
                 );
                 break;
             case "EM":
@@ -173,7 +173,7 @@ async function parseTreeContent(
                             ...state.style,
                             italics: true,
                         },
-                    }))
+                    })),
                 );
                 break;
             case "STRONG":
@@ -182,7 +182,7 @@ async function parseTreeContent(
                     ...(await parseTreeContent(options, child.childNodes, {
                         ...state,
                         style: { ...state.style, bold: true },
-                    }))
+                    })),
                 );
                 break;
             case "SUP":
@@ -193,7 +193,7 @@ async function parseTreeContent(
                             ...state.style,
                             superScript: true,
                         },
-                    }))
+                    })),
                 );
                 break;
             case "SUB":
@@ -204,7 +204,7 @@ async function parseTreeContent(
                             ...state.style,
                             subScript: true,
                         },
-                    }))
+                    })),
                 );
                 break;
             case "U":
@@ -215,7 +215,7 @@ async function parseTreeContent(
                             ...state.style,
                             underline: { type: UnderlineType.SINGLE },
                         },
-                    }))
+                    })),
                 );
                 break;
             case "UL":
@@ -239,8 +239,8 @@ async function parseTreeContent(
                         options,
                         parseInt(child.nodeName.charAt(1), 10),
                         child.childNodes,
-                        state
-                    ))
+                        state,
+                    )),
                 );
                 break;
             case "HR":
@@ -258,7 +258,7 @@ async function parseTreeContent(
                                 size: 1,
                             },
                         },
-                    })
+                    }),
                 );
                 break;
             case "BLOCKQUOTE":
@@ -273,7 +273,7 @@ async function parseTreeContent(
                                     left: convertInchesToTwip(0.25),
                                 },
                             }),
-                    }))
+                    })),
                 );
                 break;
             case "CODE":
@@ -281,7 +281,7 @@ async function parseTreeContent(
                     ...defaultNodeHandling(child, {
                         ...state,
                         style: { ...state.style, font: options.monospace_font },
-                    })
+                    }),
                 );
                 break;
             case "PRE":
@@ -291,8 +291,8 @@ async function parseTreeContent(
                             ...state,
                             text_run_builder: transformTextWithNewlines,
                         }),
-                        state.paragraph_builder
-                    )
+                        state.paragraph_builder,
+                    ),
                 );
                 break;
             case "TABLE":
@@ -303,7 +303,7 @@ async function parseTreeContent(
                             size: 100,
                             type: WidthType.PERCENTAGE,
                         },
-                    })
+                    }),
                 );
                 break;
             default:
@@ -317,7 +317,7 @@ async function parseTreeContent(
 async function getList(
     element: Element,
     state: TreeContentState,
-    options: TransformationOptions
+    options: TransformationOptions,
 ): Promise<Paragraph[]> {
     const content_children: Paragraph[] = [];
     const list_instance_id = getListInstanceID();
@@ -344,8 +344,8 @@ async function getList(
                                     : options.ordered_list_reference,
                             instance: list_instance_id,
                         },
-                    })
-            )
+                    }),
+            ),
         );
     }
 
@@ -354,7 +354,7 @@ async function getList(
 
 async function getImageRun(
     element: Element,
-    state: TreeContentState
+    state: TreeContentState,
 ): Promise<ImageRun[] | TextRun[]> {
     const source_image = element.getAttribute("src");
     if (source_image === null) {
@@ -375,7 +375,7 @@ async function getImageRun(
 async function getHyperLink(
     options: TransformationOptions,
     element: Element,
-    state: Readonly<TreeContentState>
+    state: Readonly<TreeContentState>,
 ): Promise<TreeContentChild[]> {
     if (!(element instanceof HTMLAnchorElement) || element.href === "") {
         return parseTreeContent(options, element.childNodes, state);
@@ -398,7 +398,7 @@ async function getTitle(
     options: TransformationOptions,
     level: number,
     children: NodeListOf<ChildNode>,
-    state: Readonly<TreeContentState>
+    state: Readonly<TreeContentState>,
 ): Promise<TreeContentChild[]> {
     let heading_level = options.ordered_title_levels[level - 1];
     if (heading_level === undefined) {
@@ -411,14 +411,14 @@ async function getTitle(
                 children,
                 heading: heading_level,
             });
-        }
+        },
     );
 }
 
 async function getTableRows(
     html_rows: HTMLCollectionOf<HTMLTableRowElement>,
     options: TransformationOptions,
-    state: Readonly<TreeContentState>
+    state: Readonly<TreeContentState>,
 ): Promise<TableRow[]> {
     const rows: TableRow[] = [];
     for (const html_row of html_rows) {
@@ -426,7 +426,7 @@ async function getTableRows(
             return new TableCell({
                 children: buildParagraphsFromTreeContent(
                     await parseTreeContent(options, cell.childNodes, state),
-                    state.paragraph_builder
+                    state.paragraph_builder,
                 ),
             });
         });

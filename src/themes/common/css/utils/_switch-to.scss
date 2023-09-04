@@ -89,7 +89,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-modal-header-legacy-search-button {
     margin: -2px 0;
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
-    transition: opacity 100ms ease-in-out, background 100ms ease-in-out;
+    transition:
+        opacity 100ms ease-in-out,
+        background 100ms ease-in-out;
     border: 0;
     border-radius: var(--tlp-large-radius);
     opacity: 0.75;

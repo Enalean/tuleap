@@ -49,7 +49,7 @@ describe("ListRepositoriesModal", () => {
     });
 
     function instantiateComponent(
-        repositories_props_data: GitlabProject[]
+        repositories_props_data: GitlabProject[],
     ): Wrapper<ListRepositoriesModal> {
         localVue = createLocalVue();
         localVue.use(VueDOMPurifyHTML);
@@ -114,7 +114,7 @@ describe("ListRepositoriesModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
 
         wrapper.setData({
@@ -124,7 +124,7 @@ describe("ListRepositoriesModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
         ).toBeFalsy();
     });
 
@@ -144,7 +144,7 @@ describe("ListRepositoriesModal", () => {
         jest.spyOn(repository_list_presenter, "getProjectId").mockReturnValue(101);
 
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
-            "fa-long-arrow-alt-right"
+            "fa-long-arrow-alt-right",
         );
 
         wrapper.setData({
@@ -158,7 +158,7 @@ describe("ListRepositoriesModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
         expect(store.commit).toHaveBeenCalledWith("resetRepositories");
@@ -180,8 +180,8 @@ describe("ListRepositoriesModal", () => {
                             },
                         });
                     },
-                } as Response)
-            )
+                } as Response),
+            ),
         );
 
         wrapper.setData({
@@ -195,11 +195,11 @@ describe("ListRepositoriesModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-post-repositories]").text()).toBe(
-            "404: Error during post"
+            "404: Error during post",
         );
 
         expect(
-            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes("disabled")
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes("disabled"),
         ).toBeTruthy();
     });
 
@@ -238,7 +238,7 @@ describe("ListRepositoriesModal", () => {
             "gitlab-select-repository-disabled",
         ]);
         expect(
-            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled
+            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
             "gitlab-select-repository",
@@ -249,7 +249,9 @@ describe("ListRepositoriesModal", () => {
             "tlp-tooltip-top",
         ]);
         expect(
-            wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
+            wrapper
+                .find("[data-test=gitlab-repositories-tooltip-1]")
+                .attributes("data-tlp-tooltip"),
         ).toBe("This repository is already integrated.");
     });
 
@@ -288,7 +290,7 @@ describe("ListRepositoriesModal", () => {
             "gitlab-select-repository-disabled",
         ]);
         expect(
-            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled
+            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
             "gitlab-select-repository",
@@ -299,7 +301,9 @@ describe("ListRepositoriesModal", () => {
             "tlp-tooltip-top",
         ]);
         expect(
-            wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
+            wrapper
+                .find("[data-test=gitlab-repositories-tooltip-1]")
+                .attributes("data-tlp-tooltip"),
         ).toBe("A repository with same name and path was already integrated.");
     });
 

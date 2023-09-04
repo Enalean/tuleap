@@ -38,7 +38,7 @@ describe("OngoingUploadModal", () => {
     let modal: Modal, addEventListener: jest.SpyInstance, show: jest.SpyInstance;
 
     function getWrapper(
-        files_uploads_list: Array<ItemFile>
+        files_uploads_list: Array<ItemFile>,
     ): VueWrapper<InstanceType<typeof OngoingUploadModal>> {
         return shallowMount(OngoingUploadModal, {
             global: {
@@ -136,7 +136,7 @@ describe("OngoingUploadModal", () => {
         const wrapper = getWrapper([]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(true);
     });
 
@@ -149,7 +149,7 @@ describe("OngoingUploadModal", () => {
         ]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(true);
     });
 
@@ -162,7 +162,7 @@ describe("OngoingUploadModal", () => {
         ]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(true);
     });
 
@@ -175,7 +175,7 @@ describe("OngoingUploadModal", () => {
         ]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(false);
     });
 
@@ -192,7 +192,7 @@ describe("OngoingUploadModal", () => {
         ]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(true);
     });
 
@@ -209,7 +209,7 @@ describe("OngoingUploadModal", () => {
         ]);
 
         expect(
-            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled
+            wrapper.find<HTMLButtonElement>("[data-test=continue-button]").element.disabled,
         ).toBe(false);
     });
 });

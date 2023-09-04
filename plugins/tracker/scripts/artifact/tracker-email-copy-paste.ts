@@ -20,7 +20,7 @@
 
 export function setupEmailCopyModalInteractions(
     mount_point: Document,
-    show_modal: (target: HTMLElement) => void
+    show_modal: (target: HTMLElement) => void,
 ): void {
     const reply_link = mount_point.querySelector(".email-tracker-reply");
     const reply_target = mount_point.getElementById("reply-by-mail-modal-info");
@@ -39,7 +39,7 @@ function initModal(
     mount_point: Document,
     target: HTMLElement,
     trigger: Element,
-    show_modal: (target: HTMLElement) => void
+    show_modal: (target: HTMLElement) => void,
 ): void {
     trigger.addEventListener("click", (event: Event): void => {
         event.preventDefault();

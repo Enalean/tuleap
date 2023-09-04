@@ -50,12 +50,12 @@ describe("FileDownloadController", () => {
                 {},
                 {
                     file: file,
-                }
+                },
             );
             FileDownloadController.$onInit();
 
             var decoded_file_download = decodeURIComponent(
-                FileDownloadController.file.download_url
+                FileDownloadController.file.download_url,
             );
             expect(FileDownloadController.file_download_url).toEqual(decoded_file_download);
         });

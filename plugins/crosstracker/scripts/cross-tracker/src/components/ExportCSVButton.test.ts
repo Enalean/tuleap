@@ -80,8 +80,8 @@ describe("ExportCSVButton", () => {
                     new FetchWrapperError("Not found", {
                         status: 404,
                         text: () => Promise.resolve("Report with id 90 not found"),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             wrapper.find("[data-test=export-cvs-button]").trigger("click");
@@ -91,7 +91,7 @@ describe("ExportCSVButton", () => {
             expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                "Report with id 90 not found"
+                "Report with id 90 not found",
             );
         });
 
@@ -102,14 +102,14 @@ describe("ExportCSVButton", () => {
                     response: {
                         status: 503,
                     },
-                })
+                }),
             );
             getCSVReport.mockImplementation(() =>
                 Promise.reject(
                     new FetchWrapperError("Forbidden", {
                         status: 503,
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             wrapper.find("[data-test=export-cvs-button]").trigger("click");
@@ -119,7 +119,7 @@ describe("ExportCSVButton", () => {
             expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                expect.any(String)
+                expect.any(String),
             );
         });
     });

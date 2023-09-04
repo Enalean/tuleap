@@ -179,7 +179,7 @@ describe("get-rest-body-from-search-params", () => {
         ],
     ])("should return the body based on search parameters (%s, %s)", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
-            expected
+            expected,
         );
     });
 });

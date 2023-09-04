@@ -46,7 +46,7 @@ export const createModal = (doc: Document, element: Element, options?: ModalOpti
 const getDropdownTrigger = (dropdown_menu: HTMLElement): HTMLElement => {
     if (dropdown_menu.dataset.triggeredBy) {
         const dropdown_trigger = dropdown_menu.ownerDocument.getElementById(
-            dropdown_menu.dataset.triggeredBy
+            dropdown_menu.dataset.triggeredBy,
         );
         if (!dropdown_trigger) {
             throw new Error("Dropdown trigger should exist");
@@ -133,7 +133,7 @@ export class Modal {
             textarea:enabled:not([type='hidden']),
             select:enabled:not([type='hidden']),
             button:enabled:not([data-dismiss]),
-            [href]`
+            [href]`,
         );
         if (first_form_element instanceof HTMLElement) {
             first_form_element.focus();

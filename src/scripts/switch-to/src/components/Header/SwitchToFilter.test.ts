@@ -66,7 +66,7 @@ describe("SwitchToFilter", () => {
                             filter_value: "abc",
                         },
                     },
-                })
+                }),
             ),
         });
         modal.hide();
@@ -91,7 +91,7 @@ describe("SwitchToFilter", () => {
                             filter_value: "abc",
                         },
                     },
-                })
+                }),
             ),
         });
 
@@ -113,7 +113,7 @@ describe("SwitchToFilter", () => {
                             filter_value: "abc",
                         },
                     },
-                })
+                }),
             ),
         });
 
@@ -141,7 +141,7 @@ describe("SwitchToFilter", () => {
                                 programmatically_focused_element: project,
                             } as KeyboardNavigationState,
                         },
-                    })
+                    }),
                 ),
                 provide: {
                     [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,

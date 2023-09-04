@@ -20,7 +20,7 @@
 export {}; // force the current script to be a module since it has no import
 
 document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event: Event) =>
-    initRoadmapConfigurationForm(event, false)
+    initRoadmapConfigurationForm(event, false),
 );
 
 document.addEventListener("dashboard-add-widget-settings-loaded", (event: Event) => {

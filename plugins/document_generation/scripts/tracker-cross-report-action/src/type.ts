@@ -68,7 +68,10 @@ export interface OrganizedReportDataLevel {
 }
 
 export class TextCellWithMerges extends TextCell {
-    constructor(override readonly value: string, readonly merges: number) {
+    constructor(
+        override readonly value: string,
+        readonly merges: number,
+    ) {
         super(value);
     }
 }

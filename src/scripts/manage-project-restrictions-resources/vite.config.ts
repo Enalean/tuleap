@@ -33,7 +33,7 @@ export default vite.defineAppConfig(
                 input: {
                     "manage-project-restrictions-resources": path.resolve(
                         __dirname,
-                        "src/index.ts"
+                        "src/index.ts",
                     ),
                 },
                 external: ["tlp"],
@@ -44,5 +44,5 @@ export default vite.defineAppConfig(
                 },
             },
         },
-    }
+    },
 );

@@ -76,7 +76,7 @@ export default class GitPermissionsTable extends Vue {
     get ugroup_empty_state(): string {
         return this.$gettextInterpolate(
             this.$gettext("%{ user_group } has no permission for any repository in this project"),
-            { user_group: this.selectedUgroupName }
+            { user_group: this.selectedUgroupName },
         );
     }
     get is_empty(): boolean {

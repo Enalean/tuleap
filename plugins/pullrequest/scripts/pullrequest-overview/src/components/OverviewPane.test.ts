@@ -43,7 +43,7 @@ const mockFetchPullRequestSuccess = (): void => {
         okAsync({
             title: "My pull request title",
             user_id,
-        } as PullRequest)
+        } as PullRequest),
     );
 };
 
@@ -59,7 +59,7 @@ describe("OverviewPane", () => {
                     params: {
                         id: String(pull_request_id),
                     },
-                } as unknown as RouteLocationNormalizedLoaded)
+                }) as unknown as RouteLocationNormalizedLoaded,
         );
     });
     it(`Should fetch the pull request info using its id provided in the route parameters
@@ -69,7 +69,7 @@ describe("OverviewPane", () => {
         vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(
             okAsync({
                 id: user_id,
-            } as User)
+            } as User),
         );
 
         shallowMount(OverviewPane);
@@ -83,7 +83,7 @@ describe("OverviewPane", () => {
     it(`When an error occurres while retrieving the pull-request
         Then should not try to retrieve the pull-request author`, async () => {
         vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
-            errAsync(Fault.fromMessage("Forbidden"))
+            errAsync(Fault.fromMessage("Forbidden")),
         );
 
         vi.spyOn(tuleap_api, "fetchUserInfo");

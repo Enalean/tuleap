@@ -54,7 +54,7 @@ describe("DragNDropHandler", () => {
         is_filename_pattern_enforced = false,
         max_size_upload = 1000000000,
         folder_content = [],
-        user_can_dragndrop = true
+        user_can_dragndrop = true,
     ) {
         const wrapper = shallowMount(DragNDropHandler, {
             global: {
@@ -142,7 +142,7 @@ describe("DragNDropHandler", () => {
                 await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(
-                    wrapper.vm.FILENAME_PATTERN_IS_SET_ERROR
+                    wrapper.vm.FILENAME_PATTERN_IS_SET_ERROR,
                 );
                 expect(add_upload_file_mock).not.toHaveBeenCalled();
             });
@@ -192,7 +192,7 @@ describe("DragNDropHandler", () => {
                 await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(
-                    wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE
+                    wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE,
                 );
             });
 
@@ -204,7 +204,7 @@ describe("DragNDropHandler", () => {
                 });
                 await wrapper.vm.ondrop(drop_event);
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(
-                    wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE
+                    wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE,
                 );
             });
 
@@ -555,7 +555,7 @@ describe("DragNDropHandler", () => {
 
             expect(wrapper.vm.is_drop_possible).toBe(false);
             expect(wrapper.vm.dragover_error_reason).toBe(
-                "Dropping files in workdir is forbidden."
+                "Dropping files in workdir is forbidden.",
             );
         });
 
@@ -568,7 +568,7 @@ describe("DragNDropHandler", () => {
 
             expect(wrapper.vm.is_drop_possible).toBe(false);
             expect(wrapper.vm.dragover_error_reason).toBe(
-                "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+                "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once.",
             );
         });
 

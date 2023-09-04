@@ -59,7 +59,7 @@ describe("TimeframeAdminSubmitButtons", () => {
             throw new Error("Reset button is not a button");
         }
         expect(reset_button.title).toBe(
-            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
+            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one.",
         );
     });
 
@@ -83,7 +83,7 @@ describe("TimeframeAdminSubmitButtons", () => {
             throw new Error("Reset button is not a button");
         }
         expect(reset_button.title).toBe(
-            "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin"
+            "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin",
         );
     });
 });

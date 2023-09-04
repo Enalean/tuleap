@@ -122,6 +122,6 @@ describe("DisplayHistory", () => {
             await nextTick();
 
             expect(wrapper.vm.item_has_versions).toBe(should_versions_link_be_displayed);
-        }
+        },
     );
 });

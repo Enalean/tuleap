@@ -45,7 +45,7 @@ import type { Swimlane } from "../../../../../type";
 export default class InvalidMappingCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin
+    ClassesForCollapsedColumnMixin,
 ) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;

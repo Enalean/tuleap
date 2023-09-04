@@ -22,7 +22,7 @@ import type { RepositoryFineGrainedPermissions } from "./type";
 
 export async function getGitPermissions(
     project_id: number,
-    selected_ugroup_id: string
+    selected_ugroup_id: string,
 ): Promise<{ repositories: RepositoryFineGrainedPermissions[] }> {
     const response = await get("/plugins/git/", {
         params: {

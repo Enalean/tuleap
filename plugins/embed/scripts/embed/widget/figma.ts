@@ -25,7 +25,7 @@ export const figma_pattern =
 export function insertFigma(link: HTMLAnchorElement): void {
     if (!link.ownerDocument) {
         throw Error(
-            "Embeddable link does not have a top-level document. Perhaps it is a document itself?"
+            "Embeddable link does not have a top-level document. Perhaps it is a document itself?",
         );
     }
 

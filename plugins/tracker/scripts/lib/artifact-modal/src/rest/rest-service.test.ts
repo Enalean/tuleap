@@ -110,7 +110,7 @@ describe("rest-service", () => {
 
             const result = await RestService.getUserPreference(
                 102,
-                "tracker_comment_invertorder_93"
+                "tracker_comment_invertorder_93",
             );
 
             expect(result).toEqual(return_json);
@@ -144,7 +144,7 @@ describe("rest-service", () => {
             const artifact_edition = await RestService.editArtifact(
                 8354,
                 field_values,
-                followup_comment
+                followup_comment,
             );
 
             expect(artifact_edition).toEqual({
@@ -185,7 +185,7 @@ describe("rest-service", () => {
                 field_values,
                 followup_comment,
                 "etag",
-                "1629098047"
+                "1629098047",
             );
 
             expect(artifact_edition).toEqual({
@@ -222,7 +222,7 @@ describe("rest-service", () => {
                 [],
                 followup_comment,
                 null,
-                "1629098047"
+                "1629098047",
             );
 
             expect(artifact_edition).toEqual({

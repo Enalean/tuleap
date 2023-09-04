@@ -31,7 +31,7 @@ describe("Build general information section", () => {
             "My project",
             "My milestone",
             "User name",
-            current_date
+            current_date,
         );
 
         expect(section).toStrictEqual({

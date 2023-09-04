@@ -150,7 +150,7 @@ describe("ProjectAllower", () => {
             okAsync([
                 { id: 102, label: "ACME Corp", shortname: "acme" },
                 { id: 103, label: "ACME Corp clone", shortname: "acme" },
-            ])
+            ]),
         );
         vi.spyOn(strict_inject, "strictInject").mockReturnValue({
             servers: [server],

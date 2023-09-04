@@ -44,7 +44,7 @@ export default {
                 const baselines_loading = dispatch(
                     "loadBaselines",
                     { baseline_ids },
-                    { root: true }
+                    { root: true },
                 );
 
                 await baselines_loading;
@@ -75,7 +75,7 @@ export default {
         },
         delete: (state, comparison_to_delete) => {
             state.comparisons = state.comparisons.filter(
-                (comparison) => comparison.id !== comparison_to_delete.id
+                (comparison) => comparison.id !== comparison_to_delete.id,
             );
         },
     },

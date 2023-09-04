@@ -32,12 +32,12 @@ import { getArtifacts } from "@tuleap/plugin-docgen-docx";
 export async function createTraceabilityMatrix(
     artifacts: ReadonlyArray<ArtifactFromReport>,
     datetime_locale_information: DateTimeLocaleInformation,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
 ): Promise<ReadonlyArray<TraceabilityMatrixElement>> {
     const elements = await getMatrixElements(
         artifacts,
         datetime_locale_information,
-        get_test_execution
+        get_test_execution,
     );
     const campaigns = await getCampaignsFromRawElements(elements);
 
@@ -75,7 +75,7 @@ interface RawMatrixElement {
 async function getMatrixElements(
     artifacts: ReadonlyArray<ArtifactFromReport>,
     datetime_locale_information: DateTimeLocaleInformation,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
 ): Promise<ReadonlyArray<Readonly<RawMatrixElement>>> {
     const possible_elements = [];
     for (const artifact of artifacts) {
@@ -150,7 +150,7 @@ interface ArtifactSectionContent {
 }
 
 function getArtifactFieldValues(
-    artifact_section_contents: ReadonlyArray<ArtifactSectionContent>
+    artifact_section_contents: ReadonlyArray<ArtifactSectionContent>,
 ): ReadonlyArray<ArtifactReportFieldValue> {
     return artifact_section_contents.flatMap((artifact_section_content) => {
         return [
@@ -161,7 +161,7 @@ function getArtifactFieldValues(
 }
 
 async function getCampaignsFromRawElements(
-    elements: ReadonlyArray<RawMatrixElement>
+    elements: ReadonlyArray<RawMatrixElement>,
 ): Promise<ReadonlyMap<number, ArtifactResponse>> {
     const campaign_ids = new Set(elements.flatMap((element) => element.campaigns));
 

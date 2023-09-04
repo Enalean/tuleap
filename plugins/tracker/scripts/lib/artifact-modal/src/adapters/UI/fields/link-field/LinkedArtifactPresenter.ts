@@ -28,7 +28,7 @@ export const LinkedArtifactPresenter = {
     fromLinkedArtifact: (
         artifact: LinkedArtifact,
         is_parent: boolean,
-        is_marked_for_removal: boolean
+        is_marked_for_removal: boolean,
     ): LinkedArtifactPresenter => ({
         ...artifact,
         is_parent,

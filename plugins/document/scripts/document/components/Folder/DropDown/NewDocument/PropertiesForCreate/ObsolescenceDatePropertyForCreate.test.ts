@@ -32,7 +32,7 @@ jest.mock("../../../../../helpers/emitter");
 describe("ObsolescenceDatePropertyForCreate", () => {
     function createWrapper(
         value: string,
-        is_obsolescence_date_property_used: boolean
+        is_obsolescence_date_property_used: boolean,
     ): VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForCreate>> {
         return shallowMount(ObsolescenceDatePropertyForCreate, {
             props: { value },
@@ -53,7 +53,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
 
     function checkOptionValue(
         wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForCreate>>,
-        expected_value: string
+        expected_value: string,
     ): void {
         const checked_element = wrapper.find("option:checked").element;
         if (!(checked_element instanceof HTMLOptionElement)) {
@@ -108,7 +108,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
             checkOptionValue(wrapper, "3");
             expect(emitter.emit).toHaveBeenCalledWith(
                 "update-obsolescence-date-property",
-                expected_date
+                expected_date,
             );
         });
     });
@@ -124,7 +124,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
                 (
                     wrapper.find("[data-test=document-obsolescence-date-select]")
                         .element as HTMLSelectElement
-                ).value
+                ).value,
             ).toBe("fixed");
         });
     });

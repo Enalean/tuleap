@@ -43,7 +43,7 @@ function launchSomeConfettis(modal: Modal): void {
     modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, reset);
 
     const tlp_main_color = getComputedStyle(document.documentElement).getPropertyValue(
-        "--tlp-main-color"
+        "--tlp-main-color",
     );
     const one_quarter_white_three_quarters_main_color =
         tlp_main_color.length > 0

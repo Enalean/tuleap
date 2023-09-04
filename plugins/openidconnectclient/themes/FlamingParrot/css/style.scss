@@ -42,7 +42,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_Orange {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-orange.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-orange.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -51,7 +52,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_Blue {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-blue.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-blue.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -60,7 +62,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_Green {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-green.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-green.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -69,7 +72,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_BlueGrey {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-bluegrey.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-bluegrey.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -78,7 +82,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_Purple {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-purple.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-purple.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }
@@ -87,7 +92,8 @@ body {
     // stylelint-disable-next-line selector-class-pattern
     &.FlamingParrot_Red {
         &.openid-connect-link {
-            background: url("../../../../../src/themes/FlamingParrot/images/login/login-background-red.png")
+            background:
+                url("../../../../../src/themes/FlamingParrot/images/login/login-background-red.png")
                     no-repeat center top,
                 linear-gradient(#ffffff 0%, #f5f5f5 75%);
         }

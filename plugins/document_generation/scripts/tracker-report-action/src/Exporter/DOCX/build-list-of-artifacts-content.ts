@@ -103,7 +103,7 @@ export async function buildListOfArtifactsContent(
     artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
     heading: HeadingLevel,
     style: string,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<(Paragraph | Table)[]> {
     const artifacts_content = [];
     for (const artifact of artifacts) {
@@ -120,7 +120,7 @@ export async function buildListOfArtifactsContent(
             }),
             ...(await buildFieldValuesDisplayZone(artifact, artifact.fields, gettext_provider)),
             ...(await buildContainersDisplayZone(artifact, artifact.containers, gettext_provider)),
-            new Paragraph({ children: [new PageBreak()] })
+            new Paragraph({ children: [new PageBreak()] }),
         );
     }
 
@@ -130,17 +130,17 @@ export async function buildListOfArtifactsContent(
 async function buildContainersDisplayZone(
     artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
     containers: ReadonlyArray<ArtifactContainer<ArtifactFieldValueStepDefinitionContent>>,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
         const sub_containers_display_zones = await buildContainersDisplayZone(
             artifact,
             container.containers,
-            gettext_provider
+            gettext_provider,
         );
         const field_values_display_zone: XmlComponent[] = [];
         field_values_display_zone.push(
-            ...(await buildFieldValuesDisplayZone(artifact, container.fields, gettext_provider))
+            ...(await buildFieldValuesDisplayZone(artifact, container.fields, gettext_provider)),
         );
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
@@ -168,7 +168,7 @@ async function buildContainersDisplayZone(
 async function buildFieldValuesDisplayZone(
     artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
     artifact_values: ReadonlyArray<ArtifactFieldValue<ArtifactFieldValueStepDefinitionContent>>,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];
     const display_zone_long_fields: XmlComponent[] = [];
@@ -187,7 +187,7 @@ async function buildFieldValuesDisplayZone(
                     ...(await buildParagraphsFromContent(field.field_value, field.content_format, [
                         HeadingLevel.HEADING_5,
                         HeadingLevel.HEADING_6,
-                    ]))
+                    ])),
                 );
                 break;
             case "blockttmstepdef":
@@ -195,7 +195,7 @@ async function buildFieldValuesDisplayZone(
                     new Paragraph({
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
-                    })
+                    }),
                 );
                 for (const step of field.steps) {
                     display_zone_long_fields.push(
@@ -203,11 +203,11 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank),
                                 ),
                             ],
                         }),
-                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider)),
                     );
                 }
                 break;
@@ -216,7 +216,7 @@ async function buildFieldValuesDisplayZone(
                     new Paragraph({
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
-                    })
+                    }),
                 );
 
                 if (field.steps.length === 0) {
@@ -231,7 +231,7 @@ async function buildFieldValuesDisplayZone(
                             buildTableCellHeaderValue(gettext_provider.gettext("Status")),
                         ],
                         tableHeader: true,
-                    })
+                    }),
                 );
                 let step_number = 1;
                 for (const step_status of field.steps_values) {
@@ -239,18 +239,18 @@ async function buildFieldValuesDisplayZone(
                         new TableRow({
                             children: [
                                 buildTableCellLabel(
-                                    sprintf(gettext_provider.gettext("Step %d"), step_number)
+                                    sprintf(gettext_provider.gettext("Step %d"), step_number),
                                 ),
 
                                 buildCellContentStatus(
                                     step_status,
                                     (status) =>
                                         getInternationalizedTestStatus(gettext_provider, status),
-                                    1
+                                    1,
                                 ),
                             ],
                             tableHeader: true,
-                        })
+                        }),
                     );
                     step_number++;
                 }
@@ -261,7 +261,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank),
                                 ),
                             ],
                         }),
@@ -274,14 +274,14 @@ async function buildFieldValuesDisplayZone(
                                         (status) =>
                                             getInternationalizedTestStatus(
                                                 gettext_provider,
-                                                status
+                                                status,
                                             ),
-                                        1
+                                        1,
                                     ),
                                 ],
                             }),
                         ]),
-                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider)),
                     );
                 }
                 break;
@@ -291,7 +291,7 @@ async function buildFieldValuesDisplayZone(
                     new Paragraph({
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
-                    })
+                    }),
                 );
 
                 if (field.links.length > 0) {
@@ -302,11 +302,11 @@ async function buildFieldValuesDisplayZone(
                                 new TextRun(
                                     sprintf(
                                         gettext_provider.gettext("Artifacts referenced by “%s”"),
-                                        artifact.short_title
-                                    )
+                                        artifact.short_title,
+                                    ),
                                 ),
                             ],
-                        })
+                        }),
                     );
                     const links_table_rows: TableRow[] = [
                         new TableRow({
@@ -332,7 +332,7 @@ async function buildFieldValuesDisplayZone(
                                                       id: link.artifact_id,
                                                   }),
                                               })
-                                            : new TextRun(link.artifact_id.toString())
+                                            : new TextRun(link.artifact_id.toString()),
                                     ),
                                     buildTableCellContent(
                                         link.html_url
@@ -345,11 +345,11 @@ async function buildFieldValuesDisplayZone(
                                                   ],
                                                   link: link.html_url.toString(),
                                               })
-                                            : new TextRun(link.title)
+                                            : new TextRun(link.title),
                                     ),
                                     buildTableCellContent(new TextRun(link.type)),
                                 ],
-                            })
+                            }),
                         );
                     }
                     display_zone_long_fields.push(buildTable(links_table_rows));
@@ -363,11 +363,11 @@ async function buildFieldValuesDisplayZone(
                                 new TextRun(
                                     sprintf(
                                         gettext_provider.gettext("Artifacts that reference “%s”"),
-                                        artifact.short_title
-                                    )
+                                        artifact.short_title,
+                                    ),
                                 ),
                             ],
-                        })
+                        }),
                     );
                     const reverse_links_table_rows: TableRow[] = [
                         new TableRow({
@@ -388,14 +388,14 @@ async function buildFieldValuesDisplayZone(
                                             ? new InternalHyperlink({
                                                   children: [
                                                       new TextRun(
-                                                          reverse_link.artifact_id.toString()
+                                                          reverse_link.artifact_id.toString(),
                                                       ),
                                                   ],
                                                   anchor: getAnchorToArtifactContent({
                                                       id: reverse_link.artifact_id,
                                                   }),
                                               })
-                                            : new TextRun(reverse_link.artifact_id.toString())
+                                            : new TextRun(reverse_link.artifact_id.toString()),
                                     ),
                                     buildTableCellContent(
                                         reverse_link.html_url
@@ -408,11 +408,11 @@ async function buildFieldValuesDisplayZone(
                                                   ],
                                                   link: reverse_link.html_url.toString(),
                                               })
-                                            : new TextRun(reverse_link.title)
+                                            : new TextRun(reverse_link.title),
                                     ),
                                     buildTableCellContent(new TextRun(reverse_link.type)),
                                 ],
-                            })
+                            }),
                         );
                     }
                     display_zone_long_fields.push(buildTable(reverse_links_table_rows));
@@ -439,7 +439,7 @@ async function buildFieldValuesDisplayZone(
 }
 
 function buildShortFieldValuesDisplayZone(
-    artifact_values: ReadonlyArray<ArtifactFieldShortValue>
+    artifact_values: ReadonlyArray<ArtifactFieldShortValue>,
 ): Table {
     const fields_rows: TableRow[] = [];
 
@@ -451,7 +451,7 @@ function buildShortFieldValuesDisplayZone(
                     new ExternalHyperlink({
                         children: [new TextRun({ text: link.link_label, style: "Hyperlink" })],
                         link: link.link_url,
-                    })
+                    }),
                 );
             }
 
@@ -542,7 +542,7 @@ function buildTableCellLabel(name: string): TableCell {
 }
 
 function buildTableCellContent(
-    content: TextRun | ExternalHyperlink | InternalHyperlink
+    content: TextRun | ExternalHyperlink | InternalHyperlink,
 ): TableCell {
     return new TableCell({
         children: [
@@ -572,7 +572,7 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
 
 async function buildStepDefinitionParagraphs(
     step: ArtifactFieldValueStepDefinition,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<Paragraph[]> {
     const paragraphs: Paragraph[] = [];
 
@@ -590,7 +590,7 @@ async function buildStepDefinitionParagraphs(
         }),
         ...(await buildParagraphsFromContent(step.expected_results, step.expected_results_format, [
             HeadingLevel.HEADING_6,
-        ]))
+        ])),
     );
 
     return paragraphs;
@@ -599,7 +599,7 @@ async function buildStepDefinitionParagraphs(
 async function buildParagraphsFromContent(
     content: string,
     format: "plaintext" | "html",
-    title_levels: ReadonlyArrayWithAtLeastOneElement<HeadingLevel>
+    title_levels: ReadonlyArrayWithAtLeastOneElement<HeadingLevel>,
 ): Promise<Paragraph[]> {
     const paragraphs: Paragraph[] = [];
 
@@ -609,7 +609,7 @@ async function buildParagraphsFromContent(
             unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
             ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
             monospace_font: "Courier New",
-        }))
+        })),
     );
 
     return paragraphs;

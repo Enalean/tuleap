@@ -42,17 +42,14 @@ describe("BacklogItemCollectionService", () => {
         });
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _BacklogItemCollectionService_,
-            _BacklogItemService_
-        ) {
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            BacklogItemCollectionService = _BacklogItemCollectionService_;
-            BacklogItemService = _BacklogItemService_;
-        });
+        angular.mock.inject(
+            function (_$q_, _$rootScope_, _BacklogItemCollectionService_, _BacklogItemService_) {
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                BacklogItemCollectionService = _BacklogItemCollectionService_;
+                BacklogItemService = _BacklogItemService_;
+            },
+        );
         jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);

@@ -29,7 +29,7 @@ import type { Folder, Item, Property } from "../../type";
 
 export function transformFolderPropertiesForRecursionAtUpdate(
     item: Folder,
-    is_status_property_used: boolean
+    is_status_property_used: boolean,
 ): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));
 
@@ -56,7 +56,7 @@ export function transformFolderPropertiesForRecursionAtUpdate(
 
 export function transformDocumentPropertiesForUpdate(
     document_to_update: Item,
-    is_status_property_used: boolean
+    is_status_property_used: boolean,
 ): void {
     if (!is_status_property_used || !document_to_update.properties) {
         return;
@@ -96,7 +96,7 @@ export function transformCustomPropertiesForItemUpdate(parent_properties: Array<
 export function formatCustomPropertiesForFolderUpdate(
     item_to_update: Folder,
     properties_to_update: Array<string>,
-    recursion_option: string
+    recursion_option: string,
 ): void {
     item_to_update.properties.forEach((item_properties) => {
         if (properties_to_update.find((short_name) => short_name === item_properties.short_name)) {

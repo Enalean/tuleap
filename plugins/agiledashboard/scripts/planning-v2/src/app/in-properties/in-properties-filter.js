@@ -51,7 +51,7 @@ function InPropertiesFilter($filter) {
                 if (hasChildren(item)) {
                     var filtered_children = $filter("InPropertiesFilter")(
                         item.children.data,
-                        terms
+                        terms,
                     );
                     return !isEmpty(filtered_children);
                 }

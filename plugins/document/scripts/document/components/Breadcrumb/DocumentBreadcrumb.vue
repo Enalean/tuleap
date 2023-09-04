@@ -68,7 +68,7 @@
                 <span
                     class="breadcrumb-link"
                     v-bind:title="`${$gettext(
-                        'Parent folders are not displayed to not clutter the interface'
+                        'Parent folders are not displayed to not clutter the interface',
                     )}`"
                 >
                     ...

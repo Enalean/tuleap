@@ -56,7 +56,7 @@ export default class ReleaseDescriptionBadgesTracker extends Vue {
 
     get trackers_to_display(): TrackerNumberArtifacts[] {
         return this.release_data.number_of_artifact_by_trackers.filter(
-            (tracker) => tracker.total_artifact > 0
+            (tracker) => tracker.total_artifact > 0,
         );
     }
 

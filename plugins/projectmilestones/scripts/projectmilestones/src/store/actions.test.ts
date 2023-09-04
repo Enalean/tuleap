@@ -121,11 +121,11 @@ describe("Store actions", () => {
                 ];
 
                 jest.spyOn(rest_querier, "getLastRelease").mockReturnValue(
-                    Promise.resolve(last_release)
+                    Promise.resolve(last_release),
                 );
 
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
-                    Promise.resolve(milestones)
+                    Promise.resolve(milestones),
                 );
 
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
@@ -201,11 +201,11 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getLastRelease").mockReturnValue(
-                Promise.resolve(last_release)
+                Promise.resolve(last_release),
             );
 
             jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
-                Promise.resolve(milestones)
+                Promise.resolve(milestones),
             );
 
             jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
@@ -363,18 +363,18 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getMilestonesBacklog").mockReturnValue(
-                Promise.resolve(milestone_content)
+                Promise.resolve(milestone_content),
             );
             jest.spyOn(rest_querier, "getAllSprints").mockReturnValue(
-                Promise.resolve([sprint_closed, ...sprint_open])
+                Promise.resolve([sprint_closed, ...sprint_open]),
             );
             jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
-                Promise.resolve(item_in_sprint)
+                Promise.resolve(item_in_sprint),
             );
 
             const enriched_milestones_received = await actions.getEnhancedMilestones(
                 context,
-                milestone
+                milestone,
             );
             expect(enriched_milestones_received).toEqual(enriched_milestones);
         });
@@ -409,7 +409,7 @@ describe("Store actions", () => {
             };
 
             jest.spyOn(rest_querier, "getTestManagementCampaigns").mockReturnValue(
-                Promise.resolve(campaigns)
+                Promise.resolve(campaigns),
             );
 
             const campaign = await actions.getTestManagementCampaigns(context, milestone);
@@ -425,7 +425,7 @@ describe("Store actions", () => {
                     json(): Promise<void> {
                         throw new Error();
                     },
-                } as Response)
+                } as Response),
             );
 
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");

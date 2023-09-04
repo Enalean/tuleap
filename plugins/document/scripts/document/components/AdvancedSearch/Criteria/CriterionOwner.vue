@@ -48,7 +48,7 @@ const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
 const { project_name } = useNamespacedState<Pick<ConfigurationState, "project_name">>(
     "configuration",
-    ["project_name"]
+    ["project_name"],
 );
 
 const owner_input = ref<InstanceType<typeof HTMLElement>>();
@@ -60,7 +60,7 @@ const emit = defineEmits<{
 }>();
 
 const get_currently_selected_user = computed(
-    (): RestUser | undefined => currently_selected_user.value
+    (): RestUser | undefined => currently_selected_user.value,
 );
 
 onMounted(async (): Promise<void> => {

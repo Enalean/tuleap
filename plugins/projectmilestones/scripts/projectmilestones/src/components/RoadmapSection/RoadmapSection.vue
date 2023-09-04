@@ -61,7 +61,7 @@ export default class RoadmapSection extends Vue {
         const translated = this.$ngettext(
             "%{nb_backlog_items} item in the backlog.",
             "%{nb_backlog_items} items in the backlog.",
-            this.nb_backlog_items
+            this.nb_backlog_items,
         );
 
         return this.$gettextInterpolate(translated, { nb_backlog_items: this.nb_backlog_items });
@@ -71,7 +71,7 @@ export default class RoadmapSection extends Vue {
         const translated = this.$ngettext(
             "%{nb_upcoming_releases} upcoming %{label_tracker}.",
             "%{nb_upcoming_releases} upcoming %{label_tracker}.",
-            this.nb_upcoming_releases
+            this.nb_upcoming_releases,
         );
 
         return this.$gettextInterpolate(translated, {

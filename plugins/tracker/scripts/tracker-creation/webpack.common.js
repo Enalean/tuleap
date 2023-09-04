@@ -33,7 +33,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/trackers/tracker-creation/"
+        "/assets/trackers/tracker-creation/",
     ),
     externals: {
         jquery: "jQuery",

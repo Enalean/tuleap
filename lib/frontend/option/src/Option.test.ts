@@ -33,7 +33,7 @@ describe(`Option`, () => {
         (_variant, option, expected_is_value, expected_is_nothing) => {
             expect(option.isValue()).toBe(expected_is_value);
             expect(option.isNothing()).toBe(expected_is_nothing);
-        }
+        },
     );
 
     describe(`Some`, () => {
@@ -108,7 +108,7 @@ describe(`Option`, () => {
                 () => {
                     map_value = "fault";
                     return "fault callback";
-                }
+                },
             );
 
             expect(mapped).toBe("callback");
@@ -166,7 +166,7 @@ describe(`Option`, () => {
                 () => {
                     map_value = "fault";
                     return "fault callback";
-                }
+                },
             );
 
             expect(mapped).toBe("fault callback");

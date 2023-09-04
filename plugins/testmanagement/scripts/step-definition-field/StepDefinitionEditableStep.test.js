@@ -38,7 +38,7 @@ function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMON
         },
     };
     jest.spyOn(RichTextEditorFactory, "forFlamingParrotWithExistingFormatSelector").mockReturnValue(
-        editor_factory
+        editor_factory,
     );
 
     const state = {
@@ -154,7 +154,7 @@ describe("StepDefinitionEditableStep", () => {
         it(`cannot interpret the CommonMark because the route failed to interpret the content`, async () => {
             const expected_error_text = new Error("FAIL!");
             jest.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(
-                expected_error_text
+                expected_error_text,
             );
 
             const wrapper = getComponentInstance({
@@ -179,14 +179,14 @@ describe("StepDefinitionEditableStep", () => {
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results"
+                    "raw expected results",
                 );
 
                 wrapper.vm.getEditorsContent();
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("some fabulous content");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "some fabulous content"
+                    "some fabulous content",
                 );
             });
 
@@ -195,14 +195,14 @@ describe("StepDefinitionEditableStep", () => {
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results"
+                    "raw expected results",
                 );
 
                 wrapper.vm.getEditorsContent();
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results"
+                    "raw expected results",
                 );
             });
 
@@ -211,7 +211,7 @@ describe("StepDefinitionEditableStep", () => {
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results"
+                    "raw expected results",
                 );
 
                 wrapper.setData({ editors: [] });
@@ -219,7 +219,7 @@ describe("StepDefinitionEditableStep", () => {
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
-                    "raw expected results"
+                    "raw expected results",
                 );
             });
         });

@@ -28,7 +28,7 @@ document.observe("dom:loaded", function () {
             table
                 .down("thead > tr > td", previewPos)
                 .update(
-                    '<label style="font-weight: bold;">' + codendi.locales.git.preview + "</label>"
+                    '<label style="font-weight: bold;">' + codendi.locales.git.preview + "</label>",
                 );
             var preview = new Element("div", {
                 style: "color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;",
@@ -59,7 +59,7 @@ document.observe("dom:loaded", function () {
                     $F("fork_repositories_path").strip()
                 ) {
                     tplVars["path"] = tuleap.escaper.html(
-                        $F("fork_repositories_path").strip() + "/"
+                        $F("fork_repositories_path").strip() + "/",
                     );
                 }
                 var reposList = $("fork_repositories_repo");
@@ -367,10 +367,10 @@ document.observe("dom:loaded", function () {
     function toggleMigrateDeleteRemote() {
         var should_delete =
                 $("gerrit_url").options[$("gerrit_url").selectedIndex].readAttribute(
-                    "data-repo-delete"
+                    "data-repo-delete",
                 ),
             plugin_enabled = $("gerrit_url").options[$("gerrit_url").selectedIndex].readAttribute(
-                "data-repo-delete-plugin-enabled"
+                "data-repo-delete-plugin-enabled",
             );
 
         if (should_delete == 0) {

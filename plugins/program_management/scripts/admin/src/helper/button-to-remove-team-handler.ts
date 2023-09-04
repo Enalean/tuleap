@@ -22,7 +22,7 @@ import { manageTeamOfProgram } from "../api/manage-team";
 export function handleTeamRemove(
     button_confirm_remove_team: HTMLElement,
     aggregated_team_ids: number[],
-    program_id: number
+    program_id: number,
 ): void {
     const team_id_to_remove = button_confirm_remove_team.dataset.teamId;
     if (!team_id_to_remove) {
@@ -31,7 +31,7 @@ export function handleTeamRemove(
 
     button_confirm_remove_team.addEventListener("click", async () => {
         const new_team_ids_of_program = aggregated_team_ids.filter(
-            (id) => id !== Number.parseInt(team_id_to_remove, 10)
+            (id) => id !== Number.parseInt(team_id_to_remove, 10),
         );
 
         await manageTeamOfProgram({

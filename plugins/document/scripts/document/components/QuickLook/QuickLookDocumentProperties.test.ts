@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookDocumentProperties", () => {
     function createWrapper(
-        item: Item
+        item: Item,
     ): VueWrapper<InstanceType<typeof QuickLookDocumentProperties>> {
         return shallowMount(QuickLookDocumentProperties, {
             props: {
@@ -142,7 +142,7 @@ describe("QuickLookDocumentProperties", () => {
 
         const wrapper = createWrapper(item);
         expect(
-            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists()
+            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists(),
         ).toBeTruthy();
     });
 
@@ -164,7 +164,7 @@ describe("QuickLookDocumentProperties", () => {
 
         const wrapper = createWrapper(item);
         expect(
-            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists()
+            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists(),
         ).toBeFalsy();
     });
 });

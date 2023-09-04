@@ -32,8 +32,8 @@ describe("Internationalize test status", () => {
         expect(
             getInternationalizedTestStatus(
                 createVueGettextProviderPassthrough(),
-                test_status as keyof TestStats | null
-            )
+                test_status as keyof TestStats | null,
+            ),
         ).toBe(expected);
     });
 });

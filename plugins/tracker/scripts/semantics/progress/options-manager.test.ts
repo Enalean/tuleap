@@ -21,7 +21,7 @@ import { init } from "./options-manager";
 
 function populateSelectBox(
     select: HTMLSelectElement,
-    options: { name: string; value: string }[]
+    options: { name: string; value: string }[],
 ): void {
     const empty_option = document.createElement("option");
     empty_option.setAttribute("name", "");
@@ -90,20 +90,20 @@ describe("options-manager", () => {
                 effort_based_section,
                 total_effort_selector,
                 remaining_effort_selector,
-                links_count_based_section
+                links_count_based_section,
             );
 
             expect(method_selector.addEventListener).toHaveBeenCalledWith(
                 "change",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(total_effort_selector.addEventListener).toHaveBeenCalledWith(
                 "change",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(remaining_effort_selector.addEventListener).toHaveBeenCalledWith(
                 "change",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 
@@ -117,7 +117,7 @@ describe("options-manager", () => {
                 effort_based_section,
                 total_effort_selector,
                 remaining_effort_selector,
-                links_count_based_section
+                links_count_based_section,
             );
 
             expect(getNamedOption(total_effort_selector, "field-1002").disabled).toBe(true);
@@ -133,7 +133,7 @@ describe("options-manager", () => {
                 effort_based_section,
                 total_effort_selector,
                 remaining_effort_selector,
-                links_count_based_section
+                links_count_based_section,
             );
         });
 
@@ -142,19 +142,19 @@ describe("options-manager", () => {
                 const effort_based_option = getNamedOption(method_selector, "effort-based");
                 const links_based_option = getNamedOption(
                     method_selector,
-                    "artifacts-links-count-based"
+                    "artifacts-links-count-based",
                 );
 
                 effort_based_option.selected = true;
                 method_selector.dispatchEvent(new Event("change"));
 
                 expect(
-                    effort_based_section.classList.contains("selected-computation-method-config")
+                    effort_based_section.classList.contains("selected-computation-method-config"),
                 ).toBe(true);
                 expect(
                     links_count_based_section.classList.contains(
-                        "selected-computation-method-config"
-                    )
+                        "selected-computation-method-config",
+                    ),
                 ).toBe(false);
 
                 expect(total_effort_selector.getAttribute("disabled")).toBeNull();
@@ -164,12 +164,12 @@ describe("options-manager", () => {
                 method_selector.dispatchEvent(new Event("change"));
 
                 expect(
-                    effort_based_section.classList.contains("selected-computation-method-config")
+                    effort_based_section.classList.contains("selected-computation-method-config"),
                 ).toBe(false);
                 expect(
                     links_count_based_section.classList.contains(
-                        "selected-computation-method-config"
-                    )
+                        "selected-computation-method-config",
+                    ),
                 ).toBe(true);
 
                 expect(total_effort_selector.getAttribute("disabled")).toBe("disabled");
@@ -182,7 +182,7 @@ describe("options-manager", () => {
                 const effort_based_option = getNamedOption(method_selector, "effort-based");
                 const links_based_option = getNamedOption(
                     method_selector,
-                    "artifacts-links-count-based"
+                    "artifacts-links-count-based",
                 );
 
                 links_based_option.selected = true;

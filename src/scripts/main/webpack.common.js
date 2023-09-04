@@ -30,7 +30,7 @@ const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/main/");
 
 const pkg = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "./node_modules/ckeditor4/package.json"))
+    fs.readFileSync(path.resolve(__dirname, "./node_modules/ckeditor4/package.json")),
 );
 const ckeditor_version = pkg.version;
 
@@ -239,7 +239,7 @@ const webpack_config_legacy_combined = {
             "tuleap-including-prototypejs.js": fat_combined_files,
             "tuleap_subset.js": subset_combined_files,
             "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
-                subset_combined_flamingparrot_files
+                subset_combined_flamingparrot_files,
             ),
         }),
         manifest_plugin,

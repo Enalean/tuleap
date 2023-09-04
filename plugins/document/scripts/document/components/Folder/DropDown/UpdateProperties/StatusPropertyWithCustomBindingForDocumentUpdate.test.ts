@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
     function createWrapper(
-        is_status_property_used: boolean
+        is_status_property_used: boolean,
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForDocumentUpdate>> {
         return shallowMount(StatusPropertyWithCustomBindingForDocumentUpdate, {
             props: { status_value: "none" },

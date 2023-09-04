@@ -126,7 +126,7 @@ const { embedded_are_allowed, user_can_create_wiki, user_locale } = useNamespace
 
 const create_new_item_alternatives = inject<NewItemAlternativeArray>(
     "create_new_item_alternatives",
-    []
+    [],
 );
 
 const props = defineProps<{ item: Empty; location?: Location }>();
@@ -142,7 +142,7 @@ function showNewVersionModal(type: ItemType): void {
 async function convertEmptyDocument(alternative: NewItemAlternative): Promise<void> {
     const office_file = await getEmptyOfficeFileFromMimeType(
         user_locale.value,
-        alternative.mime_type
+        alternative.mime_type,
     );
     const file = new File([office_file.file], props.item.title + "." + office_file.extension, {
         type: alternative.mime_type,

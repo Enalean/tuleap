@@ -134,8 +134,8 @@ describe("loadAscendantHierarchy", () => {
                                 i18n_error_message: error_message,
                             },
                         }),
-                } as Response)
-            )
+                } as Response),
+            ),
         );
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");

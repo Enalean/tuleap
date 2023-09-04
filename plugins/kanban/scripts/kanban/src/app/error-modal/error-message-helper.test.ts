@@ -36,7 +36,7 @@ describe(`error-message-helper`, () => {
                 },
             } as Response;
             const result = await extractErrorMessage(
-                new FetchWrapperError("Internal Server Error", response)
+                new FetchWrapperError("Internal Server Error", response),
             );
             expect(result).toBe("Internal Server Error");
         });
@@ -49,7 +49,7 @@ describe(`error-message-helper`, () => {
                 },
             } as Response;
             const result = await extractErrorMessage(
-                new FetchWrapperError("Bad Request", response)
+                new FetchWrapperError("Bad Request", response),
             );
             expect(result).toBe("Bad Request");
         });
@@ -62,7 +62,7 @@ describe(`error-message-helper`, () => {
                 },
             } as Response;
             const result = await extractErrorMessage(
-                new FetchWrapperError("Bad Request", response)
+                new FetchWrapperError("Bad Request", response),
             );
             expect(result).toBe(`Missing property "query"`);
         });

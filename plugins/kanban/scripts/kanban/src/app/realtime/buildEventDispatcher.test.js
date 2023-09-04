@@ -20,21 +20,21 @@ describe("buildEventDispatcher -", function () {
         build_event_dispatcher = buildEventDispatcher(
             callback_item_update,
             callback_item_moved,
-            callback_item_create
+            callback_item_create,
         );
     });
     function mockEventItemMove() {
         return new eventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:move\\",\\"data\\":{\\"ordered_destination_column_items_ids\\":[2,1],\\"artifact_id\\":1,\\"in_column\\":101,\\"from_column\\":\\"backlog\\"}}"',
             "",
-            "1"
+            "1",
         );
     }
     function mockEventItemUpdate() {
         return new eventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:update\\",\\"data\\":{\\"artifact_id\\":1}}"',
             "",
-            "1"
+            "1",
         );
     }
 
@@ -42,7 +42,7 @@ describe("buildEventDispatcher -", function () {
         return new eventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:create\\",\\"data\\":{\\"artifact_id\\":4}}"',
             "",
-            ""
+            "",
         );
     }
 

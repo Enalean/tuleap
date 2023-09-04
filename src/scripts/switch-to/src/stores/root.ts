@@ -48,9 +48,9 @@ export const useRootStore = defineStore("root", () => {
 
                     return matching_entries;
                 },
-                []
+                [],
             ),
-        })
+        }),
     );
 
     const filtered_projects = computed((): Project[] =>
@@ -60,7 +60,7 @@ export const useRootStore = defineStore("root", () => {
             }
 
             return matching_projects;
-        }, [])
+        }, []),
     );
 
     const is_in_search_mode = computed((): boolean => keywords.value.length > 0);

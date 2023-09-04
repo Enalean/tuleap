@@ -36,7 +36,7 @@ export class MultipleSelectionManager implements SelectionManager {
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
         private readonly gettext_provider: GettextProvider,
-        private readonly none_item?: ListPickerItem | null
+        private readonly none_item?: ListPickerItem | null,
     ) {
         this.selection_state = {
             selected_items: new Map(),
@@ -192,7 +192,7 @@ export class MultipleSelectionManager implements SelectionManager {
         if (!this.selection_element.contains(this.clear_selection_state_button_element)) {
             this.selection_element.insertAdjacentElement(
                 "beforeend",
-                this.clear_selection_state_button_element
+                this.clear_selection_state_button_element,
             );
         }
     }
@@ -210,7 +210,7 @@ export class MultipleSelectionManager implements SelectionManager {
         remove_value_button.innerText = "×";
         remove_value_button.setAttribute(
             "title",
-            this.gettext_provider.gettext("Remove all values")
+            this.gettext_provider.gettext("Remove all values"),
         );
 
         remove_value_button.addEventListener("pointerdown", (event: Event) => {

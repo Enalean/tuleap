@@ -98,7 +98,7 @@ export default class BranchesSection extends Vue {
 
     get filtered_branches(): Branch[] {
         return this.branches.filter(
-            (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1
+            (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1,
         );
     }
     get filter(): string {

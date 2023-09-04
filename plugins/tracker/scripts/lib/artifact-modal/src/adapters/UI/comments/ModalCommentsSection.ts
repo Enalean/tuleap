@@ -44,7 +44,7 @@ export const getNewCommentClasses = (is_comment_order_inverted: boolean): MapOfC
 });
 
 const getNewCommentTemplate = (
-    host: InternalModalCommentsSection
+    host: InternalModalCommentsSection,
 ): UpdateFunction<InternalModalCommentsSection> => {
     if (!host.presenter.preferences.is_allowed_to_add_comment) {
         return html``;
@@ -64,7 +64,7 @@ export const getSectionClasses = (is_comment_order_inverted: boolean): MapOfClas
 });
 
 export const getSectionTemplate = (
-    host: InternalModalCommentsSection
+    host: InternalModalCommentsSection,
 ): UpdateFunction<InternalModalCommentsSection> => {
     if (host.presenter.is_loading) {
         return html`<div>
@@ -89,7 +89,7 @@ export const getSectionTemplate = (
             class="${getSectionClasses(host.presenter.preferences.is_comment_order_inverted)}"
         >
             ${host.presenter.comments.map((comment) =>
-                getCommentTemplate(comment, host.presenter.preferences)
+                getCommentTemplate(comment, host.presenter.preferences),
             )}
         </div>
         ${getNewCommentTemplate(host)}`;
@@ -115,7 +115,7 @@ export const ModalCommentsSection = define<InternalModalCommentsSection>({
             controller.getComments().then((comments) => {
                 host.presenter = CommentsPresenter.fromCommentsAndPreferences(
                     comments,
-                    preferences
+                    preferences,
                 );
                 host.content();
                 loadTooltips(host);
@@ -124,15 +124,16 @@ export const ModalCommentsSection = define<InternalModalCommentsSection>({
         },
     },
     formattedTextController: undefined,
-    content: (host) => html` <h2
-            class="tlp-modal-subtitle tuleap-artifact-modal-followups-title"
-            title="${getChangesetsCommentMessage()}"
-        >
-            <i
-                class="fa-regular fa-comments tuleap-artifact-modal-followups-title-icon"
-                aria-hidden="true"
-            ></i>
-            ${getCommentsSectionTitle()}
-        </h2>
-        ${getSectionTemplate(host)}`,
+    content: (host) =>
+        html` <h2
+                class="tlp-modal-subtitle tuleap-artifact-modal-followups-title"
+                title="${getChangesetsCommentMessage()}"
+            >
+                <i
+                    class="fa-regular fa-comments tuleap-artifact-modal-followups-title-icon"
+                    aria-hidden="true"
+                ></i>
+                ${getCommentsSectionTitle()}
+            </h2>
+            ${getSectionTemplate(host)}`,
 });

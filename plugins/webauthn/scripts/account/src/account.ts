@@ -49,12 +49,12 @@ function prepareRegistration(): void {
     const name_modal_input = selectOrThrow(
         form_name_modal,
         "#webauthn-name-input",
-        HTMLInputElement
+        HTMLInputElement,
     );
     const csrf_modal_input = selectOrThrow(
         form_name_modal,
         "input[name=challenge]",
-        HTMLInputElement
+        HTMLInputElement,
     );
     const error = selectOrThrow(document, "#webauthn-add-error");
     const add_button_icon = selectOrThrow(document, "#webauthn-modal-add");
@@ -68,7 +68,7 @@ function prepareRegistration(): void {
                 add_button_icon.classList.add(HIDDEN);
                 error.classList.remove(HIDDEN);
                 error.innerText = fault.toString();
-            }
+            },
         );
     }
 
@@ -98,13 +98,13 @@ function prepareRemove(): void {
     const csrf_modal_input = selectOrThrow(
         form_remove_modal,
         "input[name=challenge]",
-        HTMLInputElement
+        HTMLInputElement,
     );
     const error = selectOrThrow(form_remove_modal, "#webauthn-remove-error");
     const remove_button = selectOrThrow(
         form_remove_modal,
         "#webauthn-modal-remove-button",
-        HTMLButtonElement
+        HTMLButtonElement,
     );
     const remove_button_icon = selectOrThrow(form_remove_modal, "#webauthn-modal-remove");
 
@@ -142,7 +142,7 @@ function prepareRemove(): void {
                 remove_button.disabled = false;
                 error.innerText = fault.toString();
                 error.classList.remove(HIDDEN);
-            }
+            },
         );
     });
 }

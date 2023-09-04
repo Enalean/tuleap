@@ -34,7 +34,7 @@ describe("getProjectFromDataset", () => {
     it("should get a project where current user is not admin", () => {
         const project: Project = getProjectsFromDataset(
             `[{"project_uri":"/project","project_config_uri":"/admin","is_current_user_admin":false}]`,
-            $gettext
+            $gettext,
         )[0];
 
         expect(project.project_uri).toBe("/project");
@@ -44,7 +44,7 @@ describe("getProjectFromDataset", () => {
     it("should get a project where current user is admin", () => {
         const project: Project = getProjectsFromDataset(
             `[{"project_uri":"/project","project_config_uri":"/admin","is_current_user_admin":true}]`,
-            $gettext
+            $gettext,
         )[0];
 
         expect(project.project_uri).toBe("/project");

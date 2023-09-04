@@ -27,7 +27,7 @@ describe(`ParentTrackerIdentifierProxy`, () => {
     it(`builds when parent tracker representation exists`, () => {
         const representation = { id: 93 };
         expect(
-            ParentTrackerIdentifierProxy.fromTrackerModel(representation).unwrapOr(null)?.id
+            ParentTrackerIdentifierProxy.fromTrackerModel(representation).unwrapOr(null)?.id,
         ).toBe(93);
     });
 });

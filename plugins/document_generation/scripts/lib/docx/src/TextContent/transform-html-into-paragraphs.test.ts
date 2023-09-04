@@ -71,7 +71,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms inline markup style elements", async () => {
         const paragraphs = await transformHTML(
-            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>"
+            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -107,7 +107,7 @@ describe("transform-html-into-paragraph", () => {
     it("transforms unordered lists", async () => {
         setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
-            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul>                   </li><li>B</li></ul>"
+            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul>                   </li><li>B</li></ul>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -133,7 +133,7 @@ describe("transform-html-into-paragraph", () => {
     it("transforms ordered lists", async () => {
         setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
-            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
+            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -159,7 +159,7 @@ describe("transform-html-into-paragraph", () => {
     it("transforms mixed ordered and unordered lists", async () => {
         setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
-            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
+            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -193,11 +193,11 @@ describe("transform-html-into-paragraph", () => {
                     return Promise.resolve(expected_image_run);
                 }
                 throw new Error("Something bad has happened");
-            }
+            },
         );
 
         const paragraphs = await transformHTML(
-            "<img src='/success' /><img src='/fail'><img src='/fail2' alt='My image'>"
+            "<img src='/success' /><img src='/fail'><img src='/fail2' alt='My image'>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -209,7 +209,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms hyperlinks", async () => {
         const paragraphs = await transformHTML(
-            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>"
+            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -289,7 +289,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms code snippets", async () => {
         const paragraphs = await transformHTML(
-            "<code>Inline</code><pre><code>Code\n  L2</code></pre>"
+            "<code>Inline</code><pre><code>Code\n  L2</code></pre>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -307,7 +307,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms tables", async () => {
         const paragraphs = await transformHTML(
-            "<table><thead><tr><th>0.0</th></tr></thead><tbody><tr><td>1.0</td></tr></tbody></table>"
+            "<table><thead><tr><th>0.0</th></tr></thead><tbody><tr><td>1.0</td></tr></tbody></table>",
         );
 
         expect(paragraphs).toStrictEqual([
@@ -336,7 +336,7 @@ describe("transform-html-into-paragraph", () => {
         vi.spyOn(style_extractor, "extractInlineStyles").mockImplementation(
             (
                 node: HTMLElement,
-                source_style: Readonly<IRunPropertiesOptions>
+                source_style: Readonly<IRunPropertiesOptions>,
             ): IRunPropertiesOptions => {
                 if (node.textContent === "A") {
                     return {
@@ -346,7 +346,7 @@ describe("transform-html-into-paragraph", () => {
                 }
 
                 return source_style;
-            }
+            },
         );
 
         const paragraphs = await transformHTML("<p style='color: red;'>A</p><p>B</p>");
@@ -363,7 +363,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("cleans DOM before processing it", async () => {
         const paragraphs = await transformHTML(
-            "<p><!--[if gte mso 9]><xml></xml><![endif]--></p><p>A</p>"
+            "<p><!--[if gte mso 9]><xml></xml><![endif]--></p><p>A</p>",
         );
 
         expect(paragraphs).toStrictEqual([new Paragraph({ children: [new TextRun("A")] })]);
@@ -382,6 +382,6 @@ function transformHTML(content: string): Promise<Paragraph[]> {
 function setListInstanceIDGenerator(): void {
     let list_instance_id = 90000;
     vi.spyOn(list_instance_id_generator, "getListInstanceID").mockImplementation(
-        () => list_instance_id++
+        () => list_instance_id++,
     );
 }

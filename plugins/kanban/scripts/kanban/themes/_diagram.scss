@@ -36,7 +36,9 @@
     }
 
     .area {
-        transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
+        transition:
+            fill-opacity 250ms linear,
+            stroke-opacity 250ms linear;
         fill-opacity: 0.7;
         stroke-opacity: 0;
 

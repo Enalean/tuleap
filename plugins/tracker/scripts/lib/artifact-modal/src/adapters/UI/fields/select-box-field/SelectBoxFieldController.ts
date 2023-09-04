@@ -34,8 +34,8 @@ export interface ControlSelectBoxField {
     onDependencyChange(
         callback: (
             bind_value_ids: ReadonlyArray<BindValueId>,
-            presenter: SelectBoxFieldPresenter
-        ) => void
+            presenter: SelectBoxFieldPresenter,
+        ) => void,
     ): void;
     destroy(): void;
 }
@@ -45,7 +45,7 @@ export const SelectBoxFieldController = (
     field: ListFieldStructure,
     value_model: SelectBoxFieldValueModelType,
     is_field_disabled: boolean,
-    user_locale: string
+    user_locale: string,
 ): ControlSelectBoxField => {
     let list_picker_instance: ListPicker;
 
@@ -57,14 +57,14 @@ export const SelectBoxFieldController = (
             return SelectBoxFieldPresenter.fromField(
                 field,
                 field.values.map((value) => value.id),
-                is_field_disabled
+                is_field_disabled,
             );
         },
         setSelectedValue(bind_value_ids: ReadonlyArray<BindValueId>): void {
             value_model.bind_value_ids = [...bind_value_ids];
 
             event_dispatcher.dispatch(
-                DidChangeListFieldValue(field.field_id, value_model.bind_value_ids)
+                DidChangeListFieldValue(field.field_id, value_model.bind_value_ids),
             );
         },
         onDependencyChange(callback): void {
@@ -74,7 +74,7 @@ export const SelectBoxFieldController = (
                 }
 
                 value_model.bind_value_ids = value_model.bind_value_ids.filter((bind_value_id) =>
-                    event.allowed_bind_value_ids.includes(bind_value_id)
+                    event.allowed_bind_value_ids.includes(bind_value_id),
                 );
                 if (
                     value_model.bind_value_ids.length === 0 &&
@@ -88,12 +88,12 @@ export const SelectBoxFieldController = (
                     SelectBoxFieldPresenter.fromField(
                         field,
                         event.allowed_bind_value_ids,
-                        is_field_disabled
-                    )
+                        is_field_disabled,
+                    ),
                 );
 
                 event_dispatcher.dispatch(
-                    DidChangeListFieldValue(field.field_id, value_model.bind_value_ids)
+                    DidChangeListFieldValue(field.field_id, value_model.bind_value_ids),
                 );
             });
         },

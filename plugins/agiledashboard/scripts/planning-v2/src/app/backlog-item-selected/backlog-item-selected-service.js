@@ -53,7 +53,7 @@ function BacklogItemSelectedService() {
 
     function isDraggedBacklogItemSelected(dragged_backlog_item_id) {
         const item = getCompactedSelectedBacklogItem().find(
-            ({ id }) => id === dragged_backlog_item_id
+            ({ id }) => id === dragged_backlog_item_id,
         );
         return typeof item !== "undefined";
     }

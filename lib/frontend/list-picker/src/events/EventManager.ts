@@ -34,7 +34,7 @@ import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 const wrapHandlerToExecuteIfSelectBoxIsNotDisabled = <T extends ReadonlyArray<unknown>>(
     source_select_box: HTMLSelectElement,
-    handler: (...args: T) => void
+    handler: (...args: T) => void,
 ) => {
     return (...args: T): void => {
         if (source_select_box.disabled) {
@@ -63,7 +63,7 @@ export class EventManager {
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
         private readonly list_item_highlighter: ListItemHighlighter,
-        private readonly field_focus_manager: FieldFocusManager
+        private readonly field_focus_manager: FieldFocusManager,
     ) {}
 
     public attachEvents(): void {
@@ -103,7 +103,7 @@ export class EventManager {
         };
         const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
             this.source_select_box,
-            handler
+            handler,
         );
         this.doc.addEventListener("pointerdown", wrapped_handler);
 
@@ -138,7 +138,7 @@ export class EventManager {
         };
         this.list_picker_element.addEventListener(
             "pointerdown",
-            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler)
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler),
         );
     }
 
@@ -164,8 +164,8 @@ export class EventManager {
                 "pointerup",
                 wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
                     this.source_select_box,
-                    pointerup_handler
-                )
+                    pointerup_handler,
+                ),
             );
 
             const pointerenter_handler = (): void => {
@@ -184,8 +184,8 @@ export class EventManager {
                 "pointerenter",
                 wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
                     this.source_select_box,
-                    pointerenter_handler
-                )
+                    pointerenter_handler,
+                ),
             );
         });
     }
@@ -214,13 +214,13 @@ export class EventManager {
         };
         search_field_element.addEventListener(
             "keyup",
-            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keyup_handler)
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keyup_handler),
         );
 
         if (
             search_field_element.parentElement &&
             search_field_element.parentElement.classList.contains(
-                "list-picker-multiple-search-section"
+                "list-picker-multiple-search-section",
             )
         ) {
             const pointerdown_handler = (): void => {
@@ -231,8 +231,8 @@ export class EventManager {
                 "pointerdown",
                 wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
                     this.source_select_box,
-                    pointerdown_handler
-                )
+                    pointerdown_handler,
+                ),
             );
         }
 
@@ -248,7 +248,7 @@ export class EventManager {
         };
         search_field_element.addEventListener(
             "keydown",
-            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keydown_handler)
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keydown_handler),
         );
     }
 
@@ -299,7 +299,7 @@ export class EventManager {
         };
         this.source_select_box.addEventListener(
             "change",
-            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler)
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler),
         );
     }
 
@@ -338,7 +338,7 @@ export class EventManager {
         };
         const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
             this.source_select_box,
-            handler
+            handler,
         );
         this.doc.addEventListener("keydown", wrapped_handler);
         return wrapped_handler;
@@ -357,7 +357,7 @@ export class EventManager {
         };
         const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
             this.source_select_box,
-            handler
+            handler,
         );
         this.doc.addEventListener("keypress", wrapped_handler);
         return wrapped_handler;

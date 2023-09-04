@@ -49,7 +49,7 @@ describe("CheckboxFieldController", () => {
                 required: true,
             },
             bind_value_ids,
-            false
+            false,
         ).setCheckboxValue(1, 0, true);
 
         expect(bind_value_ids[0]).toBe(checkbox_one.id);

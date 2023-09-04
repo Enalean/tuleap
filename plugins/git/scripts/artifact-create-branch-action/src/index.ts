@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const gettext_provider = await initVueGettext(
             createGettext,
-            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
         );
 
         try {
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) {
             addFeedback(
                 "error",
-                gettext_provider.$gettext("Error while loading the Git branch creation modal.")
+                gettext_provider.$gettext("Error while loading the Git branch creation modal."),
             );
             throw e;
         } finally {

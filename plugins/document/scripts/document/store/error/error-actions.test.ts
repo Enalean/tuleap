@@ -47,7 +47,7 @@ describe(`Error module actions`, () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "setGlobalModalErrorMessage",
-                "500 Internal Server Error"
+                "500 Internal Server Error",
             );
         });
 

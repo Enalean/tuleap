@@ -51,11 +51,11 @@ export interface PropertiesActions {
 }
 
 export const loadProjectProperties = async (
-    context: ActionContext<PropertiesState, RootState>
+    context: ActionContext<PropertiesState, RootState>,
 ): Promise<void> => {
     try {
         const project_properties = await getProjectProperties(
-            parseInt(context.rootState.configuration.project_id, 10)
+            parseInt(context.rootState.configuration.project_id, 10),
         );
 
         context.commit("saveProjectProperties", project_properties);
@@ -72,7 +72,7 @@ interface updatePropertiesPayload {
 
 export const updateProperties = async (
     context: ActionContext<PropertiesState, RootState>,
-    payload: updatePropertiesPayload
+    payload: updatePropertiesPayload,
 ): Promise<void> => {
     const item_to_update = payload.item_to_update;
     const custom_properties = getCustomProperties(item_to_update);
@@ -90,7 +90,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 item_to_update.status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         } else if (isEmbedded(item_to_update)) {
             await putEmbeddedFileProperties(
@@ -100,7 +100,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 item_to_update.status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         } else if (isLink(item_to_update)) {
             await putLinkProperties(
@@ -110,7 +110,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 item_to_update.status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         } else if (isWiki(item_to_update)) {
             await putWikiProperties(
@@ -120,7 +120,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 item_to_update.status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         } else if (isEmpty(item_to_update)) {
             await putEmptyDocumentProperties(
@@ -130,7 +130,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 item_to_update.status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         } else if (isFolder(item_to_update)) {
             const is_status_property_used: boolean =
@@ -152,7 +152,7 @@ export const updateProperties = async (
                 item_to_update.owner.id,
                 status,
                 obsolescence_date,
-                custom_properties
+                custom_properties,
             );
         }
 
@@ -185,12 +185,12 @@ interface updateFolderPropertiesPayload {
 
 export const updateFolderProperties = async (
     context: ActionContext<PropertiesState, RootState>,
-    payload: updateFolderPropertiesPayload
+    payload: updateFolderPropertiesPayload,
 ): Promise<void> => {
     formatCustomPropertiesForFolderUpdate(
         payload.item_to_update,
         payload.properties_to_update,
-        payload.recursion_option
+        payload.recursion_option,
     );
     const update_payload: updatePropertiesPayload = {
         item: payload.item,
@@ -202,7 +202,7 @@ export const updateFolderProperties = async (
 
 export const getFolderProperties = async (
     context: ActionContext<PropertiesState, RootState>,
-    folder_item: Folder
+    folder_item: Folder,
 ): Promise<FolderProperties | null> => {
     try {
         const folder = await getItemWithSize(folder_item.id);

@@ -148,14 +148,14 @@ const displayed_projects = computed(() =>
         (project: Project): DisplayedProject => ({
             ...project,
             is_removed: projects_to_remove.value.includes(project.id),
-        })
-    )
+        }),
+    ),
 );
 
 const sorted_projects = computed((): DisplayedProject[] =>
     [...displayed_projects.value].sort((a, b) =>
-        a.label.localeCompare(b.label, undefined, { numeric: true })
-    )
+        a.label.localeCompare(b.label, undefined, { numeric: true }),
+    ),
 );
 
 const filtered_projects = computed((): DisplayedProject[] =>
@@ -163,8 +163,8 @@ const filtered_projects = computed((): DisplayedProject[] =>
         (project) =>
             filter.value === "" ||
             String(project.id).indexOf(filter.value) !== -1 ||
-            project.label.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
-    )
+            project.label.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+    ),
 );
 
 function onDelete(): void {
@@ -184,7 +184,7 @@ function toggleAllDelete(checkbox: EventTarget | null): void {
         projects_to_remove.value = filtered_projects.value.map((project) => project.id);
     } else {
         projects_to_remove.value = projects_to_remove.value.filter(
-            (project_id) => !filtered_projects.value.find((project) => project.id === project_id)
+            (project_id) => !filtered_projects.value.find((project) => project.id === project_id),
         );
     }
 }

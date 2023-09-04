@@ -44,7 +44,7 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
         SharedPropertiesService.setIsCommentsMarkdownModeEnabled(
-            pullrequest_init_data.isFeatureFlagMarkdownCommentsEnabled ?? false
+            pullrequest_init_data.isFeatureFlagMarkdownCommentsEnabled ?? false,
         );
 
         useUiRouterInPullRequestTabLink();

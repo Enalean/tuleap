@@ -60,7 +60,7 @@ codendi.feedback = {
             feedback.insert(
                 new Element("ul")
                     .addClassName("feedback_" + level)
-                    .insert(new Element("li").update(msg))
+                    .insert(new Element("li").update(msg)),
             );
         }
     },

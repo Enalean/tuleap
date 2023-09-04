@@ -55,7 +55,7 @@ export class TextEditor implements TextEditorInterface {
         private readonly textarea: HTMLTextAreaElement,
         private readonly options: InternalTextEditorOptions,
         private readonly markdown_converter: HTMLToMarkdownConverterInterface,
-        private readonly markdown_renderer: MarkdownToHTMLRendererInterface
+        private readonly markdown_renderer: MarkdownToHTMLRendererInterface,
     ) {}
 
     public init(new_format: TextFieldFormat): void {
@@ -69,7 +69,7 @@ export class TextEditor implements TextEditorInterface {
     public onFormatChange(new_format: TextFieldFormat): void {
         if (new_format === TEXT_FORMAT_HTML) {
             this.insertFormatAndTextInCKEditorWhenFormatIsHTML(
-                this.markdown_renderer.render(this.textarea.value)
+                this.markdown_renderer.render(this.textarea.value),
             );
             return;
         }

@@ -121,7 +121,7 @@ export default class ReadingMode extends Vue {
             const { trackers, expert_query } = await updateReport(
                 this.report_id,
                 tracker_ids,
-                new_expert_query
+                new_expert_query,
             );
             this.backendCrossTrackerReport.init(trackers, expert_query);
 

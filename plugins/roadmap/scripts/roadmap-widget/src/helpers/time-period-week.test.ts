@@ -30,7 +30,7 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-07"),
                 new Date("2021-04-08"),
-                createVueGettextProviderPassthrough()
+                createVueGettextProviderPassthrough(),
             );
 
             expect(period.formatLong(new Date("2021-04-08"))).toBe("Week 14 of 2021");
@@ -40,7 +40,7 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-07"),
                 new Date("2021-04-08"),
-                createVueGettextProviderPassthrough()
+                createVueGettextProviderPassthrough(),
             );
 
             expect(period.formatShort(new Date("2021-04-08"))).toBe("W14");
@@ -52,7 +52,7 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-01"),
                 new Date("2021-04-30"),
-                createVueGettextProviderPassthrough()
+                createVueGettextProviderPassthrough(),
             );
 
             expect(toDateString(period.units)).toStrictEqual([
@@ -69,7 +69,7 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-12-15"),
                 new Date("2022-01-15"),
-                createVueGettextProviderPassthrough()
+                createVueGettextProviderPassthrough(),
             );
 
             expect(toDateString(period.units)).toStrictEqual([
@@ -86,7 +86,7 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-12-15"),
                 new Date("2022-01-15"),
-                createVueGettextProviderPassthrough()
+                createVueGettextProviderPassthrough(),
             );
 
             const additional_weeks = period.additionalUnits(6);
@@ -106,11 +106,11 @@ describe("time-period-week", () => {
                 const period = new TimePeriodWeek(
                     new Date("2021-01-01"),
                     new Date("2021-01-31"),
-                    createVueGettextProviderPassthrough()
+                    createVueGettextProviderPassthrough(),
                 );
 
                 expect(period.additionalUnits(nb_missing_weeks)).toStrictEqual([]);
-            }
+            },
         );
     });
 
@@ -118,7 +118,7 @@ describe("time-period-week", () => {
         const period = new TimePeriodWeek(
             new Date("2020-01-01"),
             new Date("2021-01-31"),
-            createVueGettextProviderPassthrough()
+            createVueGettextProviderPassthrough(),
         );
 
         expect(period.getEvenOddClass(new Date("2020-01-01"))).toBe("even");

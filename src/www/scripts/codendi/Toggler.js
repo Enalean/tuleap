@@ -77,7 +77,7 @@
             //prehide or preshow depending on the initial state of the toggler
             toggleNextSiblings(
                 toggler,
-                toggler.hasClass("toggler-hide") || toggler.hasClass("toggler-hide-noajax")
+                toggler.hasClass("toggler-hide") || toggler.hasClass("toggler-hide-noajax"),
             );
 
             toggler.on("click", function (evt) {

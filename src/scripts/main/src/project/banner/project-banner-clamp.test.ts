@@ -47,11 +47,11 @@ describe("Project banner clamp", () => {
         const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
         allowUnclampingProjectBannerMessage(local_document_with_banner.document);
         expect(local_document_with_banner.message.classList).toContain(
-            PROJECT_BANNER_MESSAGE_CLAMP_CLASS
+            PROJECT_BANNER_MESSAGE_CLAMP_CLASS,
         );
         local_document_with_banner.message.click();
         expect(local_document_with_banner.message.classList).not.toContain(
-            PROJECT_BANNER_MESSAGE_CLAMP_CLASS
+            PROJECT_BANNER_MESSAGE_CLAMP_CLASS,
         );
     });
 
@@ -73,7 +73,7 @@ describe("Project banner clamp", () => {
         allowUnclampingProjectBannerMessage(local_document_with_banner.document);
 
         expect(banner_message.classList).not.toContain(
-            PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+            PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
         );
     });
 
@@ -87,7 +87,7 @@ describe("Project banner clamp", () => {
         allowUnclampingProjectBannerMessage(local_document_with_banner.document);
 
         expect(banner_message.classList).not.toContain(
-            PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+            PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
         );
 
         jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
@@ -105,7 +105,7 @@ describe("Project banner clamp", () => {
             allowUnclampingProjectBannerMessage(local_document_with_banner.document);
 
             expect(banner_message.classList).not.toContain(
-                PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+                PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
             );
 
             jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
@@ -117,7 +117,7 @@ describe("Project banner clamp", () => {
 
             setTimeout(() => {
                 expect(banner_message.classList).toContain(
-                    PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+                    PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
                 );
                 done();
             });

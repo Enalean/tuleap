@@ -23,7 +23,7 @@ import { select } from "d3-selection";
 const PADDING_OVERLAPS = 2;
 
 export function removeAllLabelsOverlapsOthersLabels(
-    svg_burndown: Selection<SVGSVGElement, unknown, null, undefined>
+    svg_burndown: Selection<SVGSVGElement, unknown, null, undefined>,
 ): void {
     let index = 0;
     let second_index = index + 1;

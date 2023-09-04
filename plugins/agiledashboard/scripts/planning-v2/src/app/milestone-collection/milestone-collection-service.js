@@ -51,7 +51,7 @@ function MilestoneCollectionService(MilestoneService, BacklogItemCollectionServi
 
         BacklogItemCollectionService.removeBacklogItemsFromCollection(
             milestone.content,
-            backlog_items
+            backlog_items,
         );
     }
 
@@ -61,7 +61,7 @@ function MilestoneCollectionService(MilestoneService, BacklogItemCollectionServi
         BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(
             milestone.content,
             backlog_items,
-            compared_to
+            compared_to,
         );
     }
 }

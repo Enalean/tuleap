@@ -93,7 +93,7 @@ describe("MoveModal", () => {
                     });
 
                     expect(wrapper.find("[data-test=modal-loader]").exists()).toBe(true);
-                }
+                },
             );
         });
 
@@ -193,9 +193,9 @@ describe("MoveModal", () => {
 
                     expect(
                         wrapper.find<HTMLButtonElement>("[data-test=move-artifact]").element
-                            .disabled
+                            .disabled,
                     ).toBe(is_disabled);
-                }
+                },
             );
 
             it("When the dry run has been run, then only the [Confirm] button is shown", async () => {
@@ -229,9 +229,9 @@ describe("MoveModal", () => {
 
                     expect(
                         wrapper.find<HTMLButtonElement>("[data-test=confirm-move-artifact]").element
-                            .disabled
+                            .disabled,
                     ).toBe(is_disabled);
-                }
+                },
             );
         });
     });

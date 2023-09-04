@@ -22,7 +22,7 @@ export {};
 document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("toggle-cross-referenced-by");
     const cross_referenced_by_section = document.getElementById(
-        "tracker-cross-referenced-by-section"
+        "tracker-cross-referenced-by-section",
     );
 
     if (!(toggle instanceof HTMLInputElement) || !cross_referenced_by_section) {

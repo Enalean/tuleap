@@ -61,14 +61,14 @@ export class EditorAreaRenderer {
                 selectbox,
                 textarea,
             },
-            this.gettext_provider
+            this.gettext_provider,
         );
     }
 
     private renderMarkdown(state: EditorAreaStateInterface): void {
         const help_button = createSyntaxHelpButton(
             { is_disabled: !state.isInEditMode() },
-            this.gettext_provider
+            this.gettext_provider,
         );
         const preview_button = createPreviewEditButton(
             {
@@ -76,7 +76,7 @@ export class EditorAreaRenderer {
                 promise_of_preview: Promise.resolve(state.rendered_html),
                 onClickCallback: () => this.onEditPreviewClick(state),
             },
-            this.gettext_provider
+            this.gettext_provider,
         );
         const preview_area = createPreviewArea(state.rendered_html, this.gettext_provider);
         const selectbox = this.createSelectbox(state);
@@ -105,7 +105,7 @@ export class EditorAreaRenderer {
                 preview_area,
                 hidden_format_input,
             },
-            this.gettext_provider
+            this.gettext_provider,
         );
     }
 
@@ -132,7 +132,7 @@ export class EditorAreaRenderer {
                     this.render(state);
                 },
             },
-            this.gettext_provider
+            this.gettext_provider,
         );
     }
 }

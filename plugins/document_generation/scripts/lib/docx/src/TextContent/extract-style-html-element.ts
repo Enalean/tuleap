@@ -21,10 +21,10 @@ import type { IRunPropertiesOptions } from "docx";
 
 export function extractInlineStyles(
     node: HTMLElement,
-    source_style: Readonly<IRunPropertiesOptions>
+    source_style: Readonly<IRunPropertiesOptions>,
 ): IRunPropertiesOptions {
     const color_rgb = node.style.color.match(
-        /^rgba?\((\d{1,3}), (\d{1,3}), (\d{1,3})(?:, [\d.]+)?\)$/
+        /^rgba?\((\d{1,3}), (\d{1,3}), (\d{1,3})(?:, [\d.]+)?\)$/,
     );
     if (color_rgb === null) {
         return source_style;

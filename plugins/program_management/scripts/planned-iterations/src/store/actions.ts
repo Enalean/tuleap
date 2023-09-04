@@ -24,7 +24,7 @@ import type { UserStory, Iteration, State } from "../type";
 
 export async function fetchIterationContent(
     context: ActionContext<State, State>,
-    iteration: Iteration
+    iteration: Iteration,
 ): Promise<UserStory[]> {
     const iteration_id = iteration.id;
     const user_stories = await retrieveIterationContent(iteration_id);

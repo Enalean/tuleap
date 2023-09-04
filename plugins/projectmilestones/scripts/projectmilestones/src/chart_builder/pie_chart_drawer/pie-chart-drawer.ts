@@ -26,7 +26,7 @@ const MIN_ARC_TO_DISPLAY = Math.PI / (10 * Math.PI) / 2;
 export function createPieChart(
     chart_container: HTMLElement,
     pie_chart_element_sizes: ChartPropsWithRadius,
-    data_stat_campaign: DataPieChart[]
+    data_stat_campaign: DataPieChart[],
 ): void {
     const data_to_display = getDataToDisplay(data_stat_campaign);
 
@@ -74,7 +74,7 @@ export function getSumOfValue(data_stat_campaign: DataPieChart[]): number {
 
 export function replaceValue(
     chart_container: HTMLElement,
-    data_stat_campaign: DataPieChart[]
+    data_stat_campaign: DataPieChart[],
 ): void {
     data_stat_campaign.forEach((data) => {
         select(chart_container)

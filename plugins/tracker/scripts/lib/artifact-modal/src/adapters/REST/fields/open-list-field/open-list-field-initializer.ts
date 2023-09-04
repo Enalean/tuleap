@@ -118,7 +118,7 @@ const isUserValue = (value: OpenListBindValueObject): value is UserWithEmailAndS
     "email" in value;
 
 const mapToUserValueModel = (
-    bind_value_objects: readonly OpenListBindValueObject[]
+    bind_value_objects: readonly OpenListBindValueObject[],
 ): UserValueModelItem[] =>
     bind_value_objects.filter(isUserValue).map((user_value) => ({
         ...user_value,
@@ -126,23 +126,23 @@ const mapToUserValueModel = (
     }));
 
 const isStaticValue = (
-    value: OpenListBindValueObject
+    value: OpenListBindValueObject,
 ): value is OpenListValueRepresentation | StaticValueRepresentation => !isUserValue(value);
 
 const mapToStaticValueModel = (
-    bind_value_objects: readonly OpenListBindValueObject[]
+    bind_value_objects: readonly OpenListBindValueObject[],
 ): StaticValueModelItem[] => bind_value_objects.filter(isStaticValue);
 
 const isUserGroupValue = (value: OpenListBindValueObject): value is UserGroupRepresentation =>
     !isUserValue(value);
 
 const mapToUserGroupValueModel = (
-    bind_value_objects: readonly OpenListBindValueObject[]
+    bind_value_objects: readonly OpenListBindValueObject[],
 ): UserGroupValueModelItem[] => bind_value_objects.filter(isUserGroupValue);
 
 export function formatExistingValue(
     field: OpenListFieldStructure,
-    artifact_value: OpenListChangesetValue
+    artifact_value: OpenListChangesetValue,
 ): OpenListValueModel {
     const { field_id, type, permissions } = field;
 

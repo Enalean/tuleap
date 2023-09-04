@@ -40,19 +40,21 @@ describe("ExecutionService", () => {
     beforeEach(() => {
         angular.mock.module(execution_collection_module);
 
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _ExecutionRestService_,
-            _SharedPropertiesService_,
-            _ExecutionService_
-        ) {
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            ExecutionRestService = _ExecutionRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            ExecutionService = _ExecutionService_;
-        });
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$rootScope_,
+                _ExecutionRestService_,
+                _SharedPropertiesService_,
+                _ExecutionService_,
+            ) {
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                ExecutionRestService = _ExecutionRestService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                ExecutionService = _ExecutionService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -120,10 +122,10 @@ describe("ExecutionService", () => {
             };
 
             jest.spyOn(ExecutionService, "getAllRemoteExecutions").mockReturnValue(
-                $q.when(response.results)
+                $q.when(response.results),
             );
             jest.spyOn(ExecutionRestService, "getRemoteExecutions").mockReturnValue(
-                $q.when(response)
+                $q.when(response),
             );
 
             const promise = ExecutionService.loadExecutions(campaign.id);
@@ -134,7 +136,7 @@ describe("ExecutionService", () => {
             expect(ExecutionService.categories).toEqual(categories_results);
             expect(ExecutionService.executions).toEqual(execution_results);
             expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(
-                executions_by_categories_by_campaigns_results
+                executions_by_categories_by_campaigns_results,
             );
 
             expect(ExecutionService.loading[campaign.id]).toBe(false);
@@ -229,12 +231,12 @@ describe("ExecutionService", () => {
 
             get_remote_executions = $q.defer();
             jest.spyOn(ExecutionRestService, "getRemoteExecutions").mockReturnValue(
-                get_remote_executions.promise
+                get_remote_executions.promise,
             );
 
             get_all_remote_executions = $q.defer();
             jest.spyOn(ExecutionService, "getAllRemoteExecutions").mockReturnValue(
-                get_all_remote_executions.promise
+                get_all_remote_executions.promise,
             );
         });
 
@@ -470,7 +472,7 @@ describe("ExecutionService", () => {
             expect(ExecutionService.campaign).toEqual(campaign_results);
             expect(brodcast).toHaveBeenCalledWith(
                 "reload-comment-editor-view",
-                ExecutionService.executions[4]
+                ExecutionService.executions[4],
             );
         });
 
@@ -509,11 +511,11 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
             expect(Object.keys(ExecutionService.campaign)).toHaveLength(
-                Object.keys(campaign_copy).length
+                Object.keys(campaign_copy).length,
             );
             expect(brodcast).toHaveBeenCalledWith(
                 "reload-comment-editor-view",
-                ExecutionService.executions[4]
+                ExecutionService.executions[4],
             );
         });
 
@@ -571,18 +573,18 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.executions[4].definition.description).toBe("Version A");
             expect(
-                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
+                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated,
             ).toBeTruthy();
 
             ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated();
 
             expect(ExecutionService.executions[4].definition.description).toBe("Version B");
             expect(
-                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
+                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated,
             ).toBeFalsy();
             expect(brodcast).toHaveBeenCalledWith(
                 "reload-comment-editor-view",
-                ExecutionService.executions[4]
+                ExecutionService.executions[4],
             );
         });
     });
@@ -630,7 +632,7 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.executions[4]).toBeUndefined();
             expect(
-                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
+                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4],
             ).toBeUndefined();
             expect(ExecutionService.campaign.nb_of_notrun).toBe(0);
             expect(ExecutionService.campaign.total).toBe(0);
@@ -680,7 +682,7 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.executions[4]).toBeUndefined();
             expect(
-                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
+                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4],
             ).toBeUndefined();
             expect(ExecutionService.campaign.nb_of_notrun).toBe(1);
             expect(ExecutionService.campaign.total).toBe(1);
@@ -1403,10 +1405,10 @@ describe("ExecutionService", () => {
             };
 
             expect(
-                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 101 })
+                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 101 }),
             ).toBe(true);
             expect(
-                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 103 })
+                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 103 }),
             ).toBe(false);
         });
     });

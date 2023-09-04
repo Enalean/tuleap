@@ -48,7 +48,7 @@ describe("Comparisons store:", () => {
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getComparisons").mockReturnValue(
-                    Promise.resolve([comparison1, comparison2])
+                    Promise.resolve([comparison1, comparison2]),
                 );
 
                 return store.actions.load(context, { project_id: 102 });
@@ -58,7 +58,7 @@ describe("Comparisons store:", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadBaselines",
                     { baseline_ids: [1, 2, 1, 3] },
-                    { root: true }
+                    { root: true },
                 );
             });
             it("updated comparisons", () => {

@@ -42,7 +42,7 @@ export const LinksMarkedForRemovalStore = (): LinksStoreType => {
 
         deleteLinkMarkedForRemoval: (link_identifier: LinkedArtifactIdentifier): void => {
             links_marked_for_removal = links_marked_for_removal.filter(
-                (marked_identifier) => marked_identifier.id !== link_identifier.id
+                (marked_identifier) => marked_identifier.id !== link_identifier.id,
             );
         },
     };

@@ -42,7 +42,7 @@ describe("Card getters", () => {
             } as Tracker;
 
             expect(getters.have_possible_assignees_been_loaded_for_tracker(state)(tracker)).toBe(
-                true
+                true,
             );
         });
 
@@ -56,7 +56,7 @@ describe("Card getters", () => {
             state.possible_assignees.set(1234, [{ id: 1 } as UserForPeoplePicker]);
 
             expect(getters.have_possible_assignees_been_loaded_for_tracker(state)(tracker)).toBe(
-                true
+                true,
             );
         });
 
@@ -68,7 +68,7 @@ describe("Card getters", () => {
             } as Tracker;
 
             expect(getters.have_possible_assignees_been_loaded_for_tracker(state)(tracker)).toBe(
-                false
+                false,
             );
         });
     });

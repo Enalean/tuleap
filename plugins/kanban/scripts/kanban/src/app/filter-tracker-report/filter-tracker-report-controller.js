@@ -9,7 +9,7 @@ FilterTrackerReportController.$inject = [
 function FilterTrackerReportController(
     $window,
     FilterTrackerReportService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     const self = this;
 

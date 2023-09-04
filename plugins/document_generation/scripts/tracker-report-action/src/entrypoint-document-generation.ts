@@ -21,7 +21,7 @@ import { showLoaderWhileProcessing } from "./show-loader-processing";
 
 export function setupLinkForTheDocumentExport(): void {
     const generate_document_link = document.getElementById(
-        "tracker-report-action-generate-document"
+        "tracker-report-action-generate-document",
     );
     if (!generate_document_link) {
         throw new Error("Missing generate document button");
@@ -49,7 +49,7 @@ export function setupLinkForTheDocumentExport(): void {
             const gettext_provider = await initGettext(
                 language,
                 "tracker-report-action",
-                (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+                (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
             );
 
             const { startDownloadExportDocument } = await export_document_module;

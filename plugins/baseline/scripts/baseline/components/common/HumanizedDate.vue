@@ -34,7 +34,7 @@ const props = withDefaults(
     }>(),
     {
         start_with_capital: false,
-    }
+    },
 );
 
 const formatted_date = computed(() => {

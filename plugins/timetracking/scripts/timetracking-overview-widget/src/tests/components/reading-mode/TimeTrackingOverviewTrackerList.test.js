@@ -44,7 +44,7 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
-                    .exists()
+                    .exists(),
             ).toBeTruthy();
         });
 
@@ -81,7 +81,7 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
-                    .exists()
+                    .exists(),
             ).toBeFalsy();
         });
     });

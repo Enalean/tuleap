@@ -169,43 +169,43 @@ export default {
                         return defineAsyncComponent(() =>
                             import(
                                 /* webpackChunkName: "document-cell-title-file-uploading" */ `./ItemTitle/FileUploadingCellTitle.vue`
-                            )
+                            ),
                         );
                     }
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-file" */ `./ItemTitle/FileCellTitle.vue`
-                        )
+                        ),
                     );
                 case TYPE_EMBEDDED:
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-embedded" */ `./ItemTitle/EmbeddedCellTitle.vue`
-                        )
+                        ),
                     );
                 case TYPE_FOLDER:
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-folder" */ `./ItemTitle/FolderCellTitle.vue`
-                        )
+                        ),
                     );
                 case TYPE_LINK:
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-link" */ `./ItemTitle/LinkCellTitle.vue`
-                        )
+                        ),
                     );
                 case TYPE_WIKI:
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-wiki" */ `./ItemTitle/WikiCellTitle.vue`
-                        )
+                        ),
                     );
                 default:
                     return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-document" */ `./ItemTitle/DocumentCellTitle.vue`
-                        )
+                        ),
                     );
             }
         },

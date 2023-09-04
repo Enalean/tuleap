@@ -72,7 +72,7 @@ tuleap.textarea = tuleap.textarea || {};
             const editor_creator = new RichTextEditorsCreator(
                 document,
                 new UploadImageFormFactory(document, locale),
-                RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
+                RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
             );
             editor_creator.createTextFieldEditors();
         },
@@ -95,7 +95,7 @@ tuleap.textarea = tuleap.textarea || {};
 
         switchValueToManualMode: function (field_id) {
             var field_computed_is_autocomputed = document.getElementsByName(
-                "artifact[" + field_id + "][is_autocomputed]"
+                "artifact[" + field_id + "][is_autocomputed]",
             );
             if (
                 field_computed_is_autocomputed[0] !== undefined &&
@@ -107,10 +107,10 @@ tuleap.textarea = tuleap.textarea || {};
 
         switchValueToAutoComputedMode: function (field_id) {
             var field_computed_manual_value = document.getElementsByName(
-                "artifact[" + field_id + "][manual_value]"
+                "artifact[" + field_id + "][manual_value]",
             );
             var field_computed_is_autocomputed = document.getElementsByName(
-                "artifact[" + field_id + "][is_autocomputed]"
+                "artifact[" + field_id + "][is_autocomputed]",
             );
             if (
                 field_computed_manual_value[0] !== undefined &&
@@ -204,10 +204,10 @@ tuleap.textarea = tuleap.textarea || {};
                         var $element = $(this);
                         var $field_id = $(this).find(".add-field").data("field-id");
                         var field_computed_manual_value = document.getElementsByName(
-                            "artifact[" + $field_id + "][manual_value]"
+                            "artifact[" + $field_id + "][manual_value]",
                         );
                         var field_computed_is_autocomputed = document.getElementsByName(
-                            "artifact[" + $field_id + "][is_autocomputed]"
+                            "artifact[" + $field_id + "][is_autocomputed]",
                         );
 
                         if (
@@ -246,7 +246,7 @@ tuleap.textarea = tuleap.textarea || {};
             tuleap.dateTimePicker.init();
             codendi.tracker.textboxlist.init();
             initMentions(
-                '.tuleap-modal input[type="text"].user-mention, .tuleap-modal textarea.user-mention'
+                '.tuleap-modal input[type="text"].user-mention, .tuleap-modal textarea.user-mention',
             );
         },
 

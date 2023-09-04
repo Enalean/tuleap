@@ -58,7 +58,7 @@ export async function createExportReport(
     gettext_provider: GettextProvider,
     global_properties: GenericGlobalExportProperties,
     campaign: Campaign,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
 ): Promise<ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>> {
     const get_test_execution = memoize(getTestManagementExecution);
 
@@ -77,7 +77,7 @@ export async function createExportReport(
         tracker_structure_promises_map.set(global_properties.testdefinition_tracker_id, {
             tracker_id: global_properties.testdefinition_tracker_id,
             tracker_structure_promise: retrieveTrackerStructure(
-                global_properties.testdefinition_tracker_id
+                global_properties.testdefinition_tracker_id,
             ),
         });
     }
@@ -104,9 +104,9 @@ export async function createExportReport(
         async (tracker_structure_tuple: TrackerStructurePromiseTuple): Promise<void> => {
             tracker_structure_map.set(
                 tracker_structure_tuple.tracker_id,
-                await tracker_structure_tuple.tracker_structure_promise
+                await tracker_structure_tuple.tracker_structure_promise,
             );
-        }
+        },
     );
 
     const test_def_artifact_ids_without_execution: Set<number> = new Set();
@@ -121,7 +121,7 @@ export async function createExportReport(
 
             test_def_artifacts_with_execution.set(
                 last_execution.definition.artifact.id,
-                last_execution.definition.artifact
+                last_execution.definition.artifact,
             );
         } else {
             test_def_artifact_ids_without_execution.add(test_definition_id);
@@ -131,7 +131,7 @@ export async function createExportReport(
     const all_artifacts: ArtifactResponse[] = [
         ...(
             await getArtifacts(
-                new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids_without_execution])
+                new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids_without_execution]),
             )
         ).values(),
         ...test_def_artifacts_with_execution.values(),
@@ -150,8 +150,8 @@ export async function createExportReport(
                     datetime_locale_information,
                     global_properties.base_url,
                     global_properties.artifact_links_types,
-                    buildStepDefinitionFunction()
-                )
+                    buildStepDefinitionFunction(),
+                ),
             ),
         tests: all_artifacts_structures
             .filter((artifact) => test_def_artifact_ids.has(artifact.id))
@@ -163,9 +163,9 @@ export async function createExportReport(
                     global_properties.artifact_links_types,
                     buildStepDefinitionEnhancedWithResultsFunction(
                         artifact,
-                        last_executions_map.get(artifact.id) ?? null
-                    )
-                )
+                        last_executions_map.get(artifact.id) ?? null,
+                    ),
+                ),
             ),
     };
 }

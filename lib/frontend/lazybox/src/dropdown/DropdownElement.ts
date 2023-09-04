@@ -46,7 +46,7 @@ export type HostElement = InternalDropdownElement & HTMLElement;
 export const observeOpen = (
     host: HostElement,
     new_value: boolean,
-    old_value: boolean | undefined
+    old_value: boolean | undefined,
 ): void => {
     if (old_value === undefined) {
         // Do not focus at initial render

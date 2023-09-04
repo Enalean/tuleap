@@ -29,7 +29,7 @@ import { nextTick } from "vue";
 
 describe("ModalConfirmationDeletion", () => {
     function createWrapper(
-        wikiPageReferencers: Array<ItemPath>
+        wikiPageReferencers: Array<ItemPath>,
     ): VueWrapper<InstanceType<typeof DeleteAssociatedWikiPageCheckbox>> {
         const item = {
             id: 42,
@@ -64,41 +64,41 @@ describe("ModalConfirmationDeletion", () => {
         ]);
 
         const checkbox_input = wiki_checkbox.get(
-            "[data-test=delete-associated-wiki-page-checkbox]"
+            "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
         checkbox_input.trigger("click");
         await nextTick();
 
         expect(
-            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
+            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeTruthy();
 
         checkbox_input.trigger("click");
         await nextTick();
 
         expect(
-            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
+            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeFalsy();
     });
 
     it("does not show the warning when wikiPageReferencers is empty no matter if the option is checked or not", async () => {
         const wiki_checkbox = createWrapper([]);
         const checkbox_input = wiki_checkbox.get(
-            "[data-test=delete-associated-wiki-page-checkbox]"
+            "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
         checkbox_input.trigger("click");
         await nextTick();
 
         expect(
-            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
+            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeFalsy();
 
         checkbox_input.trigger("click");
 
         expect(
-            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
+            wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeFalsy();
     });
 
@@ -115,7 +115,7 @@ describe("ModalConfirmationDeletion", () => {
         ]);
 
         const checkbox_input = wiki_checkbox.get(
-            "[data-test=delete-associated-wiki-page-checkbox]"
+            "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
         checkbox_input.trigger("click");
@@ -127,13 +127,13 @@ describe("ModalConfirmationDeletion", () => {
 
         expect(links.at(0).element.tagName).toBe("A");
         expect(links.at(0).attributes("href")).toBe(
-            "/plugins/docman/?group_id=104&action=show&id=43"
+            "/plugins/docman/?group_id=104&action=show&id=43",
         );
         expect(links.at(0).text()).toBe("Project documentation/another wiki");
 
         expect(links.at(1).element.tagName).toBe("A");
         expect(links.at(1).attributes("href")).toBe(
-            "/plugins/docman/?group_id=104&action=show&id=44"
+            "/plugins/docman/?group_id=104&action=show&id=44",
         );
         expect(links.at(1).text()).toBe("Project documentation/some folder/another wiki");
     });

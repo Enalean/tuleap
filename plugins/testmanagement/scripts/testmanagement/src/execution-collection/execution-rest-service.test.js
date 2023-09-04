@@ -52,7 +52,7 @@ describe("ExecutionRestService", () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -64,7 +64,7 @@ describe("ExecutionRestService", () => {
                     statusText,
                     json: () => $q.when(error_json),
                 },
-            })
+            }),
         );
     }
 
@@ -94,7 +94,7 @@ describe("ExecutionRestService", () => {
             "/api/v1/testmanagement_campaigns/1/testmanagement_executions",
             {
                 params: { limit: 10, offset: 0 },
-            }
+            },
         );
     });
 
@@ -216,7 +216,7 @@ describe("ExecutionRestService", () => {
             mockFetchSuccess(tlpPatch);
 
             const expected_body_regex = new RegExp(
-                execution.definition.summary + ".*" + execution.definition.description
+                execution.definition.summary + ".*" + execution.definition.description,
             );
 
             const promise = ExecutionRestService.linkIssue(issue_id, execution);
@@ -224,7 +224,7 @@ describe("ExecutionRestService", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(
                 "/api/v1/testmanagement_executions/100/issues",
-                expect.anything()
+                expect.anything(),
             );
             const init_argument = tlpPatch.mock.calls[0][1];
             expect(init_argument.headers).toEqual(expected_headers);
@@ -275,7 +275,7 @@ describe("ExecutionRestService", () => {
                 (error) => {
                     // eslint-disable-next-line jest/no-conditional-expect
                     expect(error).toBe("Forbidden");
-                }
+                },
             );
 
             return wrapPromise(promise);
@@ -367,7 +367,7 @@ describe("ExecutionRestService", () => {
             const promise = ExecutionRestService.updateStepStatus(
                 test_execution,
                 step_id,
-                status
+                status,
             ).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toBe("This user cannot update the execution");
@@ -402,7 +402,7 @@ describe("ExecutionRestService", () => {
 
             const promise = ExecutionRestService.createFileInTestExecution(
                 test_execution,
-                file_info
+                file_info,
             );
             const result = await wrapPromise(promise);
 
@@ -428,7 +428,7 @@ describe("ExecutionRestService", () => {
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = ExecutionRestService.createFileInTestExecution(
                 test_execution,
-                file_info
+                file_info,
             ).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toBe("File is too big");

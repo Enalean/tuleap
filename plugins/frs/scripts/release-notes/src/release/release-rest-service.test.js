@@ -30,19 +30,21 @@ describe("ReleaseRestService -", function () {
     beforeEach(function () {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$httpBackend_,
-            _$q_,
-            _ReleaseRestService_,
-            _RestErrorService_
-        ) {
-            $rootScope = _$rootScope_;
-            $httpBackend = _$httpBackend_;
-            $q = _$q_;
-            ReleaseRestService = _ReleaseRestService_;
-            RestErrorService = _RestErrorService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$httpBackend_,
+                _$q_,
+                _ReleaseRestService_,
+                _RestErrorService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $httpBackend = _$httpBackend_;
+                $q = _$q_;
+                ReleaseRestService = _ReleaseRestService_;
+                RestErrorService = _RestErrorService_;
+            },
+        );
 
         jest.spyOn(RestErrorService, "setError").mockImplementation(() => {});
 
@@ -77,7 +79,7 @@ describe("ReleaseRestService -", function () {
             $httpBackend.expectGET("/api/v1/artifacts/752/links").respond(
                 angular.toJson({
                     natures: natures,
-                })
+                }),
             );
 
             var promise = wrapPromise(ReleaseRestService.getReleaseLinkNatures(752));
@@ -122,13 +124,13 @@ describe("ReleaseRestService -", function () {
 
             $httpBackend
                 .expectGET(
-                    "/api/v1/artifacts/392/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0"
+                    "/api/v1/artifacts/392/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0",
                 )
                 .respond(
                     angular.toJson({
                         collection: linked_artifacts,
                     }),
-                    headers
+                    headers,
                 );
 
             var uri = "artifacts/392/linked_artifacts?nature=elflock&direction=forward";
@@ -145,7 +147,7 @@ describe("ReleaseRestService -", function () {
         it("when the server responds with an error, then the error will be set in the error service", async function () {
             $httpBackend
                 .expectGET(
-                    "/api/v1/artifacts/676/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0"
+                    "/api/v1/artifacts/676/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0",
                 )
                 .respond(403, "Forbidden");
 
@@ -187,29 +189,27 @@ describe("ReleaseRestService -", function () {
                     id: 422,
                 },
             ];
-            jest.spyOn(ReleaseRestService, "getLinkedArtifacts").mockImplementation(function (
-                uri,
-                limit,
-                offset
-            ) {
-                if (offset === 0) {
-                    return $q.when({
-                        results: first_artifacts,
-                        total: 4,
-                    });
-                } else if (offset === 2) {
-                    return $q.when({
-                        results: second_artifacts,
-                        total: 4,
-                    });
-                }
-            });
+            jest.spyOn(ReleaseRestService, "getLinkedArtifacts").mockImplementation(
+                function (uri, limit, offset) {
+                    if (offset === 0) {
+                        return $q.when({
+                            results: first_artifacts,
+                            total: 4,
+                        });
+                    } else if (offset === 2) {
+                        return $q.when({
+                            results: second_artifacts,
+                            total: 4,
+                        });
+                    }
+                },
+            );
 
             ReleaseRestService.linked_artifacts_pagination_limit = 2;
             var uri = "artifacts/417/linked_artifacts?nature=neurokeratin&direction=reverse";
             var progress_callback = jest.fn();
             var promise = wrapPromise(
-                ReleaseRestService.getAllLinkedArtifacts(uri, progress_callback)
+                ReleaseRestService.getAllLinkedArtifacts(uri, progress_callback),
             );
 
             var all_artifacts = first_artifacts.concat(second_artifacts);

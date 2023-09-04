@@ -33,7 +33,7 @@ export const MapSideBySideLinesStub = (): StubSideBySideLineMapper => {
 
     return {
         withSideBySideLineMap: (
-            map: Map<FileLine, SynchronizedLineHandles>
+            map: Map<FileLine, SynchronizedLineHandles>,
         ): MapSideBySideLines => ({
             buildLineToLineHandlesMap: (): Map<FileLine, SynchronizedLineHandles> => {
                 nb_calls++;

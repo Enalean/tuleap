@@ -31,7 +31,7 @@ export const ArtifactCrossReference = {
     fromCurrentArtifact: (
         current_artifact_option: Option<CurrentArtifactIdentifier>,
         tracker_shortname: TrackerShortname,
-        tracker_color_name: ColorName
+        tracker_color_name: ColorName,
     ): Option<ArtifactCrossReference> =>
         current_artifact_option.map((current_artifact_identifier) => {
             return {

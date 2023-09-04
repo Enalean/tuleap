@@ -84,13 +84,13 @@ tuleap.tracker.RuleNode = function (field) {
         process: function () {
             //retrieve selected source values
             var selected_sources = [];
-            Array.from(tuleap.tracker.fields.get(this.field).element().options).forEach(function (
-                option
-            ) {
-                if (option.selected) {
-                    selected_sources.push(option.value);
-                }
-            });
+            Array.from(tuleap.tracker.fields.get(this.field).element().options).forEach(
+                function (option) {
+                    if (option.selected) {
+                        selected_sources.push(option.value);
+                    }
+                },
+            );
 
             //Store only if we are root (else already stored before we reach this field)
             if (tuleap.tracker.rule_forest.isTree(this.field)) {
@@ -110,7 +110,7 @@ tuleap.tracker.RuleNode = function (field) {
                         transitions.values[selected_value].forEach(function (target_value) {
                             new_target_options.set(
                                 parseInt(target_value, 10),
-                                Object.clone(target_options.get(target_value))
+                                Object.clone(target_options.get(target_value)),
                             );
                         });
                     }
@@ -118,7 +118,7 @@ tuleap.tracker.RuleNode = function (field) {
                     if (selected_value === unchanged_value) {
                         new_target_options.set(
                             parseInt(unchanged_value, 10),
-                            new Option(unchanged_value, unchanged_value)
+                            new Option(unchanged_value, unchanged_value),
                         );
                     }
                 });
@@ -161,7 +161,7 @@ tuleap.tracker.Field = function (id, name, label) {
             this.updateSelectedState();
 
             const at_least_one_new_value_selected = Array.from(new_options.values()).some(
-                (option) => option.selected
+                (option) => option.selected,
             );
             //Add options
             this.options.forEach((option, value) => {
@@ -196,7 +196,7 @@ tuleap.tracker.Field = function (id, name, label) {
             }
             if (this.element().classList.contains("list-picker-hidden-accessible")) {
                 this.element().nextElementSibling.classList.add(
-                    "list-picker-field-dependency-highlight"
+                    "list-picker-field-dependency-highlight",
                 );
             } else {
                 this.element().classList.add("tracker-field-dependency-highlight");
@@ -206,7 +206,7 @@ tuleap.tracker.Field = function (id, name, label) {
         removeHighlight: function () {
             if (this.element().classList.contains("list-picker-hidden-accessible")) {
                 this.element().nextElementSibling.classList.remove(
-                    "list-picker-field-dependency-highlight"
+                    "list-picker-field-dependency-highlight",
                 );
             } else {
                 this.element().classList.remove("tracker-field-dependency-highlight");
@@ -267,7 +267,7 @@ tuleap.tracker.runTrackerFieldDependencies = function () {
                 .addRule(
                     rule_definition.source_value,
                     rule_definition.target_field,
-                    rule_definition.target_value
+                    rule_definition.target_value,
                 );
         }
     });

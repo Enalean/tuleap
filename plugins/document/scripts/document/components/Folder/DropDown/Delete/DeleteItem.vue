@@ -42,7 +42,7 @@ const props = defineProps<{ item: Item }>();
 
 const { is_deletion_allowed } = useNamespacedState<Pick<ConfigurationState, "is_deletion_allowed">>(
     "configuration",
-    ["is_deletion_allowed"]
+    ["is_deletion_allowed"],
 );
 
 function processDeletion(): void {

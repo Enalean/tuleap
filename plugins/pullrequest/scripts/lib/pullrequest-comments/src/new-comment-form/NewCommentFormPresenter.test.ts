@@ -28,9 +28,9 @@ describe("NewCommentFormPresenter", () => {
         NewCommentFormPresenter.buildWithUpdatedComment(
             NewCommentFormPresenter.buildFromAuthor(
                 author,
-                NewCommentFormComponentConfigStub.withCancelActionAllowed()
+                NewCommentFormComponentConfigStub.withCancelActionAllowed(),
             ),
-            "This is a new comment"
+            "This is a new comment",
         );
 
     it.each([
@@ -45,15 +45,15 @@ describe("NewCommentFormPresenter", () => {
                 is_cancel_allowed: config.is_cancel_allowed,
                 author,
             });
-        }
+        },
     );
 
     it("buildWithUpdatedComment() should return a clone of the provided presenter containing the updated comment", () => {
         expect(
             NewCommentFormPresenter.buildWithUpdatedComment(
                 getBasePresenter(),
-                "This is a newer comment"
-            )
+                "This is a newer comment",
+            ),
         ).toStrictEqual({
             comment: "This is a newer comment",
             is_saving_comment: false,
@@ -73,10 +73,10 @@ describe("NewCommentFormPresenter", () => {
 
     it("buildNotSavingComment() should return a clone of the provided presenter containing is_saving_comment as false", () => {
         const presenter_saving_comment = NewCommentFormPresenter.buildSavingComment(
-            getBasePresenter()
+            getBasePresenter(),
         );
         expect(
-            NewCommentFormPresenter.buildNotSavingComment(presenter_saving_comment)
+            NewCommentFormPresenter.buildNotSavingComment(presenter_saving_comment),
         ).toStrictEqual({
             comment: "This is a new comment",
             is_saving_comment: false,

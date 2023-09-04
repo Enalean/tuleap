@@ -49,7 +49,7 @@ describe("NewInlineCommentSaver", () => {
                 user,
                 parent_id: 0,
                 color: "",
-            })
+            }),
         );
 
         const comment_saver = NewCommentSaver({
@@ -65,7 +65,7 @@ describe("NewInlineCommentSaver", () => {
 
         const result = await comment_saver.postComment(
             "This is fine",
-            is_comments_markdown_mode_enabled
+            is_comments_markdown_mode_enabled,
         );
         if (!result.isOk()) {
             throw new Error("Expected an ok");
@@ -102,7 +102,7 @@ describe("NewInlineCommentSaver", () => {
                 user,
                 parent_id: 0,
                 color: "",
-            })
+            }),
         );
 
         const comment_saver = NewCommentSaver({
@@ -113,7 +113,7 @@ describe("NewInlineCommentSaver", () => {
 
         const result = await comment_saver.postComment(
             "This is fine",
-            is_comments_markdown_mode_enabled
+            is_comments_markdown_mode_enabled,
         );
         if (!result.isOk()) {
             throw new Error("Expected an ok");

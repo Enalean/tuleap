@@ -49,13 +49,13 @@ type Constructor<TypeOfElement> = new () => TypeOfElement;
 export function selectOrThrow<TypeOfElement extends HTMLElement>(
     base: Queryable,
     selectors: string,
-    element_constructor: Constructor<TypeOfElement>
+    element_constructor: Constructor<TypeOfElement>,
 ): TypeOfElement;
 export function selectOrThrow(base: Queryable, selectors: string): HTMLElement;
 export function selectOrThrow( // eslint-disable-line @typescript-eslint/explicit-function-return-type
     base: Queryable,
     selectors: string,
-    element_constructor = HTMLElement
+    element_constructor = HTMLElement,
 ) {
     const element = base.querySelector(selectors);
     if (!(element instanceof element_constructor)) {

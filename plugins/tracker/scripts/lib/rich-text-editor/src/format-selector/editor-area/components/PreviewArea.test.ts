@@ -73,7 +73,7 @@ describe(`PreviewArea`, () => {
             await promise;
 
             expect(mount_point.innerHTML).toContain(html_string);
-        }
+        },
     );
 
     it(`when the promise is rejected, it will return an alert with the error message`, () => {

@@ -63,7 +63,7 @@ describe("GroupOfReviewersBuilder", () => {
                     display_name: "Joe the Hobo",
                 } as User,
             ],
-            []
+            [],
         );
 
         expect(group.is_loading).toBe(false);

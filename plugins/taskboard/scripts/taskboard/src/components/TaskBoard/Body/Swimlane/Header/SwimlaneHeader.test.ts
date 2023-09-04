@@ -35,7 +35,7 @@ const swimlane: Swimlane = {
 
 async function createWrapper(
     is_fullscreen: boolean,
-    backlog_items_have_children: boolean
+    backlog_items_have_children: boolean,
 ): Promise<Wrapper<SwimlaneHeader>> {
     return shallowMount(SwimlaneHeader, {
         localVue: await createTaskboardLocalVue(),
@@ -78,7 +78,7 @@ describe("SwimlaneHeader", () => {
         wrapper.get(".taskboard-swimlane-toggle").trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/collapseSwimlane",
-            swimlane
+            swimlane,
         );
     });
 

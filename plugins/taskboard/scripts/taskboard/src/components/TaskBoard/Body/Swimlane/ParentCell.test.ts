@@ -107,7 +107,7 @@ describe("ParentCell", () => {
         });
 
         expect(wrapper.findComponent(CardWithRemainingEffort).classes()).toContain(
-            "taskboard-cell-parent-card-edit-mode"
+            "taskboard-cell-parent-card-edit-mode",
         );
     });
 });

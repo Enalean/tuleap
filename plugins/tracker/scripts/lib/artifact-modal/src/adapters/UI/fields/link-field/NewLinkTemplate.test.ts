@@ -62,7 +62,7 @@ describe(`NewLinkTemplate`, () => {
     const render = (link: NewLink): void => {
         const host = {
             current_artifact_reference: Option.fromValue(
-                ArtifactCrossReferenceStub.withRef("story #330")
+                ArtifactCrossReferenceStub.withRef("story #330"),
             ),
             controller: {
                 isLinkedArtifactInCurrentProject: (artifact) =>
@@ -159,7 +159,7 @@ describe(`NewLinkTemplate`, () => {
         const getHost = (new_link: NewLink): HostElement => {
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
             const current_artifact_reference = Option.fromValue(
-                ArtifactCrossReferenceStub.withRef("bug #22")
+                ArtifactCrossReferenceStub.withRef("bug #22"),
             );
 
             const controller = LinkFieldController(
@@ -182,7 +182,7 @@ describe(`NewLinkTemplate`, () => {
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair(),
-                CurrentProjectIdentifierStub.withId(10)
+                CurrentProjectIdentifierStub.withId(10),
             );
 
             const new_links_presenter: ReadonlyArray<NewLink> = [new_link];

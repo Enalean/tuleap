@@ -66,7 +66,7 @@ export type HostElement = RichTextEditor & HTMLElement;
 export const getValidFormat = (
     host: unknown,
     value: string,
-    lastValue: TextFieldFormat | undefined
+    lastValue: TextFieldFormat | undefined,
 ): TextFieldFormat => {
     if (isValidTextFormat(value)) {
         return value;
@@ -117,13 +117,13 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
     host.upload_setup.apply((upload_setup) => {
         const onStartCallback = (): void =>
             host.controller.onFileUploadStart(
-                WillDisableSubmit(getSubmitDisabledImageUploadReason())
+                WillDisableSubmit(getSubmitDisabledImageUploadReason()),
             );
         const onErrorCallback = (error: MaxSizeUploadExceededError | UploadError): void => {
             if (error instanceof MaxSizeUploadExceededError) {
                 error.loader.message = sprintf(
                     getUploadSizeExceeded(),
-                    prettyKibibytes(error.max_size_upload)
+                    prettyKibibytes(error.max_size_upload),
                 );
             } else {
                 error.loader.message = getUploadError();
@@ -165,7 +165,7 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
     const editor_factory = RichTextEditorFactory.forBurningParrotWithExistingFormatSelector(
         document,
         locale,
-        default_format
+        default_format,
     );
 
     return editor_factory.createRichTextEditor(host.textarea, {
@@ -179,7 +179,7 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
                     extraPlugins: "uploadimage",
                     uploadUrl: "/api/v1/" + upload_setup.file_creation_uri,
                 }),
-                { height: "100px", readOnly: host.disabled }
+                { height: "100px", readOnly: host.disabled },
             ),
         onFormatChange: (new_format) => {
             host.is_help_shown =

@@ -81,7 +81,7 @@ const props = withDefaults(
         initial_tests: () => {
             return { test_selector: "milestone" };
         },
-    }
+    },
 );
 
 function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitialTests): string {
@@ -105,9 +105,9 @@ const test_definitions_tracker_reports_group_label = computed((): string => {
         $ngettext(
             "From %{ tracker_name } tracker report",
             "From %{ tracker_name } tracker reports",
-            getNbTrackerReports()
+            getNbTrackerReports(),
         ),
-        { tracker_name: testdefinition_tracker_name.value }
+        { tracker_name: testdefinition_tracker_name.value },
     );
 });
 

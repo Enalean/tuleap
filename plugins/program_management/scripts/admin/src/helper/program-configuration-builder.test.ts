@@ -23,18 +23,21 @@ describe("program-configuration-builder", function () {
     describe("buildProgramConfiguration", function () {
         it("should throw error when no input label", () => {
             expect(() =>
-                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100)
+                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100),
             ).toThrow("No admin-configuration-program-increment-label-section input");
         });
         it("should throw error when no iteration selector and feature flag is true", () => {
             expect(() =>
-                buildProgramConfiguration(createDocumentWithSelectorWithoutIterationSelector(), 100)
+                buildProgramConfiguration(
+                    createDocumentWithSelectorWithoutIterationSelector(),
+                    100,
+                ),
             ).toThrow("admin-configuration-iteration-tracker element does not exist");
         });
         it("should return configuration with selected value and not empty iteration object", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField("8"),
-                100
+                100,
             );
 
             expect(configuration.program_id).toBe(100);
@@ -49,7 +52,7 @@ describe("program-configuration-builder", function () {
         it("should return configuration with empty iteration object when no tracker iteration was selected", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField(""),
-                100
+                100,
             );
             expect(configuration.program_id).toBe(100);
             expect(configuration.plannable_tracker_ids).toEqual([9, 10]);

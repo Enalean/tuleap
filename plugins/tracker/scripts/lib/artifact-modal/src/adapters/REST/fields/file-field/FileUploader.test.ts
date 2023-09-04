@@ -72,7 +72,7 @@ describe(`FileUploader`, () => {
             (file, options) =>
                 ({
                     start: (): void => options.onError?.(Error("Error during TUS upload")),
-                } as tus.Upload)
+                }) as tus.Upload,
         );
 
         const result = await uploadFile();

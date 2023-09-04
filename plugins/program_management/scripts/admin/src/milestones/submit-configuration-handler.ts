@@ -36,7 +36,7 @@ const SUBMIT_BUTTON_ID = "program-management-admin-button-save-configuration";
 export function submitConfigurationHandler(
     doc: Document,
     gettext_provider: GetText,
-    program_id: number
+    program_id: number,
 ): void {
     const form = doc.getElementById(FORM_ID);
     if (!(form instanceof HTMLFormElement)) {
@@ -76,7 +76,7 @@ export function submitConfigurationHandler(
                     setRestErrorMessage(
                         doc,
                         DISPLAY_ERROR_REST_ID,
-                        error.code + " " + error_message
+                        error.code + " " + error_message,
                     );
                 })
                 .catch(() => setRestErrorMessage(doc, DISPLAY_ERROR_REST_ID, "404 Error"));

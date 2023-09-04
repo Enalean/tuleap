@@ -29,7 +29,7 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
             } else if (canItemBeSelectedDependingOnTheCurrentSelection(backlog_item_li)) {
                 BacklogItemSelectedService.addSelectedItem(
                     scope.backlog_item,
-                    scope.backlog_item_index
+                    scope.backlog_item_index,
                 );
                 highlightBacklogItem();
             } else {
@@ -44,7 +44,7 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
 
             if (first_selected_item) {
                 var first_selected_item_element = angular.element(
-                    'div[data-item-id="' + first_selected_item.id + '"]'
+                    'div[data-item-id="' + first_selected_item.id + '"]',
                 );
 
                 return checkIfTwoElementsAreSiblings(first_selected_item_element, backlog_item_li);

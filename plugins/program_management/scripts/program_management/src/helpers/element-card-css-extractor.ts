@@ -21,7 +21,7 @@ import type { ElementWithAccessibility } from "../type";
 
 export function getAccessibilityClasses(
     element: ElementWithAccessibility,
-    should_display_accessibility: boolean
+    should_display_accessibility: boolean,
 ): string[] {
     const classnames = [`element-card-${element.tracker.color_name}`];
 
@@ -38,7 +38,7 @@ export function getAccessibilityClasses(
 
 export function showAccessibilityPattern(
     element: ElementWithAccessibility,
-    should_display_accessibility: boolean
+    should_display_accessibility: boolean,
 ): boolean {
     return should_display_accessibility && element.background_color !== "";
 }

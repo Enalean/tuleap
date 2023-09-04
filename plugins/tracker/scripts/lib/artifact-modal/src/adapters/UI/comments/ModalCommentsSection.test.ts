@@ -55,7 +55,7 @@ describe(`ModalCommentsSection`, () => {
                 host,
                 new CustomEvent<NewComment>("value-changed", {
                     detail: { body, format },
-                })
+                }),
             );
             const event = dispatchEvent.mock.calls[0][0];
             expect(event.type).toBe("new-comment");
@@ -69,7 +69,7 @@ describe(`ModalCommentsSection`, () => {
         (is_order_inverted) => {
             const classes = getNewCommentClasses(is_order_inverted);
             expect(classes["invert-order"]).toBe(is_order_inverted);
-        }
+        },
     );
 
     it.each([[true], [false]])(
@@ -77,7 +77,7 @@ describe(`ModalCommentsSection`, () => {
         (is_order_inverted) => {
             const classes = getSectionClasses(is_order_inverted);
             expect(classes["invert-order"]).toBe(is_order_inverted);
-        }
+        },
     );
 
     describe(`template`, () => {
@@ -98,7 +98,7 @@ describe(`ModalCommentsSection`, () => {
                     RetrieveCommentsStub.withoutComments(),
                     DispatchEventsStub.buildNoOp(),
                     CurrentArtifactIdentifierStub.withId(91),
-                    preferences
+                    preferences,
                 ),
             } as HostElement;
             const update = getSectionTemplate(host);
@@ -141,7 +141,7 @@ describe(`ModalCommentsSection`, () => {
 
             const followup_editor = selectOrThrow(
                 target,
-                "[data-test=add-comment-form]"
+                "[data-test=add-comment-form]",
             ) as FollowupEditor & HTMLElement;
             expect(followup_editor.format).toBe(TEXT_FORMAT_HTML);
         });

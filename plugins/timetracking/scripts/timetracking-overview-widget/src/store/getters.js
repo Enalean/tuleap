@@ -48,7 +48,7 @@ export const can_results_be_displayed = (state) =>
 function getTotalSum(state) {
     return state.trackers_times.reduce(
         (sum, { time_per_user }) => getTotalSumPerUser(state, time_per_user) + sum,
-        0
+        0,
     );
 }
 

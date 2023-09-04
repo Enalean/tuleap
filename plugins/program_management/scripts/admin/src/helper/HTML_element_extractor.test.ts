@@ -24,7 +24,7 @@ describe("HTML_element_extractor", () => {
     describe("getHTMLSelectElementFromId", () => {
         it("should throw error when element does not exist", () => {
             expect(() => getHTMLSelectElementFromId(createDocument(), "bad-id")).toThrow(
-                "bad-id element does not exist"
+                "bad-id element does not exist",
             );
         });
         it("should throw error when element is not select element", () => {
@@ -34,7 +34,7 @@ describe("HTML_element_extractor", () => {
             doc.body.appendChild(div);
 
             expect(() => getHTMLSelectElementFromId(doc, "id-selector")).toThrow(
-                "id-selector element does not exist"
+                "id-selector element does not exist",
             );
         });
         it("whould return select element when it exists", () => {
@@ -49,7 +49,7 @@ describe("HTML_element_extractor", () => {
     describe("getHTMLInputElementFromId", () => {
         it("should throw error when element does not exist", () => {
             expect(() => getHTMLInputElementFromId(createDocument(), "bad-id")).toThrow(
-                "No bad-id input element"
+                "No bad-id input element",
             );
         });
         it("should throw error when element is not select element", () => {
@@ -59,7 +59,7 @@ describe("HTML_element_extractor", () => {
             doc.body.appendChild(div);
 
             expect(() => getHTMLInputElementFromId(doc, "id-input")).toThrow(
-                "No id-input input element"
+                "No id-input input element",
             );
         });
         it("whould return select element when it exists", () => {

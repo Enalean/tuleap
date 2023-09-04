@@ -98,7 +98,7 @@ describe("TransitionDeleter", () => {
 
                 const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
-                    "tracker-workflow-transition-action-disabled"
+                    "tracker-workflow-transition-action-disabled",
                 );
             });
         });
@@ -111,7 +111,7 @@ describe("TransitionDeleter", () => {
 
                 const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
-                    "tracker-workflow-transition-action-updated"
+                    "tracker-workflow-transition-action-updated",
                 );
             });
         });
@@ -186,7 +186,7 @@ describe("TransitionDeleter", () => {
                     const wrapper = await getWrapper();
                     const delete_button = wrapper.get(delete_transition_selector);
                     expect(delete_button.classes()).toContain(
-                        "tracker-workflow-transition-action-disabled"
+                        "tracker-workflow-transition-action-disabled",
                     );
                 });
 

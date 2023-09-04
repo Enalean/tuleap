@@ -17,7 +17,7 @@ function MainCtrl(
     SharedPropertiesService,
     amMoment,
     UUIDGeneratorService,
-    FilterTrackerReportService
+    FilterTrackerReportService,
 ) {
     this.$onInit = init;
 

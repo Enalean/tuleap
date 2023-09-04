@@ -113,7 +113,7 @@ describe("collapsible-code-sections-builder", () => {
 
             const sections_to_collapse = getPaddedCollapsibleSections(
                 potentially_collapsible_sections,
-                file_length
+                file_length,
             );
 
             expect(sections_to_collapse).toStrictEqual([
@@ -129,7 +129,7 @@ describe("collapsible-code-sections-builder", () => {
         it("Given a file of 24 lines having a deleted line on l.12, then it should return the different sections (right/left) for each side.", () => {
             const side_by_side_collapsible_sections = getCollapsibleSectionsSideBySide(
                 file_modifications,
-                []
+                [],
             );
 
             expect(side_by_side_collapsible_sections).toStrictEqual([

@@ -41,14 +41,14 @@
             <p>
                 {{
                     $gettext(
-                        "The size of the zip file you are attempting to download is exceeding the threshold defined by the site administrators."
+                        "The size of the zip file you are attempting to download is exceeding the threshold defined by the site administrators.",
                     )
                 }}
             </p>
             <p>
                 {{
                     $gettext(
-                        "Contact your administrator or try to reorganize this folder, then try again."
+                        "Contact your administrator or try to reorganize this folder, then try again.",
                     )
                 }}
             </p>
@@ -84,7 +84,7 @@ const props = defineProps<{ size: number }>();
 
 const { max_archive_size } = useNamespacedState<Pick<ConfigurationState, "max_archive_size">>(
     "configuration",
-    ["max_archive_size"]
+    ["max_archive_size"],
 );
 
 const modal = ref<Modal | null>(null);

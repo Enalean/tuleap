@@ -177,14 +177,14 @@ export default class ArtifactTable extends Vue {
             this.writingCrossTrackerReport.getTrackerIds(),
             this.writingCrossTrackerReport.expert_query,
             this.limit,
-            this.current_offset
+            this.current_offset,
         );
     }
 
     formatArtifacts(artifacts: Array<Artifact>): Array<Artifact> {
         return artifacts.map((artifact) => {
             artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
-                getUserPreferredDateFormat()
+                getUserPreferredDateFormat(),
             );
 
             return artifact;

@@ -45,11 +45,11 @@ const { interpolate, $ngettext } = useGettext();
 const dry_run_store = useDryRunStore();
 
 const partially_migrated_fields = computed(
-    (): ArtifactField[] => dry_run_store.fields_partially_migrated
+    (): ArtifactField[] => dry_run_store.fields_partially_migrated,
 );
 
 const partially_migrated_fields_count = computed(
-    (): number => dry_run_store.fields_partially_migrated.length
+    (): number => dry_run_store.fields_partially_migrated.length,
 );
 
 const message = computed((): string => {
@@ -57,9 +57,9 @@ const message = computed((): string => {
         $ngettext(
             "1 field does not fully match with the targeted tracker. One value of the field has not been found in targeted tracker, if you confirm your action, this value will be lost forever:",
             "%{ partially_migrated_fields_count } fields do not fully match with the targeted tracker. One value of the fields has not been found in targeted tracker, if you confirm your action, this value will be lost forever:",
-            partially_migrated_fields_count.value
+            partially_migrated_fields_count.value,
         ),
-        { partially_migrated_fields_count: partially_migrated_fields_count.value }
+        { partially_migrated_fields_count: partially_migrated_fields_count.value },
     );
 });
 </script>

@@ -24,7 +24,7 @@ describe("browser-deprecation-modal", () => {
     it("Shows the modal when the deprecation is not marked as already seen", () => {
         jest.spyOn(
             mark_deprecation_acknowledgement,
-            "markAndCheckBrowserDeprecationAcknowledgement"
+            "markAndCheckBrowserDeprecationAcknowledgement",
         ).mockReturnValue(false);
         const show_modal = jest.fn();
         const show_non_dismissible_modal = jest.fn();
@@ -33,7 +33,7 @@ describe("browser-deprecation-modal", () => {
             createDocumentWithModal(),
             show_modal,
             show_non_dismissible_modal,
-            localStorage
+            localStorage,
         );
         expect(show_modal).toHaveBeenCalled();
         expect(show_non_dismissible_modal).not.toHaveBeenCalled();
@@ -42,7 +42,7 @@ describe("browser-deprecation-modal", () => {
     it("Does not show the modal when the deprecation is not marked as already seen", () => {
         jest.spyOn(
             mark_deprecation_acknowledgement,
-            "markAndCheckBrowserDeprecationAcknowledgement"
+            "markAndCheckBrowserDeprecationAcknowledgement",
         ).mockReturnValue(true);
         const show_modal = jest.fn();
         const show_non_dismissible_modal = jest.fn();
@@ -51,7 +51,7 @@ describe("browser-deprecation-modal", () => {
             createDocumentWithModal(),
             show_modal,
             show_non_dismissible_modal,
-            localStorage
+            localStorage,
         );
         expect(show_modal).not.toHaveBeenCalled();
         expect(show_non_dismissible_modal).not.toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe("browser-deprecation-modal", () => {
     it("Always shows the non dismissible modal", () => {
         jest.spyOn(
             mark_deprecation_acknowledgement,
-            "markAndCheckBrowserDeprecationAcknowledgement"
+            "markAndCheckBrowserDeprecationAcknowledgement",
         ).mockReturnValue(false);
         const show_modal = jest.fn();
         const show_non_dismissible_modal = jest.fn();
@@ -69,7 +69,7 @@ describe("browser-deprecation-modal", () => {
             createDocumentWithNonDismissibleModal(),
             show_modal,
             show_non_dismissible_modal,
-            localStorage
+            localStorage,
         );
         expect(show_non_dismissible_modal).toHaveBeenCalled();
         expect(show_modal).not.toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe("browser-deprecation-modal", () => {
     it("Throws an error when the modal cannot be found in the DOM", () => {
         const mount_point = document.implementation.createHTMLDocument();
         expect(() =>
-            displayBrowserDeprecationModalIfNeeded(mount_point, jest.fn(), jest.fn(), localStorage)
+            displayBrowserDeprecationModalIfNeeded(mount_point, jest.fn(), jest.fn(), localStorage),
         ).toThrowError();
     });
 

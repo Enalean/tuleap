@@ -96,12 +96,12 @@ export class TooltipFactory {
         x: OrientationX,
         y: OrientationY,
         width: OrientationWidth,
-        height: OrientationHeight
+        height: OrientationHeight,
     ): TooltipCoordinates;
 
     getTopOrientedTooltipCoordinates(
         x: OrientationX,
         y: OrientationY,
-        width: OrientationWidth
+        width: OrientationWidth,
     ): TooltipCoordinates;
 }

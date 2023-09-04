@@ -49,7 +49,7 @@ export async function retrieveTrackerStructure(tracker_id: number): Promise<Trac
 
 export async function getTrackerDefinition(tracker_id: number): Promise<TrackerDefinition> {
     const tracker_structure_response = await get(
-        `/api/v1/trackers/${encodeURIComponent(tracker_id)}`
+        `/api/v1/trackers/${encodeURIComponent(tracker_id)}`,
     );
     return tracker_structure_response.json();
 }

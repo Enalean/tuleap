@@ -61,7 +61,7 @@ export async function saveReport(context, message) {
         context.commit("setTrackersIds");
         const report = await saveNewReport(
             context.state.report_id,
-            context.state.trackers_ids ? context.state.trackers_ids : []
+            context.state.trackers_ids ? context.state.trackers_ids : [],
         );
         context.commit("setSelectedTrackers", report.trackers);
         context.commit("setSuccessMessage", message);
@@ -133,7 +133,7 @@ function getTimesWithNewParameters(context) {
         context.state.report_id,
         context.state.trackers_ids,
         context.state.start_date,
-        context.state.end_date
+        context.state.end_date,
     );
 }
 
@@ -141,7 +141,7 @@ function getTimesWithoutNewParameters(context) {
     return getTimesFromReport(
         context.state.report_id,
         context.state.start_date,
-        context.state.end_date
+        context.state.end_date,
     );
 }
 
@@ -150,7 +150,7 @@ export async function setPreference(context) {
         await setDisplayPreference(
             context.state.report_id,
             context.state.user_id,
-            !context.state.are_void_trackers_hidden
+            !context.state.are_void_trackers_hidden,
         );
         return context.commit("toggleDisplayVoidTrackers");
     } catch (rest_error) {

@@ -90,7 +90,7 @@ describe("send-notifications", () => {
             expect(displaySuccess).toHaveBeenCalledWith(
                 ["peter@example.com", "wendy@example.com"],
                 response_body,
-                gettext_provider
+                gettext_provider,
             );
             expect(handleError).not.toHaveBeenCalled();
             expect(deactivateSpinner).toHaveBeenCalled();
@@ -134,7 +134,7 @@ describe("send-notifications", () => {
             expect(displaySuccess).toHaveBeenCalledWith(
                 ["peter@example.com", "wendy@example.com"],
                 response_body,
-                gettext_provider
+                gettext_provider,
             );
             expect(handleError).not.toHaveBeenCalled();
             expect(deactivateSpinner).toHaveBeenCalled();

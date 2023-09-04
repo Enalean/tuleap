@@ -27,31 +27,31 @@ import {
 import type { Folder, FormattedGitLabRepository, Repository, State } from "../type";
 
 export const currentRepositoryList = (
-    state: State
+    state: State,
 ): Array<Repository | FormattedGitLabRepository | Folder> => [
     ...state.repositories_for_owner[state.selected_owner_id],
 ];
 
 function isGitLabRepository(
-    item: Folder | Repository | FormattedGitLabRepository
+    item: Folder | Repository | FormattedGitLabRepository,
 ): item is FormattedGitLabRepository {
     return "gitlab_data" in item;
 }
 
 export const getGitlabRepositoriesIntegrated = (
-    state: State
+    state: State,
 ): Array<FormattedGitLabRepository | Folder | Repository> => {
     return currentRepositoryList(state).filter(
         (repository: Repository | FormattedGitLabRepository | Folder) => {
             return isGitLabRepository(repository);
-        }
+        },
     );
 };
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = (state: State): boolean => {
     return Object.prototype.hasOwnProperty.call(
         state.repositories_for_owner,
-        state.selected_owner_id
+        state.selected_owner_id,
     );
 };
 
@@ -59,7 +59,7 @@ export const isCurrentRepositoryListEmpty = (state: State): boolean =>
     areRepositoriesAlreadyLoadedForCurrentOwner(state) && currentRepositoryList(state).length === 0;
 
 export const getFilteredRepositoriesByLastUpdateDate = (
-    state: State
+    state: State,
 ): Array<Repository | FormattedGitLabRepository | Folder> => {
     if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
         return [];
@@ -67,7 +67,7 @@ export const getFilteredRepositoriesByLastUpdateDate = (
 
     return sortByLastUpdateDate(currentRepositoryList(state)).filter(
         (repository: FormattedGitLabRepository | Repository | Folder) =>
-            checkRepositoryMatchQuery(repository, state.filter)
+            checkRepositoryMatchQuery(repository, state.filter),
     );
 };
 

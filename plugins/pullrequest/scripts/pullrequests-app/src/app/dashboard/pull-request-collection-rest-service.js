@@ -35,7 +35,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
                 limit: limit,
                 offset: offset,
             },
-            status_param
+            status_param,
         );
 
         return $http
@@ -69,7 +69,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
             return recursiveGet(getFunction, limit, offset + limit, progress_callback).then(
                 function (second_response) {
                     return results.concat(second_response);
-                }
+                },
             );
         });
     }

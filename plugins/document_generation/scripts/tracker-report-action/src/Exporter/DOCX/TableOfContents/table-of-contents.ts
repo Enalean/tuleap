@@ -56,7 +56,7 @@ class Alias extends XmlComponent {
 export class TableOfContentsPrefilled extends XmlComponent {
     public constructor(
         artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
-        properties?: ITableOfContentsOptions
+        properties?: ITableOfContentsOptions,
     ) {
         super("w:sdt");
 
@@ -110,7 +110,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
     }
 
     private buildPrefilledTOC(
-        artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>
+        artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
     ): ReadonlyArray<Paragraph> {
         const links_to_content = [];
 
@@ -130,7 +130,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
                             leader: LeaderType.DOT,
                         },
                     ],
-                })
+                }),
             );
         }
 

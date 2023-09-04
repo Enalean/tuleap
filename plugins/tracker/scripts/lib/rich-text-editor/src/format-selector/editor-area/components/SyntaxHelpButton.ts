@@ -29,7 +29,7 @@ export interface HelpButtonPresenter {
 
 export function createSyntaxHelpButton(
     presenter: HelpButtonPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult {
     const helper_popover = getCommonMarkSyntaxPopoverHelperContent(gettext_provider);
     return html`

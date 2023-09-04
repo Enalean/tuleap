@@ -58,7 +58,7 @@ export function getTraceabilityMatrixTitle(gettext_provider: GettextProvider): {
 
 export function buildTraceabilityMatrix(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): (Paragraph | Table)[] {
     const title = getTraceabilityMatrixTitle(gettext_provider);
 
@@ -82,8 +82,8 @@ export function buildTraceabilityMatrix(
             section_title,
             new Paragraph(
                 gettext_provider.gettext(
-                    "There isn't any requirements to put in the traceability matrix."
-                )
+                    "There isn't any requirements to put in the traceability matrix.",
+                ),
             ),
         ];
     }
@@ -110,7 +110,7 @@ const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
 
 const buildCellContentWithRowspan = (
     content: TextRun | InternalHyperlink,
-    rowSpan: number
+    rowSpan: number,
 ): TableCell =>
     new TableCell({
         ...buildCellContentOptions(content),
@@ -119,7 +119,7 @@ const buildCellContentWithRowspan = (
 
 function buildTraceabilityMatrixTable(
     elements: ReadonlyArray<TraceabilityMatrixElement>,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Table {
     return new Table({
         width: {
@@ -151,13 +151,13 @@ function buildTraceabilityMatrixTable(
                                     children: [new TextRun(element.requirement.title)],
                                     anchor: getAnchorToArtifactContent(element.requirement),
                                 }),
-                                element.tests.size
+                                element.tests.size,
                             ),
                             buildCellContentResult(
                                 computeRequirementStatus([...element.tests.values()]),
                                 gettext_provider,
-                                element.tests.size
-                            )
+                                element.tests.size,
+                            ),
                         );
                         is_first = false;
                     }
@@ -167,7 +167,7 @@ function buildTraceabilityMatrixTable(
                             new InternalHyperlink({
                                 children: [new TextRun(test.title)],
                                 anchor: getAnchorToArtifactContent(test),
-                            })
+                            }),
                         ),
                         buildCellContent(new TextRun(test.campaign)),
                         buildCellContentResult(test.status, gettext_provider, 1),
@@ -178,7 +178,7 @@ function buildTraceabilityMatrixTable(
                     acc.push(
                         new TableRow({
                             children,
-                        })
+                        }),
                     );
                 }
                 return acc;

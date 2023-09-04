@@ -85,7 +85,7 @@ describe("lock", () => {
         expect(context.dispatch).toHaveBeenCalledWith(
             "error/handleErrorsForLock",
             expect.any(Object),
-            { root: true }
+            { root: true },
         );
     });
 

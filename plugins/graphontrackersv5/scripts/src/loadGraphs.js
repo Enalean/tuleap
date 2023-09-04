@@ -99,14 +99,14 @@ function graphFactory(graph_id, graph_data) {
 function showError(graph_node, error) {
     const error_message = sprintf(
         gettext_provider.gettext("An error occurred while loading the chart: %s"),
-        error
+        error,
     );
     const error_node = document.createElement("div");
     error_node.classList.add(
         "alert",
         "alert-error",
         "tlp-alert-danger",
-        "graphontrackersv5-chart-error"
+        "graphontrackersv5-chart-error",
     );
     error_node.insertAdjacentText("beforeend", error_message);
     graph_node.appendChild(error_node);

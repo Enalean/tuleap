@@ -49,7 +49,7 @@ export default {
                 if (current_folder && current_folder.id !== route.params.item_id) {
                     store.dispatch("loadFolder", parseInt(route.params.item_id, 10));
                 }
-            }
+            },
         );
     },
     computed: {
@@ -60,13 +60,13 @@ export default {
         if (route.name === "preview") {
             await this.$store.dispatch(
                 "toggleQuickLook",
-                parseInt(route.params.preview_item_id, 10)
+                parseInt(route.params.preview_item_id, 10),
             );
 
             if (!this.current_folder && this.currently_previewed_item) {
                 this.$store.dispatch(
                     "loadFolder",
-                    parseInt(this.currently_previewed_item.parent_id, 10)
+                    parseInt(this.currently_previewed_item.parent_id, 10),
                 );
             }
         } else {

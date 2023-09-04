@@ -56,7 +56,7 @@ describe("PullRequestDescriptionContentTemplate", () => {
         render(host, target);
 
         expect(selectOrThrow(target, "[data-test=description-content]").innerHTML.trim()).toBe(
-            host.description.content
+            host.description.content,
         );
     });
 
@@ -76,7 +76,7 @@ describe("PullRequestDescriptionContentTemplate", () => {
         render(host, target);
 
         expect(selectOrThrow(target, "[data-test=description-content]").innerHTML.trim()).toBe(
-            host.description.post_processed_content
+            host.description.post_processed_content,
         );
     });
 
@@ -107,11 +107,11 @@ describe("PullRequestDescriptionContentTemplate", () => {
 
             const empty_state_text = selectOrThrow(
                 target,
-                "[data-test=description-empty-state]"
+                "[data-test=description-empty-state]",
             ).textContent;
             expect(empty_state_text).toContain("No commit description has been provided yet.");
             expect(empty_state_text?.includes("Please add one.")).toBe(can_user_update_description);
-        }
+        },
     );
 
     it("When the user cannot edit the description, then no footer will be rendered", () => {

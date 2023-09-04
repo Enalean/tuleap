@@ -44,7 +44,7 @@ export async function getProjectUserIsAdminOf(): Promise<TemplateData[]> {
                 offset: 0,
                 query: JSON.stringify({ is_admin_of: true }),
             },
-        }
+        },
     );
 
     return minimal_project_representations

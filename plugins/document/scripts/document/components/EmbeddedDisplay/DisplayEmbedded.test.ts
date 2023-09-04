@@ -58,7 +58,7 @@ describe("DisplayEmbedded", () => {
 
     function getWrapperWithError(
         has_document_permission_error: boolean,
-        has_document_loading_error: boolean
+        has_document_loading_error: boolean,
     ): VueWrapper<InstanceType<typeof DisplayEmbedded>> {
         return shallowMount(DisplayEmbedded, {
             props: {
@@ -99,7 +99,7 @@ describe("DisplayEmbedded", () => {
     }
 
     function getWrapper(
-        version_id: number | null
+        version_id: number | null,
     ): VueWrapper<InstanceType<typeof DisplayEmbedded>> {
         return shallowMount(DisplayEmbedded, {
             props: {
@@ -158,7 +158,7 @@ describe("DisplayEmbedded", () => {
         When component is rendered
         Backend load the embedded file content`, async () => {
         getEmbeddedFileVersionContent.mockReturnValue(
-            okAsync({ version_number: 3, content: "<p>my custom content </p>" })
+            okAsync({ version_number: 3, content: "<p>my custom content </p>" }),
         );
 
         const wrapper = getWrapper(null);
@@ -170,10 +170,10 @@ describe("DisplayEmbedded", () => {
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
-            "<p>my custom content </p>"
+            "<p>my custom content </p>",
         );
         expect(
-            wrapper.findComponent(DisplayEmbeddedContent).props().specific_version_number
+            wrapper.findComponent(DisplayEmbeddedContent).props().specific_version_number,
         ).toBeNull();
         expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
@@ -182,7 +182,7 @@ describe("DisplayEmbedded", () => {
         When component is rendered
         Backend load the embedded file content and the specific version content`, async () => {
         getEmbeddedFileVersionContent.mockReturnValue(
-            okAsync({ version_number: 3, content: "<p>An old content</p>" })
+            okAsync({ version_number: 3, content: "<p>An old content</p>" }),
         );
 
         const wrapper = getWrapper(3);
@@ -195,10 +195,10 @@ describe("DisplayEmbedded", () => {
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
-            "<p>An old content</p>"
+            "<p>An old content</p>",
         );
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().specific_version_number).toBe(
-            3
+            3,
         );
         expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });

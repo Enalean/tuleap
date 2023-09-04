@@ -57,7 +57,7 @@ export const buildGetJSON =
     (response_retriever: RetrieveResponse) =>
     <TypeOfJSONPayload>(
         uri: EncodedURI,
-        options?: OptionsWithAutoEncodedParameters
+        options?: OptionsWithAutoEncodedParameters,
     ): ResultAsync<TypeOfJSONPayload, Fault> =>
         response_retriever
             .retrieveResponse(getURI(uri, options?.params), { method: GET_METHOD, credentials })
@@ -69,7 +69,7 @@ export const buildSendJSON =
     (
         uri: EncodedURI,
         options: OptionsWithAutoEncodedParameters,
-        json_payload: unknown
+        json_payload: unknown,
     ): ResultAsync<Response, Fault> =>
         response_retriever
             .retrieveResponse(getURI(uri, options.params), {
@@ -84,8 +84,8 @@ export const buildSendAndReceiveJSON =
     (response_retriever: RetrieveResponse, method: PutMethod | PatchMethod | PostMethod) =>
     <TypeOfJSONPayload>(
         uri: EncodedURI,
-        json_payload: unknown
+        json_payload: unknown,
     ): ResultAsync<TypeOfJSONPayload, Fault> =>
         buildSendJSON(response_retriever, method)(uri, {}, json_payload).andThen(
-            decodeJSON<TypeOfJSONPayload>
+            decodeJSON<TypeOfJSONPayload>,
         );

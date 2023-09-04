@@ -74,9 +74,9 @@ describe("FieldsListDisplayer", () => {
             const wrapper = getWrapper(getFields(6), type);
 
             expect(wrapper.find("[data-test=show-more-fields-button]").classes()).toContain(
-                `move-artifact-display-more-field-${type}`
+                `move-artifact-display-more-field-${type}`,
             );
-        }
+        },
     );
 
     it("When the user clicks on [Show more], then all the fields are shown and the button disappears", async () => {

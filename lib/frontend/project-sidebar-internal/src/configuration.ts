@@ -101,7 +101,7 @@ export interface Configuration {
 }
 
 export function unserializeConfiguration(
-    serialized_config: string | undefined
+    serialized_config: string | undefined,
 ): Configuration | undefined {
     if (serialized_config === undefined) {
         return undefined;

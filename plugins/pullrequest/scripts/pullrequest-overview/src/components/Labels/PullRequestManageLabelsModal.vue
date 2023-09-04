@@ -123,10 +123,10 @@ const cancel = () => {
 function saveLabels() {
     const newly_selected_labels_ids = newly_selected_labels.value.map(({ id }) => id);
     const added_labels_ids = newly_selected_labels_ids.filter(
-        (id) => !current_labels_ids.includes(id)
+        (id) => !current_labels_ids.includes(id),
     );
     const removed_labels_ids = current_labels_ids.filter(
-        (id) => !newly_selected_labels_ids.includes(id)
+        (id) => !newly_selected_labels_ids.includes(id),
     );
 
     is_saving.value = true;
@@ -135,7 +135,7 @@ function saveLabels() {
         pull_request_id,
         added_labels_ids,
         removed_labels_ids,
-        labels_creation_manager.getLabelsToCreate()
+        labels_creation_manager.getLabelsToCreate(),
     )
         .match(() => {
             modal_instance.value?.hide();
@@ -192,7 +192,7 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
             labels_creation_manager.registerLabelsToCreate(labels_in_selection);
 
             newly_selected_labels.value = labels_in_selection.filter(
-                ({ id }) => id !== LABEL_TO_CREATE_TMP_ID
+                ({ id }) => id !== LABEL_TO_CREATE_TMP_ID,
             );
         },
         new_item_label_callback: (item_name) =>
@@ -210,7 +210,7 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
             });
 
             lazybox.replaceSelection(
-                findLabelsWithIds(project_labels, [...current_labels_ids, LABEL_TO_CREATE_TMP_ID])
+                findLabelsWithIds(project_labels, [...current_labels_ids, LABEL_TO_CREATE_TMP_ID]),
             );
         },
     };

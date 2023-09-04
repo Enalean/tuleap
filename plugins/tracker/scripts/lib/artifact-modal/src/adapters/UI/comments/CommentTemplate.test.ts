@@ -48,7 +48,7 @@ describe(`CommentTemplate`, () => {
             CommentUserPreferencesBuilder.userPreferences()
                 .withLocale("fr_FR")
                 .withRelativeDatesDisplay("relative_first-absolute_tooltip")
-                .build()
+                .build(),
         );
         updateFunction(host, target);
     };
@@ -58,7 +58,7 @@ describe(`CommentTemplate`, () => {
             .withBody("<p>Rendered <strong>Markdown</strong></p>")
             .withSubmitter(
                 CommentAuthorStub.aRegisteredUser("Drema Biedermann", "dbiedermann"),
-                "2019-02-01T04:42:06+05:00"
+                "2019-02-01T04:42:06+05:00",
             )
             .build();
 
@@ -71,7 +71,7 @@ describe(`CommentTemplate`, () => {
         const submission_date = selectOrThrow(
             target,
             "[data-test=comment-submission-date]",
-            RelativeDateElement
+            RelativeDateElement,
         );
 
         expect(body.innerHTML).toBe(comment.body);
@@ -89,11 +89,11 @@ describe(`CommentTemplate`, () => {
             .withBody("Plain text comment")
             .withSubmitter(
                 CommentAuthorStub.aRegisteredUser("Alisa Davidian", "adavidian"),
-                "2014-08-26T05:57:44+10:00"
+                "2014-08-26T05:57:44+10:00",
             )
             .withUpdate(
                 CommentAuthorStub.aRegisteredUser("Kassandra Beekman", "kbeekman"),
-                "2015-12-26T20:54:47-05:00"
+                "2015-12-26T20:54:47-05:00",
             )
             .build();
 
@@ -105,7 +105,7 @@ describe(`CommentTemplate`, () => {
         const modification_date = selectOrThrow(
             target,
             "[data-test=comment-modification-date]",
-            RelativeDateElement
+            RelativeDateElement,
         );
 
         expect(body.innerHTML).toBe(comment.body);
@@ -129,7 +129,7 @@ describe(`CommentTemplate`, () => {
         const email_link = selectOrThrow(
             target,
             "[data-test=anonymous-submitter]",
-            HTMLAnchorElement
+            HTMLAnchorElement,
         );
 
         expect(email_link.href).toContain(EMAIL);

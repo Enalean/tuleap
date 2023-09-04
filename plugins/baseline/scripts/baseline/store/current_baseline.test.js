@@ -47,7 +47,7 @@ describe("Current baseline store:", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadBaselineWithAuthor",
                     { baseline_id: 1 },
-                    { root: true }
+                    { root: true },
                 );
             });
             it("loads baseline content", () => {
@@ -78,12 +78,12 @@ describe("Current baseline store:", () => {
 
                 it("filters artifacts on hidden trackers", () => {
                     expect(
-                        store.getters.filterArtifacts(state)([artifact_on_hidden_tracker])
+                        store.getters.filterArtifacts(state)([artifact_on_hidden_tracker]),
                     ).toEqual([]);
                 });
                 it("does not filter artifacts on not hidden trackers", () => {
                     expect(
-                        store.getters.filterArtifacts(state)([artifact_on_other_tracker])
+                        store.getters.filterArtifacts(state)([artifact_on_other_tracker]),
                     ).toEqual([artifact_on_other_tracker]);
                 });
             });

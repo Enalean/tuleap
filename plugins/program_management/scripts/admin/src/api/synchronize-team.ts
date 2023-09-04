@@ -22,7 +22,7 @@ import { put } from "@tuleap/tlp-fetch";
 
 export function synchronizeTeamOfProgram(
     project_shortname: string,
-    team_id: number
+    team_id: number,
 ): Promise<Response> {
     return put(
         "/program_management/admin/" +
@@ -33,6 +33,6 @@ export function synchronizeTeamOfProgram(
             headers: {
                 "Content-Type": "application/json",
             },
-        }
+        },
     );
 }

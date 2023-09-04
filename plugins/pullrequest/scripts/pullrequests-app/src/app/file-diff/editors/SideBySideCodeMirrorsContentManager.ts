@@ -31,14 +31,14 @@ export interface ManageCodeMirrorsContent {
 export const SideBySideCodeMirrorsContentManager = (
     file_lines: readonly FileLine[],
     left_code_mirror: Editor,
-    right_code_mirror: Editor
+    right_code_mirror: Editor,
 ): ManageCodeMirrorsContent => {
     const left_lines = file_lines.filter(
-        (line: FileLine): line is LeftLine => isAnUnmovedLine(line) || isARemovedLine(line)
+        (line: FileLine): line is LeftLine => isAnUnmovedLine(line) || isARemovedLine(line),
     );
 
     const right_lines = file_lines.filter(
-        (line: FileLine): line is RightLine => isAnUnmovedLine(line) || isAnAddedLine(line)
+        (line: FileLine): line is RightLine => isAnUnmovedLine(line) || isAnAddedLine(line),
     );
 
     const left_content = left_lines.map((line: FileLine) => line.content).join("\n");

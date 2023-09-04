@@ -39,7 +39,7 @@ export async function createNewFile(
         readonly permissions_for_groups?: Permissions | null;
     },
     parent: Folder,
-    should_display_fake_item: boolean
+    should_display_fake_item: boolean,
 ): Promise<CreatedItem> {
     const dropped_file = item_to_create.file_properties.file;
     const new_file = await addNewFile(
@@ -51,7 +51,7 @@ export async function createNewFile(
             },
             metadata: item_to_create.properties,
         },
-        parent.id
+        parent.id,
     );
     if (dropped_file.size === 0) {
         const created_item = await getItem(new_file.id);

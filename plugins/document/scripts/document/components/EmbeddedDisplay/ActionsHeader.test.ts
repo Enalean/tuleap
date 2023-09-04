@@ -41,7 +41,7 @@ describe("ActionsHeader", () => {
         } as Item);
 
         expect(
-            wrapper.find("[data-test=item-action-create-new-version-button]").exists()
+            wrapper.find("[data-test=item-action-create-new-version-button]").exists(),
         ).toBeTruthy();
     });
 
@@ -56,7 +56,7 @@ describe("ActionsHeader", () => {
         } as Item);
 
         expect(
-            wrapper.find("[data-test=item-action-create-new-version-button]").exists()
+            wrapper.find("[data-test=item-action-create-new-version-button]").exists(),
         ).toBeFalsy();
     });
 });

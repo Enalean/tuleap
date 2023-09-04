@@ -122,7 +122,7 @@ export default {
         this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
         this.$store.dispatch(
             "transitionModal/setIsSplitFeatureFlagEnabled",
-            this.is_split_feature_flag_enabled
+            this.is_split_feature_flag_enabled,
         );
     },
 };

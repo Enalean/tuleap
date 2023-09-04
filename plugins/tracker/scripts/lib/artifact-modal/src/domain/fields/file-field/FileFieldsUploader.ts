@@ -34,11 +34,11 @@ const DEFAULT_MIME_TYPE = "application/octet-stream";
 
 export const FileFieldsUploader = (
     upload_creator: CreateFileUpload,
-    upload_finisher: FinishFileUpload
+    upload_finisher: FinishFileUpload,
 ): FileFieldsUploaderType => {
     const uploadOneFile = (
         file_field_value: FileFieldValueModel,
-        new_file: NewFileToAttach
+        new_file: NewFileToAttach,
     ): ResultAsync<void, Fault> => {
         const file_handle = new_file.file;
         if (file_handle === undefined) {
@@ -76,10 +76,10 @@ export const FileFieldsUploader = (
                 field_values.map((file_field_value) =>
                     ResultAsync.combine(
                         file_field_value.temporary_files.map((new_file) =>
-                            uploadOneFile(file_field_value, new_file)
-                        )
-                    )
-                )
+                            uploadOneFile(file_field_value, new_file),
+                        ),
+                    ),
+                ),
             ).map(() => {
                 // map to void
             }),

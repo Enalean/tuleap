@@ -100,10 +100,10 @@ describe("move-focus", () => {
         describe("moving UP and DOWN", () => {
             beforeEach(() => {
                 const maybe_first_card = document.querySelector(
-                    "[data-test='first-cell-first-card']"
+                    "[data-test='first-cell-first-card']",
                 );
                 const maybe_second_card = document.querySelector(
-                    "[data-test='first-cell-second-card']"
+                    "[data-test='first-cell-second-card']",
                 );
                 const maybe_add_form = document.querySelector("[data-test='first-cell-add-form']");
 
@@ -170,13 +170,13 @@ describe("move-focus", () => {
         describe("moving RIGHT and LEFT", () => {
             beforeEach(() => {
                 const maybe_first_cell_card = document.querySelector(
-                    "[data-test='first-cell-first-card']"
+                    "[data-test='first-cell-first-card']",
                 );
                 const maybe_second_cell_card = document.querySelector(
-                    "[data-test='second-cell-first-card']"
+                    "[data-test='second-cell-first-card']",
                 );
                 const maybe_last_cell_add_form = document.querySelector(
-                    "[data-test='last-cell-add-form']"
+                    "[data-test='last-cell-add-form']",
                 );
 
                 if (
@@ -253,7 +253,7 @@ describe("move-focus", () => {
                 </div>
                 <div tabindex="0" data-navigation="swimlane" data-test="second-swimlane"></div>
                 <div tabindex="0" data-navigation="swimlane" data-test="last-swimlane"></div>
-            `
+            `,
         );
     }
 });

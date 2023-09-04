@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const buttons = document.querySelectorAll(
-        ".project-labels-table-delete-button, .project-labels-table-edit-button, .project-labels-table-add-button"
+        ".project-labels-table-delete-button, .project-labels-table-edit-button, .project-labels-table-add-button",
     );
     for (const button of buttons) {
         const modal_element = document.getElementById(button.dataset.modalId);
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map((label) =>
-        label.toLowerCase()
+        label.toLowerCase(),
     );
     for (const input of document.querySelectorAll(".project-label-edit-name")) {
         input.addEventListener("input", onLabelChange);

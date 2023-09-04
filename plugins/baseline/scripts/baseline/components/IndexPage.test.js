@@ -51,7 +51,7 @@ describe("IndexPage", () => {
         it("shows new modal", () => {
             expect($store.commit).toHaveBeenCalledWith(
                 "dialog_interface/showModal",
-                expect.any(Object)
+                expect.any(Object),
             );
         });
     });
@@ -68,7 +68,7 @@ describe("IndexPage", () => {
             it("shows new modal", () => {
                 expect($store.commit).toHaveBeenCalledWith(
                     "dialog_interface/showModal",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
             });
         });

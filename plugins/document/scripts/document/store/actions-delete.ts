@@ -48,8 +48,8 @@ export const deleteItem = async (
         Item,
         {
             delete_associated_wiki_page: boolean;
-        }?
-    ]
+        }?,
+    ],
 ): Promise<void> => {
     try {
         if (isFile(item)) {

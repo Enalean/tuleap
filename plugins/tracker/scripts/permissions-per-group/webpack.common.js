@@ -30,7 +30,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/trackers/permissions-per-group/"
+        "/assets/trackers/permissions-per-group/",
     ),
     resolve: {
         extensions: [".js", ".ts", ".vue"],

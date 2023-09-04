@@ -30,7 +30,7 @@ export interface PreviewButtonPresenter {
 
 export function createPreviewEditButton(
     presenter: PreviewButtonPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult {
     const button_label = presenter.is_in_edit_mode
         ? gettext_provider.gettext("Preview")
@@ -55,7 +55,7 @@ export function createPreviewEditButton(
     // If loading fails, keep the button enabled to retry
     const promise_of_button = presenter.promise_of_preview.then(
         () => enabled_button,
-        () => enabled_button
+        () => enabled_button,
     );
 
     return html`${until(promise_of_button, loading_button)}`;

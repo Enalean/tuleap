@@ -3,7 +3,7 @@ export function buildEventDispatcher(
     callback_item_update: (event: fetch.EventSourceMessage) => void,
     callback_item_move: (event: fetch.EventSourceMessage) => void,
     callback_item_create: (event: fetch.EventSourceMessage) => void,
-    callback_structural_update: () => void
+    callback_structural_update: () => void,
 ): (event: fetch.EventSourceMessage) => void {
     return (event: fetch.EventSourceMessage): void => {
         if (event.data === '"kanban_structure_update"') {

@@ -36,7 +36,7 @@ export const buildDeletionReplaceCallback =
         }
         return sprintf(
             gettext_provider.gettext("You are about to delete %s. Please, confirm your action."),
-            clicked_button.dataset.appName
+            clicked_button.dataset.appName,
         );
     };
 
@@ -51,7 +51,7 @@ export const buildRegenerationReplaceBallback =
         Make sure to replace it in %s's configuration, otherwise it will not be allowed to access Tuleap!
         Please, confirm your action.`),
             clicked_button.dataset.appName,
-            clicked_button.dataset.appName
+            clicked_button.dataset.appName,
         );
     };
 
@@ -63,8 +63,8 @@ export const buildRevocationReplaceCallback =
         }
         return sprintf(
             gettext_provider.gettext(
-                "You are about to revoke access to %s. Please, confirm your action."
+                "You are about to revoke access to %s. Please, confirm your action.",
             ),
-            clicked_button.dataset.appName
+            clicked_button.dataset.appName,
         );
     };

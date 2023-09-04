@@ -32,7 +32,7 @@ function FilterTrackerReportService() {
         }
 
         const selected_filter_tracker_report = self.selectable_reports.find(
-            (report) => report.selected
+            (report) => report.selected,
         );
 
         if (selected_filter_tracker_report) {

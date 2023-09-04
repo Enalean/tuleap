@@ -23,7 +23,7 @@ import { selectOrThrow } from "@tuleap/dom";
 
 export function createShortcutsGroupTable(
     doc: Document,
-    shortcuts_group: ShortcutsGroup
+    shortcuts_group: ShortcutsGroup,
 ): HTMLTableElement {
     const shortcuts_group_table = doc.createElement("table");
     shortcuts_group_table.classList.add("tlp-table", "help-modal-shortcuts-table");
@@ -31,7 +31,7 @@ export function createShortcutsGroupTable(
     const table_head = getTableHead(doc);
     const table_body = doc.createElement("tbody");
     table_body.append(
-        ...shortcuts_group.shortcuts.map((shortcut) => createShortcutRow(doc, shortcut))
+        ...shortcuts_group.shortcuts.map((shortcut) => createShortcutRow(doc, shortcut)),
     );
 
     shortcuts_group_table.append(table_head, table_body);
@@ -42,7 +42,7 @@ export function getTableHead(doc: Document): Node {
     const table_head_template = selectOrThrow(
         doc,
         "[data-shortcuts-help-header-template]",
-        HTMLTemplateElement
+        HTMLTemplateElement,
     );
     const table_head = table_head_template.content.firstElementChild;
     if (!table_head) {

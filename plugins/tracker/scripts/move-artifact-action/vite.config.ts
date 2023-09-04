@@ -37,7 +37,7 @@ export default vite.defineAppConfig(
                 {
                     // disable the externalisation of jQuery in dev mode, allowing us to mock it with Vitest.
                     disableInServe: true,
-                }
+                },
             ),
         ],
         build: {
@@ -47,5 +47,5 @@ export default vite.defineAppConfig(
                 },
             },
         },
-    }
+    },
 );

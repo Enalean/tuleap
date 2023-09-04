@@ -22,7 +22,7 @@ import type { VueGettextProvider } from "./vue-gettext-provider";
 
 export async function parseNatureLabels(
     mount_point: HTMLElement,
-    gettext_provider: VueGettextProvider
+    gettext_provider: VueGettextProvider,
 ): Promise<NaturesLabels> {
     const parsed_data_attribute: Array<{
         readonly shortname: string;
@@ -37,6 +37,6 @@ export async function parseNatureLabels(
         (visible_natures: NaturesLabels, { shortname, forward_label }): NaturesLabels => {
             return visible_natures.set(shortname, forward_label);
         },
-        nature_labels_including_no_nature
+        nature_labels_including_no_nature,
     );
 }

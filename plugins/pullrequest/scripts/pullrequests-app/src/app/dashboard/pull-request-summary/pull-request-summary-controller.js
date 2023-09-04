@@ -18,7 +18,7 @@ function PullRequestSummaryController(
     PullRequestService,
     UserRestService,
     SharedPropertiesService,
-    ErrorModalService
+    ErrorModalService,
 ) {
     const self = this;
 
@@ -32,7 +32,7 @@ function PullRequestSummaryController(
         relative_date_helper: RelativeDateHelper(
             SharedPropertiesService.getDateTimeFormat(),
             SharedPropertiesService.getRelativeDateDisplay(),
-            SharedPropertiesService.getUserLocale()
+            SharedPropertiesService.getUserLocale(),
         ),
         onFetchErrorCallback: (event) => {
             ErrorModalService.showErrorMessage(event.detail.fault);
@@ -59,8 +59,8 @@ function PullRequestSummaryController(
                 window.location,
                 self.pull_request,
                 SharedPropertiesService.getProjectId(),
-                SharedPropertiesService.getRepositoryId()
-            ).toString()
+                SharedPropertiesService.getRepositoryId(),
+            ).toString(),
         );
     }
 }

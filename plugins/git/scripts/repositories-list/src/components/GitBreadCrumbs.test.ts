@@ -49,7 +49,7 @@ describe("GitBreadcrumbs", () => {
                 privacy_title: "Public",
             },
             [],
-            "🐹"
+            "🐹",
         );
 
         const wrapper = shallowMount(GitBreadcrumbs, {

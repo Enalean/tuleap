@@ -43,7 +43,7 @@ export type ArtifactCreatorController = {
     getProjects(event: WillDisableSubmit): PromiseLike<readonly Project[]>;
     selectProjectAndGetItsTrackers(
         project_id: ProjectIdentifier,
-        event: WillDisableSubmit
+        event: WillDisableSubmit,
     ): PromiseLike<readonly Tracker[]>;
     selectTracker(tracker_id: TrackerIdentifier): Option<TrackerIdentifier>;
     clearTracker(): Option<TrackerIdentifier>;
@@ -61,14 +61,14 @@ export const ArtifactCreatorController = (
     artifact_creator: CreateLinkableArtifact,
     current_project_identifier: CurrentProjectIdentifier,
     current_tracker_identifier: CurrentTrackerIdentifier,
-    user_locale: string
+    user_locale: string,
 ): ArtifactCreatorController => {
     let _handler: Option<OnFaultHandler> = Option.nothing(),
         selected_project: ProjectIdentifier = ProjectIdentifier.fromCurrentProject(
-            current_project_identifier
+            current_project_identifier,
         ),
         selected_tracker: Option<TrackerIdentifier> = Option.fromValue(
-            TrackerIdentifier.fromCurrentTracker(current_tracker_identifier)
+            TrackerIdentifier.fromCurrentTracker(current_tracker_identifier),
         );
 
     const findSelectedTracker = (trackers: ReadonlyArray<Tracker>): Option<Tracker> =>
@@ -91,13 +91,13 @@ export const ArtifactCreatorController = (
                 (fault) => {
                     _handler.apply((handler) => handler(ProjectsRetrievalFault(fault)));
                     return [];
-                }
+                },
             );
         },
 
         selectProjectAndGetItsTrackers(
             project_id,
-            event: WillDisableSubmit
+            event: WillDisableSubmit,
         ): PromiseLike<readonly Tracker[]> {
             const is_new_project = project_id !== selected_project;
             selected_project = project_id;
@@ -117,7 +117,7 @@ export const ArtifactCreatorController = (
                 (fault) => {
                     _handler.apply((handler) => handler(ProjectTrackersRetrievalFault(fault)));
                     return [];
-                }
+                },
             );
         },
 
@@ -141,9 +141,9 @@ export const ArtifactCreatorController = (
                             (fault) => {
                                 _handler.apply((handler) => handler(ArtifactCreationFault(fault)));
                                 return Option.nothing();
-                            }
+                            },
                         ),
-                    Promise.resolve(Option.nothing<LinkableArtifact>())
+                    Promise.resolve(Option.nothing<LinkableArtifact>()),
                 )
                 .then((option) => {
                     event_dispatcher.dispatch(WillEnableSubmit());

@@ -41,7 +41,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                             new EmptyCell(),
                             new EmptyCell(),
                             new TextCell(
-                                "I'm a very (very very very very very very very very very very very very very very very very very very very very very very very very very) long text line\n"
+                                "I'm a very (very very very very very very very very very very very very very very very very very very very very very very very very very) long text line\n",
                             ),
                             new TextCell("I'm a text line\r\nwith\r\nsome\r\nline breaks\r\n"),
                         ],

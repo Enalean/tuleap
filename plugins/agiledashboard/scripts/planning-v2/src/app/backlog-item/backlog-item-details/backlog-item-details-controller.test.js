@@ -17,42 +17,48 @@ describe("BacklogItemDetailsController -", function () {
     beforeEach(function () {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function (
-            _$q_,
-            $rootScope,
-            $controller,
-            _BacklogItemCollectionService_,
-            _BacklogItemService_,
-            _NewTuleapArtifactModalService_,
-            _SharedPropertiesService_
-        ) {
-            $q = _$q_;
-            $scope = $rootScope.$new();
+        angular.mock.inject(
+            function (
+                _$q_,
+                $rootScope,
+                $controller,
+                _BacklogItemCollectionService_,
+                _BacklogItemService_,
+                _NewTuleapArtifactModalService_,
+                _SharedPropertiesService_,
+            ) {
+                $q = _$q_;
+                $scope = $rootScope.$new();
 
-            BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
-                () => {}
-            );
+                BacklogItemCollectionService = _BacklogItemCollectionService_;
+                jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                    () => {},
+                );
 
-            BacklogItemService = _BacklogItemService_;
-            jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
-            jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(() => {});
-            jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
-                () => {}
-            );
+                BacklogItemService = _BacklogItemService_;
+                jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
+                jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(
+                    () => {},
+                );
+                jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
+                    () => {},
+                );
 
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
+                NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+                jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
+                    () => {},
+                );
 
-            BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
-                BacklogItemCollectionService: BacklogItemCollectionService,
-                BacklogItemService: BacklogItemService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-            });
+                BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
+                    BacklogItemCollectionService: BacklogItemCollectionService,
+                    BacklogItemService: BacklogItemService,
+                    NewTuleapArtifactModalService: NewTuleapArtifactModalService,
+                });
 
-            SharedPropertiesService = _SharedPropertiesService_;
-            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
-        });
+                SharedPropertiesService = _SharedPropertiesService_;
+                jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
+            },
+        );
     });
 
     describe("showAddChildModal() -", () => {
@@ -83,7 +89,7 @@ describe("BacklogItemDetailsController -", function () {
                 7,
                 BacklogItemDetailsController.backlog_item.id,
                 expect.any(Function),
-                []
+                [],
             );
         });
 
@@ -91,7 +97,7 @@ describe("BacklogItemDetailsController -", function () {
             let artifact;
             beforeEach(() => {
                 NewTuleapArtifactModalService.showCreation.mockImplementation(
-                    (user_id, a, b, callback) => callback(207)
+                    (user_id, a, b, callback) => callback(207),
                 );
                 artifact = {
                     backlog_item: {
@@ -110,14 +116,14 @@ describe("BacklogItemDetailsController -", function () {
                 expect(BacklogItemService.removeAddBacklogItemChildren).toHaveBeenCalledWith(
                     undefined,
                     53,
-                    [207]
+                    [207],
                 );
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(207);
                 expect(BacklogItemCollectionService.items[207].id).toBe(207);
                 expect(BacklogItemCollectionService.items[207].parent.id).toBe(53);
                 expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(53);
                 const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
-                    ({ id }) => id
+                    ({ id }) => id,
                 );
                 expect(children_ids).toStrictEqual([352, 207]);
             });
@@ -135,7 +141,7 @@ describe("BacklogItemDetailsController -", function () {
                 $scope.$apply();
 
                 const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
-                    ({ id }) => id
+                    ({ id }) => id,
                 );
                 expect(children_ids).toStrictEqual([207]);
                 expect(BacklogItemDetailsController.backlog_item.children.loaded).toBeTruthy();

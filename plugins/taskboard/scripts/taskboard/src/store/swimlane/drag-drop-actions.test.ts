@@ -92,7 +92,7 @@ describe(`drag-drop-actions`, () => {
             await actions.handleDrop(context, payload);
 
             expect(context.rootGetters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
-                payload.target_cell
+                payload.target_cell,
             );
             expect(context.dispatch).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
@@ -109,7 +109,7 @@ describe(`drag-drop-actions`, () => {
             await actions.handleDrop(context, payload);
 
             expect(context.rootGetters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
-                payload.target_cell
+                payload.target_cell,
             );
             expect(context.dispatch).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");

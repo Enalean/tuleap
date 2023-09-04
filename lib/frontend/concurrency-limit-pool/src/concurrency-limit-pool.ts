@@ -20,7 +20,7 @@
 export async function limitConcurrencyPool<I, O>(
     max_concurrency: number,
     args: ReadonlyArray<I>,
-    resolver: (arg: I) => PromiseLike<O>
+    resolver: (arg: I) => PromiseLike<O>,
 ): Promise<O[]> {
     if (max_concurrency <= 0) {
         throw new Error("Concurrency limit needs to be a positive number");

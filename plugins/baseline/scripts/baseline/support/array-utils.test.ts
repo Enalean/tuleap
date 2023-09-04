@@ -29,14 +29,14 @@ describe("ArrayUtils:", () => {
                         { id: 1, title: "Scra" },
                         { id: 2, title: "Jibidus" },
                     ],
-                    "id"
-                )
+                    "id",
+                ),
             ).toStrictEqual([1, 2]);
         });
 
         it("returns empty array when no element match with given attribute", () => {
             expect(ArrayUtils.mapAttribute([{ id: 1, title: "Scra" }], "not_exist")).toStrictEqual(
-                []
+                [],
             );
         });
 
@@ -78,7 +78,7 @@ describe("ArrayUtils:", () => {
         describe("when they are string", () => {
             it("returns unique values", () => {
                 expect(
-                    ArrayUtils.unique(["unique string", "unique string", "other string"])
+                    ArrayUtils.unique(["unique string", "unique string", "other string"]),
                 ).toStrictEqual(["unique string", "other string"]);
             });
         });

@@ -30,7 +30,7 @@ function ReportsModalController(
     moment,
     SharedPropertiesService,
     DiagramRestService,
-    modal_instance
+    modal_instance,
 ) {
     var self = this;
 
@@ -94,7 +94,7 @@ function ReportsModalController(
             kanban_id,
             start_date,
             end_date,
-            self.value_last_data.interval_between_points
+            self.value_last_data.interval_between_points,
         )
             .then(setGraphData)
             .finally(function () {

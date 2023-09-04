@@ -87,8 +87,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(start);
     });
 
@@ -104,8 +104,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(start);
     });
 
@@ -121,8 +121,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(other_end);
     });
 
@@ -138,8 +138,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(start);
     });
 
@@ -155,8 +155,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(other_start);
     });
 
@@ -172,8 +172,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(start);
     });
 
@@ -189,8 +189,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(other_start);
     });
 
@@ -206,8 +206,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(start);
     });
 
@@ -223,8 +223,8 @@ describe("first-date", () => {
                     { start, end },
                     { start: other_start, end: other_end },
                 ] as Task[],
-                now
-            )
+                now,
+            ),
         ).toBe(other_start);
     });
 
@@ -240,8 +240,8 @@ describe("first-date", () => {
                     { start, end } as Task,
                     { start: iteration_start, end: iteration_end } as Iteration,
                 ],
-                now
-            )
+                now,
+            ),
         ).toBe(iteration_start);
     });
 });

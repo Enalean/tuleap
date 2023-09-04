@@ -37,7 +37,7 @@ import { sprintf } from "sprintf-js";
 
 export function getMilestoneBacklogTitle(
     gettext_provider: GettextProvider,
-    global_export_properties: GenericGlobalExportProperties
+    global_export_properties: GenericGlobalExportProperties,
 ): { id: string; text: string } {
     return {
         id: "backlog",
@@ -50,7 +50,7 @@ export function getMilestoneBacklogTitle(
 export async function buildMilestoneBacklog(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: GettextProvider,
-    global_export_properties: GenericGlobalExportProperties
+    global_export_properties: GenericGlobalExportProperties,
 ): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneBacklogTitle(gettext_provider, global_export_properties);
 
@@ -78,7 +78,7 @@ export async function buildMilestoneBacklog(
         ...(await buildBacklogSection(
             document.backlog,
             global_export_properties,
-            gettext_provider
+            gettext_provider,
         )),
     ];
 }
@@ -86,12 +86,12 @@ export async function buildMilestoneBacklog(
 function buildBacklogSection(
     backlog: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
     global_export_properties: GenericGlobalExportProperties,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
         gettext_provider,
         backlog,
         HEADER_LEVEL_ARTIFACT_TITLE,
-        HEADER_STYLE_ARTIFACT_TITLE
+        HEADER_STYLE_ARTIFACT_TITLE,
     );
 }

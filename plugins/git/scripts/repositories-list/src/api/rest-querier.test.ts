@@ -37,16 +37,16 @@ describe("API querier", () => {
                     .mockImplementation(
                         <T>(
                             url: string,
-                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>,
                         ): Promise<T[]> => {
                             if (!init || !init.getCollectionCallback) {
                                 throw new Error();
                             }
 
                             return Promise.resolve(
-                                init.getCollectionCallback(repository_collection)
+                                init.getCollectionCallback(repository_collection),
                             );
-                        }
+                        },
                     );
 
                 function displayCallback(result: Array<Repository>): void {
@@ -66,7 +66,7 @@ describe("API querier", () => {
                             limit: 50,
                             offset: 0,
                         },
-                    })
+                    }),
                 );
             });
         });
@@ -84,16 +84,16 @@ describe("API querier", () => {
                     .mockImplementation(
                         <T>(
                             url: string,
-                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>,
                         ): Promise<T[]> => {
                             if (!init || !init.getCollectionCallback) {
                                 throw new Error();
                             }
 
                             return Promise.resolve(
-                                init.getCollectionCallback(repository_collection)
+                                init.getCollectionCallback(repository_collection),
                             );
-                        }
+                        },
                     );
 
                 function displayCallback(result: Array<Repository>): void {
@@ -115,7 +115,7 @@ describe("API querier", () => {
                             limit: 50,
                             offset: 0,
                         },
-                    })
+                    }),
                 );
             });
         });

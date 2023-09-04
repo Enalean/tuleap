@@ -43,7 +43,7 @@ describe("SidebarCollapseButton", () => {
         const button = wrapper.find("button");
         expect(button.exists()).toBe(true);
         expect(button.element.getAttribute("title")).toStrictEqual(
-            example_config.internationalization.close_sidebar
+            example_config.internationalization.close_sidebar,
         );
         button.trigger("click");
         const click_events = wrapper.emitted("update:is_sidebar_collapsed");

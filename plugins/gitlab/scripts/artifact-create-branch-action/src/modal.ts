@@ -53,7 +53,7 @@ export async function init(create_branch_link: HTMLElement, mount_point: Element
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-        })
+        }),
     );
     app.mount(mount_point);
 }

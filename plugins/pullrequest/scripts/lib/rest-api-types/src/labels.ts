@@ -29,11 +29,11 @@ type AddedProjectLabel = ProjectLabelId | ProjectLabelToCreate;
 
 type ReadonlyProjectLabelToAddArrayWithAtLeastOneValue = [
     AddedProjectLabel,
-    ...AddedProjectLabel[]
+    ...AddedProjectLabel[],
 ];
 type ReadonlyProjectLabelIdsToRemoveArrayWithAtLeastOneValue = [
     ProjectLabelId,
-    ...ProjectLabelId[]
+    ...ProjectLabelId[],
 ];
 
 export type PatchPullRequestLabelsPayload = {

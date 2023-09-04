@@ -96,7 +96,7 @@ const can_user_manage_reviewers = computed(
     () =>
         props.pull_request &&
         props.pull_request.user_can_merge &&
-        isPullRequestInReview(props.pull_request)
+        isPullRequestInReview(props.pull_request),
 );
 
 fetchReviewersInfo(pull_request_id).match((reviewers: ReviewersCollection) => {

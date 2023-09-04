@@ -39,13 +39,13 @@ describe("PaneGitlabConfiguration", () => {
         });
 
         const branch_prefix_form_element = wrapper.get(
-            "[data-test=branch-name-prefix-form-element]"
+            "[data-test=branch-name-prefix-form-element]",
         );
         const branch_prefix_input = wrapper.get<HTMLInputElement>(
-            "[data-test=branch-name-prefix-input]"
+            "[data-test=branch-name-prefix-input]",
         );
         const submit_button = wrapper.get<HTMLButtonElement>(
-            "[data-test=gitlab-configuration-submit-button]"
+            "[data-test=gitlab-configuration-submit-button]",
         );
 
         expect(submit_button.element.disabled).toBe(false);
@@ -107,7 +107,7 @@ describe("PaneGitlabConfiguration", () => {
             await wrapper.get("[data-test=branch-name-prefix-input]").setValue("my-prefix");
 
             const button = wrapper.get<HTMLButtonElement>(
-                "[data-test=gitlab-configuration-submit-button]"
+                "[data-test=gitlab-configuration-submit-button]",
             );
             button.element.click();
 
@@ -119,14 +119,14 @@ describe("PaneGitlabConfiguration", () => {
                 "https://example.com/",
                 "a1e2i3o4u5y6",
                 "my-prefix",
-                false
+                false,
             );
             expect(button.element.disabled).toBe(true);
         });
 
         it("When an error occurs, Then it should display an error message", async () => {
             vi.spyOn(tuleap_api, "linkGitlabGroupWithTuleap").mockReturnValue(
-                errAsync(Fault.fromMessage("some-reason"))
+                errAsync(Fault.fromMessage("some-reason")),
             );
 
             wrapper

@@ -29,7 +29,7 @@ import type { DefaultFileItem, Folder, Item, Property } from "../../type";
 export function transformStatusPropertyForItemCreation(
     document_to_create: Item | DefaultFileItem,
     parent: Folder,
-    is_status_property_used: boolean
+    is_status_property_used: boolean,
 ): void {
     if (!is_status_property_used) {
         return;
@@ -43,7 +43,7 @@ export function transformStatusPropertyForItemCreation(
 }
 
 export function transformCustomPropertiesForItemCreation(
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Array<Property> {
     if (properties === null || properties.length === 0) {
         return [];

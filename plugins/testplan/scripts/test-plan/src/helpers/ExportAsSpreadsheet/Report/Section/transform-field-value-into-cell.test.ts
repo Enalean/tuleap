@@ -131,9 +131,9 @@ describe("transform-field-value-into-cell", () => {
         (
             _: string,
             field_value: Readonly<ArtifactReportResponseFieldValue>,
-            expected_cell: ReportCell | null
+            expected_cell: ReportCell | null,
         ) => {
             expect(transformFieldValueIntoACell(field_value)).toStrictEqual(expected_cell);
-        }
+        },
     );
 });

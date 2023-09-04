@@ -21,7 +21,7 @@ import type { PreferenciesState } from "./preferencies-default-state";
 
 export function shouldDisplayEmbeddedInLargeMode(
     state: PreferenciesState,
-    is_embedded_in_large_view: boolean
+    is_embedded_in_large_view: boolean,
 ): void {
     state.is_embedded_in_large_view = is_embedded_in_large_view;
 }

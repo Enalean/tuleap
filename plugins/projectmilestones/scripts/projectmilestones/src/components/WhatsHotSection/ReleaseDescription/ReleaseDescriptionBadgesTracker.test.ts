@@ -33,7 +33,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseDescriptionBadgesTracker>> {
         store = createStoreMock(store_options);
         component_options.mocks = { $store: store };

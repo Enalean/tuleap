@@ -57,7 +57,7 @@ export const onInput = (host: HostElement, event: Event): void => {
 
 const hasBackspaceBeenPressedWhileQueryWasAlreadyEmpty = (
     host: InternalSearchInput,
-    event: KeyboardEvent
+    event: KeyboardEvent,
 ): boolean => isBackspaceKey(event) && host.query === "";
 
 export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
@@ -107,6 +107,6 @@ export const SearchInput = define<InternalSearchInput>({
                 oninput="${onInput}"
                 onkeyup="${onKeyUp}"
             />`.style(input_style),
-        { delegatesFocus: true }
+        { delegatesFocus: true },
     ),
 });

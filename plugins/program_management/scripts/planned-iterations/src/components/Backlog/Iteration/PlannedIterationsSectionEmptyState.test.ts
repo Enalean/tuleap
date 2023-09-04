@@ -29,7 +29,7 @@ import type { IterationLabels } from "../../../store/configuration";
 
 describe("PlannedIterationsSectionEmptyState", () => {
     async function getWrapper(
-        iterations_labels: IterationLabels
+        iterations_labels: IterationLabels,
     ): Promise<Wrapper<PlannedIterationsSectionEmptyState>> {
         return shallowMount(PlannedIterationsSectionEmptyState, {
             localVue: await createPlanIterationsLocalVue(),
@@ -59,11 +59,11 @@ describe("PlannedIterationsSectionEmptyState", () => {
             const wrapper = await getWrapper(labels);
 
             expect(wrapper.get("[data-test=planned-iterations-empty-state-text]").text()).toContain(
-                expected_naming
+                expected_naming,
             );
             expect(wrapper.get("[data-test=create-first-iteration-button]").text()).toContain(
-                expected_naming
+                expected_naming,
             );
-        }
+        },
     );
 });

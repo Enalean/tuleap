@@ -48,7 +48,7 @@
                         "%{ nb } project will have their access removed and won't be able to use this server:",
                         "%{ nb } projects will have their access removed and won't be able to use this server:",
                         nb,
-                        { nb: String(nb) }
+                        { nb: String(nb) },
                     )
                 }}
                 <span class="tlp-badge-secondary">{{ server.server_url }}</span>

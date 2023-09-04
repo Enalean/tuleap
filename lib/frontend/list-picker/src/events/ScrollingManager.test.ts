@@ -56,7 +56,7 @@ describe("ScrollingManager", () => {
 
                     const scrolling_manager = new ScrollingManager(wrapper_element);
                     expect(
-                        scrolling_manager.findListPickerFirstScrollableParent(wrapper_element)
+                        scrolling_manager.findListPickerFirstScrollableParent(wrapper_element),
                     ).toEqual(modal_section);
                 });
             });
@@ -67,7 +67,7 @@ describe("ScrollingManager", () => {
             const scrolling_manager = new ScrollingManager(wrapper_element);
 
             expect(
-                scrolling_manager.findListPickerFirstScrollableParent(wrapper_element)
+                scrolling_manager.findListPickerFirstScrollableParent(wrapper_element),
             ).toBeNull();
         });
     });

@@ -53,7 +53,7 @@ describe("NewVersionEmptyMenuOptions", function () {
             embedded_are_allowed: false,
             user_can_create_wiki: false,
         },
-        create_new_item_alternatives: NewItemAlternativeArray = []
+        create_new_item_alternatives: NewItemAlternativeArray = [],
     ): VueWrapper<InstanceType<typeof NewVersionEmptyMenuOptions>> {
         return shallowMount(NewVersionEmptyMenuOptions, {
             props: {
@@ -86,7 +86,7 @@ describe("NewVersionEmptyMenuOptions", function () {
         const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=document-new-folder-creation-button]").exists()).toBe(
-            false
+            false,
         );
     });
 
@@ -150,7 +150,7 @@ describe("NewVersionEmptyMenuOptions", function () {
         const wrapper = getWrapper({ user_can_create_wiki: false, embedded_are_allowed: false });
 
         expect(wrapper.find("[data-test=document-new-embedded-creation-button]").exists()).toBe(
-            false
+            false,
         );
     });
 
@@ -181,7 +181,7 @@ describe("NewVersionEmptyMenuOptions", function () {
 
         expect(create_version_from_empty).toHaveBeenCalled();
         expect(create_version_from_empty.mock.calls[0][1][2].file_properties.file.name).toBe(
-            "Specs.docx"
+            "Specs.docx",
         );
 
         real_emitter.emit("item-has-just-been-updated", {

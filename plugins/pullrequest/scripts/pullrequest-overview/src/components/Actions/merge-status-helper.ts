@@ -34,15 +34,15 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 
 export const isPullRequestInReview = (
-    pull_request: PullRequest
+    pull_request: PullRequest,
 ): pull_request is PullRequestInReview => pull_request.status === PULL_REQUEST_STATUS_REVIEW;
 
 export const isPullRequestAlreadyMerged = (
-    pull_request: PullRequest
+    pull_request: PullRequest,
 ): pull_request is PullRequestMerged => pull_request.status === PULL_REQUEST_STATUS_MERGED;
 
 export const isPullRequestAbandoned = (
-    pull_request: PullRequest
+    pull_request: PullRequest,
 ): pull_request is PullRequestAbandoned => pull_request.status === PULL_REQUEST_STATUS_ABANDON;
 
 export const isSameReferenceMerge = (pull_request: PullRequest): boolean =>
@@ -65,7 +65,7 @@ export const isCIHappy = (pull_request: PullRequest): boolean =>
 
 export const canPullRequestBeMerged = (
     pull_request: PullRequest,
-    are_merge_commits_allowed_in_repository: boolean
+    are_merge_commits_allowed_in_repository: boolean,
 ): boolean => {
     if (
         !isPullRequestInReview(pull_request) ||

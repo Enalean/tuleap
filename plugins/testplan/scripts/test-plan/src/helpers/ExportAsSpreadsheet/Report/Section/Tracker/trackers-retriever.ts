@@ -24,16 +24,16 @@ import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_TRACKERS = 5;
 
 export function retrieveTrackers(
-    minimal_trackers: ReadonlyArray<MinimalTracker>
+    minimal_trackers: ReadonlyArray<MinimalTracker>,
 ): Promise<Tracker[]> {
     const deduplicated_tracker_id = new Set(
-        minimal_trackers.map((minimal_tracker: MinimalTracker): number => minimal_tracker.id)
+        minimal_trackers.map((minimal_tracker: MinimalTracker): number => minimal_tracker.id),
     );
 
     return limitConcurrencyPool(
         MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_TRACKERS,
         [...deduplicated_tracker_id],
-        retrieveTracker
+        retrieveTracker,
     );
 }
 

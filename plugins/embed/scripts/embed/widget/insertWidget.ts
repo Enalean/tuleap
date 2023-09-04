@@ -20,7 +20,7 @@
 export default function insertWidget(embeddable_link: Element, widget: Element): void {
     if (!embeddable_link.ownerDocument) {
         throw Error(
-            "Embeddable link does not have a top-level document. Perhaps it is a document itself?"
+            "Embeddable link does not have a top-level document. Perhaps it is a document itself?",
         );
     }
 
@@ -57,7 +57,7 @@ export default function insertWidget(embeddable_link: Element, widget: Element):
 
     if (
         ["div", "p", "pre", "h1", "h2", "h3", "h4", "h5", "h6"].includes(
-            parent.tagName.toLowerCase()
+            parent.tagName.toLowerCase(),
         )
     ) {
         parent.parentElement.insertBefore(widget, parent.nextSibling);

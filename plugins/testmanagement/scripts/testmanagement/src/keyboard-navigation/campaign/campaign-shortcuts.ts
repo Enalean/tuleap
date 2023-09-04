@@ -25,7 +25,7 @@ import { showRemainingTests } from "../shortcuts-handles/show-remaining-tests";
 
 export function createCampaignShortcutsGroup(
     doc: Document,
-    gettextCatalog: GettextProvider
+    gettextCatalog: GettextProvider,
 ): ShortcutsGroup {
     const select_tests: Shortcut = {
         keyboard_inputs: "e",

@@ -60,7 +60,7 @@ export function isConsideredInDropzone(child: Element): boolean {
 export function checkAcceptsDrop(
     store: Store<State>,
     gettext_provider: VueGettextProvider,
-    payload: HandleDragPayload
+    payload: HandleDragPayload,
 ): boolean {
     if (
         !(payload.dropped_card instanceof HTMLElement) ||
@@ -74,7 +74,7 @@ export function checkAcceptsDrop(
     if (!user_can_plan) {
         setErrorMessage(
             payload.target_cell,
-            gettext_provider.$gettext("You are not allowed to plan in this program increment.")
+            gettext_provider.$gettext("You are not allowed to plan in this program increment."),
         );
 
         return user_can_plan;
@@ -98,8 +98,8 @@ export function checkAcceptsDrop(
             setErrorMessage(
                 payload.target_cell,
                 gettext_provider.$gettext(
-                    "The feature has elements planned in team project, it can not be unplanned."
-                )
+                    "The feature has elements planned in team project, it can not be unplanned.",
+                ),
             );
 
             return false;

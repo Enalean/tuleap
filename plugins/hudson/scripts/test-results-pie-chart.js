@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initializePieChartLegendSize(pie_chart_mount_point) {
         let legend_max_width = 0;
         const legend_li_elements = pie_chart_mount_point.querySelectorAll(
-            ".test-results-pie-legend > li"
+            ".test-results-pie-legend > li",
         );
 
         for (const li_element of legend_li_elements) {

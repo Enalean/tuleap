@@ -54,9 +54,9 @@ const props = defineProps<{
 
 const is_minimal_display = ref(true);
 const fields_to_display = computed((): ArtifactField[] =>
-    is_minimal_display.value === true ? props.fields.slice(0, 5) : props.fields
+    is_minimal_display.value === true ? props.fields.slice(0, 5) : props.fields,
 );
 const show_more_classes = ref(
-    `btn btn-link move-artifact-display-more-field move-artifact-display-more-field-${props.type}`
+    `btn btn-link move-artifact-display-more-field move-artifact-display-more-field-${props.type}`,
 );
 </script>

@@ -25,7 +25,7 @@ import { transformTextWithNewlines } from "./transform-text-with-newlines";
 export function transformLargeContentIntoParagraphs(
     content: string,
     format: "plaintext" | "html",
-    html_transformation_options: TransformationOptions
+    html_transformation_options: TransformationOptions,
 ): Promise<Paragraph[]> {
     if (format === "html") {
         return transformHTMLIntoParagraphs(content, html_transformation_options);

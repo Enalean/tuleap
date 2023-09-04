@@ -46,7 +46,7 @@ export const GroupSideBySideLinesStub = (): StubGroupSideBySideLines => {
     };
 
     const buildFirstLineToGroupMap = (
-        groups_of_lines: GroupOfLines[]
+        groups_of_lines: GroupOfLines[],
     ): Map<number, GroupOfLines> => {
         has_built_first_line_to_group_map = true;
 

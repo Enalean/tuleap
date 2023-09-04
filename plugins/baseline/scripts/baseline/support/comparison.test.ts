@@ -73,7 +73,7 @@ describe("comparison :", () => {
             } as Artifact;
 
             beforeEach(
-                () => (comparison = compareArtifacts([base_artifact], [compared_to_artifact]))
+                () => (comparison = compareArtifacts([base_artifact], [compared_to_artifact])),
             );
 
             it("#identical_or_modified returns old and new artifact", () => {

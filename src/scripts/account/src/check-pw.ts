@@ -64,7 +64,7 @@ function toggleErrorMessages(data: number[]): boolean {
                         (icon_element: Element): void => {
                             icon_element.classList.add("fa-xmark", "password-strategy-bad");
                             icon_element.classList.remove("fa-check", "password-strategy-good");
-                        }
+                        },
                     );
                 } else {
                     element.classList.add("tlp-text-success");
@@ -74,10 +74,10 @@ function toggleErrorMessages(data: number[]): boolean {
                         (icon_element: Element): void => {
                             icon_element.classList.add("fa-check", "password-strategy-good");
                             icon_element.classList.remove("fa-xmark", "password-strategy-bad");
-                        }
+                        },
                     );
                 }
-            }
+            },
         );
     });
 
@@ -117,7 +117,7 @@ function removeInProgressRobustnessComputation(): void {
  */
 function debounce<F extends (...args: any[]) => any>(
     func: F,
-    wait: number
+    wait: number,
 ): (...args: Parameters<F>) => ReturnType<F> {
     let timeout: ReturnType<typeof setTimeout>;
     return (...args: Parameters<F>): ReturnType<F> => {
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         [...document.getElementsByClassName("account-security-password-robustness")].forEach(
             (element: Element): void => {
                 element.classList.remove("account-security-password-robustness-hidden");
-            }
+            },
         );
     });
 });

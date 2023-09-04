@@ -57,7 +57,9 @@ $inactive-tab-right-margin: calc(
     min-width: 100%;
     padding: var(--tlp-medium-spacing) / 2 0;
     transform: translateY(100%);
-    transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition,
+    transition:
+        bottom $tlp-tabs-transition,
+        opacity $tlp-tabs-transition,
         box-shadow $tlp-tabs-transition;
     border-top: 0;
     border-bottom: 0;
@@ -132,7 +134,9 @@ $inactive-tab-right-margin: calc(
     align-self: stretch;
     min-height: var(--tlp-jumbo-spacing);
     padding: 0 var(--tlp-large-spacing);
-    transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
+    transition:
+        color $tlp-tabs-transition,
+        border-bottom-color $tlp-tabs-transition;
     border-bottom: $active-tab-border-width solid transparent;
     color: var(--tlp-dimmed-color);
     font-size: 0.85rem;
@@ -161,7 +165,9 @@ $inactive-tab-right-margin: calc(
 
     &:hover > .tlp-tab-menu {
         bottom: -$active-tab-border-width;
-        transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition;
+        transition:
+            bottom $tlp-tabs-transition,
+            opacity $tlp-tabs-transition;
         opacity: 1;
         box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
@@ -178,7 +184,9 @@ $inactive-tab-right-margin: calc(
     width: 100%;
     padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing)
         var(--tlp-medium-spacing);
-    transition: color $tlp-tabs-transition, border-right-color $tlp-tabs-transition;
+    transition:
+        color $tlp-tabs-transition,
+        border-right-color $tlp-tabs-transition;
     border: 0;
     border-right: $inactive-tab-right-border-width solid
         var(--tlp-neutral-dark-color-transparent-50);

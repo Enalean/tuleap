@@ -86,7 +86,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        next_entry
+                        next_entry,
                     );
                 });
 
@@ -127,7 +127,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project_b
+                        project_b,
                     );
                 });
             });
@@ -170,7 +170,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        previous_entry
+                        previous_entry,
                     );
                 });
 
@@ -211,7 +211,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project_a
+                        project_a,
                     );
                 });
             });
@@ -249,7 +249,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        second_quick_link
+                        second_quick_link,
                     );
                 });
 
@@ -286,7 +286,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            second_quick_link
+                            second_quick_link,
                         );
                     });
 
@@ -319,7 +319,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            first_entry
+                            first_entry,
                         );
                     });
 
@@ -356,7 +356,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            admin_quick_link
+                            admin_quick_link,
                         );
                     });
                 });
@@ -395,7 +395,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_quick_link
+                        first_quick_link,
                     );
                 });
 
@@ -430,7 +430,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            project
+                            project,
                         );
                     });
 
@@ -466,7 +466,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            entry
+                            entry,
                         );
                     });
                 });
@@ -520,7 +520,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            admin_link
+                            admin_link,
                         );
                     });
                 });
@@ -580,7 +580,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            project
+                            project,
                         );
                     });
 
@@ -607,7 +607,7 @@ describe("Keyboard navigation store", () => {
                         });
 
                         expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                            first_entry
+                            first_entry,
                         );
                     });
                 });
@@ -684,7 +684,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_project
+                        first_project,
                     );
                 });
 
@@ -737,7 +737,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project
+                        project,
                     );
                 });
 
@@ -762,7 +762,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project
+                        project,
                     );
                 });
 
@@ -791,7 +791,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_project
+                        another_project,
                     );
                 });
 
@@ -821,7 +821,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_project
+                        another_project,
                     );
                 });
 
@@ -850,7 +850,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_project
+                        another_project,
                     );
                 });
 
@@ -894,7 +894,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_entry
+                        first_entry,
                     );
                 });
 
@@ -992,7 +992,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_quick_link
+                        first_quick_link,
                     );
                 });
             });
@@ -1045,7 +1045,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_project
+                        first_project,
                     );
                 });
 
@@ -1146,7 +1146,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_entry
+                        first_entry,
                     );
                 });
 
@@ -1188,7 +1188,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_entry
+                        first_entry,
                     );
                 });
 
@@ -1213,7 +1213,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_entry
+                        first_entry,
                     );
                 });
 
@@ -1255,7 +1255,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_project
+                        another_project,
                     );
                 });
 
@@ -1357,7 +1357,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_entry
+                        another_entry,
                     );
                 });
 
@@ -1382,7 +1382,7 @@ describe("Keyboard navigation store", () => {
                     });
 
                     expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        another_entry
+                        another_entry,
                     );
                 });
 
@@ -1466,7 +1466,7 @@ describe("Keyboard navigation store", () => {
                 navigation_store.changeFocusFromFilterInput();
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    first_project
+                    first_project,
                 );
             });
 
@@ -1497,7 +1497,7 @@ describe("Keyboard navigation store", () => {
                 navigation_store.changeFocusFromFilterInput();
 
                 expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                    first_entry
+                    first_entry,
                 );
             });
 

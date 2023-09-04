@@ -39,7 +39,7 @@ describe("ContentBody", () => {
             },
             {
                 current_baseline: { first_depth_artifacts: [] },
-            }
+            },
         );
 
         wrapper = shallowMount(ContentBody, {
@@ -62,15 +62,15 @@ describe("ContentBody", () => {
             () =>
                 ($store.state.current_baseline.first_depth_artifacts = createList(
                     "baseline_artifact",
-                    2
-                ))
+                    2,
+                )),
         );
 
         describe("when all artifacts hidden", () => {
             beforeEach(() => ($store.getters["current_baseline/filterArtifacts"] = () => []));
             it("shows all artifacts filtered message", () => {
                 expect(
-                    wrapper.find('[data-test-type="all-artifacts-filtered-message"]').exists()
+                    wrapper.find('[data-test-type="all-artifacts-filtered-message"]').exists(),
                 ).toBeTruthy();
             });
         });
@@ -80,13 +80,13 @@ describe("ContentBody", () => {
 
             beforeEach(
                 () =>
-                    ($store.getters["current_baseline/filterArtifacts"] = () => filtered_artifacts)
+                    ($store.getters["current_baseline/filterArtifacts"] = () => filtered_artifacts),
             );
 
             it("shows all visible artifacts", () => {
                 expect(wrapper.findComponent(ArtifactsList).exists()).toBeTruthy();
                 expect(wrapper.findComponent(ArtifactsList).props().artifacts).toEqual(
-                    filtered_artifacts
+                    filtered_artifacts,
                 );
             });
         });

@@ -19,7 +19,7 @@ export {};
 
 document.addEventListener("DOMContentLoaded", () => {
     const blockBreachedPasswordCheckbox = document.getElementById(
-        "block-breached-password-checkbox"
+        "block-breached-password-checkbox",
     );
 
     const formBreachedPassword = document.getElementById("form-breached-password");

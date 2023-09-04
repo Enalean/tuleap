@@ -58,7 +58,7 @@ codendi.tracker.artifact.artifactLink = {
                         checkbox_line,
                         img,
                         td,
-                        force_unlink
+                        force_unlink,
                     );
                 });
             });
@@ -79,10 +79,10 @@ codendi.tracker.artifact.artifactLink = {
 
         codendi.tracker.artifact.artifactLink.strike(td, checkbox);
         codendi.tracker.artifact.artifactLink.load_nb_artifacts(
-            checkbox.up(".tracker-form-element-artifactlink-trackerpanel")
+            checkbox.up(".tracker-form-element-artifactlink-trackerpanel"),
         );
         codendi.tracker.artifact.artifactLink.reload_aggregates_functions(
-            checkbox.up(".tracker_artifact_field ")
+            checkbox.up(".tracker_artifact_field "),
         );
     },
 
@@ -108,7 +108,7 @@ codendi.tracker.artifact.artifactLink = {
                                 checkbox,
                                 img,
                                 td,
-                                false
+                                false,
                             );
 
                             var table = checkbox.up(".tracker_report_table");
@@ -132,7 +132,7 @@ codendi.tracker.artifact.artifactLink = {
         if (codendi.tracker.artifact.artifactLinker_currentField) {
             //add to the existing ones
             var input_field = codendi.tracker.artifact.artifactLinker_currentField.down(
-                "input[type=text][name^=artifact]"
+                "input[type=text][name^=artifact]",
             );
             if (input_field.value) {
                 input_field.value += ",";
@@ -157,7 +157,7 @@ codendi.tracker.artifact.artifactLink = {
     addTemporaryArtifactLinks: function () {
         if (codendi.tracker.artifact.artifactLinker_currentField) {
             var ids = codendi.tracker.artifact.artifactLinker_currentField.down(
-                "input.tracker-form-element-artifactlink-new"
+                "input.tracker-form-element-artifactlink-new",
             ).value;
             if (
                 $("lightwindow_contents") &&
@@ -179,14 +179,14 @@ codendi.tracker.artifact.artifactLink = {
                                 codendi.tracker.artifact.artifactLinker_currentField_id +
                                 "][removed_values][" +
                                 id +
-                                '][]"]'
+                                '][]"]',
                         ).size() != 0
                     );
                 })
                 .join(",");
             if (ids) {
                 var type_select = codendi.tracker.artifact.artifactLinker_currentField.down(
-                    "select.tracker-form-element-artifactlink-new"
+                    "select.tracker-form-element-artifactlink-new",
                 );
                 var type = "";
                 if (type_select) {
@@ -210,36 +210,36 @@ codendi.tracker.artifact.artifactLink = {
                                         // remove the empty element
                                         var empty_value =
                                             codendi.tracker.artifact.artifactLinker_currentField.down(
-                                                ".empty_value"
+                                                ".empty_value",
                                             );
                                         if (empty_value) {
                                             empty_value.remove();
                                         }
                                         var list =
                                             codendi.tracker.artifact.artifactLinker_currentField.down(
-                                                ".tracker-form-element-artifactlink-list"
+                                                ".tracker-form-element-artifactlink-list",
                                             );
                                         list.insert(json.head[pair.key] + "<tbody>");
                                         var first_list = $$(
-                                            ".tracker-form-element-artifactlink-list ul"
+                                            ".tracker-form-element-artifactlink-list ul",
                                         ).first();
                                         var tabs_id = first_list.up().identify();
                                         var current_tab = first_list.down(
-                                            "li.tracker-form-element-artifactlink-list-nav-current"
+                                            "li.tracker-form-element-artifactlink-list-nav-current",
                                         );
                                         if (pair.key.includes("type")) {
                                             codendi.tracker.artifact.artifactLink.tabs[
                                                 tabs_id
                                             ].loadTypeTab(
                                                 list.childElements().last().down("h2"),
-                                                first_list
+                                                first_list,
                                             );
                                         } else {
                                             codendi.tracker.artifact.artifactLink.tabs[
                                                 tabs_id
                                             ].loadTrackerTab(
                                                 list.childElements().last().down("h2"),
-                                                first_list
+                                                first_list,
                                             );
                                         }
                                         renderer_table = $("tracker_report_table_" + pair.key);
@@ -254,33 +254,33 @@ codendi.tracker.artifact.artifactLink = {
                                         .invoke("remove");
                                     const tbody = renderer_table.down("tbody").insert(pair.value);
                                     const rows_edition_section = tbody.querySelectorAll(
-                                        ".tracker_formelement_read_and_edit_edition_section"
+                                        ".tracker_formelement_read_and_edit_edition_section",
                                     );
                                     [].forEach.call(
                                         rows_edition_section,
                                         function (row_edition_section) {
                                             row_edition_section.style.display = "block";
-                                        }
+                                        },
                                     );
                                     const rows_read_only_section = tbody.querySelectorAll(
-                                        ".tracker_formelement_read_and_edit_read_section"
+                                        ".tracker_formelement_read_and_edit_read_section",
                                     );
                                     [].forEach.call(
                                         rows_read_only_section,
                                         function (row_read_only_section) {
                                             row_read_only_section.style.display = "none";
-                                        }
+                                        },
                                     );
 
                                     codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross(
-                                        renderer_table.select("td.tracker_report_table_unlink")
+                                        renderer_table.select("td.tracker_report_table_unlink"),
                                     );
                                     codendi.tracker.artifact.artifactLink.load_nb_artifacts(
-                                        renderer_table.up()
+                                        renderer_table.up(),
                                     );
                                 });
                                 codendi.tracker.artifact.artifactLink.reload_aggregates_functions(
-                                    codendi.tracker.artifact.artifactLinker_currentField
+                                    codendi.tracker.artifact.artifactLinker_currentField,
                                 );
                                 codendi.tracker.artifact.artifactLink.enable_mass_unlink();
                             }
@@ -314,7 +314,7 @@ codendi.tracker.artifact.artifactLink = {
                         .select(
                             'input[type=checkbox][name^="artifact[' +
                                 field_id +
-                                '][removed_values]"]'
+                                '][removed_values]"]',
                         )
                         .reject(function (checkbox) {
                             return checkbox.checked;
@@ -371,7 +371,7 @@ codendi.tracker.artifact.artifactLink = {
             ) {
                 if (!location.href.toQueryParams().modal) {
                     this.ul = new Element("ul").addClassName(
-                        "nav nav-tabs tracker-form-element-artifactlink-list-nav"
+                        "nav nav-tabs tracker-form-element-artifactlink-list-nav",
                     );
                 }
             }
@@ -380,13 +380,13 @@ codendi.tracker.artifact.artifactLink = {
                 artifact_link.insert({ top: this.ul });
 
                 this.type_label = new Element("li").update(
-                    codendi.getText("tracker_artifact_link", "type_label") + ":"
+                    codendi.getText("tracker_artifact_link", "type_label") + ":",
                 );
                 this.type_label.addClassName("tracker-form-element-artifactlink-list-nav-label");
                 this.type_label.hide();
 
                 this.trackerLabel = new Element("li").update(
-                    codendi.getText("tracker_artifact_link", "trackers_label") + ":"
+                    codendi.getText("tracker_artifact_link", "trackers_label") + ":",
                 );
                 this.trackerLabel.addClassName("tracker-form-element-artifactlink-list-nav-label");
                 this.trackerLabel.hide();
@@ -396,7 +396,7 @@ codendi.tracker.artifact.artifactLink = {
             }
 
             var type_tabs = artifact_link.select(
-                'h2[class*="tracker-form-element-artifactlink-type"]'
+                'h2[class*="tracker-form-element-artifactlink-type"]',
             );
             if (type_tabs.length > 0) {
                 this.type_label.show();
@@ -406,7 +406,7 @@ codendi.tracker.artifact.artifactLink = {
             }
 
             var trackerTabs = artifact_link.select(
-                'h2[class*="tracker-form-element-artifactlink-tracker"]'
+                'h2[class*="tracker-form-element-artifactlink-tracker"]',
             );
             if (trackerTabs.length > 0) {
                 this.trackerLabel.show();
@@ -420,7 +420,7 @@ codendi.tracker.artifact.artifactLink = {
             var ul = element.up("ul");
             ul.childElements().invoke(
                 "removeClassName",
-                "tracker-form-element-artifactlink-list-nav-current"
+                "tracker-form-element-artifactlink-list-nav-current",
             );
             ul.childElements().invoke("removeClassName", "active");
             element
@@ -502,7 +502,7 @@ codendi.tracker.artifact.artifactLink = {
                 .childElements()
                 .grep(new Selector(":not(li.tracker-form-element-artifactlink-list-nav-label)"))[0];
             var current_tab = tab_list.down(
-                "li.tracker-form-element-artifactlink-list-nav-current"
+                "li.tracker-form-element-artifactlink-list-nav-current",
             );
             if (typeof current_tab === "undefined") {
                 li.addClassName("tracker-form-element-artifactlink-list-nav-current active");

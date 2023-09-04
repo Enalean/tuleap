@@ -39,7 +39,7 @@ describe("Document PhpWiki integration", () => {
         cy.visit("/project/new");
         cy.get("[data-test=project-registration-advanced-templates-tab]").click();
         cy.get(
-            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-other-user-project]"
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-other-user-project]",
         ).click();
         cy.get("[data-test=from-another-project]").select("PhpWiki Template");
         cy.get("[data-test=project-registration-next-button]").click();
@@ -164,7 +164,7 @@ describe("Document PhpWiki integration", () => {
 
             cy.visit(url);
             cy.get("[data-test=document-user-can-not-read-document]").contains(
-                "granted read permission"
+                "granted read permission",
             );
         });
 

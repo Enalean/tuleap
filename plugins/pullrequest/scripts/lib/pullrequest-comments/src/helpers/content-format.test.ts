@@ -29,6 +29,6 @@ describe("content-format", () => {
         "getContentFormat() - should return %s when is_comments_markdown_mode_enabled is %s",
         (expected_format, is_comments_markdown_mode_enabled) => {
             expect(getContentFormat(is_comments_markdown_mode_enabled)).toBe(expected_format);
-        }
+        },
     );
 });

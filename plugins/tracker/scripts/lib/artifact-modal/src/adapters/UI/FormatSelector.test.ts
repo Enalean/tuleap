@@ -48,7 +48,7 @@ describe(`FormatSelector`, () => {
 
                 const format_selectbox = target.querySelector("[data-test=format]");
                 expect(format_selectbox?.hasAttribute("disabled")).toBe(true);
-            }
+            },
         );
         it(`enables the button if the field is not disabled, if the user is not in preview mode
             and if the CommonMark interpretation is not loading`, () => {
@@ -74,7 +74,7 @@ describe(`FormatSelector`, () => {
 
                 expect(target.querySelector("[data-test=preview-button]")).toBeNull();
                 expect(target.querySelector("[data-test=syntax-button]")).toBeNull();
-            }
+            },
         );
         it(`displays the CommonMark related buttons if the chosen format is 'Markdown'`, () => {
             const host = getHost({ value: "commonmark" });

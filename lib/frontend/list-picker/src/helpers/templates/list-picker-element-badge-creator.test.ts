@@ -57,7 +57,7 @@ describe("list-picker-element-badge-creator", () => {
         it("should create the custom colored badge if the source option has the color data set", () => {
             const badge_document_fragment = doc.createDocumentFragment();
             const colored_badge = item_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-value_colored"
+                "list-picker-item-value_colored",
             );
             const badge = createItemBadgeTemplate(event_listener, colored_badge);
             render(badge, badge_document_fragment);
@@ -66,14 +66,14 @@ describe("list-picker-element-badge-creator", () => {
                 throw new Error("badge_document_element should not be null");
             }
             expect(badge_document_element.className).toBe(
-                "list-picker-badge list-picker-badge-acid-green"
+                "list-picker-badge list-picker-badge-acid-green",
             );
         });
 
         it("should create a custom badge and the user badge if the source option has the user data set", () => {
             const badge_document_fragment = doc.createDocumentFragment();
             const user_badge = item_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-peraltaj"
+                "list-picker-item-peraltaj",
             );
             const badge = createItemBadgeTemplate(event_listener, user_badge);
             render(badge, badge_document_fragment);
@@ -82,14 +82,14 @@ describe("list-picker-element-badge-creator", () => {
                 throw new Error("badge_document_element should not be null");
             }
             expect(badge_document_element.className).toBe(
-                " list-picker-badge list-picker-badge-custom "
+                " list-picker-badge list-picker-badge-custom ",
             );
         });
 
         it("should not create the custom colored badge if the source option has the legacy color data set", () => {
             const badge_document_fragment = doc.createDocumentFragment();
             const colored_badge = item_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-bad_colored"
+                "list-picker-item-bad_colored",
             );
             const badge = createItemBadgeTemplate(event_listener, colored_badge);
             render(badge, badge_document_fragment);

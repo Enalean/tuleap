@@ -47,7 +47,7 @@ describe("Table of contents", () => {
 
 function buildFakeFormattedArtifact(
     id: number,
-    title: string
+    title: string,
 ): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> {
     return { id, title } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
 }

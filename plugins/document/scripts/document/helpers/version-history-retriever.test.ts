@@ -66,7 +66,7 @@ describe("getVersionHistory", () => {
             } as FileHistory,
         ]);
         await expect(getVersionHistory(item)).rejects.toThrowError(
-            "Item type's history not implemented"
+            "Item type's history not implemented",
         );
     });
 });

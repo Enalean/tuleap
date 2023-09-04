@@ -32,7 +32,7 @@ import {
 
 export function getServicesShortcutsGroup(
     doc: HTMLElement,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): ShortcutsGroup | null {
     const available_shortcuts = getAvailableShortcuts(doc);
 
@@ -43,14 +43,14 @@ export function getServicesShortcutsGroup(
     return {
         title: gettext_provider.gettext("Services quick access"),
         shortcuts: available_shortcuts.map((project_sidebar_shortcut) =>
-            buildShortcutFromProjectSidebarShortcut(project_sidebar_shortcut, gettext_provider)
+            buildShortcutFromProjectSidebarShortcut(project_sidebar_shortcut, gettext_provider),
         ),
     };
 }
 
 function buildShortcutFromProjectSidebarShortcut(
     project_sidebar_shortcut: ProjectSidebarShortcut,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Shortcut {
     let description = "";
     const shortcut_name = project_sidebar_shortcut.name;

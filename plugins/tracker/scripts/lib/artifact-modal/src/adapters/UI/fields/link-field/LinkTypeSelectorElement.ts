@@ -52,7 +52,7 @@ export type TypeChangedEvent = { readonly new_link_type: LinkType };
 
 const getOption = (
     host: LinkTypeSelectorElement,
-    link_type: LinkType
+    link_type: LinkType,
 ): UpdateFunction<LinkTypeSelectorElement> => {
     const value = link_type.shortname + " " + link_type.direction;
     const is_selected =
@@ -85,7 +85,7 @@ const getOption = (
 
 const getOptions = (
     host: LinkTypeSelectorElement,
-    types_container: AllowedLinkTypesPresenterContainer
+    types_container: AllowedLinkTypesPresenterContainer,
 ): UpdateFunction<LinkTypeSelectorElement> => {
     const { forward_type_presenter, reverse_type_presenter } = types_container;
     return html`<option disabled>–</option>
@@ -109,7 +109,7 @@ export const LinkTypeSelectorElement = define<InternalLinkTypeSelector>({
     content: (host) => {
         const current_artifact_xref = host.current_artifact_reference.mapOr(
             (reference) => reference.ref,
-            getNewArtifactLabel()
+            getNewArtifactLabel(),
         );
 
         return html`<select

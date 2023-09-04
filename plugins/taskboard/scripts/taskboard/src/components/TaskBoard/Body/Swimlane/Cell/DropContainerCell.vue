@@ -61,7 +61,7 @@ const swimlane = namespace("swimlane");
 export default class DropContainerCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin
+    ClassesForCollapsedColumnMixin,
 ) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;

@@ -115,7 +115,7 @@ describe("event manager", () => {
             dropdown_content_renderer,
             navigation_manager,
             item_highlighter,
-            field_focus_manager
+            field_focus_manager,
         );
     });
 
@@ -160,13 +160,13 @@ describe("event manager", () => {
                 dropdown_content_renderer,
                 navigation_manager,
                 item_highlighter,
-                field_focus_manager
+                field_focus_manager,
             );
 
             const isDropdownOpen = vi.spyOn(dropdown_manager, "isDropdownOpen");
             const doesSelectionElementHaveTheFocus = vi.spyOn(
                 field_focus_manager,
-                "doesSelectionElementHaveTheFocus"
+                "doesSelectionElementHaveTheFocus",
             );
 
             manager.attachEvents();
@@ -207,7 +207,7 @@ describe("event manager", () => {
                     doc.dispatchEvent(new KeyboardEvent("keyup", event_init));
 
                     expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
-                }
+                },
             );
         });
 
@@ -235,7 +235,7 @@ describe("event manager", () => {
             search_field.dispatchEvent(new KeyboardEvent("keyup"));
 
             expect(
-                dropdown_content_renderer.renderFilteredListPickerDropdownContent
+                dropdown_content_renderer.renderFilteredListPickerDropdownContent,
             ).toHaveBeenCalledWith("query");
             expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
         });
@@ -269,7 +269,7 @@ describe("event manager", () => {
 
                 expect(search_field.value).toBe("");
                 expect(
-                    dropdown_content_renderer.renderFilteredListPickerDropdownContent
+                    dropdown_content_renderer.renderFilteredListPickerDropdownContent,
                 ).toHaveBeenCalledWith("");
                 expect(item_highlighter.resetHighlight).toHaveBeenCalled();
             });

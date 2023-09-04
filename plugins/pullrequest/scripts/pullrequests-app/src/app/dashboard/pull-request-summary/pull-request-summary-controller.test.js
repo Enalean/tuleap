@@ -19,21 +19,23 @@ describe("PullRequestSummaryController -", () => {
 
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _UserRestService_,
-            _PullRequestService_,
-            _ErrorModalService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            UserRestService = _UserRestService_;
-            PullRequestService = _PullRequestService_;
-            ErrorModalService = _ErrorModalService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _UserRestService_,
+                _PullRequestService_,
+                _ErrorModalService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                UserRestService = _UserRestService_;
+                PullRequestService = _PullRequestService_;
+                ErrorModalService = _ErrorModalService_;
+            },
+        );
 
         $state = {
             go: () => {},
@@ -50,7 +52,7 @@ describe("PullRequestSummaryController -", () => {
                 pull_request: {
                     user_id: 134,
                 },
-            }
+            },
         );
     });
 
@@ -79,7 +81,7 @@ describe("PullRequestSummaryController -", () => {
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
 
             PullRequestSummaryController.onFetchErrorCallback(
-                new CustomEvent("fetch-error", { detail: { fault: tuleap_api_fault } })
+                new CustomEvent("fetch-error", { detail: { fault: tuleap_api_fault } }),
             );
 
             expect(showErrorMessage).toHaveBeenCalledWith(tuleap_api_fault);

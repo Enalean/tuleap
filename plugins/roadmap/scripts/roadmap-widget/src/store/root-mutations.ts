@@ -22,7 +22,7 @@ import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export async function setApplicationInErrorStateDueToRestError(
     state: RootState,
-    rest_error: FetchWrapperError
+    rest_error: FetchWrapperError,
 ): Promise<void> {
     state.should_display_error_state = true;
 

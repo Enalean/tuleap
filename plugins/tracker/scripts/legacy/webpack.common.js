@@ -23,7 +23,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets/"),
-    "/assets/trackers/legacy/"
+    "/assets/trackers/legacy/",
 );
 
 const config_for_legacy_scripts = {

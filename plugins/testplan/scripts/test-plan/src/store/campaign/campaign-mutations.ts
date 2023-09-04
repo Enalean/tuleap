@@ -57,7 +57,7 @@ export function updateCampaignAfterCreation(state: CampaignState, campaign: Camp
 
 function updateCampaign(state: CampaignState, campaign: Campaign): void {
     const index = state.campaigns.findIndex(
-        (state_campaign: Campaign): boolean => state_campaign.id === campaign.id
+        (state_campaign: Campaign): boolean => state_campaign.id === campaign.id,
     );
     if (index === -1) {
         throw Error("Unable to find the campaign to update");

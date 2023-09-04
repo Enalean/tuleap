@@ -48,7 +48,7 @@ export const NewCommentFormController = (
     config: NewCommentFormComponentConfig,
     post_submit_callback: NewCommentPostSubmitCallback,
     on_error_callback: PullRequestCommentErrorCallback,
-    on_cancel_callback?: NewCommentCancelCallback
+    on_cancel_callback?: NewCommentCancelCallback,
 ): ControlNewCommentForm => ({
     buildInitialPresenter: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
@@ -72,13 +72,13 @@ export const NewCommentFormController = (
                 (fault) => {
                     host.presenter = NewCommentFormPresenter.buildNotSavingComment(host.presenter);
                     on_error_callback(fault);
-                }
+                },
             );
     },
     handleWritingZoneContentChange: (host: NewCommentForm, new_comment: string): void => {
         host.presenter = NewCommentFormPresenter.buildWithUpdatedComment(
             host.presenter,
-            new_comment
+            new_comment,
         );
     },
     triggerPostSubmitCallback: (new_comment_payload: PullRequestComment): void => {

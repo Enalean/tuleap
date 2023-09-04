@@ -200,7 +200,7 @@ describe(`keyboard-drop helper`, () => {
                 </div>
                 <div data-is-container="true" data-navigation='cell' data-test="second-cell"></div>
                 <div data-is-container="true" data-navigation='cell' data-test="third-cell"></div>
-            `
+            `,
         );
 
         const first_cell_element = doc.querySelector("[data-test='first-cell']");

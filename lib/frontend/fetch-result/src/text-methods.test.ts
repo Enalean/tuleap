@@ -55,7 +55,7 @@ describe(`text-methods`, () => {
             (): TextResult =>
                 buildSendFormAndReceiveText(ResponseRetriever(fetcher), POST_METHOD)(
                     uri,
-                    request_payload
+                    request_payload,
                 ),
         ];
     }
@@ -72,7 +72,7 @@ describe(`text-methods`, () => {
             }
             expect(result.value).toBe(text_response);
             expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/text-method-test/d%C3%A9mo"
+                "https://example.com/text-method-test/d%C3%A9mo",
             );
 
             const request_init = fetcher.getRequestInit(0);
@@ -86,7 +86,7 @@ describe(`text-methods`, () => {
                 throw Error("Expected body to be set");
             }
             expect(request_init.body.get("id")).toBe(String(ID));
-        }
+        },
     );
 
     it.each([...provider()])(
@@ -104,6 +104,6 @@ describe(`text-methods`, () => {
                 throw Error("Expected an Err");
             }
             expect(isTuleapAPIFault(result.error)).toBe(true);
-        }
+        },
     );
 });

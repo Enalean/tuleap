@@ -20,7 +20,7 @@
 import type { ArtifactReportResponseFieldValueWithExtraFields } from "../type";
 
 export function isFieldTakenIntoAccount(
-    field_value: ArtifactReportResponseFieldValueWithExtraFields
+    field_value: ArtifactReportResponseFieldValueWithExtraFields,
 ): boolean {
     return (
         field_value.type !== "art_link" &&

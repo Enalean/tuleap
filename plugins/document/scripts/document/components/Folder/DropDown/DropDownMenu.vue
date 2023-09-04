@@ -141,7 +141,7 @@ const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_I
 const should_display_versions_link = computed(
     (): boolean =>
         should_display_history_in_document &&
-        (isFile(props.item) || isLink(props.item) || isEmbedded(props.item))
+        (isFile(props.item) || isLink(props.item) || isEmbedded(props.item)),
 );
 
 function getUrlForPane(pane_name: string): string {

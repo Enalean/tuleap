@@ -66,7 +66,7 @@ type InternalMutableMapWithoutEmptyContext = {
  * }
  */
 export function sanitizePoData(
-    poItems: readonly GettextTranslation[]
+    poItems: readonly GettextTranslation[],
 ): VueGettextTranslationsFormat {
     const messages: InternalMutableMap = {};
 

@@ -33,14 +33,14 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const pinia = createPinia();
 
     const base_url = `/plugins/git/${encodeURIComponent(
-        getDatasetItemOrThrow(mount_point, "currentProjectUnixName")
+        getDatasetItemOrThrow(mount_point, "currentProjectUnixName"),
     )}/administration/gitlab/`;
 
     app.use(createInitializedRouter(base_url));
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-        })
+        }),
     );
 
     app.use(pinia);

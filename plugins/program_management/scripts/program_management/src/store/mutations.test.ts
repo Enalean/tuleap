@@ -42,7 +42,7 @@ describe("Mutations", () => {
             } as ProgramIncrement;
 
             expect(() => mutations.addProgramIncrement(state, program_increment)).toThrowError(
-                "Program increment with id #14 already exists"
+                "Program increment with id #14 already exists",
             );
         });
 
@@ -190,7 +190,7 @@ describe("Mutations", () => {
             } as State;
 
             expect(() => mutations.startMoveElementInAProgramIncrement(state, 536)).toThrowError(
-                "Program element #536 is already moving"
+                "Program element #536 is already moving",
             );
         });
     });
@@ -231,7 +231,7 @@ describe("Mutations", () => {
             };
 
             expect(() => mutations.linkUserStoriesToFeature(state, link)).toThrowError(
-                "Program increment with id #14 does not exist"
+                "Program increment with id #14 does not exist",
             );
         });
 
@@ -268,7 +268,7 @@ describe("Mutations", () => {
             };
 
             expect(() => mutations.linkUserStoriesToBePlannedElement(state, link)).toThrowError(
-                "To be planned element with id #101 does not exist"
+                "To be planned element with id #101 does not exist",
             );
         });
 
@@ -375,7 +375,7 @@ describe("Mutations", () => {
                 mutations.changeFeaturePositionInProgramBacklog(state, {
                     order: null,
                     feature: { id: 102 } as Feature,
-                })
+                }),
             ).toThrowError("No order exists in feature position");
         });
     });
@@ -688,7 +688,7 @@ describe("Mutations", () => {
                     to_program_increment_id: 1,
                     feature: { id: 66 } as Feature,
                     order: null,
-                })
+                }),
             ).toThrowError("No order exists in feature position");
         });
 

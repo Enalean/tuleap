@@ -28,7 +28,7 @@ const readProjectId = (textarea: HTMLTextAreaElement): string => {
     const attribute = textarea.dataset.projectId;
     if (!attribute) {
         throw new Error(
-            `Missing data-project-id attribute on the Rich text editor textarea #${textarea.id}`
+            `Missing data-project-id attribute on the Rich text editor textarea #${textarea.id}`,
         );
     }
     return attribute;
@@ -46,7 +46,7 @@ export class EditorAreaState implements EditorAreaStateInterface {
     constructor(
         public readonly mount_point: HTMLDivElement,
         public readonly textarea: HTMLTextAreaElement,
-        presenter: FormatSelectorPresenter
+        presenter: FormatSelectorPresenter,
     ) {
         this.selectbox_id = presenter.id;
         this.selectbox_name = presenter.name;

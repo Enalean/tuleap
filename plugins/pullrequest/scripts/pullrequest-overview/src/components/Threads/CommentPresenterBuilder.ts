@@ -43,7 +43,7 @@ export const CommentPresenterBuilder = {
         payload: SupportedTimelineItem,
         base_url: URL,
         pull_request_id: number,
-        $gettext: (msgid: string) => string
+        $gettext: (msgid: string) => string,
     ): PullRequestCommentPresenter => {
         const common = {
             id: payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id,
@@ -88,7 +88,7 @@ function getThreadData(payload: SupportedTimelineItem): {
 
 function getContentData(
     payload: SupportedTimelineItem,
-    $gettext: (msgid: string) => string
+    $gettext: (msgid: string) => string,
 ): {
     content: string;
     post_processed_content: string;
@@ -112,13 +112,13 @@ function getContentData(
 function buildFilePresenter(
     payload: CommentOnFile,
     base_url: URL,
-    pull_request_id: number
+    pull_request_id: number,
 ): PullRequestCommentFile {
     const file_url = new URL(base_url);
     const formatted_file_path = formatFilePathForUIRouter(payload.file_path);
 
     file_url.hash = `#/pull-requests/${encodeURIComponent(
-        pull_request_id
+        pull_request_id,
     )}/files/diff-${encodeURIComponent(formatted_file_path)}/${encodeURIComponent(payload.id)}`;
 
     return {
@@ -136,7 +136,7 @@ function replaceLineReturns(content: string): string {
 
 function getContentMessage(
     payload: SupportedTimelineItem,
-    $gettext: (msgid: string) => string
+    $gettext: (msgid: string) => string,
 ): string {
     if (payload.type === TYPE_EVENT_PULLREQUEST_ACTION) {
         return getTimelineEventMessage(payload, $gettext);
@@ -147,7 +147,7 @@ function getContentMessage(
 
 function getTimelineEventMessage(
     event: ActionOnPullRequestEvent,
-    $gettext: (msgid: string) => string
+    $gettext: (msgid: string) => string,
 ): string {
     switch (event.event_type) {
         case EVENT_TYPE_UPDATE:

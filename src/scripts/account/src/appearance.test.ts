@@ -53,14 +53,14 @@ describe("appearance", () => {
 
         const preview_element_option_1 = document.createElementNS(
             "http://www.w3.org/2000/svg",
-            "rect"
+            "rect",
         );
         preview_element_option_1.setAttribute(OPTION_DATA_ATTRIBUTE, "option-1");
         preview_element_option_1.classList.add(OPTION_CLASSNAME);
 
         const preview_element_option_2 = document.createElementNS(
             "http://www.w3.org/2000/svg",
-            "rect"
+            "rect",
         );
         preview_element_option_2.setAttribute(OPTION_DATA_ATTRIBUTE, "option-2");
         preview_element_option_2.classList.add(OPTION_CLASSNAME);
@@ -79,7 +79,7 @@ describe("appearance", () => {
         if (elements.length > 1) {
             throw new Error(
                 "More than 1 preview elements are displayed, should be 1 or 0. Found: " +
-                    elements.length
+                    elements.length,
             );
         }
 
@@ -114,7 +114,7 @@ describe("appearance", () => {
                 `#${SELECT_BOX_ID}`,
                 `#${PREVIEW_ID}`,
                 `.${OPTION_CLASSNAME}`,
-                OPTION_DATA_ATTRIBUTE
+                OPTION_DATA_ATTRIBUTE,
             );
 
             const previewed_elem = getCurrentlyPreviewedElement();
@@ -132,7 +132,7 @@ describe("appearance", () => {
                 `#${SELECT_BOX_ID}`,
                 `#${PREVIEW_ID}`,
                 `.${OPTION_CLASSNAME}`,
-                OPTION_DATA_ATTRIBUTE
+                OPTION_DATA_ATTRIBUTE,
             );
 
             const previewed_elem_after_init = getCurrentlyPreviewedElement();

@@ -22,7 +22,7 @@ import type { Permissions } from "../type";
 
 export async function putEmbeddedFilePermissions(
     id: number,
-    permissions: Permissions
+    permissions: Permissions,
 ): Promise<void> {
     await put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
@@ -61,7 +61,7 @@ export async function putWikiPermissions(id: number, permissions: Permissions): 
 
 export async function putEmptyDocumentPermissions(
     id: number,
-    permissions: Permissions
+    permissions: Permissions,
 ): Promise<void> {
     await put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
         headers: {

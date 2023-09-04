@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 describe("PreviewFilename", () => {
     function getWrapper(
         item: DefaultFileItem,
-        configuration: ConfigurationState
+        configuration: ConfigurationState,
     ): VueWrapper<InstanceType<typeof PreviewFilename>> {
         return shallowMount(PreviewFilename, {
             props: {
@@ -65,7 +65,7 @@ describe("PreviewFilename", () => {
 
         expect(wrapper.vm.preview).toBe(
             // eslint-disable-next-line no-template-curly-in-string
-            "${ID}-toto-Lorem ipsum-approved-.json"
+            "${ID}-toto-Lorem ipsum-approved-.json",
         );
     });
 });

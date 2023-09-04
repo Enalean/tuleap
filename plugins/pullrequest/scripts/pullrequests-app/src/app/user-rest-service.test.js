@@ -29,17 +29,14 @@ describe("UserRestService -", function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$httpBackend_,
-            _UserRestService_,
-            _ErrorModalService_
-        ) {
-            $rootScope = _$rootScope_;
-            $httpBackend = _$httpBackend_;
-            UserRestService = _UserRestService_;
-            ErrorModalService = _ErrorModalService_;
-        });
+        angular.mock.inject(
+            function (_$rootScope_, _$httpBackend_, _UserRestService_, _ErrorModalService_) {
+                $rootScope = _$rootScope_;
+                $httpBackend = _$httpBackend_;
+                UserRestService = _UserRestService_;
+                ErrorModalService = _ErrorModalService_;
+            },
+        );
 
         jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
@@ -87,7 +84,7 @@ describe("UserRestService -", function () {
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
-                })
+                }),
             );
         });
     });
@@ -128,7 +125,7 @@ describe("UserRestService -", function () {
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
-                })
+                }),
             );
         });
     });
@@ -145,7 +142,7 @@ describe("UserRestService -", function () {
                 .respond(200, "ok");
 
             const promise = wrapPromise(
-                UserRestService.setPreference(user_id, "religion", "Satan")
+                UserRestService.setPreference(user_id, "religion", "Satan"),
             );
             $httpBackend.flush();
 

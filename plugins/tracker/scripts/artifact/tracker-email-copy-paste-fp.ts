@@ -24,6 +24,6 @@ import "@tuleap/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {
     setupEmailCopyModalInteractions(document, (target: HTMLElement) =>
-        jQuery(target).modal("show")
+        jQuery(target).modal("show"),
     );
 });

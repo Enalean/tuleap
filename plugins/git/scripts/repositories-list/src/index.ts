@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     Vue.config.language = locale;
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         projectUrl,
         JSON.parse(privacy),
         JSON.parse(projectFlags),
-        vue_mount_point.dataset.projectIcon || ""
+        vue_mount_point.dataset.projectIcon || "",
     );
     buildRepositoryListPresenter(
         parseInt(userId, 10),
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         isAdmin,
         locale,
         JSON.parse(repositoriesOwners),
-        JSON.parse(externalPlugins)
+        JSON.parse(externalPlugins),
     );
 
     const repositories_for_owner: RepositoriesForOwner = JSON.parse(repositoriesOwners);

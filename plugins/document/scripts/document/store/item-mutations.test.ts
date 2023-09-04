@@ -23,7 +23,7 @@ import type { FakeItem, Item, LockInfo, State, User } from "../type";
 
 describe("Item mutations", () => {
     function isFolderContentArrayOfItem(
-        folder_content: Array<Item | FakeItem>
+        folder_content: Array<Item | FakeItem>,
     ): folder_content is Array<Item> {
         return folder_content.every((item) => "lock_info" in item);
     }

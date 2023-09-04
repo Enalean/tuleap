@@ -83,7 +83,7 @@ export default {
         updateSelectedUGroups() {
             this.$emit(
                 "input",
-                this.selected_ugroup_ids.map((ugroup_id) => ({ id: ugroup_id }))
+                this.selected_ugroup_ids.map((ugroup_id) => ({ id: ugroup_id })),
             );
         },
     },

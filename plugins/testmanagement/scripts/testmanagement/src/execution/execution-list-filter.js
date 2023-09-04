@@ -32,7 +32,7 @@ function ExecutionListFilter($filter) {
             status_list = compact(
                 map(status, function (value, key) {
                     return value ? key : false;
-                })
+                }),
             ),
             all_results = [];
 
@@ -106,7 +106,7 @@ function ExecutionListFilter($filter) {
 
     function setFocusableTestTab() {
         const previous_focusable_test_tab = document.querySelector(
-            "[data-navigation-test-link][tabindex='0']"
+            "[data-navigation-test-link][tabindex='0']",
         );
         const active_test_tab = document.querySelector("[data-navigation-test-link].active");
         const first_test_tab = document.querySelector("[data-navigation-test-link]");

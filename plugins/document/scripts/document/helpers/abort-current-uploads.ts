@@ -22,10 +22,10 @@ import type { Store } from "vuex";
 
 export function abortCurrentUploads(
     $gettext: GettextProvider["$gettext"],
-    store: Store<RootState>
+    store: Store<RootState>,
 ): boolean {
     const message = $gettext(
-        "This page is asking you to confirm that you want to leave - data you have entered may not be saved. Do you want to leave this page?"
+        "This page is asking you to confirm that you want to leave - data you have entered may not be saved. Do you want to leave this page?",
     );
     /* eslint-disable no-alert */
     if (!window.confirm(message)) {

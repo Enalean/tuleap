@@ -111,7 +111,7 @@ export default class TrackerFromAnotherProjectSelector extends Vue {
 
     get available_projects(): ProjectWithTrackers[] {
         return this.trackers_from_other_projects.sort((a, b) =>
-            a.name.localeCompare(b.name, undefined, { numeric: true })
+            a.name.localeCompare(b.name, undefined, { numeric: true }),
         );
     }
 

@@ -28,11 +28,11 @@ export function collapseCommonSectionsSideBySide(
     doc: Document,
     left_codemirror: Editor,
     right_codemirror: Editor,
-    sections: readonly SynchronizedCollapsibleSections[]
+    sections: readonly SynchronizedCollapsibleSections[],
 ): void {
     sections.forEach((section) => appendCollapsedSectionLabel(doc, left_codemirror, section.left));
     sections.forEach((section) =>
-        appendCollapsedSectionLabel(doc, right_codemirror, section.right)
+        appendCollapsedSectionLabel(doc, right_codemirror, section.right),
     );
 
     synchronizeExpandCollapsedSectionsSideBySide(left_codemirror, right_codemirror);
@@ -40,7 +40,7 @@ export function collapseCommonSectionsSideBySide(
 export function collapseCommonSectionsUnidiff(
     doc: Document,
     unidiff_codemirror: Editor,
-    sections: readonly CollapsibleSection[]
+    sections: readonly CollapsibleSection[],
 ): void {
     sections.forEach((section) => appendCollapsedSectionLabel(doc, unidiff_codemirror, section));
 }
@@ -58,7 +58,7 @@ function getCollapsedLabelElement(doc: Document, section: CollapsibleSection): H
 function appendCollapsedSectionLabel(
     doc: Document,
     codemirror: Editor,
-    section: CollapsibleSection
+    section: CollapsibleSection,
 ): void {
     const last_line = codemirror.getLine(section.end);
     const collapsed_label = getCollapsedLabelElement(doc, section);
@@ -68,7 +68,7 @@ function appendCollapsedSectionLabel(
         { line: section.end, ch: last_line ? last_line.length : 0 },
         {
             replacedWith: collapsed_label,
-        }
+        },
     );
 
     collapsed_label.addEventListener("click", () => marker.clear());
@@ -76,7 +76,7 @@ function appendCollapsedSectionLabel(
 
 function synchronizeExpandCollapsedSectionsSideBySide(
     left_codemirror: Editor,
-    right_codemirror: Editor
+    right_codemirror: Editor,
 ): void {
     const left_labels = left_codemirror.getAllMarks();
     const right_labels = right_codemirror.getAllMarks();

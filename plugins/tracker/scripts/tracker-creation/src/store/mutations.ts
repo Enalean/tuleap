@@ -45,7 +45,7 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
 
     for (let i = 0; !tracker && i < state.project_templates.length; i++) {
         tracker = state.project_templates[i].tracker_list.find(
-            (tracker: Tracker) => tracker.id === tracker_id
+            (tracker: Tracker) => tracker.id === tracker_id,
         );
     }
 

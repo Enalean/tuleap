@@ -147,7 +147,9 @@
     height: 20px;
     margin: 0;
     padding: 4px 6px;
-    transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition:
+        border linear 0.2s,
+        box-shadow linear 0.2s;
     border: 1px solid #cccccc;
     border-radius: var(--tlp-medium-radius);
     background-color: #ffffff;
@@ -169,7 +171,9 @@ input[type="text"].search-in-cardwall {
     outline: 0;
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
     outline: thin dotted \9;
-    box-shadow: inset 0 1px 1px rgb(0 0 0 / 7.5%), 0 0 8px rgb(82 168 236 / 60%);
+    box-shadow:
+        inset 0 1px 1px rgb(0 0 0 / 7.5%),
+        0 0 8px rgb(82 168 236 / 60%);
 }
 
 .cardwall-column-header {

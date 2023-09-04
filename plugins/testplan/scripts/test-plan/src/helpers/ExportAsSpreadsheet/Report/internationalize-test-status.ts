@@ -22,7 +22,7 @@ import type { VueGettextProvider } from "../../vue-gettext-provider";
 
 export function getInternationalizedTestStatus(
     gettext_provider: VueGettextProvider,
-    test_status: keyof TestStats | null
+    test_status: keyof TestStats | null,
 ): string {
     switch (test_status) {
         case null:

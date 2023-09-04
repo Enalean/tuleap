@@ -47,7 +47,7 @@ type SynchronizeButtonType = {
 export const SynchronizeButton = (
     doc: Document,
     gettext_provider: GetText,
-    group_id: number
+    group_id: number,
 ): SynchronizeButtonType => {
     const button = selectOrThrow(doc, SYNCHRONIZE_BUTTON_SELECTOR, HTMLButtonElement);
     const button_icon = selectOrThrow(button, SYNCHRONIZE_BUTTON_ICON_SELECTOR);
@@ -79,37 +79,37 @@ export const SynchronizeButton = (
         toggleLoadingState(true);
         await postJSON<SynchronizationResponse>(
             uri`/api/gitlab_groups/${group_id}/synchronize`,
-            undefined
+            undefined,
         ).match(
             (response) => {
                 const feedback_message = sprintf(
                     gettext_provider.ngettext(
                         "%d repository has just been integrated.",
                         "%d repositories have just been integrated.",
-                        response.number_of_integrations
+                        response.number_of_integrations,
                     ),
-                    response.number_of_integrations
+                    response.number_of_integrations,
                 );
                 toggleFeedbackState(true, feedback_message);
                 const badge_message = sprintf(
                     gettext_provider.ngettext(
                         "%d repository integrated just now",
                         "%d repositories integrated just now",
-                        response.number_of_integrations
+                        response.number_of_integrations,
                     ),
-                    response.number_of_integrations
+                    response.number_of_integrations,
                 );
                 toggleBadgeState(true, badge_message);
             },
             (fault) => {
                 const feedback_message = sprintf(
                     gettext_provider.gettext("Error during last sync: %(error)s"),
-                    { error: String(fault) }
+                    { error: String(fault) },
                 );
                 toggleFeedbackState(false, feedback_message);
                 const badge_message = gettext_provider.gettext("In error, just now");
                 toggleBadgeState(false, badge_message);
-            }
+            },
         );
         toggleLoadingState(false);
     };

@@ -22,7 +22,7 @@ import "./generate-pie-charts";
 
 document.addEventListener("DOMContentLoaded", () => {
     const admin_homepage_queues = document.querySelectorAll(
-        ".siteadmin-homepage-system-events-queue"
+        ".siteadmin-homepage-system-events-queue",
     );
     for (const admin_homepage_queue of admin_homepage_queues) {
         admin_homepage_queue.addEventListener("click", (event) => {

@@ -40,7 +40,7 @@ import { getArtifacts } from "./artifacts-retriever";
 export async function retrieveArtifactsStructure(
     tracker_structure_map: Map<number, TrackerStructure>,
     artifacts_from_response: ReadonlyArray<ArtifactResponse>,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
     const all_linked_artifacts_ids: Set<number> = new Set();
     const exported_artifacts: Map<number, ArtifactResponse> = new Map();
@@ -51,7 +51,7 @@ export async function retrieveArtifactsStructure(
         async (report_artifact: ArtifactResponse): Promise<ArtifactFromReport> => {
             exported_artifacts.set(report_artifact.id, report_artifact);
             const values_by_field_id = new Map(
-                report_artifact.values.map((value) => [value.field_id, value])
+                report_artifact.values.map((value) => [value.field_id, value]),
             );
 
             const tracker_structure = tracker_structure_map.get(report_artifact.tracker.id);
@@ -67,19 +67,19 @@ export async function retrieveArtifactsStructure(
                     values_by_field_id,
                     tracker_structure.fields,
                     get_test_execution,
-                    all_linked_artifacts_ids
+                    all_linked_artifacts_ids,
                 )),
             };
-        }
+        },
     );
 
     const already_retrieved_artifacts = new Map([...exported_artifacts]);
 
     const missing_artifacts_ids = new Set(
-        [...all_linked_artifacts_ids].filter((id) => already_retrieved_artifacts.has(id) === false)
+        [...all_linked_artifacts_ids].filter((id) => already_retrieved_artifacts.has(id) === false),
     );
     (await getArtifacts(missing_artifacts_ids)).forEach((artifact) =>
-        already_retrieved_artifacts.set(artifact.id, artifact)
+        already_retrieved_artifacts.set(artifact.id, artifact),
     );
 
     return report_artifacts_with_additional_info.map((report_artifact) => {
@@ -88,12 +88,12 @@ export async function retrieveArtifactsStructure(
             values: injectLinkInformationInValues(
                 report_artifact.values,
                 already_retrieved_artifacts,
-                exported_artifacts
+                exported_artifacts,
             ),
             containers: injectLinkInformationInContainers(
                 report_artifact.containers,
                 already_retrieved_artifacts,
-                exported_artifacts
+                exported_artifacts,
             ),
         };
     });
@@ -102,7 +102,7 @@ export async function retrieveArtifactsStructure(
 function injectLinkInformationInValues(
     values: ReadonlyArray<ArtifactReportFieldValue>,
     all_artifacts: Map<number, ArtifactResponse>,
-    exported_artifacts: Map<number, ArtifactResponse>
+    exported_artifacts: Map<number, ArtifactResponse>,
 ): ReadonlyArray<ArtifactReportFieldValue> {
     return values.map((value) => {
         if (value.type === "art_link") {
@@ -112,7 +112,7 @@ function injectLinkInformationInValues(
                 reverse_links: injectLinkInformation(
                     value.reverse_links,
                     all_artifacts,
-                    exported_artifacts
+                    exported_artifacts,
                 ),
             };
         }
@@ -123,7 +123,7 @@ function injectLinkInformationInValues(
 function injectLinkInformation(
     links: ReadonlyArray<ArtifactLinkWithTitle>,
     all_artifacts: Map<number, ArtifactResponse>,
-    exported_artifacts: Map<number, ArtifactResponse>
+    exported_artifacts: Map<number, ArtifactResponse>,
 ): ReadonlyArray<ArtifactLinkWithTitle> {
     return links.map((link) => {
         return {
@@ -138,7 +138,7 @@ function injectLinkInformation(
 function injectLinkInformationInContainers(
     containers: ReadonlyArray<ArtifactReportContainer>,
     all_artifacts: Map<number, ArtifactResponse>,
-    exported_artifacts: Map<number, ArtifactResponse>
+    exported_artifacts: Map<number, ArtifactResponse>,
 ): ReadonlyArray<ArtifactReportContainer> {
     return containers.map((container) => {
         return {
@@ -146,12 +146,12 @@ function injectLinkInformationInContainers(
             values: injectLinkInformationInValues(
                 container.values,
                 all_artifacts,
-                exported_artifacts
+                exported_artifacts,
             ),
             containers: injectLinkInformationInContainers(
                 container.containers,
                 all_artifacts,
-                exported_artifacts
+                exported_artifacts,
             ),
         };
     });
@@ -163,7 +163,7 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
     field_values: ReadonlyMap<number, ArtifactReportResponseFieldValue>,
     fields_structure: ReadonlyMap<number, FieldsStructure>,
     get_test_execution: typeof getTestManagementExecution,
-    all_linked_artifacts_ids: Set<number>
+    all_linked_artifacts_ids: Set<number>,
 ): Promise<Omit<ArtifactReportContainer, "name">> {
     const values_with_additional_information: ArtifactReportFieldValue[] = [];
     const containers: ArtifactReportContainer[] = [];
@@ -174,7 +174,7 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 const test_execution_value = await getStepExecutionsFieldValue(
                     artifact_id,
                     field,
-                    get_test_execution
+                    get_test_execution,
                 );
                 values_with_additional_information.push(test_execution_value);
                 continue;
@@ -188,8 +188,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 getFieldValueWithAdditionalInformation(
                     field_value,
                     fields_structure,
-                    all_linked_artifacts_ids
-                )
+                    all_linked_artifacts_ids,
+                ),
             );
             continue;
         }
@@ -204,7 +204,7 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                     field_values,
                     fields_structure,
                     get_test_execution,
-                    all_linked_artifacts_ids
+                    all_linked_artifacts_ids,
                 )),
             });
             continue;
@@ -217,7 +217,7 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 field_values,
                 fields_structure,
                 get_test_execution,
-                all_linked_artifacts_ids
+                all_linked_artifacts_ids,
             );
         values_with_additional_information.push(...children_structured_information.values);
         containers.push(...children_structured_information.containers);
@@ -232,7 +232,7 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
 async function getStepExecutionsFieldValue(
     artifact_id: number,
     field: StepExecutionFieldStructure,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
 ): Promise<ArtifactStepExecutionFieldValue> {
     try {
         const test_execution: TestExecutionResponse = await get_test_execution(artifact_id);
@@ -243,7 +243,7 @@ async function getStepExecutionsFieldValue(
         for (const test_definition of test_execution.definition.steps) {
             if (test_definition.id.toString() in test_execution.steps_results) {
                 test_execution_status.push(
-                    test_execution.steps_results[test_definition.id.toString()].status
+                    test_execution.steps_results[test_definition.id.toString()].status,
                 );
                 test_executions.push({
                     ...test_definition,
@@ -280,7 +280,7 @@ async function getStepExecutionsFieldValue(
 function getFieldValueWithAdditionalInformation(
     value: ArtifactReportResponseFieldValue,
     fields_structure: ReadonlyMap<number, FieldsStructure>,
-    all_linked_artifacts_ids: Set<number>
+    all_linked_artifacts_ids: Set<number>,
 ): ArtifactReportFieldValue {
     const field_structure = fields_structure.get(value.field_id);
     switch (value.type) {
@@ -334,7 +334,7 @@ function getFieldValueWithAdditionalInformation(
         }
         case "art_link": {
             [...value.links, ...value.reverse_links].forEach((link) =>
-                all_linked_artifacts_ids.add(link.id)
+                all_linked_artifacts_ids.add(link.id),
             );
 
             return {

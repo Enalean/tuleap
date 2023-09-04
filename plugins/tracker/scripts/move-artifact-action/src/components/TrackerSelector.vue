@@ -69,7 +69,7 @@ const tracker_options = computed((): TrackerSelectorOption[] =>
     selectors_store.trackers.map((tracker: Tracker) => ({
         ...tracker,
         disabled: tracker.id === strictInject(TRACKER_ID),
-    }))
+    })),
 );
 const tracker_id = ref(null);
 const list_picker = ref<ListPicker | undefined>();
@@ -78,7 +78,7 @@ const move_artifact_tracker_selector = ref<HTMLSelectElement>();
 const selector_title = computed(() =>
     tracker_options.value.some(({ disabled }) => disabled)
         ? $gettext("An artifact cannot be moved in the same tracker")
-        : ""
+        : "",
 );
 
 onMounted(() => {

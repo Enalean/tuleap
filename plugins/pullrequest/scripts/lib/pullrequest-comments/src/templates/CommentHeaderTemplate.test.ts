@@ -34,7 +34,7 @@ describe("CommentHeaderTemplate", () => {
                 user_url: "url/to/user_profile.html",
             },
             RelativeDatesHelper("Y-m-d H:i", PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, "en_US"),
-            "2023-03-13T16:30:00Z"
+            "2023-03-13T16:30:00Z",
         );
 
         render(host, target);

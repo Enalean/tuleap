@@ -88,7 +88,7 @@ const { is_processing, data } = usePromise(
     default_tracker_reports,
     computed(() => {
         return getTrackerReports(props.tracker_id);
-    })
+    }),
 );
 
 const report = computed({
@@ -104,14 +104,14 @@ watch(
     () => data.value,
     (report_responses) => {
         const selected_report = report_responses.find(
-            (report_response) => report_response.id === props.report?.id
+            (report_response) => report_response.id === props.report?.id,
         );
         if (selected_report) {
             report.value = selected_report;
             return;
         }
         const default_report = report_responses.find(
-            (report_response) => report_response.is_default
+            (report_response) => report_response.is_default,
         );
         if (default_report) {
             report.value = default_report;
@@ -119,7 +119,7 @@ watch(
         }
 
         const first_public_report = report_responses.find(
-            (report_response) => report_response.is_public
+            (report_response) => report_response.is_public,
         );
         if (first_public_report) {
             report.value = first_public_report;
@@ -127,7 +127,7 @@ watch(
         }
 
         const first_private_report = report_responses.find(
-            (report_response) => !report_response.is_public
+            (report_response) => !report_response.is_public,
         );
         if (first_private_report) {
             report.value = first_private_report;
@@ -135,7 +135,7 @@ watch(
         }
 
         report.value = null;
-    }
+    },
 );
 
 const public_reports = computed(() => {

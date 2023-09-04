@@ -34,7 +34,7 @@ describe("Start download of export document", () => {
         const create_export_report = jest
             .spyOn(report_creator, "createExportReport")
             .mockResolvedValue(
-                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
             );
 
         await downloadExportDocument(
@@ -56,7 +56,7 @@ describe("Start download of export document", () => {
             gettext_provider,
             download_document,
             [],
-            []
+            [],
         );
 
         expect(create_export_report).toHaveBeenCalledTimes(1);

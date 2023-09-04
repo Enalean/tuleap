@@ -31,7 +31,7 @@ jest.mock("../../../../helpers/emitter");
 describe("DeleteItem", () => {
     function createWrapper(
         user_can_write: boolean,
-        is_deletion_allowed: boolean
+        is_deletion_allowed: boolean,
     ): VueWrapper<InstanceType<typeof DeleteItem>> {
         return shallowMount(DeleteItem, {
             props: { item: { id: 1, user_can_write } as Item },

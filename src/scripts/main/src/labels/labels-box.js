@@ -26,7 +26,7 @@ export async function create(
     labels_endpoint,
     available_labels_endpoint,
     is_update_allowed,
-    input_placeholder
+    input_placeholder,
 ) {
     const existing_labels = await recursiveGet(labels_endpoint, {
         params: {
@@ -41,7 +41,7 @@ export async function create(
         labels_endpoint,
         available_labels_endpoint,
         is_update_allowed,
-        input_placeholder
+        input_placeholder,
     );
 }
 
@@ -58,7 +58,7 @@ function initiateSelect2(
     labels_endpoint,
     available_labels_endpoint,
     is_update_allowed,
-    placeholder
+    placeholder,
 ) {
     existing_labels.forEach((label) => {
         const option = createOption(label);
@@ -110,7 +110,7 @@ function formatLabel(label, li_element) {
 
         return mustache.render(
             '<span class="select-item-label-title"><i class="select-item-label-bullet {{ bullet_class }}"></i>{{ label }}</span>',
-            { bullet_class: bullet_class, label: label.text }
+            { bullet_class: bullet_class, label: label.text },
         );
     }
 

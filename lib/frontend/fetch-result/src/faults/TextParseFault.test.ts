@@ -32,6 +32,6 @@ describe(`TextParseFault`, () => {
             const fault = TextParseFault.fromError(error);
             expect(isFault(fault)).toBe(true);
             expect(isTextParseFault(fault)).toBe(true);
-        }
+        },
     );
 });

@@ -26,7 +26,7 @@ export async function handleErrors(
     store: {
         commit: Store<RootState>["commit"];
     },
-    exception: unknown
+    exception: unknown,
 ): Promise<void> {
     const message = "Internal server error";
     if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
@@ -52,7 +52,7 @@ export async function handleErrorsForDocument(
     store: {
         commit: Store<RootState>["commit"];
     },
-    exception: unknown
+    exception: unknown,
 ): Promise<void> {
     const message = "Internal server error";
     if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
@@ -79,7 +79,7 @@ export async function handleErrorsForDeletionModal(
         commit: Store<RootState>["commit"];
     },
     exception: unknown,
-    item: Item
+    item: Item,
 ): Promise<void> {
     const message = "Internal server error";
     if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {

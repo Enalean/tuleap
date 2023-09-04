@@ -87,7 +87,7 @@ describe("UnlockItem", () => {
         const wrapper = createWrapper(item);
 
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
     });
 
@@ -103,7 +103,7 @@ describe("UnlockItem", () => {
         const wrapper = createWrapper(item);
 
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
     });
 

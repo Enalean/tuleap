@@ -33,7 +33,7 @@ describe(`Option type`, () => {
         expectTypeOf(
             itCouldReturnNothing().apply((received_value) => {
                 expectTypeOf(received_value).toMatchTypeOf<CustomType>();
-            })
+            }),
         ).toBeVoid();
     });
 
@@ -53,7 +53,7 @@ describe(`Option type`, () => {
             const itCouldReturnNothing = (): Option<number> => Option.fromValue(49);
 
             const return_value = itCouldReturnNothing().andThen(() =>
-                Option.fromValue(CustomType("scrawk"))
+                Option.fromValue(CustomType("scrawk")),
             );
 
             expectTypeOf(return_value).toMatchTypeOf<Option<CustomType>>();
@@ -133,7 +133,7 @@ describe(`Option type`, () => {
                 },
                 () => {
                     return "default";
-                }
+                },
             );
 
             expectTypeOf(return_value).toBeString();
@@ -146,7 +146,7 @@ describe(`Option type`, () => {
                 (received_value) => {
                     return Number.parseInt(received_value, 10) + 10;
                 },
-                () => 42
+                () => 42,
             );
             expectTypeOf(return_value).toBeNumber();
         });

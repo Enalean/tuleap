@@ -46,7 +46,7 @@ export default {
         },
         message() {
             const translated = this.$gettext(
-                "You are about to delete the baseline <strong>%{ baseline_name }</strong>."
+                "You are about to delete the baseline <strong>%{ baseline_name }</strong>.",
             );
             return this.$gettextInterpolate(translated, {
                 baseline_name: this.baseline.name,

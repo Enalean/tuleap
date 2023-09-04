@@ -158,7 +158,7 @@ describe("reports-fields-labels-formator", () => {
         };
 
         expect(() => formatReportsFieldsLabels(organized_reports_data)).toThrowError(
-            "This must not happen. Check must be done before."
+            "This must not happen. Check must be done before.",
         );
     });
 });

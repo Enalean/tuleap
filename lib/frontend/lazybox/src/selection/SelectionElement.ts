@@ -50,7 +50,7 @@ type InternalSelectionElement = Readonly<SelectionElement> & {
 export type HostElement = InternalSelectionElement & HTMLElement;
 
 const getSingleSelectionContent = (
-    host: InternalSelectionElement
+    host: InternalSelectionElement,
 ): UpdateFunction<SelectionElement> => {
     if (host.selected_items.length < 1) {
         return html`<span class="lazybox-placeholder" data-test="selection-placeholder"
@@ -73,7 +73,7 @@ const callOnSelection = (host: InternalSelectionElement): void => {
 
 const removeItemFromSelection = (
     host: InternalSelectionElement,
-    item_to_remove: LazyboxItem
+    item_to_remove: LazyboxItem,
 ): void => {
     host.selected_items = host.selected_items.filter((item) => item !== item_to_remove);
     callOnSelection(host);
@@ -138,7 +138,7 @@ export const observeSelectedItems = (host: SelectionElement, new_value: LazyboxI
 
 export const searchInputSetter = (
     host: InternalSelectionElement,
-    new_value: SearchInput & HTMLElement
+    new_value: SearchInput & HTMLElement,
 ): SearchInput & HTMLElement => {
     new_value.addEventListener("backspace-pressed", () => {
         const last_item = host.selected_items[host.selected_items.length - 1];

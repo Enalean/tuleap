@@ -23,7 +23,7 @@ import { extractProjectnameFromAutocompleterResult } from "./extract-projectname
 describe("extractProjectnameFromAutocompleterResult", function () {
     it("extract the project name", () => {
         expect(extractProjectnameFromAutocompleterResult("Public name (shortname)")).toBe(
-            "shortname"
+            "shortname",
         );
         expect(extractProjectnameFromAutocompleterResult("")).toBe("");
     });

@@ -306,7 +306,7 @@ export default class GanttBoard extends Vue {
         }
 
         const entry = entries.find(
-            (entry) => this.$refs.time_period && entry.target === this.$refs.time_period.$el
+            (entry) => this.$refs.time_period && entry.target === this.$refs.time_period.$el,
         );
         if (!entry) {
             return;
@@ -322,7 +322,7 @@ export default class GanttBoard extends Vue {
         }
 
         this.setAdditionalUnitsNumberAccordingToWidth(
-            this.$refs.time_period.$el.getBoundingClientRect().width
+            this.$refs.time_period.$el.getBoundingClientRect().width,
         );
     }
 

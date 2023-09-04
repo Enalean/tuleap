@@ -58,10 +58,10 @@ describe("PullRequestReferences", () => {
         expect(source_reference.text()).toBe("a1e2i3o4u5y6");
         expect(source_destination.exists()).toBe(true);
         expect(source_destination.element.textContent ?? "").toContain(
-            pull_request_info.branch_src
+            pull_request_info.branch_src,
         );
         expect(source_destination.element.textContent ?? "").toContain(
-            pull_request_info.branch_dest
+            pull_request_info.branch_dest,
         );
     });
 });

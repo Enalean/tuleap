@@ -22,7 +22,7 @@ import type { TestExecutionResponse } from "@tuleap/plugin-docgen-docx";
 
 export function getLastExecutionForTest(
     artifact_id: number,
-    executions_map: ExecutionsForCampaignMap
+    executions_map: ExecutionsForCampaignMap,
 ): TestExecutionResponse | null {
     let execution_for_test: TestExecutionResponse | null = null;
     const all_execution_for_test: TestExecutionResponse[] = [];

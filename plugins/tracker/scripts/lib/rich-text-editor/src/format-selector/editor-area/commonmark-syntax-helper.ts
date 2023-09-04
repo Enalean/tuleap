@@ -23,7 +23,7 @@ import { html, unsafeStatic } from "lit/static-html.js";
 import type { TemplateResult } from "lit/html.js";
 
 export function getCommonMarkSyntaxPopoverHelperContent(
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult {
     return html`
         <template data-popover-content>

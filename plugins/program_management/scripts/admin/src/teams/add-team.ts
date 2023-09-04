@@ -68,7 +68,7 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
                     setRestErrorMessage(
                         doc,
                         DISPLAY_ERROR_REST_ID,
-                        error.code + " " + error_message
+                        error.code + " " + error_message,
                     );
                 })
                 .catch(() => setRestErrorMessage(doc, DISPLAY_ERROR_REST_ID, "404 Error"));

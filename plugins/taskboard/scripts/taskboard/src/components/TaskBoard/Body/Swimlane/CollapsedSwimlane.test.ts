@@ -30,7 +30,7 @@ type UnknowObject = Record<string, unknown>;
 
 async function wrapperFactory(
     $store?: unknown,
-    props?: UnknowObject
+    props?: UnknowObject,
 ): Promise<Wrapper<CollapsedSwimlane>> {
     const defined_store =
         $store ??

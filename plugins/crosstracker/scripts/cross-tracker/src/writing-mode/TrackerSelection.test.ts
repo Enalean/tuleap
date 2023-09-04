@@ -32,7 +32,7 @@ describe("TrackerSelection", () => {
     };
 
     async function instantiateComponent(
-        selectedTrackers: Array<SelectedTracker> = []
+        selectedTrackers: Array<SelectedTracker> = [],
     ): Promise<Wrapper<TrackerSelection>> {
         const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
         store = createStoreMock(store_options);
@@ -61,7 +61,7 @@ describe("TrackerSelection", () => {
     describe("loadProjects()", () => {
         beforeEach(() => {
             jest.spyOn(rest_querier, "getTrackersOfProject").mockImplementation(() =>
-                Promise.resolve([])
+                Promise.resolve([]),
             );
         });
 

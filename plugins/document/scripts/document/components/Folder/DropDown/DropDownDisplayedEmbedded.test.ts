@@ -30,7 +30,7 @@ describe("DropDownDisplayedEmbedded", () => {
         can_user_manage: boolean,
         parent_id: number,
         forbid_writers_to_update: boolean,
-        forbid_writers_to_delete: boolean
+        forbid_writers_to_delete: boolean,
     ): VueWrapper<InstanceType<typeof DropDownDisplayedEmbedded>> {
         return shallowMount(DropDownDisplayedEmbedded, {
             props: { isInFolderEmptyState: false },
@@ -65,7 +65,7 @@ describe("DropDownDisplayedEmbedded", () => {
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeTruthy();
@@ -79,7 +79,7 @@ describe("DropDownDisplayedEmbedded", () => {
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();

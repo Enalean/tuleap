@@ -26,7 +26,7 @@ import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter"
 
 const isLastReply = (
     host: PullRequestCommentComponentType,
-    comment: PullRequestCommentPresenter
+    comment: PullRequestCommentPresenter,
 ): boolean => {
     if (host.replies.length === 0) {
         return host.comment.id !== comment.id;
@@ -38,7 +38,7 @@ const isLastReply = (
 export const buildFooterForComment = (
     host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => {
     if (comment.type === TYPE_EVENT_PULLREQUEST_ACTION) {
         return html``;
@@ -68,6 +68,6 @@ export const buildFooterForComment = (
 
 export const getCommentFooter = (
     host: PullRequestCommentComponentType,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> =>
     buildFooterForComment(host, host.comment, gettext_provider);

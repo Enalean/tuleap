@@ -17,19 +17,21 @@ describe("PullRequestController -", () => {
 
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _PullRequestRestService_,
-            _SharedPropertiesService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            PullRequestRestService = _PullRequestRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _PullRequestRestService_,
+                _SharedPropertiesService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                PullRequestRestService = _PullRequestRestService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         $state = {
             go: () => {},

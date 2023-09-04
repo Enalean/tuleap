@@ -108,7 +108,7 @@ export default {
                     this.name,
                     this.comment,
                     this.base_baseline_id,
-                    this.compared_to_baseline_id
+                    this.compared_to_baseline_id,
                 );
                 this.$router.push({
                     name: "ComparisonPage",

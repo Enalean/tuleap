@@ -29,77 +29,81 @@ describe("MilestoneController", function () {
     beforeEach(function () {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function (
-            _$q_,
-            _$document_,
-            _$timeout_,
-            $rootScope,
-            _dragularService_,
-            $controller,
-            _BacklogService_,
-            _DroppedService_,
-            _MilestoneCollectionService_,
-            _BacklogItemSelectedService_
-        ) {
-            $q = _$q_;
-            $scope = $rootScope.$new();
-            $scope.milestone = {
-                id: 93849,
-                content: [],
-            };
-            $document = _$document_;
-            $timeout = _$timeout_;
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$document_,
+                _$timeout_,
+                $rootScope,
+                _dragularService_,
+                $controller,
+                _BacklogService_,
+                _DroppedService_,
+                _MilestoneCollectionService_,
+                _BacklogItemSelectedService_,
+            ) {
+                $q = _$q_;
+                $scope = $rootScope.$new();
+                $scope.milestone = {
+                    id: 93849,
+                    content: [],
+                };
+                $document = _$document_;
+                $timeout = _$timeout_;
 
-            dragularService = _dragularService_;
+                dragularService = _dragularService_;
 
-            BacklogService = _BacklogService_;
-            jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
-                () => {}
-            );
+                BacklogService = _BacklogService_;
+                jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
+                    () => {},
+                );
 
-            DroppedService = _DroppedService_;
-            jest.spyOn(DroppedService, "moveFromSubmilestoneToBacklog").mockImplementation(
-                () => {}
-            );
-            jest.spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone").mockImplementation(
-                () => {}
-            );
-            jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
-            jest.spyOn(DroppedService, "defineComparedToBeLastItem");
-            jest.spyOn(DroppedService, "reorderSubmilestone").mockImplementation(() => {});
+                DroppedService = _DroppedService_;
+                jest.spyOn(DroppedService, "moveFromSubmilestoneToBacklog").mockImplementation(
+                    () => {},
+                );
+                jest.spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone").mockImplementation(
+                    () => {},
+                );
+                jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
+                jest.spyOn(DroppedService, "defineComparedToBeLastItem");
+                jest.spyOn(DroppedService, "reorderSubmilestone").mockImplementation(() => {});
 
-            MilestoneCollectionService = _MilestoneCollectionService_;
-            jest.spyOn(MilestoneCollectionService, "refreshMilestone").mockImplementation(() => {});
-            jest.spyOn(
-                MilestoneCollectionService,
-                "removeBacklogItemsFromMilestoneContent"
-            ).mockImplementation(() => {});
-            jest.spyOn(
-                MilestoneCollectionService,
-                "addOrReorderBacklogItemsInMilestoneContent"
-            ).mockImplementation(() => {});
+                MilestoneCollectionService = _MilestoneCollectionService_;
+                jest.spyOn(MilestoneCollectionService, "refreshMilestone").mockImplementation(
+                    () => {},
+                );
+                jest.spyOn(
+                    MilestoneCollectionService,
+                    "removeBacklogItemsFromMilestoneContent",
+                ).mockImplementation(() => {});
+                jest.spyOn(
+                    MilestoneCollectionService,
+                    "addOrReorderBacklogItemsInMilestoneContent",
+                ).mockImplementation(() => {});
 
-            BacklogItemSelectedService = _BacklogItemSelectedService_;
-            jest.spyOn(
-                BacklogItemSelectedService,
-                "areThereMultipleSelectedBaklogItems"
-            ).mockImplementation(() => {});
-            jest.spyOn(
-                BacklogItemSelectedService,
-                "getCompactedSelectedBacklogItem"
-            ).mockImplementation(() => {});
+                BacklogItemSelectedService = _BacklogItemSelectedService_;
+                jest.spyOn(
+                    BacklogItemSelectedService,
+                    "areThereMultipleSelectedBaklogItems",
+                ).mockImplementation(() => {});
+                jest.spyOn(
+                    BacklogItemSelectedService,
+                    "getCompactedSelectedBacklogItem",
+                ).mockImplementation(() => {});
 
-            MilestoneController = $controller(BaseMilestoneController, {
-                $scope: $scope,
-                $timeout: $timeout,
-                $document: $document,
-                dragularService: dragularService,
-                BacklogService: BacklogService,
-                DroppedService: DroppedService,
-                MilestoneCollectionService: MilestoneCollectionService,
-                BacklogItemSelectedService: BacklogItemSelectedService,
-            });
-        });
+                MilestoneController = $controller(BaseMilestoneController, {
+                    $scope: $scope,
+                    $timeout: $timeout,
+                    $document: $document,
+                    dragularService: dragularService,
+                    BacklogService: BacklogService,
+                    DroppedService: DroppedService,
+                    MilestoneCollectionService: MilestoneCollectionService,
+                    BacklogItemSelectedService: BacklogItemSelectedService,
+                });
+            },
+        );
     });
 
     describe("toggleMilestone() -", () => {
@@ -134,7 +138,7 @@ describe("MilestoneController", function () {
 
                 var get_content_request = $q.defer();
                 MilestoneController.milestone.getContent.mockReturnValue(
-                    get_content_request.promise
+                    get_content_request.promise,
                 );
                 get_content_request.resolve({
                     results: [],
@@ -233,19 +237,19 @@ describe("MilestoneController", function () {
                     source_model,
                     initial_index,
                     target_model,
-                    target_index
+                    target_index,
                 );
 
                 expect(DroppedService.reorderSubmilestone).toHaveBeenCalledWith(
                     dropped_item_ids,
                     compared_to,
-                    source_milestone_id
+                    source_milestone_id,
                 );
             });
 
             it("when I move an item from one submilestone (e.g. a Sprint) to another submilestone, then the item will be moved using DroppedService and both the source and target submilestones' initial efforts will be updated", function () {
                 DroppedService.moveFromSubmilestoneToSubmilestone.mockReturnValue(
-                    move_request.promise
+                    move_request.promise,
                 );
                 var target_milestone_id = 14;
                 $target_element = createElement("ul", "submilestone");
@@ -261,7 +265,7 @@ describe("MilestoneController", function () {
                     source_model,
                     initial_index,
                     target_model,
-                    target_index
+                    target_index,
                 );
                 move_request.resolve();
                 $scope.$apply();
@@ -270,13 +274,13 @@ describe("MilestoneController", function () {
                     dropped_item_ids,
                     compared_to,
                     source_milestone_id,
-                    target_milestone_id
+                    target_milestone_id,
                 );
                 expect(MilestoneCollectionService.refreshMilestone).toHaveBeenCalledWith(
-                    source_milestone_id
+                    source_milestone_id,
                 );
                 expect(MilestoneCollectionService.refreshMilestone).toHaveBeenCalledWith(
-                    target_milestone_id
+                    target_milestone_id,
                 );
             });
 
@@ -294,7 +298,7 @@ describe("MilestoneController", function () {
                     source_model,
                     initial_index,
                     target_model,
-                    target_index
+                    target_index,
                 );
                 move_request.resolve();
                 $scope.$apply();
@@ -303,14 +307,14 @@ describe("MilestoneController", function () {
                     dropped_item_ids,
                     compared_to,
                     source_milestone_id,
-                    BacklogService.backlog
+                    BacklogService.backlog,
                 );
                 expect(BacklogService.addOrReorderBacklogItemsInBacklog).toHaveBeenCalledWith(
                     dropped_items,
-                    compared_to
+                    compared_to,
                 );
                 expect(MilestoneCollectionService.refreshMilestone).toHaveBeenCalledWith(
-                    source_milestone_id
+                    source_milestone_id,
                 );
             });
         });
@@ -332,7 +336,7 @@ describe("MilestoneController", function () {
 
                         var result = MilestoneController.dragularOptionsForMilestone().accepts(
                             $element_to_drop,
-                            $target_container_element
+                            $target_container_element,
                         );
 
                         expect(result).toBeTruthy();
@@ -344,7 +348,7 @@ describe("MilestoneController", function () {
 
                         var result = MilestoneController.dragularOptionsForMilestone().accepts(
                             $element_to_drop,
-                            $target_container_element
+                            $target_container_element,
                         );
 
                         expect(result).toBeFalsy();
@@ -355,7 +359,7 @@ describe("MilestoneController", function () {
 
                         var result = MilestoneController.dragularOptionsForMilestone().accepts(
                             $element_to_drop,
-                            $target_container_element
+                            $target_container_element,
                         );
 
                         expect(result).toBeFalsy();
@@ -383,7 +387,7 @@ describe("MilestoneController", function () {
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
                             $element_to_drag,
                             $container,
-                            $handle_element
+                            $handle_element,
                         );
 
                         expect(result).toBeTruthy();
@@ -399,7 +403,7 @@ describe("MilestoneController", function () {
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
                             $element_to_drag,
                             $container,
-                            $handle_element
+                            $handle_element,
                         );
 
                         expect(result).toBeFalsy();
@@ -411,7 +415,7 @@ describe("MilestoneController", function () {
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
                             $element_to_drag,
                             $container,
-                            $handle_element
+                            $handle_element,
                         );
 
                         expect(result).toBeFalsy();
@@ -435,12 +439,12 @@ describe("MilestoneController", function () {
             $scope.$apply();
 
             expect(
-                MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent
+                MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent,
             ).toHaveBeenCalledWith(milestone_id, backlog_items, compared_to);
             expect(DroppedService.reorderSubmilestone).toHaveBeenCalledWith(
                 [1, 2],
                 compared_to,
-                milestone_id
+                milestone_id,
             );
         });
     });
@@ -448,7 +452,7 @@ describe("MilestoneController", function () {
     describe("moveToTop() -", function () {
         beforeEach(function () {
             jest.spyOn(MilestoneController, "reorderMilestoneContent").mockReturnValue(
-                $q.defer().promise
+                $q.defer().promise,
             );
         });
 
@@ -463,13 +467,13 @@ describe("MilestoneController", function () {
             MilestoneController.moveToTop(moved_backlog_item);
 
             expect(
-                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
+                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems,
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
             expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(
                 1234,
                 [moved_backlog_item],
-                { direction: "before", item_id: 50 }
+                { direction: "before", item_id: 50 },
             );
         });
 
@@ -479,7 +483,7 @@ describe("MilestoneController", function () {
 
             BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
             BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
-                selected_backlog_items
+                selected_backlog_items,
             );
 
             MilestoneController.milestone = {
@@ -495,13 +499,13 @@ describe("MilestoneController", function () {
             MilestoneController.moveToTop(moved_backlog_item);
 
             expect(
-                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
+                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems,
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
             expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(
                 1234,
                 selected_backlog_items,
-                { direction: "before", item_id: 61 }
+                { direction: "before", item_id: 61 },
             );
         });
     });
@@ -513,7 +517,7 @@ describe("MilestoneController", function () {
             MilestoneController.get_content_promise = get_content_promise_request.promise;
 
             jest.spyOn(MilestoneController, "reorderMilestoneContent").mockReturnValue(
-                $q.defer().promise
+                $q.defer().promise,
             );
         });
 
@@ -534,13 +538,13 @@ describe("MilestoneController", function () {
             $scope.$apply();
 
             expect(
-                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
+                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems,
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
             expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(
                 1234,
                 [moved_backlog_item],
-                { direction: "after", item_id: 88 }
+                { direction: "after", item_id: 88 },
             );
         });
 
@@ -550,7 +554,7 @@ describe("MilestoneController", function () {
 
             BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
             BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
-                selected_backlog_items
+                selected_backlog_items,
             );
 
             MilestoneController.milestone = {
@@ -568,13 +572,13 @@ describe("MilestoneController", function () {
             $scope.$apply();
 
             expect(
-                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
+                BacklogItemSelectedService.areThereMultipleSelectedBaklogItems,
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
             expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(
                 1234,
                 selected_backlog_items,
-                { direction: "after", item_id: 88 }
+                { direction: "after", item_id: 88 },
             );
         });
     });

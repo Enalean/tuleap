@@ -50,7 +50,7 @@ const props = defineProps<{
 
 const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
 const user_locale: string = strictInject(USER_LOCALE_KEY);
 

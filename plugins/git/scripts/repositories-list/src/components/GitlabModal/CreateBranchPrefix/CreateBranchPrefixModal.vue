@@ -152,19 +152,19 @@ export default class CreateBranchPrefixModal extends Vue {
         if (create_branch_prefix.length === 0) {
             return this.$gettextInterpolate(
                 this.$gettext(
-                    "Create branch prefix for integration %{repository} has been successfully cleared."
+                    "Create branch prefix for integration %{repository} has been successfully cleared.",
                 ),
-                { repository: this.create_branch_prefix_repository.label }
+                { repository: this.create_branch_prefix_repository.label },
             );
         }
         return this.$gettextInterpolate(
             this.$gettext(
-                "Create branch prefix for integration %{repository} has been successfully updated to '%{branch_prefix}'!"
+                "Create branch prefix for integration %{repository} has been successfully updated to '%{branch_prefix}'!",
             ),
             {
                 branch_prefix: create_branch_prefix,
                 repository: this.create_branch_prefix_repository.label,
-            }
+            },
         );
     }
 
@@ -184,7 +184,7 @@ export default class CreateBranchPrefixModal extends Vue {
             }
 
             const success_message = this.getSuccessMessage(
-                updated_integration.create_branch_prefix
+                updated_integration.create_branch_prefix,
             );
             this.$store.commit("setSuccessMessage", success_message);
         } catch (rest_error) {

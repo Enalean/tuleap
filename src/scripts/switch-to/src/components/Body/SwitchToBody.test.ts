@@ -42,7 +42,7 @@ describe("SwitchToBody", () => {
                             filter_value: "",
                         },
                     },
-                })
+                }),
             ),
         });
 
@@ -66,7 +66,7 @@ describe("SwitchToBody", () => {
                             filter_value: "Lorem",
                         },
                     },
-                })
+                }),
             ),
         });
 
@@ -89,7 +89,7 @@ describe("SwitchToBody", () => {
                             projects: [] as Project[],
                         },
                     },
-                })
+                }),
             ),
         });
 
@@ -111,7 +111,7 @@ describe("SwitchToBody", () => {
                             projects: [] as Project[],
                         },
                     },
-                })
+                }),
             ),
         });
 

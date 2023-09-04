@@ -131,7 +131,7 @@ export default class AccessTokenFormModal extends Vue {
         }
         return this.repository.gitlab_data.gitlab_repository_url.replace(
             this.repository.normalized_path,
-            ""
+            "",
         );
     }
 
@@ -141,7 +141,7 @@ export default class AccessTokenFormModal extends Vue {
 
     tokenAPIInformationMessage(): string {
         return this.$gettext(
-            "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests. It's also needed to be able to extract Tuleap references from GitLab tag message."
+            "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests. It's also needed to be able to extract Tuleap references from GitLab tag message.",
         );
     }
 
@@ -191,7 +191,7 @@ export default class AccessTokenFormModal extends Vue {
             });
         } catch (e) {
             this.error_message = this.$gettext(
-                "Submitted token is invalid to access to this repository on this GitLab server."
+                "Submitted token is invalid to access to this repository on this GitLab server.",
             );
         } finally {
             this.is_checking_validity_of_new_token = false;

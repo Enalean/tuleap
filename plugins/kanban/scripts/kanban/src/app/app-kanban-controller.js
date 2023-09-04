@@ -65,7 +65,7 @@ function KanbanCtrl(
     KanbanFilterValue,
     TlpModalService,
     RestErrorService,
-    FilterTrackerReportService
+    FilterTrackerReportService,
 ) {
     var self = this,
         limit = 50,
@@ -183,7 +183,7 @@ function KanbanCtrl(
         UserPreferencesService.setPreference(
             user_id,
             "agiledashboard_kanban_item_view_mode_" + kanban.id,
-            SharedPropertiesService.getViewMode()
+            SharedPropertiesService.getViewMode(),
         );
 
         self.backlog.content.forEach(forceIsCollapsed);
@@ -372,8 +372,8 @@ function KanbanCtrl(
             .catch(() => {
                 setError(
                     gettextCatalog.getString(
-                        "There was an error while loading the Edit Kanban modal. Please check your network connection."
-                    )
+                        "There was an error while loading the Edit Kanban modal. Please check your network connection.",
+                    ),
                 );
             })
             .finally(() => {
@@ -397,8 +397,8 @@ function KanbanCtrl(
             .catch(() => {
                 setError(
                     gettextCatalog.getString(
-                        "There was an error while loading the Reports modal. Please check your network connection."
-                    )
+                        "There was an error while loading the Reports modal. Please check your network connection.",
+                    ),
                 );
             })
             .finally(() => {
@@ -466,7 +466,7 @@ function KanbanCtrl(
             self.kanban.tracker_id,
             null,
             callback,
-            []
+            [],
         );
     }
 
@@ -592,7 +592,7 @@ function KanbanCtrl(
             (item_representation) => {
                 setItemAsCreated(item, item_representation);
             },
-            reload
+            reload,
         );
     }
 
@@ -620,7 +620,7 @@ function KanbanCtrl(
             (item_representation) => {
                 setItemAsCreated(item, item_representation);
             },
-            reload
+            reload,
         );
     }
 
@@ -642,7 +642,7 @@ function KanbanCtrl(
                 SharedPropertiesService.getUserId(),
                 kanban.tracker_id,
                 item.id,
-                callback
+                callback,
             );
         }
     }

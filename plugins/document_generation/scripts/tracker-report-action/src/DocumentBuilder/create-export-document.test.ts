@@ -684,7 +684,7 @@ describe("Create ArtifactValues Collection", () => {
             },
         ];
         vi.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
-            report_artifacts
+            report_artifacts,
         );
 
         const report = await createExportDocument(
@@ -703,7 +703,7 @@ describe("Create ArtifactValues Collection", () => {
                     is_system: true,
                     is_visible: true,
                 },
-            ]
+            ],
         );
 
         expect(report.name).toBe("tracker_shortname - report_name");

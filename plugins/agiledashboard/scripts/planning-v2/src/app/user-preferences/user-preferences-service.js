@@ -33,7 +33,7 @@ function UserPreferencesService($q) {
             patch(encodeURI(`/api/v1/users/${user_id}/preferences`), {
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ key, value }),
-            })
+            }),
         );
     }
 }

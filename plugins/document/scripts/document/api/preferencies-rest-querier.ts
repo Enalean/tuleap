@@ -23,7 +23,7 @@ import { del, get, patch } from "@tuleap/tlp-fetch";
 export async function patchUserPreferenciesForFolderInProject(
     user_id: number,
     project_id: number,
-    folder_id: number
+    folder_id: number,
 ): Promise<void> {
     await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
@@ -38,14 +38,14 @@ export async function patchUserPreferenciesForFolderInProject(
 
 export async function deleteUserPreference(user_id: number, key: string): Promise<void> {
     await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
+        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`,
     );
 }
 
 export async function deleteUserPreferenciesForFolderInProject(
     user_id: number,
     project_id: number,
-    folder_id: number
+    folder_id: number,
 ): Promise<void> {
     const key = `plugin_docman_hide_${project_id}_${folder_id}`;
 
@@ -55,7 +55,7 @@ export async function deleteUserPreferenciesForFolderInProject(
 export async function setNarrowModeForEmbeddedDisplay(
     user_id: number,
     project_id: number,
-    document_id: number
+    document_id: number,
 ): Promise<void> {
     await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
@@ -71,26 +71,26 @@ export async function setNarrowModeForEmbeddedDisplay(
 export async function removeUserPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
-    document_id: number
+    document_id: number,
 ): Promise<void> {
     const key = `plugin_docman_display_embedded_${project_id}_${document_id}`;
 
     await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
+        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`,
     );
 }
 
 export async function getPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
-    document_id: number
+    document_id: number,
 ): Promise<"narrow" | false> {
     const escaped_user_id = encodeURIComponent(user_id);
     const escaped_preference_key = encodeURIComponent(
-        `plugin_docman_display_embedded_${project_id}_${document_id}`
+        `plugin_docman_display_embedded_${project_id}_${document_id}`,
     );
     const response = await get(
-        `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`
+        `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`,
     );
 
     return (await response.json()).value;

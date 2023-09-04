@@ -22,7 +22,7 @@ import { postFormWithTextResponse, uri } from "@tuleap/fetch-result";
 
 export const fetchCommonMarkPreview = (
     project_id: number,
-    commonmark: string
+    commonmark: string,
 ): ResultAsync<string, unknown> => {
     const form_data = new FormData();
     form_data.set("content", commonmark);

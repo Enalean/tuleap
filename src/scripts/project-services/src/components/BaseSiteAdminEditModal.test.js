@@ -59,7 +59,7 @@ describe(`BaseSiteAdminEditModal`, () => {
             },
             {
                 "edit-modal": modal,
-            }
+            },
         );
     });
 

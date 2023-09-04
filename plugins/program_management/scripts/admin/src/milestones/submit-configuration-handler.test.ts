@@ -35,7 +35,7 @@ describe(`submitConfigurationHandler`, () => {
         const createDocument = (): Document => document.implementation.createHTMLDocument();
 
         expect(() => submitConfigurationHandler(createDocument(), gettext, program_id)).not.toThrow(
-            Error
+            Error,
         );
     });
 

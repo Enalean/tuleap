@@ -22,12 +22,12 @@ import { POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS } from "@tuleap/potentia
 export function markPotentiallyDangerousBidirectionalUnicodeText(html_content: string): string {
     const regex_potentially_dangerous_bidirectional_characters = new RegExp(
         "[" + POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]",
-        "g"
+        "g",
     );
 
     return html_content.replaceAll(
         regex_potentially_dangerous_bidirectional_characters,
-        replaceMatchedChar
+        replaceMatchedChar,
     );
 }
 

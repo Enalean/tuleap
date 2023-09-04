@@ -91,7 +91,7 @@ export default {
                 } else if (old_title) {
                     document.title = base_title;
                 }
-            }
+            },
         );
 
         this.$store.commit("setRootTitle", this.$gettext("Documents"));

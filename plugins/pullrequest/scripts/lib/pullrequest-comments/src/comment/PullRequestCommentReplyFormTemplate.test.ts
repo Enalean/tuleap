@@ -103,7 +103,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         expect(reply_button.hasAttribute("disabled")).toBe(true);
         expect(spinner).not.toBeNull();
         expect(
-            selectOrThrow(target, "[data-test=button-cancel-reply]").hasAttribute("disabled")
+            selectOrThrow(target, "[data-test=button-cancel-reply]").hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -120,7 +120,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         render(host, target);
 
         expect(
-            selectOrThrow(target, "[data-test=button-save-reply]").hasAttribute("disabled")
+            selectOrThrow(target, "[data-test=button-save-reply]").hasAttribute("disabled"),
         ).toBe(true);
     });
 
@@ -152,7 +152,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         }
 
         writing_zone.dispatchEvent(
-            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
         );
 
         expect(controller.handleWritingZoneContentChange).toHaveBeenCalledOnce();

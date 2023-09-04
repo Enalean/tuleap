@@ -331,7 +331,7 @@ describe("data-formator", () => {
         };
 
         await expect(() => formatData(export_settings)).rejects.toThrowError(
-            "Artifact 76 representation not found in collection."
+            "Artifact 76 representation not found in collection.",
         );
     });
     it("throws an error if third level artifact not found", async (): Promise<void> => {
@@ -373,7 +373,7 @@ describe("data-formator", () => {
         };
 
         await expect(() => formatData(export_settings)).rejects.toThrowError(
-            "Artifact 82 representation not found in collection."
+            "Artifact 82 representation not found in collection.",
         );
     });
 });

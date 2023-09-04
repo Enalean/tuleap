@@ -24,7 +24,7 @@ export const NewInlineCommentContextBuilder = {
     fromContext: (
         file_path: string,
         unidiff_offset: number,
-        position: InlineCommentPosition
+        position: InlineCommentPosition,
     ): InlineCommentContext => ({
         file_path,
         unidiff_offset,

@@ -42,7 +42,7 @@ export interface LinkUserStoriesToFeature {
 
 export async function handleDrop(
     context: ActionContext<State, State>,
-    handle_drop: HandleDropContextWithProgramId
+    handle_drop: HandleDropContextWithProgramId,
 ): Promise<void> {
     const plan_in_program_increment_id = handle_drop.target_dropzone.dataset.programIncrementId;
     const remove_from_program_increment_id = handle_drop.dropped_element.dataset.programIncrementId;
@@ -51,7 +51,7 @@ export async function handleDrop(
         await moveFeatureFromBacklogToProgramIncrement(
             context,
             handle_drop,
-            parseInt(plan_in_program_increment_id, 10)
+            parseInt(plan_in_program_increment_id, 10),
         );
         return;
     }
@@ -60,7 +60,7 @@ export async function handleDrop(
         await moveFeatureFromProgramIncrementToBacklog(
             context,
             handle_drop,
-            parseInt(remove_from_program_increment_id, 10)
+            parseInt(remove_from_program_increment_id, 10),
         );
         return;
     }
@@ -74,7 +74,7 @@ export async function handleDrop(
             context,
             handle_drop,
             parseInt(plan_in_program_increment_id, 10),
-            parseInt(remove_from_program_increment_id, 10)
+            parseInt(remove_from_program_increment_id, 10),
         );
         return;
     }
@@ -87,7 +87,7 @@ export async function handleDrop(
         await reorderFeatureInSameProgramIncrement(
             context,
             handle_drop,
-            parseInt(plan_in_program_increment_id, 10)
+            parseInt(plan_in_program_increment_id, 10),
         );
 
         return;
@@ -100,7 +100,7 @@ export async function handleDrop(
 
 export async function linkUserStoriesToBePlannedElements(
     context: ActionContext<State, State>,
-    artifact_id: number
+    artifact_id: number,
 ): Promise<UserStory[]> {
     const user_stories = await getLinkedUserStoriesToFeature(artifact_id);
     context.commit("linkUserStoriesToBePlannedElement", {
@@ -113,10 +113,10 @@ export async function linkUserStoriesToBePlannedElements(
 
 export async function linkUserStoriesToFeature(
     context: ActionContext<State, State>,
-    link_user_stories_to_feature: LinkUserStoriesToFeature
+    link_user_stories_to_feature: LinkUserStoriesToFeature,
 ): Promise<UserStory[]> {
     const user_stories = await getLinkedUserStoriesToFeature(
-        link_user_stories_to_feature.artifact_id
+        link_user_stories_to_feature.artifact_id,
     );
     context.commit("linkUserStoriesToFeature", {
         user_stories: user_stories,
@@ -129,7 +129,7 @@ export async function linkUserStoriesToFeature(
 
 export async function retrieveToBePlannedElement(
     context: ActionContext<State, State>,
-    program_id: number
+    program_id: number,
 ): Promise<void> {
     const to_be_planned_elements = await getToBePlannedElements(program_id);
     context.commit("setToBePlannedElements", to_be_planned_elements);
@@ -137,7 +137,7 @@ export async function retrieveToBePlannedElement(
 
 export async function getFeatureAndStoreInProgramIncrement(
     context: ActionContext<State, State>,
-    program_increment: ProgramIncrement
+    program_increment: ProgramIncrement,
 ): Promise<Feature[]> {
     const features = await getFeatures(program_increment.id);
     context.commit("addProgramIncrement", { ...program_increment, features });

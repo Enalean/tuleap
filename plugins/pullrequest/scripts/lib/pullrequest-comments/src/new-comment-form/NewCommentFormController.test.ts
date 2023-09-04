@@ -48,7 +48,7 @@ describe("NewCommentFormController", () => {
         host_content: HTMLElement;
 
     const getController = (
-        new_comment_saver: SaveNewComment = SaveNewCommentStub.withDefault()
+        new_comment_saver: SaveNewComment = SaveNewCommentStub.withDefault(),
     ): ControlNewCommentForm =>
         NewCommentFormController(
             new_comment_saver,
@@ -56,7 +56,7 @@ describe("NewCommentFormController", () => {
             config,
             post_submit_callback,
             on_error_callback,
-            on_cancel_callback
+            on_cancel_callback,
         );
 
     const getEmptyPresenter = (): NewCommentFormPresenter =>
@@ -87,7 +87,7 @@ describe("NewCommentFormController", () => {
                 vi.advanceTimersToNextTimer();
 
                 expect(host.presenter.is_cancel_allowed).toStrictEqual(expected_value);
-            }
+            },
         );
     });
 
@@ -110,7 +110,7 @@ describe("NewCommentFormController", () => {
             getController().handleWritingZoneContentChange(host, new_comment);
 
             expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.buildWithUpdatedComment(getEmptyPresenter(), new_comment)
+                NewCommentFormPresenter.buildWithUpdatedComment(getEmptyPresenter(), new_comment),
             );
         });
     });
@@ -123,7 +123,7 @@ describe("NewCommentFormController", () => {
             const host = {
                 presenter: NewCommentFormPresenter.buildWithUpdatedComment(
                     getEmptyPresenter(),
-                    comment_content
+                    comment_content,
                 ),
                 content: () => host_content,
                 writing_zone_controller: {
@@ -148,7 +148,7 @@ describe("NewCommentFormController", () => {
             Then it should call the on_error_callback with the Fault`, async () => {
             const presenter = NewCommentFormPresenter.buildWithUpdatedComment(
                 getEmptyPresenter(),
-                "This is a comment"
+                "This is a comment",
             );
             const host = {
                 presenter,
@@ -156,13 +156,13 @@ describe("NewCommentFormController", () => {
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
 
             await getController(SaveNewCommentStub.withFault(tuleap_api_fault)).saveNewComment(
-                host
+                host,
             );
 
             expect(on_error_callback).toHaveBeenCalledOnce();
             expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
             expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.buildNotSavingComment(presenter)
+                NewCommentFormPresenter.buildNotSavingComment(presenter),
             );
         });
     });

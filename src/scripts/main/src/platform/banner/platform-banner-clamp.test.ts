@@ -47,11 +47,11 @@ describe("Platform banner clamp", () => {
         const local_document_with_banner = getLocalDocumentWithPlatformBannerMessage();
         allowUnclampingPlatformBannerMessage(local_document_with_banner.document);
         expect(local_document_with_banner.message.classList).toContain(
-            PLATFORM_BANNER_MESSAGE_CLAMP_CLASS
+            PLATFORM_BANNER_MESSAGE_CLAMP_CLASS,
         );
         local_document_with_banner.message.click();
         expect(local_document_with_banner.message.classList).not.toContain(
-            PLATFORM_BANNER_MESSAGE_CLAMP_CLASS
+            PLATFORM_BANNER_MESSAGE_CLAMP_CLASS,
         );
     });
 
@@ -73,7 +73,7 @@ describe("Platform banner clamp", () => {
         allowUnclampingPlatformBannerMessage(local_document_with_banner.document);
 
         expect(banner_message.classList).not.toContain(
-            PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+            PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
         );
     });
 
@@ -87,7 +87,7 @@ describe("Platform banner clamp", () => {
         allowUnclampingPlatformBannerMessage(local_document_with_banner.document);
 
         expect(banner_message.classList).not.toContain(
-            PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+            PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
         );
 
         jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
@@ -105,7 +105,7 @@ describe("Platform banner clamp", () => {
             allowUnclampingPlatformBannerMessage(local_document_with_banner.document);
 
             expect(banner_message.classList).not.toContain(
-                PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+                PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
             );
 
             jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
@@ -116,13 +116,13 @@ describe("Platform banner clamp", () => {
                 banner_message.parentElement.parentElement !== null
             ) {
                 banner_message.parentElement.parentElement.classList.add(
-                    "new-class-on-the-platform-banner"
+                    "new-class-on-the-platform-banner",
                 );
             }
 
             setTimeout(() => {
                 expect(banner_message.classList).toContain(
-                    PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+                    PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
                 );
                 done();
             });

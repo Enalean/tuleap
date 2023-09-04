@@ -119,7 +119,7 @@ const should_display_download_button = computed(
     (): boolean =>
         isFile(props.item) &&
         props.item.file_properties !== null &&
-        (props.item.file_properties.open_href || "") !== ""
+        (props.item.file_properties.open_href || "") !== "",
 );
 
 const should_display_new_version_button = computed(
@@ -128,16 +128,16 @@ const should_display_new_version_button = computed(
         !is_item_a_folder.value &&
         !isEmpty(props.item) &&
         props.item.user_can_write &&
-        !is_item_a_folder.value
+        !is_item_a_folder.value,
 );
 
 const should_display_update_properties = computed((): boolean =>
-    canUpdateProperties(forbid_writers_to_update.value, props.item)
+    canUpdateProperties(forbid_writers_to_update.value, props.item),
 );
 
 const should_display_delete = computed(
     (): boolean =>
-        is_deletion_allowed.value && canDelete(forbid_writers_to_delete.value, props.item)
+        is_deletion_allowed.value && canDelete(forbid_writers_to_delete.value, props.item),
 );
 
 defineExpose({

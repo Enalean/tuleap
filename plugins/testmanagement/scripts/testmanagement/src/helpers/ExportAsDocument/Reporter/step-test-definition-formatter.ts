@@ -29,7 +29,7 @@ import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../
 export function buildStepDefinitionFunction(): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
     return (
         base_url: string,
-        value: ArtifactReportResponseStepDefinitionFieldValue
+        value: ArtifactReportResponseStepDefinitionFieldValue,
     ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
         const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
         for (const step of value.value) {
@@ -60,11 +60,11 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
 
 export function buildStepDefinitionEnhancedWithResultsFunction(
     artifact: ArtifactFromReport,
-    execution_for_test: TestExecutionResponse | null
+    execution_for_test: TestExecutionResponse | null,
 ): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
     return (
         base_url: string,
-        value: ArtifactReportResponseStepDefinitionFieldValue
+        value: ArtifactReportResponseStepDefinitionFieldValue,
     ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
         const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
         let test_status = null;

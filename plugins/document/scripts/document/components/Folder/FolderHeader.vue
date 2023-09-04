@@ -123,36 +123,36 @@ export default {
             import(
                 /* webpackChunkName: "document-confirm-item-deletion-modal" */
                 "./DropDown/Delete/ModalConfirmDeletion.vue"
-            )
+            ),
         ),
         "permissions-update-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue"
-            )
+            ),
         ),
         "download-folder-size-threshold-exceeded-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
-            )
+            ),
         ),
         "download-folder-size-warning-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-download-folder-size-warning-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
-            )
+            ),
         ),
         "file-changelog-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "file-changelog-modal" */
                 "./DropDown/NewVersion/FileVersionChangelogModal.vue"
-            )
+            ),
         ),
         "file-creation-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "file-creation-modal" */
                 "./DropDown/NewDocument/FileCreationModal.vue"
-            )
+            ),
         ),
     },
     data() {
@@ -193,13 +193,13 @@ export default {
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         emitter.on(
             "show-create-new-version-modal-for-empty",
-            this.showCreateNewVersionModalForEmpty
+            this.showCreateNewVersionModalForEmpty,
         );
         emitter.on("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.on(
             "show-max-archive-size-threshold-exceeded-modal",
-            this.showMaxArchiveSizeThresholdExceededErrorModal
+            this.showMaxArchiveSizeThresholdExceededErrorModal,
         );
         emitter.on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
         emitter.on("show-changelog-modal", this.showChangelogModal);
@@ -210,13 +210,13 @@ export default {
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         emitter.off(
             "show-create-new-version-modal-for-empty",
-            this.showCreateNewVersionModalForEmpty
+            this.showCreateNewVersionModalForEmpty,
         );
         emitter.off("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.off(
             "show-max-archive-size-threshold-exceeded-modal",
-            this.showMaxArchiveSizeThresholdExceededErrorModal
+            this.showMaxArchiveSizeThresholdExceededErrorModal,
         );
         emitter.off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
         emitter.off("show-changelog-modal", this.showChangelogModal);
@@ -229,7 +229,7 @@ export default {
             this.shown_new_version_modal = defineAsyncComponent(() =>
                 import(
                     /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
-                )
+                ),
             );
         },
         showCreateNewItemVersionModal(event) {
@@ -240,28 +240,28 @@ export default {
                     this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-file-version-modal" */ "./DropDown/NewVersion/CreateNewVersionFileModal.vue"
-                        )
+                        ),
                     );
                     break;
                 case TYPE_EMBEDDED:
                     this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-embedded-version-file-modal" */ "./DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                        )
+                        ),
                     );
                     break;
                 case TYPE_WIKI:
                     this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-wiki-version-modal" */ "./DropDown/NewVersion/CreateNewVersionWikiModal.vue"
-                        )
+                        ),
                     );
                     break;
                 case TYPE_LINK:
                     this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-link-version-modal" */ "./DropDown/NewVersion/CreateNewVersionLinkModal.vue"
-                        )
+                        ),
                     );
                     break;
                 default:
@@ -283,13 +283,13 @@ export default {
                 this.shown_update_properties_modal = defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "update-properties-modal" */ "./DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                    )
+                    ),
                 );
             } else {
                 this.shown_update_properties_modal = defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "update-folder-properties-modal" */ "./DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
-                    )
+                    ),
                 );
             }
         },

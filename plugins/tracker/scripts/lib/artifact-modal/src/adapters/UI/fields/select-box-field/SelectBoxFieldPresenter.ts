@@ -70,7 +70,7 @@ const buildOptionPresenter = (value: ListFieldItem): SelectBoxOptionPresenter =>
 
 function buildSelectBoxOptions(
     field: ListFieldStructure,
-    allowed_bind_value_ids: ReadonlyArray<BindValueId>
+    allowed_bind_value_ids: ReadonlyArray<BindValueId>,
 ): ReadonlyArray<SelectBoxOptionPresenter> {
     const presenters = [];
     for (const value of field.values) {
@@ -86,7 +86,7 @@ export const SelectBoxFieldPresenter = {
     fromField: (
         field: ListFieldStructure,
         allowed_bind_value_ids: ReadonlyArray<BindValueId>,
-        is_field_disabled: boolean
+        is_field_disabled: boolean,
     ): SelectBoxFieldPresenter => ({
         field_id: field.field_id,
         field_label: field.label,

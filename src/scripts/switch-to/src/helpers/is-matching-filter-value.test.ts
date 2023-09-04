@@ -66,9 +66,9 @@ describe("isMatchingFilterValue", () => {
             expect(
                 isMatchingFilterValue(
                     `Lorem fo${special_char}obar ipsum`,
-                    `nomatch fo${special_char}obar`
-                )
+                    `nomatch fo${special_char}obar`,
+                ),
             ).toBe(true);
-        }
+        },
     );
 });

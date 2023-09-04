@@ -39,13 +39,13 @@ describe(`TuleapAPIFault`, () => {
             status_code: number,
             message: string,
             expected_forbidden: boolean,
-            expected_not_found: boolean
+            expected_not_found: boolean,
         ) => {
             const fault = TuleapAPIFault.fromCodeAndMessage(status_code, message);
             expect(isFault(fault)).toBe(true);
             expect(isTuleapAPIFault(fault)).toBe(true);
             expect(isForbidden(fault)).toBe(expected_forbidden);
             expect(isNotFound(fault)).toBe(expected_not_found);
-        }
+        },
     );
 });

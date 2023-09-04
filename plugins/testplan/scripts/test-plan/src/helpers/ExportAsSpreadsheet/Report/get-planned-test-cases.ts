@@ -41,10 +41,10 @@ export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
 export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
     gettext_provider: VueGettextProvider,
     backlog_items: ReadonlyArray<BacklogItem>,
-    campaigns: ReadonlyArray<Campaign>
+    campaigns: ReadonlyArray<Campaign>,
 ): PlannedTestCaseAssociatedWithTestExecAndCampaign[] {
     const campaigns_indexed_by_id: Map<string, Campaign> = new Map(
-        campaigns.map((campaign: Campaign) => [String(campaign.id), campaign])
+        campaigns.map((campaign: Campaign) => [String(campaign.id), campaign]),
     );
 
     const planned_test_defs = extractUniquePlannedTestCases(backlog_items);
@@ -59,15 +59,15 @@ export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
             }
 
             return a.test_campaign_defining_status.id - b.test_campaign_defining_status.id;
-        }
+        },
     );
 
     return sorted_planned_test_defs.map(
         (
-            test_case: PlannedTestDefinitionFromREST
+            test_case: PlannedTestDefinitionFromREST,
         ): PlannedTestCaseAssociatedWithTestExecAndCampaign => {
             const campaign = campaigns_indexed_by_id.get(
-                String(test_case.test_campaign_defining_status.id)
+                String(test_case.test_campaign_defining_status.id),
             );
 
             return {
@@ -79,20 +79,20 @@ export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
                 test_exec_status: test_case.test_status,
                 test_exec_internationalized_status: getInternationalizedTestStatus(
                     gettext_provider,
-                    test_case.test_status
+                    test_case.test_status,
                 ),
                 test_exec_runner:
                     test_case.test_execution_used_to_define_status.submitted_by.display_name,
                 test_exec_date: new Date(
-                    test_case.test_execution_used_to_define_status.submitted_on
+                    test_case.test_execution_used_to_define_status.submitted_on,
                 ),
             };
-        }
+        },
     );
 }
 
 function extractUniquePlannedTestCases(
-    backlog_items: ReadonlyArray<BacklogItem>
+    backlog_items: ReadonlyArray<BacklogItem>,
 ): PlannedTestDefinitionFromREST[] {
     const test_cases = backlog_items.flatMap(
         (backlog_item: BacklogItem): PlannedTestDefinitionFromREST[] => {
@@ -102,22 +102,22 @@ function extractUniquePlannedTestCases(
                         return [test_def];
                     }
                     return [];
-                }
+                },
             );
-        }
+        },
     );
 
     return test_cases.filter(
         (
             test_case: PlannedTestDefinitionFromREST,
             index: number,
-            all_test_cases: PlannedTestDefinitionFromREST[]
+            all_test_cases: PlannedTestDefinitionFromREST[],
         ) => {
             return (
                 all_test_cases.findIndex(
-                    (value: PlannedTestDefinitionFromREST) => value.id === test_case.id
+                    (value: PlannedTestDefinitionFromREST) => value.id === test_case.id,
                 ) === index
             );
-        }
+        },
     );
 }

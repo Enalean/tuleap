@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function canNotCreatePlanningPopover(): void {
     const trigger = document.getElementById(
-        "agiledashboard-administration-cannot-create-planning-popover-trigger"
+        "agiledashboard-administration-cannot-create-planning-popover-trigger",
     );
     if (!trigger) {
         return;
     }
 
     const popover = document.getElementById(
-        "agiledashboard-administration-cannot-create-planning-popover"
+        "agiledashboard-administration-cannot-create-planning-popover",
     );
     if (!popover) {
         return;
@@ -61,7 +61,7 @@ export function displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce():
     }
 
     const explicit_backlog_usage_button_with_modal = document.getElementById(
-        "scrum-configuration-edit-options-button"
+        "scrum-configuration-edit-options-button",
     );
     if (
         !explicit_backlog_usage_button_with_modal ||
@@ -84,7 +84,7 @@ export function displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce():
 
         submit_button.classList.add("scrum-administration-submit-hidden");
         explicit_backlog_usage_button_with_modal.classList.remove(
-            "scrum-administration-submit-hidden"
+            "scrum-administration-submit-hidden",
         );
     });
 
@@ -109,6 +109,6 @@ export function addModalListeners(explicit_backlog_usage_button_with_modal: HTML
                 legacy_mode_text.classList.remove("scrum-administration-submit-hidden");
                 explicit_mode_text.classList.add("scrum-administration-submit-hidden");
             }
-        }
+        },
     );
 }

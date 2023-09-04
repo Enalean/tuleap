@@ -48,24 +48,24 @@ describe(`AlreadyLinkedVerifier`, () => {
 
     it(`returns false when the given artifact was never linked`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(602, LinkTypeStub.buildUntyped())
+            LinkedArtifactStub.withIdAndType(602, LinkTypeStub.buildUntyped()),
         );
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(211, LinkTypeStub.buildUntyped())
+            NewLinkStub.withIdAndType(211, LinkTypeStub.buildUntyped()),
         );
         expect(isAlreadyLinked()).toBe(false);
     });
 
     it(`returns true when there is a new link for the same artifact id`, () => {
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped())
+            NewLinkStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped()),
         );
         expect(isAlreadyLinked()).toBe(true);
     });
 
     it(`returns true when there is an existing link for the same artifact id`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped())
+            LinkedArtifactStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped()),
         );
         expect(isAlreadyLinked()).toBe(true);
     });

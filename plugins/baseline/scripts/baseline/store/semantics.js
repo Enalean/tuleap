@@ -65,7 +65,7 @@ export default {
                     continue;
                 }
                 const matching_semantic_field = tracker.fields.filter(
-                    (field) => field.field_id === semantic_field_id
+                    (field) => field.field_id === semantic_field_id,
                 );
                 if (matching_semantic_field.length === 0) {
                     continue;
@@ -93,7 +93,7 @@ export default {
                 !Object.prototype.hasOwnProperty.call(state.fields_by_tracker_id, tracker_id) ||
                 !Object.prototype.hasOwnProperty.call(
                     state.fields_by_tracker_id[tracker_id],
-                    semantic
+                    semantic,
                 )
             ) {
                 return null;

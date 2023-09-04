@@ -24,7 +24,7 @@ import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 
 export const AlreadyLinkedVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
-    new_links_retriever: RetrieveNewLinks
+    new_links_retriever: RetrieveNewLinks,
 ): VerifyIsAlreadyLinked => ({
     isAlreadyLinked(linkable_artifact: LinkableArtifact): boolean {
         const has_non_removed_existing_link = links_retriever

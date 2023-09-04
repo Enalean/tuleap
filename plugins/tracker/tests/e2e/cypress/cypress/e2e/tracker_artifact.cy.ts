@@ -338,7 +338,7 @@ describe("Tracker artifacts", function () {
                 });
 
             cy.get("[data-test=artifact_followup_comment]").type(
-                "This my freshly created artifact. Hope nobody has edited it in the meantime!"
+                "This my freshly created artifact. Hope nobody has edited it in the meantime!",
             );
 
             submitAndStay();

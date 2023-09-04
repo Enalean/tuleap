@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const RootComponent = Vue.extend(GitPermissions);

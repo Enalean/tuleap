@@ -67,7 +67,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["2", "3", "4"]);
     });
 
@@ -103,7 +103,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["3", "4"]);
     });
 
@@ -139,7 +139,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["", "1", "3", "4"]);
     });
 
@@ -175,7 +175,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["", "1", "4"]);
     });
 
@@ -211,7 +211,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["", "2", "3", "4"]);
     });
 
@@ -247,7 +247,7 @@ describe("App", () => {
         expect(
             Array.from(select.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(["", "2", "4"]);
     });
 

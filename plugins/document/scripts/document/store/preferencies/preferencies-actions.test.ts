@@ -87,7 +87,7 @@ describe("displayEmbeddedInLargeMode", () => {
         } as unknown as ActionContext<PreferenciesState, RootState>;
 
         jest.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
-            Promise.resolve()
+            Promise.resolve(),
         );
     });
 
@@ -115,7 +115,7 @@ describe("displayEmbeddedInNarrowMode", () => {
         } as unknown as ActionContext<PreferenciesState, RootState>;
 
         jest.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
-            Promise.resolve()
+            Promise.resolve(),
         );
     });
 

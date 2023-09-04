@@ -49,7 +49,7 @@ const error_message = computed((): string => {
     return $ngettext(
         "The item you have dropped is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time.",
         "The items you have dropped contain an item which is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time.",
-        nb_dropped_files.value
+        nb_dropped_files.value,
     );
 });
 </script>

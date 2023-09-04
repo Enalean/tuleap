@@ -31,7 +31,7 @@ export class ListOptionsChangesObserver {
         private readonly items_map_manager: ItemsMapManager,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly selection_manager: SelectionManager,
-        private readonly event_manager: EventManager
+        private readonly event_manager: EventManager,
     ) {
         this.observer = new MutationObserver(this.refreshListPickerOnOptionsChanges());
     }
@@ -67,7 +67,7 @@ export class ListOptionsChangesObserver {
             (mutation) =>
                 mutation.type === "childList" ||
                 (mutation.type === "attributes" &&
-                    ["disabled", "value"].includes(mutation.attributeName ?? ""))
+                    ["disabled", "value"].includes(mutation.attributeName ?? "")),
         );
     }
 }

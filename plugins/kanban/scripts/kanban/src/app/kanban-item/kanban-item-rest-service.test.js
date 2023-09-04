@@ -34,17 +34,14 @@ describe("KanbanItemRestService -", function () {
         });
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            _KanbanItemRestService_,
-            _RestErrorService_
-        ) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            KanbanItemRestService = _KanbanItemRestService_;
-            RestErrorService = _RestErrorService_;
-        });
+        angular.mock.inject(
+            function (_$rootScope_, _$q_, _KanbanItemRestService_, _RestErrorService_) {
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                KanbanItemRestService = _KanbanItemRestService_;
+                RestErrorService = _RestErrorService_;
+            },
+        );
 
         jest.spyOn(RestErrorService, "reload").mockImplementation(() => {});
         wrapPromise = createAngularPromiseWrapper($rootScope);
@@ -55,7 +52,7 @@ describe("KanbanItemRestService -", function () {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -67,7 +64,7 @@ describe("KanbanItemRestService -", function () {
                     statusText,
                     json: () => $q.when(error_json),
                 },
-            })
+            }),
         );
     }
 

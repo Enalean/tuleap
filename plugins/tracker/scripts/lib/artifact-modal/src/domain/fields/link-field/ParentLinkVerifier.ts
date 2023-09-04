@@ -27,7 +27,7 @@ import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdenti
 export const ParentLinkVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
     new_links_retriever: RetrieveNewLinks,
-    parent_artifact_identifier: Option<ParentArtifactIdentifier>
+    parent_artifact_identifier: Option<ParentArtifactIdentifier>,
 ): VerifyHasParentLink => ({
     hasParentLink(): boolean {
         if (parent_artifact_identifier.isValue()) {

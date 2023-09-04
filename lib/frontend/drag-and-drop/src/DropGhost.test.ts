@@ -128,7 +128,7 @@ describe(`DropGhost`, () => {
                 (callback: FrameRequestCallback) => {
                     callback(0);
                     return 0;
-                }
+                },
             );
         });
 

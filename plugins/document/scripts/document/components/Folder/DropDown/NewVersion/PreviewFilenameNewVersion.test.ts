@@ -30,7 +30,7 @@ describe("PreviewFilenameNewVersion", () => {
     function getWrapper(
         item: DefaultFileNewVersionItem,
         version: NewVersion,
-        filename_pattern: string
+        filename_pattern: string,
     ): VueWrapper<InstanceType<typeof PreviewFilenameNewVersion>> {
         return shallowMount(PreviewFilenameNewVersion, {
             props: {
@@ -68,7 +68,7 @@ describe("PreviewFilenameNewVersion", () => {
             item,
             version,
             // eslint-disable-next-line no-template-curly-in-string
-            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
         );
 
         expect(wrapper.vm.preview).toBe("42-toto-Lorem ipsum-approved-wololo.json");
@@ -86,7 +86,7 @@ describe("PreviewFilenameNewVersion", () => {
             item,
             {} as NewVersion,
             // eslint-disable-next-line no-template-curly-in-string
-            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
         );
         expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(false);
     });
@@ -109,7 +109,7 @@ describe("PreviewFilenameNewVersion", () => {
             item,
             version,
             // eslint-disable-next-line no-template-curly-in-string
-            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
         );
         expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(true);
     });

@@ -72,7 +72,7 @@ describe("SubtaskMessage", () => {
             await button.trigger("click");
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "tasks/removeSubtasksDisplayForTask",
-                task
+                task,
             );
         });
     });

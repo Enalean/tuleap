@@ -40,7 +40,7 @@ describe("execution-attachments-creation-error-modal", () => {
             controller = $componentController(
                 "executionAttachmentsCreationErrorModal",
                 { $element, $scope },
-                { errors }
+                { errors },
             );
         });
 
@@ -77,7 +77,7 @@ describe("execution-attachments-creation-error-modal", () => {
             expect(controller.modal).toBe(tlp_error_modal);
             expect(tlp_error_modal.addEventListener).toHaveBeenCalledWith(
                 "tlp-modal-hidden",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(tlp_error_modal.show).toHaveBeenCalled();
             expect(tlp_error_modal.is_shown).toBe(true);
@@ -87,7 +87,7 @@ describe("execution-attachments-creation-error-modal", () => {
 
             expect(tlp_error_modal.is_shown).toBe(false);
             expect($scope.$emit).toHaveBeenCalledWith(
-                "user-has-closed-the-file-creation-errors-modal"
+                "user-has-closed-the-file-creation-errors-modal",
             );
         });
     });

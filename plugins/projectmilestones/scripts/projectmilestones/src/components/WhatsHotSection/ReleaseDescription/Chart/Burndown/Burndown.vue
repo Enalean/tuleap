@@ -60,7 +60,7 @@ export default class Burndown extends Vue {
                 chart_container,
                 this.getChartProps(chart_container.clientWidth, chart_container.clientHeight),
                 this.release_data.burndown_data,
-                this.release_data.id
+                this.release_data.id,
             );
         }
     }

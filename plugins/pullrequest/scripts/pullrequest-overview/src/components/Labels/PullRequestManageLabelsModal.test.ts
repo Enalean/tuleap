@@ -135,7 +135,7 @@ describe("PullRequestManageLabelsModal", () => {
             pull_request_id,
             [easy_fix_label.id],
             [],
-            []
+            [],
         );
         expect(modal_instance.hide).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledOnce();
@@ -155,7 +155,7 @@ describe("PullRequestManageLabelsModal", () => {
             pull_request_id,
             [],
             [],
-            ["Gluten free"]
+            ["Gluten free"],
         );
         expect(modal_instance.hide).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledOnce();

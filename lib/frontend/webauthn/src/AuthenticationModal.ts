@@ -91,7 +91,7 @@ export class AuthenticationModal extends HTMLElement {
         modal_body.classList.add("tlp-modal-body");
         const modal_body_text = document.createElement("div");
         modal_body_text.innerText = this.gettext_provider.gettext(
-            "Please prepare your passkey to confirm your identity"
+            "Please prepare your passkey to confirm your identity",
         );
         modal_body.appendChild(modal_body_text);
         this.modal_form.appendChild(modal_body);
@@ -102,7 +102,7 @@ export class AuthenticationModal extends HTMLElement {
         modal_footer_cancel.classList.add(
             "tlp-button-primary",
             "tlp-button-outline",
-            "tlp-modal-action"
+            "tlp-modal-action",
         );
         modal_footer_cancel.setAttribute("data-dismiss", "modal");
         modal_footer_cancel.innerText = this.gettext_provider.gettext("Cancel");

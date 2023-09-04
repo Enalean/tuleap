@@ -63,7 +63,7 @@ describe(`TransitionModal`, () => {
     it(`when the modal is hidden (through ESC or a close button),
         it will clear the modal shown flag`, async () => {
         jest.spyOn(modal, "addEventListener").mockImplementation((event_name, callback) =>
-            callback()
+            callback(),
         );
         const store = mockStore();
         await createWrapper(store);

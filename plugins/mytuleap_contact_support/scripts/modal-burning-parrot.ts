@@ -33,7 +33,7 @@ function buildThenShowModal(mount_point: Document, modal_element: Element): void
     contact_support_modal = createModal(modal_element);
     contact_support_modal.addEventListener(
         "tlp-modal-shown",
-        contactSupportModalShown(mount_point, post)
+        contactSupportModalShown(mount_point, post),
     );
 
     showModal(contact_support_modal);

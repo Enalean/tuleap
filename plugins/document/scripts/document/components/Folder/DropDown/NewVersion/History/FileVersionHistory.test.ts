@@ -32,7 +32,7 @@ describe("FileVersionHistory", () => {
     function createWrapper(
         has_error = false,
         is_filename_pattern_enforced = true,
-        is_loading = false
+        is_loading = false,
     ): VueWrapper<InstanceType<typeof FileVersionHistory>> {
         return shallowMount(FileVersionHistory, {
             props: { item: { id: 18, type: TYPE_FILE } },
@@ -159,7 +159,7 @@ describe("FileVersionHistory", () => {
                             i18n_error_message: "Something goes wrong",
                         },
                     }),
-            } as Response)
+            } as Response),
         );
         const wrapper = createWrapper(true);
 

@@ -117,7 +117,7 @@ export default {
         emitter.off("show-new-folder-modal", this.show);
         emitter.off(
             "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue
+            this.updateMultiplePropertiesListValue,
         );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
         emitter.off("update-status-property", this.updateStatusValue);
@@ -144,14 +144,14 @@ export default {
             this.parent = event.detail.parent;
             this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
-                JSON.stringify(this.parent.permissions_for_groups)
+                JSON.stringify(this.parent.permissions_for_groups),
             );
             this.is_displayed = true;
             this.modal.show();
             try {
                 await this.$store.dispatch(
                     "permissions/loadProjectUserGroupsIfNeeded",
-                    this.project_id
+                    this.project_id,
                 );
             } catch (e) {
                 await handleErrors(this.$store, e);
@@ -190,7 +190,7 @@ export default {
             transformStatusPropertyForItemCreation(
                 this.item,
                 this.parent,
-                this.is_status_property_used
+                this.is_status_property_used,
             );
         },
         updateMultiplePropertiesListValue(event) {
@@ -198,7 +198,7 @@ export default {
                 return;
             }
             const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.detail.id
+                (property) => property.short_name === event.detail.id,
             );
             item_properties.list_value = event.detail.value;
         },
@@ -216,7 +216,7 @@ export default {
                 return;
             }
             const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.property_short_name
+                (property) => property.short_name === event.property_short_name,
             );
 
             if (!item_properties) {

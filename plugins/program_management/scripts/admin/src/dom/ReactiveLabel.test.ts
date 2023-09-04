@@ -31,7 +31,7 @@ describe(`ReactiveLabel`, () => {
         input_element = doc.createElement("input");
         label_input = TimeboxLabel.fromId(
             RetrieveElementStub.withElements(input_element),
-            "some_id"
+            "some_id",
         );
     });
 
@@ -40,7 +40,7 @@ describe(`ReactiveLabel`, () => {
         const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
             RetrieveContainedNodeStub.withNodes(node),
             "some_selector",
-            label_input
+            label_input,
         );
         input_element.value = "iteration";
         reactive_label.reactOnLabelChange((text) => "New " + text);
@@ -54,7 +54,7 @@ describe(`ReactiveLabel`, () => {
             const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
                 RetrieveContainedNodeStub.withNodes(node),
                 "some_selector",
-                label_input
+                label_input,
             );
             reactive_label.reactOnLabelChange((text) => "New " + text);
             input_element.value = "release";
@@ -68,7 +68,7 @@ describe(`ReactiveLabel`, () => {
             const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
                 RetrieveContainedNodeStub.withNodes(node),
                 "some_selector",
-                label_input
+                label_input,
             );
             input_element.value = "iteration";
             reactive_label.reactOnLabelChange((text) => "New " + text);

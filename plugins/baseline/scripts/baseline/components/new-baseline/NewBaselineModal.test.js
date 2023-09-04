@@ -48,7 +48,7 @@ describe("NewBaselineModal", () => {
             new Promise((resolve, reject) => {
                 getOpenMilestonesResolve = resolve;
                 getOpenMilestonesReject = reject;
-            })
+            }),
         );
 
         createBaseline = jest
@@ -124,7 +124,7 @@ describe("NewBaselineModal", () => {
                 new Promise((resolve, reject) => {
                     createBaselineResolve = resolve;
                     createBaselineReject = reject;
-                })
+                }),
             );
             wrapper.vm.saveBaseline();
         });
@@ -136,7 +136,7 @@ describe("NewBaselineModal", () => {
         it("disables buttons", () => {
             expect(wrapper.get(cancel_selector).attributes("disabled")).toBe("disabled");
             expect(wrapper.get('[data-test-action="submit"]').attributes("disabled")).toBe(
-                "disabled"
+                "disabled",
             );
         });
 
@@ -163,7 +163,7 @@ describe("NewBaselineModal", () => {
             it("notify user with successful creation", () => {
                 expect($store.commit).toHaveBeenCalledWith(
                     "dialog_interface/notify",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
             });
             it("reloads all baselines", () => {

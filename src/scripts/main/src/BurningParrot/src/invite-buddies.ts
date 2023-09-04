@@ -44,7 +44,7 @@ export async function init(): Promise<void> {
             import(
                 /* webpackChunkName: "invitation-po-" */ "../../invite-buddies/po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     const modal = createModal(modal_element);

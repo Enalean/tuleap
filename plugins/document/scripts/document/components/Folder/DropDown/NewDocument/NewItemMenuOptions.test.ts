@@ -51,7 +51,7 @@ describe("NewItemMenuOptions", function () {
             embedded_are_allowed: false,
             user_can_create_wiki: false,
         },
-        create_new_item_alternatives: NewItemAlternativeArray = []
+        create_new_item_alternatives: NewItemAlternativeArray = [],
     ): VueWrapper<InstanceType<typeof NewItemMenuOptions>> {
         jest.spyOn(strict_inject, "strictInject").mockReturnValue(create_new_item_alternatives);
         return shallowMount(NewItemMenuOptions, {
@@ -149,7 +149,7 @@ describe("NewItemMenuOptions", function () {
         const wrapper = getWrapper({ user_can_create_wiki: false, embedded_are_allowed: false });
 
         expect(wrapper.find("[data-test=document-new-embedded-creation-button]").exists()).toBe(
-            false
+            false,
         );
     });
 

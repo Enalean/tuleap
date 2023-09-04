@@ -40,13 +40,13 @@ const convertRestlerErrorResponseToFault = (response: Response): ResultAsync<nev
                 return errAsync(
                     TuleapAPIFault.fromCodeAndMessage(
                         response.status,
-                        error_json.error.i18n_error_message
-                    )
+                        error_json.error.i18n_error_message,
+                    ),
                 );
             }
             if (error_json.error.message !== undefined) {
                 return errAsync(
-                    TuleapAPIFault.fromCodeAndMessage(response.status, error_json.error.message)
+                    TuleapAPIFault.fromCodeAndMessage(response.status, error_json.error.message),
                 );
             }
         }

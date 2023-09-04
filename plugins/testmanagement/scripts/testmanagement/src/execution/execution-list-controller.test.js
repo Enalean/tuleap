@@ -45,21 +45,23 @@ describe("ExecutionListController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function (
-            _$controller_,
-            $rootScope,
-            _$q_,
-            _ExecutionService_,
-            _SharedPropertiesService_,
-            _ExecutionRestService_
-        ) {
-            $controller = _$controller_;
-            $scope = $rootScope.$new();
-            $q = _$q_;
-            ExecutionService = _ExecutionService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            ExecutionRestService = _ExecutionRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                $rootScope,
+                _$q_,
+                _ExecutionService_,
+                _SharedPropertiesService_,
+                _ExecutionRestService_,
+            ) {
+                $controller = _$controller_;
+                $scope = $rootScope.$new();
+                $q = _$q_;
+                ExecutionService = _ExecutionService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                ExecutionRestService = _ExecutionRestService_;
+            },
+        );
 
         jest.spyOn(ExecutionRestService, "leaveTestExecution").mockImplementation(() => $q.when());
 
@@ -83,12 +85,12 @@ describe("ExecutionListController -", () => {
             $scope.campaign_id = campaign_id;
             jest.spyOn(ExecutionService, "removeAllViewTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "displayPresencesForAllExecutions").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(ExecutionService, "addPresenceCampaign").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "changePresenceOnTestExecution").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(current_user);
         });
@@ -114,12 +116,12 @@ describe("ExecutionListController -", () => {
             expect(ExecutionService.addPresenceCampaign).toHaveBeenCalledWith(current_user);
             expect(ExecutionRestService.changePresenceOnTestExecution).toHaveBeenCalledWith(
                 execution_id,
-                ""
+                "",
             );
             expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith("", current_user);
             expect(ExecutionService.viewTestExecution).toHaveBeenCalledWith(
                 execution_id,
-                current_user
+                current_user,
             );
             expect($scope.execution_id).toEqual(execution_id);
         });
@@ -157,7 +159,7 @@ describe("ExecutionListController -", () => {
                             message: "Unauthorized",
                         },
                     },
-                })
+                }),
             );
 
             $ctrl.loadExecutions();

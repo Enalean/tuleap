@@ -72,22 +72,22 @@ export default class TaskBoardHeaderCell extends Vue {
     get legacy_palette_message(): string {
         return this.$gettextInterpolate(
             this.$gettext(
-                "The column is configured to use a color (%{ color }) from the legacy palette."
+                "The column is configured to use a color (%{ color }) from the legacy palette.",
             ),
             {
                 color: `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${this.color};"></span>
                 <code>${this.color}</code></span>`,
             },
-            true
+            true,
         );
     }
 
     get adjust_configuration_message(): string {
         return this.$gettextInterpolate(
             this.$gettext(
-                'Please <a href="%{ admin_url }">adjust configuration</a> to use a suitable color.'
+                'Please <a href="%{ admin_url }">adjust configuration</a> to use a suitable color.',
             ),
-            { admin_url: this.admin_url }
+            { admin_url: this.admin_url },
         );
     }
 }

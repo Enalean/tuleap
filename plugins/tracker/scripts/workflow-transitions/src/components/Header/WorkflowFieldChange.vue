@@ -83,7 +83,7 @@ export default {
             feedback_section_content.classList.add("tlp-alert-info");
             feedback_section_content.insertAdjacentText(
                 "afterbegin",
-                this.$gettext("Transitions rules were deleted. Workflow is reset.")
+                this.$gettext("Transitions rules were deleted. Workflow is reset."),
             );
             feedback_box.appendChild(feedback_section_content);
             this.modal.hide();

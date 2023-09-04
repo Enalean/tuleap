@@ -32,7 +32,7 @@ describe("execution-attachments-drop-zone-message", () => {
                 $scope = $rootScope.$new();
 
                 jest.spyOn(_SharedPropertiesService_, "getFileUploadMaxSize").mockReturnValue(
-                    100000000
+                    100000000,
                 );
                 jest.spyOn($root_scope, "$on");
 
@@ -42,7 +42,7 @@ describe("execution-attachments-drop-zone-message", () => {
                     _gettextCatalog_,
                     _SharedPropertiesService_,
                 });
-            }
+            },
         );
 
         controller.$onInit();
@@ -53,7 +53,7 @@ describe("execution-attachments-drop-zone-message", () => {
             expect($root_scope.$on).toHaveBeenCalledWith("drop-zone-active", expect.any(Function));
             expect($root_scope.$on).toHaveBeenCalledWith(
                 "drop-zone-inactive",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
     });
@@ -75,7 +75,7 @@ describe("execution-attachments-drop-zone-message", () => {
     describe("message", () => {
         it("should build a message informing the user about the max file size allowed", () => {
             expect(controller.getMessage()).toBe(
-                "Drop files here to attach them to your comment (max size is 95.4 MBs)."
+                "Drop files here to attach them to your comment (max size is 95.4 MBs).",
             );
         });
     });

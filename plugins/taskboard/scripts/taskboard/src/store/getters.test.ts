@@ -48,7 +48,7 @@ describe("column_and_swimlane_of_cell", () => {
     it("shoud return the column and the swimlane referenced by the cell", () => {
         const target_cell = getCellElement(
             swimlane_to_find.card.id.toString(),
-            column_to_find.id.toString()
+            column_to_find.id.toString(),
         );
 
         const { swimlane, column } = getters.column_and_swimlane_of_cell(root_state)(target_cell);

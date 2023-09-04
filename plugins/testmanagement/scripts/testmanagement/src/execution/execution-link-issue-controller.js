@@ -17,7 +17,7 @@ function ExecutionLinkIssueCtrl(
     modal_model,
     modal_callback,
     ExecutionRestService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     const self = this,
         { test_execution } = modal_model,
@@ -55,7 +55,7 @@ function ExecutionLinkIssueCtrl(
 
     function validateIssueIsNotAlreadyLinked(model_value, view_value) {
         const index = test_execution.linked_bugs.findIndex(
-            (artifact) => artifact.id === Number.parseInt(view_value, 10)
+            (artifact) => artifact.id === Number.parseInt(view_value, 10),
         );
         return index === -1;
     }

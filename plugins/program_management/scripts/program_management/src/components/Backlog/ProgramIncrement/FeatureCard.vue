@@ -140,7 +140,7 @@ export default class FeatureCard extends Vue {
         }
 
         return this.$gettext(
-            "The feature is not plannable, user does not have permission to update artifact or field link."
+            "The feature is not plannable, user does not have permission to update artifact or field link.",
         );
     }
 }

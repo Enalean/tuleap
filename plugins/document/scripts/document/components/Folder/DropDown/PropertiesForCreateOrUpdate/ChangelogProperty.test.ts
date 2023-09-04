@@ -41,7 +41,7 @@ describe("ChangelogProperty", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "update-changelog-property",
-            "an updated changelog"
+            "an updated changelog",
         );
     });
 });

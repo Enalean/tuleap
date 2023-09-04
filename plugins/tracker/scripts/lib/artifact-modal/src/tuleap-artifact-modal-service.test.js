@@ -61,7 +61,7 @@ describe("NewTuleapArtifactModalService", () => {
         jest.spyOn(tracker_transformer, "addFieldValuesToTracker").mockImplementation(
             (artifact_values, tracker) => {
                 return tracker;
-            }
+            },
         );
         jest.spyOn(tracker_transformer, "transform").mockImplementation((tracker) => {
             return tracker;
@@ -72,12 +72,12 @@ describe("NewTuleapArtifactModalService", () => {
         getUserPreference = jest.spyOn(rest_service, "getUserPreference");
         getArtifactWithCompleteTrackerStructure = jest.spyOn(
             rest_service,
-            "getArtifactWithCompleteTrackerStructure"
+            "getArtifactWithCompleteTrackerStructure",
         );
         buildFormTree = jest.spyOn(form_tree_builder, "buildFormTree").mockReturnValue({});
         enforceWorkflowTransitions = jest.spyOn(
             workflow_field_values_filter,
-            "enforceWorkflowTransitions"
+            "enforceWorkflowTransitions",
         );
         getSelectedValues = jest
             .spyOn(field_values_formatter, "getSelectedValues")
@@ -118,7 +118,7 @@ describe("NewTuleapArtifactModalService", () => {
                 user_id,
                 tracker_id,
                 parent_artifact_id,
-                false
+                false,
             );
 
             await expect(wrapPromise(promise)).resolves.toBeDefined();
@@ -146,7 +146,10 @@ describe("NewTuleapArtifactModalService", () => {
             getTracker.mockReturnValue($q.reject());
 
             const promise = wrapPromise(
-                NewTuleapArtifactModalService.initCreationModalModel(tracker_id, parent_artifact_id)
+                NewTuleapArtifactModalService.initCreationModalModel(
+                    tracker_id,
+                    parent_artifact_id,
+                ),
             );
 
             let has_thrown = false;
@@ -186,14 +189,14 @@ describe("NewTuleapArtifactModalService", () => {
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
+                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
                 );
 
                 await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     null,
                     workflow_field,
-                    workflow
+                    workflow,
                 );
             });
 
@@ -219,7 +222,7 @@ describe("NewTuleapArtifactModalService", () => {
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
+                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
                 );
 
                 await expect(promise).resolves.toBeDefined();
@@ -243,7 +246,7 @@ describe("NewTuleapArtifactModalService", () => {
                 getTracker.mockReturnValue($q.when(tracker));
 
                 const promise = wrapPromise(
-                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
+                    NewTuleapArtifactModalService.initCreationModalModel(tracker_id),
                 );
 
                 await expect(promise).resolves.toBeDefined();
@@ -323,26 +326,26 @@ describe("NewTuleapArtifactModalService", () => {
                     user_id,
                     tracker_id,
                     artifact_id,
-                    false
+                    false,
                 );
 
                 await expect(wrapPromise(promise)).resolves.toBeDefined();
                 expect(getArtifactWithCompleteTrackerStructure).toHaveBeenCalledWith(artifact_id);
                 expect(getUserPreference).toHaveBeenCalledWith(
                     user_id,
-                    "tracker_comment_invertorder_93"
+                    "tracker_comment_invertorder_93",
                 );
                 expect(getUserPreference).toHaveBeenCalledWith(user_id, "relative_dates_display");
                 expect(getUserPreference).toHaveBeenCalledWith(
                     user_id,
-                    "user_edition_default_format"
+                    "user_edition_default_format",
                 );
 
                 expect(getSelectedValues).toHaveBeenCalledWith(expect.any(Object), tracker);
                 expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, false);
                 expect(tracker_transformer.addFieldValuesToTracker).toHaveBeenCalledWith(
                     expect.any(Object),
-                    tracker
+                    tracker,
                 );
                 expect(buildFormTree).toHaveBeenCalledWith(tracker);
                 var model = promise.$$state.value;
@@ -389,7 +392,7 @@ describe("NewTuleapArtifactModalService", () => {
                 const promise = NewTuleapArtifactModalService.initEditionModalModel(
                     user_id,
                     tracker_id,
-                    artifact_id
+                    artifact_id,
                 );
 
                 await expect(wrapPromise(promise)).resolves.toBeDefined();
@@ -441,15 +444,15 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initEditionModalModel(
                         user_id,
                         tracker_id,
-                        artifact_id
-                    )
+                        artifact_id,
+                    ),
                 );
 
                 await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     757,
                     workflow_field,
-                    workflow
+                    workflow,
                 );
             });
 
@@ -486,8 +489,8 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initEditionModalModel(
                         user_id,
                         tracker_id,
-                        artifact_id
-                    )
+                        artifact_id,
+                    ),
                 );
 
                 await expect(promise).resolves.toBeDefined();
@@ -521,15 +524,15 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initEditionModalModel(
                         user_id,
                         tracker_id,
-                        artifact_id
-                    )
+                        artifact_id,
+                    ),
                 );
 
                 await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     null,
                     workflow_field,
-                    workflow
+                    workflow,
                 );
             });
         });

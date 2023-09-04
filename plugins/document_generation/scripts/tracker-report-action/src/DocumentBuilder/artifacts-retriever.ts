@@ -30,12 +30,12 @@ export async function retrieveReportArtifacts(
     tracker_id: number,
     report_id: number,
     report_has_changed: boolean,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
     const tracker_structure_promise = retrieveTrackerStructure(tracker_id);
     const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
         report_id,
-        report_has_changed
+        report_has_changed,
     );
 
     const tracker_structure = await tracker_structure_promise;
@@ -43,6 +43,6 @@ export async function retrieveReportArtifacts(
     return retrieveArtifactsStructure(
         new Map([[tracker_id, tracker_structure]]),
         report_artifacts,
-        get_test_execution
+        get_test_execution,
     );
 }

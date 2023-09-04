@@ -153,7 +153,7 @@ var tuleap = tuleap || {};
                 codendi.feedback.clear();
                 codendi.feedback.log(
                     "error",
-                    codendi.locales.search.error + " : " + JSON.parse(error.responseText)
+                    codendi.locales.search.error + " : " + JSON.parse(error.responseText),
                 );
             })
             .always(function () {
@@ -215,7 +215,7 @@ var tuleap = tuleap || {};
     function addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element) {
         if (type_of_search === "tracker") {
             $(".search-bar .input-append").prepend(
-                "<input name='atid' type='hidden' value='" + getArtifactTypeId(element) + "'>"
+                "<input name='atid' type='hidden' value='" + getArtifactTypeId(element) + "'>",
             );
         }
     }

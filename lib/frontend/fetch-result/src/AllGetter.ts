@@ -34,7 +34,7 @@ type GetAllLimitParameters = {
 };
 
 export type GetAllCollectionCallback<TypeOfArrayItem, TypeOfJSONPayload> = (
-    json: TypeOfJSONPayload
+    json: TypeOfJSONPayload,
 ) => ReadonlyArray<TypeOfArrayItem>;
 
 export type GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {
@@ -44,7 +44,7 @@ export type GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {
 };
 
 function defaultGetCollectionCallback<TypeOfJSONPayload>(
-    json: TypeOfJSONPayload
+    json: TypeOfJSONPayload,
 ): ReadonlyArray<TypeOfJSONPayload> {
     if (json instanceof Array) {
         return json;
@@ -60,7 +60,7 @@ type ArrayOfResultOfArrayItems<TypeOfArrayItem> = ReadonlyArray<
 
 const flatten = <TypeOfArrayItem>(
     all_responses_result: ResultAsync<ArrayOfResultOfArrayItems<TypeOfArrayItem>, Fault>,
-    first_results: ReadonlyArray<TypeOfArrayItem>
+    first_results: ReadonlyArray<TypeOfArrayItem>,
 ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> =>
     all_responses_result
         // flatten the Result[] into a single Result
@@ -69,21 +69,21 @@ const flatten = <TypeOfArrayItem>(
             // flatten the ArrayItem[][] into ArrayItem[] and concat after first_results
             nested_array.reduce(
                 (accumulator, array_items) => accumulator.concat(array_items),
-                first_results
-            )
+                first_results,
+            ),
         );
 
 export type GetAll = {
     getAllJSON<TypeOfArrayItem, TypeOfJSONPayload = ReadonlyArray<TypeOfArrayItem>>(
         uri: EncodedURI,
-        options?: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload>
+        options?: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload>,
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
 
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
     function getAllJSON<TypeOfArrayItem, TypeOfJSONPayload>(
         uri: EncodedURI,
-        options: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {}
+        options: GetAllOptions<TypeOfArrayItem, TypeOfJSONPayload> = {},
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> {
         const { params = {}, max_parallel_requests = 6 } = options;
         if (max_parallel_requests < 1) {
@@ -108,7 +108,7 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
                     // Abuse response.json() returning Promise<any> to "cheat" the types.
                     // We assume response.json() will return some type compatible with TypeOfArrayItem
                     response.json().then((json) => getCollectionCallback(json)),
-                    JSONParseFault.fromError
+                    JSONParseFault.fromError,
                 ).map((items) => ({ value: items, size }));
             });
 
@@ -139,11 +139,11 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
                                     Fault
                                 >(
                                     response.json().then((json) => getCollectionCallback(json)),
-                                    JSONParseFault.fromError
+                                    JSONParseFault.fromError,
                                 );
                             });
-                    }
-                )
+                    },
+                ),
             );
 
             return flatten(all_responses_result, first_results);

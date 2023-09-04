@@ -84,12 +84,12 @@ export const defineJestConfiguration = (): JestConfiguration => {
             "^tlp$": path.resolve(__dirname, "../../../../../src/scripts/tlp/src/js/index.ts"),
             "^@tuleap/tlp$": path.resolve(
                 __dirname,
-                "../../../../../src/scripts/tlp/src/js/index.ts"
+                "../../../../../src/scripts/tlp/src/js/index.ts",
             ),
             // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
             "^@tuleap/tlp-fetch$": path.resolve(
                 __dirname,
-                "../../../tlp-fetch/src/fetch-wrapper.ts"
+                "../../../tlp-fetch/src/fetch-wrapper.ts",
             ),
             "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
         },

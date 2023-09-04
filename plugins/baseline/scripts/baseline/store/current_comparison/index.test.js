@@ -42,7 +42,7 @@ describe("Current comparison store:", () => {
 
         describe("#load", () => {
             beforeEach(() =>
-                store.actions.load(context, { base_baseline_id: 1, compared_to_baseline_id: 2 })
+                store.actions.load(context, { base_baseline_id: 1, compared_to_baseline_id: 2 }),
             );
 
             it("commits 'startNewComparison'", () => {
@@ -55,12 +55,12 @@ describe("Current comparison store:", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadBaseline",
                     { baseline_id: 1 },
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadBaseline",
                     { baseline_id: 2 },
-                    { root: true }
+                    { root: true },
                 );
             });
             it("dispatches 'loadAllArtifacts' on compared baselines", () => {
@@ -74,7 +74,7 @@ describe("Current comparison store:", () => {
                 store.actions.startNewComparison(context, {
                     base_baseline_id: 1,
                     compared_to_baseline_id: 2,
-                })
+                }),
             );
 
             it("commit 'rest' on compared baseline", () => {
@@ -131,7 +131,7 @@ describe("Current comparison store:", () => {
             it("commits 'incrementStatistics' with comparison of given artifacts", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "incrementStatistics",
-                    artifacts_comparison
+                    artifacts_comparison,
                 );
             });
             it("compares linked artifacts", () => {

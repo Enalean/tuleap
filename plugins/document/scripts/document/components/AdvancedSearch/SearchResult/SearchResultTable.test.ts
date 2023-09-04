@@ -347,6 +347,6 @@ describe("SearchResultTable", () => {
 
             expect(mock_replace).not.toHaveBeenCalled();
             expect(mock_push).not.toHaveBeenCalled();
-        }
+        },
     );
 });

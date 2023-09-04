@@ -33,11 +33,11 @@ const authorized_navigations = new Map<GitlabGroupLinkStepName, readonly GitlabG
         [STEP_GITLAB_SERVER, [NO_GROUP_LINKED_EMPTY_STATE, STEP_GITLAB_GROUP]],
         [STEP_GITLAB_GROUP, [STEP_GITLAB_SERVER, STEP_GITLAB_CONFIGURATION]],
         [STEP_GITLAB_CONFIGURATION, [STEP_GITLAB_GROUP]],
-    ]
+    ],
 );
 
 function isAValidStepName(
-    name: RouteRecordName | null | undefined
+    name: RouteRecordName | null | undefined,
 ): name is GitlabGroupLinkStepName {
     if (!name) {
         return false;
@@ -53,14 +53,14 @@ function isAValidStepName(
 
 function isARedirectionToEmptyState(
     from: RouteLocationNormalized,
-    to: RouteLocationNormalized
+    to: RouteLocationNormalized,
 ): boolean {
     return from.name === undefined && to.name === NO_GROUP_LINKED_EMPTY_STATE;
 }
 
 export const ensureStepsHaveBeenCompletedInTheRightOrder = (
     to: RouteLocationNormalized,
-    from: RouteLocationNormalized
+    from: RouteLocationNormalized,
 ): RouteLocationRaw | void => {
     if (isARedirectionToEmptyState(from, to)) {
         return;

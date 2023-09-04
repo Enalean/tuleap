@@ -24,7 +24,7 @@ import type { ResultAsync } from "neverthrow";
 export const postGitlabBranch = (
     gitlab_integration_id: number,
     artifact_id: number,
-    reference: string
+    reference: string,
 ): ResultAsync<GitLabIntegrationCreatedBranchInformation, Fault> =>
     postJSON<GitLabIntegrationCreatedBranchInformation>(uri`/api/v1/gitlab_branch`, {
         gitlab_integration_id: gitlab_integration_id,
@@ -35,12 +35,12 @@ export const postGitlabBranch = (
 export const postGitlabMergeRequest = (
     gitlab_integration_id: number,
     artifact_id: number,
-    source_branch: string
+    source_branch: string,
 ): ResultAsync<void, Fault> =>
     post(
         uri`/api/v1/gitlab_merge_request`,
         {},
-        { gitlab_integration_id, artifact_id, source_branch }
+        { gitlab_integration_id, artifact_id, source_branch },
     ).map(() => {
         // ignore response
     });
@@ -54,8 +54,8 @@ export interface GitLabIntegrationCreatedBranchInformation {
 }
 
 export const getGitLabRepositoryBranchInformation = (
-    gitlab_integration_id: number
+    gitlab_integration_id: number,
 ): ResultAsync<GitLabIntegrationBranchInformation, Fault> =>
     getJSON<GitLabIntegrationBranchInformation>(
-        uri`/api/v1/gitlab_repositories/${gitlab_integration_id}/branches`
+        uri`/api/v1/gitlab_repositories/${gitlab_integration_id}/branches`,
     );

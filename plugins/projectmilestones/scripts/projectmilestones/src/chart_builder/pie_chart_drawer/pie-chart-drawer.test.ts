@@ -84,25 +84,25 @@ describe("PieChartDrawer", () => {
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-blocked")
                     .select("text")
-                    .text()
+                    .text(),
             ).toBe("10");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-passed")
                     .select("text")
-                    .text()
+                    .text(),
             ).toBe("1");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-notrun")
                     .select("text")
-                    .text()
+                    .text(),
             ).toBe("100");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-failed")
                     .select("text")
-                    .text()
+                    .text(),
             ).toBe("");
         });
     });

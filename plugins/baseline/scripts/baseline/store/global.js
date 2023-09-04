@@ -33,7 +33,7 @@ export default {
         async loadBaselines({ dispatch, getters }, { baseline_ids }) {
             let unique_baseline_ids = ArrayUtils.unique(baseline_ids);
             let baselines_loading = unique_baseline_ids.map((baseline_id) =>
-                dispatch("loadBaseline", { baseline_id })
+                dispatch("loadBaseline", { baseline_id }),
             );
             await Promise.all(baselines_loading);
 
@@ -54,7 +54,7 @@ export default {
         },
         async loadUsers({ dispatch }, { user_ids }) {
             let users_loading = ArrayUtils.unique(user_ids).map((user_id) =>
-                dispatch("loadUser", { user_id })
+                dispatch("loadUser", { user_id }),
             );
             await Promise.all(users_loading);
         },
@@ -65,7 +65,7 @@ export default {
         async loadArtifacts({ dispatch, getters }, { artifact_ids }) {
             let unique_artifact_ids = ArrayUtils.unique(artifact_ids);
             let artifacts_loading = unique_artifact_ids.map((artifact_id) =>
-                dispatch("loadArtifact", { artifact_id })
+                dispatch("loadArtifact", { artifact_id }),
             );
             await Promise.all(artifacts_loading);
 
@@ -80,7 +80,7 @@ export default {
         },
         async loadTrackers({ dispatch }, { tracker_ids }) {
             let trackers_loading = ArrayUtils.unique(tracker_ids).map((tracker_id) =>
-                dispatch("loadTracker", { tracker_id })
+                dispatch("loadTracker", { tracker_id }),
             );
             await Promise.all(trackers_loading);
         },

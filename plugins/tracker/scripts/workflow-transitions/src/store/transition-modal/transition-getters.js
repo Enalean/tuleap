@@ -29,7 +29,7 @@ function post_actions(state) {
         return null;
     }
     return Object.keys(state.post_actions_by_unique_id).map(
-        (unique_id) => state.post_actions_by_unique_id[unique_id]
+        (unique_id) => state.post_actions_by_unique_id[unique_id],
     );
 }
 

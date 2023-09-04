@@ -81,7 +81,7 @@ export default class LabelEditor extends Vue {
 
     computeRows(): void {
         this.rows = Math.ceil(
-            (this.mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
+            (this.mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX,
         );
     }
 

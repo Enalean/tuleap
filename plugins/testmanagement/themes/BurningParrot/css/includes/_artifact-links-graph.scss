@@ -37,7 +37,11 @@ circle {
 
 text {
     font: 12px sans-serif;
-    text-shadow: 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff, -1px 0 0 #ffffff;
+    text-shadow:
+        0 1px 0 #ffffff,
+        1px 0 0 #ffffff,
+        0 -1px 0 #ffffff,
+        -1px 0 0 #ffffff;
     cursor: pointer;
 }
 

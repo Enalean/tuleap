@@ -73,7 +73,7 @@ describe("User stories retriever", () => {
                 "/api/v1/program_backlog_items/146/children",
                 {
                     params: { limit: 50, offset: 0 },
-                }
+                },
             );
         });
     });

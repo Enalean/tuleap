@@ -46,8 +46,8 @@ describe("fetch-gitlab-repositories-information", () => {
             if (integration_id === 2) {
                 return errAsync(
                     Fault.fromMessage(
-                        "Something bad happened while retrieving the branches information"
-                    )
+                        "Something bad happened while retrieving the branches information",
+                    ),
                 );
             }
 

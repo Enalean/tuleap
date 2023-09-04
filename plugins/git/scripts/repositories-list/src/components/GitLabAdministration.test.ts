@@ -74,12 +74,12 @@ describe("GitLabAdministration", () => {
 
         expect(wrapper.find("[data-test=git-repository-card-admin-link]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=git-repository-card-admin-unlink-gitlab]").exists()
+            wrapper.find("[data-test=git-repository-card-admin-unlink-gitlab]").exists(),
         ).toBeTruthy();
 
         expect(wrapper.find("[data-test=dropdown-gitlab-administration-1]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options]").exists()
+            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options]").exists(),
         ).toBeTruthy();
     });
 
@@ -92,7 +92,7 @@ describe("GitLabAdministration", () => {
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showDeleteGitlabRepositoryModal",
-            repository
+            repository,
         );
     });
 
@@ -105,7 +105,7 @@ describe("GitLabAdministration", () => {
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showEditAccessTokenGitlabRepositoryModal",
-            repository
+            repository,
         );
     });
 
@@ -118,7 +118,7 @@ describe("GitLabAdministration", () => {
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showRegenerateGitlabWebhookModal",
-            repository
+            repository,
         );
     });
 

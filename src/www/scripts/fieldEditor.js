@@ -50,7 +50,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
                 highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
                 highlightendcolor: "#FFFFFF",
             },
-            options || {}
+            options || {},
         );
         var element_offsetHeight = this.element.offsetHeight;
         var element_offsetWidth = this.element.offsetWidth;
@@ -61,14 +61,14 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
                 this.element.id +
                 '_edit_or_cancel">[' +
                 this.options.edit +
-                "]</a></div>"
+                "]</a></div>",
         );
         new Insertion.After(
             this.element,
             '<div style="font-family:monospace; font-size:10pt;" id="' +
                 this.element.id +
                 '_preview">' +
-                /*$F(this.element).escapeHTML() +*/ "</div>"
+                /*$F(this.element).escapeHTML() +*/ "</div>",
         );
 
         this.preview = $(this.element.id + "_preview");

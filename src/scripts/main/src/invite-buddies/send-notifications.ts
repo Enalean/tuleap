@@ -37,7 +37,7 @@ export function initNotificationsOnFormSubmit(gettext_provider: GettextProvider)
 
 export async function sendNotifications(
     form: HTMLFormElement,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<void> {
     const email_input = form.querySelector("input[name=invite_buddies_email]");
     if (!(email_input instanceof HTMLInputElement)) {

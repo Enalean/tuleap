@@ -11,19 +11,21 @@ describe("PullRequestCollectionRestService -", function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$httpBackend_,
-            _$q_,
-            _ErrorModalService_,
-            _PullRequestCollectionRestService_
-        ) {
-            $rootScope = _$rootScope_;
-            $httpBackend = _$httpBackend_;
-            $q = _$q_;
-            ErrorModalService = _ErrorModalService_;
-            PullRequestCollectionRestService = _PullRequestCollectionRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$httpBackend_,
+                _$q_,
+                _ErrorModalService_,
+                _PullRequestCollectionRestService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $httpBackend = _$httpBackend_;
+                $q = _$q_;
+                ErrorModalService = _ErrorModalService_;
+                PullRequestCollectionRestService = _PullRequestCollectionRestService_;
+            },
+        );
 
         jest.spyOn(ErrorModalService, "showErrorResponseMessage").mockImplementation(() => {});
 
@@ -83,11 +85,11 @@ describe("PullRequestCollectionRestService -", function () {
                     angular.toJson({
                         collection: pull_requests,
                     }),
-                    headers
+                    headers,
                 );
 
             var promise = wrapPromise(
-                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0)
+                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0),
             );
             $httpBackend.flush();
 
@@ -129,17 +131,17 @@ describe("PullRequestCollectionRestService -", function () {
                     "/api/v1/git/" +
                         repository_id +
                         "/pull_requests?limit=50&offset=0&query=" +
-                        query_param
+                        query_param,
                 )
                 .respond(
                     angular.toJson({
                         collection: pull_requests,
                     }),
-                    headers
+                    headers,
                 );
 
             var promise = wrapPromise(
-                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0, "open")
+                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0, "open"),
             );
             $httpBackend.flush();
 
@@ -157,7 +159,7 @@ describe("PullRequestCollectionRestService -", function () {
                 .respond(403, "Forbidden");
 
             var promise = wrapPromise(
-                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0)
+                PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0),
             );
             $httpBackend.flush();
 
@@ -168,7 +170,7 @@ describe("PullRequestCollectionRestService -", function () {
                 expect.objectContaining({
                     status: 403,
                     statusText: "",
-                })
+                }),
             );
         });
     });
@@ -208,7 +210,7 @@ describe("PullRequestCollectionRestService -", function () {
                         });
                     }
                     throw new Error("Not expected offset: " + offset);
-                }
+                },
             );
             PullRequestCollectionRestService.pull_requests_pagination.limit = 2;
             progress_callback = jest.fn();
@@ -222,8 +224,8 @@ describe("PullRequestCollectionRestService -", function () {
                 var promise = wrapPromise(
                     PullRequestCollectionRestService.getAllPullRequests(
                         repository_id,
-                        progress_callback
-                    )
+                        progress_callback,
+                    ),
                 );
 
                 await expect(promise).resolves.toStrictEqual(all_pull_requests);
@@ -233,13 +235,13 @@ describe("PullRequestCollectionRestService -", function () {
                     repository_id,
                     2,
                     0,
-                    null
+                    null,
                 );
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,
                     2,
-                    null
+                    null,
                 );
                 expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });
@@ -252,8 +254,8 @@ describe("PullRequestCollectionRestService -", function () {
                 var promise = wrapPromise(
                     PullRequestCollectionRestService.getAllOpenPullRequests(
                         repository_id,
-                        progress_callback
-                    )
+                        progress_callback,
+                    ),
                 );
 
                 await expect(promise).resolves.toStrictEqual(all_pull_requests);
@@ -261,13 +263,13 @@ describe("PullRequestCollectionRestService -", function () {
                     repository_id,
                     2,
                     0,
-                    "open"
+                    "open",
                 );
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,
                     2,
-                    "open"
+                    "open",
                 );
                 expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });
@@ -280,8 +282,8 @@ describe("PullRequestCollectionRestService -", function () {
                 var promise = wrapPromise(
                     PullRequestCollectionRestService.getAllClosedPullRequests(
                         repository_id,
-                        progress_callback
-                    )
+                        progress_callback,
+                    ),
                 );
 
                 await expect(promise).resolves.toStrictEqual(all_pull_requests);
@@ -289,13 +291,13 @@ describe("PullRequestCollectionRestService -", function () {
                     repository_id,
                     2,
                     0,
-                    "closed"
+                    "closed",
                 );
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,
                     2,
-                    "closed"
+                    "closed",
                 );
                 expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });

@@ -53,9 +53,9 @@ describe("TestDefinitionCardStatusTooltipIcon", () => {
             });
 
             expect(wrapper.find("[data-test=test-status]").attributes("data-tlp-tooltip")).toBe(
-                expected_tooltip
+                expected_tooltip,
             );
             expect(wrapper.find("[data-test=test-status-icon]").classes(expected_icon)).toBe(true);
-        }
+        },
     );
 });

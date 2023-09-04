@@ -25,7 +25,7 @@ import type { ColumnState } from "./type";
 
 export function expandColumn(
     context: ActionContext<ColumnState, RootState>,
-    column: ColumnDefinition
+    column: ColumnDefinition,
 ): Promise<void> {
     context.commit("expandColumn", column);
     const payload: UserPreference = {
@@ -37,7 +37,7 @@ export function expandColumn(
 
 export function collapseColumn(
     context: ActionContext<ColumnState, RootState>,
-    column: ColumnDefinition
+    column: ColumnDefinition,
 ): Promise<void> {
     context.commit("collapseColumn", column);
     const payload: UserPreferenceValue = {
@@ -50,7 +50,7 @@ export function collapseColumn(
 
 function getCollapsePreferenceName(
     context: ActionContext<ColumnState, RootState>,
-    column: ColumnDefinition
+    column: ColumnDefinition,
 ): string {
     return `plugin_taskboard_collapse_column_${context.rootState.milestone_id}_${column.id}`;
 }

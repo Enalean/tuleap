@@ -126,7 +126,7 @@ const is_folder_loaded_and_open = computed((): boolean => {
 
 const has_uploading_content = computed((): boolean => {
     const uploading_content = files_uploads_list.value.find(
-        (file) => file.parent_id === props.item.id && file.progress && file.progress > 0
+        (file) => file.parent_id === props.item.id && file.progress && file.progress > 0,
     );
 
     return uploading_content !== null;

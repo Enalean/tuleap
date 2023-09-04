@@ -33,7 +33,7 @@ function SocketService(
     SharedPropertiesService,
     JWTService,
     KanbanFilteredUpdatedAlertService,
-    KanbanItemRestService
+    KanbanItemRestService,
 ) {
     const self = this;
 
@@ -100,8 +100,8 @@ function SocketService(
         SocketFactory.on("disconnect", () => {
             setError(
                 gettextCatalog.getString(
-                    "You are disconnected from real time. Please reload your page."
-                )
+                    "You are disconnected from real time. Please reload your page.",
+                ),
             );
             SharedPropertiesService.setIsNodeServerConnected(false);
         });
@@ -196,7 +196,7 @@ function SocketService(
                 data.artifact_id,
                 source_column,
                 destination_column,
-                data.ordered_destination_column_items_ids
+                data.ordered_destination_column_items_ids,
             );
         });
     }

@@ -40,7 +40,7 @@ describe(`ParentFeedbackController`, () => {
         const parent_artifact: ParentArtifact = { title: PARENT_TITLE };
         artifact_retriever = RetrieveParentStub.withParent(parent_artifact);
         parent_artifact_identifier = Option.fromValue(
-            ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID)
+            ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID),
         );
     });
 
@@ -48,7 +48,7 @@ describe(`ParentFeedbackController`, () => {
         const controller = ParentFeedbackController(
             artifact_retriever,
             event_dispatcher,
-            parent_artifact_identifier
+            parent_artifact_identifier,
         );
         return controller.getParentArtifact();
     };

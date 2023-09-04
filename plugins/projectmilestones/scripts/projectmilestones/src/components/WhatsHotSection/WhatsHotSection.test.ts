@@ -27,7 +27,7 @@ import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 const project_id = 102;
 
 async function getPersonalWidgetInstance(
-    store_options: StoreOptions
+    store_options: StoreOptions,
 ): Promise<Wrapper<WhatsHotSection>> {
     const store = createStoreMock(store_options);
     const component_options = {
@@ -80,10 +80,10 @@ describe("What'sHotSection", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(
-            wrapper.find("[data-test=current-milestones-test-" + release1.label + "]").exists()
+            wrapper.find("[data-test=current-milestones-test-" + release1.label + "]").exists(),
         ).toBe(true);
         expect(
-            wrapper.find("[data-test=current-milestones-test-" + release2.label + "]").exists()
+            wrapper.find("[data-test=current-milestones-test-" + release2.label + "]").exists(),
         ).toBe(true);
     });
 });

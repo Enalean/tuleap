@@ -64,7 +64,7 @@ function createParser(gettext_extractor) {
             ],
             {
                 arguments: { text: 0 },
-            }
+            },
         ),
         JsExtractors.callExpression(
             [
@@ -75,19 +75,19 @@ function createParser(gettext_extractor) {
             ],
             {
                 arguments: { text: 0, textPlural: 1 },
-            }
+            },
         ),
         JsExtractors.callExpression(
             ["[this].$pgettext", "$pgettext", "gettext_provider.$pgettext"],
             {
                 arguments: { context: 0, text: 1 },
-            }
+            },
         ),
         JsExtractors.callExpression(
             ["[this].$npgettext", "$npgettext", "gettext_provider.$npgettext"],
             {
                 arguments: { context: 0, text: 1, textPlural: 2 },
-            }
+            },
         ),
     ]);
 }
@@ -129,7 +129,7 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
                 undefined,
                 {
                     scriptKind,
-                }
+                },
             );
         } else {
             gettext_parser.parseString(compiled.render, undefined, {

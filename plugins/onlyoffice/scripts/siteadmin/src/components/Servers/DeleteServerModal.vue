@@ -51,7 +51,7 @@
             <p>
                 {{
                     $gettext(
-                        "Deleting a document server will induce loosing of modifications for users that are currently using it."
+                        "Deleting a document server will induce loosing of modifications for users that are currently using it.",
                     )
                 }}
             </p>

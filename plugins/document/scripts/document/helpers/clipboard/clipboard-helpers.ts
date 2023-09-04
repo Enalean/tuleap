@@ -23,7 +23,7 @@ import type { FolderContentItem } from "../../type";
 export function isItemDestinationIntoItself(
     folder_content: Array<FolderContentItem>,
     item_id: number,
-    destination_id: number | null
+    destination_id: number | null,
 ): boolean {
     if (destination_id === item_id) {
         return true;

@@ -60,7 +60,7 @@ describe("TimePeriodMonth", () => {
         const period = new TimePeriodMonth(
             new Date("2021-03-31T22:00:00.000Z"),
             new Date("2021-10-30T22:00:00.000Z"),
-            "en-US"
+            "en-US",
         );
         expect(toDateString(period.units)).toStrictEqual([
             "Mon Mar 01 2021",
@@ -98,7 +98,7 @@ describe("TimePeriodMonth", () => {
             const period = new TimePeriodMonth(start, end, "en-US");
 
             expect(period.additionalUnits(nb_missing_months)).toStrictEqual([]);
-        }
+        },
     );
 
     it("Returns an array of additional months", () => {

@@ -26,7 +26,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookDocumentAdditionalProperties", () => {
     function createWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof QuickLookDocumentAdditionalProperties>> {
         return shallowMount(QuickLookDocumentAdditionalProperties, {
             props: {

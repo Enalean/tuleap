@@ -25,5 +25,5 @@ export function buildChartLayout(
     { graph_width, graph_height, margins }: ChartPropsWithoutTooltip,
     scales: XYScale,
     ticks?: number,
-    tick_padding?: number
+    tick_padding?: number,
 ): Selection<SVGSVGElement, unknown, null, undefined>;

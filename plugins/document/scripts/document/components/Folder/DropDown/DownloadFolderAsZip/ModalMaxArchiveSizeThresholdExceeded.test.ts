@@ -78,7 +78,7 @@ describe("ModalSizeThresholdExceeded", () => {
         expect(
             wrapper
                 .find("[data-test=close-max-archive-size-threshold-exceeded-modal]")
-                .attributes("data-dismiss")
+                .attributes("data-dismiss"),
         ).toBe("modal");
         close_callback();
 

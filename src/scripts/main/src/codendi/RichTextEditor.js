@@ -41,7 +41,7 @@ codendi.RTE = Class.create({
                 autoresize_when_ready: true,
                 linkShowTargetTab: false,
             },
-            options || {}
+            options || {},
         );
 
         this.rte = false;
@@ -182,7 +182,7 @@ codendi.RTE = Class.create({
                 if (!this.can_be_resized()) {
                     evt.editor.config.resize_enabled = false;
                 }
-            }.bind(this)
+            }.bind(this),
         );
 
         CKEDITOR.on(
@@ -204,7 +204,7 @@ codendi.RTE = Class.create({
                 ) {
                     evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
                 }
-            }.bind(this)
+            }.bind(this),
         );
     },
     toggle: function (evt, option) {

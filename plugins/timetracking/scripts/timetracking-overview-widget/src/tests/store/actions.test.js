@@ -43,7 +43,7 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
-                Promise.resolve(report)
+                Promise.resolve(report),
             );
 
             await actions.initWidgetWithReport(context);
@@ -94,7 +94,7 @@ describe("Store actions", () => {
             context.state.trackers_times = trackers;
 
             jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(
-                Promise.resolve(trackers)
+                Promise.resolve(trackers),
             );
 
             await actions.loadTimes(context);
@@ -137,7 +137,7 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
-                Promise.resolve(projects)
+                Promise.resolve(projects),
             );
 
             await actions.getProjects(context);
@@ -154,7 +154,7 @@ describe("Store actions", () => {
             ];
 
             jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
-                Promise.resolve(trackers)
+                Promise.resolve(trackers),
             );
 
             await actions.getTrackers(context);

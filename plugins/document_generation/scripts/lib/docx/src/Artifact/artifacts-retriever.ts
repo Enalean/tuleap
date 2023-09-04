@@ -25,7 +25,7 @@ const MAX_CHUNK_SIZE_ARTIFACTS = 100;
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS = 5;
 
 export async function getArtifacts(
-    artifact_ids: ReadonlySet<number>
+    artifact_ids: ReadonlySet<number>,
 ): Promise<Map<number, ArtifactResponse>> {
     const artifacts: Map<number, ArtifactResponse> = new Map();
     const responses = await limitConcurrencyPool(
@@ -34,10 +34,10 @@ export async function getArtifacts(
         (artifact_ids_chunk: ReadonlyArray<number>): Promise<Response> => {
             return get(
                 `/api/v1/artifacts?query=${encodeURIComponent(
-                    JSON.stringify({ id: artifact_ids_chunk })
-                )}`
+                    JSON.stringify({ id: artifact_ids_chunk }),
+                )}`,
             );
-        }
+        },
     );
 
     for (const response of responses) {
@@ -52,7 +52,7 @@ export async function getArtifacts(
 }
 
 function getArtifactIDsChunks(
-    artifact_ids: ReadonlyArray<number>
+    artifact_ids: ReadonlyArray<number>,
 ): ReadonlyArray<ReadonlyArray<number>> {
     const artifact_ids_chunks: ReadonlyArray<number>[] = [];
 

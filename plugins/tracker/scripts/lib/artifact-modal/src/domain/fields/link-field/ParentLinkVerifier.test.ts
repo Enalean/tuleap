@@ -44,7 +44,7 @@ describe(`ParentLinkVerifier`, () => {
         const verifier = ParentLinkVerifier(
             links_retriever,
             new_links_retriever,
-            parent_artifact_identifier
+            parent_artifact_identifier,
         );
         return verifier.hasParentLink();
     };
@@ -60,14 +60,14 @@ describe(`ParentLinkVerifier`, () => {
 
     it(`returns false when there is no existing reverse _is_child link`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildUntyped())
+            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildUntyped()),
         );
         expect(hasParentLink()).toBe(false);
     });
 
     it(`returns false when there is no new reverse _is_child link`, () => {
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(162, LinkTypeStub.buildUntyped())
+            NewLinkStub.withIdAndType(162, LinkTypeStub.buildUntyped()),
         );
 
         expect(hasParentLink()).toBe(false);
@@ -75,14 +75,14 @@ describe(`ParentLinkVerifier`, () => {
 
     it(`returns true when a new reverse _is_child link exists`, () => {
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(162, LinkTypeStub.buildChildLinkType())
+            NewLinkStub.withIdAndType(162, LinkTypeStub.buildChildLinkType()),
         );
         expect(hasParentLink()).toBe(true);
     });
 
     it(`returns true when an existing reverse _is_child link exists`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildChildLinkType())
+            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildChildLinkType()),
         );
         expect(hasParentLink()).toBe(true);
     });

@@ -98,7 +98,7 @@ describe("EditAccessTokenGitlabModal", () => {
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).attributes().gitlab_new_token).toBe(
-            "azert123"
+            "azert123",
         );
     });
 
@@ -129,7 +129,7 @@ describe("EditAccessTokenGitlabModal", () => {
 
         expect(store.commit).toHaveBeenCalledWith(
             "setSuccessMessage",
-            "Token of GitLab repository my/repo has been successfully updated."
+            "Token of GitLab repository my/repo has been successfully updated.",
         );
     });
 
@@ -159,7 +159,7 @@ describe("EditAccessTokenGitlabModal", () => {
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(AccessTokenFormModal).attributes().gitlab_token).toBe(
-            "azert123"
+            "azert123",
         );
 
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeFalsy();

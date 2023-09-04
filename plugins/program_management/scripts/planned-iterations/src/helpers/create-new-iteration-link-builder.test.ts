@@ -25,13 +25,13 @@ import {
 describe("create-new-iteration-link-builder", () => {
     it("should build the iteration creation url", () => {
         expect(buildIterationCreationUrl(1280, 101)).toBe(
-            "/plugins/tracker/?redirect-to-planned-iterations=create&increment-id=1280&tracker=101&func=new-artifact"
+            "/plugins/tracker/?redirect-to-planned-iterations=create&increment-id=1280&tracker=101&func=new-artifact",
         );
     });
 
     it("should build the iteration edition url", () => {
         expect(buildIterationEditionUrl(1281, 1280)).toBe(
-            "/plugins/tracker/?aid=1281&redirect-to-planned-iterations=update&increment-id=1280"
+            "/plugins/tracker/?aid=1281&redirect-to-planned-iterations=update&increment-id=1280",
         );
     });
 });

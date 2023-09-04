@@ -60,7 +60,7 @@ describe("User preferences", () => {
             await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
 
             expect(tlpDel).toHaveBeenCalledWith(
-                "/api/users/102/preferences?key=plugin_docman_hide_110_30"
+                "/api/users/102/preferences?key=plugin_docman_hide_110_30",
             );
         });
     });

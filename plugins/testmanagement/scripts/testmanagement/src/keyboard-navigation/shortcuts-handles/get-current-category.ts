@@ -21,7 +21,7 @@ export function getCurrentCategory(doc: Document): HTMLElement {
     const current_category = doc.querySelector("[data-navigation-category]:focus-within");
     if (!(current_category instanceof HTMLElement)) {
         throw new Error(
-            "[data-navigation-category] attribute could not be found on current test's category"
+            "[data-navigation-category] attribute could not be found on current test's category",
         );
     }
     return current_category;

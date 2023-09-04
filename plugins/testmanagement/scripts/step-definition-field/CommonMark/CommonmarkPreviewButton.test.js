@@ -44,7 +44,7 @@ describe("CommonmarkPreviewButton", () => {
             expect(icon_classes).not.toContain("fa-circle-notch");
             expect(icon_classes).not.toContain("fa-spin");
             expect(wrapper.text()).toBe(expected_button_label);
-        }
+        },
     );
 
     it("disables the button and display the spinner when the preview is loading", () => {

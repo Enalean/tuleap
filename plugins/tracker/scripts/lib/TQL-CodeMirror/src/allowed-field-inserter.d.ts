@@ -21,5 +21,5 @@ import type { TQLCodeMirrorEditor } from "./builder";
 
 export function insertAllowedFieldInCodeMirror(
     event: Event,
-    query_rich_editor: TQLCodeMirrorEditor
+    query_rich_editor: TQLCodeMirrorEditor,
 ): void;

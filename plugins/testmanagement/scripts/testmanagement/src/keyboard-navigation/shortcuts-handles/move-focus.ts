@@ -61,7 +61,7 @@ function getFirstTestLink(link_container: HTMLElement | Document): HTMLAnchorEle
     const first_link = link_container.querySelector("[data-navigation-test-link]");
     if (!(first_link instanceof HTMLAnchorElement)) {
         throw new Error(
-            `Could not find an anchor element with [data-navigation-test-link] attribute in ${link_container}`
+            `Could not find an anchor element with [data-navigation-test-link] attribute in ${link_container}`,
         );
     }
     return first_link;
@@ -72,7 +72,7 @@ function getLastTestLink(link_container: HTMLElement | Document): HTMLAnchorElem
     const last_link = links[links.length - 1];
     if (!(last_link instanceof HTMLAnchorElement)) {
         throw new Error(
-            `Could not find last anchor element with [data-navigation-test-link] attribute in ${link_container}`
+            `Could not find last anchor element with [data-navigation-test-link] attribute in ${link_container}`,
         );
     }
     return last_link;
@@ -81,7 +81,7 @@ function getLastTestLink(link_container: HTMLElement | Document): HTMLAnchorElem
 function getNextTestLink(
     doc: Document,
     current_test: HTMLElement,
-    current_category: HTMLElement
+    current_category: HTMLElement,
 ): HTMLAnchorElement {
     const next_test_tab = current_test.nextElementSibling;
     if (next_test_tab instanceof HTMLElement) {
@@ -97,7 +97,7 @@ function getNextTestLink(
 function getPreviousTestLink(
     doc: Document,
     current_test: HTMLElement,
-    current_category: HTMLElement
+    current_category: HTMLElement,
 ): HTMLAnchorElement {
     const previous_test_tab = current_test.previousElementSibling;
     if (previous_test_tab instanceof HTMLElement) {

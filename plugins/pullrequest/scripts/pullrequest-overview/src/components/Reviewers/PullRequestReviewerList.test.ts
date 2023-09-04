@@ -102,7 +102,7 @@ describe("PullRequestReviewerList", () => {
         expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(true);
 
         const avatar: DOMWrapper<HTMLImageElement>[] = wrapper.findAll(
-            "[data-test=pullrequest-reviewer-avatar]"
+            "[data-test=pullrequest-reviewer-avatar]",
         );
 
         expect(avatar).toHaveLength(2);
@@ -115,7 +115,7 @@ describe("PullRequestReviewerList", () => {
         vi.spyOn(tuleap_api, "fetchReviewersInfo").mockReturnValue(
             okAsync({
                 users: [],
-            })
+            }),
         );
 
         const wrapper = getWrapper();
@@ -168,7 +168,7 @@ describe("PullRequestReviewerList", () => {
                 await wrapper.vm.$nextTick();
 
                 expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
-            }
+            },
         );
 
         it("When the user clicks on the edit reviewers button, Then it should display the reviewers management modal", async () => {

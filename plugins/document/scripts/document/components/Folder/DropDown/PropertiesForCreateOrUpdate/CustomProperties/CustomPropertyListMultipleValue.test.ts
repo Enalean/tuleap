@@ -37,7 +37,7 @@ describe("CustomPropertyListMultipleValue", () => {
     ];
 
     function createWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof CustomPropertyListMultipleValue>> {
         return shallowMount(CustomPropertyListMultipleValue, {
             props: { currentlyUpdatedItemProperty: property },
@@ -84,13 +84,13 @@ describe("CustomPropertyListMultipleValue", () => {
 
         expect(all_options).toHaveLength(3);
         expect(
-            wrapper.find("[data-test=document-custom-list-multiple-value-100]").exists()
+            wrapper.find("[data-test=document-custom-list-multiple-value-100]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-custom-list-multiple-value-101]").exists()
+            wrapper.find("[data-test=document-custom-list-multiple-value-101]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-custom-list-multiple-value-102]").exists()
+            wrapper.find("[data-test=document-custom-list-multiple-value-102]").exists(),
         ).toBeTruthy();
     });
     it(`Given a list property is required
@@ -106,11 +106,11 @@ describe("CustomPropertyListMultipleValue", () => {
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         expect(
-            wrapper.find("[data-test=document-custom-list-multiple-select]").exists()
+            wrapper.find("[data-test=document-custom-list-multiple-select]").exists(),
         ).toBeTruthy();
 
         expect(
-            wrapper.find("[data-test=document-custom-property-is-required]").exists()
+            wrapper.find("[data-test=document-custom-property-is-required]").exists(),
         ).toBeTruthy();
     });
 
@@ -126,7 +126,7 @@ describe("CustomPropertyListMultipleValue", () => {
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
     });
 
@@ -143,7 +143,7 @@ describe("CustomPropertyListMultipleValue", () => {
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         await nextTick();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
     });
 

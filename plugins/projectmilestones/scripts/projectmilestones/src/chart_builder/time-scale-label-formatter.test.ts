@@ -107,7 +107,7 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         transform_x: number,
         date: string,
         left_padding: number,
-        right_padding: number
+        right_padding: number,
     ): void {
         const g_element = svg
             .append("g")

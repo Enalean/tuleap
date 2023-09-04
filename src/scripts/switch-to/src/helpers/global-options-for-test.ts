@@ -23,7 +23,7 @@ import type { Pinia } from "pinia";
 import { createTestingPinia as officialCreateTestingPinia } from "@pinia/testing";
 
 export function createTestingPinia(
-    option?: Parameters<typeof officialCreateTestingPinia>[0]
+    option?: Parameters<typeof officialCreateTestingPinia>[0],
 ): ReturnType<typeof officialCreateTestingPinia> {
     return officialCreateTestingPinia({ ...option, createSpy: jest.fn });
 }

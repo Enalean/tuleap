@@ -28,7 +28,7 @@ describe("BacklogItemContainer", () => {
     const load_test_defs = jest.fn();
 
     function createWrapper(
-        backlog_item: BacklogItem
+        backlog_item: BacklogItem,
     ): VueWrapper<InstanceType<typeof BacklogItemContainer>> {
         load_test_defs.mockReset();
         return shallowMount(BacklogItemContainer, {

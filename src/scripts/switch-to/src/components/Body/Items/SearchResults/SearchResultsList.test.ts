@@ -50,7 +50,7 @@ describe("SearchResultsList", () => {
                             },
                         } as FullTextState,
                     },
-                })
+                }),
             ),
         });
 
@@ -69,7 +69,7 @@ describe("SearchResultsList", () => {
                             fulltext_search_has_more_results: true,
                         } as FullTextState,
                     },
-                })
+                }),
             ),
         });
 
@@ -88,7 +88,7 @@ describe("SearchResultsList", () => {
                             fulltext_search_is_loading: true,
                         } as FullTextState,
                     },
-                })
+                }),
             ),
         });
 
@@ -106,7 +106,7 @@ describe("SearchResultsList", () => {
                             fulltext_search_has_more_results: true,
                         } as FullTextState,
                     },
-                })
+                }),
             ),
         });
 

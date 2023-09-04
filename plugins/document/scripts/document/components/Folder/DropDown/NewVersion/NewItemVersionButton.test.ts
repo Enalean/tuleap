@@ -35,7 +35,7 @@ describe("CreateNewItemVersionButton", () => {
     });
 
     function createWrapper(
-        item: Item
+        item: Item,
     ): VueWrapper<InstanceType<typeof CreateNewItemVersionButton>> {
         return shallowMount(CreateNewItemVersionButton, {
             props: { item: item, buttonClasses: "", iconClasses: "" },
@@ -81,7 +81,7 @@ describe("CreateNewItemVersionButton", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
-            expect.any(Object)
+            expect.any(Object),
         );
     });
 
@@ -100,7 +100,7 @@ describe("CreateNewItemVersionButton", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
-            expect.any(Object)
+            expect.any(Object),
         );
     });
 
@@ -120,7 +120,7 @@ describe("CreateNewItemVersionButton", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
-            expect.any(Object)
+            expect.any(Object),
         );
     });
 
@@ -139,7 +139,7 @@ describe("CreateNewItemVersionButton", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
-            expect.any(Object)
+            expect.any(Object),
         );
     });
 

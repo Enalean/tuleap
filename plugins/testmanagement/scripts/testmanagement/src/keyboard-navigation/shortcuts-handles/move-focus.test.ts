@@ -100,7 +100,7 @@ describe("move-focus", () => {
             it("returns the first test link in next category if current test is last of its category", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
-                    first_category
+                    first_category,
                 );
                 const target_test = getTargetTest(doc, NEXT);
 
@@ -110,7 +110,7 @@ describe("move-focus", () => {
             it("returns first test link if current test is the last", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(fourth_test);
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
-                    second_category
+                    second_category,
                 );
                 const target_test = getTargetTest(doc, NEXT);
 
@@ -129,7 +129,7 @@ describe("move-focus", () => {
             it("returns the last test link in previous category if current test is first of its category", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(third_test);
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
-                    second_category
+                    second_category,
                 );
                 const target_test = getTargetTest(doc, PREVIOUS);
 
@@ -139,7 +139,7 @@ describe("move-focus", () => {
             it("returns last test link if current test is the first", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(first_test);
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
-                    first_category
+                    first_category,
                 );
                 const target_test = getTargetTest(doc, PREVIOUS);
 
@@ -171,7 +171,7 @@ describe("move-focus", () => {
         [first_test_link, second_test_link, third_test_link, fourth_test_link].forEach(
             (test_link) => {
                 test_link.setAttribute("data-navigation-test-link", "");
-            }
+            },
         );
 
         first_test.append(first_test_link);

@@ -121,7 +121,7 @@ export default class PlannedIterationsSection extends Vue {
 
         return this.$gettextInterpolate(
             this.$gettext("The retrieval of %{ iteration_label } has failed"),
-            { iteration_label: this.iterations_labels.label }
+            { iteration_label: this.iterations_labels.label },
         );
     }
 

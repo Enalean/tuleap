@@ -60,7 +60,7 @@ describe("side-by-side-widget-helper", () => {
             "should return %s when the widget is %s",
             (is_comment_placeholder, widget_name, widget) => {
                 expect(isCodeCommentPlaceholderWidget(widget)).toBe(is_comment_placeholder);
-            }
+            },
         );
     });
 

@@ -49,6 +49,6 @@ const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>(
 ]);
 
 const tooltip_text = ref(
-    $gettext("Filename will follow a pattern enforced by the document manager configuration.")
+    $gettext("Filename will follow a pattern enforced by the document manager configuration."),
 );
 </script>

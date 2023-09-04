@@ -45,7 +45,7 @@ export const getSelectedLabels = (selected_labels: unknown): ProjectLabel[] => {
 
 export const getAssignableLabelsTemplate = (
     html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem
+    item: LazyboxItem,
 ): HTMLTemplateResult => {
     const label = getAssignableLabel(item.value);
     if (!label) {

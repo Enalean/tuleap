@@ -22,7 +22,7 @@ import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
 export function transformFieldValueIntoAFormattedCell(
-    field_value: Readonly<ArtifactReportResponseFieldValue>
+    field_value: Readonly<ArtifactReportResponseFieldValue>,
 ): ReportCell {
     switch (field_value.type) {
         case "string":

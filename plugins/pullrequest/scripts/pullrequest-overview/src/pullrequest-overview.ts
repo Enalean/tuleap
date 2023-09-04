@@ -42,7 +42,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const base_url = buildBaseUrl(
         window.location,
         getDatasetItemOrThrow(mount_point, "repositoryId"),
-        project_id
+        project_id,
     );
 
     createApp(OverviewApp)
@@ -51,27 +51,27 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
         .provide(
             CURRENT_USER_ID,
-            Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10)
+            Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
         )
         .provide(PROJECT_ID, project_id)
         .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            getDatasetItemOrThrow(mount_point, "relativeDateDisplay")
+            getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
         )
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
-            Boolean(getDatasetItemOrThrow(mount_point, "areMergeCommitsAllowedInRepository"))
+            Boolean(getDatasetItemOrThrow(mount_point, "areMergeCommitsAllowedInRepository")),
         )
         .provide(
             IS_COMMENTS_MARKDOWN_MODE_ENABLED,
-            Boolean(getDatasetItemOrThrow(mount_point, "isFeatureFlagMarkdownCommentsEnabled"))
+            Boolean(getDatasetItemOrThrow(mount_point, "isFeatureFlagMarkdownCommentsEnabled")),
         )
         .use(createOverviewRouter(base_url))
         .use(
             await initVueGettext(createGettext, (locale: string) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-            })
+            }),
         )
         .use(VueDOMPurifyHTML)
         .mount(mount_point);

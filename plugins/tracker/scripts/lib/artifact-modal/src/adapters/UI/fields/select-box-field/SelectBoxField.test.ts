@@ -48,7 +48,7 @@ describe("SelectBoxField", () => {
                     ],
                 },
                 [205, 462],
-                false
+                false,
             ),
             bind_value_ids,
         } as HostElement);
@@ -63,7 +63,7 @@ describe("SelectBoxField", () => {
     describe("field error state", () => {
         const getFieldClasses = (
             is_field_required: boolean,
-            bind_value_ids: ReadonlyArray<BindValueId>
+            bind_value_ids: ReadonlyArray<BindValueId>,
         ): Record<string, boolean> => {
             return getFormElementClasses({
                 bind_value_ids,
@@ -121,7 +121,7 @@ describe("SelectBoxField", () => {
         const select = selectOrThrow(
             target,
             "[data-test=selectbox-field-select]",
-            HTMLSelectElement
+            HTMLSelectElement,
         );
         const [first_option] = select.options;
         first_option.selected = true;

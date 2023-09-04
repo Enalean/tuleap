@@ -38,14 +38,14 @@ export default {
     },
     pushGitlabRepositoriesForCurrentOwner(
         state: State,
-        repositories: Array<GitLabRepository>
+        repositories: Array<GitLabRepository>,
     ): void {
         if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
             Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
         }
         if (repositories.length > 0) {
             const repositories_formatted = repositories.map((repo: GitLabRepository) =>
-                formatRepository(repo)
+                formatRepository(repo),
             );
             state.repositories_for_owner[state.selected_owner_id].push(...repositories_formatted);
         }

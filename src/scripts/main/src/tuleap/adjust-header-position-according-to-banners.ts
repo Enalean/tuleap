@@ -21,7 +21,7 @@ export function adjustHeaderPositionAccordingToBanners(
     header: HTMLElement,
     platform_banner: HTMLElement | null,
     project_banner: HTMLElement | null,
-    scroll_y: number
+    scroll_y: number,
 ): void {
     if (project_banner === null && platform_banner === null) {
         return;

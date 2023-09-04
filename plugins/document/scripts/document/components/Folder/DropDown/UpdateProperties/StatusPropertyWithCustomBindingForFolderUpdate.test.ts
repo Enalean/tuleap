@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     function createWrapper(
-        is_status_property_used: boolean
+        is_status_property_used: boolean,
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForFolderUpdate>> {
         return shallowMount(StatusPropertyWithCustomBindingForFolderUpdate, {
             props: { status_value: "none" },
@@ -48,7 +48,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
         const wrapper = createWrapper(true);
 
         expect(
-            wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
+            wrapper.find("[data-test=document-status-property-for-folder-update]").exists(),
         ).toBeTruthy();
     });
 
@@ -56,7 +56,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
         const wrapper = createWrapper(false);
 
         expect(
-            wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
+            wrapper.find("[data-test=document-status-property-for-folder-update]").exists(),
         ).toBeFalsy();
     });
 });

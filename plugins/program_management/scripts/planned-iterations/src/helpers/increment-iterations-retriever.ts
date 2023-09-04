@@ -28,6 +28,6 @@ export function getIncrementIterations(increment_id: number): Promise<Iteration[
                 limit: 50,
                 offset: 0,
             },
-        }
+        },
     );
 }

@@ -56,7 +56,7 @@ type EditConfigurationModalType = {
 export const EditConfigurationModal = (
     doc: Document,
     gettext_provider: GetText,
-    group_id: number
+    group_id: number,
 ): EditConfigurationModalType => {
     const edit_button = selectOrThrow(doc, EDIT_CONFIG_SELECTOR, HTMLButtonElement);
     const edit_modal = selectOrThrow(doc, EDIT_CONFIGURATION_MODAL_SELECTOR);
@@ -67,12 +67,12 @@ export const EditConfigurationModal = (
     const prefix_checkbox = selectOrThrow(
         edit_modal,
         HAS_PREFIX_CHECKBOX_SELECTOR,
-        HTMLInputElement
+        HTMLInputElement,
     );
     const allow_closure_checkbox = selectOrThrow(
         edit_modal,
         ALLOW_ARTIFACT_CLOSURE_INPUT_SELECTOR,
-        HTMLInputElement
+        HTMLInputElement,
     );
     const prefix_box = selectOrThrow(edit_modal, PREFIX_BOX_SELECTOR);
     const form_elements = edit_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR);
@@ -133,9 +133,9 @@ export const EditConfigurationModal = (
                 modal_feedback.classList.remove(FEEDBACK_HIDDEN_CLASSNAME);
                 modal_alert.textContent = sprintf(
                     gettext_provider.gettext("Error during the update of configuration: %(error)s"),
-                    { error: String(fault) }
+                    { error: String(fault) },
                 );
-            }
+            },
         );
         toggleLoadingState(false);
     };

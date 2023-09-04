@@ -62,7 +62,9 @@
     z-index: 2;
     margin: 12px 0 0;
     background: var(--tlp-white-color);
-    box-shadow: 0 3px 3px var(--tlp-white-color), 0 -3px 3px var(--tlp-white-color);
+    box-shadow:
+        0 3px 3px var(--tlp-white-color),
+        0 -3px 3px var(--tlp-white-color);
 }
 
 .document-properties-recursion-option-section {

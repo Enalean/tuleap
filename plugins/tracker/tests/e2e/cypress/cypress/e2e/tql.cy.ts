@@ -30,7 +30,7 @@ function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
     return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}`).then((response) => {
         const tracker = response.body;
         const summary_field = tracker.fields.find(
-            (field: TrackerField) => field.name === "summary"
+            (field: TrackerField) => field.name === "summary",
         );
 
         return String(summary_field.field_id);
@@ -57,10 +57,10 @@ function findArtifactsWithExpertQuery(query: string): void {
 
 function checkOnlyExpectedArtifactsAreListed(
     summary_column_id: string,
-    expected_artifacts: Array<string>
+    expected_artifacts: Array<string>,
 ): void {
     cy.get(
-        `[data-test=tracker-report-table-results-artifact] > [data-column-id=${summary_column_id}]`
+        `[data-test=tracker-report-table-results-artifact] > [data-column-id=${summary_column_id}]`,
     ).then((artifact) => {
         expected_artifacts.forEach((artifact_name) => {
             cy.wrap(artifact).should("contain", artifact_name);
@@ -142,7 +142,7 @@ describe("Report expert queries", () => {
         checkNoArtifactsAreListed();
 
         findArtifactsWithExpertQuery(
-            "status IN ('todo', 'doing') OR ugroups = 'Membres du projet'"
+            "status IN ('todo', 'doing') OR ugroups = 'Membres du projet'",
         );
         checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
 
@@ -167,25 +167,25 @@ describe("Report expert queries", () => {
         findArtifactsWithExpertQuery('submitted_by="username"');
 
         cy.get("[data-test=feedback]").contains(
-            "Error with the field 'submitted_by'. The user 'username' does not exist."
+            "Error with the field 'submitted_by'. The user 'username' does not exist.",
         );
 
         findArtifactsWithExpertQuery('test="bug1"');
 
         cy.get("[data-test=feedback]").contains(
-            "We cannot search on 'test', we don't know what it refers to. Please refer to the documentation for the allowed comparisons."
+            "We cannot search on 'test', we don't know what it refers to. Please refer to the documentation for the allowed comparisons.",
         );
 
         findArtifactsWithExpertQuery('due_date = "2017-01-10 12:12"');
 
         cy.get("[data-test=feedback]").contains(
-            "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'"
+            "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'",
         );
 
         findArtifactsWithExpertQuery('ugroups = "unknown"');
 
         cy.get("[data-test=feedback]").contains(
-            "The value 'unknown' doesn't exist for the list field 'ugroups'."
+            "The value 'unknown' doesn't exist for the list field 'ugroups'.",
         );
     });
 });

@@ -31,7 +31,7 @@ export function buildOverviewURL(
     location: Location,
     pull_request: PullRequestWithProjectAndRepository,
     current_project_id: number,
-    current_repository_id: number
+    current_repository_id: number,
 ): URL {
     const url = new URL("/plugins/git/", location.origin);
     url.searchParams.set("action", "pull-requests");

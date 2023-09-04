@@ -44,7 +44,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(
             parent_comment,
-            new_comment_payload
+            new_comment_payload,
         );
 
         expect(presenter).toStrictEqual({
@@ -75,7 +75,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(
             parent_comment,
-            new_comment_on_file_payload
+            new_comment_on_file_payload,
         );
 
         expect(presenter).toStrictEqual({

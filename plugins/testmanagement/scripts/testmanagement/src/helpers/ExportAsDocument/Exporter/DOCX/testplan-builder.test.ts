@@ -58,7 +58,7 @@ describe("buildMilestoneTestPlan", () => {
                 tests: [],
             },
             gettext_provider,
-            global_export_properties
+            global_export_properties,
         );
 
         const tree = section[1].prepForXml({} as IContext);
@@ -91,7 +91,7 @@ describe("buildMilestoneTestPlan", () => {
         const backlog = await buildMilestoneTestPlan(
             document,
             gettext_provider,
-            global_export_properties
+            global_export_properties,
         );
 
         expect(JSON.stringify(backlog[1].prepForXml({} as IContext))).toContain("Lorem");

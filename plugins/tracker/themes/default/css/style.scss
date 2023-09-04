@@ -232,7 +232,9 @@ button[name="tracker_query_submit"] {
 
     > .CodeMirror {
         height: 100px;
-        transition: border linear 0.2s, box-shadow linear 0.2s;
+        transition:
+            border linear 0.2s,
+            box-shadow linear 0.2s;
         border: 1px solid #cccccc;
         border-radius: var(--tlp-medium-radius);
 
@@ -1026,8 +1028,10 @@ select.tracker-report-expert-allowed-fields {
     padding: 0 0 1px;
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
-    box-shadow: inset 1px 0 var(--tlp-neutral-normal-color),
-        inset 0 -1px var(--tlp-neutral-normal-color), inset -1px 0 var(--tlp-neutral-normal-color);
+    box-shadow:
+        inset 1px 0 var(--tlp-neutral-normal-color),
+        inset 0 -1px var(--tlp-neutral-normal-color),
+        inset -1px 0 var(--tlp-neutral-normal-color);
 
     &.tracker_artifact_fieldset_hidden {
         display: none;
@@ -1152,7 +1156,10 @@ select.tracker-report-expert-allowed-fields {
 
     &:hover {
         background-color: rgb(217 237 247 / 90%);
-        box-shadow: inset 0 1px 0 #8fcedb, inset 1px 0 0 #8fcedb, inset -1px 0 0 #8fcedb,
+        box-shadow:
+            inset 0 1px 0 #8fcedb,
+            inset 1px 0 0 #8fcedb,
+            inset -1px 0 0 #8fcedb,
             inset 0 -1px 0 #8fcedb;
 
         div {
@@ -1165,14 +1172,20 @@ select.tracker-report-expert-allowed-fields {
 .tracker_artifact_preview_attachment {
     height: 110px;
     background-color: #fcfcfc;
-    box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5,
+    box-shadow:
+        inset 0 1px 0 #e5e5e5,
+        inset 1px 0 0 #e5e5e5,
+        inset -1px 0 0 #e5e5e5,
         inset 0 -1px 0 #e5e5e5;
 
     &:not(.image) {
         background: #fcfcfc
             url("../../../../../src/www/themes/common/images/ic/artifact_attachment_default.png")
             no-repeat center center;
-        box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5,
+        box-shadow:
+            inset 0 1px 0 #e5e5e5,
+            inset 1px 0 0 #e5e5e5,
+            inset -1px 0 0 #e5e5e5,
             inset 0 -1px 0 #e5e5e5;
     }
 

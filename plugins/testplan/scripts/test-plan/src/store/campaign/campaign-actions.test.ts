@@ -59,7 +59,7 @@ describe("Campaign state actions", () => {
                 {
                     params: { query: '{"milestone_id":42}', limit: 100 },
                     getCollectionCallback: expect.any(Function),
-                }
+                },
             );
         });
 
@@ -163,7 +163,7 @@ describe("Campaign state actions", () => {
                     body: JSON.stringify({ project_id: 104, label: "New campaign" }),
                     headers: { "content-type": "application/json" },
                 });
-            }
+            },
         );
 
         it("Commits as soon as possible the new campaign, and asks to refresh it", async () => {

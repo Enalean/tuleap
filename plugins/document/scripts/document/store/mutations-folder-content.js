@@ -45,7 +45,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
             sibling.parent_id === new_item.parent_id &&
             sibling.title.localeCompare(new_item.title, undefined, {
                 numeric: true,
-            }) >= 0
+            }) >= 0,
     );
 
     const has_no_sibling_and_no_parent = near_sibling_index === -1 && !parent;
@@ -57,7 +57,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
         return;
     } else if (has_a_parent_but_no_siblings) {
         const document_siblings = state.folder_content.filter(
-            (item) => item.parent_id === new_item.parent_id
+            (item) => item.parent_id === new_item.parent_id,
         );
 
         let nearest_sibling;
@@ -69,7 +69,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
         }
 
         const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id,
         );
 
         state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
@@ -82,7 +82,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
 
 function addFolderToTheRightPlace(state, new_item, parent) {
     const folder_siblings = state.folder_content.filter(
-        (item) => isFolder(item) && item.parent_id === new_item.parent_id
+        (item) => isFolder(item) && item.parent_id === new_item.parent_id,
     );
 
     let nearest_sibling = folder_siblings.find((sibling) => {
@@ -99,13 +99,13 @@ function addFolderToTheRightPlace(state, new_item, parent) {
         nearest_sibling = folder_siblings[folder_siblings.length - 1];
 
         const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id,
         );
 
         state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
     } else if (nearest_sibling) {
         const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id,
         );
 
         state.folder_content.splice(nearest_sibling_index, 0, new_item);
@@ -153,7 +153,7 @@ function appendSubFolderContent(state, [folder_id, sub_items]) {
 
     const filtered_sub_items = sub_items.filter(
         (item) =>
-            state.folder_content.findIndex((existing_item) => item.id === existing_item.id) === -1
+            state.folder_content.findIndex((existing_item) => item.id === existing_item.id) === -1,
     );
 
     state.folder_content.splice(folder_index + 1, 0, ...filtered_sub_items);
@@ -220,7 +220,7 @@ function unfoldFolderContent(state, folder_id) {
     }
 
     state.folded_items_ids = state.folded_items_ids.filter(
-        (item) => !items_to_unfold.includes(item)
+        (item) => !items_to_unfold.includes(item),
     );
 
     delete state.folded_by_map[folder_id];

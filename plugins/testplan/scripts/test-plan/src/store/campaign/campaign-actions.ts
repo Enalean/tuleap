@@ -30,7 +30,7 @@ export interface CampaignActions extends ActionTree<CampaignState, RootState> {
 }
 
 export async function loadCampaigns(
-    context: ActionContext<CampaignState, RootState>
+    context: ActionContext<CampaignState, RootState>,
 ): Promise<void> {
     context.commit("beginLoadingCampaigns");
     try {
@@ -50,13 +50,13 @@ export async function loadCampaigns(
                             is_being_refreshed: false,
                             is_just_refreshed: false,
                             is_error: false,
-                        })
+                        }),
                     );
                     context.commit("addCampaigns", campaigns);
 
                     return campaigns;
                 },
-            }
+            },
         );
     } catch (e) {
         if (!isPermissionDenied(e)) {
@@ -82,7 +82,7 @@ function isAFetchWrapperError(error: Error | FetchWrapperError): error is FetchW
 
 export async function createCampaign(
     context: ActionContext<CampaignState, RootState>,
-    payload: CreateCampaignPayload
+    payload: CreateCampaignPayload,
 ): Promise<void> {
     const headers = {
         "content-type": "application/json",
@@ -125,7 +125,7 @@ export async function createCampaign(
 
 export async function refreshCampaign(
     context: ActionContext<CampaignState, RootState>,
-    campaign: Campaign
+    campaign: Campaign,
 ): Promise<void> {
     try {
         const response = await get(`/api/v1/testmanagement_campaigns/${campaign.id}`);

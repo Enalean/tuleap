@@ -39,7 +39,7 @@ export default {
             const translated = $ngettext(
                 "You are not allowed to drag 'n drop more than %{ nb } file at once.",
                 "You are not allowed to drag 'n drop more than %{ nb } files at once.",
-                this.max_files_dragndrop
+                this.max_files_dragndrop,
             );
 
             return interpolate(translated, { nb: this.max_files_dragndrop });

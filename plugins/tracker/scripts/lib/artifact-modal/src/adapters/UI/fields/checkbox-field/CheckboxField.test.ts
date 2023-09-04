@@ -47,7 +47,7 @@ describe("CheckboxField", () => {
                 required: true,
             },
             bind_value_ids,
-            false
+            false,
         );
         value_index = 0;
         value = { id: 1, label: "One", is_checked: true };

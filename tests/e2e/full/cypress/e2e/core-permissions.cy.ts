@@ -64,7 +64,7 @@ describe("Core", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            message
+            message,
         );
 
         cy.siteAdministratorSession();
@@ -88,7 +88,7 @@ describe("Core", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            message
+            message,
         );
     });
 });
@@ -96,7 +96,7 @@ describe("Core", function () {
 function checkForumPermissions(project_id: string): void {
     cy.visit("/forum/admin/?group_id=" + project_id);
     cy.get("[data-test=feedback]").contains(
-        "You are not granted sufficient permission to perform this operation."
+        "You are not granted sufficient permission to perform this operation.",
     );
 }
 
@@ -104,7 +104,7 @@ function checkNewsPermissions(project_id: string): void {
     cy.visit("/news/admin/?group_id=" + project_id);
 
     cy.get("[data-test=feedback]").contains(
-        "Permission Denied. You have to be an admin on the News service of this project."
+        "Permission Denied. You have to be an admin on the News service of this project.",
     );
 }
 
@@ -112,14 +112,14 @@ function checkPhpWikiPermissions(project_id: string): void {
     cy.visit(`/wiki/admin/index.php?group_id=${project_id}&view=wikiPerms`);
 
     cy.get("[data-test=feedback]").contains(
-        "You are not granted sufficient permission to perform this operation."
+        "You are not granted sufficient permission to perform this operation.",
     );
 }
 
 function checkFrsPermissions(project_id: string): void {
     cy.visit(`/file/admin/?group_id=${project_id}&action=edit-permissions`);
     cy.get("[data-test=feedback]").contains(
-        "You are not granted sufficient permission to perform this operation."
+        "You are not granted sufficient permission to perform this operation.",
     );
 }
 

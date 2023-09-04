@@ -55,7 +55,7 @@ describe("GroupTemplate", () => {
                 isSelected: (item) => (item ? false : false),
             } as SelectionElement & HTMLElement,
             templating_callback: TemplatingCallbackStub.build(),
-        } as HostElement);
+        }) as HostElement;
 
     const render = (): void => {
         const host = getHost();
@@ -208,7 +208,7 @@ describe("GroupTemplate", () => {
 
             const item_template = target.firstElementChild;
             expect(
-                item_template?.classList.contains("lazybox-dropdown-option-value-disabled")
+                item_template?.classList.contains("lazybox-dropdown-option-value-disabled"),
             ).toBe(true);
         });
     });

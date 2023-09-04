@@ -74,7 +74,7 @@ export function getAvailableShortcuts(doc: HTMLElement): ProjectSidebarShortcut[
 }
 
 export function getAvailableShortcutsFromToolsConfiguration(
-    tools: ReadonlyArray<Tool>
+    tools: ReadonlyArray<Tool>,
 ): ProjectSidebarShortcutWithHandle[] | null {
     const available_tools = new Map(tools.map((tool: Tool) => [tool.shortcut_id, tool]));
     if (available_tools.size <= 0) {

@@ -37,7 +37,7 @@ export async function initStatusListPicker(mount_point: Document): Promise<void>
             import(
                 /* webpackChunkName: "status-done-picker-po-" */ "../po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     createListPicker(document.querySelector("#done_value"), {

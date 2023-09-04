@@ -211,7 +211,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                             label: "None",
                         });
                         expect(transformed_tracker.fields[0].values).toHaveLength(3);
-                    }
+                    },
                 );
 
                 it(`when the field has a workflow, then the "None" value will not be added`, () => {
@@ -269,7 +269,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                             label: "None",
                         });
                         expect(transformed_tracker.fields[0].values).toHaveLength(3);
-                    }
+                    },
                 );
 
                 it.each([
@@ -295,7 +295,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                             label: "None",
                         });
                         expect(transformed_tracker.fields[0].values).toHaveLength(2);
-                    }
+                    },
                 );
             });
 
@@ -456,13 +456,13 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                         expect.objectContaining({
                             id: "101_3",
                             label: "MSB Group Name",
-                        })
+                        }),
                     );
                     expect(transformed_tracker.fields[0].values[2]).toStrictEqual(
                         expect.objectContaining({
                             id: "101_4",
                             label: "MSB Other Group Name",
-                        })
+                        }),
                     );
                     expect(transformed_tracker.fields[1].values[0]).toStrictEqual({
                         id: 100,
@@ -472,19 +472,19 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                         expect.objectContaining({
                             id: "103_4",
                             label: "SB Group Name",
-                        })
+                        }),
                     );
                     expect(transformed_tracker.fields[2].values[0]).toStrictEqual(
                         expect.objectContaining({
                             id: "108_3",
                             label: "CB Group Name",
-                        })
+                        }),
                     );
                     expect(transformed_tracker.fields[3].values[0]).toStrictEqual(
                         expect.objectContaining({
                             id: "107_4",
                             label: "RB Group Name",
-                        })
+                        }),
                     );
                 });
             });
@@ -715,7 +715,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                     const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.workflow.rules.lists).toStrictEqual(
-                        tracker.workflow.rules.lists
+                        tracker.workflow.rules.lists,
                     );
                 });
             });

@@ -36,7 +36,7 @@ document.observe("dom:loaded", function () {
                     loadOnInit: false,
                     newValues: false,
                     newValuePrefix: "!",
-                }
+                },
             );
         }
     }
@@ -80,7 +80,7 @@ document.observe("dom:loaded", function () {
             })
                 .hide()
                 .update(
-                    '<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>'
+                    '<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>',
                 );
             palette.insert({
                 after: admin_field_properties,
@@ -134,7 +134,7 @@ document.observe("dom:loaded", function () {
                                     evt.stop();
                                 })
                                 .update(
-                                    "&laquo; " + codendi.locales.tracker_formelement_admin.cancel
+                                    "&laquo; " + codendi.locales.tracker_formelement_admin.cancel,
                                 ),
                         });
                         admin_field_properties.select("input[type=submit]")[0].insert({
@@ -161,7 +161,7 @@ document.observe("dom:loaded", function () {
                                                 height: "auto",
                                             });
                                         },
-                                    })
+                                    }),
                                 );
                             });
 
@@ -194,7 +194,7 @@ document.observe("dom:loaded", function () {
                         .addClassName("tracker-admin-field-selected")
                         .addClassName("widget")
                         .update(
-                            '<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>'
+                            '<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>',
                         );
                     element = a.up(".tracker-admin-field");
                     if (element) {
@@ -250,7 +250,7 @@ document.observe("dom:loaded", function () {
                                     evt.stop();
                                 })
                                 .update(
-                                    "&laquo; " + codendi.locales.tracker_formelement_admin.cancel
+                                    "&laquo; " + codendi.locales.tracker_formelement_admin.cancel,
                                 ),
                         });
                         selected_element.select("input[type=submit]")[0].insert({
@@ -284,7 +284,7 @@ document.observe("dom:loaded", function () {
                                             height: "auto",
                                         });
                                     },
-                                })
+                                }),
                             );
                         });
 

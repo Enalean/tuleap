@@ -40,9 +40,9 @@ describe("accessibility-helper", () => {
             expect(classes).toContain("element-card-red-wine");
             expect(classes).toContain("element-card-background-lemon-green");
             expect(classes.includes("element-card-with-accessibility")).toBe(
-                is_accessibility_mode_enabled
+                is_accessibility_mode_enabled,
             );
-        }
+        },
     );
 
     it.each([
@@ -54,14 +54,14 @@ describe("accessibility-helper", () => {
         (
             card_bg_color: string,
             is_accessibility_mode_enabled: boolean,
-            expected_return: boolean
+            expected_return: boolean,
         ) => {
             const is_accessibility_patter_shown = showAccessibilityPattern(
                 { background_color: card_bg_color } as UserStory,
-                is_accessibility_mode_enabled
+                is_accessibility_mode_enabled,
             );
 
             expect(is_accessibility_patter_shown).toBe(expected_return);
-        }
+        },
     );
 });

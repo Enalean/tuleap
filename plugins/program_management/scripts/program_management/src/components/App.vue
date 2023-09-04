@@ -186,9 +186,9 @@ export default class App extends Vue {
     getAdminEmptyState(): string {
         return this.$gettextInterpolate(
             this.$gettext(
-                `Configuration can be done in <a href="%{ url }" data-test="program-go-to-administration">administration</a> of service.`
+                `Configuration can be done in <a href="%{ url }" data-test="program-go-to-administration">administration</a> of service.`,
             ),
-            { url: `/program_management/admin/${this.short_name}` }
+            { url: `/program_management/admin/${this.short_name}` },
         );
     }
 }

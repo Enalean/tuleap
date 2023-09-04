@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 describe("ApprovalBadge", () => {
     function createWrapper(
         item: ApprovableDocument,
-        isInFolderContentRow: boolean
+        isInFolderContentRow: boolean,
     ): VueWrapper<InstanceType<typeof ApprovalBadge>> {
         return shallowMount(ApprovalBadge, {
             props: { item, isInFolderContentRow },

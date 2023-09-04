@@ -37,8 +37,8 @@ describe("ReviewersAutocompleter", () => {
         autocompleter = ReviewersAutocompleter(
             GroupOfReviewersBuilder(
                 UsersToLazyboxItemsTransformer(),
-                (msgid: string): string => msgid
-            )
+                (msgid: string): string => msgid,
+            ),
         );
     });
 
@@ -82,7 +82,7 @@ describe("ReviewersAutocompleter", () => {
                     id: 102,
                     display_name: "Joe the Hobo",
                 } as User,
-            ])
+            ]),
         );
 
         await autocompleter.autocomplete(lazybox, [], "joe");
@@ -109,7 +109,7 @@ describe("ReviewersAutocompleter", () => {
     it(`Given that an error occurred while retrieving matching users
         Then it should display an empty group`, async () => {
         vi.spyOn(tuleap_api, "fetchMatchingUsers").mockReturnValue(
-            errAsync(Fault.fromMessage("An error that should probably never happen"))
+            errAsync(Fault.fromMessage("An error that should probably never happen")),
         );
 
         await autocompleter.autocomplete(lazybox, [], "joe");

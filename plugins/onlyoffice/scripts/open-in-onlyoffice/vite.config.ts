@@ -34,5 +34,5 @@ export default vite.defineAppConfig(
                 },
             },
         },
-    }
+    },
 );

@@ -88,7 +88,7 @@ watch(
         }
         error_message.value = error;
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 onMounted((): void => {
@@ -127,7 +127,7 @@ function getValidityErrorAtUpdate(text_value: string): string {
             text_value,
             folder_content.value,
             props.currentlyUpdatedItem,
-            props.parent
+            props.parent,
         )
     ) {
         return document_already_exists_error;
@@ -137,7 +137,7 @@ function getValidityErrorAtUpdate(text_value: string): string {
             text_value,
             folder_content.value,
             props.currentlyUpdatedItem,
-            props.parent
+            props.parent,
         )
     ) {
         return folder_already_exists_error;

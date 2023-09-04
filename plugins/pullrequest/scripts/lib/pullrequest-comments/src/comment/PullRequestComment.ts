@@ -87,7 +87,7 @@ const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfC
 
 export const setReplies = (
     host: PullRequestCommentComponentType,
-    presenter: PullRequestCommentRepliesCollectionPresenter | undefined
+    presenter: PullRequestCommentRepliesCollectionPresenter | undefined,
 ): PullRequestCommentRepliesCollectionPresenter => {
     if (!presenter) {
         return PullRequestCommentRepliesCollectionPresenter.buildEmpty();
@@ -98,7 +98,7 @@ export const setReplies = (
 
 export const setNewCommentState = (
     host: PullRequestCommentComponentType,
-    presenter: ReplyCommentFormPresenter | undefined
+    presenter: ReplyCommentFormPresenter | undefined,
 ): ReplyCommentFormPresenter | null => {
     if (!presenter) {
         return null;
@@ -189,7 +189,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
 
             <div class="pull-request-comment-follow-ups">
                 ${host.replies.map((reply: PullRequestCommentPresenter) =>
-                    getCommentReplyTemplate(host, reply, gettext_provider)
+                    getCommentReplyTemplate(host, reply, gettext_provider),
                 )}
                 ${getReplyFormTemplate(host, gettext_provider)}
             </div>

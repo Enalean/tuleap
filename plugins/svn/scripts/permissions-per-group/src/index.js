@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocale(locale)}`)
+        import(`../po/${getPOFileFromLocale(locale)}`),
     );
 
     const RootComponent = Vue.extend(SvnPermissions);

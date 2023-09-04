@@ -47,7 +47,7 @@ const stubBounding = (height: number) => {
 export const FileDiffWidgetStub = {
     buildInlineCommentWidget: (
         height = 20,
-        data: Partial<InlineCommentWidget> = {}
+        data: Partial<InlineCommentWidget> = {},
     ): InlineCommentWidget => ({
         ...base_element,
         localName: "tuleap-pullrequest-comment",

@@ -210,7 +210,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     const document_dropdown_shortcuts_group: ShortcutsGroup = {
         title: gettext_provider.$gettext("Actions in Documents service"),
         details: gettext_provider.$gettext(
-            "Shortcuts will apply to the selected document or folder. If there is no selected item they will apply to the current folder."
+            "Shortcuts will apply to the selected document or folder. If there is no selected item they will apply to the current folder.",
         ),
         shortcuts: [
             create_new_document,

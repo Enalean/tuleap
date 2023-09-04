@@ -90,7 +90,7 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
 
         const render = getDescriptionCommentFormTemplate(
             host_with_writing_zone,
-            GettextProviderStub
+            GettextProviderStub,
         );
         render(host_with_writing_zone, target);
 
@@ -100,11 +100,11 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
         }
 
         writing_zone.dispatchEvent(
-            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } })
+            new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
         );
 
         expect(
-            host_with_writing_zone.controller.handleWritingZoneContentChange
+            host_with_writing_zone.controller.handleWritingZoneContentChange,
         ).toHaveBeenCalledOnce();
     });
 });

@@ -38,14 +38,14 @@ export interface SaveNewReplyToComment {
     saveReply(
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ): ResultAsync<PullRequestComment, Fault>;
 }
 
 const saveReplyToComment = (
     root_comment: PullRequestGlobalCommentPresenter,
     new_reply: ReplyCommentFormPresenter,
-    is_comments_markdown_mode_enabled: boolean
+    is_comments_markdown_mode_enabled: boolean,
 ): ResultAsync<PullRequestComment, Fault> =>
     postJSON<NewGlobalComment>(uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
         user_id: new_reply.comment_author.user_id,
@@ -57,7 +57,7 @@ const saveReplyToComment = (
 const saveReplyToInlineComment = (
     root_comment: PullRequestInlineCommentPresenter,
     new_reply: ReplyCommentFormPresenter,
-    is_comments_markdown_mode_enabled: boolean
+    is_comments_markdown_mode_enabled: boolean,
 ): ResultAsync<PullRequestComment, Fault> => {
     return postJSON<NewCommentOnFile>(
         uri`/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
@@ -69,7 +69,7 @@ const saveReplyToInlineComment = (
             position: root_comment.file.position,
             unidiff_offset: root_comment.file.unidiff_offset,
             format: getContentFormat(is_comments_markdown_mode_enabled),
-        }
+        },
     ).map((new_inline_comment) => ({
         type: TYPE_INLINE_COMMENT,
         is_outdated: false,
@@ -81,7 +81,7 @@ export const PullRequestCommentNewReplySaver = (): SaveNewReplyToComment => ({
     saveReply: (
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ): ResultAsync<PullRequestComment, Fault> =>
         root_comment.type === TYPE_INLINE_COMMENT
             ? saveReplyToInlineComment(root_comment, new_reply, is_comments_markdown_mode_enabled)

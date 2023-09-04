@@ -24,7 +24,7 @@ import App from "./components/App.vue";
 
 export async function bootstrapVueMountPoint(
     mount_point: HTMLElement,
-    is_in_creation: boolean
+    is_in_creation: boolean,
 ): Promise<void> {
     const app = createApp(App, {
         widget_id: Number.parseInt(mount_point.dataset.widgetId || "0", 10),
@@ -49,8 +49,8 @@ export async function bootstrapVueMountPoint(
     app.use(
         await initVueGettext(
             createGettext,
-            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
-        )
+            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+        ),
     );
 
     app.mount(mount_point);

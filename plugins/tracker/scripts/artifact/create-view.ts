@@ -30,14 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const creator = new RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
-        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
     creator.createTextFieldEditors();
 
     const submit_buttons = document.querySelectorAll(
         `.artifact-form input[name="submit_and_continue"],
         .artifact-form input[name="submit_and_stay"],
-        .artifact-form button[type=submit][data-test="artifact-submit-button"]`
+        .artifact-form button[type=submit][data-test="artifact-submit-button"]`,
     );
     for (const button of submit_buttons) {
         if (!(button instanceof HTMLButtonElement) && !(button instanceof HTMLInputElement)) {

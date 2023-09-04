@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const effort_based_config_section = document.getElementById("effort-based-config");
     const links_count_based_config_section = document.getElementById("links-count-based-config");
     const update_semantic_progress_button = document.getElementById(
-        "update-semantic-progress-button"
+        "update-semantic-progress-button",
     );
 
     if (
@@ -45,6 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         effort_based_config_section,
         total_effort_selector,
         remaining_effort_selector,
-        links_count_based_config_section
+        links_count_based_config_section,
     );
 });

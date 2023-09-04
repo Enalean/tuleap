@@ -46,7 +46,7 @@ function ExecutionService(
     ExecutionConstants,
     ExecutionRestService,
     SharedPropertiesService,
-    gettextCatalog
+    gettextCatalog,
 ) {
     const self = this;
 
@@ -115,19 +115,19 @@ function ExecutionService(
         var limit = 50,
             offset = 0;
 
-        return getAllRemoteExecutions(campaign_id, limit, offset).then(function (
-            remote_executions
-        ) {
-            var executions_to_remove = filter(self.executions, function (execution) {
-                return !remote_executions.some((remote) => remote.id === execution.id);
-            });
-            var executions_to_add = remote_executions.filter(function (execution) {
-                return !some(self.executions, { id: execution.id });
-            });
+        return getAllRemoteExecutions(campaign_id, limit, offset).then(
+            function (remote_executions) {
+                var executions_to_remove = filter(self.executions, function (execution) {
+                    return !remote_executions.some((remote) => remote.id === execution.id);
+                });
+                var executions_to_add = remote_executions.filter(function (execution) {
+                    return !some(self.executions, { id: execution.id });
+                });
 
-            executions_to_remove.forEach(removeTestExecutionWithoutUpdateCampaignStatus);
-            executions_to_add.forEach(addTestExecutionWithoutUpdateCampaignStatus);
-        });
+                executions_to_remove.forEach(removeTestExecutionWithoutUpdateCampaignStatus);
+                executions_to_add.forEach(addTestExecutionWithoutUpdateCampaignStatus);
+            },
+        );
     }
 
     function loadExecutions(campaign_id) {
@@ -151,21 +151,21 @@ function ExecutionService(
     function getAllRemoteExecutions(campaign_id, limit, offset, remote_executions) {
         remote_executions = remote_executions || [];
 
-        return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function (
-            data
-        ) {
-            var total_executions = data.total;
+        return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(
+            function (data) {
+                var total_executions = data.total;
 
-            groupExecutionsByCategory(campaign_id, data.results);
-            $rootScope.$emit("bunch-of-executions-loaded", data.results);
-            remote_executions = remote_executions.concat(data.results);
+                groupExecutionsByCategory(campaign_id, data.results);
+                $rootScope.$emit("bunch-of-executions-loaded", data.results);
+                remote_executions = remote_executions.concat(data.results);
 
-            offset = offset + limit;
-            if (offset < total_executions) {
-                return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
-            }
-            return remote_executions;
-        });
+                offset = offset + limit;
+                if (offset < total_executions) {
+                    return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
+                }
+                return remote_executions;
+            },
+        );
     }
 
     function updateExecutionToUseLatestVersionOfDefinition(execution_id) {
@@ -198,7 +198,7 @@ function ExecutionService(
 
             if (
                 !categories[category].executions.some(
-                    (category_execution) => category_execution.id === execution.id
+                    (category_execution) => category_execution.id === execution.id,
                 )
             ) {
                 categories[category].executions.push(execution);
@@ -210,7 +210,7 @@ function ExecutionService(
 
     function getExecutionsByDefinitionId(artifact_id) {
         const executions = Object.values(self.categories).flatMap(
-            (category) => category.executions
+            (category) => category.executions,
         );
 
         return executions.filter((execution) => execution.definition.id === artifact_id);
@@ -243,7 +243,7 @@ function ExecutionService(
 
     function removeTestExecutionByCategories(execution_to_remove_id) {
         for (const category of Object.values(
-            self.executions_by_categories_by_campaigns[self.campaign_id]
+            self.executions_by_categories_by_campaigns[self.campaign_id],
         )) {
             remove(category.executions, { id: execution_to_remove_id });
         }
@@ -306,7 +306,7 @@ function ExecutionService(
         return (
             execution.viewed_by &&
             execution.viewed_by.find(
-                (user) => user.uuid === SharedPropertiesService.getCurrentUser().uuid
+                (user) => user.uuid === SharedPropertiesService.getCurrentUser().uuid,
             )
         );
     }
@@ -331,7 +331,7 @@ function ExecutionService(
 
     function updatePresenceOnCampaign(user) {
         var user_on_campaign = self.presences_on_campaign.find(
-            (presence) => presence.id === user.id
+            (presence) => presence.id === user.id,
         );
 
         if (user_on_campaign && !has(user_on_campaign, "score")) {
@@ -378,7 +378,7 @@ function ExecutionService(
             }
 
             var user_uuid_exists = execution.viewed_by.some(
-                (presence) => presence.uuid === user.uuid
+                (presence) => presence.uuid === user.uuid,
             );
 
             if (!user_uuid_exists) {
@@ -452,7 +452,7 @@ function ExecutionService(
             if (error instanceof MaxSizeUploadExceededError) {
                 execution.error = gettextCatalog.getString(
                     "You are not allowed to upload images bigger than {{ max_size }}",
-                    { max_size: prettyKibibytes(execution.max_size_upload) }
+                    { max_size: prettyKibibytes(execution.max_size_upload) },
                 );
             } else if (error instanceof UploadError) {
                 execution.error = gettextCatalog.getString("Unable to upload the image");
@@ -485,7 +485,7 @@ function ExecutionService(
 
     function doesFileAlreadyExistInUploadedAttachments(execution, file) {
         return execution.uploaded_files_through_attachment_area.some(
-            (attachment) => attachment.id === file.id
+            (attachment) => attachment.id === file.id,
         );
     }
 
@@ -495,7 +495,7 @@ function ExecutionService(
                 event.data.dataValue = "";
                 event.cancel();
                 self.editor.showNotification(
-                    gettextCatalog.getString("You are not allowed to paste images here")
+                    gettextCatalog.getString("You are not allowed to paste images here"),
                 );
             }
         });
@@ -527,7 +527,7 @@ function ExecutionService(
 
     function updateExecutionAttachment(execution, attachment_id, attachment_attributes) {
         const attachment = execution.uploaded_files_through_attachment_area.find(
-            (attachment) => attachment.id === attachment_id
+            (attachment) => attachment.id === attachment_id,
         );
         if (!attachment) {
             return;
@@ -538,7 +538,7 @@ function ExecutionService(
 
     function removeFileUploadedThroughAttachmentArea(execution, attachment_id) {
         const index = execution.uploaded_files_through_attachment_area.findIndex(
-            (attachment) => attachment.id === attachment_id
+            (attachment) => attachment.id === attachment_id,
         );
         if (index === -1) {
             return;
@@ -553,7 +553,7 @@ function ExecutionService(
 
     function removeFileFromDeletedFiles(execution, removed_file) {
         execution.removed_files = execution.removed_files.filter(
-            (files) => files.id !== removed_file.id
+            (files) => files.id !== removed_file.id,
         );
     }
 
@@ -614,7 +614,7 @@ function ExecutionService(
 
     function executionsForCampaign(campaign_id) {
         return Object.values(self.executions_by_categories_by_campaigns[campaign_id]).flatMap(
-            (executions_by_categories) => executions_by_categories.executions
+            (executions_by_categories) => executions_by_categories.executions,
         );
     }
 

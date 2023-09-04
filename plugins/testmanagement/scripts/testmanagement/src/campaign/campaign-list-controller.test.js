@@ -46,19 +46,21 @@ describe("CampaignListController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _$controller_,
-            _SharedPropertiesService_,
-            _TlpModalService_
-        ) {
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            $controller = _$controller_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            TlpModalService = _TlpModalService_;
-        });
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$rootScope_,
+                _$controller_,
+                _SharedPropertiesService_,
+                _TlpModalService_,
+            ) {
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                $controller = _$controller_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                TlpModalService = _TlpModalService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
 

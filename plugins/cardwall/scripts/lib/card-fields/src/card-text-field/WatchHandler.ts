@@ -43,7 +43,7 @@ export const WatchHandler = (
     doc: Document,
     win: RequestAnimationFrame,
     target_element: Element,
-    purifier: PurifyHTML
+    purifier: PurifyHTML,
 ): WatchHandlerType => ({
     init(card_field: CardField): void {
         if (card_field.format === HTML_FORMAT) {

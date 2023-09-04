@@ -119,7 +119,7 @@ describe("rest-querier", () => {
 
                 expect(tlpPut).toHaveBeenCalledWith(
                     "/api/v1/cross_tracker_reports/59",
-                    expect.any(Object)
+                    expect.any(Object),
                 );
                 expect(result).toEqual({ trackers_id, expert_query });
             });
@@ -191,7 +191,7 @@ describe("rest-querier", () => {
                         text() {
                             return Promise.resolve(csv);
                         },
-                    } as unknown as Response)
+                    } as unknown as Response),
                 );
 
                 const results = await getCSVReport(72);
@@ -219,7 +219,7 @@ describe("rest-querier", () => {
                         text() {
                             return Promise.resolve(csv);
                         },
-                    } as unknown as Response)
+                    } as unknown as Response),
                 );
 
                 const results = await getCSVReport(81);

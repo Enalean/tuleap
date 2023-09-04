@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const bindToggleRevokeSelectedButton = (): void => {
         const selectboxes = document.querySelectorAll(
-            '#allowed-projects-list input[type="checkbox"]'
+            '#allowed-projects-list input[type="checkbox"]',
         );
 
         if (!selectboxes) {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (
                     document.querySelectorAll(
-                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked'
+                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked',
                     ).length > 0
                 ) {
                     revoke_project.removeAttribute("disabled");
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Gitolite check all is not a select element");
         }
         const project_checkboxes = document.querySelectorAll(
-            '#allowed-projects-list input[type="checkbox"]:not(#check-all)'
+            '#allowed-projects-list input[type="checkbox"]:not(#check-all)',
         );
 
         if (!check_all_checkbox || !project_checkboxes) {
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 project_checkboxes.forEach((checkbox) => {
                     if (!(checkbox instanceof HTMLInputElement)) {
                         throw new Error(
-                            `Gitolite checkbox ${checkbox.id} is not a checkbox element`
+                            `Gitolite checkbox ${checkbox.id} is not a checkbox element`,
                         );
                     }
                     checkbox.checked = true;
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 project_checkboxes.forEach((checkbox) => {
                     if (!(checkbox instanceof HTMLInputElement)) {
                         throw new Error(
-                            `Gitolite checkbox ${checkbox.id} is not a checkbox element`
+                            `Gitolite checkbox ${checkbox.id} is not a checkbox element`,
                         );
                     }
                     checkbox.checked = false;
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
             checkbox.addEventListener("click", () => {
                 if (
                     document.querySelectorAll(
-                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):not(:checked)'
+                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):not(:checked)',
                     ).length > 0
                 ) {
                     check_all_checkbox.checked = false;

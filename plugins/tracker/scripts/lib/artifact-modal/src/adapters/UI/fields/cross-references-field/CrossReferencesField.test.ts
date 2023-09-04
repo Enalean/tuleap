@@ -73,7 +73,7 @@ describe("CrossReferencesField", () => {
         update(host, target);
 
         const references: Array<HTMLAnchorElement> = Array.from(
-            target.querySelectorAll("[data-test=cross-references-field-cross-reference-link]")
+            target.querySelectorAll("[data-test=cross-references-field-cross-reference-link]"),
         );
 
         expect(references).toHaveLength(2);

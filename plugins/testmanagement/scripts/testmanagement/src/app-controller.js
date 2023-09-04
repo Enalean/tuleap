@@ -16,13 +16,13 @@ function TestManagementCtrl(
     amMoment,
     gettextCatalog,
     SharedPropertiesService,
-    UUIDGeneratorService
+    UUIDGeneratorService,
 ) {
     this.$onInit = function () {
         const mount_point = $element[0];
         const body = mount_point.closest("body");
         const testmanagement_init_data = mount_point.querySelector(
-            ".testmanagement-init-data"
+            ".testmanagement-init-data",
         ).dataset;
 
         const uuid = UUIDGeneratorService.generateUUID();
@@ -67,11 +67,11 @@ function TestManagementCtrl(
 
         const file_upload_max_size = Number.parseInt(
             testmanagement_init_data.fileUploadMaxSize,
-            10
+            10,
         );
         SharedPropertiesService.setFileUploadMaxSize(file_upload_max_size);
         SharedPropertiesService.setArtifactLinksTypes(
-            JSON.parse(testmanagement_init_data.artifactLinksTypes)
+            JSON.parse(testmanagement_init_data.artifactLinksTypes),
         );
 
         moveBreadCrumbs(
@@ -79,7 +79,7 @@ function TestManagementCtrl(
             project_url,
             project_icon,
             ttm_admin_url,
-            ttm_admin_label
+            ttm_admin_label,
         );
         replaceSkipToMainContentLink();
     };

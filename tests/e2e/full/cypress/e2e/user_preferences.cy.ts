@@ -64,13 +64,13 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
                 assertFeedbackContainsMessage(
-                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address)."
+                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address).",
                 );
                 cy.visit("/account/");
 
                 cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
                 cy.get("[data-test=user-prefs-email-need-confirmation-warning]").contains(
-                    "An email change was requested, please check your inbox to complete the change."
+                    "An email change was requested, please check your inbox to complete the change.",
                 );
 
                 cy.get("[data-test=user-timezone]").should("have.value", "America/Denver");
@@ -81,7 +81,7 @@ describe("User preferences", () => {
                 cy.visit("/account/");
                 cy.get("[data-test=account-information-avatar-button]").click();
                 cy.get("[data-test=account-information-avatar-modal-select-file]").selectFile(
-                    "cypress/fixtures/heisenberg.jpg"
+                    "cypress/fixtures/heisenberg.jpg",
                 );
 
                 cy.get("[data-test=user-prefs-save-avatar-button]").click();
@@ -132,7 +132,7 @@ describe("User preferences", () => {
 
             assertFeedbackContainsMessage("User preferences successfully updated");
             assertFeedbackContainsMessage(
-                "You need to logout & login again for this to be taken into account"
+                "You need to logout & login again for this to be taken into account",
             );
         });
     });
@@ -181,13 +181,13 @@ describe("User preferences", () => {
                     .type(".")
                     .then(($input) => {
                         $input.val(
-                            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCu3WYbOeBkXkDaKiV3AX6noIw16pjjrftXyiRjvP9O heisenberg@example"
+                            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCu3WYbOeBkXkDaKiV3AX6noIw16pjjrftXyiRjvP9O heisenberg@example",
                         );
                     });
 
                 cy.get("[data-test=submit-new-ssh-key-button]").click();
                 assertFeedbackContainsMessage(
-                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
+                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient.",
                 );
 
                 cy.get("[data-ssh_key_value]").should("have.length", 1);
@@ -197,7 +197,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=remove-ssh-keys-button]").click();
 
                 assertFeedbackContainsMessage(
-                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
+                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient.",
                 );
 
                 cy.get("[data-ssh_key_value]").should("have.length", 0);
@@ -219,7 +219,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=generate-new-access-key-button]").click();
 
                 cy.get("[data-test=user-prefs-add-personal-access-key-feedback]").contains(
-                    "Here is your new access key. Please make sure to copy it, you won't be able to see it again!"
+                    "Here is your new access key. Please make sure to copy it, you won't be able to see it again!",
                 );
                 cy.get("[data-test=user-prefs-new-api-key]").should("exist");
                 cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 1);
@@ -263,7 +263,7 @@ describe("User preferences", () => {
             function assertColorPreviewIs(color_name: string): void {
                 cy.get("[data-test=user-preferences-section-appearance-preview]").should(
                     "have.class",
-                    `user-preferences-section-appearance-preview-${color_name}`
+                    `user-preferences-section-appearance-preview-${color_name}`,
                 );
             }
 
@@ -328,7 +328,7 @@ describe("User preferences", () => {
 
                 cy.get("[data-test=user-prefs-username-display-format-select]").should(
                     "have.value",
-                    "2"
+                    "2",
                 );
             });
         });
@@ -338,14 +338,14 @@ describe("User preferences", () => {
                 newUserSession();
                 cy.visit("/account/appearance");
                 cy.get("[data-test=user-prefs-relative-dates-display-format-select]").select(
-                    "absolute_first-relative_shown"
+                    "absolute_first-relative_shown",
                 );
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-prefs-relative-dates-display-format-select]").should(
                     "have.value",
-                    "absolute_first-relative_shown"
+                    "absolute_first-relative_shown",
                 );
             });
         });

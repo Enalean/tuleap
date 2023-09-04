@@ -151,7 +151,7 @@ export class VelocityChartDrawer {
 
     getSprintDates({ start_date, duration }) {
         const sprint_start = moment(start_date, moment.ISO_8601).format(
-            this.chart_props.tooltip_date_format
+            this.chart_props.tooltip_date_format,
         );
 
         const sprint_end = moment(start_date, moment.ISO_8601)

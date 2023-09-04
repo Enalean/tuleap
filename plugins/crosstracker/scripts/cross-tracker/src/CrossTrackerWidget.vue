@@ -122,7 +122,7 @@ export default class CrossTrackerWidget extends Vue {
             this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
         } else {
             this.readingCrossTrackerReport.duplicateFromWritingReport(
-                this.writingCrossTrackerReport
+                this.writingCrossTrackerReport,
             );
         }
         this.$store.commit("switchToReadingMode", event.saved_state);
@@ -158,7 +158,7 @@ export default class CrossTrackerWidget extends Vue {
         this.$store.commit("resetInvalidTrackerList");
         this.$store.commit(
             "switchReportToSaved",
-            this.$gettext("Report has been successfully saved")
+            this.$gettext("Report has been successfully saved"),
         );
     }
 }

@@ -34,7 +34,7 @@ const emptyFunction = (): void => {
 
 function createState(
     selectbox_id: string,
-    selectbox_name: string | undefined
+    selectbox_name: string | undefined,
 ): EditorAreaStateInterface {
     const doc = document.implementation.createHTMLDocument();
     const mount_point = doc.createElement("div");
@@ -48,7 +48,7 @@ function createState(
             public selectbox_name: string | undefined,
             public current_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK,
             public rendered_html = null,
-            private is_in_preview_mode = false
+            private is_in_preview_mode = false,
         ) {}
         changeFormat(new_format: TextFieldFormat): void {
             this.current_format = new_format;
@@ -126,7 +126,7 @@ describe(`EditorAreaRenderer`, () => {
                 it(`when I click on the Edit button, it will switch to Edit and re-render`, () => {
                     const createEditButton = jest.spyOn(
                         PreviewEditButton,
-                        "createPreviewEditButton"
+                        "createPreviewEditButton",
                     );
                     const render = jest.spyOn(renderer, "render");
 
@@ -146,7 +146,7 @@ describe(`EditorAreaRenderer`, () => {
                 it(`when I click on the Preview button, it will switch to Preview and re-render`, () => {
                     const createPreviewButton = jest.spyOn(
                         PreviewEditButton,
-                        "createPreviewEditButton"
+                        "createPreviewEditButton",
                     );
                     const render = jest.spyOn(renderer, "render");
 

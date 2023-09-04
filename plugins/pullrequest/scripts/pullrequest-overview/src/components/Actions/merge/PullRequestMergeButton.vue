@@ -72,7 +72,7 @@ import {
 } from "../merge-status-helper";
 
 const are_merge_commits_allowed_in_repository = strictInject(
-    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY
+    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
 );
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const updatePullRequest = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
@@ -89,15 +89,15 @@ const show_confirmation_modal = ref(false);
 const is_merge_button_disabled = computed(
     () =>
         !canPullRequestBeMerged(props.pull_request, are_merge_commits_allowed_in_repository) ||
-        is_merge_in_progress.value
+        is_merge_in_progress.value,
 );
 
 const is_button_displayed = computed(
-    () => isPullRequestInReview(props.pull_request) && hasUserPermissionToMerge(props.pull_request)
+    () => isPullRequestInReview(props.pull_request) && hasUserPermissionToMerge(props.pull_request),
 );
 
 const is_merge_confirmation_required = computed(
-    () => !(isFastForwardMerge(props.pull_request) && isCIHappy(props.pull_request))
+    () => !(isFastForwardMerge(props.pull_request) && isCIHappy(props.pull_request)),
 );
 
 const processMerge = () => {

@@ -24,6 +24,6 @@ import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTi
 
 export type RetrieveTrackerWithTitleSemantic = {
     getTrackerWithTitleSemantic(
-        tracker_id: TrackerIdentifier
+        tracker_id: TrackerIdentifier,
     ): ResultAsync<TrackerWithTitleSemantic, Fault>;
 };

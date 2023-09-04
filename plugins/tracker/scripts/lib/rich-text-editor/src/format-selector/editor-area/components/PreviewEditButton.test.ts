@@ -72,7 +72,7 @@ describe(`PreviewEditButton`, () => {
 
             button.click();
             expect(presenter.onClickCallback).toHaveBeenCalled();
-        }
+        },
     );
 
     it(`if the promise fails, it will re-enable the button to allow people to retry`, () => {

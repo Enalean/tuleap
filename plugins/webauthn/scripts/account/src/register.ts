@@ -30,7 +30,7 @@ import type { Fault } from "@tuleap/fault";
 export function register(name: string, csrf_token: string): ResultAsync<null, Fault> {
     return postJSON<PublicKeyCredentialCreationOptionsJSON>(
         uri`/webauthn/registration-challenge`,
-        {}
+        {},
     )
         .andThen((options) => {
             options.timeout = 30000; // ms
@@ -45,14 +45,14 @@ export function register(name: string, csrf_token: string): ResultAsync<null, Fa
                     name: name,
                     response: attestation_response,
                     csrf_token: csrf_token,
-                }
+                },
             );
         })
         .map(() => null);
 }
 
 function registration(
-    options: PublicKeyCredentialCreationOptionsJSON
+    options: PublicKeyCredentialCreationOptionsJSON,
 ): ResultAsync<RegistrationResponseJSON, Fault> {
     return ResultAsync.fromPromise(startRegistration(options), RegistrationFault.fromError);
 }

@@ -55,8 +55,8 @@ describe("PullRequestDescriptionCommentPresenter", () => {
         expect(
             PullRequestDescriptionCommentPresenter.fromPullRequestWithUpdatedDescription(
                 old_description_presenter,
-                updated_pull_request
-            )
+                updated_pull_request,
+            ),
         ).toStrictEqual({
             ...old_description_presenter,
             raw_content: updated_pull_request.raw_description,

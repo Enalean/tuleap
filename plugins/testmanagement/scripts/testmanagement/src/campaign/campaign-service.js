@@ -37,8 +37,8 @@ function CampaignService($q) {
     function getCampaign(campaign_id) {
         return $q.when(
             get(encodeURI(`/api/v1/testmanagement_campaigns/${campaign_id}`)).then((response) =>
-                response.json()
-            )
+                response.json(),
+            ),
         );
     }
 
@@ -55,7 +55,7 @@ function CampaignService($q) {
             patch(encodeURI(`/api/v1/testmanagement_campaigns/${campaign_id}`), {
                 headers,
                 body,
-            }).then((response) => response.json())
+            }).then((response) => response.json()),
         );
     }
 
@@ -68,10 +68,10 @@ function CampaignService($q) {
             .when(
                 patch(
                     encodeURI(
-                        `/api/v1/testmanagement_campaigns/${campaign_id}/testmanagement_executions`
+                        `/api/v1/testmanagement_campaigns/${campaign_id}/testmanagement_executions`,
                     ),
-                    { headers, body }
-                )
+                    { headers, body },
+                ),
             )
             .then((response) => {
                 const total = response.headers.get("X-PAGINATION-SIZE");
@@ -84,10 +84,10 @@ function CampaignService($q) {
     function triggerAutomatedTests(campaign_id) {
         return $q.when(
             post(
-                encodeURI(`/api/v1/testmanagement_campaigns/${campaign_id}/automated_tests`)
+                encodeURI(`/api/v1/testmanagement_campaigns/${campaign_id}/automated_tests`),
             ).catch((error) => {
                 return error.response.json().then((json) => $q.reject(json.error));
-            })
+            }),
         );
     }
 }
