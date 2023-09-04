@@ -292,8 +292,8 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
 
         $platform_configuration_collection = new PlatformConfiguration();
 
-        $tracker_for_export = (new XMLTracker('T1', 'Issues'))
-            ->withName('issues')
+        $tracker_for_export = (new XMLTracker('T1', 'issue'))
+            ->withName('Issues')
             ->withDescription('Issues')
             ->withColor(TrackerColor::default());
 
