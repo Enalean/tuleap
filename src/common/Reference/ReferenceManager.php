@@ -849,7 +849,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
             $target_gid  = $reference->getGroupId();
 
             $cross_reference = new CrossReference(
-                (int) $source_id,
+                $source_id,
                 $source_gid,
                 $source_type,
                 (string) $source_key,
