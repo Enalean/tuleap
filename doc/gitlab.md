@@ -1,6 +1,6 @@
 # GitLab for Tuleap development
 
-This section covers how to setup a local GitLab next to your Tuleap
+This section covers how to set up a local GitLab next to your Tuleap
 development platform in order to develop or debug.
 
 ## Setup GitLab
@@ -27,10 +27,10 @@ in Tuleap container GitLab certs. You can use `docker cp` to copy files
 from container to computer, and from computer to container.
 
 ``` bash
-you@workstation $> docker cp tuleap_gitlab_1:/etc/gitlab/ssl/gitlab.local.crt /tmp
-you@workstation $> docker cp tuleap_gitlab_1:/etc/gitlab/ssl/gitlab.local.key /tmp
-you@workstation $> docker cp /tmp/gitlab.local.key tuleap_web_1:/etc/pki/ca-trust/source/anchors/
-you@workstation $> docker cp /tmp/gitlab.local.crt tuleap_web_1:/etc/pki/ca-trust/source/anchors/
+you@workstation $> docker cp tuleap-gitlab-1:/etc/gitlab/ssl/gitlab.local.crt /tmp
+you@workstation $> docker cp tuleap-gitlab-1:/etc/gitlab/ssl/gitlab.local.key /tmp
+you@workstation $> docker cp /tmp/gitlab.local.key tuleap-web-1:/etc/pki/ca-trust/source/anchors/
+you@workstation $> docker cp /tmp/gitlab.local.crt tuleap-web-1:/etc/pki/ca-trust/source/anchors/
 ```
 
 When your certs are copied in Tuleap container, you need to trust them
@@ -38,12 +38,9 @@ When your certs are copied in Tuleap container, you need to trust them
 
 ### Create a GitLab admin account
 
-Once your GitLab instance is deployed, you can go to
-`https://gitlab.local`. If your first time, you need to enter a password
-for admin account.
-
-The account login is `root`. You can log in with this account and manage
-your GitLab.
+Once your GitLab instance is deployed, you can go to `https://gitlab.local`.
+The administrator account username is `root`. The password can be found in the GitLab container at `/etc/gitlab/initial_root_password`.
+You can log in with this account and manage your GitLab.
 
 ### Trust Tuleap IP
 
@@ -66,12 +63,12 @@ Once a GitLab repository is integrated in Tuleap (see
 
 ## After each restart
 
-GitLab instance doesn\'t know Tuleap IP. You need to edit (as root) the
+GitLab instance doesn't know Tuleap IP. You need to edit (as root) the
 `/etc/hosts` file of GitLab container:
 
 ``` bash
-you@workstation $> docker exec -it tuleap_gitlab_1 /bin/bash
-you@workstation $> vim /etc/hosts
+you@workstation $> docker exec -it tuleap-gitlab-1 /bin/bash
+you@workstation $> vi /etc/hosts
 ```
 
 Add IP of your Tuleap:
