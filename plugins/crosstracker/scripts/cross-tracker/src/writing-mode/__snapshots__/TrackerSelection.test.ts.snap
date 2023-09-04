@@ -5,7 +5,7 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
   class="cross-tracker-selector"
 >
   <div
-    class="tlp-form-element tlp-form-element-disabled"
+    class="tlp-form-element"
     data-test="cross-tracker-selector-global"
   >
     <label
@@ -26,10 +26,24 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
     <select
       class="cross-tracker-selector-project-input tlp-select"
       data-test="cross-tracker-selector-project"
-      disabled="disabled"
       id="project"
       name="project"
-    />
+    >
+      <option
+        value="[object Object]"
+      >
+        
+                unheroically
+            
+      </option>
+      <option
+        value="[object Object]"
+      >
+        
+                cycler
+            
+      </option>
+    </select>
   </div>
    
   <div
