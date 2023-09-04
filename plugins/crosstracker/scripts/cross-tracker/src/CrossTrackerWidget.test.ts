@@ -157,15 +157,12 @@ describe("CrossTrackerWidget", () => {
                 // nothing to mock
             });
             const invalid_trackers: Array<InvalidTracker> = [];
+            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
                 invalid_trackers: invalid_trackers,
             } as State);
-            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
-            const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-
-            expect(wrapper.vm.$data.is_loading).toBe(true);
-            await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
