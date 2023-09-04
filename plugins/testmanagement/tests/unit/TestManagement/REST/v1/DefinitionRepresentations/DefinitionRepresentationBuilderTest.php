@@ -38,7 +38,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -79,6 +79,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->purifier                        = Mockery::mock(\Codendi_HTMLPurifier::class);
         $this->interpreter                     = Mockery::mock(ContentInterpretor::class);
         $this->artifact_representation_builder = $this->createMock(ArtifactRepresentationBuilder::class);
+        $priority_manager                      = $this->createStub(\Tracker_Artifact_PriorityManager::class);
+        $priority_manager->method('getGlobalRank')->willReturn(1);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->tracker_form_element_factory,
@@ -87,6 +89,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->purifier,
             $this->interpreter,
             $this->artifact_representation_builder,
+            $priority_manager,
         );
     }
 

@@ -95,6 +95,7 @@ class DefinitionsResource
                     new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
                 )
             ),
+            \Tracker_Artifact_PriorityManager::build(),
         );
     }
 

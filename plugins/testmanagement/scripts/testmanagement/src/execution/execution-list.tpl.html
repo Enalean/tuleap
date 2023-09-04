@@ -142,7 +142,7 @@
                                     | toArray:false
                                     | ExecutionListFilter:search:status
                                     | AutomatedTestsFilter:are_automated_tests_shown
-                                    | orderBy:'definition.id'
+                                    | orderBy:isOrderByDefinitionRankEnabled()?'definition.rank':'definition.id'
                                     | unique:'definition.id'
                                     track by execution.definition.id"
                                     data-navigation-test

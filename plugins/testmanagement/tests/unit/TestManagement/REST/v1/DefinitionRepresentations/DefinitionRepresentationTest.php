@@ -28,7 +28,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
-class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -70,12 +70,15 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn("description")->once();
         $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
-        $representation         = new DefinitionTextOrHTMLRepresentation(
+        $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
+        $priority_manager->method('getGlobalRank')->willReturn(1);
+        $representation = new DefinitionTextOrHTMLRepresentation(
             $purifier,
             $commonmark_interpreter,
             $artifact,
             $this->createMock(ArtifactRepresentation::class),
             $this->form_element_factory,
+            $priority_manager,
             $user,
             'text',
             [],

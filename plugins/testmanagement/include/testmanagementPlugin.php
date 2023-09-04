@@ -20,6 +20,7 @@
 
 use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -114,7 +115,7 @@ use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdateEven
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\Config\PluginWithConfigKeys //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NAME              = 'testmanagement';
     public const SERVICE_SHORTNAME = 'plugin_testmanagement';
@@ -434,6 +435,11 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $this->pluginInfo = new TestManagementPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\Tuleap\TestManagement\IndexPresenter::class);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

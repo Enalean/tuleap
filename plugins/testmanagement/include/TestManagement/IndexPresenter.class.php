@@ -22,6 +22,8 @@ namespace Tuleap\TestManagement;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\RealTimeMercure\MercureClient;
@@ -29,8 +31,12 @@ use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\User\REST\UserRepresentation;
 
+#[ConfigKeyCategory('Test Management')]
 class IndexPresenter
 {
+    #[FeatureFlagConfigKey('Order test executions by test definition ranks')]
+    public const FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK = 'ttm_test_exec_order_by_test_def_rank';
+
     /** @var int */
     public $project_id;
 
@@ -136,6 +142,7 @@ class IndexPresenter
     public string $artifact_links_types;
 
     public bool $mercure_enabled;
+    public readonly bool $order_by_definition_rank;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -207,8 +214,9 @@ class IndexPresenter
 
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
 
-        $this->artifact_links_types = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
-        $this->mercure_enabled      = \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) === "1";
+        $this->artifact_links_types     = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
+        $this->mercure_enabled          = \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY) === "1";
+        $this->order_by_definition_rank = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
