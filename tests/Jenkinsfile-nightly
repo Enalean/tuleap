@@ -98,6 +98,15 @@ pipeline {
                 }
             }
         }
+        stage ('PHP 8.2') {
+            failFast false
+            parallel {
+                stage('Unit tests') {
+                    steps { script { actions.runPHPUnitTests('82', false) } }
+                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
+                }
+            }
+        }
     }
     post {
         always {
