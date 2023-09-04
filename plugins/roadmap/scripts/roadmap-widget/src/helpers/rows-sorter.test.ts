@@ -35,10 +35,7 @@ describe("rows-sorter", () => {
                 },
             } as TaskRow,
             {
-                task: {
-                    id: 70,
-                    start: new Date(40),
-                },
+                task: parent_task,
             } as TaskRow,
             {
                 for_task: {
@@ -93,6 +90,16 @@ describe("rows-sorter", () => {
                 },
               },
               {
+                "task": {
+                  "id": 60,
+                  "parent": {
+                    "id": 70,
+                    "start": 1970-01-01T00:00:00.040Z,
+                  },
+                  "start": 1970-01-01T00:00:00.040Z,
+                },
+              },
+              {
                 "for_task": {
                   "id": 5,
                   "start": null,
@@ -108,16 +115,6 @@ describe("rows-sorter", () => {
                 "task": {
                   "id": 50,
                   "start": null,
-                },
-              },
-              {
-                "task": {
-                  "id": 60,
-                  "parent": {
-                    "id": 70,
-                    "start": 1970-01-01T00:00:00.040Z,
-                  },
-                  "start": 1970-01-01T00:00:00.040Z,
                 },
               },
             ]
