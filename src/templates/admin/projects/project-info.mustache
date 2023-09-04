@@ -10,8 +10,8 @@
         {{/ is_active }}
     </nav>
 
-    {{^ plugin_suspended_and_not_blocked_warnings }}
-        <section class="tlp-alert-warning site-admin-project-is-supended-warning">
+    {{# has_suspension_warnings_to_display }}
+        <section class="tlp-alert-warning site-admin-project-is-suspended-warning">
             {{# gettext }}This project is suspended. Only site administrators may access it.
                 However, the following services are not blocked and may still be used:{{/ gettext }}
             <ul>
@@ -20,7 +20,7 @@
                 {{/ plugin_suspended_and_not_blocked_warnings }}
             </ul>
         </section>
-    {{/ plugin_suspended_and_not_blocked_warnings }}
+    {{/ has_suspension_warnings_to_display }}
 
     <section class="tlp-framed-horizontally" id="siteadmin-project-information">
         <div id="siteadmin-project-information-details">
