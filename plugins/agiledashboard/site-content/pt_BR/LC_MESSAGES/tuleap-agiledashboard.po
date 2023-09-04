@@ -510,9 +510,6 @@ msgid ""
 "its hierarchy."
 msgstr ""
 
-msgid "The request is invalid."
-msgstr ""
-
 #, php-format
 msgid "The tracker %s is not found"
 msgstr ""

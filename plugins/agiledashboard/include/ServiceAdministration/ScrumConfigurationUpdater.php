@@ -85,16 +85,6 @@ class ScrumConfigurationUpdater
                 $this->first_scrum_creator->createFirstScrum();
             }
         }
-
-        $GLOBALS['Response']->addFeedback(
-            \Feedback::INFO,
-            dgettext(
-                'tuleap-agiledashboard',
-                'Scrum configuration successfully updated.'
-            )
-        );
-
-        $this->response->scrumConfigurationUpdated();
     }
 
     private function getActivatedScrum(): bool|string

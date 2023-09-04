@@ -516,6 +516,8 @@ class AgileDashboardRouter
 
     protected function buildController(Codendi_Request $request)
     {
+        $layout = $GLOBALS['Response'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
         return new AdminController(
             $request,
             $this->planning_factory,
@@ -527,7 +529,8 @@ class AgileDashboardRouter
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
             $this->count_elements_mode_checker,
-            $this->scrum_presenter_builder
+            $this->scrum_presenter_builder,
+            $layout
         );
     }
 

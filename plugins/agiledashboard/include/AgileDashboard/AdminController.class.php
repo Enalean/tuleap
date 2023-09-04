@@ -26,7 +26,6 @@ use AgileDashboard_FirstScrumCreator;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
-use Feedback;
 use MilestoneReportCriterionDao;
 use PFUser;
 use Planning_MilestoneFactory;
@@ -53,6 +52,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\ServiceAdministration\ConfigurationResponse;
+use Tuleap\AgileDashboard\ServiceAdministration\RedirectURI;
 use Tuleap\AgileDashboard\ServiceAdministration\ScrumConfigurationUpdater;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
@@ -67,6 +67,7 @@ use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -128,6 +129,7 @@ class AdminController extends BaseController
         AdministrationCrumbBuilder $admin_crumb_builder,
         CountElementsModeChecker $count_elements_mode_checker,
         ScrumPresenterBuilder $scrum_presenter_builder,
+        private readonly BaseLayout $layout,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -170,7 +172,7 @@ class AdminController extends BaseController
     public function adminScrum(): string
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
-        $GLOBALS['HTML']->addJavascriptAsset(
+        $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../scripts/administration/frontend-assets',
@@ -227,8 +229,8 @@ class AdminController extends BaseController
     public function updateConfiguration(): void
     {
         if (! $this->request->getCurrentUser()->isAdmin($this->group_id)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
+            $this->layout->addFeedback(
+                \Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'perm_denied')
             );
 
@@ -238,10 +240,11 @@ class AdminController extends BaseController
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $token->check();
 
-        $response = new ConfigurationResponse(
-            $this->request->getProject(),
-            $this->request->exist('home-ease-onboarding')
-        );
+        $request_comes_from_homepage = $this->request->exist('home-ease-onboarding');
+        $project                     = $this->request->getProject();
+        $response                    = new ConfigurationResponse();
+
+        $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
 
         if ($this->request->exist('activate-kanban')) {
             $legacy_kanban_configuration_dao = new LegacyConfigurationDao();
@@ -253,7 +256,7 @@ class AdminController extends BaseController
                 $legacy_kanban_configuration_dao,
                 $response,
                 new FirstKanbanCreator(
-                    $this->request->getProject(),
+                    $project,
                     $this->kanban_manager,
                     $this->tracker_factory,
                     TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
@@ -262,53 +265,73 @@ class AdminController extends BaseController
                     Tracker_ReportFactory::instance()
                 )
             );
-        } elseif ($this->request->exist("burnup-count-mode")) {
+
+            $updater->updateConfiguration();
+            $redirect_uri = $request_comes_from_homepage
+                ? RedirectURI::buildLegacyAgileDashboardHomepage($project)
+                : RedirectURI::buildLegacyKanbanAdministration($project);
+            $this->layout->redirect((string) $redirect_uri);
+        }
+
+        if ($this->request->exist("burnup-count-mode")) {
             $updater = new AgileDashboardChartsConfigurationUpdater(
                 $this->request,
                 new CountElementsModeUpdater(
                     new ProjectsCountModeDao()
                 )
             );
-        } else {
-            $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
-            $updater                  = new ScrumConfigurationUpdater(
-                $this->request,
-                $this->config_manager,
-                $response,
-                new AgileDashboard_FirstScrumCreator(
-                    $this->request->getProject(),
-                    $this->planning_factory,
-                    $this->tracker_factory,
-                    ProjectXMLImporter::build(
-                        new XMLImportHelper(UserManager::instance()),
-                        \ProjectCreator::buildSelfByPassValidation()
-                    )
-                ),
-                new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
-                new ConfigurationUpdater(
-                    new ExplicitBacklogDao(),
-                    new MilestoneReportCriterionDao(),
-                    new AgileDashboard_BacklogItemDao(),
-                    Planning_MilestoneFactory::build(),
-                    new ArtifactsInExplicitBacklogDao(),
-                    new UnplannedArtifactsAdder(
-                        new ExplicitBacklogDao(),
-                        new ArtifactsInExplicitBacklogDao(),
-                        new PlannedArtifactDao()
-                    ),
-                    new AddToTopBacklogPostActionDao(),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                    $this->event_manager
-                ),
-                $this->event_manager,
-                new CheckSplitKanbanConfiguration(),
-            );
+
+            $updater->updateConfiguration();
+            return;
         }
 
-        $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
+        $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
+        $explicit_artifacts_dao   = new ArtifactsInExplicitBacklogDao();
+        $explicit_backlog_dao     = new ExplicitBacklogDao();
+        $updater                  = new ScrumConfigurationUpdater(
+            $this->request,
+            $this->config_manager,
+            $response,
+            new AgileDashboard_FirstScrumCreator(
+                $project,
+                $this->planning_factory,
+                $this->tracker_factory,
+                ProjectXMLImporter::build(
+                    new XMLImportHelper(UserManager::instance()),
+                    \ProjectCreator::buildSelfByPassValidation()
+                )
+            ),
+            new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
+            new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
+            new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
+            new ConfigurationUpdater(
+                $explicit_backlog_dao,
+                new MilestoneReportCriterionDao(),
+                new AgileDashboard_BacklogItemDao(),
+                Planning_MilestoneFactory::build(),
+                $explicit_artifacts_dao,
+                new UnplannedArtifactsAdder(
+                    $explicit_backlog_dao,
+                    $explicit_artifacts_dao,
+                    new PlannedArtifactDao()
+                ),
+                new AddToTopBacklogPostActionDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                $this->event_manager
+            ),
+            $this->event_manager,
+            new CheckSplitKanbanConfiguration(),
+        );
+
         $updater->updateConfiguration();
+        $this->layout->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-agiledashboard', 'Scrum configuration successfully updated.')
+        );
+        $redirect_uri = $request_comes_from_homepage
+            ? RedirectURI::buildLegacyAgileDashboardHomepage($project)
+            : RedirectURI::buildScrumAdministration($project);
+        $this->layout->redirect((string) $redirect_uri);
     }
 
     private function isScrumAccessible(): bool
