@@ -49,7 +49,7 @@ class ConfigSetCommand extends Command
     {
         $this->setDescription('Set configuration values')
             ->addArgument('key', InputArgument::REQUIRED, 'Variable key')
-            ->addArgument('value', InputArgument::REQUIRED, 'Variable value');
+            ->addArgument('value', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Variable value');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -66,6 +66,9 @@ class ConfigSetCommand extends Command
         }
 
         $value = $input->getArgument('value');
+        if (is_array($value)) {
+            $value = implode(' ', $value);
+        }
         assert(is_string($value));
 
         try {
