@@ -14,12 +14,12 @@ let
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";
-    version = "1.3.1";
+    version = "1.3.2";
     src = pkgs.fetchFromGitHub {
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      hash = "sha256-jttT4qChoqwTnjjoW0Zc15ZieZN7KD1Us64Tk0eDG3Y=";
+      hash = "sha256-FHuUB61/KP08nV1MSdCf6tnkLQ0ySzkqTdvJPwRP70k=";
     };
     cargoDeps = pkgs.rustPlatform.importCargoLock {
       lockFile = "${src.out}/Cargo.lock";
