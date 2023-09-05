@@ -57,6 +57,7 @@ final class MercureJWTControllerTest extends TestCase
     private Artifact $artifact;
     private Tracker $tracker;
     private Project $project;
+    private MercureJWTController $mercure_jwt_controller;
 
     protected function setUp(): void
     {

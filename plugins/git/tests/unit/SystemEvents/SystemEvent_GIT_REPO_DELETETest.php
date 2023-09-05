@@ -57,7 +57,6 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
         $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
         $this->repository_factory->shouldReceive('getDeletedRepository')->with($this->repository_id)->andReturns($this->repository);
 
-        $this->system_event_manager  = \Mockery::spy(\Git_SystemEventManager::class);
         $this->ugroups_to_notify_dao = \Mockery::spy(UgroupsToNotifyDao::class);
         $this->users_to_notify_dao   = \Mockery::spy(UsersToNotifyDao::class);
         $this->event_manager         = \Mockery::spy(\EventManager::class);

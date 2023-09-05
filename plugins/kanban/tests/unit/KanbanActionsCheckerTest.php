@@ -45,6 +45,8 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List&MockObject $field_list;
     private Tracker $tracker;
     private \Project $project;
+    private MockObject&Tracker_Semantic_Title $semantic_title;
+    private Tracker_Semantic_Status&MockObject $semantic_status;
 
     protected function setUp(): void
     {
