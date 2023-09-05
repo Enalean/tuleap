@@ -1130,10 +1130,11 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
+        $event_manager           =  \EventManager::instance();
         $project_manager         = ProjectManager::instance();
         $project_access_checker  = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
+            $event_manager
         );
         $assets                  = new \Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../scripts/artifact-additional-action/frontend-assets',
@@ -1154,7 +1155,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
             new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts'),
-            new \Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics(TrackerFactory::instance())
+            new \Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics(TrackerFactory::instance()),
+            $event_manager,
+            $project_manager_adapter
         );
 
         $artifact = $event->getArtifact();
