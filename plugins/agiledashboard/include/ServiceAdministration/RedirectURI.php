@@ -57,6 +57,16 @@ final class RedirectURI implements \Stringable
         return new self($uri);
     }
 
+    public static function buildProjectBacklog(\Project $project): self
+    {
+        $uri = '/plugins/agiledashboard/?' . http_build_query([
+            'group_id' => $project->getID(),
+            'action'   => 'show-top',
+            'pane'     => 'topplanning-v2',
+        ]);
+        return new self($uri);
+    }
+
     public function __toString(): string
     {
         return $this->uri;

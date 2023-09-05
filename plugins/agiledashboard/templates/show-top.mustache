@@ -1,4 +1,4 @@
-<h1 class="agiledashboard-header-title">{{backlog_title}}</h1>
+<h1 class="agiledashboard-header-title">{{ backlog_title }}</h1>
 <div class="agiledashboard tlp-framed-vertically agiledashboard-top-backlog">
     {{# planning_presenter }}
         {{> pane-planning-v2 }}
@@ -11,10 +11,10 @@
             </h1>
             <p class="empty-state-text">{{# dgettext }}tuleap-agiledashboard | There is no Backlog created yet.{{/ dgettext }}</p>
             {{# is_admin }}
-                <button type="button" disabled class="empty-state-action tlp-button-primary">
+                <a href="{{ create_backlog_uri }}" class="empty-state-action tlp-button-primary">
                     <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-agiledashboard | Create a Backlog{{/ dgettext }}
-                </button>
+                </a>
             {{/ is_admin }}
         </section>
     {{/ planning_presenter }}

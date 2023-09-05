@@ -25,8 +25,10 @@ namespace Tuleap\AgileDashboard\Planning;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\VerifyProjectUsesExplicitBacklog;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
+use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Option\Option;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class VirtualTopMilestonePresenterBuilder
 {
@@ -42,8 +44,12 @@ final class VirtualTopMilestonePresenterBuilder
     /**
      * @param Option<\Planning_VirtualTopMilestone> $milestone
      */
-    public function buildPresenter(Option $milestone, \Project $project, \PFUser $user): VirtualTopMilestonePresenter
-    {
+    public function buildPresenter(
+        Option $milestone,
+        \Project $project,
+        \PFUser $user,
+        CSRFSynchronizerTokenInterface $csrf_token,
+    ): VirtualTopMilestonePresenter {
         $planning_presenter = $milestone->mapOr(function () use ($project, $user): ?PlanningV2Presenter {
             $additional_panes = $this->event_dispatcher->dispatch(new AllowedAdditionalPanesToDisplayCollector());
 
@@ -61,7 +67,15 @@ final class VirtualTopMilestonePresenterBuilder
             );
         }, null);
         $is_project_admin   = $user->isAdmin((int) $project->getID());
-        $backlog_title      = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext("tuleap-agiledashboard", "Backlog") : dgettext("tuleap-agiledashboard", "Top Backlog Planning");
-        return new VirtualTopMilestonePresenter($planning_presenter, $is_project_admin, $backlog_title);
+        $backlog_title      = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)
+            ? dgettext("tuleap-agiledashboard", "Backlog")
+            : dgettext("tuleap-agiledashboard", "Top Backlog Planning");
+
+        return new VirtualTopMilestonePresenter(
+            $planning_presenter,
+            $is_project_admin,
+            $backlog_title,
+            CreateBacklogURI::withRedirectionToProjectBacklog($project, $csrf_token)
+        );
     }
 }
