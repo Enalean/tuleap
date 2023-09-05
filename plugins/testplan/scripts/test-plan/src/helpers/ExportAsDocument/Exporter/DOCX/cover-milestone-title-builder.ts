@@ -19,7 +19,7 @@
 
 export function buildMilestoneTitle(
     milestone_name: string,
-    parent_milestone_title: string
+    parent_milestone_title: string,
 ): string {
     let full_milestone_title = milestone_name;
     if (parent_milestone_title !== "") {

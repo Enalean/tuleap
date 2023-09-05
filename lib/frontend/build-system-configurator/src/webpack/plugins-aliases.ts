@@ -139,7 +139,7 @@ export function extendDevConfiguration(webpack_configs: object[]): object {
             target: "browserslist:" + browserlist_config,
             devtool: "inline-source-map",
             plugins: [getIgnorePlugin()],
-        })
+        }),
     );
 }
 
@@ -165,13 +165,13 @@ export function extendProdConfiguration(webpack_configs: object[]): object {
                 groupAssetsByPath: true,
                 groupAssetsByExtension: true,
             },
-        })
+        }),
     );
 }
 
 export const easygettext_loader_alias = {
     "easygettext-loader": path.resolve(
         __dirname,
-        "./../../../../../tools/utils/scripts/easygettext-loader.js"
+        "./../../../../../tools/utils/scripts/easygettext-loader.js",
     ),
 };

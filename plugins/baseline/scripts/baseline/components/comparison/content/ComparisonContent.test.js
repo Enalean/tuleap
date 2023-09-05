@@ -47,7 +47,7 @@ describe("ComparisonContent", () => {
                         first_depth_artifacts: [],
                     },
                 },
-            }
+            },
         );
 
         wrapper = shallowMount(ComparisonContent, {
@@ -74,7 +74,7 @@ describe("ComparisonContent", () => {
         });
         it("shows artifacts list comparison", () => {
             expect(
-                wrapper.find('[data-test-type="no-comparison-available-message"]').exists()
+                wrapper.find('[data-test-type="no-comparison-available-message"]').exists(),
             ).toBeTruthy();
         });
     });

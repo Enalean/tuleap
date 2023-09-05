@@ -80,7 +80,7 @@ describe("TestDefinitionCard", () => {
             {
                 backlog_item: { id: 456 },
                 test_definition: { id: 123, is_just_refreshed: true },
-            }
+            },
         );
     });
 });

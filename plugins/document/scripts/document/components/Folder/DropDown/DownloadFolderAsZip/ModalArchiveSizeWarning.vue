@@ -48,7 +48,7 @@
                     <p>
                         {{
                             $gettext(
-                                "Depending on the speed of your network, it can take some time to complete. Do you want to continue?"
+                                "Depending on the speed of your network, it can take some time to complete. Do you want to continue?",
                             )
                         }}
                     </p>
@@ -66,14 +66,14 @@
                     <p>
                         {{
                             $gettext(
-                                "The archive you want to download has a size greater than or equal to 4GB or contains more than 64000 files."
+                                "The archive you want to download has a size greater than or equal to 4GB or contains more than 64000 files.",
                             )
                         }}"
                     </p>
                     <p>
                         {{
                             $gettext(
-                                "Please note that the OSX archive extraction tool might not succeed in opening it."
+                                "Please note that the OSX archive extraction tool might not succeed in opening it.",
                             )
                         }}
                     </p>
@@ -114,7 +114,7 @@ const props = defineProps<{ size: number; folderHref: string; shouldWarnOsxUser:
 
 const { warning_threshold } = useNamespacedState<Pick<ConfigurationState, "warning_threshold">>(
     "configuration",
-    ["warning_threshold"]
+    ["warning_threshold"],
 );
 
 const size_in_MB = computed((): string => {
@@ -133,7 +133,7 @@ const modal_header_title = computed((): string => {
 
 const warning_threshold_message = computed((): string => {
     const translated = $gettext(
-        "The archive you want to download has a size greater than %{ warning_threshold } MB."
+        "The archive you want to download has a size greater than %{ warning_threshold } MB.",
     );
 
     return interpolate(translated, { warning_threshold: warning_threshold.value });

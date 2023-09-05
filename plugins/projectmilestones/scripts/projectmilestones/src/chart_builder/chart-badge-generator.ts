@@ -29,14 +29,14 @@ export function addBadgeCaption(
     badge_x_position: number,
     badge_value: number,
     layout: Selection<SVGSVGElement, unknown, null, undefined>,
-    id_milestone: number
+    id_milestone: number,
 ): void {
     const badge = layout
         .append("g")
         .attr("class", "release-chart-badge-remaining")
         .attr(
             "transform",
-            `translate(${badge_x_position}, ${badge_y_position + Y_AXIS_TO_CENTER})`
+            `translate(${badge_x_position}, ${badge_y_position + Y_AXIS_TO_CENTER})`,
         );
 
     const badge_content = buildBadgeContent();

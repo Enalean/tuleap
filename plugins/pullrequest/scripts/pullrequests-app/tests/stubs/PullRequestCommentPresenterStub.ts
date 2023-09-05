@@ -63,7 +63,7 @@ export const PullRequestCommentPresenterStub = {
 
     buildFileDiffCommentPresenter: (
         file_data: Partial<PullRequestCommentFile> = {},
-        comment_id: number = comment_presenter_base.id
+        comment_id: number = comment_presenter_base.id,
     ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         id: comment_id,

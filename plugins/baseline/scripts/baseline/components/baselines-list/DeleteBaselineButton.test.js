@@ -67,7 +67,7 @@ describe("DeleteBaselineButton", () => {
             });
 
             expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(true);
-        }
+        },
     );
 
     it.each([[[]], [[{ base_baseline_id: 2, compared_to_baseline_id: 3 }]]])(
@@ -79,7 +79,7 @@ describe("DeleteBaselineButton", () => {
             });
 
             expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(false);
-        }
+        },
     );
 
     it("shows modal on click", async () => {

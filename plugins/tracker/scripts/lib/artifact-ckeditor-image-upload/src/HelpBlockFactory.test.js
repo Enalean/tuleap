@@ -43,7 +43,7 @@ describe(`HelpBlockFactory`, () => {
             const help_block = factory.createHelpBlock(textarea);
 
             expect(help_block_element.innerHTML).toBe(
-                `<p>You can drag 'n drop or paste image directly in the editor.</p>`
+                `<p>You can drag 'n drop or paste image directly in the editor.</p>`,
             );
             expect(help_block).not.toBeNull();
             expect(help_block.onFormatChange).toBeDefined();

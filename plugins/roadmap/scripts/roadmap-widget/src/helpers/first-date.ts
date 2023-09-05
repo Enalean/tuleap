@@ -36,7 +36,7 @@ export function getFirstDate(elements: (Task | Iteration)[], now: Date): Date {
 
             return first;
         },
-        null
+        null,
     );
 
     if (!first_date) {

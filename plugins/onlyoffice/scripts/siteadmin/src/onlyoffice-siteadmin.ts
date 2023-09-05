@@ -26,7 +26,7 @@ import App from "./components/App.vue";
 document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initVueGettext(
         createGettext,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const mount_point = document.getElementById("onlyoffice-admin-servers-app");

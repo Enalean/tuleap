@@ -53,99 +53,107 @@ describe("PlannerView", () => {
     beforeEach(() => {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function (
-            $componentController,
-            $rootScope,
-            _$q_,
-            _BacklogService_,
-            _BacklogItemService_,
-            _MilestoneService_,
-            _NewTuleapArtifactModalService_,
-            _SharedPropertiesService_,
-            _UserPreferencesService_,
-            _BacklogItemCollectionService_,
-            _BacklogItemSelectedService_,
-            _ItemAnimatorService_
-        ) {
-            wrapPromise = createAngularPromiseWrapper($rootScope);
-            $scope = $rootScope.$new();
-            $q = _$q_;
-            $window = {
-                sessionStorage: { setItem: noop },
-                location: { reload: noop },
-            };
+        angular.mock.inject(
+            function (
+                $componentController,
+                $rootScope,
+                _$q_,
+                _BacklogService_,
+                _BacklogItemService_,
+                _MilestoneService_,
+                _NewTuleapArtifactModalService_,
+                _SharedPropertiesService_,
+                _UserPreferencesService_,
+                _BacklogItemCollectionService_,
+                _BacklogItemSelectedService_,
+                _ItemAnimatorService_,
+            ) {
+                wrapPromise = createAngularPromiseWrapper($rootScope);
+                $scope = $rootScope.$new();
+                $q = _$q_;
+                $window = {
+                    sessionStorage: { setItem: noop },
+                    location: { reload: noop },
+                };
 
-            SharedPropertiesService = _SharedPropertiesService_;
-            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
-            jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
-            jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
-            jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
-            jest.spyOn(
-                SharedPropertiesService,
-                "shouldloadOpenAndClosedMilestones"
-            ).mockReturnValue(false);
+                SharedPropertiesService = _SharedPropertiesService_;
+                jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
+                jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
+                jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
+                jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
+                jest.spyOn(
+                    SharedPropertiesService,
+                    "shouldloadOpenAndClosedMilestones",
+                ).mockReturnValue(false);
 
-            var returnPromise = function (method) {
-                var self = this;
-                jest.spyOn(self, method).mockReturnValue($q.defer().promise);
-            };
+                var returnPromise = function (method) {
+                    var self = this;
+                    jest.spyOn(self, method).mockReturnValue($q.defer().promise);
+                };
 
-            BacklogItemService = _BacklogItemService_;
-            [
-                "getBacklogItemChildren",
-                "getMilestoneBacklogItems",
-                "getProjectBacklogItems",
-                "getBacklogItem",
-                "removeAddBacklogItemChildren",
-            ].forEach(returnPromise, BacklogItemService);
+                BacklogItemService = _BacklogItemService_;
+                [
+                    "getBacklogItemChildren",
+                    "getMilestoneBacklogItems",
+                    "getProjectBacklogItems",
+                    "getBacklogItem",
+                    "removeAddBacklogItemChildren",
+                ].forEach(returnPromise, BacklogItemService);
 
-            MilestoneService = _MilestoneService_;
-            [
-                "addReorderToContent",
-                "addToContent",
-                "augmentMilestone",
-                "defineAllowedBacklogItemTypes",
-                "getMilestone",
-                "patchSubMilestones",
-                "removeAddReorderToBacklog",
-                "removeAddToBacklog",
-            ].forEach(returnPromise, MilestoneService);
+                MilestoneService = _MilestoneService_;
+                [
+                    "addReorderToContent",
+                    "addToContent",
+                    "augmentMilestone",
+                    "defineAllowedBacklogItemTypes",
+                    "getMilestone",
+                    "patchSubMilestones",
+                    "removeAddReorderToBacklog",
+                    "removeAddToBacklog",
+                ].forEach(returnPromise, MilestoneService);
 
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
-            jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(() => {});
+                NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+                jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
+                    () => {},
+                );
+                jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(
+                    () => {},
+                );
 
-            UserPreferencesService = _UserPreferencesService_;
-            jest.spyOn(UserPreferencesService, "setPreference").mockReturnValue($q.defer().promise);
+                UserPreferencesService = _UserPreferencesService_;
+                jest.spyOn(UserPreferencesService, "setPreference").mockReturnValue(
+                    $q.defer().promise,
+                );
 
-            BacklogService = _BacklogService_;
+                BacklogService = _BacklogService_;
 
-            BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
-                () => {}
-            );
+                BacklogItemCollectionService = _BacklogItemCollectionService_;
+                jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                    () => {},
+                );
 
-            $filter = jest.fn(function () {
-                return function () {};
-            });
+                $filter = jest.fn(function () {
+                    return function () {};
+                });
 
-            ItemAnimatorService = _ItemAnimatorService_;
-            BacklogItemSelectedService = _BacklogItemSelectedService_;
-            PlanningController = $componentController("plannerView", {
-                $filter,
-                $q,
-                $scope,
-                $window,
-                BacklogService,
-                BacklogItemService,
-                MilestoneService,
-                NewTuleapArtifactModalService,
-                SharedPropertiesService,
-                UserPreferencesService,
-                BacklogItemCollectionService,
-                BacklogItemSelectedService,
-            });
-        });
+                ItemAnimatorService = _ItemAnimatorService_;
+                BacklogItemSelectedService = _BacklogItemSelectedService_;
+                PlanningController = $componentController("plannerView", {
+                    $filter,
+                    $q,
+                    $scope,
+                    $window,
+                    BacklogService,
+                    BacklogItemService,
+                    MilestoneService,
+                    NewTuleapArtifactModalService,
+                    SharedPropertiesService,
+                    UserPreferencesService,
+                    BacklogItemCollectionService,
+                    BacklogItemSelectedService,
+                });
+            },
+        );
 
         jest.spyOn(ItemAnimatorService, "animateCreated").mockImplementation(() => {});
         jest.spyOn(rest_querier, "getOpenTopMilestones").mockImplementation(() => {});
@@ -291,7 +299,7 @@ describe("PlannerView", () => {
             expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
                 102,
                 "agiledashboard_planning_item_view_mode_736",
-                "detailed-view"
+                "detailed-view",
             );
         });
     });
@@ -546,7 +554,7 @@ describe("PlannerView", () => {
                 user_id,
                 SUB_MILESTONE_TRACKER_ID,
                 SUB_MILESTONE_ID,
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(refreshSubmilestone).toHaveBeenCalledWith(SUB_MILESTONE_ID);
         });
@@ -572,7 +580,7 @@ describe("PlannerView", () => {
             submilestone_type = { id: 82 };
             event = { preventDefault: jest.fn() };
             NewTuleapArtifactModalService.showCreation.mockImplementation(
-                (user_id, a, b, callback) => callback(1668)
+                (user_id, a, b, callback) => callback(1668),
             );
         });
 
@@ -584,7 +592,7 @@ describe("PlannerView", () => {
                 82,
                 PlanningController.milestone_id,
                 expect.any(Function),
-                []
+                [],
             );
         });
 
@@ -607,7 +615,7 @@ describe("PlannerView", () => {
                                 label: "Sprint 2015-20",
                                 semantic_status: "open",
                             },
-                        })
+                        }),
                     );
 
                     PlanningController.showAddSubmilestoneModal(event, submilestone_type);
@@ -616,7 +624,7 @@ describe("PlannerView", () => {
                     expect(MilestoneService.patchSubMilestones).toHaveBeenCalledWith(736, [1668]);
                     expect(MilestoneService.getMilestone).toHaveBeenCalledWith(
                         1668,
-                        expect.any(Object)
+                        expect.any(Object),
                     );
                     expect(PlanningController.milestones.content).toStrictEqual([
                         {
@@ -647,7 +655,7 @@ describe("PlannerView", () => {
                             id: 1668,
                             label: "Sprint 2015-20",
                         },
-                    })
+                    }),
                 );
 
                 PlanningController.showAddSubmilestoneModal(event, submilestone_type);
@@ -655,7 +663,7 @@ describe("PlannerView", () => {
 
                 expect(MilestoneService.getMilestone).toHaveBeenCalledWith(
                     1668,
-                    expect.any(Object)
+                    expect.any(Object),
                 );
                 expect(PlanningController.milestones.content).toStrictEqual([
                     {
@@ -676,7 +684,7 @@ describe("PlannerView", () => {
 
         beforeEach(() => {
             NewTuleapArtifactModalService.showCreation.mockImplementation(
-                (user_id, a, b, callback) => callback(7488)
+                (user_id, a, b, callback) => callback(7488),
             );
             artifact = {
                 backlog_item: {
@@ -696,7 +704,7 @@ describe("PlannerView", () => {
                 94,
                 null,
                 expect.any(Function),
-                []
+                [],
             );
         });
 
@@ -744,7 +752,7 @@ describe("PlannerView", () => {
             and will update the milestones collection`, async () => {
             PlanningController.milestones.content = [{ id: SUB_MILESTONE_ID }];
             MilestoneService.getMilestone.mockReturnValue(
-                $q.when({ results: { id: SUB_MILESTONE_ID } })
+                $q.when({ results: { id: SUB_MILESTONE_ID } }),
             );
 
             const promise = PlanningController.refreshSubmilestone(SUB_MILESTONE_ID);

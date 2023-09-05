@@ -35,7 +35,7 @@ export function pointerLeavesColumn(state: ColumnState, column: ColumnDefinition
 
 function findColumn(state: ColumnState, column: ColumnDefinition): ColumnDefinition {
     const column_state: ColumnDefinition | undefined = state.columns.find(
-        (col) => col.id === column.id
+        (col) => col.id === column.id,
     );
     if (!column_state) {
         throw new Error("Could not find column with id=" + column.id);

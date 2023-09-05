@@ -56,7 +56,7 @@ describe(`Feedback`, () => {
             addFeedback(doc, "info", MESSAGE_WITH_HTML_LINK);
 
             expect(feedback.getElementsByTagName("li").item(0)?.innerHTML).toBe(
-                MESSAGE_WITH_HTML_LINK
+                MESSAGE_WITH_HTML_LINK,
             );
         });
 
@@ -75,7 +75,7 @@ describe(`Feedback`, () => {
                     throw new Error("Expected element not found");
                 }
                 expect(ul_element.classList.contains(`feedback_${level}`)).toBe(true);
-            }
+            },
         );
     });
 

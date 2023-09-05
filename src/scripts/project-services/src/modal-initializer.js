@@ -27,7 +27,7 @@ import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export async function setupModalButtons(addModalCallback, editModalCallback) {
     await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`)
+        import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`),
     );
     setupAddButton(addModalCallback);
     setupEditButtons(editModalCallback);
@@ -87,7 +87,7 @@ function updateDeleteModalContent(button) {
 
 function updateDeleteModalDescription(button) {
     const modal_description = document.getElementById(
-        "project-admin-services-delete-modal-description"
+        "project-admin-services-delete-modal-description",
     );
 
     modal_description.innerText = "";
@@ -96,10 +96,10 @@ function updateDeleteModalDescription(button) {
         sanitize(
             sprintf(
                 gettext_provider.$gettext(
-                    "You are about to delete the <b>%s</b> service. Please, confirm your action"
+                    "You are about to delete the <b>%s</b> service. Please, confirm your action",
                 ) /* javascript-format */,
-                escaper.html(button.dataset.serviceLabel)
-            )
-        )
+                escaper.html(button.dataset.serviceLabel),
+            ),
+        ),
     );
 }

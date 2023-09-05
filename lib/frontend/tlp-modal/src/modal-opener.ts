@@ -23,7 +23,7 @@ import { createModal } from "./modal";
 export function openTargetModalIdOnClick(
     doc: Document,
     button_id: string,
-    beforeModalOpenCallback?: (clicked_button: HTMLElement) => void
+    beforeModalOpenCallback?: (clicked_button: HTMLElement) => void,
 ): Modal | null {
     const button = doc.getElementById(button_id);
     if (!button || !(button instanceof HTMLElement)) {
@@ -99,7 +99,7 @@ export function openModalAndReplacePlaceholders(options: ModalReplacementOptions
 function replaceHiddenInput(
     doc: Document,
     clicked_button: HTMLElement,
-    replacer: HiddenInputReplacement
+    replacer: HiddenInputReplacement,
 ): void {
     const hidden_input = doc.getElementById(replacer.input_id);
     if (!hidden_input || !(hidden_input instanceof HTMLInputElement)) {
@@ -111,7 +111,7 @@ function replaceHiddenInput(
 function replaceParagraph(
     doc: Document,
     clicked_button: HTMLElement,
-    replacer: ParagraphReplacement
+    replacer: ParagraphReplacement,
 ): void {
     const paragraph = doc.getElementById(replacer.paragraph_id);
     if (!paragraph) {

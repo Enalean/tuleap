@@ -35,7 +35,7 @@ export function getPOFileFromLocaleWithoutExtension(locale: string): string {
 export async function initGettext(
     locale: string,
     domain: string,
-    load_translations_callback: (locale: string) => Promise<GettextParserPoFile>
+    load_translations_callback: (locale: string) => Promise<GettextParserPoFile>,
 ): Promise<Gettext> {
     const gettext_provider = new Gettext();
     if (locale !== DEFAULT_LANGUAGE) {
@@ -43,7 +43,7 @@ export async function initGettext(
             gettext_provider.addTranslations(
                 locale,
                 domain,
-                await load_translations_callback(locale)
+                await load_translations_callback(locale),
             );
         } catch (exception) {
             // will be en_US if translations cannot be loaded

@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initGettext(
         language,
         "program_management_admin",
-        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const app = document.getElementById("program-management-administration");

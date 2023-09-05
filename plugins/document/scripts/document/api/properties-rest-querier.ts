@@ -27,7 +27,7 @@ export function putFileProperties(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -51,7 +51,7 @@ export function putEmbeddedFileProperties(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -75,7 +75,7 @@ export function putLinkProperties(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_links/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -99,7 +99,7 @@ export function putWikiProperties(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_wikis/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -123,7 +123,7 @@ export function putEmptyDocumentProperties(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -147,7 +147,7 @@ export function putFolderDocumentProperties(
     owner_id: number,
     status: FolderStatus | null,
     obsolescence_date: number | null,
-    properties: Array<Property> | null
+    properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
         headers: {

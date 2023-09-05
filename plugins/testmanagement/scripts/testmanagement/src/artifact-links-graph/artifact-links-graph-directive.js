@@ -41,7 +41,7 @@ function Graph(
     ArtifactLinksModelService,
     ArtifactLinksArtifactsList,
     $q,
-    $timeout
+    $timeout,
 ) {
     return {
         restrict: "E",
@@ -150,10 +150,10 @@ function Graph(
                                 .id(function (d) {
                                     return d.index;
                                 })
-                                .distance(100)
+                                .distance(100),
                         )
                         .force("charge", forceManyBody().strength(-150))
-                        .force("center", forceCenter(graphd3.width() / 2, graphd3.height() / 2))
+                        .force("center", forceCenter(graphd3.width() / 2, graphd3.height() / 2)),
                 );
 
                 graphd3.graph().on("tick", display);
@@ -235,7 +235,7 @@ function Graph(
                                 );
                             }
                             return "link " + d.type;
-                        })
+                        }),
                 );
             };
 
@@ -254,7 +254,7 @@ function Graph(
                         .attr("class", (d) =>
                             d.id
                                 ? normalizeColor(d.color) + " circle_" + d.id
-                                : normalizeColor(d.color)
+                                : normalizeColor(d.color),
                         )
                         .attr("r", 8)
                         .call(
@@ -268,12 +268,12 @@ function Graph(
                                     var position = calculatePosition(
                                         document.getElementsByClassName("graph-container")[0],
                                         document.getElementsByClassName(
-                                            "graph-elements-clickable"
+                                            "graph-elements-clickable",
                                         )[0],
                                         event.x,
                                         event.y,
                                         graphd3.width(),
-                                        graphd3.height()
+                                        graphd3.height(),
                                     );
                                     d.fx = position.x;
                                     d.fy = position.y;
@@ -282,7 +282,7 @@ function Graph(
                                     if (!event.active) {
                                         graphd3.graph().alphaTarget(0);
                                     }
-                                })
+                                }),
                         )
                         .on("click", function (event, d) {
                             if (d.clicked && d.has_children) {
@@ -306,7 +306,7 @@ function Graph(
                                     });
                                 }
                             }
-                        })
+                        }),
                 );
             };
 
@@ -339,7 +339,7 @@ function Graph(
                         })
                         .text(function (d) {
                             return d.ref_name + " " + d.id;
-                        })
+                        }),
                 );
 
                 selectAll(".graph-label")
@@ -386,7 +386,7 @@ function Graph(
                         .on("zoom", function (event) {
                             graphd3.g().attr("transform", event.transform);
                             graphd3.gClickable().attr("transform", event.transform);
-                        })
+                        }),
                 );
 
                 graphd3.width(element.width());
@@ -397,7 +397,7 @@ function Graph(
                         .append("svg")
                         .attr("class", "graph-container")
                         .attr("width", graphd3.width())
-                        .attr("height", graphd3.height())
+                        .attr("height", graphd3.height()),
                 );
 
                 graphd3.g(graphd3.svg().append("g").attr("class", "graph-elements"));
@@ -411,11 +411,11 @@ function Graph(
                         .attr("height", graphd3.height())
                         .call(graphd3.zoom())
                         .on("wheel.zoom", null)
-                        .on("dblclick.zoom", null)
+                        .on("dblclick.zoom", null),
                 );
 
                 graphd3.gClickable(
-                    graphd3.svg().append("g").attr("class", "graph-elements-clickable")
+                    graphd3.svg().append("g").attr("class", "graph-elements-clickable"),
                 );
             };
 
@@ -436,7 +436,7 @@ function Graph(
                     select(".graph")
                         .append("img")
                         .attr("src", "/themes/BurningParrot/images/spinner.gif")
-                        .attr("class", "loader loader-node")
+                        .attr("class", "loader loader-node"),
                 );
             };
 
@@ -505,7 +505,7 @@ function Graph(
                         .some(
                             (d3_link) =>
                                 d3_link.source.id === link.source &&
-                                d3_link.target.id === link.target
+                                d3_link.target.id === link.target,
                         );
 
                     var d3_link = {
@@ -848,13 +848,13 @@ function Graph(
 
     function showGraph(artifact_id) {
         if (!artifactExist(artifact_id)) {
-            return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function (
-                artifact
-            ) {
-                ArtifactLinksArtifactsList.artifacts[artifact_id] =
-                    ArtifactLinksModelService.getGraphStructure(artifact);
-                return ArtifactLinksArtifactsList.artifacts[artifact_id];
-            });
+            return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(
+                function (artifact) {
+                    ArtifactLinksArtifactsList.artifacts[artifact_id] =
+                        ArtifactLinksModelService.getGraphStructure(artifact);
+                    return ArtifactLinksArtifactsList.artifacts[artifact_id];
+                },
+            );
         }
         return $q(function (resolve) {
             return resolve(ArtifactLinksArtifactsList.artifacts[artifact_id]);

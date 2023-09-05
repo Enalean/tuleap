@@ -60,7 +60,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                file_item
+                file_item,
             );
         });
 
@@ -77,7 +77,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                link_item
+                link_item,
             );
         });
 
@@ -96,7 +96,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                embedded_file_item
+                embedded_file_item,
             );
         });
 
@@ -117,7 +117,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                wiki_item
+                wiki_item,
             );
         });
 
@@ -136,7 +136,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                empty_doc_item
+                empty_doc_item,
             );
         });
 
@@ -155,7 +155,7 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                folder_item
+                folder_item,
             );
         });
 
@@ -173,11 +173,11 @@ describe("actions-delete", () => {
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
-                item_to_delete
+                item_to_delete,
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "clipboard/emptyClipboardAfterItemDeletion",
-                item_to_delete
+                item_to_delete,
             );
         });
 
@@ -196,7 +196,7 @@ describe("actions-delete", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setModalError",
-                "Internal server error"
+                "Internal server error",
             );
         });
 

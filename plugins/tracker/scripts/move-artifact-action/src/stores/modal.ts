@@ -51,7 +51,7 @@ export const useModalStore = defineStore("modal", {
             const selected_tracker_id = useSelectorsStore().selected_tracker_id;
             if (!selected_tracker_id) {
                 return Promise.reject(
-                    "Expected a tracker to be selected before calling MoveDryRun"
+                    "Expected a tracker to be selected before calling MoveDryRun",
                 );
             }
 

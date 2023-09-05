@@ -23,7 +23,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 export function disablePasteOfImages(
     ckeditor_instance: CKEDITOR.editor,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): void {
     ckeditor_instance.on("paste", (event) => {
         if (isThereAnImageWithDataURI(event.data.dataValue)) {
@@ -32,7 +32,7 @@ export function disablePasteOfImages(
             ckeditor_instance.showNotification(
                 gettext_provider.gettext("You are not allowed to paste images here"),
                 "warning",
-                0
+                0,
             );
         }
     });

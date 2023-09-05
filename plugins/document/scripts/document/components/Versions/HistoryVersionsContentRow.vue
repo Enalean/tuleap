@@ -96,7 +96,7 @@
                     <p>
                         {{
                             $gettext(
-                                "You are about to delete a version permanently. Please confirm your action."
+                                "You are about to delete a version permanently. Please confirm your action.",
                             )
                         }}
                     </p>
@@ -158,14 +158,14 @@ const is_deleting = ref(false);
 const got_error_while_trying_to_delete = ref(false);
 
 const should_display_source_column_for_versions = strictInject(
-    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS
+    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 );
 
 const gettext_provider = useGettext();
 const source_text = computed((): string =>
     props.version.authoring_tool.length > 0
         ? props.version.authoring_tool
-        : gettext_provider.$gettext("Uploaded")
+        : gettext_provider.$gettext("Uploaded"),
 );
 
 let modal: Modal | null = null;
@@ -185,15 +185,15 @@ function onConfirmDeletion(): void {
             success(
                 gettext_provider.interpolate(
                     gettext_provider.$gettext("Version %{ number } has been successfully deleted"),
-                    { number: props.version.number }
-                )
+                    { number: props.version.number },
+                ),
             );
             props.loadVersions();
         },
         () => {
             got_error_while_trying_to_delete.value = true;
             is_deleting.value = false;
-        }
+        },
     );
 }
 

@@ -70,7 +70,7 @@ describe("Hide widget", function () {
         cy.get("[data-test=dashboard-add-widget-empty-state-button]").click();
         cy.get("[data-test=myimageviewer]").click();
         cy.get("[data-test=dashboard-widget-image-input-url]").type(
-            "https://tuleap/images/organization_logo.png"
+            "https://tuleap/images/organization_logo.png",
         );
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
         cy.get("[data-test=dashboard-widget-myimageviewer]")

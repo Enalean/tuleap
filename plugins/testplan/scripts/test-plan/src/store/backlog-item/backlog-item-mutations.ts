@@ -41,7 +41,7 @@ export function endLoadingTestDefinition(state: BacklogItemState, item: BacklogI
 
 export function removeIsJustRefreshedFlagOnBacklogItem(
     state: BacklogItemState,
-    item: BacklogItem
+    item: BacklogItem,
 ): void {
     updateBacklogItem(state, item, (item) => ({
         ...item,
@@ -51,12 +51,12 @@ export function removeIsJustRefreshedFlagOnBacklogItem(
 
 export function removeIsJustRefreshedFlagOnTestDefinition(
     state: BacklogItemState,
-    payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload
+    payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload,
 ): void {
     updateBacklogItem(state, payload.backlog_item, (item) => {
         const test_definition_index = item.test_definitions.findIndex(
             (state_test_definition: TestDefinition): boolean =>
-                state_test_definition.id === payload.test_definition.id
+                state_test_definition.id === payload.test_definition.id,
         );
         if (test_definition_index === -1) {
             throw Error("Unable to find the test definition to update");
@@ -77,7 +77,7 @@ export function removeIsJustRefreshedFlagOnTestDefinition(
 
 export function addTestDefinitions(
     state: BacklogItemState,
-    payload: AddTestDefinitionsToBacklogItemPayload
+    payload: AddTestDefinitionsToBacklogItemPayload,
 ): void {
     updateBacklogItem(state, payload.backlog_item, (item) => ({
         ...item,
@@ -100,7 +100,7 @@ export function addTestDefinitions(
 
 export function loadingErrorHasBeenCatchedForTestDefinition(
     state: BacklogItemState,
-    item: BacklogItem
+    item: BacklogItem,
 ): void {
     updateBacklogItem(state, item, (item) => ({
         ...item,
@@ -140,10 +140,10 @@ export function collapseBacklogItem(state: BacklogItemState, item: BacklogItem):
 function updateBacklogItem(
     state: BacklogItemState,
     item: BacklogItem,
-    getNewVersionOfItem: (item: BacklogItem) => BacklogItem
+    getNewVersionOfItem: (item: BacklogItem) => BacklogItem,
 ): void {
     const index = state.backlog_items.findIndex(
-        (state_backlog_item: BacklogItem): boolean => state_backlog_item.id === item.id
+        (state_backlog_item: BacklogItem): boolean => state_backlog_item.id === item.id,
     );
     if (index === -1) {
         throw Error("Unable to find the backlog item to update");

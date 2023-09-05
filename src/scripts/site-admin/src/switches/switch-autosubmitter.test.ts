@@ -36,14 +36,14 @@ describe(`description-fields`, () => {
 
         it(`will throw if the switch has no data-form-id`, () => {
             expect(() => autoSubmitSwitches(doc, ".switches")).toThrow(
-                "Missing data-form-id on switch element"
+                "Missing data-form-id on switch element",
             );
         });
 
         it(`will throw if the form id cannot be found`, () => {
             switch_element.dataset.formId = "unknown-form";
             expect(() => autoSubmitSwitches(doc, ".switches")).toThrow(
-                "Could not find form id #unknown-form"
+                "Could not find form id #unknown-form",
             );
         });
 
@@ -53,7 +53,7 @@ describe(`description-fields`, () => {
             not_a_form.id = "switch-form";
             doc.body.appendChild(not_a_form);
             expect(() => autoSubmitSwitches(doc, ".switches")).toThrow(
-                "Could not find form id #switch-form"
+                "Could not find form id #switch-form",
             );
         });
 
@@ -80,6 +80,6 @@ function simulateChange(switch_element: HTMLInputElement): void {
             if (handler instanceof Function) {
                 handler(new Event("change"));
             }
-        }
+        },
     );
 }

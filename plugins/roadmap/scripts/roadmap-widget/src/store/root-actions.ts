@@ -26,7 +26,7 @@ import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export function loadRoadmap(
     context: ActionContext<RootState, RootState>,
-    roadmap_id: number
+    roadmap_id: number,
 ): void {
     Promise.all([
         retrieveAllTasks(roadmap_id),

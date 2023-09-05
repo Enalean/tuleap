@@ -146,7 +146,7 @@ function createBurnupChart({
             },
             displayable_data,
             line_name,
-            curveLinear
+            curveLinear,
         );
     }
 
@@ -183,7 +183,7 @@ function createBurnupChart({
         tooltip_factory
             .addTooltip(target_column)
             .addTextLine(({ date }) =>
-                moment(date, moment.ISO_8601).format(properties.tooltip_date_format)
+                moment(date, moment.ISO_8601).format(properties.tooltip_date_format),
             )
             .addTextLine(({ progression }) => sprintf(progression_label, progression))
             .addTextLine(({ total }) => sprintf(total_label, total));
@@ -212,7 +212,7 @@ function createBurnupChart({
             {
                 line_start: 0,
                 line_end: total,
-            }
+            },
         );
     }
 
@@ -241,13 +241,13 @@ function createBurnupChart({
         if (isThereALastDayProgression()) {
             return sprintf(
                 chart_props.left_legend_title,
-                moment(last_day_data.date).format(chart_props.left_legend_date_format)
+                moment(last_day_data.date).format(chart_props.left_legend_date_format),
             );
         }
 
         return sprintf(
             chart_props.left_legend_title,
-            moment().format(chart_props.left_legend_date_format)
+            moment().format(chart_props.left_legend_date_format),
         );
     }
 

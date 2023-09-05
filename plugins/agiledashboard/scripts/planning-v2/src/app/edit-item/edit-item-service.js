@@ -13,7 +13,7 @@ function EditItemService(
     NewTuleapArtifactModalService,
     MilestoneService,
     SharedPropertiesService,
-    BacklogService
+    BacklogService,
 ) {
     var self = this;
     self.showEditModal = showEditModal;
@@ -28,7 +28,7 @@ function EditItemService(
                     if (milestone) {
                         MilestoneService.updateInitialEffort(milestone);
                     }
-                }
+                },
             );
         }
 
@@ -39,7 +39,7 @@ function EditItemService(
                 SharedPropertiesService.getUserId(),
                 backlog_item.artifact.tracker.id,
                 backlog_item.artifact.id,
-                callback
+                callback,
             );
         }
     }

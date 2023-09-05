@@ -29,7 +29,7 @@ describe(`LinksStore`, () => {
         const first_link = LinkedArtifactStub.withIdAndType(90, LinkTypeStub.buildUntyped());
         const second_link = LinkedArtifactStub.withIdAndType(
             55,
-            LinkTypeStub.buildParentLinkType()
+            LinkTypeStub.buildParentLinkType(),
         );
 
         store.addLinkedArtifacts([first_link, second_link]);

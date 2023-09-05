@@ -49,7 +49,7 @@ document.observe("dom:loaded", function () {
             const locale = getLocaleFromBody(document);
             const editor_factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(
                 document,
-                locale
+                locale,
             );
             edit.observe("click", function (evt) {
                 Event.stop(evt);
@@ -65,16 +65,16 @@ document.observe("dom:loaded", function () {
                     textarea.dataset.projectId = getProjectId(followup_body);
 
                     var rteSpan = new Element("span", { style: "text-align: left;" }).update(
-                        textarea
+                        textarea,
                     );
                     var edit_panel = new Element("div", { style: "text-align: right;" }).update(
-                        rteSpan
+                        rteSpan,
                     );
                     comment_panel.insert({ before: edit_panel });
                     const creator = new RichTextEditorsCreator(
                         document,
                         new UploadImageFormFactory(document, locale),
-                        editor_factory
+                        editor_factory,
                     );
                     creator.createEditFollowupEditor(id, format);
 
@@ -137,7 +137,7 @@ document.observe("dom:loaded", function () {
                         .observe("click", function (evt) {
                             if (CKEDITOR.instances["tracker_followup_comment_edit_" + id]) {
                                 CKEDITOR.instances["tracker_followup_comment_edit_" + id].destroy(
-                                    true
+                                    true,
                                 );
                             }
                             edit_panel.remove();

@@ -21,7 +21,7 @@ function BacklogItemDetailsController(
     BacklogItemService,
     BacklogItemCollectionService,
     NewTuleapArtifactModalService,
-    ItemAnimatorService
+    ItemAnimatorService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -44,7 +44,7 @@ function BacklogItemDetailsController(
             return BacklogItemService.removeAddBacklogItemChildren(
                 undefined,
                 self.backlog_item.id,
-                [item_id]
+                [item_id],
             ).then(() => {
                 return appendItemToChildren(item_id, self.backlog_item);
             });
@@ -55,7 +55,7 @@ function BacklogItemDetailsController(
             item_type.id,
             self.backlog_item.id,
             callback,
-            []
+            [],
         );
     }
 
@@ -73,7 +73,7 @@ function BacklogItemDetailsController(
                     }
                 }
                 BacklogItemCollectionService.refreshBacklogItem(self.backlog_item.id);
-            }
+            },
         );
     }
 
@@ -87,7 +87,7 @@ function BacklogItemDetailsController(
         }
 
         const child_already_in_children = self.backlog_item.children.data.find(
-            ({ id }) => id === child_item_id
+            ({ id }) => id === child_item_id,
         );
 
         return angular.isUndefined(child_already_in_children);

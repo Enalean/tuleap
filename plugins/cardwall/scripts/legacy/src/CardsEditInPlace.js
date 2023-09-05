@@ -63,7 +63,7 @@ tuleap.cardwall = tuleap.cardwall || {};
 
                 tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(
                     artifact_id,
-                    self.moveCardCallback(artifact_id)
+                    self.moveCardCallback(artifact_id),
                 );
             });
         },

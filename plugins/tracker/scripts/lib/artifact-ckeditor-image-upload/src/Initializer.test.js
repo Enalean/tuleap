@@ -121,7 +121,7 @@ describe(`Initializer`, () => {
                 jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                     ({ onStartCallback }) => {
                         triggerStart = onStartCallback;
-                    }
+                    },
                 );
                 const disableFormSubmit = jest
                     .spyOn(form_adapter, "disableFormSubmit")
@@ -139,7 +139,7 @@ describe(`Initializer`, () => {
                     jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                         ({ onSuccessCallback }) => {
                             triggerSuccess = onSuccessCallback;
-                        }
+                        },
                     );
                     jest.spyOn(form, "appendChild").mockImplementation();
                     enableFormSubmit = jest
@@ -169,7 +169,7 @@ describe(`Initializer`, () => {
                     jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                         ({ onErrorCallback }) => {
                             triggerError = onErrorCallback;
-                        }
+                        },
                     );
                     enableFormSubmit = jest
                         .spyOn(form_adapter, "enableFormSubmit")
@@ -204,7 +204,7 @@ describe(`Initializer`, () => {
             it(`registers the CKEditor instance to clear unused uploaded files`, () => {
                 const addInstance = jest.spyOn(
                     consistent_uploaded_files_before_submit_checker,
-                    "addInstance"
+                    "addInstance",
                 );
                 initializer.init(ckeditor_instance, textarea);
 

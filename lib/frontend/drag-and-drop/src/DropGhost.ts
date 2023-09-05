@@ -26,7 +26,7 @@ export class DropGhost implements AfterDropListener {
     constructor(
         event_source: AfterDropEventSource,
         private readonly ongoing_drag: OngoingDrag,
-        private readonly element: Element
+        private readonly element: Element,
     ) {
         event_source.attachAfterDropListener(this);
     }
@@ -45,14 +45,14 @@ export class DropGhost implements AfterDropListener {
     public update(
         target_dropzone: Element,
         options: DrekkenovInitOptions,
-        y_coordinate: number
+        y_coordinate: number,
     ): void {
         window.requestAnimationFrame(() => {
             this.ongoing_drag.hideDraggedElement(options);
             const dropzone_children = Array.from(target_dropzone.children).filter(
                 (child: Element): boolean => {
                     return child instanceof HTMLElement && options.isConsideredInDropzone(child);
-                }
+                },
             );
             this.move(target_dropzone, dropzone_children, y_coordinate);
         });
@@ -63,7 +63,7 @@ export class DropGhost implements AfterDropListener {
             if (!this.isAtDraggedElementInitialPlace()) {
                 this.ongoing_drag.source_dropzone.insertBefore(
                     this.element,
-                    this.ongoing_drag.initial_sibling
+                    this.ongoing_drag.initial_sibling,
                 );
             }
         });
@@ -72,7 +72,7 @@ export class DropGhost implements AfterDropListener {
     private move(
         target_dropzone: Element,
         dropzone_children: Element[],
-        y_coordinate: number
+        y_coordinate: number,
     ): void {
         if (dropzone_children.length === 0) {
             if (target_dropzone === this.element.parentElement) {
@@ -98,7 +98,7 @@ export class DropGhost implements AfterDropListener {
 
     private isUnchanged(
         next_ghost_sibling: Element | null,
-        current_ghost_sibling: Element | null
+        current_ghost_sibling: Element | null,
     ): boolean {
         return next_ghost_sibling === current_ghost_sibling || next_ghost_sibling === this.element;
     }

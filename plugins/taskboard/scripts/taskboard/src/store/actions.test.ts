@@ -46,7 +46,7 @@ describe("State actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/deletePreference",
                 { key: "plugin_taskboard_hide_closed_items_42" },
-                { root: true }
+                { root: true },
             );
         });
     });
@@ -58,7 +58,7 @@ describe("State actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/setPreference",
                 { key: "plugin_taskboard_hide_closed_items_42", value: "1" },
-                { root: true }
+                { root: true },
             );
         });
     });

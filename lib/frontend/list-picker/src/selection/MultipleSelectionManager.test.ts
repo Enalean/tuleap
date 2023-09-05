@@ -57,7 +57,7 @@ describe("MultipleSelectionManager", () => {
             source_select_box,
             {
                 placeholder: "Please select some values",
-            }
+            },
         ).renderBaseComponent();
 
         gettext_provider = {
@@ -81,7 +81,7 @@ describe("MultipleSelectionManager", () => {
             { openListPicker } as DropdownManager,
             item_map_manager,
             gettext_provider,
-            item_none
+            item_none,
         );
 
         manager_without_none = new MultipleSelectionManager(
@@ -91,7 +91,7 @@ describe("MultipleSelectionManager", () => {
             "Please select some values",
             { openListPicker } as DropdownManager,
             item_map_manager,
-            gettext_provider
+            gettext_provider,
         );
 
         item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
@@ -113,7 +113,7 @@ describe("MultipleSelectionManager", () => {
 
             expect(search_input.hasAttribute("placeholder")).toBe(false);
             expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
+                selection_container.querySelector(".list-picker-selected-value-remove-button"),
             ).not.toBeNull();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
@@ -147,14 +147,14 @@ describe("MultipleSelectionManager", () => {
             const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
             expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
+                selection_container.querySelector(".list-picker-selected-value-remove-button"),
             ).toBeNull();
 
             manager.processSelection(item_1.element);
 
             expect(search_input.hasAttribute("placeholder")).toBe(false);
             expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
+                selection_container.querySelector(".list-picker-selected-value-remove-button"),
             ).not.toBeNull();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
         });
@@ -171,7 +171,7 @@ describe("MultipleSelectionManager", () => {
         it("selects items", () => {
             const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             const colored_item = item_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-value_colored"
+                "list-picker-item-value_colored",
             );
 
             manager.processSelection(item_1.element);
@@ -189,13 +189,13 @@ describe("MultipleSelectionManager", () => {
             expect(items_badges[1].textContent).toContain("Value 2");
             expect(items_badges[2].textContent).toContain("Value Colored");
             expect(
-                items_badges[0].querySelector(".list-picker-value-remove-button")
+                items_badges[0].querySelector(".list-picker-value-remove-button"),
             ).not.toBeNull();
             expect(
-                items_badges[1].querySelector(".list-picker-value-remove-button")
+                items_badges[1].querySelector(".list-picker-value-remove-button"),
             ).not.toBeNull();
             expect(
-                items_badges[2].querySelector(".list-picker-value-remove-button")
+                items_badges[2].querySelector(".list-picker-value-remove-button"),
             ).not.toBeNull();
 
             expect(items_badges[0].className).toContain("list-picker-badge");
@@ -221,7 +221,7 @@ describe("MultipleSelectionManager", () => {
                     manager.processSelection(item_1.element);
                     x_button = selectOrThrow(
                         selection_container,
-                        ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
+                        ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
                     );
                 });
 
@@ -235,8 +235,8 @@ describe("MultipleSelectionManager", () => {
                     expect(openListPicker).toHaveBeenCalled();
                     expect(
                         selection_container.querySelector(
-                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
-                        )
+                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
+                        ),
                     ).toBeNull();
                     expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
                 });
@@ -255,8 +255,8 @@ describe("MultipleSelectionManager", () => {
                     expect(openListPicker).toHaveBeenCalled();
                     expect(
                         selection_container.querySelector(
-                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
-                        )
+                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
+                        ),
                     ).toBeNull();
                     expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
                 });
@@ -269,7 +269,7 @@ describe("MultipleSelectionManager", () => {
 
                 const clear_values_button = selectOrThrow(
                     selection_container,
-                    ".list-picker-selected-value-remove-button"
+                    ".list-picker-selected-value-remove-button",
                 );
                 clear_values_button.dispatchEvent(new Event("pointerdown"));
 
@@ -324,7 +324,7 @@ describe("MultipleSelectionManager", () => {
                     manager_without_none.processSelection(item_1.element);
                     x_button = selectOrThrow(
                         selection_container,
-                        ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
+                        ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
                     );
                 });
 
@@ -335,13 +335,13 @@ describe("MultipleSelectionManager", () => {
 
                     expectItemNotToBeSelected(item_1);
                     expect(search_input.getAttribute("placeholder")).toBe(
-                        "Please select some values"
+                        "Please select some values",
                     );
                     expect(openListPicker).toHaveBeenCalled();
                     expect(
                         selection_container.querySelector(
-                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
-                        )
+                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
+                        ),
                     ).toBeNull();
                     expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
                 });
@@ -358,8 +358,8 @@ describe("MultipleSelectionManager", () => {
                     expect(openListPicker).toHaveBeenCalled();
                     expect(
                         selection_container.querySelector(
-                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
-                        )
+                            ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
+                        ),
                     ).toBeNull();
                     expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
                 });
@@ -371,7 +371,7 @@ describe("MultipleSelectionManager", () => {
 
                     const clear_values_button = selectOrThrow(
                         selection_container,
-                        ".list-picker-selected-value-remove-button"
+                        ".list-picker-selected-value-remove-button",
                     );
                     clear_values_button.dispatchEvent(new Event("pointerdown"));
 
@@ -379,12 +379,12 @@ describe("MultipleSelectionManager", () => {
                     expectItemNotToBeSelected(item_2);
 
                     expect(search_input.getAttribute("placeholder")).toBe(
-                        "Please select some values"
+                        "Please select some values",
                     );
                     expect(
                         selection_container.querySelector(
-                            ".list-picker-selected-value-remove-button"
-                        )
+                            ".list-picker-selected-value-remove-button",
+                        ),
                     ).toBeNull();
 
                     expect(openListPicker).toHaveBeenCalled();
@@ -397,7 +397,7 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_1.element);
             const x_button = selectOrThrow(
                 selection_container,
-                ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
+                ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button",
             );
             source_select_box.setAttribute("disabled", "disabled");
 
@@ -422,7 +422,7 @@ describe("MultipleSelectionManager", () => {
             expect(search_input.value).toBe(item_1.label);
             expect(backspace_down_event.cancelBubble).toBe(true);
             expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
+                selection_container.querySelector(".list-picker-selected-value-remove-button"),
             ).toBeNull();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
         });
@@ -501,11 +501,11 @@ describe("MultipleSelectionManager", () => {
                 manager.resetAfterChangeInOptions();
 
                 expect(
-                    selection_container.querySelector(".list-picker-selected-value-remove-button")
+                    selection_container.querySelector(".list-picker-selected-value-remove-button"),
                 ).toBeNull();
                 expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
                 expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-            }
+            },
         );
 
         it.each([
@@ -553,7 +553,7 @@ describe("MultipleSelectionManager", () => {
                 const new_item_with_item_1_value = item_map_manager.getItemWithValue(item_1.value);
                 if (!new_item_with_item_1_value) {
                     throw Error(
-                        "an item matching item_1's value should have been found in the items map"
+                        "an item matching item_1's value should have been found in the items map",
                     );
                 }
                 expectItemToBeSelected(new_item_with_item_1_value);
@@ -566,7 +566,7 @@ describe("MultipleSelectionManager", () => {
                 }
                 expectItemToBeSelected(new_item_3);
                 expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-            }
+            },
         );
     });
 });

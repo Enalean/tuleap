@@ -26,7 +26,7 @@ import TrackerTemplateSelector from "./TrackerTemplateSelector.vue";
 
 describe("TrackerTemplateSelector", () => {
     async function getWrapper(
-        state: State = {} as State
+        state: State = {} as State,
     ): Promise<Wrapper<TrackerTemplateSelector>> {
         return shallowMount(TrackerTemplateSelector, {
             mocks: {

@@ -56,7 +56,7 @@ export interface RootActionsUpdate {
 
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
-    [item, dropped_file]: [ItemFile, File]
+    [item, dropped_file]: [ItemFile, File],
 ): Promise<void> {
     try {
         await uploadNewVersion(context, [item, dropped_file, item.title, "", false, null]);
@@ -82,8 +82,8 @@ export const createNewFileVersionFromModal = async (
         string,
         string,
         boolean,
-        ApprovalTable | null
-    ]
+        ApprovalTable | null,
+    ],
 ): Promise<void> => {
     try {
         await uploadNewVersion(context, [
@@ -109,8 +109,8 @@ export const createNewEmbeddedFileVersionFromModal = async (
         string,
         string,
         boolean,
-        ApprovalTable | null
-    ]
+        ApprovalTable | null,
+    ],
 ): Promise<void> => {
     try {
         await postEmbeddedFile(
@@ -119,7 +119,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
             version_title,
             changelog,
             is_file_locked,
-            approval_table_action
+            approval_table_action,
         );
         item.updated = true;
         emitter.emit("item-has-just-been-updated", { item });
@@ -135,8 +135,8 @@ export const createNewWikiVersionFromModal = async (
         string,
         string,
         string,
-        boolean
-    ]
+        boolean,
+    ],
 ): Promise<void> => {
     try {
         await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
@@ -157,8 +157,8 @@ export const createNewLinkVersionFromModal = async (
         string,
         string,
         boolean,
-        ApprovalTable | null
-    ]
+        ApprovalTable | null,
+    ],
 ): Promise<void> => {
     try {
         await postLinkVersion(
@@ -167,7 +167,7 @@ export const createNewLinkVersionFromModal = async (
             version_title,
             changelog,
             is_file_locked,
-            approval_table_action
+            approval_table_action,
         );
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
@@ -192,7 +192,7 @@ export interface NewVersionFromEmptyInformation {
 
 export const createNewVersionFromEmpty = async (
     context: ActionContext<RootState, RootState>,
-    [selected_type, item, item_to_update]: [string, Empty, NewVersionFromEmptyInformation]
+    [selected_type, item, item_to_update]: [string, Empty, NewVersionFromEmptyInformation],
 ): Promise<void> => {
     try {
         switch (selected_type) {
@@ -202,7 +202,7 @@ export const createNewVersionFromEmpty = async (
             case TYPE_EMBEDDED:
                 await postNewEmbeddedFileVersionFromEmpty(
                     item.id,
-                    item_to_update.embedded_properties.content
+                    item_to_update.embedded_properties.content,
                 );
                 break;
             case TYPE_FILE:
@@ -214,7 +214,7 @@ export const createNewVersionFromEmpty = async (
             default:
                 await context.dispatch(
                     "error/handleErrorsForModal",
-                    "The wanted type is not supported"
+                    "The wanted type is not supported",
                 );
                 break;
         }
@@ -235,7 +235,7 @@ export const createNewVersionFromEmpty = async (
 
 async function uploadNewFileVersionFromEmptyDocument(
     context: ActionContext<RootState, RootState>,
-    [item, uploaded_file]: [Empty, File]
+    [item, uploaded_file]: [Empty, File],
 ): Promise<void> {
     const new_version = await postNewFileVersionFromEmpty(item.id, uploaded_file);
     if (uploaded_file.size === 0) {
@@ -258,7 +258,7 @@ function uploadVersionAndAssignUploaderFromEmpty(
     item: Empty,
     context: ActionContext<RootState, RootState>,
     uploaded_file: File,
-    new_version: CreatedItemFileProperties
+    new_version: CreatedItemFileProperties,
 ): void {
     item.uploader = uploadVersionFromEmpty(context, uploaded_file, item, new_version);
 }

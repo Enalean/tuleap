@@ -69,7 +69,7 @@ async function handleClickDiffButton(event: Event): Promise<void> {
         changeset_id,
         field_id,
         "strip-html",
-        "show-diff-follow-up"
+        "show-diff-follow-up",
     );
 
     toggleIcon(diff_button);
@@ -82,10 +82,10 @@ export async function toggleDiffContent(
     changeset_id: string,
     field_id: string,
     format: string,
-    spinner_to_toogle: string
+    spinner_to_toogle: string,
 ): Promise<void> {
     const diff = await document.getElementById(
-        `tracker-changeset-diff-comment-${changeset_id}-${field_id}`
+        `tracker-changeset-diff-comment-${changeset_id}-${field_id}`,
     );
     if (!diff) {
         return;
@@ -111,7 +111,7 @@ export async function toggleDiffContent(
         only_formatted_message.classList.add("hide-only-formatted-diff-message");
 
         const error_message = document.getElementById(
-            `tracker-changeset-diff-error-${changeset_id}-${field_id}`
+            `tracker-changeset-diff-error-${changeset_id}-${field_id}`,
         );
         if (!error_message) {
             throw new Error("Missing error message field error-" + changeset_id);
@@ -138,7 +138,7 @@ export async function toggleDiffContent(
                 const only_formatted_message = getFormattedDiffDiv(
                     changeset_id,
                     field_id,
-                    document
+                    document,
                 );
                 only_formatted_message.classList.remove("hide-only-formatted-diff-message");
             }
@@ -175,7 +175,7 @@ export function toggleIcon(diff_button: Element): void {
 export function shouldLoadSomeContent(
     diff: Element,
     diff_button: Element,
-    new_format: string
+    new_format: string,
 ): boolean {
     const last_load_by = diff.getAttribute("last-load-by");
 
@@ -198,7 +198,7 @@ export function shouldLoadSomeContent(
 
 function toggleMarkupButton(diff_button: Element, changeset_id: string, field_id: string): void {
     const markup_button = document.getElementById(
-        `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`
+        `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`,
     );
 
     if (!markup_button) {
@@ -237,7 +237,7 @@ function toggleMarkupButton(diff_button: Element, changeset_id: string, field_id
                     changeset_id,
                     field_id,
                     "html",
-                    "show-markup-diff-follow-up"
+                    "show-markup-diff-follow-up",
                 );
             } finally {
                 markup_button.classList.add("markup-diff");
@@ -249,10 +249,10 @@ function toggleMarkupButton(diff_button: Element, changeset_id: string, field_id
 function getFormattedDiffDiv(
     changeset_id: string,
     field_id: string,
-    document: Document
+    document: Document,
 ): HTMLElement {
     const only_formatted_message = document.getElementById(
-        `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
+        `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`,
     );
     if (!only_formatted_message) {
         throw new Error("Missing only formatted dff message" + changeset_id);

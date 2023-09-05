@@ -53,7 +53,7 @@ export interface IterationLabels {
 }
 
 export function createConfigurationModule(
-    initial_configuration_state: ConfigurationState
+    initial_configuration_state: ConfigurationState,
 ): Module<ConfigurationState, State> {
     return {
         namespaced: true,

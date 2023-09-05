@@ -60,13 +60,13 @@ describe("iterations-getters", () => {
             expect(
                 getters
                     .lvl1_iterations_to_display(state, {}, {}, root_getters)
-                    .some((iteration) => iteration.id === 123)
+                    .some((iteration) => iteration.id === 123),
             ).toBe(expected_is_displayed);
             expect(
                 getters
                     .lvl2_iterations_to_display(state, {}, {}, root_getters)
-                    .some((iteration) => iteration.id === 124)
+                    .some((iteration) => iteration.id === 124),
             ).toBe(expected_is_displayed);
-        }
+        },
     );
 });

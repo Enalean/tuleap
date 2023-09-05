@@ -40,7 +40,7 @@ describe(`ConfigureStateButton`, () => {
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "transitionModal/showTransitionConfigurationModal",
-            transition
+            transition,
         );
     });
 

@@ -66,7 +66,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
     const buildCreationManager = (
         lines: FileLine[],
         group_of_lines: GroupOfLines[],
-        lines_to_handles_map: Map<FileLine, SynchronizedLineHandles>
+        lines_to_handles_map: Map<FileLine, SynchronizedLineHandles>,
     ): ManageCodeMirrorWidgetsCreation => {
         const file_lines_state = FileLinesStateStub(lines, group_of_lines, lines_to_handles_map);
         return SideBySideCodeMirrorWidgetsCreationManager(
@@ -74,16 +74,16 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             SideBySideLinesHeightEqualizer(
                 left_code_mirror,
                 right_code_mirror,
-                SideBySidePlaceholderPositioner(file_lines_state.getState())
+                SideBySidePlaceholderPositioner(file_lines_state.getState()),
             ),
             SideBySideCodeMirrorsContentManager(
                 file_lines_state.getFileLines(),
                 left_code_mirror,
-                right_code_mirror
+                right_code_mirror,
             ),
             create_inline_comment_stub.build(),
             create_new_inline_comment_form_stub.build(),
-            create_placeholder_stub.build()
+            create_placeholder_stub.build(),
         );
     };
 
@@ -97,13 +97,13 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
 
     const triggerInlineCommentRenderingCallback = (): void => {
         triggerPostRenderingCallback(
-            create_inline_comment_stub.getLastCreationParametersReceived()
+            create_inline_comment_stub.getLastCreationParametersReceived(),
         );
     };
 
     const triggerNewInlineCommentFormRenderingCallback = (): void => {
         triggerPostRenderingCallback(
-            create_new_inline_comment_form_stub.getLastCreationParametersReceived()
+            create_new_inline_comment_form_stub.getLastCreationParametersReceived(),
         );
     };
 
@@ -150,12 +150,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 buildCreationManager(
                     [comment_line],
                     [GroupOfLinesStub.buildGroupOfRemovedLines([comment_line])],
-                    new Map([])
+                    new Map([]),
                 ).displayInlineComment(comment);
 
                 expect(create_inline_comment_stub.getNbCalls()).toBe(1);
                 expect(
-                    create_inline_comment_stub.getLastCreationParametersReceived()
+                    create_inline_comment_stub.getLastCreationParametersReceived(),
                 ).toStrictEqual({
                     code_mirror: left_code_mirror,
                     comment,
@@ -178,13 +178,13 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                             {
                                 left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        left_side_handle_height
+                                        left_side_handle_height,
                                     ),
                                 ]),
                                 right_handle: right_side_handle,
                             },
                         ],
-                    ])
+                    ]),
                 ).displayInlineComment(comment);
 
                 triggerInlineCommentRenderingCallback();
@@ -214,7 +214,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                             {
                                 left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        left_side_handle_height
+                                        left_side_handle_height,
                                     ),
                                 ]),
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
@@ -222,7 +222,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayInlineComment(comment);
 
                 triggerInlineCommentRenderingCallback();
@@ -246,14 +246,14 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 const widget_creation_manager = buildCreationManager(
                     [comment_line],
                     [GroupOfLinesStub.buildGroupOfAddedLines([comment_line])],
-                    new Map([])
+                    new Map([]),
                 );
 
                 widget_creation_manager.displayInlineComment(comment);
 
                 expect(create_inline_comment_stub.getNbCalls()).toBe(1);
                 expect(
-                    create_inline_comment_stub.getLastCreationParametersReceived()
+                    create_inline_comment_stub.getLastCreationParametersReceived(),
                 ).toStrictEqual({
                     code_mirror: right_code_mirror,
                     comment,
@@ -277,12 +277,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 left_handle: left_side_handle,
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        right_side_handle_height
+                                        right_side_handle_height,
                                     ),
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayInlineComment(comment);
 
                 triggerInlineCommentRenderingCallback();
@@ -316,12 +316,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 ]),
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        right_side_handle_height
+                                        right_side_handle_height,
                                     ),
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayInlineComment(comment);
 
                 triggerInlineCommentRenderingCallback();
@@ -335,7 +335,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             let comment_line: UnMovedFileLine;
 
             const buildComment = (
-                position: InlineCommentPosition
+                position: InlineCommentPosition,
             ): PullRequestInlineCommentPresenter => {
                 return PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
                     unidiff_offset: 12,
@@ -353,13 +353,13 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     const widget_creation_manager = buildCreationManager(
                         [comment_line],
                         [GroupOfLinesStub.buildGroupOfUnMovedLines([comment_line])],
-                        new Map([])
+                        new Map([]),
                     );
                     widget_creation_manager.displayInlineComment(comment);
 
                     expect(create_inline_comment_stub.getNbCalls()).toBe(1);
                     expect(
-                        create_inline_comment_stub.getLastCreationParametersReceived()
+                        create_inline_comment_stub.getLastCreationParametersReceived(),
                     ).toStrictEqual({
                         code_mirror: left_code_mirror,
                         comment,
@@ -384,20 +384,20 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 {
                                     left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                         FileDiffWidgetStub.buildInlineCommentWidget(
-                                            left_side_handle_height
+                                            left_side_handle_height,
                                         ),
                                     ]),
                                     right_handle: right_side_handle,
                                 },
                             ],
-                        ])
+                        ]),
                     ).displayInlineComment(comment);
 
                     triggerInlineCommentRenderingCallback();
 
                     expect(create_placeholder_stub.getNbCalls()).toBe(1);
                     expect(
-                        create_placeholder_stub.getLastCreationParametersReceived()
+                        create_placeholder_stub.getLastCreationParametersReceived(),
                     ).toStrictEqual({
                         code_mirror: right_code_mirror,
                         handle: right_side_handle,
@@ -424,7 +424,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 {
                                     left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                         FileDiffWidgetStub.buildInlineCommentWidget(
-                                            left_side_handle_height
+                                            left_side_handle_height,
                                         ),
                                     ]),
                                     right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
@@ -432,14 +432,14 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                     ]),
                                 },
                             ],
-                        ])
+                        ]),
                     ).displayInlineComment(comment);
 
                     triggerInlineCommentRenderingCallback();
 
                     expect(create_placeholder_stub.getNbCalls()).toBe(0);
                     expect(right_hand_side_placeholder.height).toStrictEqual(
-                        left_side_handle_height
+                        left_side_handle_height,
                     );
                 });
             });
@@ -450,14 +450,14 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     const widget_creation_manager = buildCreationManager(
                         [comment_line],
                         [GroupOfLinesStub.buildGroupOfUnMovedLines([comment_line])],
-                        new Map([])
+                        new Map([]),
                     );
 
                     widget_creation_manager.displayInlineComment(comment);
 
                     expect(create_inline_comment_stub.getNbCalls()).toBe(1);
                     expect(
-                        create_inline_comment_stub.getLastCreationParametersReceived()
+                        create_inline_comment_stub.getLastCreationParametersReceived(),
                     ).toStrictEqual({
                         code_mirror: right_code_mirror,
                         comment,
@@ -483,19 +483,19 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                     left_handle: left_side_handle,
                                     right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                         FileDiffWidgetStub.buildInlineCommentWidget(
-                                            right_side_handle_height
+                                            right_side_handle_height,
                                         ),
                                     ]),
                                 },
                             ],
-                        ])
+                        ]),
                     ).displayInlineComment(comment);
 
                     triggerInlineCommentRenderingCallback();
 
                     expect(create_placeholder_stub.getNbCalls()).toBe(1);
                     expect(
-                        create_placeholder_stub.getLastCreationParametersReceived()
+                        create_placeholder_stub.getLastCreationParametersReceived(),
                     ).toStrictEqual({
                         code_mirror: left_code_mirror,
                         handle: left_side_handle,
@@ -525,19 +525,19 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                     ]),
                                     right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                         FileDiffWidgetStub.buildInlineCommentWidget(
-                                            right_side_handle_height
+                                            right_side_handle_height,
                                         ),
                                     ]),
                                 },
                             ],
-                        ])
+                        ]),
                     ).displayInlineComment(comment);
 
                     triggerInlineCommentRenderingCallback();
 
                     expect(create_placeholder_stub.getNbCalls()).toBe(0);
                     expect(left_hand_side_placeholder.height).toStrictEqual(
-                        right_side_handle_height
+                        right_side_handle_height,
                     );
                 });
             });
@@ -553,7 +553,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
         const line = FileLineStub.buildUnMovedFileLine(
             code_mirror_line_number + 1,
             code_mirror_line_number + 1,
-            code_mirror_line_number + 1
+            code_mirror_line_number + 1,
         );
 
         it("When no corresponding line is found, Then it does nothing", () => {
@@ -566,7 +566,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 user_id,
                 user_avatar_url,
                 file_path,
-                code_mirror_line_number
+                code_mirror_line_number,
             );
 
             creation_manager.displayNewInlineCommentForm(
@@ -576,7 +576,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 user_id,
                 user_avatar_url,
                 file_path,
-                code_mirror_line_number
+                code_mirror_line_number,
             );
 
             expect(create_new_inline_comment_form_stub.getNbCalls()).toBe(0);
@@ -587,7 +587,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 buildCreationManager(
                     [line],
                     [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
-                    new Map([])
+                    new Map([]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
@@ -595,12 +595,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 expect(create_new_inline_comment_form_stub.getNbCalls()).toBe(1);
                 expect(
-                    create_new_inline_comment_form_stub.getLastCreationParametersReceived()
+                    create_new_inline_comment_form_stub.getLastCreationParametersReceived(),
                 ).toStrictEqual({
                     code_mirror: left_code_mirror,
                     line_number: code_mirror_line_number,
@@ -611,7 +611,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     context: NewInlineCommentContextBuilder.fromContext(
                         file_path,
                         line.unidiff_offset,
-                        INLINE_COMMENT_POSITION_LEFT
+                        INLINE_COMMENT_POSITION_LEFT,
                     ),
                     post_rendering_callback: expect.any(Function),
                 });
@@ -632,13 +632,13 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                             {
                                 left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildNewCommentFormWidget(
-                                        left_side_handle_height
+                                        left_side_handle_height,
                                     ),
                                 ]),
                                 right_handle: right_side_handle,
                             },
                         ],
-                    ])
+                    ]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
@@ -646,7 +646,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 triggerNewInlineCommentFormRenderingCallback();
@@ -677,7 +677,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                             {
                                 left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        left_side_handle_height
+                                        left_side_handle_height,
                                     ),
                                 ]),
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
@@ -685,7 +685,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
@@ -693,7 +693,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 triggerNewInlineCommentFormRenderingCallback();
@@ -708,7 +708,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 buildCreationManager(
                     [line],
                     [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
-                    new Map([])
+                    new Map([]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
@@ -716,12 +716,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 expect(create_new_inline_comment_form_stub.getNbCalls()).toBe(1);
                 expect(
-                    create_new_inline_comment_form_stub.getLastCreationParametersReceived()
+                    create_new_inline_comment_form_stub.getLastCreationParametersReceived(),
                 ).toStrictEqual({
                     code_mirror: right_code_mirror,
                     line_number: code_mirror_line_number,
@@ -732,7 +732,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     context: NewInlineCommentContextBuilder.fromContext(
                         file_path,
                         line.unidiff_offset,
-                        INLINE_COMMENT_POSITION_RIGHT
+                        INLINE_COMMENT_POSITION_RIGHT,
                     ),
                     post_rendering_callback: expect.any(Function),
                 });
@@ -754,12 +754,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 left_handle: left_side_handle,
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildNewCommentFormWidget(
-                                        right_side_handle_height
+                                        right_side_handle_height,
                                     ),
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
@@ -767,7 +767,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 triggerNewInlineCommentFormRenderingCallback();
@@ -801,12 +801,12 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                                 ]),
                                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                                     FileDiffWidgetStub.buildInlineCommentWidget(
-                                        right_side_handle_height
+                                        right_side_handle_height,
                                     ),
                                 ]),
                             },
                         ],
-                    ])
+                    ]),
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
@@ -814,7 +814,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                     user_id,
                     user_avatar_url,
                     file_path,
-                    code_mirror_line_number
+                    code_mirror_line_number,
                 );
 
                 triggerNewInlineCommentFormRenderingCallback();

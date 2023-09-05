@@ -26,7 +26,7 @@
             data-test="document-update-changelog"
             name="changelog"
             v-bind:placeholder="`${$gettext(
-                'Please describe the changes of the new version here'
+                'Please describe the changes of the new version here',
             )}`"
             v-bind:value="value"
             v-on:input="oninput"

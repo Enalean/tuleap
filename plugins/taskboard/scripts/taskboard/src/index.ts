@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.columns).map(
                   (column: ColumnDefinition): ColumnDefinition => {
                       return { ...column, has_hover: false };
-                  }
+                  },
               )
             : [];
     const has_content = Boolean(vue_mount_point.dataset.hasContent);
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
     Vue.use(Vuex);
     Vue.use(VueDOMPurifyHTML);

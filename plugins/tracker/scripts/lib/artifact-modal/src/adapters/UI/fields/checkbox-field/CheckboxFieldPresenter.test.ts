@@ -46,7 +46,7 @@ describe("CheckboxFieldPresenter", () => {
                 required: true,
             },
             [null, null, 3, 4],
-            false
+            false,
         );
 
         expect(presenter.field_id).toBe(1060);

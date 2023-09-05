@@ -24,6 +24,6 @@ export type PullRequestCommentRepliesCollectionPresenter = readonly PullRequestC
 export const PullRequestCommentRepliesCollectionPresenter = {
     buildEmpty: (): PullRequestCommentRepliesCollectionPresenter => [],
     fromReplies: (
-        replies: readonly PullRequestCommentPresenter[]
+        replies: readonly PullRequestCommentPresenter[],
     ): PullRequestCommentRepliesCollectionPresenter => replies,
 };

@@ -68,7 +68,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             controller,
             comments_store,
             FileDiffCommentWidgetsMap(),
-            true
+            true,
         );
 
     beforeEach(() => {
@@ -105,7 +105,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             };
 
             const placeholder = document.createElement(
-                PLACEHOLDER_TAG_NAME
+                PLACEHOLDER_TAG_NAME,
             ) as FileDiffPlaceholderWidget;
             createElement.mockReturnValue(placeholder);
 
@@ -118,7 +118,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
 
             expect(placeholder.height).toStrictEqual(widget_creation_params.widget_height);
             expect(placeholder.isReplacingAComment).toBe(
-                widget_creation_params.is_comment_placeholder
+                widget_creation_params.is_comment_placeholder,
             );
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(
@@ -127,7 +127,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 {
                     coverGutter: true,
                     above: widget_creation_params.display_above_line,
-                }
+                },
             );
 
             placeholder.post_rendering_callback();
@@ -143,7 +143,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             const post_rendering_callback = jest.fn();
 
             const inline_comment_widget = document.createElement(
-                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME
+                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
             ) as InlineCommentWidget;
             createElement.mockReturnValue(inline_comment_widget);
 
@@ -183,10 +183,10 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             const post_rendering_callback = jest.fn();
 
             const new_comment_form = document.createElement(
-                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME
+                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
             ) as NewInlineCommentFormWidget;
             const inline_comment_widget = document.createElement(
-                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME
+                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
             ) as InlineCommentWidget;
             createElement.mockReturnValueOnce(new_comment_form);
             createElement.mockReturnValueOnce(inline_comment_widget);

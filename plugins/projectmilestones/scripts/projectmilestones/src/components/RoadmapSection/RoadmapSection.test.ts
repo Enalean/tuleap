@@ -26,7 +26,7 @@ import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 const project_id = 102;
 async function getPersonalWidgetInstance(
-    store_options: StoreOptions
+    store_options: StoreOptions,
 ): Promise<Wrapper<RoadmapSection>> {
     const store = createStoreMock(store_options);
 

@@ -48,7 +48,7 @@ function controller(
     $rootScope,
     ExecutionService,
     ExecutionRestService,
-    gettextCatalog
+    gettextCatalog,
 ) {
     const self = this;
 
@@ -86,7 +86,7 @@ function controller(
                         attachFile(file);
                     }
                 });
-            }
+            },
         );
 
         $scope.$on("user-has-closed-the-file-creation-errors-modal", () => {
@@ -99,7 +99,7 @@ function controller(
                 if (!isFile(file)) {
                     pushErrorInModal(
                         buildFileInfo(file),
-                        gettextCatalog.getString("This item is not a file")
+                        gettextCatalog.getString("This item is not a file"),
                     );
                     $scope.$apply();
 
@@ -112,7 +112,7 @@ function controller(
 
     function $onDestroy() {
         Array.from(self.upload_error_messages_popovers.values()).forEach((popover) =>
-            popover.destroy()
+            popover.destroy(),
         );
     }
 
@@ -122,14 +122,14 @@ function controller(
                 if (
                     ExecutionService.doesFileAlreadyExistInUploadedAttachments(
                         self.execution,
-                        new_file
+                        new_file,
                     )
                 ) {
                     pushErrorInModal(
                         file,
                         gettextCatalog.getString(
-                            "This file has already been attached to this comment"
-                        )
+                            "This file has already been attached to this comment",
+                        ),
                     );
 
                     return;
@@ -146,7 +146,7 @@ function controller(
 
                 ExecutionService.addToFilesAddedThroughAttachmentArea(
                     self.execution,
-                    file_uploading
+                    file_uploading,
                 );
 
                 if (upload_url === null) {
@@ -162,13 +162,13 @@ function controller(
                             file_uploading.id,
                             {
                                 progress: progress_in_percent,
-                            }
+                            },
                         );
                         $scope.$apply();
                     },
                     (error) => {
                         handleUploadError(file_uploading, error);
-                    }
+                    },
                 );
             })
             .catch((error) => {
@@ -212,12 +212,12 @@ function controller(
 
         const popover = createPopover(
             $element[0].querySelector(
-                `#popover-upload-error-attachment-${file_uploading.id}-trigger`
+                `#popover-upload-error-attachment-${file_uploading.id}-trigger`,
             ),
             $element[0].querySelector(
-                `#popover-upload-error-attachment-${file_uploading.id}-content`
+                `#popover-upload-error-attachment-${file_uploading.id}-content`,
             ),
-            { trigger: "click" }
+            { trigger: "click" },
         );
 
         self.upload_error_messages_popovers.set(file_uploading.id, popover);

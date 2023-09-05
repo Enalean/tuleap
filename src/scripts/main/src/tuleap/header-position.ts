@@ -47,7 +47,7 @@ export function initHeaderPosition(): void {
             header,
             platform_banner,
             project_banner,
-            window.scrollY
+            window.scrollY,
         );
     });
     mutation_observer.observe(header, { attributes: true, attributeFilter: ["class"] });
@@ -58,7 +58,7 @@ export function initHeaderPosition(): void {
                 header,
                 platform_banner,
                 project_banner,
-                window.scrollY
+                window.scrollY,
             );
         });
     }
@@ -69,7 +69,7 @@ export function initHeaderPosition(): void {
                 header,
                 platform_banner,
                 project_banner,
-                window.scrollY
+                window.scrollY,
             );
         });
     }
@@ -84,7 +84,7 @@ export function initHeaderPosition(): void {
                     header,
                     platform_banner,
                     project_banner,
-                    last_known_scroll_y
+                    last_known_scroll_y,
                 );
                 ticking = false;
             });

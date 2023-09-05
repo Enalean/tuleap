@@ -34,7 +34,7 @@ const buildErrorMessage = (error: Error, gettext_provider: GettextProvider): Tem
 
 export function createPreviewArea(
     promise_of_html: Promise<string> | null,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult {
     if (promise_of_html === null) {
         return html``;
@@ -47,10 +47,10 @@ export function createPreviewArea(
                         unsafeHTML(
                             DOMPurify.sanitize(html_string, {
                                 ADD_TAGS: ["tlp-mermaid-diagram", "tlp-syntax-highlighting"],
-                            })
+                            }),
                         ),
-                    (error) => buildErrorMessage(error, gettext_provider)
-                )
+                    (error) => buildErrorMessage(error, gettext_provider),
+                ),
             )}
         </div>
     `;

@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initGettext(
         locale,
         "plugin-gitlab/linked-group",
-        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const buttons_section = selectOrThrow(document.body, SECTION_SELECTOR);
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gitlab_server_uri = getDatasetItemOrThrow(buttons_section, "gitlabUri");
     const gitlab_group_id = Number.parseInt(
         getDatasetItemOrThrow(buttons_section, "gitlabGroupId"),
-        10
+        10,
     );
     const group: GroupInformation = { id: group_id, gitlab_server_uri, gitlab_group_id };
 

@@ -67,7 +67,7 @@ describe("EditRemainingEffort", () => {
         const card = wrapper.props("card");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "swimlane/removeRemainingEffortFromEditMode",
-            card
+            card,
         );
     });
 
@@ -123,7 +123,7 @@ describe("EditRemainingEffort", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "swimlane/removeRemainingEffortFromEditMode",
-            card
+            card,
         );
         expect(card.remaining_effort.value).toBe(3.14);
     });

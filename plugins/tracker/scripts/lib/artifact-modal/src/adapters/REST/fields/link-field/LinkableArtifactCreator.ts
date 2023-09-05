@@ -29,7 +29,7 @@ import { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNum
 export const LinkableArtifactCreator = (
     tracker_retriever: RetrieveTrackerWithTitleSemantic,
     artifact_creator: CreateArtifact,
-    artifact_retriever: RetrieveMatchingArtifact
+    artifact_retriever: RetrieveMatchingArtifact,
 ): CreateLinkableArtifact => ({
     createLinkableArtifact: (tracker_identifier, title): ResultAsync<LinkableArtifact, Fault> =>
         tracker_retriever
@@ -41,6 +41,8 @@ export const LinkableArtifactCreator = (
                 ]);
             })
             .andThen((artifact) =>
-                artifact_retriever.getMatchingArtifact(LinkableNumber.fromArtifactCreated(artifact))
+                artifact_retriever.getMatchingArtifact(
+                    LinkableNumber.fromArtifactCreated(artifact),
+                ),
             ),
 });

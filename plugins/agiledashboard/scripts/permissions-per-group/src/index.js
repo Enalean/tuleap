@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const RootComponent = Vue.extend(AgileDashboardPermissions);

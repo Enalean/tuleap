@@ -45,7 +45,7 @@ describe("initGettext", () => {
         const gettext_provider = await initGettext(
             "en_US",
             "my-domain",
-            load_translations_callback
+            load_translations_callback,
         );
 
         expect(gettext_provider.setLocale).toHaveBeenCalledWith("en_US");
@@ -56,7 +56,7 @@ describe("initGettext", () => {
 
     it("calls function to load external translation", async () => {
         const gettext_provider = await initGettext("fr_FR", "my-domain", (locale) =>
-            Promise.resolve({ headers: { Language: locale }, translations: {} })
+            Promise.resolve({ headers: { Language: locale }, translations: {} }),
         );
 
         expect(gettext_provider.addTranslations).toHaveBeenCalledWith("fr_FR", "my-domain", {

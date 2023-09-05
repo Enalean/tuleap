@@ -79,7 +79,7 @@ export default {
             if (file.size > this.max_size_upload) {
                 this.error_message = sprintf(
                     this.$gettext("You are not allowed to upload files bigger than %s."),
-                    prettyKibibytes(this.max_size_upload)
+                    prettyKibibytes(this.max_size_upload),
                 );
             }
 

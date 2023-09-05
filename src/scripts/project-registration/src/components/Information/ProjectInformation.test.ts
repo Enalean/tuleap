@@ -189,13 +189,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -226,13 +226,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -262,13 +262,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -298,13 +298,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -334,13 +334,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -416,13 +416,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -452,13 +452,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
     });
@@ -498,7 +498,7 @@ describe("ProjectInformation -", () => {
 
         it("Does not display privacy list", () => {
             expect(
-                factory.find("[data-test=project-information-input-privacy-list]").exists()
+                factory.find("[data-test=project-information-input-privacy-list]").exists(),
             ).toBe(false);
         });
     });
@@ -601,13 +601,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
             );
         });
 
@@ -660,13 +660,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true",
             );
         });
         it("Build the properties according to the project template 100", async () => {
@@ -723,13 +723,13 @@ describe("ProjectInformation -", () => {
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
-                expected_project_properties
+                expected_project_properties,
             );
 
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true",
             );
         });
     });

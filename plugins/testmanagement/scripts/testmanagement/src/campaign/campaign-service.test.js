@@ -43,7 +43,7 @@ describe("CampaignService", () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -55,7 +55,7 @@ describe("CampaignService", () => {
                     statusText,
                     json: () => $q.when(error_json),
                 },
-            })
+            }),
         );
     }
 
@@ -90,13 +90,13 @@ describe("CampaignService", () => {
                 campaign_to_create,
                 "report",
                 milestone_id,
-                report_id
+                report_id,
             );
             await wrapPromise(promise);
 
             expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=report&milestone_id=133&report_id=24`,
-                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) },
             );
         });
 
@@ -106,13 +106,13 @@ describe("CampaignService", () => {
                 campaign_to_create,
                 "report",
                 undefined,
-                report_id
+                report_id,
             );
             await wrapPromise(promise);
 
             expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=report&report_id=24`,
-                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) },
             );
         });
 
@@ -122,13 +122,13 @@ describe("CampaignService", () => {
                 campaign_to_create,
                 "all",
                 milestone_id,
-                null
+                null,
             );
             await wrapPromise(promise);
 
             expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=all&milestone_id=133`,
-                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) },
             );
         });
 
@@ -137,7 +137,7 @@ describe("CampaignService", () => {
                 campaign_to_create,
                 "all",
                 undefined,
-                null
+                null,
             );
             await wrapPromise(promise);
 
@@ -146,7 +146,7 @@ describe("CampaignService", () => {
                 {
                     headers: expected_headers,
                     body: JSON.stringify(campaign_to_create),
-                }
+                },
             );
         });
     });
@@ -205,7 +205,7 @@ describe("CampaignService", () => {
                     definition_ids_to_add: definition_ids,
                     execution_ids_to_remove: execution_ids,
                 }),
-            }
+            },
         );
     });
 
@@ -218,7 +218,7 @@ describe("CampaignService", () => {
             await wrapPromise(promise);
 
             expect(tlpPost).toHaveBeenCalledWith(
-                `/api/v1/testmanagement_campaigns/53/automated_tests`
+                `/api/v1/testmanagement_campaigns/53/automated_tests`,
             );
         });
 
@@ -235,7 +235,7 @@ describe("CampaignService", () => {
             const promise = CampaignService.triggerAutomatedTests(31).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(error.message).toBe(
-                    "Message: The requested URL returned error: 403 Forbidden"
+                    "Message: The requested URL returned error: 403 Forbidden",
                 );
             });
             return wrapPromise(promise);

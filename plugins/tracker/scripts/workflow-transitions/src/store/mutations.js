@@ -92,7 +92,7 @@ export function deleteTransition(state, transition_to_delete) {
         return;
     }
     state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
-        (transition) => transition !== transition_to_delete
+        (transition) => transition !== transition_to_delete,
     );
 }
 

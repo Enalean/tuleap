@@ -105,7 +105,10 @@
     }
 
     > .tlp-card-selectable {
-        transition: border-color 100ms linear, background 100ms linear, box-shadow 100ms linear;
+        transition:
+            border-color 100ms linear,
+            background 100ms linear,
+            box-shadow 100ms linear;
 
         &:hover,
         &:focus {
@@ -121,7 +124,10 @@
     }
 
     > .tlp-card-inactive {
-        transition: border-color 100ms linear, background 100ms linear, box-shadow 100ms linear;
+        transition:
+            border-color 100ms linear,
+            background 100ms linear,
+            box-shadow 100ms linear;
         background: var(--tlp-fade-background-color);
 
         &:hover,

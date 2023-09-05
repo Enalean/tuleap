@@ -99,7 +99,7 @@ describe("organize-reports-data", () => {
                     return Promise.resolve(artifacts_third_report_response);
                 }
                 throw Error("Unknown report id");
-            }
+            },
         );
 
         const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
@@ -118,7 +118,7 @@ describe("organize-reports-data", () => {
                     return Promise.resolve([]);
                 }
                 throw Error("Unknown artifact id " + artifact_id);
-            }
+            },
         );
 
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
@@ -230,7 +230,7 @@ describe("organize-reports-data", () => {
                     return Promise.resolve(artifacts_second_report_response);
                 }
                 throw Error("Unknown report id");
-            }
+            },
         );
 
         const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
@@ -243,7 +243,7 @@ describe("organize-reports-data", () => {
                     return Promise.resolve([]);
                 }
                 throw Error("Unknown artifact id");
-            }
+            },
         );
 
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
@@ -345,14 +345,14 @@ describe("organize-reports-data", () => {
                     return Promise.resolve(artifacts_second_report_response);
                 }
                 throw Error("Unknown report id");
-            }
+            },
         );
 
         const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
         getLinkedArtifactsMock.mockImplementation(
             (
                 artifact_id: number,
-                artifact_link_type: string
+                artifact_link_type: string,
             ): Promise<LinkedArtifactsResponse[]> => {
                 if (artifact_id === 74 && artifact_link_type === "_is_child") {
                     return Promise.resolve(linked_child_artifacts_collection);
@@ -364,7 +364,7 @@ describe("organize-reports-data", () => {
                     return Promise.resolve([]);
                 }
                 throw Error("Unknown artifact id");
-            }
+            },
         );
 
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({

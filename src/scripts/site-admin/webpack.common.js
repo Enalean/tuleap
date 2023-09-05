@@ -43,7 +43,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets"),
-        "/assets/core/site-admin/"
+        "/assets/core/site-admin/",
     ),
     externals: {
         tlp: "tlp",

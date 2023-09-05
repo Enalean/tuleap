@@ -22,7 +22,7 @@ import { ref, shallowRef, unref, watch } from "vue";
 
 export function usePromise<Data>(
     default_data: Data,
-    promise: Ref<Promise<Data>> | Promise<Data>
+    promise: Ref<Promise<Data>> | Promise<Data>,
 ): UsePromiseResult<Data> {
     const is_processing = ref(true);
     const data = shallowRef(default_data);
@@ -43,7 +43,7 @@ export function usePromise<Data>(
                     error.value = retrieved_error;
                 });
         },
-        { immediate: true }
+        { immediate: true },
     );
 
     return {

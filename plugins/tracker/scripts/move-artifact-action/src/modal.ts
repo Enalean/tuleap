@@ -35,22 +35,22 @@ export async function init(vue_mount_point: HTMLElement): Promise<void> {
     createApp(MoveModal)
         .provide(
             TRACKER_ID,
-            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "trackerId"), 10)
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "trackerId"), 10),
         )
         .provide(TRACKER_NAME, getDatasetItemOrThrow(vue_mount_point, "trackerName"))
         .provide(TRACKER_COLOR, getDatasetItemOrThrow(vue_mount_point, "trackerColor"))
         .provide(
             ARTIFACT_ID,
-            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "artifactId"), 10)
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "artifactId"), 10),
         )
         .provide(
             PROJECT_ID,
-            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10)
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "projectId"), 10),
         )
         .use(
             await initVueGettext(createGettext, (locale: string) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-            })
+            }),
         )
         .use(createPinia())
         .mount(vue_mount_point);

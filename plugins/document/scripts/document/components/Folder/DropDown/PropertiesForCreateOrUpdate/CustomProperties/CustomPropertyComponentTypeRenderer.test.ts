@@ -24,7 +24,7 @@ import type { Property } from "../../../../../type";
 
 describe("CustomPropertyComponentTypeRenderer", () => {
     function createWrapper(
-        item_property: Property
+        item_property: Property,
     ): VueWrapper<InstanceType<typeof CustomPropertyComponentTypeRenderer>> {
         return shallowMount(CustomPropertyComponentTypeRenderer, {
             props: { itemProperty: item_property },
@@ -42,10 +42,10 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-single]").exists()
+            wrapper.find("[data-test=document-custom-property-list-single]").exists(),
         ).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-date]").exists()).toBeFalsy();
     });
@@ -60,10 +60,10 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-single]").exists()
+            wrapper.find("[data-test=document-custom-property-list-single]").exists(),
         ).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-date]").exists()).toBeFalsy();
     });
@@ -79,10 +79,10 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-single]").exists()
+            wrapper.find("[data-test=document-custom-property-list-single]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-date]").exists()).toBeFalsy();
     });
@@ -99,10 +99,10 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-single]").exists()
+            wrapper.find("[data-test=document-custom-property-list-single]").exists(),
         ).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-custom-property-date]").exists()).toBeFalsy();
     });
@@ -120,10 +120,10 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-single]").exists()
+            wrapper.find("[data-test=document-custom-property-list-single]").exists(),
         ).toBeFalsy();
         expect(
-            wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
+            wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-date]").exists()).toBeTruthy();
     });

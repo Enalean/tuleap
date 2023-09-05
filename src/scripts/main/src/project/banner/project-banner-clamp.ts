@@ -48,7 +48,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
     const fully_display_message_event_listener = function (): void {
         fullyDisplayProjectBannerMessage(
             project_banner_message,
-            fully_display_message_event_listener
+            fully_display_message_event_listener,
         );
     };
     window.addEventListener("resize", resize_event_listener);
@@ -61,11 +61,11 @@ function isMessageClamped(banner_message: HTMLElement): boolean {
 
 function fullyDisplayProjectBannerMessage(
     project_banner_message: HTMLElement,
-    fully_display_event_listener: () => void
+    fully_display_event_listener: () => void,
 ): void {
     project_banner_message.classList.remove(
         PROJECT_BANNER_MESSAGE_CLAMP_CLASS,
-        PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+        PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
     );
 
     project_banner_message.removeEventListener("click", fully_display_event_listener);

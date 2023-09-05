@@ -49,7 +49,7 @@ describe("LinkableArtifactRESTFilter", () => {
 
         it("returns false when the current entry is the same artifact as the current edited artifact", () => {
             current_artifact_option = Option.fromValue(
-                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID)
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
             );
             expect(filter()).toBe(false);
         });
@@ -57,7 +57,7 @@ describe("LinkableArtifactRESTFilter", () => {
         it("returns true when the current entry is not the same artifact as the current edited artifact", () => {
             entry = buildSearchResultEntryStub(OTHER_ARTIFACT_ID, ARTIFACT_TYPE);
             current_artifact_option = Option.fromValue(
-                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID)
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
             );
             expect(filter()).toBe(true);
         });
@@ -66,7 +66,7 @@ describe("LinkableArtifactRESTFilter", () => {
 
 function buildSearchResultEntryStub(
     per_type_id: number,
-    type: "kanban" | "artifact"
+    type: "kanban" | "artifact",
 ): SearchResultEntry {
     const project = { id: 102, label: "Cloth Decide", icon: "" };
     return {

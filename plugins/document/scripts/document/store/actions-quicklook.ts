@@ -24,7 +24,7 @@ import type { ActionContext } from "vuex";
 
 export const toggleQuickLook = async (
     context: ActionContext<RootState, RootState>,
-    item_id: number
+    item_id: number,
 ): Promise<void> => {
     try {
         context.commit("beginLoadingCurrentlyPreviewedItem");

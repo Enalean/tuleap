@@ -123,7 +123,7 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists()
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists(),
                 ).toBeTruthy();
 
                 expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
@@ -139,7 +139,7 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists()
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists(),
                 ).toBeTruthy();
 
                 expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
@@ -157,7 +157,7 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists()
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists(),
                 ).toBeTruthy();
 
                 expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
@@ -174,7 +174,7 @@ describe("FolderContentRow", () => {
             });
 
             expect(
-                wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists()
+                wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists(),
             ).toBeTruthy();
 
             expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();

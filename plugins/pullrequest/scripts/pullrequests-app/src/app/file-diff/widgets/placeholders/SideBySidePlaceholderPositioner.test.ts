@@ -40,7 +40,7 @@ describe("placeholder positioner", () => {
                             right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
                         },
                     ],
-                ])
+                ]),
             ).getState();
 
             const should_display_above =

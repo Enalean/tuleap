@@ -55,26 +55,28 @@ describe("MercureService -", function () {
                 return $delegate;
             });
         });
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            _moment_,
-            _MercureService_,
-            _ColumnCollectionService_,
-            _KanbanColumnService_,
-            _KanbanItemRestService_,
-            _KanbanService_,
-            _SharedPropertiesService_
-        ) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            MercureService = _MercureService_;
-            KanbanItemRestService = _KanbanItemRestService_;
-            KanbanColumnService = _KanbanColumnService_;
-            ColumnCollectionService = _ColumnCollectionService_;
-            KanbanService = _KanbanService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$q_,
+                _moment_,
+                _MercureService_,
+                _ColumnCollectionService_,
+                _KanbanColumnService_,
+                _KanbanItemRestService_,
+                _KanbanService_,
+                _SharedPropertiesService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                MercureService = _MercureService_;
+                KanbanItemRestService = _KanbanItemRestService_;
+                KanbanColumnService = _KanbanColumnService_;
+                ColumnCollectionService = _ColumnCollectionService_;
+                KanbanService = _KanbanService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -94,7 +96,7 @@ describe("MercureService -", function () {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
     function mockKanbanGet() {
@@ -157,7 +159,7 @@ describe("MercureService -", function () {
             let message = mockMessageItemMoved();
             jest.spyOn(ColumnCollectionService, "getColumn").mockReturnValue(mockColumn());
             jest.spyOn(KanbanColumnService, "findItemAndReorderItemMercure").mockImplementation(
-                function () {}
+                function () {},
             );
             await MercureService.listenKanbanItemMoved(message);
             expect(KanbanColumnService.findItemAndReorderItemMercure).toHaveBeenCalled();
@@ -166,7 +168,7 @@ describe("MercureService -", function () {
             let message = mockMessageItemMoved();
             jest.spyOn(ColumnCollectionService, "getColumn").mockReturnValue(null);
             jest.spyOn(KanbanColumnService, "findItemAndReorderItemMercure").mockImplementation(
-                function () {}
+                function () {},
             );
             await MercureService.listenKanbanItemMoved(message);
             expect(KanbanColumnService.findItemAndReorderItemMercure).not.toHaveBeenCalled();

@@ -43,7 +43,7 @@ export async function initImportMembersPreview(): Promise<void> {
 
 async function initGettextProvider(): Promise<void> {
     const import_button = document.getElementById(
-        "project-admin-members-modal-import-users-button"
+        "project-admin-members-modal-import-users-button",
     );
     if (!import_button) {
         return;
@@ -60,7 +60,7 @@ async function initGettextProvider(): Promise<void> {
             import(
                 /* webpackChunkName: "project-admin-po-" */ "../../po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 }
 
@@ -106,7 +106,7 @@ function disableImportButton(): void {
 
 function showFileFormatError(): void {
     const file_input_label = document.getElementById(
-        "project-admin-members-upload-file-form-element"
+        "project-admin-members-upload-file-form-element",
     );
     if (!file_input_label) {
         throw new Error("No file input label");
@@ -122,7 +122,7 @@ function showFileFormatError(): void {
 
 function hideFileFormatError(): void {
     const file_input_label = document.getElementById(
-        "project-admin-members-upload-file-form-element"
+        "project-admin-members-upload-file-form-element",
     );
     if (!file_input_label) {
         throw new Error("No file input label");
@@ -212,7 +212,7 @@ function renderImportPreview(import_result: ResultImport): void {
             empty_preview: gettext_provider.gettext("There isn't any new user to import"),
             table_header_name: gettext_provider.gettext("Name"),
             table_header_email: gettext_provider.gettext("Email"),
-        })
+        }),
     );
 }
 
@@ -228,6 +228,6 @@ function startSpinner(element: HTMLElement): void {
         "afterbegin",
         mustache.render(import_spinner, {
             loading: gettext_provider.gettext("Preview loading..."),
-        })
+        }),
     );
 }

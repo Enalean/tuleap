@@ -30,7 +30,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
         then it should build a collection of presenters for each type and each direction`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             false,
-            LinkTypesCollectionStub.withCustomPair()
+            LinkTypesCollectionStub.withCustomPair(),
         );
 
         expect(presenter.is_parent_type_disabled).toBe(false);
@@ -55,7 +55,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
         A -> _is_child -> B actually means B is child of A and A is parent of B`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             false,
-            LinkTypesCollectionStub.withParentPair()
+            LinkTypesCollectionStub.withParentPair(),
         );
 
         expect(presenter.types).toStrictEqual([
@@ -78,7 +78,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
         as an Artifact should only have one Parent`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             true,
-            LinkTypesCollectionStub.withParentPair()
+            LinkTypesCollectionStub.withParentPair(),
         );
         expect(presenter.is_parent_type_disabled).toBe(true);
         expect(presenter.types).toHaveLength(1);

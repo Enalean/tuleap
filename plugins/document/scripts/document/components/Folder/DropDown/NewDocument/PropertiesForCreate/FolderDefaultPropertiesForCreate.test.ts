@@ -30,7 +30,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
         status_value: string,
         properties: Array<Property>,
         is_status_property_used: boolean,
-        has_loaded_properties: boolean
+        has_loaded_properties: boolean,
     ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForCreate>> {
         return shallowMount(FolderDefaultPropertiesForCreate, {
             props: { status_value, properties },
@@ -71,7 +71,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
             const wrapper = createWrapper("rejected", properties, true, true);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
         });
         it(`Given item has custom property, default properties are rendered`, () => {
@@ -89,10 +89,10 @@ describe("FolderDefaultPropertiesForCreate", () => {
             const wrapper = createWrapper("rejected", properties, true, true);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
             expect(
-                wrapper.find("[data-test=document-folder-default-properties]").exists()
+                wrapper.find("[data-test=document-folder-default-properties]").exists(),
             ).toBeTruthy();
         });
         it(`Given item has no custom property and status is not available, default properties are not rendered`, () => {
@@ -101,7 +101,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
             const wrapper = createWrapper("rejected", properties, false, true);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeFalsy();
         });
     });

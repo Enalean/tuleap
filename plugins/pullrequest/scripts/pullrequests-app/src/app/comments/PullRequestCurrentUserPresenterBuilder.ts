@@ -26,7 +26,7 @@ export const PullRequestCurrentUserPresenterBuilder = {
         avatar_url: string,
         user_locale: string,
         preferred_date_format: string,
-        preferred_relative_date_display: RelativeDatesDisplayPreference
+        preferred_relative_date_display: RelativeDatesDisplayPreference,
     ): CurrentPullRequestUserPresenter => ({
         user_id,
         avatar_url,

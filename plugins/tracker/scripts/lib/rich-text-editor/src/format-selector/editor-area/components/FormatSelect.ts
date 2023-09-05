@@ -40,7 +40,7 @@ const createOption = (presenter: OptionPresenter): TemplateResult => html`
 
 const createOptions = (
     presenter: SelectboxPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult[] =>
     presenter.options.map((format) => {
         const is_selected = format === presenter.selected_value;
@@ -78,7 +78,7 @@ export interface SelectboxPresenter {
 
 export function createSelect(
     presenter: SelectboxPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): TemplateResult {
     const inputHandler = (event: InputEvent): void => {
         if (event.target instanceof HTMLSelectElement && isValidTextFormat(event.target.value)) {

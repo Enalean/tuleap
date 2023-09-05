@@ -45,7 +45,7 @@ describe("base-component-renderer", () => {
         } = renderer.renderBaseComponent();
 
         const base_component = doc.body.querySelector(
-            "#source-select-box + .list-picker-component-wrapper"
+            "#source-select-box + .list-picker-component-wrapper",
         );
 
         if (!base_component) {
@@ -77,7 +77,7 @@ describe("base-component-renderer", () => {
         it("Should display an empty string otherwise", () => {
             const { placeholder_element } = new BaseComponentRenderer(
                 doc,
-                select
+                select,
             ).renderBaseComponent();
             expect(placeholder_element.textContent).toBe("");
         });
@@ -101,8 +101,8 @@ describe("base-component-renderer", () => {
             expect(search_field_element.getAttribute("data-test")).toBe("list-picker-search-field");
             expect(
                 search_field_element.parentElement.classList.contains(
-                    "list-picker-multiple-search-section"
-                )
+                    "list-picker-multiple-search-section",
+                ),
             ).toBe(true);
         });
 
@@ -116,8 +116,8 @@ describe("base-component-renderer", () => {
 
             expect(
                 search_field_element.parentElement.classList.contains(
-                    "list-picker-multiple-search-section-disabled"
-                )
+                    "list-picker-multiple-search-section-disabled",
+                ),
             ).toBe(true);
         });
 

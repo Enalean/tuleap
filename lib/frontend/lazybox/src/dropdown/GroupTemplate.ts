@@ -26,7 +26,7 @@ import { onArrowKeyDown, onArrowKeyUp } from "./DropdownElement";
 
 export const getItemTemplate = (
     host: DropdownElement,
-    item: LazyboxItem
+    item: LazyboxItem,
 ): UpdateFunction<DropdownElement> => {
     if (item.is_disabled) {
         return html`<li
@@ -102,7 +102,7 @@ const getGroupFooter = (group: GroupOfItems): UpdateFunction<DropdownElement> =>
 
 const getGroupTemplate = (
     host: DropdownElement,
-    group: GroupOfItems
+    group: GroupOfItems,
 ): UpdateFunction<DropdownElement> => {
     const item_templates =
         group.items.length === 0

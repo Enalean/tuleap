@@ -31,7 +31,7 @@ export class ElementAdapter implements RetrieveContainedNode {
         const node = this.element.querySelector(selector);
         if (!node) {
             throw new Error(
-                `Could not find node by selector ${selector} in container with id ${this.element.id}`
+                `Could not find node by selector ${selector} in container with id ${this.element.id}`,
             );
         }
         return node;

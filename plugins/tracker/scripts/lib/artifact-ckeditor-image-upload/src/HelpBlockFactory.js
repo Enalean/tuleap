@@ -41,7 +41,7 @@ export class HelpBlockFactory {
 
         const p = this.doc.createElement("p");
         p.textContent = this.gettext_provider.gettext(
-            "You can drag 'n drop or paste image directly in the editor."
+            "You can drag 'n drop or paste image directly in the editor.",
         );
         help_block_element.appendChild(p);
 

@@ -74,7 +74,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=confirm-unlink-gitlab-message]").text()).toBe(
-            "Wow, wait a minute. You are about to unlink the GitLab repository My project. Please confirm your action."
+            "Wow, wait a minute. You are about to unlink the GitLab repository My project. Please confirm your action.",
         );
     });
 
@@ -123,11 +123,11 @@ describe("UnlinkRepositoryGitlabModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-delete-repository]").text()).toBe(
-            "404 Error during delete"
+            "404 Error during delete",
         );
 
         expect(
-            wrapper.find("[data-test=button-delete-gitlab-repository]").attributes("disabled")
+            wrapper.find("[data-test=button-delete-gitlab-repository]").attributes("disabled"),
         ).toBeTruthy();
     });
 

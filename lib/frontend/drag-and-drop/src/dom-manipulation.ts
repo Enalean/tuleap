@@ -29,7 +29,7 @@ export function cloneHTMLElement(element: HTMLElement): HTMLElement {
 
 export function findClosestDraggable(
     options: DrekkenovInitOptions,
-    element: Node
+    element: Node,
 ): HTMLElement | null {
     let current_element: Node | null = element;
     do {
@@ -44,7 +44,7 @@ export function findClosestDraggable(
 
 export function findClosestDropzone(
     options: DrekkenovInitOptions,
-    element: Node
+    element: Node,
 ): HTMLElement | null {
     let current_element: Node | null = element;
     do {
@@ -74,7 +74,7 @@ export function findNextGhostSibling(y_coordinate: number, children: Element[]):
 export function insertAfter(
     dropzone_element: Element,
     drop_ghost: Element,
-    reference_element: Element
+    reference_element: Element,
 ): void {
     dropzone_element.insertBefore(drop_ghost, reference_element.nextElementSibling);
 }

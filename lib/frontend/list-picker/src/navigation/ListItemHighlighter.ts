@@ -28,7 +28,7 @@ export class ListItemHighlighter {
         }
 
         const first_item = this.dropdown_list_element.querySelector(
-            ".list-picker-dropdown-option-value"
+            ".list-picker-dropdown-option-value",
         );
 
         if (!first_item) {

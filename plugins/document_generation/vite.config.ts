@@ -36,5 +36,5 @@ export default vite.defineAppConfig(
         resolve: {
             dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
         },
-    }
+    },
 );

@@ -57,7 +57,7 @@ watch(
 
         error_message.value = props.error.message;
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 function isFetchWrapperError(error: Error): error is FetchWrapperError {

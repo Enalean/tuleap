@@ -23,6 +23,6 @@ import type { UserIdentifier } from "../../UserIdentifier";
 
 export interface RetrieveUserHistory {
     getUserArtifactHistory(
-        user_identifier: UserIdentifier
+        user_identifier: UserIdentifier,
     ): ResultAsync<readonly LinkableArtifact[], Fault>;
 }

@@ -174,8 +174,8 @@ document.observe("dom:loaded", function () {
                             .observe("click", function (evt) {
                                 Event.stop(evt);
                                 new_attachment.remove();
-                            })
-                    )
+                            }),
+                    ),
                 );
                 //insert the new attachment selector
                 add.insert({ before: new_attachment });
@@ -208,7 +208,7 @@ document.observe("dom:loaded", function () {
                     CKEDITOR.instances.tracker_followup_comment_new.getData() +
                         "<p>" +
                         value +
-                        "</p>"
+                        "</p>",
                 );
             }
         });
@@ -224,7 +224,7 @@ document.observe("dom:loaded", function () {
 
             this.ownerDocument.location.href = this.ownerDocument.location.href.gsub(
                 /tracker=\d+/,
-                "tracker=" + this.value
+                "tracker=" + this.value,
             );
         });
     }

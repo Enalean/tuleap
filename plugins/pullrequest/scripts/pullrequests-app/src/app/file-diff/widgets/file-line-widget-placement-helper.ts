@@ -30,15 +30,15 @@ const getPlaceholderWidgetIndex = (handle: FileLineHandle): number => {
     }
 
     return handle.widgets.findIndex((widget_element) =>
-        isCodeCommentPlaceholderWidget(widget_element.node)
+        isCodeCommentPlaceholderWidget(widget_element.node),
     );
 };
 
 export const getWidgetPlacementOptions = (
-    comment_widget_params: CommentWidgetCreationParams
+    comment_widget_params: CommentWidgetCreationParams,
 ): LineWidgetOptions => {
     const line_handle = comment_widget_params.code_mirror.getLineHandle(
-        comment_widget_params.line_number
+        comment_widget_params.line_number,
     );
     if (!line_handle) {
         return {};

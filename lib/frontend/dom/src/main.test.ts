@@ -39,7 +39,7 @@ describe(`DOM`, () => {
         it(`throws when the item has no dataset for the given key`, () => {
             const key = "unknownKey";
             expect(() => getDatasetItemOrThrow(element, key)).toThrowError(
-                `Missing item ${key} in dataset`
+                `Missing item ${key} in dataset`,
             );
         });
     });
@@ -75,7 +75,7 @@ describe(`DOM`, () => {
         it(`throws when the selectors don't match anything`, () => {
             const unknown_selector = "#doesNotMatch";
             expect(() => selectOrThrow(base, unknown_selector)).toThrowError(
-                `Could not find element with selector '${unknown_selector}'`
+                `Could not find element with selector '${unknown_selector}'`,
             );
         });
 

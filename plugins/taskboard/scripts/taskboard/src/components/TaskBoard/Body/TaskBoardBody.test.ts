@@ -31,7 +31,7 @@ import type { Swimlane, ColumnDefinition } from "../../../type";
 
 async function createWrapper(
     swimlanes: Swimlane[],
-    are_closed_items_displayed: boolean
+    are_closed_items_displayed: boolean,
 ): Promise<Wrapper<TaskBoardBody>> {
     return shallowMount(TaskBoardBody, {
         localVue: await createTaskboardLocalVue(),
@@ -44,7 +44,7 @@ async function createWrapper(
                 } as RootState,
                 getters: {
                     "swimlane/is_there_at_least_one_children_to_display": (
-                        swimlane: Swimlane
+                        swimlane: Swimlane,
                     ): boolean => swimlane.card.has_children,
                 },
             }),

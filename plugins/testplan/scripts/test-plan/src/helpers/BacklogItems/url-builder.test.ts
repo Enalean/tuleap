@@ -54,7 +54,7 @@ describe("URL Builder for backlog items", () => {
         const url = buildGoToTestExecutionLink(102, 12, test_definition);
 
         expect(url).toBe(
-            "/plugins/testmanagement/?group_id=102&milestone_id=12#!/campaigns/21/741/123"
+            "/plugins/testmanagement/?group_id=102&milestone_id=12#!/campaigns/21/741/123",
         );
     });
 
@@ -89,7 +89,7 @@ describe("URL Builder for backlog items", () => {
         const url = buildCreateNewTestDefinitionLink(12, 41, backlog_item);
 
         expect(url).toBe(
-            "/plugins/tracker/?tracker=12&func=new-artifact&ttm_backlog_item_id=123&ttm_milestone_id=41"
+            "/plugins/tracker/?tracker=12&func=new-artifact&ttm_backlog_item_id=123&ttm_milestone_id=41",
         );
     });
 });

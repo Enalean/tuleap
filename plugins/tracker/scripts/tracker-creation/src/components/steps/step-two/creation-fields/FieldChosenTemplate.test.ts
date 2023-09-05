@@ -41,7 +41,7 @@ describe("FieldChosenTemplate", () => {
         is_a_duplication_of_a_tracker_from_another_project = false,
         project_of_selected_tracker_template: ProjectTemplate | null = null,
         is_created_from_default_template = false,
-        is_created_from_jira = false
+        is_created_from_jira = false,
     ): Promise<Wrapper<FieldChosenTemplate>> {
         return shallowMount(FieldChosenTemplate, {
             mocks: {
@@ -112,11 +112,11 @@ describe("FieldChosenTemplate", () => {
             });
 
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
-                "Default Site Template"
+                "Default Site Template",
             );
 
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe(
-                "Tracker from a template project"
+                "Tracker from a template project",
             );
         });
 
@@ -129,7 +129,7 @@ describe("FieldChosenTemplate", () => {
                     },
                 } as State,
                 false,
-                true
+                true,
             );
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
@@ -147,7 +147,7 @@ describe("FieldChosenTemplate", () => {
             const wrapper = await getWrapper(state, false, false, false, false, null, false, true);
 
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
-                "My chosen project"
+                "My chosen project",
             );
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe("A Jira tracker");
         });
@@ -156,10 +156,10 @@ describe("FieldChosenTemplate", () => {
             const wrapper = await getWrapper(state, false, false, false, true);
 
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
-                "Another project"
+                "Another project",
             );
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe(
-                "Tracker from another project"
+                "Tracker from another project",
             );
         });
     });

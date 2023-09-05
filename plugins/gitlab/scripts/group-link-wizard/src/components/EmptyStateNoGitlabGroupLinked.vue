@@ -75,7 +75,7 @@
                 {{
                     $gettext(
                         "%{ current_project_name } is currently not linked to a GitLab group",
-                        { current_project_name: root_store.current_project.public_name }
+                        { current_project_name: root_store.current_project.public_name },
                     )
                 }}
             </h1>

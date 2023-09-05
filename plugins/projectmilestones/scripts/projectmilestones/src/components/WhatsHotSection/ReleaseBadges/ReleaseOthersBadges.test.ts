@@ -36,7 +36,7 @@ describe("ReleaseOthersBadges", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseOthersBadges>> {
         store = createStoreMock(store_options);
 
@@ -159,7 +159,7 @@ describe("ReleaseOthersBadges", () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
-                "tlp-badge-warning"
+                "tlp-badge-warning",
             );
         });
 
@@ -178,7 +178,7 @@ describe("ReleaseOthersBadges", () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
-                "tlp-badge-primary"
+                "tlp-badge-primary",
             );
         });
     });
@@ -195,7 +195,7 @@ describe("ReleaseOthersBadges", () => {
                 encodeURIComponent(release_data.planning.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(release_data.id) +
-                "&pane=planning-v2"
+                "&pane=planning-v2",
         );
     });
 

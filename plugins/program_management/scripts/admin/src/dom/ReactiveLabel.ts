@@ -23,12 +23,15 @@ import type { RetrieveContainedNode } from "./RetrieveContainedNode";
 export type LabelTextCallback = (text: string) => string;
 
 export class ReactiveLabel {
-    private constructor(private readonly node: Node, private readonly label_input: TimeboxLabel) {}
+    private constructor(
+        private readonly node: Node,
+        private readonly label_input: TimeboxLabel,
+    ) {}
 
     static fromSelectorAndTimeboxLabel(
         retriever: RetrieveContainedNode,
         selector: string,
-        label_input: TimeboxLabel
+        label_input: TimeboxLabel,
     ): ReactiveLabel {
         return new ReactiveLabel(retriever.getNodeBySelector(selector), label_input);
     }

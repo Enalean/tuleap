@@ -64,7 +64,7 @@ import { isPreferenceAbsoluteDateFirst } from "../../helpers/relative-dates-pref
 const { $gettext } = useGettext();
 
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
 
 const props = defineProps<{

@@ -44,9 +44,9 @@ type MockedTlpFetchFunction<TypeOfArrayItem> =
 
 export function mockFetchSuccess<TypeOfArrayItem>(
     mocked_function: MockedTlpFetchFunction<TypeOfArrayItem>,
-    options?: MockFetchSuccessOptions
+    options?: MockFetchSuccessOptions,
 ): void;
 export function mockFetchError<TypeOfArrayItem>(
     mocked_function: MockedTlpFetchFunction<TypeOfArrayItem>,
-    options?: MockFetchErrorOptions
+    options?: MockFetchErrorOptions,
 ): void;

@@ -26,7 +26,7 @@ describe("getSortedProjectsIAmMemberOf", () => {
     it("Returns the projects I'm member of", async () => {
         const spyRESTgetSortedProjectsIAmMemberOf = jest.spyOn(
             rest_querier,
-            "getSortedProjectsIAmMemberOf"
+            "getSortedProjectsIAmMemberOf",
         );
 
         const expected_project_list = [
@@ -35,7 +35,7 @@ describe("getSortedProjectsIAmMemberOf", () => {
         ];
 
         spyRESTgetSortedProjectsIAmMemberOf.mockImplementation(() =>
-            Promise.resolve(expected_project_list)
+            Promise.resolve(expected_project_list),
         );
 
         const project_list = await getProjects();

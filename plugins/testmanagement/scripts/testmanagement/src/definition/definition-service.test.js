@@ -29,19 +29,21 @@ describe(`DefinitionService`, () => {
     beforeEach(() => {
         angular.mock.module(testmanagment_module);
         let $rootScope, $httpBackend;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            _DefinitionService_,
-            _SharedPropertiesService_,
-            _$httpBackend_
-        ) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            DefinitionService = _DefinitionService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            $httpBackend = _$httpBackend_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$q_,
+                _DefinitionService_,
+                _SharedPropertiesService_,
+                _$httpBackend_,
+            ) {
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                DefinitionService = _DefinitionService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                $httpBackend = _$httpBackend_;
+            },
+        );
         wrapPromise = createAngularPromiseWrapper($rootScope);
         $httpBackend.when("GET", "campaign-list.tpl.html").respond(200);
     });
@@ -51,7 +53,7 @@ describe(`DefinitionService`, () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -65,7 +67,7 @@ describe(`DefinitionService`, () => {
             };
             const uncategorized_definition = { id: 675 };
             jest.spyOn(rest_querier, "getDefinitions").mockReturnValue(
-                $q.when([categorized_definition, uncategorized_definition])
+                $q.when([categorized_definition, uncategorized_definition]),
             );
 
             const report_id = 31;
@@ -88,7 +90,7 @@ describe(`DefinitionService`, () => {
                 .mockReturnValue($q.when([{ id: artifact_id }]));
 
             jest.spyOn(SharedPropertiesService, "getDefinitionTrackerId").mockReturnValue(
-                report_id
+                report_id,
             );
 
             const promise = DefinitionService.getDefinitionReports();
@@ -98,7 +100,7 @@ describe(`DefinitionService`, () => {
                 `/api/v1/trackers/${report_id}/tracker_reports`,
                 {
                     params: { limit: 10 },
-                }
+                },
             );
         });
     });

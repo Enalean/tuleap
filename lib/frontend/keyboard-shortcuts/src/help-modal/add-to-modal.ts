@@ -27,7 +27,7 @@ import { getGlobalShortcutsSection, getSpecificShortcutsSection } from "./get-sh
 export function addShortcutsGroupToShortcutsModal(
     doc: Document,
     shortcuts_group: ShortcutsGroup,
-    scope: Scope = PLUGIN_SCOPE
+    scope: Scope = PLUGIN_SCOPE,
 ): void {
     const help_template = doc.querySelector("[data-shortcuts-help-header-template]");
     if (!(help_template instanceof HTMLElement)) {
@@ -42,7 +42,7 @@ export function addShortcutsGroupToShortcutsModal(
 
 export function createShortcutsGroupContainer(
     doc: Document,
-    shortcuts_group: ShortcutsGroup
+    shortcuts_group: ShortcutsGroup,
 ): HTMLElement {
     const shortcuts_group_head = createShortcutsGroupHead(doc, shortcuts_group);
     const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);

@@ -48,7 +48,7 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
 
 function buildContent(
     export_settings: ExportSettings,
-    formatted_data: ReportSection
+    formatted_data: ReportSection,
 ): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
     const report_trackers_names: CellObjectWithExtraInfo[] = [];

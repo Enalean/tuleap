@@ -66,7 +66,7 @@ describe("CollapsedLabel", () => {
         wrapper.trigger("pointerenter");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
             "column/pointerEntersColumn",
-            column
+            column,
         );
     });
 
@@ -85,7 +85,7 @@ describe("CollapsedLabel", () => {
         wrapper.trigger("pointerleave");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
             "column/pointerLeavesColumn",
-            column
+            column,
         );
     });
 

@@ -68,7 +68,7 @@ describe("TemplateFooter", () => {
             const wrapper = factory;
 
             const next_button: HTMLButtonElement = wrapper.get(
-                "[data-test=project-registration-next-button]"
+                "[data-test=project-registration-next-button]",
             ).element as HTMLButtonElement;
 
             expect(next_button.getAttribute("disabled")).toBe("disabled");

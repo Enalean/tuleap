@@ -47,7 +47,7 @@ describe("Error modules actions", () => {
             expect(context.commit).toHaveBeenCalledTimes(1);
             expect(context.commit).toHaveBeenCalledWith(
                 "setGlobalErrorMessage",
-                "500 Internal Server Error"
+                "500 Internal Server Error",
             );
         });
 
@@ -68,7 +68,7 @@ describe("Error modules actions", () => {
             expect(context.commit).toHaveBeenCalledTimes(1);
             expect(context.commit).toHaveBeenCalledWith(
                 "setGlobalErrorMessage",
-                "400 Bad request: with a i18n error message"
+                "400 Bad request: with a i18n error message",
             );
         });
 
@@ -100,7 +100,7 @@ describe("Error modules actions", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "setModalErrorMessage",
-                "500 Internal Server Error"
+                "500 Internal Server Error",
             );
         });
 
@@ -122,7 +122,7 @@ describe("Error modules actions", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "setModalErrorMessage",
-                "400 Bad request: with a i18n error message"
+                "400 Bad request: with a i18n error message",
             );
         });
 

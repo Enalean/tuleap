@@ -33,7 +33,7 @@ export const LinksRetriever = (
     types_retriever: RetrieveLinkTypes,
     artifacts_retriever: RetrieveLinkedArtifactsByType,
     links_adder: AddLinkedArtifactCollection,
-    current_artifact_option: Option<CurrentArtifactIdentifier>
+    current_artifact_option: Option<CurrentArtifactIdentifier>,
 ): RetrieveAllLinkedArtifacts => ({
     getLinkedArtifacts(): ResultAsync<readonly LinkedArtifact[], Fault> {
         return current_artifact_option.mapOr(
@@ -44,8 +44,8 @@ export const LinksRetriever = (
                         const promises = link_types.map((type: LinkType) =>
                             artifacts_retriever.getLinkedArtifactsByLinkType(
                                 current_artifact_identifier,
-                                type
-                            )
+                                type,
+                            ),
                         );
                         return ResultAsync.combine(promises).map((collections) => {
                             const all_links = collections.flat();
@@ -53,7 +53,7 @@ export const LinksRetriever = (
                             return all_links;
                         });
                     }),
-            errAsync(NoLinksInCreationModeFault())
+            errAsync(NoLinksInCreationModeFault()),
         );
     },
 });

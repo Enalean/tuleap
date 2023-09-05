@@ -140,11 +140,11 @@ export default class GitRepositoryCreate extends Vue {
             }
             if (error_code === 400) {
                 this.error = this.$gettext(
-                    'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".'
+                    'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".',
                 );
             } else if (error_code === 401) {
                 this.error = this.$gettext(
-                    "You don't have permission to create Git repositories as you are not Git administrator."
+                    "You don't have permission to create Git repositories as you are not Git administrator.",
                 );
             } else if (error_code === 404) {
                 this.error = this.$gettext("Project not found");

@@ -63,7 +63,7 @@ interface InvitationResponse {
 export function displaySuccess(
     emails: string[],
     response_body: InvitationResponse,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): void {
     const modal_body = document.getElementById("invite-buddies-modal-body");
     if (!modal_body) {
@@ -88,7 +88,7 @@ export function displaySuccess(
         const title = gettext_provider.ngettext(
             "Invitation successfully sent",
             "Invitations successfully sent",
-            successful_emails.length
+            successful_emails.length,
         );
 
         alert_success = html`
@@ -99,7 +99,7 @@ export function displaySuccess(
                         (email) =>
                             html`<li data-test="success">
                                 <code>${email}</code>
-                            </li>`
+                            </li>`,
                     )}
                 </ul>
             </div>
@@ -112,14 +112,14 @@ export function displaySuccess(
         gettext_provider.ngettext(
             "Already project member",
             "Already project members",
-            response_body.already_project_members.length
+            response_body.already_project_members.length,
         ),
         gettext_provider.ngettext(
             "The following user is already project member, they have been ignored:",
             "The following users are already project members, they have been ignored:",
-            response_body.already_project_members.length
+            response_body.already_project_members.length,
         ),
-        "already-member"
+        "already-member",
     );
 
     const alert_known_users_added = getAlertForUsers(
@@ -128,14 +128,14 @@ export function displaySuccess(
         gettext_provider.ngettext(
             "Already registered",
             "Already registered",
-            response_body.known_users_added_to_project_members.length
+            response_body.known_users_added_to_project_members.length,
         ),
         gettext_provider.ngettext(
             "The following user is already registered on the platform, they are now member of the project:",
             "The following users are already registered on the platform, they are now member of the project:",
-            response_body.known_users_added_to_project_members.length
+            response_body.known_users_added_to_project_members.length,
         ),
-        "known-user-added"
+        "known-user-added",
     );
 
     const alert_known_users_not_alive = getAlertForUsers(
@@ -144,14 +144,14 @@ export function displaySuccess(
         gettext_provider.ngettext(
             "Not active",
             "Not active",
-            response_body.known_users_not_alive.length
+            response_body.known_users_not_alive.length,
         ),
         gettext_provider.ngettext(
             "The following user is not active, they cannot be added as member of the project:",
             "The following users are not active, they cannot be added as member of the project:",
-            response_body.known_users_not_alive.length
+            response_body.known_users_not_alive.length,
         ),
-        "not-alive"
+        "not-alive",
     );
 
     const alert_known_users_are_retricted = getAlertForUsers(
@@ -160,14 +160,14 @@ export function displaySuccess(
         gettext_provider.ngettext(
             "Restricted users",
             "Restricted users",
-            response_body.known_users_are_restricted.length
+            response_body.known_users_are_restricted.length,
         ),
         gettext_provider.ngettext(
             "The following user is restricted, they cannot be added as member of the project because it does not accepted restricted users:",
             "The following users are restricted, they cannot be added as member of the project because it does not accepted restricted users:",
-            response_body.known_users_are_restricted.length
+            response_body.known_users_are_restricted.length,
         ),
-        "restricted"
+        "restricted",
     );
 
     let alert_not_sent = html``;
@@ -175,11 +175,11 @@ export function displaySuccess(
         const title = gettext_provider.ngettext(
             "An invitation could not be sent",
             "Some invitations could not be sent",
-            response_body.failures.length
+            response_body.failures.length,
         );
 
         const description = gettext_provider.gettext(
-            "An error occurred while trying to send an invitation to:"
+            "An error occurred while trying to send an invitation to:",
         );
 
         alert_not_sent = html`
@@ -191,7 +191,7 @@ export function displaySuccess(
                         (email) =>
                             html`<li data-test="could-not-be-sent">
                                 <code>${email}</code>
-                            </li>`
+                            </li>`,
                     )}
                 </ul>
             </div>
@@ -201,7 +201,7 @@ export function displaySuccess(
     render(
         html`${alert_known_users_not_alive} ${alert_known_users_are_retricted} ${alert_not_sent}
         ${alert_success} ${alert_known_users_added} ${alert_already_members}`,
-        feedback
+        feedback,
     );
 }
 
@@ -210,7 +210,7 @@ function getAlertForUsers(
     users: User[],
     title: string,
     description: string,
-    data_test: string
+    data_test: string,
 ): TemplateResult {
     if (users.length <= 0) {
         return html``;
@@ -225,7 +225,7 @@ function getAlertForUsers(
                     (user) =>
                         html`<li data-test="${data_test}">
                             <code>${user.email}</code> ${user.display_name}
-                        </li>`
+                        </li>`,
                 )}
             </ul>
         </div>

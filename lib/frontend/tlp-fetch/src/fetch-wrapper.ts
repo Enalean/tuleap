@@ -73,7 +73,7 @@ interface RecursiveGetLimitParameters {
 }
 
 export type RecursiveGetCollectionCallback<TypeOfJSONPayload, TypeOfArrayItem> = (
-    json: TypeOfJSONPayload
+    json: TypeOfJSONPayload,
 ) => Array<TypeOfArrayItem>;
 
 export interface RecursiveGetInit<TypeOfJSONPayload, TypeOfArrayItem> {
@@ -83,7 +83,7 @@ export interface RecursiveGetInit<TypeOfJSONPayload, TypeOfArrayItem> {
 }
 
 function defaultGetCollectionCallback<TypeOfArrayItem>(
-    json: TypeOfArrayItem
+    json: TypeOfArrayItem,
 ): Array<TypeOfArrayItem> {
     if (json instanceof Array) {
         return json;
@@ -94,7 +94,7 @@ function defaultGetCollectionCallback<TypeOfArrayItem>(
 export async function recursiveGet<TypeOfJSONPayload, TypeOfArrayItem>(
     url: string,
     init: RequestInit & RecursiveGetInit<TypeOfJSONPayload, TypeOfArrayItem> = {},
-    max_parallel_requests = 6
+    max_parallel_requests = 6,
 ): Promise<Array<TypeOfArrayItem>> {
     if (max_parallel_requests < 1) {
         throw new Error("At least one request needs to be sent to retrieve data");
@@ -136,7 +136,7 @@ export async function recursiveGet<TypeOfJSONPayload, TypeOfArrayItem>(
             const response = await get(url, new_init);
             const json = await response.json();
             return getCollectionCallback(json);
-        }
+        },
     );
 
     return all_responses.reduce((accumulator, response) => accumulator.concat(response), results);

@@ -34,7 +34,7 @@ describe("FeatureExtractor", () => {
             };
 
             expect(() =>
-                featureExtractor.extractFeatureIndexFromProgramIncrement(feature_id_with_increment)
+                featureExtractor.extractFeatureIndexFromProgramIncrement(feature_id_with_increment),
             ).toThrowError("No feature with id #125 in program increment #4");
         });
 

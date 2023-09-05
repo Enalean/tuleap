@@ -69,7 +69,7 @@ describe("RunJobAction", () => {
                 {
                     post_action: post_action,
                     job_url: "http://new-url.test",
-                }
+                },
             );
         });
     });

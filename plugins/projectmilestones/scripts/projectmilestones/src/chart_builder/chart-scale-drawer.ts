@@ -24,7 +24,7 @@ const OVERSIZE_LINE_SCALE = 10;
 
 export function addScaleLines(
     svg_burndown: Selection<SVGSVGElement, unknown, null, undefined>,
-    coordinates: XYMinMaxCoordinates
+    coordinates: XYMinMaxCoordinates,
 ): void {
     svg_burndown
         .append("line")

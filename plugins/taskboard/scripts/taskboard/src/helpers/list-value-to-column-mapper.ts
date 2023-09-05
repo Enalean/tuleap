@@ -21,7 +21,7 @@ import type { Card, ColumnDefinition, Mapping } from "../type";
 
 export function getColumnOfCard(
     columns: ColumnDefinition[],
-    card: Card
+    card: Card,
 ): ColumnDefinition | undefined {
     if (card.mapped_list_value === null) {
         return undefined;
@@ -38,7 +38,7 @@ function isStatusPartOfMapping(card: Card, mapping: Mapping): boolean {
         mapping.tracker_id === card.tracker_id &&
         mapping.accepts.some(
             (list_value) =>
-                card.mapped_list_value !== null && list_value.id === card.mapped_list_value.id
+                card.mapped_list_value !== null && list_value.id === card.mapped_list_value.id,
         )
     );
 }

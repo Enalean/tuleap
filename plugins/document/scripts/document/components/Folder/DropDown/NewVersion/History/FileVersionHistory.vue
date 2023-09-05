@@ -80,7 +80,7 @@ const props = defineProps<{ item: ItemFile }>();
 
 const { is_filename_pattern_enforced, project_id } = useNamespacedState<ConfigurationState>(
     "configuration",
-    ["is_filename_pattern_enforced", "project_id"]
+    ["is_filename_pattern_enforced", "project_id"],
 );
 
 let versions = ref<ReadonlyArray<FileHistory>>([]);
@@ -113,7 +113,7 @@ const is_version_history_empty = computed((): boolean => {
 
 const history_url = computed((): string => {
     return `/plugins/docman/?group_id=${encodeURIComponent(
-        project_id.value
+        project_id.value,
     )}&id=${encodeURIComponent(props.item.id)}&action=details&section=history`;
 });
 

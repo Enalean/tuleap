@@ -98,7 +98,7 @@ const can_item_be_pasted = computed((): boolean => {
         return !doesDocumentNameAlreadyExist(
             clipboard.item_title,
             folder_content.value,
-            props.destination
+            props.destination,
         );
     }
 
@@ -106,7 +106,7 @@ const can_item_be_pasted = computed((): boolean => {
         !doesFolderNameAlreadyExist(
             clipboard.item_title,
             folder_content.value,
-            props.destination
+            props.destination,
         ) &&
         !isItemDestinationIntoItself(folder_content.value, clipboard.item_id, props.destination.id)
     );

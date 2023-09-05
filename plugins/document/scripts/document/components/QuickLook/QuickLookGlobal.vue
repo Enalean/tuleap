@@ -121,33 +121,33 @@ const quick_look_component_action = computed(() => {
     switch (currently_previewed_item.value.type) {
         case TYPE_FILE:
             return defineAsyncComponent(
-                () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`)
+                () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`),
             );
         case TYPE_WIKI:
             return defineAsyncComponent(
-                () => import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`)
+                () => import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`),
             );
         case TYPE_FOLDER:
             return defineAsyncComponent(
-                () => import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`)
+                () => import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`),
             );
         case TYPE_LINK:
             return defineAsyncComponent(
-                () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`)
+                () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`),
             );
         case TYPE_EMPTY:
             return defineAsyncComponent(
                 () =>
                     import(
                         /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmpty.vue`
-                    )
+                    ),
             );
         case TYPE_EMBEDDED:
             return defineAsyncComponent(
                 () =>
                     import(
                         /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmbedded.vue`
-                    )
+                    ),
             );
         default:
             return null;

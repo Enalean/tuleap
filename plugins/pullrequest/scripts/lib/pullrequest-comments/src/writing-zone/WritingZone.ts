@@ -36,13 +36,13 @@ export type InternalWritingZone = {
 export type HostElement = InternalWritingZone & HTMLElement;
 
 export const isWritingZoneElement = (
-    element: Element
+    element: Element,
 ): element is HTMLElement & InternalWritingZone => {
     return element.tagName.toLowerCase() === TAG;
 };
 
 export const getWritingZoneElement = <ElementType>(
-    host: ElementContainingAWritingZone<ElementType>
+    host: ElementContainingAWritingZone<ElementType>,
 ): HTMLElement & InternalWritingZone => {
     const element = document.createElement(TAG);
     if (!isWritingZoneElement(element)) {
@@ -103,12 +103,12 @@ export const WritingZoneElement = define<InternalWritingZone>({
             textarea_element.setAttribute("data-test", "writing-zone-textarea");
             textarea_element.setAttribute(
                 "class",
-                "pull-request-comment-writing-zone-textarea tlp-textarea"
+                "pull-request-comment-writing-zone-textarea tlp-textarea",
             );
             textarea_element.setAttribute("rows", "10");
             textarea_element.setAttribute(
                 "placeholder",
-                gettext_provider.gettext("Say something…")
+                gettext_provider.gettext("Say something…"),
             );
             textarea_element.addEventListener("input", () => host.controller.onTextareaInput(host));
 

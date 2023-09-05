@@ -25,7 +25,7 @@ import type { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashb
 export function drawIdealLine(
     container: Selection<SVGSVGElement, unknown, null, undefined>,
     { x_scale, y_scale }: XYScale,
-    { line_start, line_end }: { line_start: number; line_end: number }
+    { line_start, line_end }: { line_start: number; line_end: number },
 ): void;
 
 export function drawCurve(
@@ -33,5 +33,5 @@ export function drawCurve(
     { x_scale, y_scale }: XYScale,
     dataset: PointsWithDate[] | PointsWithDateForGenericBurnup[],
     line_name: string,
-    interpolation: CurveFactory
+    interpolation: CurveFactory,
 ): void;

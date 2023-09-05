@@ -77,7 +77,7 @@ describe("RegenerateGitlabWebhook", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled
+            wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
@@ -126,7 +126,7 @@ describe("RegenerateGitlabWebhook", () => {
                 status: 404,
                 json: (): Promise<{ error: { code: number; message: string } }> =>
                     Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-            } as Response)
+            } as Response),
         );
 
         jest.spyOn(gitlab_error_handler, "handleError");
@@ -140,7 +140,7 @@ describe("RegenerateGitlabWebhook", () => {
 
         expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         expect(
-            wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled
+            wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled,
         ).toBeTruthy();
         expect(gitlab_error_handler.handleError).toHaveBeenCalled();
     });

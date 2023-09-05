@@ -39,7 +39,7 @@ const ListOfTestDefinitions = defineAsyncComponent(
     () =>
         import(
             /* webpackChunkName: "testplan-tests-list" */ "./TestDefinitions/ListOfTestDefinitions.vue"
-        )
+        ),
 );
 
 const props = defineProps<{

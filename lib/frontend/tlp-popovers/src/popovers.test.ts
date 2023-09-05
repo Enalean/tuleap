@@ -80,7 +80,7 @@ describe(`Popovers`, () => {
                 content_element,
                 expect.objectContaining({
                     placement: "right",
-                })
+                }),
             );
 
             popover.destroy();
@@ -121,7 +121,7 @@ describe(`Popovers`, () => {
                 content_element,
                 expect.objectContaining({
                     placement: "left",
-                })
+                }),
             );
 
             popover.destroy();
@@ -132,7 +132,7 @@ describe(`Popovers`, () => {
             trigger_element.dataset.placement = "invalid";
 
             expect(() => createPopover(doc, trigger_element, content_element)).toThrow(
-                "Invalid placement received: invalid."
+                "Invalid placement received: invalid.",
             );
         });
 
@@ -147,7 +147,7 @@ describe(`Popovers`, () => {
                 content_element,
                 expect.objectContaining({
                     placement: "bottom",
-                })
+                }),
             );
 
             popover.destroy();
@@ -161,7 +161,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -169,7 +169,7 @@ describe(`Popovers`, () => {
                         }
 
                         const flip_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "flip"
+                            (middleware) => middleware && middleware.name === "flip",
                         );
                         if (!flip_middleware) {
                             done(Error("No flip middleware"));
@@ -184,7 +184,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element);
@@ -200,7 +200,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -208,7 +208,7 @@ describe(`Popovers`, () => {
                         }
 
                         const flip_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "flip"
+                            (middleware) => middleware && middleware.name === "flip",
                         );
                         if (!flip_middleware) {
                             done(Error("No flip middleware"));
@@ -225,7 +225,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element, {
@@ -248,7 +248,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -256,7 +256,7 @@ describe(`Popovers`, () => {
                         }
 
                         const offset_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "offset"
+                            (middleware) => middleware && middleware.name === "offset",
                         );
                         if (!offset_middleware) {
                             done(Error("No offset middleware"));
@@ -274,7 +274,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element);
@@ -290,7 +290,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -298,7 +298,7 @@ describe(`Popovers`, () => {
                         }
 
                         const offset_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "offset"
+                            (middleware) => middleware && middleware.name === "offset",
                         );
                         if (!offset_middleware) {
                             done(Error("No offset middleware"));
@@ -316,7 +316,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element, {
@@ -337,7 +337,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -345,7 +345,7 @@ describe(`Popovers`, () => {
                         }
 
                         const shift_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "shift"
+                            (middleware) => middleware && middleware.name === "shift",
                         );
                         if (!shift_middleware) {
                             done(Error("No shift middleware"));
@@ -362,7 +362,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element);
@@ -383,7 +383,7 @@ describe(`Popovers`, () => {
                     (
                         trigger,
                         content,
-                        options: ComputePositionConfig
+                        options: ComputePositionConfig,
                     ): Promise<ComputePositionReturn | void> => {
                         if (!options.middleware) {
                             done(Error("No middleware given"));
@@ -391,7 +391,7 @@ describe(`Popovers`, () => {
                         }
 
                         const arrow_middleware = options.middleware.find(
-                            (middleware) => middleware && middleware.name === "arrow"
+                            (middleware) => middleware && middleware.name === "arrow",
                         );
                         if (!arrow_middleware) {
                             done(Error("No arrow middleware"));
@@ -409,7 +409,7 @@ describe(`Popovers`, () => {
                             y: 20,
                             placement: "top",
                         } as ComputePositionReturn);
-                    }
+                    },
                 );
 
                 const popover = createPopover(doc, trigger_element, content_element);
@@ -548,7 +548,7 @@ describe(`Popovers`, () => {
             describe("when I hit the `Escape` key", () => {
                 it("does not do anything when hitting the `Escape` key if the popover is already closed", () => {
                     doc.body.dispatchEvent(
-                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true })
+                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true }),
                     );
                     expectThePopoverToBeHidden(content_element);
                 });
@@ -556,7 +556,7 @@ describe(`Popovers`, () => {
                 it("hides the popover when hitting the `Escape` key", () => {
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     doc.body.dispatchEvent(
-                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true })
+                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true }),
                     );
                     expectThePopoverToBeHidden(content_element);
                 });

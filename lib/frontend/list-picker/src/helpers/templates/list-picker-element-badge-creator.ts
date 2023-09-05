@@ -28,7 +28,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 export function createItemBadgeTemplate(
     event_listener: (event: Event) => void,
-    list_item: ListPickerItem
+    list_item: ListPickerItem,
 ): TemplateResult {
     const badge_color = list_item.target_option.dataset.colorValue;
     if (badge_color) {
@@ -64,7 +64,7 @@ export function createItemBadgeTemplate(
 function createColoredBadge(
     badge_color: string,
     event_listener: (event: Event) => void,
-    list_item: ListPickerItem
+    list_item: ListPickerItem,
 ): TemplateResult {
     return html`
         <span class="list-picker-badge list-picker-badge-${badge_color}" title="${list_item.label}">
@@ -83,7 +83,7 @@ function createColoredBadge(
 function createLegacyColoredBadge(
     badge_color: string,
     event_listener: (event: Event) => void,
-    list_item: ListPickerItem
+    list_item: ListPickerItem,
 ): TemplateResult {
     const rgb_legacy_color = convertBadColorHexToRGB(badge_color);
     const badge_legacy_color_style = {

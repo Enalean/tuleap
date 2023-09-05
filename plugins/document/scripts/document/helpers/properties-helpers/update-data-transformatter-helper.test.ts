@@ -52,7 +52,7 @@ describe("transformFolderPropertiesForRecursionAtUpdate", () => {
         };
         const is_status_property_used = true;
         expect(
-            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used)
+            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used),
         ).toStrictEqual(item_to_update);
     });
     it("Given an existing folder, then we add 'none' status update key for update if status is not used", () => {
@@ -81,7 +81,7 @@ describe("transformFolderPropertiesForRecursionAtUpdate", () => {
         };
         const is_status_property_used = false;
         expect(
-            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used)
+            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used),
         ).toStrictEqual(item_to_update);
     });
 });
@@ -411,7 +411,7 @@ describe("formatCustomPropertiesForFolderUpdate", () => {
         formatCustomPropertiesForFolderUpdate(
             item_to_update,
             properties_to_update,
-            recursion_option
+            recursion_option,
         );
 
         expect(item_to_update).toStrictEqual(expected_item_to_update);

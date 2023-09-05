@@ -25,13 +25,13 @@ import type { Option } from "@tuleap/option";
 export const LinkableArtifactRESTFilter = {
     filterArtifact: (
         entry: SearchResultEntry | UserHistoryEntry,
-        current_artifact_option: Option<CurrentArtifactIdentifier>
+        current_artifact_option: Option<CurrentArtifactIdentifier>,
     ): boolean => {
         const is_artifact_entry = entry.type === ARTIFACT_TYPE;
         return current_artifact_option.mapOr(
             (current_artifact_identifier) =>
                 is_artifact_entry && entry.per_type_id !== current_artifact_identifier.id,
-            is_artifact_entry
+            is_artifact_entry,
         );
     },
 };

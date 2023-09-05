@@ -46,7 +46,7 @@ describe("Permission delegation", function () {
 
             if ($permissions.find("[data-test=admin-delegation-no-user]").length > 0) {
                 cy.get(
-                    "[data-test=add-user-to-delegation-permission] + .select2-container"
+                    "[data-test=add-user-to-delegation-permission] + .select2-container",
                 ).click();
                 // ignore rule for select2
                 // eslint-disable-next-line cypress/require-data-selectors

@@ -39,13 +39,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     Vue.config.language = locale;
 
     const widget_cross_tracker_elements = document.getElementsByClassName(
-        "dashboard-widget-content-cross-tracker"
+        "dashboard-widget-content-cross-tracker",
     );
     const Widget = Vue.extend(CrossTrackerWidget);
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     for (const widget_element of widget_cross_tracker_elements) {

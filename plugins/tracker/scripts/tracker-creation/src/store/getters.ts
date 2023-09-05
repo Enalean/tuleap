@@ -117,7 +117,7 @@ export const is_name_already_used = (state: State): boolean => {
 export const is_shortname_already_used = (state: State): boolean => {
     return (
         state.existing_trackers.shortnames.indexOf(
-            state.tracker_to_be_created.shortname.toLowerCase()
+            state.tracker_to_be_created.shortname.toLowerCase(),
         ) !== -1
     );
 };
@@ -141,7 +141,7 @@ export const project_of_selected_tracker_template = (state: State): ProjectTempl
     return (
         state.project_templates.find((project: ProjectTemplate) => {
             return Boolean(
-                project.tracker_list.find((tracker: Tracker) => tracker.id === target_tracker.id)
+                project.tracker_list.find((tracker: Tracker) => tracker.id === target_tracker.id),
             );
         }) || null
     );

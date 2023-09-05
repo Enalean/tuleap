@@ -115,7 +115,7 @@ describe(`RichTextEditor`, () => {
         editor_factory = {
             createRichTextEditor: (
                 textarea: HTMLTextAreaElement,
-                options: RichTextEditorOptions
+                options: RichTextEditorOptions,
             ): TextEditorInterface => {
                 if (typeof options.onFormatChange !== "function") {
                     throw new Error("Expected onFormatChange to be a function");
@@ -130,7 +130,7 @@ describe(`RichTextEditor`, () => {
         } as RichTextEditorFactory;
         jest.spyOn(
             RichTextEditorFactory,
-            "forBurningParrotWithExistingFormatSelector"
+            "forBurningParrotWithExistingFormatSelector",
         ).mockReturnValue(editor_factory);
 
         required = false;
@@ -158,7 +158,7 @@ describe(`RichTextEditor`, () => {
             controller: FormattedTextController(
                 event_dispatcher,
                 InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-                TEXT_FORMAT_TEXT
+                TEXT_FORMAT_TEXT,
             ),
         } as HostElement);
     }
@@ -176,7 +176,7 @@ describe(`RichTextEditor`, () => {
                 ckeditor = {
                     on(
                         event_name: string,
-                        handler: CKEditorEventHandler
+                        handler: CKEditorEventHandler,
                     ): CKEDITOR.listenerRegistration {
                         if (event_name === "change") {
                             triggerChange = handler;
@@ -252,7 +252,7 @@ describe(`RichTextEditor`, () => {
                 expect(attachListener).toHaveBeenCalledWith(
                     expect.anything(),
                     "input",
-                    expect.any(Function)
+                    expect.any(Function),
                 );
 
                 const event = dispatchEvent.mock.calls[0][0];
@@ -327,7 +327,7 @@ describe(`RichTextEditor`, () => {
                     showNotification(
                         message: string,
                         type: CKEDITOR.plugins.notification.type,
-                        duration: number
+                        duration: number,
                     ): void {
                         // side-effects
                     },
@@ -391,7 +391,7 @@ describe(`RichTextEditor`, () => {
 
                     it(`disables form submits`, () => {
                         expect(event_dispatcher.getDispatchedEventTypes()).toContain(
-                            "WillDisableSubmit"
+                            "WillDisableSubmit",
                         );
                     });
                 });
@@ -424,13 +424,13 @@ describe(`RichTextEditor`, () => {
                         then it shows an error message and enables back form submits`, () => {
                         const error = new MaxSizeUploadExceededError(
                             3000,
-                            {} as CKEDITOR.fileTools.fileLoader
+                            {} as CKEDITOR.fileTools.fileLoader,
                         );
                         triggerError(error);
 
                         expect(error.loader.message).toBeDefined();
                         expect(event_dispatcher.getDispatchedEventTypes()).toContain(
-                            "WillEnableSubmit"
+                            "WillEnableSubmit",
                         );
                     });
 
@@ -523,7 +523,7 @@ describe(`RichTextEditor`, () => {
             `when value is a valid format, it will return it`,
             (format) => {
                 expect(getValidFormat({}, format, TEXT_FORMAT_TEXT)).toBe(format);
-            }
+            },
         );
 
         it(`when value is not a valid format, it will return last value`, () => {

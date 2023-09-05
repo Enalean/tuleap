@@ -63,7 +63,7 @@ export default class FieldTrackerColor extends Vue {
     @Watch("tracker_to_be_created", { deep: true })
     updateSelectedColor(
         old_value: TrackerToBeCreatedMandatoryData,
-        new_value: TrackerToBeCreatedMandatoryData
+        new_value: TrackerToBeCreatedMandatoryData,
     ): void {
         if (old_value.color !== new_value.color) {
             this.selectColor();
@@ -104,7 +104,7 @@ export default class FieldTrackerColor extends Vue {
     hasTrackerAValidColor(): boolean {
         return (
             this.color_picker_data.findIndex(
-                (data: DataForColorPicker) => this.tracker_to_be_created.color === data.id
+                (data: DataForColorPicker) => this.tracker_to_be_created.color === data.id,
             ) !== -1
         );
     }

@@ -24,7 +24,7 @@ describe(`Taskboard`, function () {
         cy.projectMemberSession();
         cy.getProjectId("taskboard-project")
             .then((project_id: number) =>
-                cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
+                cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`),
             )
             .then((response) => response.body[0].id)
             .as("release_id");
@@ -58,13 +58,13 @@ describe(`Taskboard`, function () {
             cy.contains("[data-test=child-card]", "Golden Wrench");
 
             const on_going_column = this.taskboard_columns.find(
-                (column: ColumnDefinition) => column.label === "On Going"
+                (column: ColumnDefinition) => column.label === "On Going",
             );
             const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
-                (swimlane: Card) => swimlane.label === "Quality Sunshine"
+                (swimlane: Card) => swimlane.label === "Quality Sunshine",
             );
             cy.get(
-                `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`
+                `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
             ).within(() => {
                 cy.get("[data-test=add-in-place-form]")
                     .should("be.hidden")
@@ -99,7 +99,7 @@ describe(`Taskboard`, function () {
                         .find("[data-test=label-editor]")
                         .clear()
                         .type("Lonesome Galaxy{enter}");
-                }
+                },
             );
         });
 

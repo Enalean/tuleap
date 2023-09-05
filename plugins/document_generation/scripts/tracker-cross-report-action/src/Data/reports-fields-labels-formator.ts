@@ -22,7 +22,7 @@ import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { extractFieldsLabels } from "./report-fields-labels-extractor";
 
 export function formatReportsFieldsLabels(
-    organized_data: OrganizedReportsData
+    organized_data: OrganizedReportsData,
 ): ReadonlyArray<TextCell> {
     if (organized_data.first_level.artifact_representations.size === 0) {
         throw new Error("This must not happen. Check must be done before.");
@@ -30,7 +30,7 @@ export function formatReportsFieldsLabels(
 
     const report_fields_labels: Array<TextCell> = [];
     for (const field_label of extractFieldsLabels(
-        organized_data.first_level.artifact_representations
+        organized_data.first_level.artifact_representations,
     )) {
         report_fields_labels.push(new TextCell(field_label));
     }
@@ -40,7 +40,7 @@ export function formatReportsFieldsLabels(
         organized_data.second_level.artifact_representations.size > 0
     ) {
         for (const field_label of extractFieldsLabels(
-            organized_data.second_level.artifact_representations
+            organized_data.second_level.artifact_representations,
         )) {
             report_fields_labels.push(new TextCell(field_label));
         }
@@ -51,7 +51,7 @@ export function formatReportsFieldsLabels(
         organized_data.third_level.artifact_representations.size > 0
     ) {
         for (const field_label of extractFieldsLabels(
-            organized_data.third_level.artifact_representations
+            organized_data.third_level.artifact_representations,
         )) {
             report_fields_labels.push(new TextCell(field_label));
         }

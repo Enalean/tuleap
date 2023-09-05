@@ -34,6 +34,6 @@ export function initSidebarPosition(): void {
 function setPlatformBannerOffsetHeightCSSVar(platform_banner: HTMLElement): void {
     document.documentElement.style.setProperty(
         "--platform-banner-offset-height",
-        platform_banner.offsetHeight + "px"
+        platform_banner.offsetHeight + "px",
     );
 }

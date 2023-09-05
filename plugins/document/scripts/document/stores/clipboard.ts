@@ -66,7 +66,7 @@ export function useClipboardStore(
     store: Store<RootState>,
     project_id: string,
     user_id: string,
-    pinia?: Pinia | null | undefined
+    pinia?: Pinia | null | undefined,
 ) {
     const base_storage_key = buildBaseStorageKey(project_id, user_id);
     return defineStore("clipboard", {
@@ -98,7 +98,7 @@ export function useClipboardStore(
                         default:
                             this.emptyClipboard();
                             throw new Error(
-                                "Cannot paste from an unknown operation " + this.operation_type
+                                "Cannot paste from an unknown operation " + this.operation_type,
                             );
                     }
                     this.emptyClipboard();
@@ -114,7 +114,7 @@ export function useClipboardStore(
                             current_folder: payload.current_folder,
                             item_id: pasted_item_id,
                         },
-                        { root: true }
+                        { root: true },
                     );
                 } catch (exception) {
                     this.pastingHasFailed();

@@ -21,7 +21,7 @@ import type { LinkableArtifact } from "../../../../domain/fields/link-field/Link
 
 export const ArtifactLinkListDuplicateRemover = {
     removeDuplicateArtifact: (
-        artifacts: readonly LinkableArtifact[]
+        artifacts: readonly LinkableArtifact[],
     ): readonly LinkableArtifact[] => {
         return artifacts.filter((artifact, index) => {
             return (

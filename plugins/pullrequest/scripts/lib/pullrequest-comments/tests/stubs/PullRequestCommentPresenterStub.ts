@@ -70,7 +70,7 @@ export const PullRequestCommentPresenterStub = {
     }),
 
     buildInlineCommentWithData: (
-        data: Partial<PullRequestInlineCommentPresenter>
+        data: Partial<PullRequestInlineCommentPresenter>,
     ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         file: { ...file },
@@ -85,7 +85,7 @@ export const PullRequestCommentPresenterStub = {
     }),
 
     buildGlobalCommentWithData: (
-        data: Partial<PullRequestGlobalCommentPresenter>
+        data: Partial<PullRequestGlobalCommentPresenter>,
     ): PullRequestGlobalCommentPresenter => ({
         ...comment_presenter_base,
         type: TYPE_GLOBAL_COMMENT,

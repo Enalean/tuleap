@@ -41,23 +41,25 @@ describe("KanbanService", () => {
         });
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$window_,
-            _$q_,
-            _KanbanService_,
-            _RestErrorService_,
-            _FilterTrackerReportService_,
-            _SharedPropertiesService_
-        ) {
-            $rootScope = _$rootScope_;
-            $window = _$window_;
-            $q = _$q_;
-            KanbanService = _KanbanService_;
-            RestErrorService = _RestErrorService_;
-            FilterTrackerReportService = _FilterTrackerReportService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$window_,
+                _$q_,
+                _KanbanService_,
+                _RestErrorService_,
+                _FilterTrackerReportService_,
+                _SharedPropertiesService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $window = _$window_;
+                $q = _$q_;
+                KanbanService = _KanbanService_;
+                RestErrorService = _RestErrorService_;
+                FilterTrackerReportService = _FilterTrackerReportService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         jest.spyOn(RestErrorService, "reload").mockImplementation(() => {});
         wrapPromise = createAngularPromiseWrapper($rootScope);
@@ -68,7 +70,7 @@ describe("KanbanService", () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 
@@ -80,7 +82,7 @@ describe("KanbanService", () => {
                     statusText,
                     json: () => $q.when(error_json),
                 },
-            })
+            }),
         );
     }
 
@@ -110,11 +112,11 @@ describe("KanbanService", () => {
                 async (filter_report_id, query, should_item_be_collapsed) => {
                     jest.spyOn(
                         FilterTrackerReportService,
-                        "getSelectedFilterTrackerReportId"
+                        "getSelectedFilterTrackerReportId",
                     ).mockReturnValue(filter_report_id);
                     jest.spyOn(
                         SharedPropertiesService,
-                        "doesUserPrefersCompactCards"
+                        "doesUserPrefersCompactCards",
                     ).mockReturnValue(should_item_be_collapsed);
                     const first_item = { id: 94, item_name: "exotropia" };
                     const second_item = { id: 96, item_name: "trigeminous" };
@@ -140,9 +142,9 @@ describe("KanbanService", () => {
                     expect(tlpGet).toHaveBeenCalledWith(expected_url, {
                         params: { limit: 50, offset: 0, ...additional_params, ...query },
                     });
-                }
+                },
             );
-        }
+        },
     );
 
     describe.each([
@@ -165,7 +167,7 @@ describe("KanbanService", () => {
                 mockFetchSuccess(tlpHead, { headers: { get: () => "27" } });
                 jest.spyOn(
                     FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
+                    "getSelectedFilterTrackerReportId",
                 ).mockReturnValue(filter_report_id);
 
                 const promise = methodUnderTest();
@@ -174,7 +176,7 @@ describe("KanbanService", () => {
                     params: { ...additional_params, ...query },
                 });
             });
-        }
+        },
     );
 
     it.each([
@@ -256,7 +258,7 @@ describe("KanbanService", () => {
                 headers: expected_headers,
                 body: JSON.stringify(expected_body),
             });
-        }
+        },
     );
 
     it.each([
@@ -283,7 +285,7 @@ describe("KanbanService", () => {
             });
 
             return wrapPromise(promise);
-        }
+        },
     );
 
     describe(`updateKanbanLabel`, () => {
@@ -462,7 +464,7 @@ describe("KanbanService", () => {
                     headers: expected_headers,
                     body: JSON.stringify({ label: "On going", wip_limit: expected_wip_limit }),
                 });
-            }
+            },
         );
     });
 
@@ -485,7 +487,7 @@ describe("KanbanService", () => {
             jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
 
             jest.spyOn(SharedPropertiesService, "getKanbanHomepageUrl").mockReturnValue(
-                "/projects/acme/kanban"
+                "/projects/acme/kanban",
             );
             const setItem = jest.spyOn(Storage.prototype, "setItem");
 

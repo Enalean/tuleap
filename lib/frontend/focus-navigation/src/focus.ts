@@ -52,7 +52,7 @@ const getHTMLElement = (element: Element): HTMLElement | null =>
 function cycleUpOrDown(
     current_element: HTMLElement,
     direction: Direction,
-    getParent: GetParent
+    getParent: GetParent,
 ): HTMLElement | null {
     const parent = getParent(current_element);
     if (!parent) {

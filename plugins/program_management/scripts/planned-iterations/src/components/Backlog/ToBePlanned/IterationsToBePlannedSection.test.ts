@@ -116,7 +116,7 @@ describe("IterationsToBePlannedSection", () => {
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         expect(unplanned_elements).toHaveLength(0);
         expect(
-            wrapper.find("[data-test=unplanned-elements-retrieval-error-message]").exists()
+            wrapper.find("[data-test=unplanned-elements-retrieval-error-message]").exists(),
         ).toBe(true);
     });
 });

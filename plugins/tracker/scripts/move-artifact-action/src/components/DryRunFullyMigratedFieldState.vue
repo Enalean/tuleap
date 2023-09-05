@@ -53,9 +53,9 @@ const message = computed((): string => {
         $ngettext(
             "1 field will be fully migrated:",
             "%{ fully_migrated_fields_count } fields will be fully migrated:",
-            fully_migrated_fields_count.value
+            fully_migrated_fields_count.value,
         ),
-        { fully_migrated_fields_count: fully_migrated_fields_count.value }
+        { fully_migrated_fields_count: fully_migrated_fields_count.value },
     );
 });
 </script>

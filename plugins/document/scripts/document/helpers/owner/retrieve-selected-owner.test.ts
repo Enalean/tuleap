@@ -27,7 +27,7 @@ describe("getSelectedOwner", () => {
     it("returns the wanted user", async () => {
         const get_spy = jest.spyOn(rest_querier, "getUserByName");
         get_spy.mockReturnValue(
-            okAsync([{ display_name: "John Doe", username: "jdoe" } as RestUser])
+            okAsync([{ display_name: "John Doe", username: "jdoe" } as RestUser]),
         );
 
         const user = await retrieveSelectedOwner("jdoe");

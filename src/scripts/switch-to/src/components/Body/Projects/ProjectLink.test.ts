@@ -98,7 +98,7 @@ describe("ProjectLink", () => {
                                 programmatically_focused_element: null,
                             } as KeyboardNavigationState,
                         },
-                    })
+                    }),
                 ),
                 provide: {
                     [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,

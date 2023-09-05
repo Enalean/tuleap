@@ -129,7 +129,7 @@ describe("FilledPreConditionsSection", () => {
                 };
                 const wrapper = await filledPreConditionsMockFactory(state);
                 expect(wrapper.vm.authorized_user_group_ids).toStrictEqual(
-                    authorized_user_group_ids
+                    authorized_user_group_ids,
                 );
             });
         });
@@ -192,7 +192,7 @@ describe("FilledPreConditionsSection", () => {
 
         it(`will disable the "Authorized ugroups" selectbox`, () => {
             const authorized_ugroups_selectbox = wrapper.get(
-                "[data-test=authorized-ugroups-select]"
+                "[data-test=authorized-ugroups-select]",
             );
             expect(authorized_ugroups_selectbox.attributes("disabled")).toBeTruthy();
         });
@@ -204,7 +204,7 @@ describe("FilledPreConditionsSection", () => {
 
         it(`will disable the "Not empty comment" checkbox`, () => {
             const not_empty_comment_checkbox = wrapper.get(
-                "[data-test=not-empty-comment-checkbox]"
+                "[data-test=not-empty-comment-checkbox]",
             );
             expect(not_empty_comment_checkbox.attributes("disabled")).toBeTruthy();
         });

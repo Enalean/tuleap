@@ -83,7 +83,7 @@ describe(`Fault`, () => {
         expect(isFault(specialized_fault)).toBe(true);
         if (!isSpecializedFault(specialized_fault)) {
             throw new Error(
-                `Expected specialized fault to have a method named "isPermissionDenied"`
+                `Expected specialized fault to have a method named "isPermissionDenied"`,
             );
         }
         expect(specialized_fault.isPermissionDenied()).toBe(true);

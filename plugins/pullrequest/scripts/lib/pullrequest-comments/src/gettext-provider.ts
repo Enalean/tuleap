@@ -23,5 +23,5 @@ import fr_FR from "../po/fr_FR.po";
 export const gettext_provider = initGettextSync(
     "plugin-pullrequest/comments",
     { fr_FR },
-    document.body.dataset.userLocale ?? "en_US"
+    document.body.dataset.userLocale ?? "en_US",
 );

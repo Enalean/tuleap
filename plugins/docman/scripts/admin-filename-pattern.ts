@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const mandatory_marker = document.getElementById(
-        "docman-admin-filename-pattern-mandatory-marker"
+        "docman-admin-filename-pattern-mandatory-marker",
     );
     if (!mandatory_marker) {
         throw Error("Cannot mark input as required if no visual indicator");

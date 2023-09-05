@@ -38,10 +38,10 @@ export async function downloadExportDocument(
         gettext_provider: GettextProvider,
         global_export_properties: GlobalExportProperties,
         datetime_locale_information: DateTimeLocaleInformation,
-        buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>
+        buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>,
     ) => void,
     backlog_items: ReadonlyArray<BacklogItem>,
-    campaigns: ReadonlyArray<Campaign>
+    campaigns: ReadonlyArray<Campaign>,
 ): Promise<void> {
     const datetime_locale_information: DateTimeLocaleInformation = {
         locale: global_export_properties.user_locale.replace("_", "-"),
@@ -53,7 +53,7 @@ export async function downloadExportDocument(
         global_export_properties,
         backlog_items,
         campaigns,
-        datetime_locale_information
+        datetime_locale_information,
     );
 
     download_document(
@@ -62,6 +62,6 @@ export async function downloadExportDocument(
         global_export_properties,
         datetime_locale_information,
         (exported_formatted_date: string): Promise<ReadonlyArray<XmlComponent>> =>
-            buildCoverPage(gettext_provider, global_export_properties, exported_formatted_date)
+            buildCoverPage(gettext_provider, global_export_properties, exported_formatted_date),
     );
 }

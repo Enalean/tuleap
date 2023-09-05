@@ -32,6 +32,6 @@ const props = defineProps<{ item: ItemSearchResult }>();
 const filename = computed((): string =>
     props.item.type === TYPE_FILE && props.item.file_properties?.file_name
         ? props.item.file_properties.file_name
-        : ""
+        : "",
 );
 </script>

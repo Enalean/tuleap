@@ -67,7 +67,7 @@ export const LazyboxStub = {
             createItem(item_name: string): void {
                 if (!this.options.new_item_clicked_callback) {
                     throw new Error(
-                        "Expected to have new_item_clicked_callback defined. Please check it is defined in your lazybox options"
+                        "Expected to have new_item_clicked_callback defined. Please check it is defined in your lazybox options",
                     );
                 }
 

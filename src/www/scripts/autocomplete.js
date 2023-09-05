@@ -14,7 +14,7 @@ var AutoCompleter = Class.create({
                 imgPath: imgPath,
                 multiple: multiple,
             },
-            options || {}
+            options || {},
         );
         // The url to call to get completion list
         this.url = "";

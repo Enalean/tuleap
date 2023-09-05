@@ -23,13 +23,13 @@ import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullreq
 
 export interface StorePullRequestCommentReplies {
     getCommentReplies: (
-        comment: PullRequestCommentPresenter
+        comment: PullRequestCommentPresenter,
     ) => PullRequestCommentRepliesCollectionPresenter;
     getAllRootComments: () => PullRequestCommentPresenter[];
     addRootComment: (comment: PullRequestCommentPresenter) => void;
     addReplyToComment: (
         comment: PullRequestCommentPresenter,
-        reply: PullRequestCommentPresenter
+        reply: PullRequestCommentPresenter,
     ) => void;
 }
 
@@ -48,12 +48,12 @@ function getOnlyRootComments(comment: PullRequestCommentPresenter): boolean {
 function sortRepliesByDate(replies: PullRequestCommentPresenter[]): PullRequestCommentPresenter[] {
     return replies.sort(
         (a: PullRequestCommentPresenter, b: PullRequestCommentPresenter) =>
-            Date.parse(a.post_date) - Date.parse(b.post_date)
+            Date.parse(a.post_date) - Date.parse(b.post_date),
     );
 }
 
 function buildMapFromComments(
-    comments: PullRequestCommentPresenter[]
+    comments: PullRequestCommentPresenter[],
 ): Map<number, PullRequestCommentPresenter[]> {
     const map = comments.reduce(
         (replies_by_comments, current_comment): Map<number, PullRequestCommentPresenter[]> => {
@@ -66,12 +66,12 @@ function buildMapFromComments(
 
             replies_by_comments.set(
                 current_comment.parent_id,
-                comment_replies.concat([current_comment])
+                comment_replies.concat([current_comment]),
             );
 
             return replies_by_comments;
         },
-        new Map<number, PullRequestCommentPresenter[]>()
+        new Map<number, PullRequestCommentPresenter[]>(),
     );
 
     map.forEach((replies: PullRequestCommentPresenter[], parent_id: number, map) => {
@@ -84,7 +84,7 @@ function buildMapFromComments(
 function addCommentReply(
     map: Map<number, PullRequestCommentPresenter[]>,
     comment: PullRequestCommentPresenter,
-    reply: PullRequestCommentPresenter
+    reply: PullRequestCommentPresenter,
 ): void {
     const replies = map.get(comment.id);
     if (!replies) {
@@ -96,19 +96,19 @@ function addCommentReply(
 }
 
 export const PullRequestCommentRepliesStore = (
-    comments: readonly PullRequestCommentPresenter[]
+    comments: readonly PullRequestCommentPresenter[],
 ): StorePullRequestCommentReplies => {
     const global_comments_replies_map = buildMapFromComments(
-        comments.filter(getOnlyGlobalCommentReplies)
+        comments.filter(getOnlyGlobalCommentReplies),
     );
     const inline_comments_replies_map = buildMapFromComments(
-        comments.filter(getOnlyInlineCommentReplies)
+        comments.filter(getOnlyInlineCommentReplies),
     );
     const root_comments = comments.filter(getOnlyRootComments);
 
     return {
         getCommentReplies: (
-            comment: PullRequestCommentPresenter
+            comment: PullRequestCommentPresenter,
         ): PullRequestCommentRepliesCollectionPresenter => {
             let replies;
 
@@ -140,7 +140,7 @@ export const PullRequestCommentRepliesStore = (
         },
         addReplyToComment: (
             comment: PullRequestCommentPresenter,
-            reply: PullRequestCommentPresenter
+            reply: PullRequestCommentPresenter,
         ): void => {
             if (comment.type === TYPE_INLINE_COMMENT) {
                 addCommentReply(inline_comments_replies_map, comment, reply);

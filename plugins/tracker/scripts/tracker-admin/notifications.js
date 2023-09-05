@@ -75,10 +75,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function hideEditMode() {
         var form = document.getElementById("tracker-admin-notifications-form"),
             read_cells = document.querySelectorAll(
-                ".tracker-global-notifications-checkbox-cell-read"
+                ".tracker-global-notifications-checkbox-cell-read",
             ),
             edit_cells = document.querySelectorAll(
-                ".tracker-global-notifications-checkbox-cell-write"
+                ".tracker-global-notifications-checkbox-cell-write",
             );
 
         form.reset();
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
             selected_emails = JSON.parse(input.dataset.emails);
         addDataToAutocompleter(
             input,
-            selected_ugroups.concat(selected_users).concat(selected_emails)
+            selected_ugroups.concat(selected_users).concat(selected_emails),
         );
         enableAutocompleter(input);
     }

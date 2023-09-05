@@ -11,7 +11,7 @@ function DashboardController(
     PullRequestCollectionService,
     PullRequestService,
     TooltipService,
-    $element
+    $element,
 ) {
     const self = this;
 

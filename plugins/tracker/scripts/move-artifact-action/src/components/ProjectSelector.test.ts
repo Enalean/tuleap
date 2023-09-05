@@ -96,7 +96,7 @@ describe("ProjectSelector", () => {
     it("the <select> should display the projects", () => {
         const wrapper = getWrapper();
         const select = wrapper.find<HTMLSelectElement>(
-            "[data-test=move-artifact-project-selector]"
+            "[data-test=move-artifact-project-selector]",
         ).element;
 
         expect(select.options).toHaveLength(projects.length);
@@ -114,7 +114,7 @@ describe("ProjectSelector", () => {
         const wrapper = getWrapper();
 
         const select_wrapper = wrapper.find<HTMLSelectElement>(
-            "[data-test=move-artifact-project-selector]"
+            "[data-test=move-artifact-project-selector]",
         );
 
         select_wrapper.element.selectedIndex = 1;

@@ -24,7 +24,7 @@ import { clickOnElement, focusElement } from "./shortcuts-handles/trigger-datash
 
 export function createCampaignsListShortcutsGroup(
     doc: Document,
-    gettextCatalog: GettextProvider
+    gettextCatalog: GettextProvider,
 ): ShortcutsGroup {
     const focus_search_field: Shortcut = {
         keyboard_inputs: "f",

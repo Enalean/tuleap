@@ -42,7 +42,7 @@ function updateParentProgress(
     item_being_uploaded: Uploadable,
     bytes_uploaded: number,
     context: ActionContext<State, State>,
-    parent: Folder
+    parent: Folder,
 ): void {
     if (bytes_total === 0) {
         item_being_uploaded.progress = 100;
@@ -57,7 +57,7 @@ export function uploadFile(
     dropped_file: File,
     fake_item: FakeItem,
     docman_item: CreatedItem,
-    parent: Folder
+    parent: Folder,
 ): Upload {
     const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties?.upload_href ?? null,
@@ -109,12 +109,12 @@ export function uploadVersion(
     context: ActionContext<State, State>,
     dropped_file: File,
     updated_file: FakeItem | ItemFile,
-    new_version: CreatedItemFileProperties
+    new_version: CreatedItemFileProperties,
 ): Upload {
     const parent_folder = getParentFolder(
         context.state.folder_content,
         updated_file,
-        context.state.current_folder
+        context.state.current_folder,
     );
 
     const uploader = new Upload(dropped_file, {
@@ -156,12 +156,12 @@ export function uploadVersionFromEmpty(
     context: ActionContext<State, State>,
     dropped_file: File,
     updated_empty: Empty,
-    new_version: CreatedItemFileProperties
+    new_version: CreatedItemFileProperties,
 ): Upload {
     const parent_folder = getParentFolder(
         context.state.folder_content,
         updated_empty,
-        context.state.current_folder
+        context.state.current_folder,
     );
 
     const uploader = new Upload(dropped_file, {
@@ -176,7 +176,7 @@ export function uploadVersionFromEmpty(
                 updated_empty,
                 bytes_uploaded,
                 context,
-                parent_folder
+                parent_folder,
             );
         },
         onSuccess: async (): Promise<void> => {

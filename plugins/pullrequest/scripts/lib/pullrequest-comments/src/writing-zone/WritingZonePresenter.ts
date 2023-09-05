@@ -31,7 +31,7 @@ export interface WritingZonePresenter {
 export const WritingZonePresenter = {
     buildInitial: (
         project_id: number,
-        is_comments_markdown_mode_enabled = false
+        is_comments_markdown_mode_enabled = false,
     ): WritingZonePresenter => ({
         initial_content: "",
         previewed_content: "",
@@ -58,7 +58,7 @@ export const WritingZonePresenter = {
     }),
     buildPreviewMode: (
         presenter: WritingZonePresenter,
-        previewed_content: string
+        previewed_content: string,
     ): WritingZonePresenter => ({
         ...presenter,
         is_focused: true,

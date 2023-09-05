@@ -31,7 +31,7 @@ function getExampleSvg(
     width: number,
     height: number,
     color: string,
-    callback: (width: number, height: number) => string
+    callback: (width: number, height: number) => string,
 ): SVGTemplateResult {
     return svg`
         <svg style="height: ${height + 2 * gap}px; width: ${width + 2 * gap}px">
@@ -80,16 +80,19 @@ const content = [
     { title: "Down left arrows", color: danger_color, callback: getDownLeftArrow },
     { title: "Up right arrows", color: theme_color, callback: getUpRightArrow },
     { title: "Up left arrows", color: danger_color, callback: getUpLeftArrow },
-].reduce((previous, { title, color, callback }) => {
-    let content = html`
-        ${previous}
-        <h1>${title}</h1>
-    `;
-    for (let width = 0; width < max_width; width += step) {
-        content = html`${content}${getExampleSvg(width, height, color, callback)}`;
-    }
+].reduce(
+    (previous, { title, color, callback }) => {
+        let content = html`
+            ${previous}
+            <h1>${title}</h1>
+        `;
+        for (let width = 0; width < max_width; width += step) {
+            content = html`${content}${getExampleSvg(width, height, color, callback)}`;
+        }
 
-    return content;
-}, html``);
+        return content;
+    },
+    html``,
+);
 
 render(content, document.body);

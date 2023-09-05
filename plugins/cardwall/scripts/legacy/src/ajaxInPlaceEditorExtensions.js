@@ -61,7 +61,7 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
                 option_element.appendChild(document.createTextNode(option_val));
 
                 this._controls.editor.appendChild(option_element);
-            }.bind(this)
+            }.bind(this),
         );
 
         this._controls.editor.disabled = false;

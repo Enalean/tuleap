@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         target_url: String(mount_point.dataset.targetUrl),
         csrf_token: String(mount_point.dataset.csrfToken),
         has_other_trackers_implying_their_timeframes: Boolean(
-            mount_point.dataset.hasOtherTrackersImplyingTheirTimeframes
+            mount_point.dataset.hasOtherTrackersImplyingTheirTimeframes,
         ),
         has_tracker_charts: Boolean(mount_point.dataset.hasTrackerCharts),
         has_artifact_link_field: Boolean(mount_point.dataset.hasArtifactLinkField),

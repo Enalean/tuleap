@@ -31,7 +31,7 @@ const unique = <T>(values: T[]): T[] => [...new Set(values)];
 
 const uniqueByAttribute = <T>(
     values: Record<string, T>[],
-    attribute: string
+    attribute: string,
 ): Record<string, T>[] => {
     const attributes: T[] = unique(mapAttribute(values, attribute));
     return attributes.reduce((accumulator: Record<string, T>[], attribute_value) => {

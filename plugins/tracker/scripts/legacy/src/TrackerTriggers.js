@@ -56,7 +56,7 @@ tuleap.trackers.trigger = Class.create({
                         tuleap.trackers.trigger.form_data = transport.responseJSON;
                         addTriggerFormData(self);
                     },
-                }
+                },
             );
         }
 
@@ -157,7 +157,7 @@ tuleap.trackers.trigger = Class.create({
         function populateTargetFieldValues(field_values) {
             field_values.values.forEach(function (field_value) {
                 $("trigger_target_field_value").appendChild(
-                    createOption(field_value, "trigger-target-field-value")
+                    createOption(field_value, "trigger-target-field-value"),
                 );
             });
         }
@@ -214,7 +214,7 @@ tuleap.trackers.trigger = Class.create({
                     //eslint-disable-next-line no-alert
                     alert(response.responseText);
                 },
-            }
+            },
         );
     },
 
@@ -362,7 +362,7 @@ tuleap.trackers.trigger.triggering_field = Class.create({
 
                 self.removeAllOptions();
                 self.addTrackerFieldsData(tracker_id, select_box_element);
-            }
+            },
         );
     },
 
@@ -391,12 +391,12 @@ tuleap.trackers.trigger.triggering_field = Class.create({
             function (evt) {
                 var field_id = Event.element(evt).value,
                     tracker_id = container.down(
-                        ".trigger_triggering_field_child_tracker_name"
+                        ".trigger_triggering_field_child_tracker_name",
                     ).value;
 
                 self.removeExistingFieldValues();
                 self.addTrackerFieldValuesData(tracker_id, field_id);
-            }
+            },
         );
     },
 

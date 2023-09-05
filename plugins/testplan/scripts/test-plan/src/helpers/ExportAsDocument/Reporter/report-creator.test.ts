@@ -58,7 +58,7 @@ describe("Create an export report", () => {
                     });
                 }
                 throw Error("Unknown tracker id");
-            }
+            },
         );
 
         const getArtifactsMock = jest.spyOn(docgen_docx, "getArtifacts");
@@ -68,12 +68,12 @@ describe("Create an export report", () => {
                 [2, { id: 2 } as ArtifactResponse],
                 [3, { id: 3 } as ArtifactResponse],
                 [123, { id: 123 } as ArtifactResponse],
-            ])
+            ]),
         );
 
         const retrieveArtifactsStructureMock = jest.spyOn(
             docgen_docx,
-            "retrieveArtifactsStructure"
+            "retrieveArtifactsStructure",
         );
         retrieveArtifactsStructureMock.mockResolvedValue([
             { id: 1 } as ArtifactFromReport,
@@ -85,7 +85,7 @@ describe("Create an export report", () => {
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
         formatArtifactMock.mockImplementation(
             (
-                artifact: ArtifactFromReport
+                artifact: ArtifactFromReport,
             ): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> => {
                 if (artifact.id === 1) {
                     return { id: 1 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
@@ -102,7 +102,7 @@ describe("Create an export report", () => {
                     } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
                 }
                 throw Error("Unknown artifact");
-            }
+            },
         );
 
         jest.spyOn(querier, "getExecutions").mockResolvedValue([
@@ -177,7 +177,7 @@ describe("Create an export report", () => {
                 } as BacklogItem,
             ],
             [{ id: 101, label: "Tuleap 13.3" } as Campaign],
-            { locale: "en-US", timezone: "UTC" }
+            { locale: "en-US", timezone: "UTC" },
         );
 
         expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);

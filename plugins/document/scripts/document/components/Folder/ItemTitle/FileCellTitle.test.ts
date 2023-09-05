@@ -97,7 +97,8 @@ describe("FileCellTitle", () => {
         const wrapper = getWrapper(item);
 
         expect(
-            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element.href
+            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element
+                .href,
         ).toContain("/plugins/docman/download/119/42");
     });
 
@@ -121,7 +122,8 @@ describe("FileCellTitle", () => {
         const wrapper = getWrapper(item);
 
         expect(
-            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element.href
+            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element
+                .href,
         ).toContain("/path/to/open/42");
     });
 });

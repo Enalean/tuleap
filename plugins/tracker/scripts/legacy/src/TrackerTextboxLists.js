@@ -41,7 +41,7 @@ codendi.tracker.textboxlist = {
                             newValues: true,
                             newValuePrefix: "!",
                             encodeEntities: true,
-                        }
+                        },
                     );
                 }
             }

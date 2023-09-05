@@ -27,6 +27,6 @@ import type { TrackerIdentifier } from "../TrackerIdentifier";
 export type CreateArtifact = {
     createArtifact(
         tracker_identifier: CurrentTrackerIdentifier | TrackerIdentifier,
-        changeset_values: ChangesetValues
+        changeset_values: ChangesetValues,
     ): ResultAsync<ArtifactCreated, Fault>;
 };

@@ -78,7 +78,7 @@ function formatExistingValue(field, artifact_value) {
         case "rb":
             if (artifact_value.bind_value_ids && field.values) {
                 const filtered_artifact_values = artifact_value.bind_value_ids.filter((value_id) =>
-                    field.values.some((value) => value.id === value_id)
+                    field.values.some((value) => value.id === value_id),
                 );
                 if (filtered_artifact_values.length > 0) {
                     value_obj.bind_value_ids = filtered_artifact_values;
@@ -107,7 +107,7 @@ function formatExistingValue(field, artifact_value) {
         case "file":
             value_obj = addPropertiesToFileValueModel(value_obj);
             value_obj.value = artifact_value.file_descriptions.map(
-                (file_description) => file_description.id
+                (file_description) => file_description.id,
             );
             break;
         case "computed":

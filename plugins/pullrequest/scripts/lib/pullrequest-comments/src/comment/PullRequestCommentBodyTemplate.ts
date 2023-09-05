@@ -29,7 +29,7 @@ import type { PullRequestCommentComponentType } from "./PullRequestComment";
 type MapOfClasses = Record<string, boolean>;
 
 const displayFileNameIfNeeded = (
-    comment: PullRequestCommentPresenter
+    comment: PullRequestCommentPresenter,
 ): UpdateFunction<PullRequestCommentComponentType> => {
     if (
         comment.type !== TYPE_INLINE_COMMENT ||
@@ -70,7 +70,7 @@ const displayFileNameIfNeeded = (
 const displayOutdatedBadgeIfNeeded = (
     host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => {
     if (comment.type !== TYPE_INLINE_COMMENT) {
         return html``;
@@ -106,7 +106,7 @@ const getContent = (comment: PullRequestCommentPresenter): string => {
 export const buildBodyForComment = (
     host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
@@ -126,6 +126,6 @@ export const buildBodyForComment = (
 
 export const getCommentBody = (
     host: PullRequestCommentComponentType,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> =>
     buildBodyForComment(host, host.comment, gettext_provider);

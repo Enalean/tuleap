@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");
@@ -98,11 +98,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
         const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
         const trackers_agile_dashboard: TrackerAgileDashboard[] = JSON.parse(
-            trackers_agile_dashboard_dataset
+            trackers_agile_dashboard_dataset,
         );
         const is_timeframe_duration = Boolean(is_timeframe_duration_dataset);
         const user_can_view_sub_milestones_planning = Boolean(
-            user_can_view_sub_milestones_planning_dataset
+            user_can_view_sub_milestones_planning_dataset,
         );
 
         const AppComponent = Vue.extend(App);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 label_start_date,
                 label_timeframe,
                 user_can_view_sub_milestones_planning,
-                burnup_mode === "count" ? COUNT : EFFORT
+                burnup_mode === "count" ? COUNT : EFFORT,
             ),
         }).$mount(widget);
     }

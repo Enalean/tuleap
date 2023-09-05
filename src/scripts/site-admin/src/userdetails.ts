@@ -43,7 +43,7 @@ function initChangePasswordModal(): void {
 
 function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted(): void {
     const warning_project_without_restricted_removal_modal_element = document.getElementById(
-        "modal-warning-removal-project-not-including-restricted"
+        "modal-warning-removal-project-not-including-restricted",
     );
 
     if (!warning_project_without_restricted_removal_modal_element) {
@@ -60,7 +60,7 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
     const nb_project_user_is_member_of_that_dont_accept_restricted = parseInt(
         warning_project_without_restricted_removal_modal_element.dataset
             .nbProjectNotAcceptingRestricted,
-        10
+        10,
     );
 
     if (
@@ -71,7 +71,7 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
     }
 
     const confirm_button = document.getElementById(
-        "modal-warning-removal-project-not-including-restricted-confirm"
+        "modal-warning-removal-project-not-including-restricted-confirm",
     );
 
     if (!confirm_button) {
@@ -124,13 +124,13 @@ function initWebAuthnRemove(): void {
     const csrf_modal_input = selectOrThrow(
         form_remove_modal,
         "input[name=challenge]",
-        HTMLInputElement
+        HTMLInputElement,
     );
     const error = selectOrThrow(form_remove_modal, "#webauthn-remove-error");
     const remove_button = selectOrThrow(
         form_remove_modal,
         "#webauthn-modal-remove-button",
-        HTMLButtonElement
+        HTMLButtonElement,
     );
     const remove_button_icon = selectOrThrow(form_remove_modal, "#webauthn-modal-remove");
 
@@ -167,7 +167,7 @@ function initWebAuthnRemove(): void {
             {
                 key_id: key_id,
                 csrf_token: csrf_token,
-            }
+            },
         ).match(
             () => location.reload(),
             (fault: Fault) => {
@@ -175,7 +175,7 @@ function initWebAuthnRemove(): void {
                 remove_button.disabled = false;
                 error.innerText = fault.toString();
                 error.classList.remove(HIDDEN);
-            }
+            },
         );
     });
 }

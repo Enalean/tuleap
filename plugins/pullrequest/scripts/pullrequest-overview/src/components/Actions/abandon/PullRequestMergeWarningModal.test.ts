@@ -90,14 +90,14 @@ describe("PullRequestMergeWarningModal", () => {
                 } as PullRequest);
 
                 const ci_validation_warning = wrapper.find(
-                    "[data-test=warning-missing-ci-validation]"
+                    "[data-test=warning-missing-ci-validation]",
                 );
 
                 expect(ci_validation_warning.exists()).toBe(true);
                 expect(ci_validation_warning.text().trim()).toBe(
-                    `The last CI status is ${last_build_status}.`
+                    `The last CI status is ${last_build_status}.`,
                 );
-            }
+            },
         );
 
         it('When the CI is "success", Then it should not show a CI status warning', () => {

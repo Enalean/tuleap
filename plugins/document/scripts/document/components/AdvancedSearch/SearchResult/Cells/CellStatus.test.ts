@@ -42,6 +42,6 @@ describe("CellStatus", () => {
             });
 
             expect(wrapper.vm.status).toBe(expected);
-        }
+        },
     );
 });

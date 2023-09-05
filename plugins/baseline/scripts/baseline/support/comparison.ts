@@ -22,7 +22,7 @@ import type { Artifact } from "../type";
 
 export function compareArtifacts(
     base_artifacts: ReadonlyArray<Artifact>,
-    compared_to_artifacts: ReadonlyArray<Artifact>
+    compared_to_artifacts: ReadonlyArray<Artifact>,
 ): ArtifactsListComparison {
     return new ArtifactsListComparison(base_artifacts, compared_to_artifacts);
 }
@@ -41,7 +41,7 @@ export class ArtifactsListComparison {
 
     constructor(
         base_artifacts: ReadonlyArray<Artifact>,
-        compared_to_artifacts: ReadonlyArray<Artifact>
+        compared_to_artifacts: ReadonlyArray<Artifact>,
     ) {
         this.base_artifacts = base_artifacts;
         this.compared_to_artifacts = compared_to_artifacts;
@@ -54,14 +54,14 @@ export class ArtifactsListComparison {
         return this.base_artifacts.reduce(
             (accumulator: Array<Couple>, base: Artifact): Array<Couple> => {
                 const compared_to = this.compared_to_artifacts.find(
-                    (compared) => base.id === compared.id
+                    (compared) => base.id === compared.id,
                 );
                 if (compared_to) {
                     accumulator.push({ base, compared_to });
                 }
                 return accumulator;
             },
-            []
+            [],
         );
     }
 
@@ -71,19 +71,19 @@ export class ArtifactsListComparison {
     get modified(): Array<Couple> {
         return this.identical_or_modified.filter(
             ({ base, compared_to }) =>
-                base.description !== compared_to.description || base.status !== compared_to.status
+                base.description !== compared_to.description || base.status !== compared_to.status,
         );
     }
 
     get removed(): Array<Artifact> {
         return this.base_artifacts.filter((base) =>
-            this.compared_to_artifacts.every((compared_to) => base.id !== compared_to.id)
+            this.compared_to_artifacts.every((compared_to) => base.id !== compared_to.id),
         );
     }
 
     get added(): Array<Artifact> {
         return this.compared_to_artifacts.filter((compared_to) =>
-            this.base_artifacts.every((base) => base.id !== compared_to.id)
+            this.base_artifacts.every((base) => base.id !== compared_to.id),
         );
     }
 }

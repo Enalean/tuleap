@@ -45,7 +45,7 @@
                         <label class="tlp-label" for="msg_private_project">
                             {{
                                 $gettext(
-                                    "Write your message below and click on the button to send your request to the project administrators"
+                                    "Write your message below and click on the button to send your request to the project administrators",
                                 )
                             }}
                             <i class="fa-solid fa-asterisk"></i>
@@ -64,7 +64,7 @@
                         <p v-if="error !== ''" class="tlp-text-danger">
                             {{
                                 $gettext(
-                                    "Please enter a reason for why you need to access this document."
+                                    "Please enter a reason for why you need to access this document.",
                                 )
                             }}
                         </p>

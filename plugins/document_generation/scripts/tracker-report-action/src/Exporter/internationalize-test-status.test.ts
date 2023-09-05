@@ -35,8 +35,8 @@ describe("Internationalize test status", () => {
                 {
                     gettext: (str: string) => str,
                 } as GetText,
-                status as ArtifactFieldValueStatus
-            )
+                status as ArtifactFieldValueStatus,
+            ),
         ).toBe(expected);
     });
 });

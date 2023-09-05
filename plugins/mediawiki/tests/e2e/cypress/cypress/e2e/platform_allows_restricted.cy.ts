@@ -42,7 +42,7 @@ describe("Platform allows restricted", function () {
         });
 
         cy.get("[data-test=error-user-is-restricted]").contains(
-            "You have a restricted user account"
+            "You have a restricted user account",
         );
     });
 

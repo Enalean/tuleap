@@ -26,7 +26,7 @@ export async function getChartData(report_id, renderer_id, chart_id, in_dashboar
             params: {
                 in_dashboard: in_dashboard,
             },
-        }
+        },
     );
 
     return response.json();

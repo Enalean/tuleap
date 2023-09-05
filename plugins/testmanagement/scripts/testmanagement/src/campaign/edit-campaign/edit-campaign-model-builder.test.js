@@ -82,7 +82,7 @@ describe("Edit campaign model builder -", () => {
 
             const result = buildInitialTestsList(
                 [first_definition, second_definition, third_definition],
-                [first_execution, second_execution]
+                [first_execution, second_execution],
             );
 
             expect(result).toEqual({

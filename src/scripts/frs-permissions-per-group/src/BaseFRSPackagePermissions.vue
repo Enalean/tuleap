@@ -81,7 +81,7 @@ export default class BaseFRSPackagePermissions extends Vue {
 
             this.packages_list = await getPackagesPermissions(
                 this.selectedProjectId,
-                this.selectedUgroupId
+                this.selectedUgroupId,
             );
 
             this.is_loaded = true;

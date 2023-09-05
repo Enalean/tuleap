@@ -43,7 +43,7 @@ describe("AddTeam", () => {
             set_rest_error_message = jest.spyOn(restErrorHelper, "setRestErrorMessage");
             set_button_to_disabled = jest.spyOn(
                 buttonAddTeamHelper,
-                "setButtonToDisabledWithSpinner"
+                "setButtonToDisabledWithSpinner",
             );
             reset_button = jest.spyOn(buttonAddTeamHelper, "resetButtonToAddTeam");
 
@@ -60,7 +60,7 @@ describe("AddTeam", () => {
 
         it("Given document without button to add team, Then error is thrown", () => {
             expect(() => addTeamInProgram(125, createDocument())).toThrow(
-                "Button to add team does not exist"
+                "Button to add team does not exist",
             );
         });
 
@@ -93,8 +93,8 @@ describe("AddTeam", () => {
                     new FetchWrapperError("Not found", {
                         json: (): Promise<{ error: { code: number; message: string } }> =>
                             Promise.resolve({ error: { code: 400, message: "Team not found" } }),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             addTeamInProgram(125, doc);
@@ -106,7 +106,7 @@ describe("AddTeam", () => {
             await expect(set_rest_error_message).toHaveBeenCalledWith(
                 doc,
                 "program-management-add-team-error-rest",
-                "400 Team not found"
+                "400 Team not found",
             );
             expect(reset_button).toHaveBeenCalled();
         });
@@ -125,8 +125,8 @@ describe("AddTeam", () => {
                                     i18n_error_message: "L'Équipe n'est pas trouvée",
                                 },
                             }),
-                    } as Response)
-                )
+                    } as Response),
+                ),
             );
 
             addTeamInProgram(125, doc);
@@ -138,7 +138,7 @@ describe("AddTeam", () => {
             await expect(set_rest_error_message).toHaveBeenCalledWith(
                 doc,
                 "program-management-add-team-error-rest",
-                "400 L'Équipe n'est pas trouvée"
+                "400 L'Équipe n'est pas trouvée",
             );
             expect(reset_button).toHaveBeenCalled();
         });

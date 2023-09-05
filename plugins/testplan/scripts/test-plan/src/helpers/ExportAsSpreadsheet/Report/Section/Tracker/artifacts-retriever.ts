@@ -29,13 +29,13 @@ interface ArtifactsCollection {
 }
 
 export async function retrieveArtifacts(
-    artifact_ids: ReadonlyArray<number>
+    artifact_ids: ReadonlyArray<number>,
 ): Promise<Map<number, Artifact>> {
     const artifacts: Map<number, Artifact> = new Map();
     const responses = await limitConcurrencyPool(
         MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS,
         getArtifactIDsChunks(artifact_ids),
-        getArtifactIDsChunkResponse
+        getArtifactIDsChunkResponse,
     );
 
     for (const response of responses) {
@@ -50,7 +50,7 @@ export async function retrieveArtifacts(
 }
 
 function getArtifactIDsChunks(
-    artifact_ids: ReadonlyArray<number>
+    artifact_ids: ReadonlyArray<number>,
 ): ReadonlyArray<ReadonlyArray<number>> {
     const artifact_ids_chunks: ReadonlyArray<number>[] = [];
 
@@ -65,6 +65,6 @@ function getArtifactIDsChunks(
 
 function getArtifactIDsChunkResponse(artifact_ids_chunk: ReadonlyArray<number>): Promise<Response> {
     return get(
-        `/api/v1/artifacts?query=${encodeURIComponent(JSON.stringify({ id: artifact_ids_chunk }))}`
+        `/api/v1/artifacts?query=${encodeURIComponent(JSON.stringify({ id: artifact_ids_chunk }))}`,
     );
 }

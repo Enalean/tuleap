@@ -138,7 +138,7 @@ export default class AdvancedTemplateList extends Vue {
     get is_checked(): boolean {
         return (
             this.projects_user_is_admin_of.findIndex(
-                (project) => project.id === this.selected_company_template?.id
+                (project) => project.id === this.selected_company_template?.id,
             ) !== -1
         );
     }

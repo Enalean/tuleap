@@ -248,7 +248,7 @@ describe("TaskHeader", () => {
 
             expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith(
                 "tasks/toggleSubtasks",
-                task
+                task,
             );
         });
     });

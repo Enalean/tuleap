@@ -36,31 +36,31 @@ export function doesHandleHaveWidgets(handle: FileLineHandle): handle is LineHan
 }
 
 export function isCodeCommentPlaceholderWidget(
-    widget: FileDiffWidget
+    widget: FileDiffWidget,
 ): widget is FileDiffPlaceholderWidget {
     return isPlaceholderWidget(widget) && Boolean(widget.isReplacingAComment) === true;
 }
 
 export function isPlaceholderWidget(
-    widget: FileDiffWidget | HTMLElement
+    widget: FileDiffWidget | HTMLElement,
 ): widget is FileDiffPlaceholderWidget {
     return widget.localName === PLACEHOLDER_NAME;
 }
 
 export function isCommentWidget(
-    widget: FileDiffWidget | HTMLElement
+    widget: FileDiffWidget | HTMLElement,
 ): widget is FileDiffCommentWidget {
     return isANewInlineCommentWidget(widget) || isPullRequestCommentWidget(widget);
 }
 
 export function isPullRequestCommentWidget(
-    widget: FileDiffWidget | HTMLElement
+    widget: FileDiffWidget | HTMLElement,
 ): widget is InlineCommentWidget {
     return widget.localName === PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME;
 }
 
 export function isANewInlineCommentWidget(
-    widget: FileDiffWidget | HTMLElement
+    widget: FileDiffWidget | HTMLElement,
 ): widget is NewInlineCommentFormWidget {
     return widget.localName === PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME;
 }

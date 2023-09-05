@@ -22,7 +22,7 @@ import { isAssignableLabel } from "./AssignableLabelTemplate";
 
 export const findLabelsWithIds = (
     items: ReadonlyArray<LazyboxItem>,
-    ids: ReadonlyArray<number>
+    ids: ReadonlyArray<number>,
 ): ReadonlyArray<LazyboxItem> => {
     return items.filter((item) => {
         if (!isAssignableLabel(item.value)) {
@@ -35,7 +35,7 @@ export const findLabelsWithIds = (
 
 export const findLabelMatchingValue = (
     items: ReadonlyArray<LazyboxItem>,
-    value: string
+    value: string,
 ): ReadonlyArray<LazyboxItem> => {
     return items.filter((item) => {
         if (!isAssignableLabel(item.value)) {

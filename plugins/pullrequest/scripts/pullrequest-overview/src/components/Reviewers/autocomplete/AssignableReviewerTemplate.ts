@@ -46,7 +46,7 @@ export const getSelectedReviewers = (selected_users: unknown): User[] => {
 
 export const getAssignableReviewerTemplate = (
     lit_html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem
+    item: LazyboxItem,
 ): HTMLTemplateResult => {
     const reviewer = getAssignableReviewer(item.value);
     if (!reviewer) {

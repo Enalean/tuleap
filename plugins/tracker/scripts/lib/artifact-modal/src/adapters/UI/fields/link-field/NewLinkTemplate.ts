@@ -29,7 +29,7 @@ import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 type MapOfClasses = Record<string, boolean>;
 
 export const getArtifactStatusBadgeClasses = (
-    artifact: LinkedArtifactPresenter | NewLink
+    artifact: LinkedArtifactPresenter | NewLink,
 ): MapOfClasses => {
     const classes: MapOfClasses = {
         "tlp-badge-outline": true,
@@ -58,7 +58,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
     const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
         host.new_links_presenter = host.controller.changeNewLinkType(
             link,
-            event.detail.new_link_type
+            event.detail.new_link_type,
         );
     };
 

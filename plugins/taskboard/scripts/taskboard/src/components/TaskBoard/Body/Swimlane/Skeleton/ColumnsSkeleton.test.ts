@@ -65,7 +65,7 @@ describe("ColumnsSkeleton", () => {
 
             expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
             expect(wrapper.findAllComponents(CardSkeleton)).toHaveLength(
-                expected_number_of_skeletons
+                expected_number_of_skeletons,
             );
         });
     });

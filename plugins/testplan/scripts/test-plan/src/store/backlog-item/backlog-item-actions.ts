@@ -35,7 +35,7 @@ export interface BacklogItemActions {
 }
 
 export async function loadBacklogItems(
-    context: ActionContext<BacklogItemState, RootState>
+    context: ActionContext<BacklogItemState, RootState>,
 ): Promise<void> {
     context.commit("beginLoadingBacklogItems");
     try {
@@ -61,13 +61,13 @@ export async function loadBacklogItems(
                                 has_test_definitions_loading_error: false,
                                 test_definitions: [],
                             };
-                        }
+                        },
                     );
                     context.commit("addBacklogItems", backlog_items);
 
                     return backlog_items;
                 },
-            }
+            },
         );
     } catch (e) {
         if (!isPermissionDenied(e)) {
@@ -81,7 +81,7 @@ export async function loadBacklogItems(
 
 export async function loadTestDefinitions(
     context: ActionContext<BacklogItemState, RootState>,
-    backlog_item: BacklogItem
+    backlog_item: BacklogItem,
 ): Promise<void> {
     context.commit("beginLoadingTestDefinition", backlog_item);
     try {
@@ -98,7 +98,7 @@ export async function loadTestDefinitions(
                             ...test,
                             is_just_refreshed:
                                 test.id === context.rootState.highlight_test_definition_id,
-                        })
+                        }),
                     );
                     const payload: AddTestDefinitionsToBacklogItemPayload = {
                         backlog_item,
@@ -108,7 +108,7 @@ export async function loadTestDefinitions(
 
                     return test_definitions;
                 },
-            }
+            },
         );
         context.commit("markTestDefinitionsAsBeingLoaded", backlog_item);
     } catch (e) {

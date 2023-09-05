@@ -56,7 +56,7 @@ export default {
             const is_part_of_comparisons = this.comparisons.some(
                 (comparison) =>
                     comparison.base_baseline_id === this.baseline.id ||
-                    comparison.compared_to_baseline_id === this.baseline.id
+                    comparison.compared_to_baseline_id === this.baseline.id,
             );
 
             return is_part_of_comparisons;
@@ -64,7 +64,7 @@ export default {
         title() {
             return this.is_disabled
                 ? this.$gettext(
-                      "The baseline cannot be deleted because it is associated to a comparison."
+                      "The baseline cannot be deleted because it is associated to a comparison.",
                   )
                 : "";
         },

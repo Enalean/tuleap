@@ -48,7 +48,7 @@ describe("StepController", () => {
         resetError = jest.spyOn(feedback_state, "resetError");
 
         jest.spyOn(execution_with_steps_updater, "updateStatusWithStepResults").mockImplementation(
-            () => {}
+            () => {},
         );
 
         angular.mock.module(execution_module);
@@ -100,7 +100,7 @@ describe("StepController", () => {
                 expect(ExecutionRestService.updateStepStatus).toHaveBeenCalledWith(
                     execution,
                     step_id,
-                    "passed"
+                    "passed",
                 );
                 expect(StepController.isPassed()).toBe(true);
                 expect(StepController.saving).toBe(false);
@@ -121,7 +121,7 @@ describe("StepController", () => {
                 StepController.step = { id: 67 };
                 StepController.step_result = { status: "failed" };
                 ExecutionRestService.updateStepStatus.mockReturnValue(
-                    $q.reject("This user cannot update the execution")
+                    $q.reject("This user cannot update the execution"),
                 );
 
                 StepController.setToPassed();
@@ -145,7 +145,7 @@ describe("StepController", () => {
                 expect(ExecutionRestService.updateStepStatus).toHaveBeenCalledWith(
                     execution,
                     step_id,
-                    "failed"
+                    "failed",
                 );
                 expect(StepController.isFailed()).toBe(true);
                 expect(StepController.saving).toBe(false);
@@ -166,7 +166,7 @@ describe("StepController", () => {
                 expect(ExecutionRestService.updateStepStatus).toHaveBeenCalledWith(
                     execution,
                     step_id,
-                    "blocked"
+                    "blocked",
                 );
                 expect(StepController.isBlocked()).toBe(true);
                 expect(StepController.saving).toBe(false);
@@ -187,7 +187,7 @@ describe("StepController", () => {
                 expect(ExecutionRestService.updateStepStatus).toHaveBeenCalledWith(
                     execution,
                     step_id,
-                    "notrun"
+                    "notrun",
                 );
                 expect(StepController.isNotRun()).toBe(true);
                 expect(StepController.saving).toBe(false);
@@ -199,11 +199,11 @@ describe("StepController", () => {
     describe("sanitizedContentWithEnhancedCodeBlocks() -", () => {
         it("should allow tlp-mermaid-block but still sanitizes the html", () => {
             const trusted_as_html = StepController.sanitizedContentWithEnhancedCodeBlocks(
-                "<tlp-mermaid-diagram>23<a href='\u2028javascript:alert(1)'>I am a dolphin too!</a></tlp-mermaid-diagram>"
+                "<tlp-mermaid-diagram>23<a href='\u2028javascript:alert(1)'>I am a dolphin too!</a></tlp-mermaid-diagram>",
             );
 
             expect(trusted_as_html.$$unwrapTrustedValue()).toBe(
-                "<tlp-mermaid-diagram>23<a>I am a dolphin too!</a></tlp-mermaid-diagram>"
+                "<tlp-mermaid-diagram>23<a>I am a dolphin too!</a></tlp-mermaid-diagram>",
             );
         });
     });

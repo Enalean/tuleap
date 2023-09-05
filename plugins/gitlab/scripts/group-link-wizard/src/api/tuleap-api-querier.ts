@@ -27,7 +27,7 @@ export const linkGitlabGroupWithTuleap = (
     server_url: string,
     token: string,
     create_branch_prefix: string,
-    allow_artifact_closure: boolean
+    allow_artifact_closure: boolean,
 ): ResultAsync<void, Fault> => {
     return postJSON(uri`/api/v1/gitlab_groups`, {
         project_id: current_project_id,

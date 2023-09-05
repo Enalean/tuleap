@@ -69,7 +69,7 @@ export const interpretCommonMark = async (host: TextAndFormat, content: string):
             host.is_in_preview_mode = true;
             host.has_error = true;
             host.error_message = String(fault);
-        }
+        },
     );
 };
 
@@ -87,7 +87,7 @@ export const isDisabled = (host: TextAndFormat): boolean =>
 
 export const getTextAndFormatTemplate = (
     host: TextAndFormat,
-    options: TextAndFormatOptions
+    options: TextAndFormatOptions,
 ): UpdateFunction<TextAndFormat> => html`
     <tuleap-artifact-modal-format-selector
         identifier="${options.identifier}"

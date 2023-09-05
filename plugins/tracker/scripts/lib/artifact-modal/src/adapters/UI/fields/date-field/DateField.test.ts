@@ -80,7 +80,7 @@ describe("DateField", () => {
 
         expect(form_element.classList.contains("tlp-form-element-error")).toBe(true);
         expect(
-            target.querySelector("[data-test=date-field-required-and-empty-error]")
+            target.querySelector("[data-test=date-field-required-and-empty-error]"),
         ).not.toBeNull();
     });
 
@@ -116,7 +116,7 @@ describe("DateField", () => {
             expect(event.type).toBe("value-changed");
             expect(event.detail.field_id).toBe(60);
             expect(event.detail.value).toBe(input_value);
-        }
+        },
     );
 
     it(`dispatches a bubbling "change" event when its inner field is changed

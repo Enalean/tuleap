@@ -90,7 +90,7 @@ export default class GitPermissions extends Vue {
             this.is_loading = true;
             const { repositories } = await getGitPermissions(
                 this.selectedProjectId,
-                this.selectedUgroupId
+                this.selectedUgroupId,
             );
             this.is_loaded = true;
             this.repositories = repositories;

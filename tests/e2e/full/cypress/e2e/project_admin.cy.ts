@@ -179,7 +179,7 @@ describe("Project admin", function () {
 
             cy.get("[data-test=project-admin-ugroups-members-list]").contains(
                 "SecondProjectAdministrator",
-                { timeout: 40000 }
+                { timeout: 40000 },
             );
         });
     });
@@ -223,7 +223,7 @@ context("Restricted users", function () {
         cy.get("[data-test=create-new-item]").click();
 
         cy.get(
-            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]",
         );
 
         cy.log("Remove the permission for restricted");

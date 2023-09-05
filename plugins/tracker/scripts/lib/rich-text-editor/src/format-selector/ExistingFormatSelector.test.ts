@@ -91,7 +91,7 @@ describe(`ExistingFormatSelector`, () => {
                 format_element.value = "text";
                 format_element.insertAdjacentHTML(
                     "beforeend",
-                    `<option value="text"></option><option value="html"></option><option value="commonmark"></option>`
+                    `<option value="text"></option><option value="html"></option><option value="commonmark"></option>`,
                 );
 
                 doc.body.append(format_element);
@@ -109,7 +109,7 @@ describe(`ExistingFormatSelector`, () => {
                 format_element.value = format;
                 format_element.dispatchEvent(new InputEvent("input"));
                 expect(editorOnFormatChanged).toHaveBeenCalledWith(format);
-            }
+            },
         );
     });
 });

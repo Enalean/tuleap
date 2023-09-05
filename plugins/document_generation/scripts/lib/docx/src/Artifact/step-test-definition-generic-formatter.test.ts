@@ -57,7 +57,7 @@ describe("step-test-definition-generic-formatter", () => {
 
         const enhanced_step_def_value = formatStepDefinitionField(
             "https://example.com",
-            field_value
+            field_value,
         );
 
         expect(enhanced_step_def_value).toEqual({

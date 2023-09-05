@@ -44,7 +44,7 @@ export class RichTextEditorFactory {
     private constructor(
         private readonly format_selector: FormatSelectorInterface,
         private readonly default_format: TextFieldFormat,
-        private readonly locale: string
+        private readonly locale: string,
     ) {
         const turndown_service = new TurndownService({ emDelimiter: "*" });
         this.markdown_converter = {
@@ -57,14 +57,14 @@ export class RichTextEditorFactory {
 
     public createRichTextEditor(
         textarea: HTMLTextAreaElement,
-        options: RichTextEditorOptions
+        options: RichTextEditorOptions,
     ): TextEditorInterface {
         const defaulted_options = defaultOptionsIfNotProvided(this.locale, options);
         const editor = new TextEditor(
             textarea,
             defaulted_options,
             this.markdown_converter,
-            this.markdown_renderer
+            this.markdown_renderer,
         );
         const selected_value =
             options.format_selectbox_value !== undefined
@@ -82,13 +82,13 @@ export class RichTextEditorFactory {
 
     public static forFlamingParrotWithFormatSelector(
         doc: Document,
-        locale: string
+        locale: string,
     ): RichTextEditorFactory {
         const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
         const builder = new FlamingParrotEditorAreaBuilder(
             document_adapter,
-            new EditorAreaRenderer(gettext_provider)
+            new EditorAreaRenderer(gettext_provider),
         );
         const default_format = document_adapter.getDefaultFormat();
         return new RichTextEditorFactory(builder, default_format, locale);
@@ -96,7 +96,7 @@ export class RichTextEditorFactory {
 
     public static forFlamingParrotWithExistingFormatSelector(
         doc: Document,
-        locale: string
+        locale: string,
     ): RichTextEditorFactory {
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
         const default_format = document_adapter.getDefaultFormat();
@@ -107,7 +107,7 @@ export class RichTextEditorFactory {
     public static forBurningParrotWithExistingFormatSelector(
         doc: Document,
         locale: string,
-        default_format: TextFieldFormat
+        default_format: TextFieldFormat,
     ): RichTextEditorFactory {
         const format_selector = new ExistingFormatSelector(doc);
         return new RichTextEditorFactory(format_selector, default_format, locale);

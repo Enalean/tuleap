@@ -112,7 +112,7 @@ describe("step-test-definition-formatter", () => {
 
         const format_step_def_builder = buildStepDefinitionEnhancedWithResultsFunction(
             artifact,
-            execution
+            execution,
         );
 
         const field_value = {
@@ -239,7 +239,7 @@ describe("step-test-definition-formatter", () => {
 
         const format_step_def_builder = buildStepDefinitionEnhancedWithResultsFunction(
             artifact,
-            execution
+            execution,
         );
 
         const field_value = {

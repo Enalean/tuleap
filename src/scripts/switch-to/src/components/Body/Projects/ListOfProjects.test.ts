@@ -33,7 +33,7 @@ describe("ListOfProjects", () => {
             state: (): State =>
                 ({
                     projects: [] as Project[],
-                } as State),
+                }) as State,
             getters: {
                 filtered_projects: (): Project[] => [],
                 is_in_search_mode: (): boolean => false,
@@ -59,7 +59,7 @@ describe("ListOfProjects", () => {
                         { project_uri: "/b" } as Project,
                         { project_uri: "/c" } as Project,
                     ],
-                } as State),
+                }) as State,
             getters: {
                 filtered_projects: (): Project[] => [
                     { project_uri: "/a" } as Project,
@@ -91,7 +91,7 @@ describe("ListOfProjects", () => {
                         { project_uri: "/b" } as Project,
                         { project_uri: "/c" } as Project,
                     ],
-                } as State),
+                }) as State,
             getters: {
                 filtered_projects: (): Project[] => [],
                 is_in_search_mode: (): boolean => true,

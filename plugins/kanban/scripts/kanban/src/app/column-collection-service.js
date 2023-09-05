@@ -53,7 +53,7 @@ function ColumnCollectionService(SharedPropertiesService) {
                 columns[index_column_tmp] = columns.splice(
                     index,
                     1,
-                    getColumn(columns_ids[index])
+                    getColumn(columns_ids[index]),
                 )[0];
             }
         });

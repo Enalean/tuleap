@@ -38,7 +38,7 @@ export const FileUploader = (): FinishFileUpload => ({
                 return error instanceof Error
                     ? Fault.fromError(error)
                     : Fault.fromMessage("Error during file upload");
-            }
+            },
         );
     },
 });

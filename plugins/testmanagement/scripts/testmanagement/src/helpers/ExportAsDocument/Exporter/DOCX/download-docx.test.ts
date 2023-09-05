@@ -54,7 +54,7 @@ describe("download-docx", () => {
                 locale: "en-US",
                 timezone: "UTC",
             },
-            () => Promise.resolve([])
+            () => Promise.resolve([]),
         );
 
         expect(trigger_download_spy).toHaveBeenCalled();

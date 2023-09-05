@@ -78,7 +78,9 @@
         top: -7px;
         left: 3px;
         transform: rotate(-45deg);
-        transition: transform ease-in-out 100ms, opacity ease-in-out 100ms;
+        transition:
+            transform ease-in-out 100ms,
+            opacity ease-in-out 100ms;
         opacity: 0.5;
         font-size: 10px;
     }

@@ -45,7 +45,7 @@ function EditKanbanCtrl(
     RestErrorService,
     FilterTrackerReportService,
     modal_instance,
-    rebuild_scrollbars
+    rebuild_scrollbars,
 ) {
     const self = this;
     self.kanban = SharedPropertiesService.getKanban();
@@ -78,14 +78,14 @@ function EditKanbanCtrl(
         "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
         {
             trackerLink: info_tracker_link,
-        }
+        },
     );
 
     self.column_config_cannot_manage_info = gettextCatalog.getString(
         "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
         {
             trackerLink: info_tracker_link,
-        }
+        },
     );
 
     self.old_kanban_label = self.kanban.label;
@@ -125,7 +125,7 @@ function EditKanbanCtrl(
         self.initListenModal();
         self.tracker_reports = FilterTrackerReportService.getTrackerReports();
         self.selectable_report_ids = FilterTrackerReportService.getSelectableReports().map(
-            ({ id }) => id
+            ({ id }) => id,
         );
     }
 
@@ -165,7 +165,7 @@ function EditKanbanCtrl(
             (response) => {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
-            }
+            },
         );
     }
 
@@ -212,7 +212,7 @@ function EditKanbanCtrl(
             function (response) {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
-            }
+            },
         );
     }
 
@@ -263,7 +263,7 @@ function EditKanbanCtrl(
                 function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
-                }
+                },
             );
         } else {
             self.adding_column = true;
@@ -283,7 +283,7 @@ function EditKanbanCtrl(
             function (response) {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
-            }
+            },
         );
     }
 
@@ -310,7 +310,7 @@ function EditKanbanCtrl(
                 function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
-                }
+                },
             );
         } else {
             column_to_remove.confirm_delete = true;
@@ -328,7 +328,7 @@ function EditKanbanCtrl(
     function updateWidgetTitle(label) {
         if (SharedPropertiesService.getUserIsOnWidget()) {
             var kanban_widget = element(
-                '.dashboard-widget[data-widget-id="' + SharedPropertiesService.getWidgetId() + '"]'
+                '.dashboard-widget[data-widget-id="' + SharedPropertiesService.getWidgetId() + '"]',
             );
             var kanban_title = kanban_widget.find(".dashboard-widget-header-title");
             kanban_title[0].textContent = label;

@@ -44,7 +44,7 @@ describe("execution-attachments-component", () => {
                 $rootScope,
                 _$q_,
                 _ExecutionService_,
-                _ExecutionRestService_
+                _ExecutionRestService_,
             ) => {
                 $q = _$q_;
                 $scope = $rootScope.$new();
@@ -73,9 +73,9 @@ describe("execution-attachments-component", () => {
                     {
                         execution,
                         isInCommentMode: true,
-                    }
+                    },
                 );
-            }
+            },
         );
     });
 
@@ -95,7 +95,7 @@ describe("execution-attachments-component", () => {
 
             expect(file_input.addEventListener).toHaveBeenCalledWith(
                 "change",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 
@@ -116,7 +116,7 @@ describe("execution-attachments-component", () => {
 
             expect(file_input.addEventListener).not.toHaveBeenCalledWith(
                 "change",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
     });
@@ -150,10 +150,10 @@ describe("execution-attachments-component", () => {
             };
 
             jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
-                $q.when(new_file)
+                $q.when(new_file),
             );
             jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(attachments_uploader, "processUpload");
 
@@ -180,13 +180,13 @@ describe("execution-attachments-component", () => {
                     progress: 0,
                     upload_error_message: "",
                     upload_url: "/upload-me.here",
-                }
+                },
             );
             expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
                 file_to_attach,
                 new_file.upload_href,
                 expect.any(Function),
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 
@@ -198,10 +198,10 @@ describe("execution-attachments-component", () => {
             };
 
             jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
-                $q.when(new_file)
+                $q.when(new_file),
             );
             jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(attachments_uploader, "processUpload");
 
@@ -228,19 +228,19 @@ describe("execution-attachments-component", () => {
                     progress: 100,
                     upload_error_message: "",
                     upload_url: null,
-                }
+                },
             );
             expect(attachments_uploader.processUpload).not.toHaveBeenCalled();
         });
 
         it("forbids to upload two files with the same name for the same comment", () => {
             jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
-                $q.when({ id: 101 })
+                $q.when({ id: 101 }),
             );
             jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea");
             jest.spyOn(
                 ExecutionService,
-                "doesFileAlreadyExistInUploadedAttachments"
+                "doesFileAlreadyExistInUploadedAttachments",
             ).mockReturnValue(true);
             jest.spyOn(attachments_uploader, "processUpload");
 
@@ -285,7 +285,7 @@ describe("execution-attachments-component", () => {
             controller.abortUpload(file_uploading);
 
             expect(attachments_uploader.abortFileUpload).toHaveBeenCalledWith(
-                file_uploading.upload_url
+                file_uploading.upload_url,
             );
             expect(execution.uploaded_files_through_attachment_area).toHaveLength(0);
         });
@@ -363,7 +363,7 @@ describe("execution-attachments-component", () => {
                 {
                     progress: 100,
                     upload_error_message: "Upload is fucked up",
-                }
+                },
             );
         });
     });
@@ -380,7 +380,7 @@ describe("execution-attachments-component", () => {
 
             expect(ExecutionService.removeFileUploadedThroughAttachmentArea).toHaveBeenCalledWith(
                 execution,
-                110
+                110,
             );
             expect(popover_110.destroy).toHaveBeenCalled();
         });
@@ -392,7 +392,7 @@ describe("execution-attachments-component", () => {
                 $q.reject({
                     code: 400,
                     message: "File too big",
-                })
+                }),
             );
 
             controller.$onInit();
@@ -433,10 +433,10 @@ describe("execution-attachments-component", () => {
             };
 
             jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
-                $q.when(new_file)
+                $q.when(new_file),
             );
             jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea").mockImplementation(
-                () => {}
+                () => {},
             );
             jest.spyOn(attachments_uploader, "processUpload");
 
@@ -459,14 +459,14 @@ describe("execution-attachments-component", () => {
                     progress: 0,
                     upload_error_message: "",
                     upload_url: "/upload-me.here",
-                }
+                },
             );
 
             expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
                 file_to_attach,
                 new_file.upload_href,
                 expect.any(Function),
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 

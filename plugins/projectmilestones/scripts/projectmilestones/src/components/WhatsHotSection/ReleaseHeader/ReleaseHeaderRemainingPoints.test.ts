@@ -32,7 +32,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseHeaderRemainingPoints>> {
         store = createStoreMock(store_options);
 
@@ -72,10 +72,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("110.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-success");
             expect(remaining_point_text.classes()).not.toContain(
-                "release-remaining-value-disabled"
+                "release-remaining-value-disabled",
             );
             expect(remaining_point_value.classes()).not.toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
 
             expect(remaining_point_text.text()).toBe("-1");
@@ -100,7 +100,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("No remaining effort defined.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_point_text.text()).toBe("0");
         });
@@ -124,7 +124,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("50.00%");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-success"
+                "release-remaining-progress-value-success",
             );
             expect(remaining_point_text.text()).toBe("5");
         });
@@ -148,10 +148,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("100.00%");
             expect(remaining_point_text.classes()).not.toContain("release-remaining-value-success");
             expect(remaining_point_text.classes()).not.toContain(
-                "release-remaining-value-disabled"
+                "release-remaining-value-disabled",
             );
             expect(remaining_point_value.classes()).not.toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_point_text.text()).toBe("0");
         });
@@ -175,7 +175,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("No initial effort defined.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_point_text.text()).toBe("5");
         });
@@ -199,7 +199,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("Initial effort equal at 0.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_point_text.text()).toBe("5");
         });
@@ -221,11 +221,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toBe(
-                "Initial effort (10) should be bigger or equal to remaining effort (100)."
+                "Initial effort (10) should be bigger or equal to remaining effort (100).",
             );
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_point_text.text()).toBe("100");
         });
@@ -249,10 +249,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(points_remaining_value.classes("release-remaining-value-disabled")).toBe(false);
 
             expect(
-                points_remaining_progress.classes("release-remaining-progress-value-success")
+                points_remaining_progress.classes("release-remaining-progress-value-success"),
             ).toBe(true);
             expect(
-                points_remaining_progress.classes("release-remaining-progress-value-disabled")
+                points_remaining_progress.classes("release-remaining-progress-value-disabled"),
             ).toBe(false);
 
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");

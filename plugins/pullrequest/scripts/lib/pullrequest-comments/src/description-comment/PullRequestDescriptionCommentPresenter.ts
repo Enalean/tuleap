@@ -35,7 +35,7 @@ export interface PullRequestDescriptionCommentPresenter {
 export const PullRequestDescriptionCommentPresenter = {
     fromPullRequestWithUpdatedDescription: (
         presenter: PullRequestDescriptionCommentPresenter,
-        pull_request: PullRequest
+        pull_request: PullRequest,
     ): PullRequestDescriptionCommentPresenter => ({
         ...presenter,
         content: pull_request.description,

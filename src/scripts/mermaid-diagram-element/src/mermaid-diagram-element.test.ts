@@ -63,7 +63,7 @@ describe("MermaidDiagramElement", () => {
         render.mockReset();
         render.mockImplementation(
             (id: string, txt: string): Promise<RenderResult> =>
-                Promise.resolve({ svg: `<svg>${txt}</svg>` })
+                Promise.resolve({ svg: `<svg>${txt}</svg>` }),
         );
     });
 

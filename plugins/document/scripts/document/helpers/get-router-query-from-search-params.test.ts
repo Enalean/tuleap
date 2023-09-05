@@ -83,8 +83,8 @@ describe("getRouterQueryFromSearchParams", () => {
         "should return the url parameters based from search parameters (%s, %s)",
         (params, expected) => {
             expect(getRouterQueryFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
-                expected
+                expected,
             );
-        }
+        },
     );
 });

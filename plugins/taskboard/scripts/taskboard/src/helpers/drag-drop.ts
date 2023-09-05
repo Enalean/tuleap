@@ -69,7 +69,7 @@ export function checkCellAcceptsDrop(store: Store<RootState>, payload: HandleDra
 function isDropAcceptedInTarget(
     dropped_card: HTMLElement,
     target_cell: HTMLElement,
-    source_cell: HTMLElement
+    source_cell: HTMLElement,
 ): boolean {
     if (isDraggedOverTheSourceCell(target_cell, source_cell)) {
         return true; // Allow reordering

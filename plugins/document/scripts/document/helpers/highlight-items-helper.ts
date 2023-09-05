@@ -51,7 +51,7 @@ function applyHighlightForbiddenClass(closest_row: HTMLElement): void {
     } else {
         closest_row.classList.add(
             "document-tree-item-highlighted",
-            "document-tree-item-hightlighted-forbidden"
+            "document-tree-item-hightlighted-forbidden",
         );
     }
 }

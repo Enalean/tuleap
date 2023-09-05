@@ -19,7 +19,7 @@
 
 export const reopenFieldsetsWithInvalidInput = (form: HTMLFormElement): void => {
     const closed_fieldsets_that_contain_invalid_elements = form.querySelectorAll(
-        "fieldset:invalid > .toggler-hide-noajax"
+        "fieldset:invalid > .toggler-hide-noajax",
     );
     for (const fieldset of closed_fieldsets_that_contain_invalid_elements) {
         if (fieldset instanceof HTMLElement) {

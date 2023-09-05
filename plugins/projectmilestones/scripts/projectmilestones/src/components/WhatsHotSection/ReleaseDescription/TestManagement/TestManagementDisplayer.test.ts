@@ -35,7 +35,7 @@ describe("TestManagementDisplayer", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<TestManagementDisplayer>> {
         store = createStoreMock(store_options);
 

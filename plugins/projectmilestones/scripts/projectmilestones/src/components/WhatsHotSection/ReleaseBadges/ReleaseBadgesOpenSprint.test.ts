@@ -36,7 +36,7 @@ describe("ReleaseBadgesOpenSprint", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseBadgesOpenSprint>> {
         store = createStoreMock(store_options);
 
@@ -90,7 +90,7 @@ describe("ReleaseBadgesOpenSprint", () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.get("[data-test=sprint-label]").attributes("class")).toContain(
-                "tlp-badge-outline"
+                "tlp-badge-outline",
             );
         });
 
@@ -122,7 +122,7 @@ describe("ReleaseBadgesOpenSprint", () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.get("[data-test=sprint-label]").attributes("class")).not.toContain(
-                "tlp-badge-outline"
+                "tlp-badge-outline",
             );
         });
     });

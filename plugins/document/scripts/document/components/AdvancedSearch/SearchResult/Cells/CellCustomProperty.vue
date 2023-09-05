@@ -51,19 +51,19 @@ const is_string = ref(isString(property));
 const is_list = ref(isList(property));
 
 function isDate(
-    property: CustomPropertySearchResult | null
+    property: CustomPropertySearchResult | null,
 ): property is CustomPropertySearchResultDate {
     return property !== null && property.type === "date";
 }
 
 function isString(
-    property: CustomPropertySearchResult | null
+    property: CustomPropertySearchResult | null,
 ): property is CustomPropertySearchResultString {
     return property !== null && property.type === "string";
 }
 
 function isList(
-    property: CustomPropertySearchResult | null
+    property: CustomPropertySearchResult | null,
 ): property is CustomPropertySearchResultList {
     return property !== null && property.type === "list";
 }

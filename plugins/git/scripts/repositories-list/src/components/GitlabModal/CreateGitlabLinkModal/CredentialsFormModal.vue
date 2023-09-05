@@ -153,7 +153,7 @@ export default class CredentialsFormModal extends Vue {
     handleError(): void {
         this.resetMessages();
         this.error_message = this.$gettext(
-            "Cannot connect to GitLab server, please check your credentials."
+            "Cannot connect to GitLab server, please check your credentials.",
         );
     }
 
@@ -168,7 +168,7 @@ export default class CredentialsFormModal extends Vue {
 
         if (credentialsAreEmpty(credentials)) {
             this.error_message = this.$gettext(
-                "You must provide a valid GitLab server and user API token"
+                "You must provide a valid GitLab server and user API token",
             );
             return;
         }
@@ -184,7 +184,7 @@ export default class CredentialsFormModal extends Vue {
 
             if (this.gitlab_projects.length === 0) {
                 this.empty_message = this.$gettext(
-                    "No repository is available with your GitLab account"
+                    "No repository is available with your GitLab account",
                 );
                 return;
             }

@@ -28,7 +28,7 @@ interface RecursiveGetProjectRepositories {
 
 export const getProjectRepositories = (
     project_id: number,
-    branch_name_preview: string
+    branch_name_preview: string,
 ): ResultAsync<readonly GitRepository[], Fault> =>
     getAllJSON<GitRepository, RecursiveGetProjectRepositories>(
         uri`/api/v1/projects/${project_id}/git`,
@@ -42,7 +42,7 @@ export const getProjectRepositories = (
                 }),
             },
             getCollectionCallback: (payload) => payload.repositories,
-        }
+        },
     );
 
 export interface GitCreateBranchResponse {
@@ -52,7 +52,7 @@ export interface GitCreateBranchResponse {
 export const postGitBranch = (
     repository_id: number,
     branch_name: string,
-    reference: string
+    reference: string,
 ): ResultAsync<GitCreateBranchResponse, Fault> =>
     postJSON<GitCreateBranchResponse>(uri`/api/v1/git/${repository_id}/branches`, {
         branch_name,
@@ -61,7 +61,7 @@ export const postGitBranch = (
 
 export const postPullRequestOnDefaultBranch = (
     repository: GitRepository,
-    branch_name: string
+    branch_name: string,
 ): ResultAsync<unknown, Fault> =>
     postJSON(uri`/api/v1/pull_requests`, {
         repository_id: repository.id,

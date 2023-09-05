@@ -45,12 +45,12 @@ export const RecentlyViewedArtifactGroup = {
 
     fromUserHistory: (
         link_verifier: VerifyIsAlreadyLinked,
-        linkable_artifacts: readonly LinkableArtifact[]
+        linkable_artifacts: readonly LinkableArtifact[],
     ): GroupOfItems => ({
         label: getRecentlyViewedArtifactGroupLabel(),
         empty_message: getNoResultFoundEmptyState(),
         items: linkable_artifacts.map((artifact) =>
-            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact),
         ),
         is_loading: false,
         footer_message: "",

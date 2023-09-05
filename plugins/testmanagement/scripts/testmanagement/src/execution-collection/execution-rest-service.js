@@ -49,17 +49,17 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
         return $q.when(
             get(
                 encodeURI(
-                    `/api/v1/testmanagement_campaigns/${campaign_id}/testmanagement_executions`
+                    `/api/v1/testmanagement_campaigns/${campaign_id}/testmanagement_executions`,
                 ),
                 {
                     params: { limit, offset },
-                }
+                },
             ).then((response) => {
                 const total = response.headers.get("X-PAGINATION-SIZE");
                 return response.json().then((executions) => {
                     return { results: executions, total };
                 });
-            })
+            }),
         );
     }
 
@@ -72,7 +72,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                     definition_id,
                     status,
                 }),
-            }).then((response) => response.json())
+            }).then((response) => response.json()),
         );
     }
 
@@ -81,7 +81,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
         new_status,
         results,
         uploaded_file_ids,
-        deleted_file_ids
+        deleted_file_ids,
     ) {
         let param = {
             status: new_status,
@@ -104,7 +104,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                     }
 
                     return $q.reject(exception);
-                })
+                }),
         );
     }
 
@@ -113,7 +113,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
             patch(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`), {
                 headers,
                 body: JSON.stringify({ force_use_latest_definition_version: true }),
-            })
+            }),
         );
     }
 
@@ -125,7 +125,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                     uuid: SharedPropertiesService.getUUID(),
                     remove_from: old_execution_id,
                 }),
-            })
+            }),
         );
     }
 
@@ -135,7 +135,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
 
     function getArtifactById(artifact_id) {
         return $q.when(
-            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json())
+            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json()),
         );
     }
 
@@ -173,7 +173,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                 body: JSON.stringify({ issue_id, comment }),
             }).catch((exception) => {
                 return exception.response.json().then((json) => $q.reject(json.error));
-            })
+            }),
         );
     }
 
@@ -192,15 +192,15 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                 return response.json().then(({ collection }) => {
                     return { collection, total };
                 });
-            })
+            }),
         );
     }
 
     function getExecution(execution_id) {
         return $q.when(
             get(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`)).then((response) =>
-                response.json()
-            )
+                response.json(),
+            ),
         );
     }
 
@@ -212,7 +212,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                 body: JSON.stringify({ steps_results: [{ step_id, status: step_status }] }),
             }).catch((exception) => {
                 return exception.response.json().then((json) => $q.reject(json.error));
-            })
+            }),
         );
     }
 
@@ -229,7 +229,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                 .then((response) => response.json())
                 .catch((exception) => {
                     return exception.response.json().then((json) => $q.reject(json.error));
-                })
+                }),
         );
     }
 }

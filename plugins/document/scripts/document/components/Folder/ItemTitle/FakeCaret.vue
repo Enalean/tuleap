@@ -42,8 +42,8 @@ function is_item_in_current_folder(): boolean {
 function is_item_sibling_of_a_folder(): boolean {
     return Boolean(
         folder_content.value.find(
-            (item) => item.parent_id === current_folder.value.id && isFolder(item)
-        )
+            (item) => item.parent_id === current_folder.value.id && isFolder(item),
+        ),
     );
 }
 

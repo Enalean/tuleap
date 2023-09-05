@@ -28,7 +28,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
     function createWrapper(
         state: RootState,
         backlog_item: BacklogItem,
-        should_empty_state_be_displayed: boolean
+        should_empty_state_be_displayed: boolean,
     ): VueWrapper<InstanceType<typeof AddTestButtonWithAdditionalActionsMenu>> {
         return shallowMount(AddTestButtonWithAdditionalActionsMenu, {
             global: {
@@ -45,7 +45,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
         const wrapper = await createWrapper(
             { milestone_id: 69, testdefinition_tracker_id: null } as RootState,
             { id: 123, can_add_a_test: false } as BacklogItem,
-            false
+            false,
         );
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
@@ -55,7 +55,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
         const wrapper = await createWrapper(
             { milestone_id: 69, testdefinition_tracker_id: null } as RootState,
             { id: 123, can_add_a_test: true } as BacklogItem,
-            false
+            false,
         );
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
@@ -70,7 +70,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
                 can_add_a_test: true,
                 is_expanded: true,
             } as BacklogItem,
-            false
+            false,
         );
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
@@ -86,7 +86,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
                 can_add_a_test: true,
                 is_expanded: true,
             } as BacklogItem,
-            false
+            false,
         );
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
@@ -103,7 +103,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
                 can_add_a_test: true,
                 is_expanded: true,
             } as BacklogItem,
-            false
+            false,
         );
 
         expect(wrapper.element).toMatchSnapshot();

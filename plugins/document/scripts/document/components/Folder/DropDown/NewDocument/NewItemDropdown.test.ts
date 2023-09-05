@@ -65,7 +65,7 @@ describe("NewItemDropdown", function () {
             });
 
             expect(wrapper.findAll("*")).toHaveLength(0);
-        }
+        },
     );
 
     it("should not output anything if folder is not writable", function () {

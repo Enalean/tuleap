@@ -36,7 +36,7 @@ describe("ReleaseBadgesAllSprints", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseBadgesAllSprints>> {
         store = createStoreMock(store_options);
 

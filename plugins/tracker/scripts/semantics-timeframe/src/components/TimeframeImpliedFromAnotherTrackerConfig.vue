@@ -45,7 +45,7 @@
                 <i class="fa-solid fa-life-ring"></i>
                 {{
                     $gettext(
-                        "You can't find the tracker you are looking for? Make sure it has an artifact link field, and that its semantic is not inherited from another tracker."
+                        "You can't find the tracker you are looking for? Make sure it has an artifact link field, and that its semantic is not inherited from another tracker.",
                     )
                 }}
             </p>
@@ -99,9 +99,9 @@ const missing_artifact_link_field_error_message = computed((): string => {
 
     return gettext_provider.interpolate(
         gettext_provider.$gettext(
-            `Please <a href="%{ tracker_fields_admin_url }">add an artifact link field</a> to your tracker first.`
+            `Please <a href="%{ tracker_fields_admin_url }">add an artifact link field</a> to your tracker first.`,
         ),
-        { tracker_fields_admin_url }
+        { tracker_fields_admin_url },
     );
 });
 </script>

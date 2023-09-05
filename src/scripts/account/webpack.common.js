@@ -37,7 +37,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/core/account/"
+        "/assets/core/account/",
     ),
     externals: {
         tlp: "tlp",

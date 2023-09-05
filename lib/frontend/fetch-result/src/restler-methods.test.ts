@@ -83,7 +83,7 @@ describe(`restler-methods`, () => {
     describe(`head()`, () => {
         const callHead = (
             uri: EncodedURI,
-            options?: OptionsWithAutoEncodedParameters
+            options?: OptionsWithAutoEncodedParameters,
         ): ResponseResult => buildHead(ResponseRetriever(fetcher))(uri, options);
 
         it(`will encode the given URI with the given parameters
@@ -95,7 +95,7 @@ describe(`restler-methods`, () => {
 
             expect(result.value).toBe(success_response);
             expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false"
+                "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false",
             );
 
             const request_init = fetcher.getRequestInit(0);
@@ -110,7 +110,7 @@ describe(`restler-methods`, () => {
             await callHead(uri);
 
             expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/result-fetcher-test/d%C3%A9mo"
+                "https://example.com/result-fetcher-test/d%C3%A9mo",
             );
         });
     });
@@ -132,7 +132,7 @@ describe(`restler-methods`, () => {
 
             expect(result.value).toBe(success_response);
             expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/result-fetcher-test/d%C3%A9mo"
+                "https://example.com/result-fetcher-test/d%C3%A9mo",
             );
             const request_init = fetcher.getRequestInit(0);
             if (request_init === undefined) {
@@ -140,7 +140,7 @@ describe(`restler-methods`, () => {
             }
             expect(request_init.method).toBe(expected_http_method);
             expect(request_init.credentials).toBe("same-origin");
-        }
+        },
     );
 
     function* provider(): Generator<[PutMethod | PatchMethod | PostMethod]> {
@@ -159,7 +159,7 @@ describe(`restler-methods`, () => {
             const result = await buildSendJSON(ResponseRetriever(fetcher), expected_http_method)(
                 uri,
                 { params },
-                json_request_payload
+                json_request_payload,
             );
             if (!result.isOk()) {
                 throw Error("Expected an Ok");
@@ -167,7 +167,7 @@ describe(`restler-methods`, () => {
 
             expect(result.value).toBe(success_response);
             expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false"
+                "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false",
             );
 
             const request_init = fetcher.getRequestInit(0);
@@ -182,7 +182,7 @@ describe(`restler-methods`, () => {
             }
             expect(request_init.headers.get("Content-Type")).toBe("application/json");
             expect(request_init.body).toBe(`{"request_id":196,"request_value":"Sphindus"}`);
-        }
+        },
     );
 
     describe(`JSON-reading methods`, () => {
@@ -197,7 +197,7 @@ describe(`restler-methods`, () => {
         describe(`getJSON()`, () => {
             const callGet = <TypeOfJSONPayload>(
                 uri: EncodedURI,
-                options?: OptionsWithAutoEncodedParameters
+                options?: OptionsWithAutoEncodedParameters,
             ): ResultAsync<TypeOfJSONPayload, Fault> =>
                 buildGetJSON(ResponseRetriever(fetcher))(uri, options);
 
@@ -211,7 +211,7 @@ describe(`restler-methods`, () => {
                 expect(result.value).toBe(json_response_payload);
                 expect(result.value.id).toBe(ID);
                 expect(fetcher.getRequestInfo(0)).toBe(
-                    "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false"
+                    "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false",
                 );
 
                 const request_init = fetcher.getRequestInit(0);
@@ -226,7 +226,7 @@ describe(`restler-methods`, () => {
                 await callGet(uri);
 
                 expect(fetcher.getRequestInfo(0)).toBe(
-                    "https://example.com/result-fetcher-test/d%C3%A9mo"
+                    "https://example.com/result-fetcher-test/d%C3%A9mo",
                 );
             });
         });
@@ -240,7 +240,7 @@ describe(`restler-methods`, () => {
             async (expected_http_method) => {
                 const result = await buildSendAndReceiveJSON(
                     ResponseRetriever(fetcher),
-                    expected_http_method
+                    expected_http_method,
                 )<JSONResponsePayload>(uri, json_request_payload);
                 if (!result.isOk()) {
                     throw Error("Expected an Ok");
@@ -249,7 +249,7 @@ describe(`restler-methods`, () => {
                 expect(result.value).toBe(json_response_payload);
                 expect(result.value.id).toBe(ID);
                 expect(fetcher.getRequestInfo(0)).toBe(
-                    "https://example.com/result-fetcher-test/d%C3%A9mo"
+                    "https://example.com/result-fetcher-test/d%C3%A9mo",
                 );
 
                 const request_init = fetcher.getRequestInit(0);
@@ -265,7 +265,7 @@ describe(`restler-methods`, () => {
                 }
                 expect(request_init.headers.get("Content-Type")).toBe("application/json");
                 expect(request_init.body).toBe(`{"request_id":196,"request_value":"Sphindus"}`);
-            }
+            },
         );
     });
 
@@ -279,14 +279,14 @@ describe(`restler-methods`, () => {
                 buildSendJSON(ResponseRetriever(fetcher), POST_METHOD)(
                     uri,
                     {},
-                    json_request_payload
+                    json_request_payload,
                 ),
         ];
         yield [
             (): JSONResult =>
                 buildSendAndReceiveJSON(ResponseRetriever(fetcher), PATCH_METHOD)(
                     uri,
-                    json_request_payload
+                    json_request_payload,
                 ),
         ];
     }
@@ -307,6 +307,6 @@ describe(`restler-methods`, () => {
                 throw Error("Expected an Err");
             }
             expect(isTuleapAPIFault(result.error)).toBe(true);
-        }
+        },
     );
 });

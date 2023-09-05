@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_split_feature_flag_enabled = vue_mount_point.dataset.isSplitFeatureFlagEnabled === "1";
     Vue.use(Vuex);
     await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import("../po/" + getPOFileFromLocale(locale))
+        import("../po/" + getPOFileFromLocale(locale)),
     );
     Vue.use(VueDOMPurifyHTML);
 

@@ -24,7 +24,7 @@ export const DescriptionCommentPresenterBuilder = {
     fromPullRequestAndItsAuthor: (
         pull_request: PullRequest,
         author: User,
-        project_id: number
+        project_id: number,
     ): PullRequestDescriptionCommentPresenter => ({
         author: {
             id: author.id,

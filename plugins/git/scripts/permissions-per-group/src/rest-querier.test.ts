@@ -48,7 +48,7 @@ describe("API querier", () => {
                         selected_ugroup_id: "",
                         action: "permission-per-group",
                     },
-                })
+                }),
             );
 
             expect(result).toEqual({ repositories: [{ name: "repo" }] });

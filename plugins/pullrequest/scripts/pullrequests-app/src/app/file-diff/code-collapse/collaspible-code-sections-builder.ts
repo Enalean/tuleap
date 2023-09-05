@@ -35,16 +35,16 @@ export interface SynchronizedCollapsibleSections {
 
 export function isThereACommentOnThisLine(
     file_line: FileLine,
-    inline_comments: readonly PullRequestInlineCommentPresenter[]
+    inline_comments: readonly PullRequestInlineCommentPresenter[],
 ): boolean {
     return Boolean(
-        inline_comments.find((comment) => comment.file.unidiff_offset === file_line.unidiff_offset)
+        inline_comments.find((comment) => comment.file.unidiff_offset === file_line.unidiff_offset),
     );
 }
 
 export function getUnchangedSections(
     code: readonly FileLine[],
-    inline_comments: readonly PullRequestInlineCommentPresenter[]
+    inline_comments: readonly PullRequestInlineCommentPresenter[],
 ): CollapsibleSection[] {
     const collapsible_sections = [];
 
@@ -97,7 +97,7 @@ export function getUnchangedSections(
 
 export function getPaddedCollapsibleSections(
     collapsible_sections: CollapsibleSection[],
-    file_length: number
+    file_length: number,
 ): CollapsibleSection[] {
     const sections_to_collapse: CollapsibleSection[] = [];
 
@@ -137,7 +137,7 @@ export function getPaddedCollapsibleSections(
 
 function getDiffSideBySideSection(
     line_start: UnMovedFileLine,
-    line_end: UnMovedFileLine
+    line_end: UnMovedFileLine,
 ): SynchronizedCollapsibleSections {
     return {
         left: {
@@ -153,13 +153,13 @@ function getDiffSideBySideSection(
 
 export function getCollapsibleSectionsSideBySide(
     code: readonly FileLine[],
-    comments: readonly PullRequestInlineCommentPresenter[]
+    comments: readonly PullRequestInlineCommentPresenter[],
 ): SynchronizedCollapsibleSections[] {
     const synchronized_sections: SynchronizedCollapsibleSections[] = [];
 
     getCollapsibleCodeSections(code, comments).forEach((section) => {
         const line_end: FileLine | undefined = code.find(
-            (line) => line.unidiff_offset === section.end
+            (line) => line.unidiff_offset === section.end,
         );
         if (!isAnUnmovedLine(line_end)) {
             return;
@@ -169,13 +169,13 @@ export function getCollapsibleSectionsSideBySide(
             synchronized_sections.push(
                 getDiffSideBySideSection(
                     { old_offset: 0, new_offset: 0, unidiff_offset: 0, content: "" },
-                    line_end
-                )
+                    line_end,
+                ),
             );
         }
 
         const line_start: FileLine | undefined = code.find(
-            (line) => line.unidiff_offset === section.start
+            (line) => line.unidiff_offset === section.start,
         );
         if (!isAnUnmovedLine(line_start)) {
             return;
@@ -189,10 +189,10 @@ export function getCollapsibleSectionsSideBySide(
 
 export function getCollapsibleCodeSections(
     code: readonly FileLine[],
-    inline_comments: readonly PullRequestInlineCommentPresenter[]
+    inline_comments: readonly PullRequestInlineCommentPresenter[],
 ): CollapsibleSection[] {
     return getPaddedCollapsibleSections(
         getUnchangedSections(code, inline_comments),
-        code.length - 1
+        code.length - 1,
     );
 }

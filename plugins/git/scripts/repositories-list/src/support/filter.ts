@@ -33,19 +33,19 @@ function createHierarchy(hierarchy: Folder, path_part: string): Folder {
 }
 
 export function sortByLabelAlphabetically(
-    items: Array<Folder | Repository | FormattedGitLabRepository>
+    items: Array<Folder | Repository | FormattedGitLabRepository>,
 ): Array<Folder | Repository | FormattedGitLabRepository> {
     return items.sort(
         (
             a: Folder | Repository | FormattedGitLabRepository,
-            b: Folder | Repository | FormattedGitLabRepository
-        ) => a.label.localeCompare(b.label, undefined, { numeric: true })
+            b: Folder | Repository | FormattedGitLabRepository,
+        ) => a.label.localeCompare(b.label, undefined, { numeric: true }),
     );
 }
 
 export function checkRepositoryMatchQuery(
     repository: Folder | Repository | FormattedGitLabRepository,
-    query: string
+    query: string,
 ): boolean {
     return (
         repository.normalized_path !== undefined &&
@@ -54,7 +54,7 @@ export function checkRepositoryMatchQuery(
 }
 
 export function recursivelySortAlphabetically(
-    folder: Folder | Repository | FormattedGitLabRepository
+    folder: Folder | Repository | FormattedGitLabRepository,
 ): Folder {
     const folders: Array<Folder> = [];
     const repositories: Array<Folder | Repository | FormattedGitLabRepository> = [];
@@ -83,7 +83,7 @@ export function recursivelySortAlphabetically(
 }
 
 export function groupRepositoriesByPath(
-    repositories: Array<Folder | Repository | FormattedGitLabRepository>
+    repositories: Array<Folder | Repository | FormattedGitLabRepository>,
 ): Folder {
     const grouped = repositories.reduce(
         (accumulator: Folder, repository: Folder | Repository | FormattedGitLabRepository) => {
@@ -101,7 +101,7 @@ export function groupRepositoriesByPath(
             is_folder: true,
             label: "root",
             children: [],
-        }
+        },
     );
 
     return recursivelySortAlphabetically(grouped);
@@ -111,7 +111,7 @@ export function filterAFolder(folder: Folder, query: string): Folder {
     const filtered_children = folder.children.reduce(
         (
             accumulator: Array<Folder | Repository | FormattedGitLabRepository>,
-            child: Folder | Repository | FormattedGitLabRepository
+            child: Folder | Repository | FormattedGitLabRepository,
         ) => {
             const filtered_child = filterAChild(child, query);
             if (filtered_child) {
@@ -119,7 +119,7 @@ export function filterAFolder(folder: Folder, query: string): Folder {
             }
             return accumulator;
         },
-        []
+        [],
     );
 
     return {
@@ -130,7 +130,7 @@ export function filterAFolder(folder: Folder, query: string): Folder {
 
 export function filterAChild(
     child: Folder | Repository | FormattedGitLabRepository,
-    query: string
+    query: string,
 ): Folder | Repository | FormattedGitLabRepository | null {
     if (isFolder(child)) {
         const filtered_folder = filterAFolder(child, query);
@@ -147,17 +147,17 @@ export function filterAChild(
 }
 
 export function sortByLastUpdateDate(
-    repositories: Array<Folder | Repository | FormattedGitLabRepository>
+    repositories: Array<Folder | Repository | FormattedGitLabRepository>,
 ): Array<Folder | Repository | FormattedGitLabRepository> {
     return repositories.sort(
         (
             a: Folder | Repository | FormattedGitLabRepository,
-            b: Folder | Repository | FormattedGitLabRepository
+            b: Folder | Repository | FormattedGitLabRepository,
         ) => {
             if (!("last_update_date" in a) || !("last_update_date" in b)) {
                 throw new Error("sortByLastUpdateDate is not applied on a correct objet");
             }
             return new Date(b.last_update_date).valueOf() - new Date(a.last_update_date).valueOf();
-        }
+        },
     );
 }

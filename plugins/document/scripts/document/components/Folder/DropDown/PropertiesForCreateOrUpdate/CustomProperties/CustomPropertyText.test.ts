@@ -27,7 +27,7 @@ jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyText", () => {
     function createWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof CustomPropertyText>> {
         return shallowMount(CustomPropertyText, {
             props: { currentlyUpdatedItemProperty: property },
@@ -51,7 +51,7 @@ describe("CustomPropertyText", () => {
         expect(text_input.element.value).toBe("text value");
         expect(text_input.element.required).toBe(true);
         expect(
-            wrapper.find("[data-test=document-custom-property-is-required]").exists()
+            wrapper.find("[data-test=document-custom-property-is-required]").exists(),
         ).toBeTruthy();
     });
 
@@ -72,7 +72,7 @@ describe("CustomPropertyText", () => {
         expect(text_input.element.value).toBe("");
         expect(text_input.element.required).toBe(false);
         expect(
-            wrapper.find("[data-test=document-custom-property-is-required]").exists()
+            wrapper.find("[data-test=document-custom-property-is-required]").exists(),
         ).toBeFalsy();
     });
 

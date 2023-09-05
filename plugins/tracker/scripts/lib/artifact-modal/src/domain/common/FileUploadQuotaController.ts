@@ -25,7 +25,7 @@ export interface FileUploadQuotaControllerType {
 }
 
 export const FileUploadQuotaController = (
-    event_dispatcher: DispatchEvents
+    event_dispatcher: DispatchEvents,
 ): FileUploadQuotaControllerType => ({
     getMaxAllowedUploadSizeInBytes(): Promise<number> {
         return new Promise((resolve) => {

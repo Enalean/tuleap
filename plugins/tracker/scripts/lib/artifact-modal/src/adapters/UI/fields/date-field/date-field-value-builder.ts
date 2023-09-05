@@ -30,7 +30,7 @@ interface DateFieldValue {
 
 export function buildEditableDateFieldValue(
     field: EditableDateFieldStructure,
-    date_field_value: string | null
+    date_field_value: string | null,
 ): DateFieldValue {
     const { field_id, type, permissions, is_time_displayed } = field;
 

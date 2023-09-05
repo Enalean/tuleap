@@ -78,7 +78,7 @@ describe(`rest-querier`, () => {
                     },
                     getCollectionCallback: expect.any(Function),
                 });
-            }
+            },
         );
     });
 });

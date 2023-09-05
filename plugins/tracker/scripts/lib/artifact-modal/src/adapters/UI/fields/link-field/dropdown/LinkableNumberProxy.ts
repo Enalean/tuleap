@@ -24,7 +24,7 @@ import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArt
 export const LinkableNumberProxy = {
     fromQueryString: (
         query_string: string,
-        current_artifact_option: Option<CurrentArtifactIdentifier>
+        current_artifact_option: Option<CurrentArtifactIdentifier>,
     ): Option<LinkableNumber> => {
         if (query_string === "") {
             return Option.nothing();
@@ -37,7 +37,7 @@ export const LinkableNumberProxy = {
         const is_invalid = current_artifact_option.mapOr(
             (current_artifact_identifier) =>
                 is_invalid_number || query_number === current_artifact_identifier.id,
-            is_invalid_number
+            is_invalid_number,
         );
 
         if (is_invalid) {

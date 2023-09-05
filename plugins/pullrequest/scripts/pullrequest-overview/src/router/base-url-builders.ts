@@ -20,7 +20,7 @@
 export const buildBaseUrl = (
     location: Location,
     repository_id: string,
-    project_id: string
+    project_id: string,
 ): URL => {
     const base_url = new URL("/plugins/git/", location.origin);
     base_url.searchParams.set("action", "pull-requests");

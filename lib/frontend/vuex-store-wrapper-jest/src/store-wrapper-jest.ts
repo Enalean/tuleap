@@ -23,7 +23,7 @@ export type { Store } from "vuex-mock-store";
 
 export function createStoreMock<S extends Dict, G extends Dict, Spy>(
     store_options: StoreConstructorOptions<S, G, Spy>,
-    custom_state: S | Record<string, never> = {}
+    custom_state: S | Record<string, never> = {},
 ): Store<S, G, Spy> {
     const state = Object.assign({}, store_options.state, custom_state);
     const options = Object.assign({}, store_options, {

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale) =>
             import(
                 /* webpackChunkName: "oauth2-server-po-" */ "../po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     openModalAndReplacePlaceholders({

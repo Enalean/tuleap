@@ -44,7 +44,7 @@ export default (options = {}) => {
         chart.bisectDate(
             bisector((d) => {
                 return moment(d.date).valueOf();
-            }).left
+            }).left,
         );
 
         chart.svg(
@@ -52,7 +52,7 @@ export default (options = {}) => {
                 .divGraph()
                 .append("svg")
                 .attr("width", chart.width() + chart.margin().left + chart.margin().right)
-                .attr("height", chart.height() + chart.margin().top + chart.margin().bottom)
+                .attr("height", chart.height() + chart.margin().top + chart.margin().bottom),
         );
 
         chart.g(
@@ -61,8 +61,8 @@ export default (options = {}) => {
                 .append("g")
                 .attr(
                     "transform",
-                    "translate(" + chart.margin().left + "," + chart.margin().top + ")"
-                )
+                    "translate(" + chart.margin().left + "," + chart.margin().top + ")",
+                ),
         );
 
         chart.initData();
@@ -607,7 +607,7 @@ function total(data) {
         function (sum, value) {
             return !isNaN(value) ? sum + value : sum;
         },
-        0
+        0,
     );
 }
 

@@ -56,33 +56,35 @@ describe("KanbanCtrl", function () {
 
         angular.mock.module(kanban_module);
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _KanbanItemRestService_,
-            _KanbanService_,
-            _NewTuleapArtifactModalService_,
-            _SharedPropertiesService_,
-            _KanbanColumnService_,
-            _SocketService_,
-            _DroppedService_,
-            _ColumnCollectionService_,
-            _UserPreferencesService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            KanbanColumnService = _KanbanColumnService_;
-            KanbanItemRestService = _KanbanItemRestService_;
-            KanbanService = _KanbanService_;
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            SocketService = _SocketService_;
-            DroppedService = _DroppedService_;
-            ColumnCollectionService = _ColumnCollectionService_;
-            UserPreferencesService = _UserPreferencesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _KanbanItemRestService_,
+                _KanbanService_,
+                _NewTuleapArtifactModalService_,
+                _SharedPropertiesService_,
+                _KanbanColumnService_,
+                _SocketService_,
+                _DroppedService_,
+                _ColumnCollectionService_,
+                _UserPreferencesService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                KanbanColumnService = _KanbanColumnService_;
+                KanbanItemRestService = _KanbanItemRestService_;
+                KanbanService = _KanbanService_;
+                NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                SocketService = _SocketService_;
+                DroppedService = _DroppedService_;
+                ColumnCollectionService = _ColumnCollectionService_;
+                UserPreferencesService = _UserPreferencesService_;
+            },
+        );
 
         kanban = {
             id: 38,
@@ -280,7 +282,7 @@ describe("KanbanCtrl", function () {
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
                 expect(KanbanService.getColumnContentSize).toHaveBeenCalledWith(
                     kanban.id,
-                    column.id
+                    column.id,
                 );
                 expect(column.loading_items).toBeFalsy();
                 expect(column.nb_items_at_kanban_init).toBe(42);
@@ -413,10 +415,10 @@ describe("KanbanCtrl", function () {
             then it will be created using KanbanItemRestService
             and will be appended to the given column`, () => {
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                true
+                true,
             );
             jest.spyOn(KanbanItemRestService, "createItem").mockReturnValue(
-                $q.when({ id: 94, label: "photothermic" })
+                $q.when({ id: 94, label: "photothermic" }),
             );
             const column = {
                 id: 5,
@@ -454,7 +456,7 @@ describe("KanbanCtrl", function () {
             expect(KanbanItemRestService.createItem).toHaveBeenCalledWith(
                 kanban.id,
                 column.id,
-                "photothermic"
+                "photothermic",
             );
         });
     });
@@ -464,10 +466,10 @@ describe("KanbanCtrl", function () {
             then it will be created using KanbanItemRestService
             and will be appended to the backlog`, () => {
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                true
+                true,
             );
             jest.spyOn(KanbanItemRestService, "createItemInBacklog").mockReturnValue(
-                $q.when({ id: 11, label: "unbeautifully" })
+                $q.when({ id: 11, label: "unbeautifully" }),
             );
             KanbanCtrl.backlog.content = [{ id: 91 }, { id: 85 }];
             KanbanCtrl.backlog.filtered_content = [{ id: 91 }];
@@ -501,7 +503,7 @@ describe("KanbanCtrl", function () {
             expect(KanbanCtrl.backlog.content[2].updating).toBeFalsy();
             expect(KanbanItemRestService.createItemInBacklog).toHaveBeenCalledWith(
                 kanban.id,
-                "unbeautifully"
+                "unbeautifully",
             );
         });
     });
@@ -604,7 +606,7 @@ describe("KanbanCtrl", function () {
                 102,
                 56,
                 4288,
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 
@@ -613,18 +615,15 @@ describe("KanbanCtrl", function () {
             var get_request;
 
             beforeEach(function () {
-                NewTuleapArtifactModalService.showEdition.mockImplementation(function (
-                    c,
-                    a,
-                    b,
-                    callback
-                ) {
-                    callback();
-                });
+                NewTuleapArtifactModalService.showEdition.mockImplementation(
+                    function (c, a, b, callback) {
+                        callback();
+                    },
+                );
                 get_request = $q.defer();
                 jest.spyOn(KanbanItemRestService, "getItem").mockReturnValue(get_request.promise);
                 jest.spyOn(KanbanCtrl, "moveItemAtTheEndWithoutItemUpdate").mockImplementation(
-                    () => {}
+                    () => {},
                 );
 
                 var archive = {
@@ -674,7 +673,7 @@ describe("KanbanCtrl", function () {
                 // I'd rather have an imprecise test than a misleading one, so I used jasmine.any(Object)
                 expect(KanbanCtrl.moveItemAtTheEndWithoutItemUpdate).toHaveBeenCalledWith(
                     expect.any(Object),
-                    "archive"
+                    "archive",
                 );
             });
 
@@ -711,7 +710,7 @@ describe("KanbanCtrl", function () {
                 56,
                 null,
                 expect.any(Function),
-                []
+                [],
             );
         });
         describe("callback -", function () {
@@ -722,18 +721,15 @@ describe("KanbanCtrl", function () {
             let compared_to;
 
             beforeEach(function () {
-                NewTuleapArtifactModalService.showCreation.mockImplementation(function (
-                    user_id,
-                    a,
-                    b,
-                    callback
-                ) {
-                    callback();
-                });
+                NewTuleapArtifactModalService.showCreation.mockImplementation(
+                    function (user_id, a, b, callback) {
+                        callback();
+                    },
+                );
                 get_request = $q.defer();
                 jest.spyOn(KanbanItemRestService, "getItem").mockReturnValue(get_request.promise);
                 jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                    true
+                    true,
                 );
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(true);
                 jest.spyOn(KanbanColumnService, "addItem").mockImplementation(() => {});
@@ -792,7 +788,7 @@ describe("KanbanCtrl", function () {
 
             it("does not use the KanbanColumnService when the node server (realtime) is up", () => {
                 jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
-                    false
+                    false,
                 );
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(true);
 
@@ -803,7 +799,7 @@ describe("KanbanCtrl", function () {
                 expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
                 expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
                 expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
-                    archive
+                    archive,
                 );
                 expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
@@ -812,7 +808,7 @@ describe("KanbanCtrl", function () {
             it("does not use the KanbanColumnService when the mercure server (realtime) is up", () => {
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
                 jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
-                    true
+                    true,
                 );
 
                 KanbanCtrl.openAddArtifactModal(fake_event);
@@ -822,7 +818,7 @@ describe("KanbanCtrl", function () {
                 expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
                 expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
                 expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
-                    archive
+                    archive,
                 );
                 expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
@@ -831,7 +827,7 @@ describe("KanbanCtrl", function () {
             it("uses the KanbanColumnService to add the created item when the node server & the mercure server (realtime) are down", () => {
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
                 jest.spyOn(SharedPropertiesService, "isMercureServerConnected").mockReturnValue(
-                    false
+                    false,
                 );
 
                 KanbanCtrl.openAddArtifactModal(fake_event);
@@ -841,12 +837,12 @@ describe("KanbanCtrl", function () {
                 expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
                 expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
                 expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
-                    archive
+                    archive,
                 );
                 expect(KanbanColumnService.addItem).toHaveBeenCalledWith(
                     created_artifact,
                     archive,
-                    compared_to
+                    compared_to,
                 );
 
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(archive);
@@ -865,12 +861,12 @@ describe("KanbanCtrl", function () {
                 expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
                 expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith(252);
                 expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
-                    collapsed_column
+                    collapsed_column,
                 );
                 expect(KanbanColumnService.addItem).toHaveBeenCalledWith(
                     created_artifact,
                     collapsed_column,
-                    compared_to
+                    compared_to,
                 );
 
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(collapsed_column);
@@ -914,14 +910,14 @@ describe("KanbanCtrl", function () {
             KanbanCtrl.moveItemAtTheEndWithoutItemUpdate(
                 item,
                 destination_column.id,
-                item.in_column
+                item.in_column,
             );
 
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
                 item,
                 source_column,
                 destination_column,
-                compared_to
+                compared_to,
             );
         });
     });
@@ -949,13 +945,13 @@ describe("KanbanCtrl", function () {
                 item,
                 column,
                 column,
-                compared_to
+                compared_to,
             );
             expect(DroppedService.reorderColumn).toHaveBeenCalledWith(
                 kanban.id,
                 column.id,
                 item.id,
-                compared_to
+                compared_to,
             );
         });
     });
@@ -983,13 +979,13 @@ describe("KanbanCtrl", function () {
                 item,
                 archive,
                 archive,
-                compared_to
+                compared_to,
             );
             expect(DroppedService.reorderColumn).toHaveBeenCalledWith(
                 kanban.id,
                 "archive",
                 item.id,
-                compared_to
+                compared_to,
             );
         });
     });
@@ -1014,14 +1010,14 @@ describe("KanbanCtrl", function () {
             expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
                 757,
                 "agiledashboard_kanban_item_view_mode_33",
-                "compact-view"
+                "compact-view",
             );
             expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
 
             var all_columns = [kanban.archive, kanban.backlog, ...kanban.columns];
             var all_kanban_items = all_columns.reduce(
                 (all_items, column) => all_items.concat(column.content),
-                []
+                [],
             );
             all_kanban_items.forEach((item) => {
                 expect(item.is_collapsed).toBe(true);
@@ -1036,13 +1032,13 @@ describe("KanbanCtrl", function () {
             expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
                 757,
                 "agiledashboard_kanban_item_view_mode_33",
-                "detailed-view"
+                "detailed-view",
             );
             expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
             var all_columns = [kanban.archive, kanban.backlog, ...kanban.columns];
             var all_kanban_items = all_columns.reduce(
                 (all_items, column) => all_items.concat(column.content),
-                []
+                [],
             );
             all_kanban_items.forEach((item) => {
                 expect(item.is_collapsed).toBe(false);

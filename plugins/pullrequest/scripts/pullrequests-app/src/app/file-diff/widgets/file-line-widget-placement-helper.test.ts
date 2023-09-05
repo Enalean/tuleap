@@ -30,7 +30,7 @@ type EditorWithLineHandles = Editor & {
 const buildEditorWithLineHandle = (line_handle: LineHandle | null): EditorWithLineHandles =>
     ({
         getLineHandle: jest.fn().mockReturnValue(line_handle),
-    } as unknown as EditorWithLineHandles);
+    }) as unknown as EditorWithLineHandles;
 
 describe("file-line-widget-placement-helper", () => {
     describe("getWidgetPlacementOptions()", () => {
@@ -47,7 +47,7 @@ describe("file-line-widget-placement-helper", () => {
             Then it should return a LineWidgetOption with no insertAt property`, () => {
             const options = getWidgetPlacementOptions({
                 code_mirror: buildEditorWithLineHandle(
-                    FileLineHandleStub.buildLineHandleWithNoWidgets()
+                    FileLineHandleStub.buildLineHandleWithNoWidgets(),
                 ),
                 line_number: 15,
             } as unknown as CommentWidgetCreationParams);
@@ -65,7 +65,7 @@ describe("file-line-widget-placement-helper", () => {
                     FileLineHandleStub.buildLineHandleWithWidgets([
                         FileDiffWidgetStub.buildInlineCommentWidget(),
                         FileDiffWidgetStub.buildInlineCommentWidget(),
-                    ])
+                    ]),
                 ),
                 line_number: 15,
             } as unknown as CommentWidgetCreationParams);
@@ -83,7 +83,7 @@ describe("file-line-widget-placement-helper", () => {
                     FileLineHandleStub.buildLineHandleWithWidgets([
                         FileDiffWidgetStub.buildInlineCommentWidget(),
                         FileDiffWidgetStub.buildCodeCommentPlaceholder(),
-                    ])
+                    ]),
                 ),
                 line_number: 15,
             } as unknown as CommentWidgetCreationParams);

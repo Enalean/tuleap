@@ -89,7 +89,7 @@ describe("LabeledItemsList", () => {
                             title: "test 2",
                         },
                     ],
-                })
+                }),
             );
 
             const wrapper = await getWrapper(labels_ids);
@@ -107,15 +107,15 @@ describe("LabeledItemsList", () => {
                     Promise.resolve({
                         labeled_items: [{ title: "test 1" }],
                         has_more: has_more_items_to_load,
-                    })
+                    }),
                 );
 
                 const wrapper = await getWrapper(labels_ids);
 
                 expect(wrapper.find("[data-test=load-more-section]").exists()).toBe(
-                    has_more_items_to_load
+                    has_more_items_to_load,
                 );
-            }
+            },
         );
 
         it("Loads the next page of items", async () => {
@@ -125,14 +125,14 @@ describe("LabeledItemsList", () => {
                         labeled_items: [{ title: "test 1" }],
                         offset: 0,
                         has_more: true,
-                    })
+                    }),
                 )
                 .mockReturnValueOnce(
                     Promise.resolve({
                         labeled_items: [{ title: "test 2" }],
                         offset: 50,
                         has_more: false,
-                    })
+                    }),
                 );
 
             const wrapper = await getWrapper(labels_ids);

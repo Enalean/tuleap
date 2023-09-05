@@ -75,7 +75,7 @@ describe("ModalArchiveSizeWarningModal", () => {
         const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=download-as-zip-folder-size-warning]").html()).toContain(
-            "1.05 MB"
+            "1.05 MB",
         );
     });
 
@@ -83,7 +83,7 @@ describe("ModalArchiveSizeWarningModal", () => {
         const wrapper = getWrapper();
 
         expect(
-            wrapper.find("[data-test=close-archive-size-warning]").attributes("data-dismiss")
+            wrapper.find("[data-test=close-archive-size-warning]").attributes("data-dismiss"),
         ).toBe("modal");
         close_callback();
 
@@ -93,7 +93,7 @@ describe("ModalArchiveSizeWarningModal", () => {
     it("The [Download] button is a link to the archive, the modal is closed when it is clicked", () => {
         const wrapper = getWrapper();
         const confirm_button = wrapper.find(
-            "[data-test=confirm-download-archive-button-despite-size-warning]"
+            "[data-test=confirm-download-archive-button-despite-size-warning]",
         );
 
         expect(confirm_button.attributes("href")).toBe("/download/me/here");

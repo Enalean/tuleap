@@ -29,7 +29,7 @@ export async function initLdapBindingPreview(options, callback) {
     const gettext_provider = await initGettext(select.dataset.locale, "ldap-bindings", (locale) =>
         import(
             /* webpackChunkName: "project-admin-ldap-po-" */ "./po/" + getPOFileFromLocale(locale)
-        )
+        ),
     );
 
     const select2 = autocomplete_groups_for_select2(select, {
@@ -55,9 +55,8 @@ export async function initLdapBindingPreview(options, callback) {
 
         let users_to_add, users_to_remove, nb_not_impacted, group_not_found;
         try {
-            ({ users_to_add, users_to_remove, nb_not_impacted } = await callback(
-                chosen_ldap_group
-            ));
+            ({ users_to_add, users_to_remove, nb_not_impacted } =
+                await callback(chosen_ldap_group));
             group_not_found = false;
         } catch (ex) {
             users_to_add = users_to_remove = [];
@@ -77,9 +76,9 @@ export async function initLdapBindingPreview(options, callback) {
                     display_name,
                     chosen_ldap_group,
                     nb_not_impacted,
-                    group_not_found
-                )
-            )
+                    group_not_found,
+                ),
+            ),
         );
 
         button.disabled = group_not_found;
@@ -95,7 +94,7 @@ export async function initLdapBindingPreview(options, callback) {
         ugroup_name,
         chosen_ldap_group,
         nb_not_impacted,
-        ldap_group_not_found
+        ldap_group_not_found,
     ) {
         const nb_to_add = users_to_add.length;
         const nb_to_remove = users_to_remove.length;
@@ -103,31 +102,31 @@ export async function initLdapBindingPreview(options, callback) {
         const title = sprintf(
             gettext_provider.gettext("Binding %s to directory group %s"),
             ugroup_name,
-            chosen_ldap_group
+            chosen_ldap_group,
         );
         const nb_to_add_text = sprintf(
             gettext_provider.ngettext("%d user to add.", "%d users to add.", nb_to_add),
-            nb_to_add
+            nb_to_add,
         );
         const nb_to_remove_text = sprintf(
             gettext_provider.ngettext("%d user to remove.", "%d users to remove.", nb_to_remove),
-            nb_to_remove
+            nb_to_remove,
         );
 
         const nothing_to_do_text = gettext_provider.gettext(
-            "There aren't any users to add nor to remove."
+            "There aren't any users to add nor to remove.",
         );
         const nb_not_impacted_text = sprintf(
             gettext_provider.ngettext(
                 "%d user not impacted.",
                 "%d users not impacted.",
-                nb_not_impacted
+                nb_not_impacted,
             ),
-            nb_not_impacted
+            nb_not_impacted,
         );
         const ldap_group_not_found_text = sprintf(
             gettext_provider.gettext("Directory group %s does not exist."),
-            chosen_ldap_group
+            chosen_ldap_group,
         );
 
         return {

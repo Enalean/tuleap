@@ -31,7 +31,7 @@ describe("PullRequestCurrentUserPresenterBuilder", () => {
             avatar_url,
             user_locale,
             preferred_date_format,
-            preferred_relative_date_display
+            preferred_relative_date_display,
         );
 
         expect(presenter).toStrictEqual({

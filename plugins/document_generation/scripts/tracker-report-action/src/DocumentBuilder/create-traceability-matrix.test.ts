@@ -58,7 +58,7 @@ describe("create-traceability-matrix", () => {
         vi.spyOn(docgen_docx, "getArtifacts").mockResolvedValue(
             new Map<number, ArtifactResponse>([
                 [800, { id: 800, title: "Campaign title" } as ArtifactResponse],
-            ])
+            ]),
         );
 
         const matrix = await buildMatrix(
@@ -97,7 +97,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            get_test_exec
+            get_test_exec,
         );
 
         expect(matrix).toStrictEqual([
@@ -137,7 +137,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            vi.fn()
+            vi.fn(),
         );
 
         expect(matrix).toStrictEqual([]);
@@ -183,7 +183,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            get_test_exec
+            get_test_exec,
         );
 
         expect(matrix).toStrictEqual([]);
@@ -207,7 +207,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            vi.fn()
+            vi.fn(),
         );
 
         expect(matrix).toStrictEqual([]);
@@ -255,7 +255,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            get_test_exec
+            get_test_exec,
         );
 
         expect(matrix).toStrictEqual([]);
@@ -313,7 +313,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            get_test_exec
+            get_test_exec,
         );
 
         expect(matrix).toStrictEqual([]);
@@ -378,7 +378,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            get_test_exec
+            get_test_exec,
         );
 
         expect(matrix).toStrictEqual([
@@ -399,7 +399,7 @@ describe("create-traceability-matrix", () => {
 
 function buildMatrix(
     artifacts: ReadonlyArray<ArtifactFromReport>,
-    get_test_exec: typeof getTestManagementExecution
+    get_test_exec: typeof getTestManagementExecution,
 ): Promise<ReadonlyArray<TraceabilityMatrixElement>> {
     return createTraceabilityMatrix(artifacts, { locale: "en-US", timezone: "UTC" }, get_test_exec);
 }

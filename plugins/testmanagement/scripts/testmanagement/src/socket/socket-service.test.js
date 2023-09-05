@@ -37,11 +37,11 @@ describe("SocketService -", () => {
 
             expect(socket_factory_on).toHaveBeenCalledWith(
                 "testmanagement_execution:link_artifact",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith(
                 artifact_id,
-                added_artifact_link
+                added_artifact_link,
             );
         });
     });

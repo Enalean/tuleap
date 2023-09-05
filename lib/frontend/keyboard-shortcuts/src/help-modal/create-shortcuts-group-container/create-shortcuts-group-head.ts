@@ -21,7 +21,7 @@ import type { ShortcutsGroup } from "../../type";
 
 export function createShortcutsGroupHead(
     doc: Document,
-    shortcuts_group: ShortcutsGroup
+    shortcuts_group: ShortcutsGroup,
 ): HTMLElement {
     const shortcuts_group_head = doc.createElement("div");
     shortcuts_group_head.classList.add("help-modal-shortcuts-group-head");

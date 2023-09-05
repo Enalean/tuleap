@@ -47,7 +47,7 @@ export interface FeatureIdWithProgramIncrementId {
 
 export function addProgramIncrement(state: State, program_increment: ProgramIncrement): void {
     const existing_increment = state.program_increments.find(
-        (existing_increment) => existing_increment.id === program_increment.id
+        (existing_increment) => existing_increment.id === program_increment.id,
     );
 
     if (existing_increment !== undefined) {
@@ -63,7 +63,7 @@ export function setToBePlannedElements(state: State, to_be_planned_elements: Fea
 
 export function addToBePlannedElement(state: State, feature_moving: FeaturePlanningChange): void {
     const element_already_exist = state.to_be_planned_elements.find(
-        (element) => element.id === feature_moving.feature.id
+        (element) => element.id === feature_moving.feature.id,
     );
 
     if (element_already_exist !== undefined) {
@@ -89,7 +89,7 @@ export function setModalErrorMessage(state: State, message: string): void {
 
 export function startMoveElementInAProgramIncrement(
     state: State,
-    program_element_id: number
+    program_element_id: number,
 ): void {
     if (state.ongoing_move_elements_id.indexOf(program_element_id) !== -1) {
         throw Error("Program element #" + program_element_id + " is already moving");
@@ -100,23 +100,23 @@ export function startMoveElementInAProgramIncrement(
 
 export function finishMoveElement(state: State, ongoing_move_elements_id_id: number): void {
     state.ongoing_move_elements_id = [...state.ongoing_move_elements_id].filter(
-        (element_id) => element_id !== ongoing_move_elements_id_id
+        (element_id) => element_id !== ongoing_move_elements_id_id,
     );
 }
 
 export function linkUserStoriesToFeature(
     state: State,
-    user_story_feature: LinkUserStoryToFeature
+    user_story_feature: LinkUserStoryToFeature,
 ): void {
     const existing_increment = state.program_increments.find(
-        (existing_increment) => existing_increment.id === user_story_feature.program_increment.id
+        (existing_increment) => existing_increment.id === user_story_feature.program_increment.id,
     );
 
     if (existing_increment === undefined) {
         throw Error(
             "Program increment with id #" +
                 user_story_feature.program_increment.id +
-                " does not exist"
+                " does not exist",
         );
     }
 
@@ -132,15 +132,15 @@ export function linkUserStoriesToFeature(
 
 export function linkUserStoriesToBePlannedElement(
     state: State,
-    user_story_element: LinkUserStoryToPlannedElement
+    user_story_element: LinkUserStoryToPlannedElement,
 ): void {
     const element = state.to_be_planned_elements.find(
-        (element) => element.id === user_story_element.element_id
+        (element) => element.id === user_story_element.element_id,
     );
 
     if (element === undefined) {
         throw Error(
-            "To be planned element with id #" + user_story_element.element_id + " does not exist"
+            "To be planned element with id #" + user_story_element.element_id + " does not exist",
         );
     }
 
@@ -149,7 +149,7 @@ export function linkUserStoriesToBePlannedElement(
 
 export function changeFeaturePositionInProgramBacklog(
     state: State,
-    feature_planning_change: FeaturePlanningChange
+    feature_planning_change: FeaturePlanningChange,
 ): void {
     if (!feature_planning_change.order) {
         throw Error("No order exists in feature position");
@@ -157,17 +157,17 @@ export function changeFeaturePositionInProgramBacklog(
     orderFeatureInProgramBacklog(
         state,
         feature_planning_change.order,
-        feature_planning_change.feature
+        feature_planning_change.feature,
     );
 }
 
 function orderFeatureInProgramBacklog(
     state: State,
     reorder_position: FeatureReorderPosition,
-    feature: Feature
+    feature: Feature,
 ): void {
     const sibling_index = getToBePlannedElementWithoutFeature(state, feature).findIndex(
-        (feature) => feature.id === reorder_position.compared_to
+        (feature) => feature.id === reorder_position.compared_to,
     );
 
     if (sibling_index === -1) {
@@ -182,7 +182,7 @@ function orderFeatureInProgramBacklog(
 
 export function changeFeaturePositionInSameProgramIncrement(
     state: State,
-    feature_planning_change: FeaturePlanningChangeInProgramIncrement
+    feature_planning_change: FeaturePlanningChangeInProgramIncrement,
 ): void {
     if (!feature_planning_change.order) {
         throw Error("No order exists in feature position");
@@ -192,7 +192,7 @@ export function changeFeaturePositionInSameProgramIncrement(
         feature_planning_change.order,
         feature_planning_change.feature,
         feature_planning_change.to_program_increment_id,
-        true
+        true,
     );
 }
 
@@ -201,12 +201,12 @@ function orderFeatureInProgramIncrement(
     reorder_position: FeatureReorderPosition,
     feature: Feature,
     program_increment_id: number,
-    order_in_same_program_increment: boolean
+    order_in_same_program_increment: boolean,
 ): void {
     const sibling_index = getAllFeaturesInProgramIncrementWithoutFeature(
         state,
         feature,
-        program_increment_id
+        program_increment_id,
     ).findIndex((feature) => feature.id === reorder_position.compared_to);
 
     if (sibling_index === -1) {
@@ -220,20 +220,20 @@ function orderFeatureInProgramIncrement(
     getFeaturesInProgramIncrement(state)(program_increment_id).splice(
         sibling_index + offset,
         0,
-        feature
+        feature,
     );
 }
 
 function getToBePlannedElementWithoutFeature(state: State, element_to_remove: Feature): Feature[] {
     return state.to_be_planned_elements.filter(
-        (to_be_planned_element) => to_be_planned_element.id !== element_to_remove.id
+        (to_be_planned_element) => to_be_planned_element.id !== element_to_remove.id,
     );
 }
 
 function getAllFeaturesInProgramIncrementWithoutFeature(
     state: State,
     element_to_remove: Feature,
-    program_increment_id: number
+    program_increment_id: number,
 ): Feature[] {
     const all_features = getFeaturesInProgramIncrement(state)(program_increment_id);
     return all_features.filter((feature) => feature.id !== element_to_remove.id);
@@ -241,12 +241,12 @@ function getAllFeaturesInProgramIncrementWithoutFeature(
 
 export function moveFeatureFromBacklogToProgramIncrement(
     state: State,
-    feature_order: FeaturePlanningChangeInProgramIncrement
+    feature_order: FeaturePlanningChangeInProgramIncrement,
 ): void {
     removeToBePlannedElement(state, feature_order.feature);
     if (!feature_order.order) {
         const program_increment = getProgramIncrementFromId(state)(
-            feature_order.to_program_increment_id
+            feature_order.to_program_increment_id,
         );
         program_increment.features.push(feature_order.feature);
         return;
@@ -257,16 +257,16 @@ export function moveFeatureFromBacklogToProgramIncrement(
         feature_order.order,
         feature_order.feature,
         feature_order.to_program_increment_id,
-        false
+        false,
     );
 }
 
 export function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
     state: State,
-    feature_order: FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement
+    feature_order: FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement,
 ): void {
     const from_program_increment = getProgramIncrementFromId(state)(
-        feature_order.from_program_increment_id
+        feature_order.from_program_increment_id,
     );
 
     const feature_to_move_index = extractFeatureIndexFromProgramIncrement({
@@ -278,7 +278,7 @@ export function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
 
     if (!feature_order.order) {
         const program_increment = getProgramIncrementFromId(state)(
-            feature_order.to_program_increment_id
+            feature_order.to_program_increment_id,
         );
         program_increment.features.push(feature_order.feature);
         return;
@@ -289,16 +289,16 @@ export function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
         feature_order.order,
         feature_order.feature,
         feature_order.to_program_increment_id,
-        false
+        false,
     );
 }
 
 export function removeFeatureFromProgramIncrement(
     state: State,
-    feature_id_with_program_increment_id: FeatureIdWithProgramIncrementId
+    feature_id_with_program_increment_id: FeatureIdWithProgramIncrementId,
 ): void {
     const program_increment = getProgramIncrementFromId(state)(
-        feature_id_with_program_increment_id.program_increment_id
+        feature_id_with_program_increment_id.program_increment_id,
     );
 
     const feature_to_unplan_index = extractFeatureIndexFromProgramIncrement({

@@ -31,7 +31,7 @@ function getHost(data: Partial<HostElement>): HostElement {
         controller: FormattedTextController(
             DispatchEventsStub.buildNoOp(),
             InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-            TEXT_FORMAT_TEXT
+            TEXT_FORMAT_TEXT,
         ),
         dispatchEvent: jest.fn(),
     } as HostElement;
@@ -59,7 +59,7 @@ describe(`FollowupEditor`, () => {
             getSelector("[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("content-change", {
                     detail: { content: "chrysopid" },
-                })
+                }),
             );
 
             const value_changed = dispatch.mock.calls[0][0];
@@ -78,7 +78,7 @@ describe(`FollowupEditor`, () => {
             getSelector("[data-test=text-editor]").dispatchEvent(
                 new CustomEvent("format-change", {
                     detail: { format: "commonmark", content: "chrysopid" },
-                })
+                }),
             );
 
             const value_changed = dispatch.mock.calls[0][0];

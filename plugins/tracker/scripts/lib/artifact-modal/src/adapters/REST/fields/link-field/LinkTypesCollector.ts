@@ -23,7 +23,7 @@ import type { LinkTypesPair } from "../../../../domain/fields/link-field/LinkTyp
 
 export const LinkTypesCollector = {
     buildFromTypesRepresentations: (
-        allowed_types: readonly AllowedLinkTypeRepresentation[]
+        allowed_types: readonly AllowedLinkTypeRepresentation[],
     ): LinkTypesCollection => {
         const allowed_links_types = allowed_types.reduce<LinkTypesPair[]>((accumulator, type) => {
             accumulator.push({

@@ -40,7 +40,7 @@ function KanbanItemRestService($q, SharedPropertiesService, RestErrorService) {
             post(encodeURI("/api/v1/kanban_items"), {
                 headers,
                 body: JSON.stringify({ label, kanban_id, column_id }),
-            }).then((response) => response.json())
+            }).then((response) => response.json()),
         );
     }
 
@@ -49,7 +49,7 @@ function KanbanItemRestService($q, SharedPropertiesService, RestErrorService) {
             post(encodeURI("/api/v1/kanban_items"), {
                 headers,
                 body: JSON.stringify({ label, kanban_id }),
-            }).then((response) => response.json())
+            }).then((response) => response.json()),
         );
     }
 
@@ -57,8 +57,8 @@ function KanbanItemRestService($q, SharedPropertiesService, RestErrorService) {
         return $q.when(
             get(encodeURI(`/api/v1/kanban_items/${item_id}`)).then(
                 (response) => response.json(),
-                catchRestError
-            )
+                catchRestError,
+            ),
         );
     }
 

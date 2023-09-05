@@ -67,7 +67,7 @@ export function formatExistingValue(artifact_value: TextFieldArtifactValue): Tex
             };
         default:
             throw new Error(
-                `Unknown text field format was given: ${artifact_value.format}, supported values are "text", "html"`
+                `Unknown text field format was given: ${artifact_value.format}, supported values are "text", "html"`,
             );
     }
 }

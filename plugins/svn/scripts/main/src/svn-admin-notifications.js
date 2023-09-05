@@ -59,7 +59,7 @@ import {
                     setTimeout(function () {
                         clearTimeouts();
                         checkPathExists(event);
-                    }, 1000)
+                    }, 1000),
                 );
             });
         });
@@ -123,7 +123,7 @@ import {
                 selected_emails = JSON.parse(input.dataset.emails);
             addDataToAutocompleter(
                 input,
-                selected_ugroups.concat(selected_users).concat(selected_emails)
+                selected_ugroups.concat(selected_users).concat(selected_emails),
             );
             enableAutocompleter(input);
         }

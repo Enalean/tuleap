@@ -57,7 +57,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
     public constructor(
         gettext_provider: GettextProvider,
         global_export_properties: GenericGlobalExportProperties,
-        properties?: ITableOfContentsOptions
+        properties?: ITableOfContentsOptions,
     ) {
         super("w:sdt");
 
@@ -112,7 +112,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
 
     private buildPrefilledTOC(
         gettext_provider: GettextProvider,
-        global_export_properties: GenericGlobalExportProperties
+        global_export_properties: GenericGlobalExportProperties,
     ): ReadonlyArray<Paragraph> {
         const links_to_content = [];
 
@@ -137,7 +137,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
                             leader: LeaderType.DOT,
                         },
                     ],
-                })
+                }),
             );
         }
 

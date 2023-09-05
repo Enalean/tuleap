@@ -33,7 +33,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/core/project-services/"
+        "/assets/core/project-services/",
     ),
     resolve: {
         extensions: [".js", ".ts", ".vue"],

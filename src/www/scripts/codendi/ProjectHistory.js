@@ -52,7 +52,7 @@ var ProjectHistory = Class.create({
         var optn = Builder.node(
             "option",
             { value: value },
-            this.sub_events_array[history_event][value]
+            this.sub_events_array[history_event][value],
         );
         $("sub_events_box").appendChild(optn);
         if (selected) {

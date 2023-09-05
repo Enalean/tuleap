@@ -88,7 +88,7 @@
                     <p>
                         {{
                             $gettext(
-                                "You are about to delete a version permanently. Please confirm your action."
+                                "You are about to delete a version permanently. Please confirm your action.",
                             )
                         }}
                     </p>
@@ -166,15 +166,15 @@ function onConfirmDeletion(): void {
             success(
                 gettext_provider.interpolate(
                     gettext_provider.$gettext("Version %{ number } has been successfully deleted"),
-                    { number: props.version.number }
-                )
+                    { number: props.version.number },
+                ),
             );
             props.loadVersions();
         },
         () => {
             got_error_while_trying_to_delete.value = true;
             is_deleting.value = false;
-        }
+        },
     );
 }
 

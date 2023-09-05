@@ -32,7 +32,7 @@ describe("export-document", () => {
 
         await downloadXLSXDocument(
             { first_level: { report_id: 1 } } as ExportSettings,
-            document_exporter
+            document_exporter,
         );
 
         expect(format_data).toHaveBeenCalled();

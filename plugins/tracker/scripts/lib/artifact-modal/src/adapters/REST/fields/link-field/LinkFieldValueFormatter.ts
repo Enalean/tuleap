@@ -30,14 +30,14 @@ interface FormatLinkFieldValue {
 export const LinkFieldValueFormatter = (
     retrieve_linked_artifacts: RetrieveLinkedArtifactsSync,
     verify_link_is_marked_for_removal: VerifyLinkIsMarkedForRemoval,
-    retrieve_new_links: RetrieveNewLinks
+    retrieve_new_links: RetrieveNewLinks,
 ): FormatLinkFieldValue => ({
     getFormattedValuesByFieldId: (field_id: number): ArtifactLinkNewChangesetValue => {
         const links_not_removed = retrieve_linked_artifacts
             .getLinkedArtifacts()
             .filter(
                 (linked_artifact) =>
-                    !verify_link_is_marked_for_removal.isMarkedForRemoval(linked_artifact)
+                    !verify_link_is_marked_for_removal.isMarkedForRemoval(linked_artifact),
             )
             .map(NewChangesetLinkProxy.fromLinkedArtifact);
 

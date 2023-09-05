@@ -92,7 +92,7 @@ export default class ToBePlannedBacklogItems extends Vue {
             this.is_loading_user_story = true;
             this.user_stories = await this.$store.dispatch(
                 "linkUserStoriesToBePlannedElements",
-                this.to_be_planned_element.id
+                this.to_be_planned_element.id,
             );
         } catch (rest_error) {
             this.message_error_rest = await handleError(rest_error, this);

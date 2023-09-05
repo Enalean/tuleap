@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(
                 /* webpackChunkName: "project-admin-po-" */ "../po/" +
                     getPOFileFromLocale(user_locale)
-            )
+            ),
     );
 
     initTOSCheckbox();
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initIconPicker(document, buildIconPicker(gettext_provider, document));
 
     const select_element = document.getElementById(
-        "project-admin-details-hierarchy-project-select"
+        "project-admin-details-hierarchy-project-select",
     );
     if (!select_element) {
         return;
@@ -82,7 +82,7 @@ function initTOSCheckbox(): void {
 
 function initWarningRestrictedUsersRemovalOnProjectVisibilityChange(): void {
     const warning_restricted_users_removal_modal_element = document.getElementById(
-        "modal-warning-restricted-users-removal"
+        "modal-warning-restricted-users-removal",
     );
     if (!warning_restricted_users_removal_modal_element) {
         return;
@@ -101,7 +101,7 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange(): void {
     }
 
     const confirm_button = document.getElementById(
-        "modal-warning-restricted-users-removal-confirm"
+        "modal-warning-restricted-users-removal-confirm",
     );
     if (!confirm_button) {
         return;

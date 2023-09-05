@@ -31,7 +31,7 @@ export async function downloadCampaignAsDocx(
     base_url: string,
     project_id: number,
     testdefinition_tracker_id: number | null,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
 ): Promise<void> {
     const { downloadExportDocument } = await import(
         /* webpackChunkName: "testmanagement-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
@@ -59,6 +59,6 @@ export async function downloadCampaignAsDocx(
             testdefinition_tracker_id,
         },
         downloadDocx,
-        campaign
+        campaign,
     );
 }

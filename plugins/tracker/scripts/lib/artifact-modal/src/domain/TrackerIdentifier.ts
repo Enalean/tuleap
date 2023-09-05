@@ -24,7 +24,7 @@ export type TrackerIdentifier = Identifier<"TrackerIdentifier">;
 
 export const TrackerIdentifier = {
     fromCurrentTracker: (
-        current_tracker_identifier: CurrentTrackerIdentifier
+        current_tracker_identifier: CurrentTrackerIdentifier,
     ): TrackerIdentifier => ({
         id: current_tracker_identifier.id,
         _type: "TrackerIdentifier",

@@ -54,7 +54,7 @@ describe("merge-status-helper", () => {
         "isPullRequestInReview() should return %s when the pull-request status is %s",
         (expected_result, status) => {
             expect(isPullRequestInReview({ status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -65,7 +65,7 @@ describe("merge-status-helper", () => {
         "isPullRequestAlreadyMerged() should return %s when the pull-request status is %s",
         (expected_result, status) => {
             expect(isPullRequestAlreadyMerged({ status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -76,7 +76,7 @@ describe("merge-status-helper", () => {
         "isPullRequestAbandoned() should return %s when the pull-request status is %s",
         (expected_result, status) => {
             expect(isPullRequestAbandoned({ status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -99,9 +99,9 @@ describe("merge-status-helper", () => {
                 isSameReferenceMerge({
                     reference_src,
                     reference_dest,
-                } as PullRequest)
+                } as PullRequest),
             ).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -113,7 +113,7 @@ describe("merge-status-helper", () => {
         "isMergeConflicting() should return %s when the pull-request merge_status is %s",
         (expected_result, merge_status) => {
             expect(isMergeConflicting({ merge_status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -125,7 +125,7 @@ describe("merge-status-helper", () => {
         "isUnknownMerge() should return %s when the pull-request merge_status is %s",
         (expected_result, merge_status) => {
             expect(isUnknownMerge({ merge_status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -137,7 +137,7 @@ describe("merge-status-helper", () => {
         "isFastForwardMerge() should return %s when the pull-request merge_status is %s",
         (expected_result, merge_status) => {
             expect(isFastForwardMerge({ merge_status } as PullRequest)).toBe(expected_result);
-        }
+        },
     );
 
     it.each([
@@ -147,9 +147,9 @@ describe("merge-status-helper", () => {
         "hasUserPermissionToMerge() should return %s when user_can_merge is %s",
         (expected_result, user_can_merge) => {
             expect(hasUserPermissionToMerge({ user_can_merge } as PullRequest)).toBe(
-                expected_result
+                expected_result,
             );
-        }
+        },
     );
 
     it.each([
@@ -161,7 +161,7 @@ describe("merge-status-helper", () => {
         "isCIHappy() should return %s when the last_build_status is %s",
         (should_be_happy, last_build_status) => {
             expect(isCIHappy({ last_build_status } as PullRequest)).toBe(should_be_happy);
-        }
+        },
     );
 
     describe("canPullRequestBeMerged()", () => {
@@ -181,8 +181,8 @@ describe("merge-status-helper", () => {
                         reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
                         reference_dest: "66728d6153adbd267f3b1b3a1250bab6bd2ee3d0",
                     } as PullRequest,
-                    are_merge_commits_allowed_in_repository
-                )
+                    are_merge_commits_allowed_in_repository,
+                ),
             ).toBe(true);
         });
 
@@ -207,10 +207,10 @@ describe("merge-status-helper", () => {
                             reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
                             reference_dest: "66728d6153adbd267f3b1b3a1250bab6bd2ee3d0",
                         } as PullRequest,
-                        are_merge_commits_allowed_in_repository
-                    )
+                        are_merge_commits_allowed_in_repository,
+                    ),
                 ).toBe(expected_result);
-            }
+            },
         );
     });
 });

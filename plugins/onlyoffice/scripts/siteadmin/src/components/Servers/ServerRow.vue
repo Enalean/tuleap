@@ -34,7 +34,7 @@
                         "%{ nb } project can use the server",
                         "%{ nb } projects can use the server",
                         server.project_restrictions.length,
-                        { nb: String(server.project_restrictions.length) }
+                        { nb: String(server.project_restrictions.length) },
                     )
                 }}
             </span>

@@ -23,7 +23,7 @@ import { variable_definition } from "./configuration";
 
 export function getHint(
     editor: TQLCodeMirrorEditor,
-    options: CodeMirror.ShowHintOptions
+    options: CodeMirror.ShowHintOptions,
 ): CodeMirror.Hints | undefined {
     const cursor = editor.getCursor(),
         token = editor.getTokenAt(cursor);
@@ -43,7 +43,7 @@ function getAutocompletableHint(
     editor: TQLCodeMirrorEditor,
     options: CodeMirror.ShowHintOptions,
     cursor: CodeMirror.Position,
-    token: CodeMirror.Token
+    token: CodeMirror.Token,
 ): CodeMirror.Hints {
     const start = getStartOfToken(editor);
     const end = cursor.ch;

@@ -24,7 +24,7 @@ import type { LazyboxItem } from "@tuleap/lazybox";
 export const LinkSelectorItemProxy = {
     fromLinkableArtifact: (
         link_verifier: VerifyIsAlreadyLinked,
-        linkable_artifact: LinkableArtifact
+        linkable_artifact: LinkableArtifact,
     ): LazyboxItem => ({
         value: linkable_artifact,
         is_disabled: link_verifier.isAlreadyLinked(linkable_artifact),

@@ -63,47 +63,47 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_url = getDatasetItemOrThrow(vue_mount_point, "projectUrl");
     const user_is_admin = Boolean(getDatasetItemOrThrow(vue_mount_point, "userIsAdmin"));
     const user_can_create_wiki = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "userCanCreateWiki")
+        getDatasetItemOrThrow(vue_mount_point, "userCanCreateWiki"),
     );
     const user_timezone = getDatasetItemOrThrow(document.body, "userTimezone");
     const date_time_format = getDatasetItemOrThrow(document.body, "dateTimeFormat");
     const user_id = Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10);
     const max_files_dragndrop = Number.parseInt(
         getDatasetItemOrThrow(vue_mount_point, "maxFilesDragndrop"),
-        10
+        10,
     );
     const max_size_upload = Number.parseInt(
         getDatasetItemOrThrow(vue_mount_point, "maxSizeUpload"),
-        10
+        10,
     );
     const warning_threshold = Number.parseInt(
         getDatasetItemOrThrow(vue_mount_point, "warningThreshold"),
-        10
+        10,
     );
     const max_archive_size = Number.parseInt(
         getDatasetItemOrThrow(vue_mount_point, "maxArchiveSize"),
-        10
+        10,
     );
     const embedded_are_allowed = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "embeddedAreAllowed")
+        getDatasetItemOrThrow(vue_mount_point, "embeddedAreAllowed"),
     );
     const is_deletion_allowed = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "userCanDeleteItem")
+        getDatasetItemOrThrow(vue_mount_point, "userCanDeleteItem"),
     );
     const is_status_property_used = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "isItemStatusPropertyUsed")
+        getDatasetItemOrThrow(vue_mount_point, "isItemStatusPropertyUsed"),
     );
     const forbid_writers_to_update = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "forbidWritersToUpdate")
+        getDatasetItemOrThrow(vue_mount_point, "forbidWritersToUpdate"),
     );
     const forbid_writers_to_delete = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "forbidWritersToDelete")
+        getDatasetItemOrThrow(vue_mount_point, "forbidWritersToDelete"),
     );
     const is_obsolescence_date_property_used = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "isObsolescenceDatePropertyUsed")
+        getDatasetItemOrThrow(vue_mount_point, "isObsolescenceDatePropertyUsed"),
     );
     const is_changelog_proposed_after_dnd = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "isChangelogDisplayedAfterDnd")
+        getDatasetItemOrThrow(vue_mount_point, "isChangelogDisplayedAfterDnd"),
     );
     const csrf_token_name = getDatasetItemOrThrow(vue_mount_point, "csrfTokenName");
     const csrf_token = getDatasetItemOrThrow(vue_mount_point, "csrfToken");
@@ -113,16 +113,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_icon = getDatasetItemOrThrow(vue_mount_point, "projectIcon");
     const filename_pattern = getDatasetItemOrThrow(vue_mount_point, "filenamePattern");
     const is_filename_pattern_enforced = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "isFilenamePatternEnforced")
+        getDatasetItemOrThrow(vue_mount_point, "isFilenamePatternEnforced"),
     );
     const can_user_switch_to_old_ui = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "canUserSwitchToOldUi")
+        getDatasetItemOrThrow(vue_mount_point, "canUserSwitchToOldUi"),
     );
     const should_display_history_in_document = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "shouldDisplayHistoryInDocument")
+        getDatasetItemOrThrow(vue_mount_point, "shouldDisplayHistoryInDocument"),
     );
     const should_display_source_column_for_versions = Boolean(
-        getDatasetItemOrThrow(vue_mount_point, "shouldDisplaySourceColumn")
+        getDatasetItemOrThrow(vue_mount_point, "shouldDisplaySourceColumn"),
     );
 
     const consider_string_criteria_as_text = (criterion: MustacheCriterion): SearchCriterion => ({
@@ -131,11 +131,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const criteria = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "criteria")).map(
-        consider_string_criteria_as_text
+        consider_string_criteria_as_text,
     );
     const columns = JSON.parse(getDatasetItemOrThrow(vue_mount_point, "columns"));
     const create_new_item_alternatives = JSON.parse(
-        getDatasetItemOrThrow(vue_mount_point, "createNewItemAlternatives")
+        getDatasetItemOrThrow(vue_mount_point, "createNewItemAlternatives"),
     );
 
     moment.tz(user_timezone);
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(store);
     const gettext = await initVueGettext(
         createGettext,
-        (locale) => import(`./po/${getPOFileFromLocale(locale)}`)
+        (locale) => import(`./po/${getPOFileFromLocale(locale)}`),
     );
 
     const pinia = createPinia();
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT, should_display_history_in_document);
     app.provide(
         SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
-        should_display_source_column_for_versions
+        should_display_source_column_for_versions,
     );
     app.provide(NEW_ITEMS_ALTERNATIVES, create_new_item_alternatives);
     app.use(VueDOMPurifyHTML);

@@ -23,7 +23,7 @@ import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-edi
 export class RichTextEditorsCreatorWithoutImageUpload {
     constructor(
         private readonly doc: Document,
-        private readonly editor_factory: RichTextEditorFactory
+        private readonly editor_factory: RichTextEditorFactory,
     ) {}
 
     public createTextFieldEditorForMassChange(): void {

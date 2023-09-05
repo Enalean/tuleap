@@ -63,7 +63,8 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     height: $tlp-button-normal-height;
     padding: $tlp-button-normal-padding;
     overflow: hidden;
-    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out,
+    transition:
+        box-shadow $tlp-button-box-shadow-timing ease-in-out,
         background $tlp-button-background-timing ease-in-out,
         border-color $tlp-button-background-timing ease-in-out;
     border: 1px solid transparent;
@@ -85,7 +86,8 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     &:hover,
     &:active,
     &:focus {
-        transition: box-shadow $tlp-button-box-shadow-timing ease-in-out,
+        transition:
+            box-shadow $tlp-button-box-shadow-timing ease-in-out,
             background $tlp-button-background-timing ease-in-out,
             border-color $tlp-button-background-timing ease-in-out;
         box-shadow: var(--tlp-button-shadow-hover);
@@ -415,7 +417,10 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     height: $tlp-button-mini-height;
     padding: $tlp-button-mini-padding;
     border-radius: $tlp-button-mini-radius;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 1px 1px rgb(0 0 0 / 10%), 0 -1px 0 rgb(0 0 0 / 3%);
+    box-shadow:
+        0 1px 2px rgb(0 0 0 / 8%),
+        0 1px 1px rgb(0 0 0 / 10%),
+        0 -1px 0 rgb(0 0 0 / 3%);
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;

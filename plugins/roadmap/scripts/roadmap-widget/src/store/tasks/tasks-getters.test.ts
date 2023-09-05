@@ -416,7 +416,7 @@ describe("tasks-getters", () => {
                         error_row,
                         subtask_row,
                     ],
-                }
+                },
             );
 
             expect(tasks).toStrictEqual([{ id: 123 }, { id: 234 }]);
@@ -433,8 +433,8 @@ describe("tasks-getters", () => {
                             { task: { id: 123 } as Task, is_shown: false },
                             { task: { id: 124 } as Task, is_shown: false },
                         ],
-                    }
-                )
+                    },
+                ),
             ).toBe(false);
         });
         it("should return true if at least one row is displayed", () => {
@@ -446,8 +446,8 @@ describe("tasks-getters", () => {
                             { task: { id: 123 } as Task, is_shown: false },
                             { task: { id: 124 } as Task, is_shown: true },
                         ],
-                    }
-                )
+                    },
+                ),
             ).toBe(true);
         });
     });

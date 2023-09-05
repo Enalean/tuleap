@@ -46,7 +46,7 @@ interface PermissionUpdatePayload {
 }
 export const updatePermissions = async (
     context: ActionContext<PermissionsState, State>,
-    payload: PermissionUpdatePayload
+    payload: PermissionUpdatePayload,
 ): Promise<void> => {
     try {
         const item_id = payload.item.id;
@@ -92,7 +92,7 @@ export const updatePermissions = async (
 
 export const loadProjectUserGroupsIfNeeded = async (
     context: ActionContext<PermissionsState, RootState>,
-    project_id: number
+    project_id: number,
 ): Promise<void> => {
     if (context.rootState.permissions.project_ugroups !== null) {
         return;

@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(
                 /* webpackChunkName: "permissions-per-group-frs-po-" */ "../po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     const rootComponent = Vue.extend(FRSPermissions);

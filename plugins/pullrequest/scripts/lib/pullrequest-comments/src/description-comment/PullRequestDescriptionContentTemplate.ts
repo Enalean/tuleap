@@ -27,7 +27,7 @@ import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 
 const getContent = (
     host: PullRequestDescriptionComment,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestDescriptionComment> => {
     if (host.description.content !== "") {
         const sanitized_content =
@@ -72,7 +72,7 @@ const getContent = (
 
 const getFooter = (
     host: PullRequestDescriptionComment,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestDescriptionComment> => {
     if (!host.description.can_user_update_description) {
         return html``;
@@ -98,7 +98,7 @@ const getFooter = (
 
 export const getDescriptionContentTemplate = (
     host: PullRequestDescriptionComment,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestDescriptionComment> => {
     if (host.edition_form_presenter !== null) {
         return html``;
@@ -110,7 +110,7 @@ export const getDescriptionContentTemplate = (
                 ${getHeaderTemplate(
                     host.description.author,
                     host.controller.getRelativeDateHelper(),
-                    host.description.post_date
+                    host.description.post_date,
                 )}
             </div>
             ${getContent(host, gettext_provider)} ${getFooter(host, gettext_provider)}

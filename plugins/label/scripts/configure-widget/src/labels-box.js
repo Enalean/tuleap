@@ -63,7 +63,7 @@ function formatLabel(label, li_element) {
 
         return mustache.render(
             '<span class="select-item-label-title"><i class="select-item-label-bullet {{ bullet_class }}"></i>{{ label }}</span>',
-            { bullet_class: bullet_class, label: label.text }
+            { bullet_class: bullet_class, label: label.text },
         );
     }
 

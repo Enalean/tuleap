@@ -31,7 +31,7 @@ export interface ReplyCommentFormPresenter {
 export const ReplyCommentFormPresenter = {
     buildEmpty: (
         comment_author: CurrentPullRequestUserPresenter,
-        pull_request: PullRequestPresenter
+        pull_request: PullRequestPresenter,
     ): ReplyCommentFormPresenter => ({
         pull_request_id: pull_request.pull_request_id,
         comment_author,
@@ -41,7 +41,7 @@ export const ReplyCommentFormPresenter = {
     }),
     updateContent: (
         presenter: ReplyCommentFormPresenter,
-        content: string
+        content: string,
     ): ReplyCommentFormPresenter => ({
         ...presenter,
         comment_content: content,

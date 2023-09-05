@@ -44,7 +44,7 @@ export async function getTimes(context) {
             context.state.start_date,
             context.state.end_date,
             context.state.pagination_limit,
-            context.state.pagination_offset
+            context.state.pagination_offset,
         );
         return context.commit("loadAChunkOfTimes", [times, total]);
     } catch (error) {

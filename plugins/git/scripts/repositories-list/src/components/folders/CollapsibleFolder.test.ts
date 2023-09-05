@@ -73,19 +73,19 @@ describe("CollapsibleFolder", () => {
 
         expect(wrapper.find("[data-test=git-repository-list-folder-icon]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-list-folder-icon]").classes()).toContain(
-            "fa-caret-down"
+            "fa-caret-down",
         );
 
         expect(wrapper.find("[data-test=git-repository-list-folder-label]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=git-repository-list-folder-label]").text()).toBe(
-            "Repositories"
+            "Repositories",
         );
 
         wrapper.find("[data-test=git-repository-list-folder-collapse]").trigger("click");
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=git-repository-list-folder-icon]").classes()).toContain(
-            "fa-caret-right"
+            "fa-caret-right",
         );
     });
 

@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale: string) =>
             import(
                 /* webpackChunkName: "roadmap-widget-po-" */ "../po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
     Vue.use(Vuex);
     Vue.use(VueDOMPurifyHTML);
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } as RootState;
 
         const default_timescale: TimeScale = ((
-            default_timescale: string | undefined
+            default_timescale: string | undefined,
         ): TimeScale => {
             if (
                 default_timescale === "week" ||

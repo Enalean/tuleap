@@ -41,7 +41,7 @@ describe(`OngoingDrag`, () => {
             const drag_start_context = createDragStartContext(doc, true);
             const rect = { height: 100 } as DOMRect;
             vi.spyOn(drag_start_context.source_dropzone, "getBoundingClientRect").mockReturnValue(
-                rect
+                rect,
             );
             const ongoing_drag = new OngoingDrag(mock_event_source, drag_start_context);
 
@@ -114,7 +114,7 @@ describe(`OngoingDrag`, () => {
 
             expect(ongoing_drag.dragged_element.parentElement).toBe(ongoing_drag.source_dropzone);
             expect(ongoing_drag.dragged_element.nextElementSibling).toBe(
-                ongoing_drag.initial_sibling
+                ongoing_drag.initial_sibling,
             );
             expect(ongoing_drag.dragged_element.classList.contains(HIDE_CSS_CLASS)).toBe(false);
         });

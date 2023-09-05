@@ -33,7 +33,7 @@ async function getWrapper(
     card: Card,
     slots: Slots = {},
     user_has_accessibility_mode = false,
-    tracker_of_card: Tracker = { title_field: { id: 1212 } } as Tracker
+    tracker_of_card: Tracker = { title_field: { id: 1212 } } as Tracker,
 ): Promise<Wrapper<BaseCard>> {
     return shallowMount(BaseCard, {
         localVue: await createTaskboardLocalVue(),
@@ -58,7 +58,7 @@ function getCard(
     definition: Card = {
         background_color: "",
         is_in_edit_mode: false,
-    } as Card
+    } as Card,
 ): Card {
     return {
         ...definition,
@@ -79,7 +79,7 @@ describe("BaseCard", () => {
         const wrapper = await getWrapper(
             getCard({ background_color: "fiesta-red" } as Card),
             {},
-            true
+            true,
         );
 
         expect(wrapper.find(".taskboard-card-accessibility").exists()).toBe(true);
@@ -126,7 +126,7 @@ describe("BaseCard", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
-                card
+                card,
             );
         });
 
@@ -137,7 +137,7 @@ describe("BaseCard", () => {
             wrapper.get("[data-test=card-edit-button]").trigger("click");
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
-                expect.any(Object)
+                expect.any(Object),
             );
         });
 
@@ -175,7 +175,7 @@ describe("BaseCard", () => {
             EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
-                card
+                card,
             );
         });
 
@@ -200,7 +200,7 @@ describe("BaseCard", () => {
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
-                card
+                card,
             );
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
@@ -221,7 +221,7 @@ describe("BaseCard", () => {
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
-                card
+                card,
             );
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
@@ -241,7 +241,7 @@ describe("BaseCard", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
-                card
+                card,
             );
             expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
         });

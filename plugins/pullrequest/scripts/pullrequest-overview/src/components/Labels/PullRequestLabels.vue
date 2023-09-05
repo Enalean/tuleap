@@ -89,13 +89,13 @@ const are_project_labels_loading = ref(true);
 const is_modal_shown = ref(false);
 
 const is_loading_labels = computed(
-    () => are_project_labels_loading.value || are_pull_request_labels_loading.value
+    () => are_project_labels_loading.value || are_pull_request_labels_loading.value,
 );
 const has_no_labels = computed(
-    () => pull_request_labels.value.length === 0 && !are_pull_request_labels_loading.value
+    () => pull_request_labels.value.length === 0 && !are_pull_request_labels_loading.value,
 );
 const can_user_manage_labels = computed(
-    () => props.pull_request && props.pull_request.user_can_update_labels
+    () => props.pull_request && props.pull_request.user_can_update_labels,
 );
 
 const getBadgeClasses = (label: ProjectLabel): string[] => {
@@ -150,7 +150,7 @@ watch(
         }
 
         fetchAllLabels(props.pull_request);
-    }
+    },
 );
 </script>
 

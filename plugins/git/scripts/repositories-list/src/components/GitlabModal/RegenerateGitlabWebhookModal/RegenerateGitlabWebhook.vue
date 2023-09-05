@@ -143,11 +143,11 @@ export default class RegenerateGitlabWebhook extends Vue {
 
         return this.$gettextInterpolate(
             this.$gettext(
-                "New webhook of GitLab repository %{ label } has been successfully regenerated."
+                "New webhook of GitLab repository %{ label } has been successfully regenerated.",
             ),
             {
                 label: this.repository.normalized_path,
-            }
+            },
         );
     }
 
@@ -161,7 +161,7 @@ export default class RegenerateGitlabWebhook extends Vue {
         }
         return this.repository.gitlab_data.gitlab_repository_url.replace(
             this.repository.normalized_path,
-            ""
+            "",
         );
     }
 

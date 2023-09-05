@@ -68,7 +68,7 @@ function getTrackers(project_id: number | null): Promise<MinimalTrackerResponse[
 
 const { is_processing, data: current_trackers } = usePromise(
     default_data_current_trackers,
-    computed(() => getTrackers(props.project_id))
+    computed(() => getTrackers(props.project_id)),
 );
 
 const tracker = computed({

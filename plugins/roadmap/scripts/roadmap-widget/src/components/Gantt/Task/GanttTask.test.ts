@@ -37,7 +37,7 @@ describe("GanttTask", () => {
         task: Task,
         tasks_by_nature: TasksByNature | null = null,
         dependencies_nature_to_display: string | null = null,
-        show_closed_elements: boolean | null = false
+        show_closed_elements: boolean | null = false,
     ): Wrapper<GanttTask> {
         const defaults: Task = {
             id: 123,
@@ -57,7 +57,7 @@ describe("GanttTask", () => {
         const time_period = new TimePeriodMonth(
             new Date(2020, 3, 3),
             new Date(2020, 4, 3),
-            "en-US"
+            "en-US",
         );
 
         const dependencies = new TasksDependencies();
@@ -158,7 +158,7 @@ describe("GanttTask", () => {
                     ["depends_on", [dep_1, dep_2]],
                     ["", [dep_3]],
                 ]),
-                nature
+                nature,
             );
 
             const arrows = wrapper.findAllComponents(DependencyArrow);
@@ -176,7 +176,7 @@ describe("GanttTask", () => {
         const wrapper = mountGanttTask(
             { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
             new TasksByNature([["", [dep_3]]]),
-            ""
+            "",
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);
@@ -190,7 +190,7 @@ describe("GanttTask", () => {
             { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
             new TasksByNature([["", [dep_3]]]),
             "",
-            true
+            true,
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);
@@ -206,7 +206,7 @@ describe("GanttTask", () => {
         const wrapper = mountGanttTask(
             { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
             new TasksByNature([["depends_on", [dep_1, dep_2]]]),
-            "depends_on"
+            "depends_on",
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);

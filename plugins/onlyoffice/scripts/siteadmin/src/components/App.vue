@@ -36,7 +36,7 @@ const props = defineProps<{ location: Location; history: History }>();
 const config = strictInject(CONFIG);
 
 const server_to_restrict = ref<Server | undefined>(
-    config.servers.find((server) => server.restrict_url === props.location.pathname)
+    config.servers.find((server) => server.restrict_url === props.location.pathname),
 );
 
 provide(NAVIGATION, {

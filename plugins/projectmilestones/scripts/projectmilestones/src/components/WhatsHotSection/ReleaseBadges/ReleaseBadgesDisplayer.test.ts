@@ -36,7 +36,7 @@ describe("ReleaseBadgesDisplayer", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseBadgesDisplayer>> {
         store = createStoreMock(store_options);
 
@@ -72,7 +72,7 @@ describe("ReleaseBadgesDisplayer", () => {
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
-                true
+                true,
             );
         });
 
@@ -90,7 +90,7 @@ describe("ReleaseBadgesDisplayer", () => {
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
-                true
+                true,
             );
         });
 
@@ -113,7 +113,7 @@ describe("ReleaseBadgesDisplayer", () => {
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(true);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
-                false
+                false,
             );
         });
     });

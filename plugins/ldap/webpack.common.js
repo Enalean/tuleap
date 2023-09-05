@@ -23,7 +23,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/ldap/"
+    "/assets/ldap/",
 );
 
 const entry_points = {

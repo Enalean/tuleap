@@ -30,13 +30,13 @@ export const first_date = (
     state: unknown,
     getters: unknown,
     root_state: RootState,
-    root_getters: { "tasks/tasks": Task[] }
+    root_getters: { "tasks/tasks": Task[] },
 ): Date => {
     const first_task_date = getFirstDate(root_getters["tasks/tasks"], root_state.now);
 
     const iterations_containing_first_task_date = getIterationsAroundDate(
         root_state,
-        first_task_date
+        first_task_date,
     );
 
     if (iterations_containing_first_task_date.length === 0) {
@@ -56,7 +56,7 @@ export const last_date = (
     state: unknown,
     getters: unknown,
     root_state: RootState,
-    root_getters: { "tasks/tasks": Task[] }
+    root_getters: { "tasks/tasks": Task[] },
 ): Date => {
     return getLastDate(
         [
@@ -64,20 +64,20 @@ export const last_date = (
             ...root_state.iterations.lvl1_iterations,
             ...root_state.iterations.lvl2_iterations,
         ],
-        root_state.now
+        root_state.now,
     );
 };
 
 export const time_period = (
     state: TimeperiodState,
     { first_date, last_date }: { first_date: Date; last_date: Date },
-    root_state: RootState
+    root_state: RootState,
 ): TimePeriod => {
     if (state.timescale === "week") {
         return new TimePeriodWeek(
             getFirstDateWithOffset(7, first_date),
             last_date,
-            root_state.gettext_provider
+            root_state.gettext_provider,
         );
     }
 
@@ -85,14 +85,14 @@ export const time_period = (
         return new TimePeriodQuarter(
             getFirstDateWithOffset(90, first_date),
             last_date,
-            root_state.gettext_provider
+            root_state.gettext_provider,
         );
     }
 
     return new TimePeriodMonth(
         getFirstDateWithOffset(30, first_date),
         last_date,
-        root_state.locale_bcp47
+        root_state.locale_bcp47,
     );
 };
 

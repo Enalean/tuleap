@@ -71,7 +71,7 @@ describe("Text follow up", () => {
             changeset_id,
             field_id,
             "strip-html",
-            "show-diff-follow-up"
+            "show-diff-follow-up",
         );
 
         expect(get).toHaveBeenCalledWith("/plugins/tracker/changeset/123/diff/strip-html/130/1911");
@@ -85,7 +85,7 @@ describe("Text follow up", () => {
         const diff_button_element = diff_buttons[0];
 
         const only_formatted_message = local_document_with_followup.getElementById(
-            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
+            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`,
         );
         if (!only_formatted_message) {
             throw new Error("Missing only formatted dff message" + changeset_id);
@@ -98,12 +98,12 @@ describe("Text follow up", () => {
             changeset_id,
             field_id,
             "strip-html",
-            "show-diff-follow-up"
+            "show-diff-follow-up",
         );
 
         expect(get).toHaveBeenCalledWith("/plugins/tracker/changeset/123/diff/strip-html/130/1911");
         expect(only_formatted_message.classList.contains("hide-only-formatted-diff-message")).toBe(
-            false
+            false,
         );
     });
 
@@ -180,14 +180,14 @@ describe("Text follow up", () => {
         markup_diff_button.setAttribute("data-field-id", field_id);
         markup_diff_button.setAttribute(
             "id",
-            `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`
+            `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`,
         );
 
         const diff_element = local_document.createElement("div");
         diff_element.classList.add("diff");
         diff_element.setAttribute(
             "id",
-            `tracker-changeset-diff-comment-${changeset_id}-${field_id}`
+            `tracker-changeset-diff-comment-${changeset_id}-${field_id}`,
         );
 
         diff_element.setAttribute("data-artifact-id", value);
@@ -196,13 +196,13 @@ describe("Text follow up", () => {
         const error_element = local_document.createElement("div");
         error_element.setAttribute(
             "id",
-            `tracker-changeset-diff-error-${changeset_id}-${field_id}`
+            `tracker-changeset-diff-error-${changeset_id}-${field_id}`,
         );
 
         const only_formatting_element = local_document.createElement("div");
         only_formatting_element.setAttribute(
             "id",
-            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
+            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`,
         );
         markup_diff_button.setAttribute("class", "hide-only-formatted-diff-message");
 
@@ -211,7 +211,7 @@ describe("Text follow up", () => {
             markup_diff_button,
             diff_element,
             error_element,
-            only_formatting_element
+            only_formatting_element,
         );
 
         return local_document;

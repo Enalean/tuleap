@@ -98,7 +98,7 @@ describe("NewComparisonModal", () => {
 
                 it("enables submit", () => {
                     expect(wrapper.get(submit_selector).attributes("disabled")).not.toBe(
-                        "disabled"
+                        "disabled",
                     );
                 });
 

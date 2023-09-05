@@ -46,12 +46,12 @@ export const SearchResultsGroup = {
 
     fromSearchResults: (
         link_verifier: VerifyIsAlreadyLinked,
-        search_results: readonly LinkableArtifact[]
+        search_results: readonly LinkableArtifact[],
     ): GroupOfItems => ({
         label: getSearchResultsGroupLabel(),
         empty_message: getNoResultFoundEmptyState(),
         items: search_results.map((artifact) =>
-            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact),
         ),
         is_loading: false,
         footer_message: getSearchResultsGroupFootMessage(),

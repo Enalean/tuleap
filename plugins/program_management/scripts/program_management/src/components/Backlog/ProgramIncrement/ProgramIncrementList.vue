@@ -111,7 +111,7 @@ export default class ProgramIncrementList extends Vue {
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(
-                "The retrieval of the program increments has failed"
+                "The retrieval of the program increments has failed",
             );
             throw e;
         } finally {

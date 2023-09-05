@@ -86,7 +86,7 @@ async function saveTransitionRules({ commit, state, getters }) {
             },
             () => {
                 commit("hideTransitionUpdated", transition, { root: true });
-            }
+            },
         );
         commit("clearModalShown");
     } catch (error) {

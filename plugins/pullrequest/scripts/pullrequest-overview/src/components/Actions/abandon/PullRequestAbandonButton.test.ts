@@ -87,7 +87,7 @@ describe("PullRequestAbandonButton", () => {
         (status) => {
             const wrapper = getWrapper({ status });
             expect(wrapper.element.children).toBeUndefined();
-        }
+        },
     );
 
     it("should not be displayed when the pull-request status is review but the user cannot abandon", () => {
@@ -107,7 +107,7 @@ describe("PullRequestAbandonButton", () => {
             } as PullRequest;
 
             vi.spyOn(tuleap_api, "abandonPullRequest").mockReturnValue(
-                okAsync(updated_pull_request)
+                okAsync(updated_pull_request),
             );
 
             await getWrapper().find("[data-test=abandon-button]").trigger("click");

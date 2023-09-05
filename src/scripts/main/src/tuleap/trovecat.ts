@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const matching_buttons = document.querySelectorAll(
-        ".trovecats-edit-button, .trovecats-delete-button"
+        ".trovecats-edit-button, .trovecats-delete-button",
     );
 
     for (const button of matching_buttons) {
@@ -69,7 +69,7 @@ function bindNbMaxValuesToProjectFlag(): void {
             throw new Error("InputProjectFlagId is not in dataset");
         }
         const is_project_flag_input = document.getElementById(
-            nb_max_input.dataset.inputProjectFlagId
+            nb_max_input.dataset.inputProjectFlagId,
         );
         if (!(is_project_flag_input instanceof HTMLInputElement)) {
             continue;
@@ -137,7 +137,7 @@ function markFormElementAsEnabled(input: HTMLInputElement): void {
 
 function selectParentCategoryOption(): void {
     const select_categories = document.getElementsByClassName(
-        "trove-cats-modal-select-parent-category"
+        "trove-cats-modal-select-parent-category",
     );
 
     for (const select_category of select_categories) {
@@ -218,11 +218,11 @@ function allowMandatoryPropertyOnlyForRootCategories(select_id: string, id: stri
 
 function changeVisibilityOfDisplayAtProjectCreation(
     id: string,
-    selected_option: HTMLOptionElement
+    selected_option: HTMLOptionElement,
 ): void {
     const checkbox = document.getElementById("trove-cats-modal-display-at-project-creation-" + id);
     const form_element = document.getElementById(
-        "trove-cats-modal-display-at-project-creation-form-element-" + id
+        "trove-cats-modal-display-at-project-creation-form-element-" + id,
     );
     if (!(checkbox instanceof HTMLInputElement)) {
         throw new Error("Checkbox is not a HTMLInputElement");

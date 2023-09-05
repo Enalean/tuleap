@@ -115,11 +115,11 @@ const { testdefinition_tracker_id } = useState<Pick<State, "testdefinition_track
 
 const { createCampaign } = useNamespacedActions<Pick<CampaignActions, "createCampaign">>(
     "campaign",
-    ["createCampaign"]
+    ["createCampaign"],
 );
 const { loadBacklogItems } = useNamespacedActions<Pick<BacklogItemActions, "loadBacklogItems">>(
     "backlog_item",
-    ["loadBacklogItems"]
+    ["loadBacklogItems"],
 );
 
 const testdefinition_tracker_reports = ref<TrackerReport[] | null>(null);
@@ -148,11 +148,11 @@ onMounted(async (): Promise<void> => {
     } else {
         try {
             testdefinition_tracker_reports.value = await getTrackerReports(
-                testdefinition_tracker_id.value
+                testdefinition_tracker_id.value,
             );
         } catch (e) {
             error_message.value = $gettext(
-                "The retrieval of the test definition tracker reports has failed, try again later"
+                "The retrieval of the test definition tracker reports has failed, try again later",
             );
             throw e;
         }

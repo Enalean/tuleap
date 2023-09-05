@@ -31,7 +31,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ListOfTestDefinitions", () => {
     function createWrapper(
-        backlog_item: BacklogItem
+        backlog_item: BacklogItem,
     ): VueWrapper<InstanceType<typeof ListOfTestDefinitions>> {
         return shallowMount(ListOfTestDefinitions, {
             props: {

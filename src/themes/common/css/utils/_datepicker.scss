@@ -14,7 +14,9 @@ div.datePicker {
     background: transparent;
 
     /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
-    font: 0.8em/0.8em Verdana, sans-serif;
+    font:
+        0.8em/0.8em Verdana,
+        sans-serif;
     text-align: center;
     user-select: none;
 }
@@ -93,7 +95,9 @@ div.datePicker th span {
 
 div.datePicker th span.month-display,
 div.datePicker th span.year-display {
-    font: normal 1em Verdana, sans-serif;
+    font:
+        normal 1em Verdana,
+        sans-serif;
     letter-spacing: 1px;
     text-transform: uppercase;
     cursor: default;
@@ -108,7 +112,9 @@ div.datePicker th span.next-but {
 div.datePicker th span.today-but {
     width: 100%;
     margin: 0 auto;
-    font: normal 0.8em Verdana, sans-serif;
+    font:
+        normal 0.8em Verdana,
+        sans-serif;
     line-height: 1em;
     text-align: center;
     text-decoration: none;
@@ -126,7 +132,9 @@ div.datePicker th span.fd-day-header {
     width: 2em;
     height: 1.2em;
     margin: 0 auto;
-    font: 900 1em Verdana, sans-serif;
+    font:
+        900 1em Verdana,
+        sans-serif;
     line-height: 1em;
     text-align: center;
     text-decoration: none;

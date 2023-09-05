@@ -83,7 +83,7 @@ describe("SelectionElement", () => {
                 it(`When no item is selected, it shows a placeholder element`, () => {
                     const placeholder = selectOrThrow(
                         getRenderedTemplate(getHost()),
-                        "[data-test=selection-placeholder]"
+                        "[data-test=selection-placeholder]",
                     );
                     expect(placeholder.textContent?.trim()).toBe(PLACEHOLDER_TEXT);
                 });
@@ -92,7 +92,7 @@ describe("SelectionElement", () => {
                     const host = getHost(LazyboxItemStub.withDefaults());
                     const content = selectOrThrow(
                         getRenderedTemplate(host),
-                        "[data-test=selected-element]"
+                        "[data-test=selected-element]",
                     );
                     expect(content).toBeDefined();
                 });
@@ -108,7 +108,7 @@ describe("SelectionElement", () => {
                     const content = getRenderedTemplate(host);
 
                     expect(
-                        content.querySelector("[data-test=clear-current-selection-button]")
+                        content.querySelector("[data-test=clear-current-selection-button]"),
                     ).toBeNull();
                 });
 
@@ -116,7 +116,7 @@ describe("SelectionElement", () => {
                     const host = getHost(LazyboxItemStub.withDefaults());
                     const button = selectOrThrow(
                         getRenderedTemplate(host),
-                        "[data-test=clear-current-selection-button]"
+                        "[data-test=clear-current-selection-button]",
                     );
                     expect(button).toBeDefined();
                 });
@@ -175,7 +175,7 @@ describe("SelectionElement", () => {
             it(`replaces the previous selection by the new one`, () => {
                 const host = getHost(
                     LazyboxItemStub.withDefaults({ value: "value-1" }),
-                    LazyboxItemStub.withDefaults({ value: "value-2" })
+                    LazyboxItemStub.withDefaults({ value: "value-2" }),
                 );
                 const onSelection = vi.spyOn(host, "onSelection");
 

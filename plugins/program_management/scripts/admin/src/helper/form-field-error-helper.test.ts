@@ -25,7 +25,7 @@ describe("form-field-error-helper", () => {
     describe("resetErrorOnSelectField", () => {
         it("Throw error When there are no parent", () => {
             expect(() => resetErrorOnSelectField(document.createElement("select"))).toThrow(
-                "Parent of selector does not exist"
+                "Parent of selector does not exist",
             );
         });
         it("When parent exists, Then class error is removed", () => {
@@ -56,7 +56,7 @@ describe("form-field-error-helper", () => {
     describe("setErrorMessageOnSelectField", () => {
         it("Throw error When there are no parent", () => {
             expect(() =>
-                setErrorMessageOnSelectField(document.createElement("select"), "error message")
+                setErrorMessageOnSelectField(document.createElement("select"), "error message"),
             ).toThrow("Parent of selector does not exist");
         });
         it("When parent exists, Then class error and error message are added", () => {

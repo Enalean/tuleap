@@ -63,7 +63,7 @@ describe("ListOptionsChangesObserver", () => {
             items_map_manager,
             dropdown_content_renderer,
             selection_manager,
-            event_manager
+            event_manager,
         );
     });
 

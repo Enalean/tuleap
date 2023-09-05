@@ -29,7 +29,7 @@ const location = {
 describe("base-url-builders", () => {
     it("should build the base url", () => {
         expect(buildBaseUrl(location, repository_id, project_id).toString()).toBe(
-            `https://example.com/plugins/git/?action=pull-requests&repo_id=${repository_id}&group_id=${project_id}`
+            `https://example.com/plugins/git/?action=pull-requests&repo_id=${repository_id}&group_id=${project_id}`,
         );
     });
 
@@ -37,7 +37,7 @@ describe("base-url-builders", () => {
         const base_url = buildBaseUrl(location, repository_id, project_id);
 
         expect(buildVueOverviewBaseUrl(base_url).toString()).toBe(
-            `https://example.com/plugins/git/?action=pull-requests&repo_id=${repository_id}&group_id=${project_id}&tab=overview`
+            `https://example.com/plugins/git/?action=pull-requests&repo_id=${repository_id}&group_id=${project_id}&tab=overview`,
         );
     });
 });

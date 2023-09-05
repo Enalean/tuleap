@@ -64,7 +64,7 @@ describe("DryRunNotMigratedFieldState", () => {
         expect(wrapper.find("[data-test=not-migrated-field-error-message]").exists()).toBe(true);
         expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=move-action-not-possible-error-message]").exists()).toBe(
-            false
+            false,
         );
     });
 
@@ -77,7 +77,7 @@ describe("DryRunNotMigratedFieldState", () => {
 
         expect(wrapper.find("[data-test=dry-run-message-error]").exists()).toBe(true);
         expect(wrapper.find("[data-test=move-action-not-possible-error-message]").exists()).toBe(
-            true
+            true,
         );
         expect(wrapper.find("[data-test=not-migrated-field-error-message]").exists()).toBe(false);
         expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(false);

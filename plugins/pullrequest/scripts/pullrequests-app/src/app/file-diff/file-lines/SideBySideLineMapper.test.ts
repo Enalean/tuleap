@@ -53,7 +53,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_unmoved_line, second_unmoved_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const first_line_left_handle = {};
@@ -100,7 +100,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_line, first_added_line, second_added_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const first_line_before_group_left_handle = {};
@@ -151,7 +151,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_added_line, second_added_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const first_line_left_handle = {};
@@ -203,7 +203,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_line, second_deleted_line, third_deleted_line, fourth_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const second_deleted_line_left_handle = {};
@@ -265,7 +265,7 @@ describe("side-by-side line mapper", () => {
                         fourth_deleted_line,
                     ],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const second_line_right_handle = {};
@@ -318,7 +318,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_deleted_line, second_deleted_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const first_line_left_handle = {};
@@ -368,7 +368,7 @@ describe("side-by-side line mapper", () => {
                 const lines_mapper = SideBySideLineMapper(
                     [first_deleted_line, second_added_line],
                     left_code_mirror,
-                    right_code_mirror
+                    right_code_mirror,
                 );
 
                 const first_line_left_handle = {};

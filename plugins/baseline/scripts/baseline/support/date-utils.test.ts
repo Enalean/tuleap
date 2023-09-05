@@ -44,7 +44,7 @@ describe("DateUtils:", () => {
     describe("#humanFormat", () => {
         it("formats date to make it readable", () => {
             expect(DateFormatter.humanFormat("2019-03-22T10:01:48+00:00")).toBe(
-                "22. März 2019 05:01"
+                "22. März 2019 05:01",
             );
         });
     });

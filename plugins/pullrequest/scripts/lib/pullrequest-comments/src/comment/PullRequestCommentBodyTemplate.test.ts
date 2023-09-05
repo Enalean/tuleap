@@ -52,7 +52,7 @@ describe("PullRequestCommentBodyTemplate", () => {
 
         const displayed_file = selectOrThrow(
             target,
-            "[data-test=pullrequest-comment-with-link-to-file]"
+            "[data-test=pullrequest-comment-with-link-to-file]",
         );
         const link_to_file = selectOrThrow(displayed_file, "a", HTMLAnchorElement);
 
@@ -73,7 +73,7 @@ describe("PullRequestCommentBodyTemplate", () => {
 
         const displayed_file = selectOrThrow(
             target,
-            "[data-test=pullrequest-comment-only-file-name]"
+            "[data-test=pullrequest-comment-only-file-name]",
         );
 
         const body = selectOrThrow(target, "[data-test=pull-request-comment-body]");
@@ -115,7 +115,7 @@ describe("PullRequestCommentBodyTemplate", () => {
         render(host, target);
 
         expect(
-            target.querySelector("[data-test=pullrequest-comment-with-link-to-file]")
+            target.querySelector("[data-test=pullrequest-comment-with-link-to-file]"),
         ).toBeNull();
         expect(target.querySelector("[data-test=pullrequest-comment-only-file-name]")).toBeNull();
     });

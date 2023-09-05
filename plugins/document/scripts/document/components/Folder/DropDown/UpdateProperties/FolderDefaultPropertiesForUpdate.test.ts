@@ -47,7 +47,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         is_status_property_used: boolean,
         has_loaded_properties: boolean,
         currentlyUpdatedItem: Folder,
-        itemProperty: Array<Property>
+        itemProperty: Array<Property>,
     ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForUpdate>> {
         return shallowMount(FolderDefaultPropertiesForUpdate, {
             props: {
@@ -103,10 +103,10 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             await nextTick();
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-spinner]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-spinner]").exists(),
             ).toBeTruthy();
         });
     });
@@ -134,7 +134,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             const wrapper = createWrapper(true, true, item, []);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
         });
         it(`Given item has custom properties, default properties are rendered`, () => {
@@ -161,7 +161,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             const wrapper = createWrapper(false, true, item, [item_property]);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
         });
         it(`Given item has no custom properties and status is not available, default properties are not rendered`, () => {
@@ -178,7 +178,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             const wrapper = createWrapper(false, true, item, []);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeFalsy();
         });
     });
@@ -210,7 +210,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             const wrapper = createWrapper(true, true, item, [item_property]);
 
             expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists(),
             ).toBeTruthy();
 
             const input = wrapper.get("[data-test=document-custom-property-checkbox]");

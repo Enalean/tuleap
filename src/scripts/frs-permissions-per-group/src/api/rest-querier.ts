@@ -22,7 +22,7 @@ import type { PackagePermission } from "../types";
 
 export async function getPackagesPermissions(
     group_id: string,
-    selected_ugroup_id: string
+    selected_ugroup_id: string,
 ): Promise<PackagePermission[]> {
     const response = await get("/file/files_permissions_per_group.php", {
         params: {

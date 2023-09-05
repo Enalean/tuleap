@@ -31,7 +31,7 @@ export type ParentFeedbackControllerType = {
 export const ParentFeedbackController = (
     retriever: RetrieveParent,
     event_dispatcher: DispatchEvents,
-    parent_option: Option<ParentArtifactIdentifier>
+    parent_option: Option<ParentArtifactIdentifier>,
 ): ParentFeedbackControllerType => ({
     getParentArtifact: (): PromiseLike<Option<ParentArtifact>> => {
         return parent_option.mapOr(
@@ -41,9 +41,9 @@ export const ParentFeedbackController = (
                     (fault) => {
                         event_dispatcher.dispatch(WillNotifyFault(fault));
                         return Option.nothing();
-                    }
+                    },
                 ),
-            Promise.resolve(Option.nothing())
+            Promise.resolve(Option.nothing()),
         );
     },
 });

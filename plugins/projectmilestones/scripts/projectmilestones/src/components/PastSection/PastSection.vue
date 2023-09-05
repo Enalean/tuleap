@@ -75,7 +75,7 @@ export default class PastSection extends Vue {
         const translated = this.$ngettext(
             "%{nb_past} past %{label_tracker}",
             "%{nb_past} past %{label_tracker}",
-            this.nb_past_releases
+            this.nb_past_releases,
         );
 
         return this.$gettextInterpolate(translated, {

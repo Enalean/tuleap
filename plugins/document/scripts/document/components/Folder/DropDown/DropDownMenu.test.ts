@@ -38,10 +38,10 @@ import * as strict_inject from "@tuleap/vue-strict-inject";
 describe("DropDownMenu", () => {
     function createWrapper(
         item: Item,
-        should_display_history_in_document = false
+        should_display_history_in_document = false,
     ): VueWrapper<InstanceType<typeof DropDownMenu>> {
         jest.spyOn(strict_inject, "strictInject").mockReturnValue(
-            should_display_history_in_document
+            should_display_history_in_document,
         );
         return shallowMount(DropDownMenu, {
             props: { item },
@@ -133,7 +133,7 @@ describe("DropDownMenu", () => {
                     type: "file",
                     can_user_manage: false,
                 } as Item,
-                true
+                true,
             );
 
             await nextTick();
@@ -154,7 +154,7 @@ describe("DropDownMenu", () => {
                 await nextTick();
 
                 expect(wrapper.vm.should_display_versions_link).toBe(false);
-            }
+            },
         );
 
         it.each([
@@ -174,13 +174,13 @@ describe("DropDownMenu", () => {
                         type,
                         can_user_manage: false,
                     } as Item,
-                    true
+                    true,
                 );
 
                 await nextTick();
 
                 expect(wrapper.vm.should_display_versions_link).toBe(should_versions_be_displayed);
-            }
+            },
         );
     });
 });

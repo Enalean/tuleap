@@ -121,7 +121,7 @@ function CardFieldsService($sce) {
 
             return html`<span class="${classlist}"></span>${highlightFilterElements(
                     label,
-                    filter_terms
+                    filter_terms,
                 )}`;
         }
 
@@ -153,8 +153,8 @@ function CardFieldsService($sce) {
         return getHTMLStringFromTemplate(
             renderListItems(
                 values,
-                (value) => html`${highlightFilterElements(value, filter_terms)}`
-            )
+                (value) => html`${highlightFilterElements(value, filter_terms)}`,
+            ),
         );
     }
 

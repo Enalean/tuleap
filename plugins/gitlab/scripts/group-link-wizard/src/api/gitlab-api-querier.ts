@@ -34,7 +34,7 @@ export interface GitlabApi {
 export const createGitlabApiQuerier = (): GitlabApi => {
     const continueFetching = (
         response: Response,
-        credentials: GitlabCredentials
+        credentials: GitlabCredentials,
     ): ResultAsync<readonly GitlabGroup[], Fault> => {
         const next_page_url = extractNextUrl(getLinkHeaderFromResponse(response));
 
@@ -42,8 +42,8 @@ export const createGitlabApiQuerier = (): GitlabApi => {
             if (next_page_url !== null) {
                 return get(uri`${rawUri(next_page_url)}`, credentials).andThen((response) =>
                     continueFetching(response, credentials).map((new_groups) =>
-                        groups.concat(new_groups)
-                    )
+                        groups.concat(new_groups),
+                    ),
                 );
             }
             return okAsync(groups);
@@ -54,11 +54,11 @@ export const createGitlabApiQuerier = (): GitlabApi => {
         getGitlabGroups(credentials): ResultAsync<readonly GitlabGroup[], Fault> {
             const next_page_url = new URL(
                 "/api/v4/groups?pagination=keyset&order_by=id&sort=asc",
-                credentials.server_url
+                credentials.server_url,
             );
 
             return get(uri`${rawUri(String(next_page_url))}`, credentials).andThen((response) =>
-                continueFetching(response, credentials)
+                continueFetching(response, credentials),
             );
         },
     };

@@ -53,7 +53,7 @@ context("Platform notifications", function () {
         cy.get("[data-test=new-button]").click();
         cy.get("[data-test=create-new-item]").click();
         cy.get(
-            `[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]`
+            `[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]`,
         ).click();
         cy.get('[data-test="project-registration-next-button"]').click();
         cy.get('[data-test="new-project-name"]').type(project);
@@ -71,7 +71,7 @@ context("Platform notifications", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectMember@example.com",
-            "Project approved"
+            "Project approved",
         );
     });
 
@@ -84,7 +84,7 @@ context("Platform notifications", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectMember@example.com",
-            "You are now a member of project "
+            "You are now a member of project ",
         );
         cy.log("sends a notification when a project member leave project");
         cy.projectMemberSession();
@@ -99,7 +99,7 @@ context("Platform notifications", function () {
 
                 cy.assertUserMessagesReceivedByWithSpecificContent(
                     "ProjectAdministrator@example.com",
-                    "user ProjectMember has chosen to"
+                    "user ProjectMember has chosen to",
                 );
             });
     });
@@ -132,7 +132,7 @@ context("Platform notifications", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "codendi-admin@tuleap",
-            "A new user has just registered on Tuleap"
+            "A new user has just registered on Tuleap",
         );
 
         cy.siteAdministratorSession();
@@ -143,7 +143,7 @@ context("Platform notifications", function () {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "user@example.com",
-            "You are now a registered user on Tuleap"
+            "You are now a registered user on Tuleap",
         );
     });
 });

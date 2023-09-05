@@ -67,10 +67,10 @@ describe("IterationCard", () => {
         const wrapper = await getWrapper();
 
         expect(
-            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right")
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right"),
         ).toBe(true);
         expect(
-            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down")
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down"),
         ).toBe(false);
         expect(wrapper.find("[data-test=planned-iteration-content]").exists()).toBe(false);
         expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(false);
@@ -84,10 +84,10 @@ describe("IterationCard", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right")
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right"),
         ).toBe(false);
         expect(
-            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down")
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down"),
         ).toBe(true);
         expect(wrapper.find("[data-test=planned-iteration-content]").exists()).toBe(true);
         expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(true);
@@ -98,13 +98,13 @@ describe("IterationCard", () => {
 
         expect(wrapper.get("[data-test=iteration-header-label]").text()).toContain(iteration.title);
         expect(wrapper.get("[data-test=iteration-header-dates]").text()).toContain(
-            formatDateYearMonthDay("en-US", iteration.start_date)
+            formatDateYearMonthDay("en-US", iteration.start_date),
         );
         expect(wrapper.get("[data-test=iteration-header-dates]").text()).toContain(
-            formatDateYearMonthDay("en-US", iteration.end_date)
+            formatDateYearMonthDay("en-US", iteration.end_date),
         );
         expect(wrapper.get("[data-test=iteration-header-status]").text()).toContain(
-            iteration.status
+            iteration.status,
         );
     });
 

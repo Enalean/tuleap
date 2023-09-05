@@ -101,7 +101,7 @@ describe("BarPopover", () => {
                 mutation_callback = callback;
 
                 return observer;
-            }
+            },
         );
 
         jest.spyOn(tooltip, "retrieveTooltipData").mockResolvedValue({
@@ -138,7 +138,7 @@ describe("BarPopover", () => {
         wrapper.element.classList.add("tlp-popover-shown");
         mutation_callback(
             [{ target: wrapper.element } as unknown as MutationRecord],
-            {} as MutationObserver
+            {} as MutationObserver,
         );
 
         // await watch() and body content is fetched

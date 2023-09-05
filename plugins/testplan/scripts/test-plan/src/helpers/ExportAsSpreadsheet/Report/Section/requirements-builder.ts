@@ -69,14 +69,14 @@ interface ExtraFieldsToExtract {
 
 export async function buildRequirementsSection(
     gettext_provider: VueGettextProvider,
-    backlog_items: ReadonlyArray<BacklogItem>
+    backlog_items: ReadonlyArray<BacklogItem>,
 ): Promise<RequirementsSection> {
     const all_full_requirements: ReadonlyMap<number, Artifact> = await retrieveArtifacts(
-        backlog_items.map((backlog_item: BacklogItem): number => backlog_item.id)
+        backlog_items.map((backlog_item: BacklogItem): number => backlog_item.id),
     );
 
     const trackers = await retrieveTrackers(
-        [...all_full_requirements.values()].map((value) => value.tracker)
+        [...all_full_requirements.values()].map((value) => value.tracker),
     );
     const extra_fields_to_extract = getExtraFieldToExtract(trackers);
 
@@ -97,7 +97,7 @@ export async function buildRequirementsSection(
             let extra_cells: ReportCell[] = [];
             if (requirement) {
                 extra_cells = sortExtraCells(
-                    getExtraCells(gettext_provider, requirement, extra_fields_to_extract)
+                    getExtraCells(gettext_provider, requirement, extra_fields_to_extract),
                 );
             }
 
@@ -114,13 +114,13 @@ export async function buildRequirementsSection(
 
 function getTestStatusCell(
     gettext_provider: VueGettextProvider,
-    backlog_item: BacklogItem
+    backlog_item: BacklogItem,
 ): TextCell {
     return new TextCell(
         getInternationalizedTestStatus(
             gettext_provider,
-            getTestStatusFromStats(computeTestStats(backlog_item))
-        )
+            getTestStatusFromStats(computeTestStats(backlog_item)),
+        ),
     );
 }
 
@@ -150,7 +150,7 @@ function getExtraFieldToExtract(trackers: ReadonlyArray<Tracker>): ExtraFieldsTo
 function getExtraCells(
     gettext_provider: VueGettextProvider,
     requirement: Artifact,
-    extra_fields: ExtraFieldsToExtract
+    extra_fields: ExtraFieldsToExtract,
 ): Map<string, ReportCell> {
     const extra_cells: Map<string, ReportCell> = new Map();
 
@@ -169,9 +169,9 @@ function getExtraCells(
                 field_value.label,
                 already_existing_cell_with_label.withComment(
                     gettext_provider.$gettext(
-                        "This requirement have multiple fields with this label, only one value is visible"
-                    )
-                )
+                        "This requirement have multiple fields with this label, only one value is visible",
+                    ),
+                ),
             );
             continue;
         }
@@ -184,7 +184,7 @@ function getExtraCells(
 
     const extra_field_labels_of_artifact = new Set(extra_cells.keys());
     const extra_field_labels_not_existing_for_the_artifact = [...extra_fields.labels].filter(
-        (label: string) => !extra_field_labels_of_artifact.has(label)
+        (label: string) => !extra_field_labels_of_artifact.has(label),
     );
     for (const missing_extra_field_label of extra_field_labels_not_existing_for_the_artifact) {
         extra_cells.set(missing_extra_field_label, new EmptyCell());
@@ -201,7 +201,7 @@ function sortExtraCells(unsorted_cells: ReadonlyMap<string, ReportCell>): Report
 
     return extra_cells
         .sort((a: [string, ReportCell], b: [string, ReportCell]): number =>
-            sortFieldLabel(a[0], b[0])
+            sortFieldLabel(a[0], b[0]),
         )
         .map((label_with_cell: [string, ReportCell]): ReportCell => label_with_cell[1]);
 }

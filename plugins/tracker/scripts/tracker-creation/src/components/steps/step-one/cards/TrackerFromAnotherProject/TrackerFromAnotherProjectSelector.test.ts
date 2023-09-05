@@ -26,7 +26,7 @@ import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelect
 
 describe("TrackerFromAnotherProject", () => {
     async function getWrapper(
-        state: State = {} as State
+        state: State = {} as State,
     ): Promise<Wrapper<TrackerFromAnotherProjectSelector>> {
         return shallowMount(TrackerFromAnotherProjectSelector, {
             mocks: {
@@ -105,12 +105,12 @@ describe("TrackerFromAnotherProject", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProject",
-            helpdesk_project
+            helpdesk_project,
         );
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProjectTrackerTemplate",
-            null
+            null,
         );
 
         expect(tracker_option_names).toContain("SLA");
@@ -152,7 +152,7 @@ describe("TrackerFromAnotherProject", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProjectTrackerTemplate",
-            sla_tracker
+            sla_tracker,
         );
     });
 });

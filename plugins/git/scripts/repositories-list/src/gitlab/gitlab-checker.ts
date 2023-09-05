@@ -29,7 +29,7 @@ export function isGitlabRepository(repository: FormattedGitLabRepository | Repos
 }
 
 export function isGitlabRepositoryWellConfigured(
-    repository: FormattedGitLabRepository | Repository
+    repository: FormattedGitLabRepository | Repository,
 ): boolean {
     return (
         Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&

@@ -81,7 +81,7 @@ export function groupedbar(id, graph) {
     xGrouped.domain(graph.grouped_labels.map((d, i) => i)).range([0, x.bandwidth()]);
 
     const max_grouped_value = max(graph.values, ({ values }) =>
-        max(Object.values(values).map(({ value }) => parseFloat(value)))
+        max(Object.values(values).map(({ value }) => parseFloat(value))),
     );
 
     y.domain([0, max_grouped_value]);
@@ -146,7 +146,7 @@ export function groupedbar(id, graph) {
                     interpolate(t),
                     xGrouped.bandwidth(),
                     height - interpolate(t),
-                    3
+                    3,
                 );
         });
 
@@ -169,7 +169,7 @@ export function groupedbar(id, graph) {
         graph.colors,
         onOverValue,
         onOutValue,
-        getLegendClass
+        getLegendClass,
     );
 
     function getGradientId(value_index) {

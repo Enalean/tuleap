@@ -33,7 +33,7 @@ import type { TasksState } from "../store/tasks/type";
 describe("App", () => {
     async function mountComponent(
         tasks: TasksState = {} as TasksState,
-        root: RootState = {} as RootState
+        root: RootState = {} as RootState,
     ): Promise<Wrapper<App>> {
         return shallowMount(App, {
             propsData: {
@@ -62,7 +62,7 @@ describe("App", () => {
                 should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",
-            } as RootState
+            } as RootState,
         );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
@@ -81,7 +81,7 @@ describe("App", () => {
                 should_display_empty_state: true,
                 should_display_error_state: false,
                 error_message: "",
-            } as RootState
+            } as RootState,
         );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
@@ -100,7 +100,7 @@ describe("App", () => {
                 should_display_empty_state: false,
                 should_display_error_state: true,
                 error_message: "Missing timeframe",
-            } as RootState
+            } as RootState,
         );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
@@ -122,7 +122,7 @@ describe("App", () => {
                 should_display_empty_state: false,
                 should_display_error_state: true,
                 error_message: "",
-            } as RootState
+            } as RootState,
         );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
@@ -147,7 +147,7 @@ describe("App", () => {
                 should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",
-            } as RootState
+            } as RootState,
         );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);

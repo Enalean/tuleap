@@ -62,7 +62,7 @@ describe(`vue-gettext-init`, () => {
                     GettextPlugin,
                     expect.objectContaining({
                         translations: { fr_FR: { "Hello world": "Bonjour monde" } },
-                    })
+                    }),
                 );
             });
 
@@ -77,7 +77,7 @@ describe(`vue-gettext-init`, () => {
                 await init();
                 expect(Vue.use).toHaveBeenCalledWith(
                     GettextPlugin,
-                    expect.objectContaining({ translations: {} })
+                    expect.objectContaining({ translations: {} }),
                 );
             });
         });
@@ -95,7 +95,7 @@ describe(`vue-gettext-init`, () => {
             it(`gives an empty translations object to vue-gettext`, () =>
                 expect(Vue.use).toHaveBeenCalledWith(
                     GettextPlugin,
-                    expect.objectContaining({ translations: {} })
+                    expect.objectContaining({ translations: {} }),
                 ));
         });
     });
@@ -127,7 +127,7 @@ describe(`vue-gettext-init`, () => {
                     GettextPlugin,
                     expect.objectContaining({
                         translations: { fr_FR: { "Hello world": "Bonjour monde" } },
-                    })
+                    }),
                 );
             });
             it(`sets vue-gettext's language config to the document locale`, async () => {
@@ -141,7 +141,7 @@ describe(`vue-gettext-init`, () => {
                 await init();
                 expect(Vue.use).toHaveBeenCalledWith(
                     GettextPlugin,
-                    expect.objectContaining({ translations: {} })
+                    expect.objectContaining({ translations: {} }),
                 );
             });
         });
@@ -159,7 +159,7 @@ describe(`vue-gettext-init`, () => {
             it(`gives an empty translations object to vue-gettext`, () =>
                 expect(Vue.use).toHaveBeenCalledWith(
                     GettextPlugin,
-                    expect.objectContaining({ translations: {} })
+                    expect.objectContaining({ translations: {} }),
                 ));
         });
     });

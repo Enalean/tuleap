@@ -137,7 +137,7 @@ describe("Store actions:", () => {
             };
             restUpdateTransitionRulesEnforcement = jest.spyOn(
                 rest_querier,
-                "updateTransitionRulesEnforcement"
+                "updateTransitionRulesEnforcement",
             );
         });
 
@@ -146,7 +146,7 @@ describe("Store actions:", () => {
 
             beforeEach(async () => {
                 restUpdateTransitionRulesEnforcement.mockReturnValue(
-                    Promise.resolve(updated_tracker)
+                    Promise.resolve(updated_tracker),
                 );
                 await updateTransitionRulesEnforcement(context, true);
             });
@@ -260,7 +260,7 @@ describe("Store actions:", () => {
                 new Promise((resolve, reject) => {
                     resolveRestCall = resolve;
                     rejectRestCall = reject;
-                })
+                }),
             );
 
             deleteTransitionPromise = deleteTransition(context, transition);
@@ -293,7 +293,7 @@ describe("Store actions:", () => {
             it("does not add new transition in store", () =>
                 expect(context.commit).not.toHaveBeenCalledWith(
                     "deleteTransition",
-                    expect.anything()
+                    expect.anything(),
                 ));
             it("extracts message from exception", () =>
                 expect(getErrorMessage).toHaveBeenCalledWith(exception));
@@ -312,7 +312,7 @@ describe("Store actions:", () => {
             };
             restDeactivateLegacyTransitions = jest.spyOn(
                 rest_querier,
-                "deactivateLegacyTransitions"
+                "deactivateLegacyTransitions",
             );
         });
 

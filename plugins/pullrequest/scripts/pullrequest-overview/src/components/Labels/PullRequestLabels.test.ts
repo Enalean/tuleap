@@ -146,9 +146,9 @@ describe("PullRequestLabels", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=manage-labels-button]").exists()).toBe(
-                can_update_labels
+                can_update_labels,
             );
-        }
+        },
     );
 
     describe("Errors", () => {
@@ -171,7 +171,7 @@ describe("PullRequestLabels", () => {
         it("When an error occurs while retrieving the pull-request's labels, then it should trigger the display error callback", async () => {
             vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
             vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(
-                errAsync(tuleap_api_fault)
+                errAsync(tuleap_api_fault),
             );
             const wrapper = getWrapper();
             await wrapper.vm.$nextTick();

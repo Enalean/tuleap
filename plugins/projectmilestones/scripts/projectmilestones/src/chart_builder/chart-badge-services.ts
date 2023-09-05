@@ -25,7 +25,7 @@ const PADDING_HEIGHT = 2;
 
 export function getContainerProperties(
     badge_content: Selection<SVGTextElement, unknown, null, undefined>,
-    badge_value: number
+    badge_value: number,
 ): XYSizeElement {
     const node = badge_content.node();
     if (!node) {

@@ -34,7 +34,7 @@ export function setEditAccessTokenGitlabRepositoryModal(state: GitlabState, moda
 }
 export function setEditAccessTokenGitlabRepository(
     state: GitlabState,
-    repository: GitLabRepository
+    repository: GitLabRepository,
 ): void {
     state.edit_access_token_gitlab_repository = repository;
 }
@@ -43,7 +43,7 @@ export function setRegenerateGitlabWebhookModal(state: GitlabState, modal: Modal
 }
 export function setRegenerateGitlabWebhookRepository(
     state: GitlabState,
-    repository: GitLabRepository
+    repository: GitLabRepository,
 ): void {
     state.regenerate_gitlab_webhook_repository = repository;
 }
@@ -54,7 +54,7 @@ export function setArtifactClosureModal(state: GitlabState, modal: Modal): void 
 
 export function setArtifactClosureRepository(
     state: GitlabState,
-    repository: GitLabRepository
+    repository: GitLabRepository,
 ): void {
     state.artifact_closure_repository = repository;
 }
@@ -65,7 +65,7 @@ export function setCreateBranchPrefixModal(state: GitlabState, modal: Modal): vo
 
 export function setCreateBranchPrefixRepository(
     state: GitlabState,
-    repository: GitLabRepository
+    repository: GitLabRepository,
 ): void {
     state.create_branch_prefix_repository = repository;
 }

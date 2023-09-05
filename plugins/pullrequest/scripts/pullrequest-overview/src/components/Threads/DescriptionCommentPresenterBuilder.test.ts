@@ -48,8 +48,8 @@ describe("DescriptionCommentPresenterBuilder", () => {
             DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(
                 pull_request,
                 author,
-                project_id
-            )
+                project_id,
+            ),
         ).toStrictEqual({
             pull_request_id: pull_request.id,
             project_id,

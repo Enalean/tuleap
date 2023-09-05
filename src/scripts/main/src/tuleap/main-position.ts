@@ -33,7 +33,7 @@ export function initMainPosition(main: HTMLElement): void {
 
 function adjustMainPositionAccordingToPlatformBanner(
     main: HTMLElement,
-    platform_banner: HTMLElement
+    platform_banner: HTMLElement,
 ): void {
     main.style.marginTop = platform_banner.offsetHeight + "px";
 }

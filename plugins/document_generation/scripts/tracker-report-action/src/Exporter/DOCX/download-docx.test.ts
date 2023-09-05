@@ -43,7 +43,7 @@ describe("download-docx", () => {
                     width: 100,
                     height: 100,
                 },
-            })
+            }),
         );
 
         await downloadDocx(
@@ -173,7 +173,7 @@ describe("download-docx", () => {
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
         );
 
         expect(trigger_download_spy).toHaveBeenCalled();

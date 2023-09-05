@@ -44,7 +44,7 @@ describe("WritingMode", () => {
     });
 
     async function instantiateComponent(
-        writingCrossTrackerReport: WritingCrossTrackerReport
+        writingCrossTrackerReport: WritingCrossTrackerReport,
     ): Promise<Wrapper<WritingMode>> {
         const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
         store = createStoreMock(store_options);
@@ -63,11 +63,11 @@ describe("WritingMode", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
                 { id: 804, label: "fanatical" } as ProjectInfo,
-                { id: 29, label: "charry" } as TrackerInfo
+                { id: 29, label: "charry" } as TrackerInfo,
             );
             writingCrossTrackerReport.addTracker(
                 { id: 146, label: "surly" } as ProjectInfo,
-                { id: 51, label: "monodynamism" } as TrackerInfo
+                { id: 51, label: "monodynamism" } as TrackerInfo,
             );
 
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
@@ -122,11 +122,11 @@ describe("WritingMode", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
                 { id: 172, label: "undiuretic" } as ProjectInfo,
-                { id: 61, label: "Dipneumona" } as TrackerInfo
+                { id: 61, label: "Dipneumona" } as TrackerInfo,
             );
             writingCrossTrackerReport.addTracker(
                 { id: 288, label: "defectless" } as ProjectInfo,
-                { id: 46, label: "knothorn" } as TrackerInfo
+                { id: 46, label: "knothorn" } as TrackerInfo,
             );
             jest.spyOn(writingCrossTrackerReport, "removeTracker");
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
@@ -162,7 +162,7 @@ describe("WritingMode", () => {
 
             expect(writingCrossTrackerReport.addTracker).toHaveBeenCalledWith(
                 selected_project,
-                selected_tracker
+                selected_tracker,
             );
             expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
                 {
@@ -189,7 +189,7 @@ describe("WritingMode", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
-                expect.any(String)
+                expect.any(String),
             );
         });
     });

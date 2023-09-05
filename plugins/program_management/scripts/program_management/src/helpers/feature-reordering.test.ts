@@ -92,7 +92,7 @@ describe("Feature Reordering", () => {
             const sibling: Feature = { id: 666 } as Feature;
             const backlog = [feature] as Feature[];
             expect(() => getFeaturePlanningChange(feature, sibling, backlog)).toThrowError(
-                "Cannot find feature with id #666"
+                "Cannot find feature with id #666",
             );
         });
 
@@ -118,7 +118,7 @@ describe("Feature Reordering", () => {
             context.getters = {
                 getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
                 getSiblingFeatureFromProgramBacklog: getSiblingFeatureFromProgramBacklog(
-                    context.state
+                    context.state,
                 ),
             };
         });
@@ -145,7 +145,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_backlog = jest.spyOn(
                 backlogAdder,
-                "reorderElementInTopBacklog"
+                "reorderElementInTopBacklog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -168,7 +168,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInProgramBacklog",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
@@ -185,7 +185,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_backlog = jest.spyOn(
                 backlogAdder,
-                "reorderElementInTopBacklog"
+                "reorderElementInTopBacklog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -208,7 +208,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInProgramBacklog",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
@@ -223,7 +223,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_backlog = jest.spyOn(
                 backlogAdder,
-                "reorderElementInTopBacklog"
+                "reorderElementInTopBacklog",
             );
 
             await reorderFeatureInProgramBacklog(context, {
@@ -244,7 +244,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInProgramBacklog",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
@@ -261,7 +261,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_backlog = jest.spyOn(
                 backlogAdder,
-                "reorderElementInTopBacklog"
+                "reorderElementInTopBacklog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
@@ -287,7 +287,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInProgramBacklog",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
@@ -319,7 +319,7 @@ describe("Feature Reordering", () => {
                 feature,
                 sibling,
                 features,
-                4
+                4,
             );
 
             expect(position).toEqual({
@@ -340,7 +340,7 @@ describe("Feature Reordering", () => {
                 feature,
                 sibling,
                 features,
-                4
+                4,
             );
 
             expect(position).toEqual({
@@ -358,7 +358,7 @@ describe("Feature Reordering", () => {
             const sibling: Feature = { id: 666 } as Feature;
             const features = [feature] as Feature[];
             expect(() =>
-                getFeaturePlanningChangeInProgramIncrement(feature, sibling, features, 4)
+                getFeaturePlanningChangeInProgramIncrement(feature, sibling, features, 4),
             ).toThrowError("Cannot find feature with id #666");
         });
 
@@ -381,7 +381,7 @@ describe("Feature Reordering", () => {
                 null,
                 features,
                 4,
-                18
+                18,
             );
 
             expect(position).toEqual({
@@ -404,7 +404,7 @@ describe("Feature Reordering", () => {
                 sibling,
                 features,
                 4,
-                18
+                18,
             );
 
             expect(position).toEqual({
@@ -427,7 +427,7 @@ describe("Feature Reordering", () => {
                 sibling,
                 features,
                 4,
-                18
+                18,
             );
 
             expect(position).toEqual({
@@ -451,8 +451,8 @@ describe("Feature Reordering", () => {
                     sibling,
                     features,
                     4,
-                    18
-                )
+                    18,
+                ),
             ).toThrowError("Cannot find feature with id #666");
         });
 
@@ -464,8 +464,8 @@ describe("Feature Reordering", () => {
                     null,
                     [],
                     4,
-                    18
-                )
+                    18,
+                ),
             ).toEqual({
                 feature: { id: 115 },
                 order: null,
@@ -491,7 +491,7 @@ describe("Feature Reordering", () => {
                 getFeatureInProgramIncrement: getFeatureInProgramIncrement(context.state),
                 getFeaturesInProgramIncrement: getFeaturesInProgramIncrement(context.state),
                 getSiblingFeatureInProgramIncrement: getSiblingFeatureInProgramIncrement(
-                    context.state
+                    context.state,
                 ),
             };
         });
@@ -508,7 +508,7 @@ describe("Feature Reordering", () => {
                     source_dropzone,
                     target_dropzone,
                 } as HandleDropContextWithProgramId,
-                4
+                4,
             );
 
             expect(context.commit).not.toHaveBeenCalled();
@@ -522,7 +522,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_program_increment = jest.spyOn(
                 featurePlanner,
-                "reorderElementInProgramIncrement"
+                "reorderElementInProgramIncrement",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -536,7 +536,7 @@ describe("Feature Reordering", () => {
                     program_id: 101,
                     next_sibling: null,
                 },
-                4
+                4,
             );
 
             const reorder_payload = {
@@ -550,7 +550,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInSameProgramIncrement",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_program_increment).toHaveBeenCalledWith(reorder_payload);
@@ -567,7 +567,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_program_increment = jest.spyOn(
                 featurePlanner,
-                "reorderElementInProgramIncrement"
+                "reorderElementInProgramIncrement",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -581,7 +581,7 @@ describe("Feature Reordering", () => {
                     program_id: 101,
                     next_sibling: sibling_element,
                 },
-                4
+                4,
             );
 
             const reorder_payload = {
@@ -595,7 +595,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInSameProgramIncrement",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_program_increment).toHaveBeenCalledWith(reorder_payload);
@@ -610,7 +610,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_program_increment = jest.spyOn(
                 featurePlanner,
-                "reorderElementInProgramIncrement"
+                "reorderElementInProgramIncrement",
             );
 
             await reorderFeatureInSameProgramIncrement(
@@ -622,7 +622,7 @@ describe("Feature Reordering", () => {
                     program_id: 101,
                     next_sibling: sibling_element,
                 },
-                4
+                4,
             );
 
             const reorder_payload = {
@@ -636,7 +636,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInSameProgramIncrement",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_program_increment).toHaveBeenCalledWith(reorder_payload);
@@ -653,7 +653,7 @@ describe("Feature Reordering", () => {
 
             const reorder_element_in_program_increment = jest.spyOn(
                 featurePlanner,
-                "reorderElementInProgramIncrement"
+                "reorderElementInProgramIncrement",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
@@ -670,7 +670,7 @@ describe("Feature Reordering", () => {
                     program_id: 101,
                     next_sibling: sibling_element,
                 },
-                4
+                4,
             );
 
             const reorder_payload = {
@@ -684,7 +684,7 @@ describe("Feature Reordering", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "changeFeaturePositionInSameProgramIncrement",
-                reorder_payload
+                reorder_payload,
             );
 
             expect(reorder_element_in_program_increment).toHaveBeenCalledWith(reorder_payload);

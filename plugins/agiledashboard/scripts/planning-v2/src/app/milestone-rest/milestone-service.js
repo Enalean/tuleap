@@ -55,7 +55,7 @@ function MilestoneService($q) {
                     augmentMilestone(milestone, scope_items);
 
                     return { results: milestone };
-                })
+                }),
         );
     }
 
@@ -66,7 +66,7 @@ function MilestoneService($q) {
                 body: JSON.stringify({
                     add: submilestone_ids.map((id) => ({ id })),
                 }),
-            })
+            }),
         );
     }
 
@@ -79,7 +79,7 @@ function MilestoneService($q) {
                 return response.json().then((content_items) => {
                     return { results: content_items, total };
                 });
-            })
+            }),
         );
     }
 
@@ -101,7 +101,7 @@ function MilestoneService($q) {
 
                 return fetchMilestoneContent(
                     self.milestone_content_pagination.limit,
-                    self.milestone_content_pagination.offset
+                    self.milestone_content_pagination.offset,
                 );
             };
 
@@ -128,7 +128,7 @@ function MilestoneService($q) {
     function updateInitialEffort(milestone) {
         milestone.initialEffort = milestone.content.reduce(
             (previous_sum, backlog_item) => previous_sum + backlog_item.initial_effort,
-            0
+            0,
         );
     }
 
@@ -171,7 +171,7 @@ function MilestoneService($q) {
                         compared_to: compared_to.item_id,
                     },
                 }),
-            })
+            }),
         );
     }
 
@@ -179,7 +179,7 @@ function MilestoneService($q) {
         source_milestone_id,
         dest_milestone_id,
         dropped_item_ids,
-        compared_to
+        compared_to,
     ) {
         return $q.when(
             patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/backlog`), {
@@ -195,7 +195,7 @@ function MilestoneService($q) {
                         remove_from: source_milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -209,7 +209,7 @@ function MilestoneService($q) {
                         remove_from: source_milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -224,7 +224,7 @@ function MilestoneService($q) {
                         compared_to: compared_to.item_id,
                     },
                 }),
-            })
+            }),
         );
     }
 
@@ -240,7 +240,7 @@ function MilestoneService($q) {
                     },
                     add: dropped_item_ids.map((id) => ({ id })),
                 }),
-            })
+            }),
         );
     }
 
@@ -251,7 +251,7 @@ function MilestoneService($q) {
                 body: JSON.stringify({
                     add: dropped_item_ids.map((id) => ({ id })),
                 }),
-            })
+            }),
         );
     }
 
@@ -259,7 +259,7 @@ function MilestoneService($q) {
         source_milestone_id,
         dest_milestone_id,
         dropped_item_ids,
-        compared_to
+        compared_to,
     ) {
         return $q.when(
             patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/content`), {
@@ -275,7 +275,7 @@ function MilestoneService($q) {
                         remove_from: source_milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -289,7 +289,7 @@ function MilestoneService($q) {
                         remove_from: source_milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 }

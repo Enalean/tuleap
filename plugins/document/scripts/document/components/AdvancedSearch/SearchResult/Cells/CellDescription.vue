@@ -34,7 +34,7 @@ import { computed } from "vue";
 const props = defineProps<{ item: ItemSearchResult }>();
 
 const get_post_processed_description = computed(
-    (): string => props.item.post_processed_description
+    (): string => props.item.post_processed_description,
 );
 
 defineExpose({

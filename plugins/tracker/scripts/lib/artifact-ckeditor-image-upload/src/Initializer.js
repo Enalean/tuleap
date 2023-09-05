@@ -50,9 +50,9 @@ export class Initializer {
             if (error instanceof MaxSizeUploadExceededError) {
                 error.loader.message = sprintf(
                     this.gettext_provider.gettext(
-                        "You are not allowed to upload files bigger than %s."
+                        "You are not allowed to upload files bigger than %s.",
                     ),
-                    prettyKibibytes(error.max_size_upload)
+                    prettyKibibytes(error.max_size_upload),
                 );
             } else if (error instanceof UploadError) {
                 error.loader.message = this.gettext_provider.gettext("Unable to upload the file");

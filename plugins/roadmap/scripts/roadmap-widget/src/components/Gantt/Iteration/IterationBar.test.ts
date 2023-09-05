@@ -50,7 +50,7 @@ describe("IterationBar", () => {
                             "timeperiod/time_period": new TimePeriodMonth(
                                 new Date("2020-01-01T13:42:08+02:00"),
                                 new Date("2020-01-30T13:42:08+02:00"),
-                                "en-US"
+                                "en-US",
                             ),
                             "tasks/rows": [
                                 { is_shown: true } as Row,
@@ -88,7 +88,7 @@ describe("IterationBar", () => {
                             "timeperiod/time_period": new TimePeriodMonth(
                                 new Date("2020-01-01T13:42:08+02:00"),
                                 new Date("2020-01-30T13:42:08+02:00"),
-                                "en-US"
+                                "en-US",
                             ),
                             "tasks/rows": [
                                 { is_shown: true } as Row,

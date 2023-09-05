@@ -95,7 +95,7 @@ const color = ref<string>(props.current_color);
 const is_hexa_color = computed((): boolean => color.value.includes("#"));
 const show_old_preview = computed((): boolean => color.value.length === 0 || is_hexa_color.value);
 const is_old_palette_shown = ref<boolean>(
-    props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled
+    props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled,
 );
 
 function setColor(new_color = ""): void {

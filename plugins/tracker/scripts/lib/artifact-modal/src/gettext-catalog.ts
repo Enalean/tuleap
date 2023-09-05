@@ -112,7 +112,7 @@ export const getRecentlyViewedArtifactGroupLabel = (): string =>
 export const getSearchResultsGroupLabel = (): string => gettextCatalog.getString("Search results");
 export const getSearchResultsGroupFootMessage = (): string =>
     gettextCatalog.getString(
-        "Please refine your search if you did not find what you are looking for."
+        "Please refine your search if you did not find what you are looking for.",
     );
 export const getUserHistoryErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving recently viewed artifacts: %s");

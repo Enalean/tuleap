@@ -41,7 +41,7 @@ export class ScrollingManager {
 
             this.first_scrollable_parent.scroll(
                 this.parent_scroll.x_position,
-                this.parent_scroll.y_position
+                this.parent_scroll.y_position,
             );
         };
 
@@ -104,13 +104,13 @@ export class ScrollingManager {
 
         const styles = window.getComputedStyle(node, null);
         const is_scrolling_on_any_axis = this.isAScrollableValue(
-            styles.getPropertyValue("overflow")
+            styles.getPropertyValue("overflow"),
         );
         const is_scrolling_on_y_axis = this.isAScrollableValue(
-            styles.getPropertyValue("overflow-y")
+            styles.getPropertyValue("overflow-y"),
         );
         const is_scrolling_on_x_axis = this.isAScrollableValue(
-            styles.getPropertyValue("overflow-x")
+            styles.getPropertyValue("overflow-x"),
         );
 
         return is_scrolling_on_any_axis || is_scrolling_on_y_axis || is_scrolling_on_x_axis;

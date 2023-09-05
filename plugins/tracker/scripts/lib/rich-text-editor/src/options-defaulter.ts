@@ -26,7 +26,7 @@ const emptyOptionsProvider = (): Record<string, never> => ({});
 
 export function defaultOptionsIfNotProvided(
     locale: string,
-    options: RichTextEditorOptions
+    options: RichTextEditorOptions,
 ): InternalTextEditorOptions {
     return {
         locale,

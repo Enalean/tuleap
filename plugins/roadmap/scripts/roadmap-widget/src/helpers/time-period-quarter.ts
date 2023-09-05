@@ -25,7 +25,11 @@ export class TimePeriodQuarter implements TimePeriod {
     private readonly quarters: Date[];
     private gettext_provider: VueGettextProvider;
 
-    constructor(readonly from: Date, readonly to: Date, gettext_provider: VueGettextProvider) {
+    constructor(
+        readonly from: Date,
+        readonly to: Date,
+        gettext_provider: VueGettextProvider,
+    ) {
         this.gettext_provider = gettext_provider;
         this.quarters = getQuarters(from, to);
     }
@@ -39,7 +43,7 @@ export class TimePeriodQuarter implements TimePeriod {
             this.gettext_provider.$gettext("Q%{ quarter }"),
             {
                 quarter: getQuarterNumber(unit),
-            }
+            },
         );
     }
 
@@ -49,7 +53,7 @@ export class TimePeriodQuarter implements TimePeriod {
             {
                 quarter: getQuarterNumber(unit),
                 year: unit.getUTCFullYear(),
-            }
+            },
         );
     }
 

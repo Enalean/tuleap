@@ -112,7 +112,7 @@ export default {
         ...mapGetters(["is_workflow_advanced"]),
         advanced_configuration_tooltip() {
             return this.$gettext(
-                "Use advanced configuration if you want to configure each transition independently."
+                "Use advanced configuration if you want to configure each transition independently.",
             );
         },
     },

@@ -19,7 +19,7 @@
 
 export async function actionsOnHelpMenuOpened(
     help_button: HTMLElement,
-    tlp_post: (url: string, init: RequestInit & { method?: "POST" }) => Promise<Response>
+    tlp_post: (url: string, init: RequestInit & { method?: "POST" }) => Promise<Response>,
 ): Promise<void> {
     helpButtonMarkAsRead(help_button);
 

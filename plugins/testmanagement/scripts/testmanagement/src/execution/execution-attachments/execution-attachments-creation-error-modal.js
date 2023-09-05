@@ -56,7 +56,7 @@ function controller($element, $scope) {
                 }
 
                 self.modal.show();
-            }
+            },
         );
     }
 

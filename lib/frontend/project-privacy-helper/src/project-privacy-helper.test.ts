@@ -87,6 +87,6 @@ describe("project-privacy-helper", () => {
         `returns the icon matching the project privacy`,
         (privacy: ProjectPrivacy, expected_icon: string) => {
             expect(getProjectPrivacyIcon(privacy)).toBe(expected_icon);
-        }
+        },
     );
 });

@@ -25,7 +25,7 @@ import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-te
 import EditRemainingEffort from "./RemainingEffort/EditRemainingEffort.vue";
 
 async function getWrapper(
-    remaining_effort: RemainingEffort | null
+    remaining_effort: RemainingEffort | null,
 ): Promise<Wrapper<ParentCardRemainingEffort>> {
     return shallowMount(ParentCardRemainingEffort, {
         localVue: await createTaskboardLocalVue(),

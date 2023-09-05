@@ -117,8 +117,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(true);
     });
 
@@ -143,8 +143,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(false);
     });
 
@@ -169,8 +169,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(false);
     });
 
@@ -195,8 +195,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(false);
     });
     it("The folder title has the same name of an other existing folder", () => {
@@ -220,8 +220,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(true);
     });
 
@@ -246,8 +246,8 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_title,
                 folder_content,
                 item_to_update,
-                parent_folder
-            )
+                parent_folder,
+            ),
         ).toBe(false);
     });
 });

@@ -48,7 +48,7 @@ describe("side-by-side lines state", () => {
             SideBySideLineState(
                 lines,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
-                side_by_side_line_mapper.withSideBySideLineMap(new Map())
+                side_by_side_line_mapper.withSideBySideLineMap(new Map()),
             );
 
             expect(side_by_side_line_grouper.hasBuiltLineToGroupMap()).toBe(true);
@@ -69,7 +69,7 @@ describe("side-by-side lines state", () => {
             const state = SideBySideLineState(
                 lines,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
-                side_by_side_line_mapper.withSideBySideLineMap(new Map())
+                side_by_side_line_mapper.withSideBySideLineMap(new Map()),
             );
 
             expect(state.getCommentLine(comment)).toBe(second_line);
@@ -91,7 +91,7 @@ describe("side-by-side lines state", () => {
             const state = SideBySideLineState(
                 [first_line, second_line, third_line],
                 side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines]),
-                side_by_side_line_mapper.withSideBySideLineMap(new Map())
+                side_by_side_line_mapper.withSideBySideLineMap(new Map()),
             );
 
             expect(state.getGroupLines(unmoved_lines)).toStrictEqual([first_line, second_line]);
@@ -118,8 +118,8 @@ describe("side-by-side lines state", () => {
                                 right_handle,
                             },
                         ],
-                    ])
-                )
+                    ]),
+                ),
             );
 
             expect(state.getLineOfHandle(left_handle)).toBe(unmoved_line);
@@ -154,8 +154,8 @@ describe("side-by-side lines state", () => {
                                 right_handle: opposite_right_handle,
                             },
                         ],
-                    ])
-                )
+                    ]),
+                ),
             );
 
             expect(state.getLineOfHandle(added_handle)).toBe(added_line);
@@ -190,8 +190,8 @@ describe("side-by-side lines state", () => {
                                 right_handle: opposite_right_handle,
                             },
                         ],
-                    ])
-                )
+                    ]),
+                ),
             );
 
             expect(state.getLineOfHandle(deleted_handle)).toBe(deleted_line);

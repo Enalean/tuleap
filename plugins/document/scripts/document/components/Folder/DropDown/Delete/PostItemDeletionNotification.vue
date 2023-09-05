@@ -49,7 +49,7 @@ watch(
             show();
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 function show(): void {

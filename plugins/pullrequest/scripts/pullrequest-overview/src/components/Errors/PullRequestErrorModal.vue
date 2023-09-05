@@ -105,7 +105,7 @@ watch(
         }
 
         modal_instance.value.show();
-    }
+    },
 );
 
 function showErrorDetails(): void {

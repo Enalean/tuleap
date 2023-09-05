@@ -43,7 +43,7 @@ export function transformAReportIntoASheet(report: ExportReport): WorkSheet {
 }
 
 function transformSectionsIntoSheetRows(
-    sections: ReadonlyArray<ReportSection>
+    sections: ReadonlyArray<ReportSection>,
 ): CellObjectWithExtraInfo[][] {
     return sections.flatMap((section) => {
         const section_cells: CellObjectWithExtraInfo[][] = [];
@@ -76,7 +76,7 @@ function transformSectionsIntoSheetRows(
 }
 
 function transformReportSectionRowsIntoSheetRows(
-    report_section_row: ReadonlyArray<ReportCell>
+    report_section_row: ReadonlyArray<ReportCell>,
 ): CellObjectWithExtraInfo[] {
     return report_section_row.map(transformReportCellIntoASheetCell);
 }

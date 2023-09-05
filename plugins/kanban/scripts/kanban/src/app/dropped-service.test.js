@@ -54,7 +54,7 @@ describe("DroppedService -", function () {
                 column_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
             await wrapPromise(promise);
 
@@ -63,7 +63,7 @@ describe("DroppedService -", function () {
                 column_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
         });
 
@@ -78,7 +78,7 @@ describe("DroppedService -", function () {
                 column_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
             await wrapPromise(promise);
 
@@ -86,7 +86,7 @@ describe("DroppedService -", function () {
                 kanban_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
         });
 
@@ -101,7 +101,7 @@ describe("DroppedService -", function () {
                 column_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
             await wrapPromise(promise);
 
@@ -109,7 +109,7 @@ describe("DroppedService -", function () {
                 kanban_id,
                 kanban_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
         });
     });
@@ -136,7 +136,7 @@ describe("DroppedService -", function () {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
             await wrapPromise(promise);
 
@@ -144,7 +144,7 @@ describe("DroppedService -", function () {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
         });
 
@@ -158,14 +158,14 @@ describe("DroppedService -", function () {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
             await wrapPromise(promise);
 
             expect(KanbanService.reorderBacklog).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
         });
 
@@ -179,14 +179,14 @@ describe("DroppedService -", function () {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
             await wrapPromise(promise);
 
             expect(KanbanService.reorderArchive).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
             );
         });
     });

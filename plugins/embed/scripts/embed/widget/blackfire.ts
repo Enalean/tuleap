@@ -24,7 +24,7 @@ export const blackfire_pattern = /^https:\/\/blackfire.io\/profiles\/(?:.*)\/gra
 export function insertBlackfire(link: HTMLAnchorElement): void {
     if (!link.ownerDocument) {
         throw Error(
-            "Embeddable link does not have a top-level document. Perhaps it is a document itself?"
+            "Embeddable link does not have a top-level document. Perhaps it is a document itself?",
         );
     }
 

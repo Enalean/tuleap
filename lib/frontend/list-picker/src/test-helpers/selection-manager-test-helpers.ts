@@ -23,7 +23,7 @@ import type { ListPickerItem } from "../type";
 
 export function expectChangeEventToHaveBeenFiredOnSourceSelectBox(
     spy: SpyInstance,
-    nb_times: number
+    nb_times: number,
 ): void {
     if (nb_times === 0) {
         expect(spy).not.toHaveBeenCalled();

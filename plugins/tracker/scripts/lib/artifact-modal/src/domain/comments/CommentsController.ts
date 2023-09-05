@@ -34,7 +34,7 @@ export const CommentsController = (
     comments_retriever: RetrieveComments,
     event_dispatcher: DispatchEvents,
     current_artifact_identifier: CurrentArtifactIdentifier,
-    user_preferences: CommentUserPreferences
+    user_preferences: CommentUserPreferences,
 ): CommentsControllerType => ({
     getPreferences: () => user_preferences,
 
@@ -46,7 +46,7 @@ export const CommentsController = (
                 (fault) => {
                     event_dispatcher.dispatch(WillNotifyFault(CommentsRetrievalFault(fault)));
                     return [];
-                }
+                },
             );
     },
 });

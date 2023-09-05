@@ -79,7 +79,7 @@ describe(`TokenModal`, () => {
                 <i id="token-icon" class="${HIDDEN_ICON_CLASSNAME}"></i>
               </button>
             </form>
-          </div>`
+          </div>`,
         );
 
         modal_instance = {
@@ -121,7 +121,7 @@ describe(`TokenModal`, () => {
             expect(confirm_button.disabled).toBe(is_loading);
             token_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
                 expect(form_element.classList.contains(FORM_ELEMENT_DISABLED_CLASSNAME)).toBe(
-                    is_loading
+                    is_loading,
                 );
             });
             token_modal.querySelectorAll(INPUTS_SELECTOR).forEach((input) => {
@@ -152,7 +152,7 @@ describe(`TokenModal`, () => {
             expect(modalHide).toHaveBeenCalled();
             expect(validateTokenSpy).toHaveBeenCalledWith(
                 uri`${rawUri(GITLAB_SERVER_URI)}/api/v4/groups/${GITLAB_GROUP_ID}`,
-                { token: NEW_TOKEN }
+                { token: NEW_TOKEN },
             );
             expect(saveTokenSpy).toHaveBeenCalledWith(uri`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 gitlab_token: NEW_TOKEN,
@@ -196,7 +196,7 @@ describe(`TokenModal`, () => {
                 expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(false);
                 expect(feedback.textContent).toContain(error_message);
                 expect(modalHide).not.toHaveBeenCalled();
-            }
+            },
         );
     });
 });

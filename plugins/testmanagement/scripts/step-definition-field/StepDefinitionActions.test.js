@@ -71,7 +71,7 @@ describe(`StepDefinitionActions`, () => {
 
                 expect(wrapper.findComponent(CommonmarkPreviewButton).exists()).toBe(false);
                 expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBe(false);
-            }
+            },
         );
     });
     describe(`Selection of the right format`, () => {
@@ -83,9 +83,9 @@ describe(`StepDefinitionActions`, () => {
                 });
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format-" + value + "]")
-                        .element.selected
+                        .element.selected,
                 ).toBe(true);
-            }
+            },
         );
     });
     describe("Enabling of the selectbox", () => {
@@ -93,7 +93,7 @@ describe(`StepDefinitionActions`, () => {
             const wrapper = factory({ disabled: false, is_in_preview_mode: false });
 
             expect(
-                wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled
+                wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled,
             ).toBe(false);
         });
 
@@ -108,9 +108,9 @@ describe(`StepDefinitionActions`, () => {
 
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format]").element
-                        .disabled
+                        .disabled,
                 ).toBe(true);
-            }
+            },
         );
     });
 });

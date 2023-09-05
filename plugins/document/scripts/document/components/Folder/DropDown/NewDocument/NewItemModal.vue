@@ -178,7 +178,7 @@ export default {
         emitter.off("createItem", this.show);
         emitter.off(
             "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue
+            this.updateMultiplePropertiesListValue,
         );
         if (this.modal) {
             this.modal.removeEventListener("tlp-modal-hidden", this.reset);
@@ -227,7 +227,7 @@ export default {
             if (event.from_alternative) {
                 const office_file = await getEmptyOfficeFileFromMimeType(
                     this.user_locale,
-                    event.from_alternative.mime_type
+                    event.from_alternative.mime_type,
                 );
                 this.item.file_properties.file = office_file.file;
                 this.from_alternative_extension = office_file.extension;
@@ -238,7 +238,7 @@ export default {
             this.parent = event.item;
             this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
-                JSON.stringify(this.parent.permissions_for_groups)
+                JSON.stringify(this.parent.permissions_for_groups),
             );
 
             if (this.parent.obsolescence_date) {
@@ -249,7 +249,7 @@ export default {
             transformStatusPropertyForItemCreation(
                 this.item,
                 this.parent,
-                this.is_status_property_used
+                this.is_status_property_used,
             );
 
             this.is_displayed = true;
@@ -257,7 +257,7 @@ export default {
             try {
                 await this.$store.dispatch(
                     "permissions/loadProjectUserGroupsIfNeeded",
-                    this.project_id
+                    this.project_id,
                 );
             } catch (e) {
                 await handleErrors(this.$store, e);
@@ -320,7 +320,7 @@ export default {
                 return;
             }
             const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.detail.id
+                (property) => property.short_name === event.detail.id,
             );
             item_properties.list_value = event.detail.value;
         },
@@ -333,7 +333,7 @@ export default {
                 this.item.file_properties.file = new File(
                     [this.item.file_properties.file],
                     this.item.title + "." + this.from_alternative_extension,
-                    { type: this.item.file_properties.file.type }
+                    { type: this.item.file_properties.file.type },
                 );
             }
         },
@@ -345,7 +345,7 @@ export default {
                 return;
             }
             const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.property_short_name
+                (property) => property.short_name === event.property_short_name,
             );
             item_properties.value = event.value;
         },

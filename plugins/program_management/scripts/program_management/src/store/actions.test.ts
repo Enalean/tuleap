@@ -52,23 +52,23 @@ describe("Actions", () => {
         beforeEach(() => {
             moveFeatureFromBacklogToProgramIncrement = jest.spyOn(
                 FeatureMoving,
-                "moveFeatureFromBacklogToProgramIncrement"
+                "moveFeatureFromBacklogToProgramIncrement",
             );
             moveFeatureFromProgramIncrementToBacklog = jest.spyOn(
                 FeatureMoving,
-                "moveFeatureFromProgramIncrementToBacklog"
+                "moveFeatureFromProgramIncrementToBacklog",
             );
             moveFeatureFromProgramIncrementToAnotherProgramIncrement = jest.spyOn(
                 FeatureMoving,
-                "moveFeatureFromProgramIncrementToAnotherProgramIncrement"
+                "moveFeatureFromProgramIncrementToAnotherProgramIncrement",
             );
             reorderFeatureInProgramBacklog = jest.spyOn(
                 FeatureReordering,
-                "reorderFeatureInProgramBacklog"
+                "reorderFeatureInProgramBacklog",
             );
             reorderFeatureInSameProgramIncrement = jest.spyOn(
                 FeatureReordering,
-                "reorderFeatureInSameProgramIncrement"
+                "reorderFeatureInSameProgramIncrement",
             );
         });
         afterEach(() => {
@@ -92,7 +92,7 @@ describe("Actions", () => {
             expect(moveFeatureFromBacklogToProgramIncrement).toHaveBeenCalledWith(
                 context,
                 handle_drop,
-                1
+                1,
             );
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromProgramIncrementToBacklog).not.toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe("Actions", () => {
             expect(moveFeatureFromProgramIncrementToBacklog).toHaveBeenCalledWith(
                 context,
                 handle_drop,
-                1
+                1,
             );
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
@@ -146,7 +146,7 @@ describe("Actions", () => {
                 context,
                 handle_drop,
                 2,
-                1
+                1,
             );
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromProgramIncrementToBacklog).not.toHaveBeenCalled();
@@ -174,7 +174,7 @@ describe("Actions", () => {
             expect(reorderFeatureInSameProgramIncrement).toHaveBeenCalledWith(
                 context,
                 handle_drop,
-                1
+                1,
             );
 
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
@@ -253,7 +253,7 @@ describe("Actions", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "setToBePlannedElements",
-                expected_features
+                expected_features,
             );
         });
     });

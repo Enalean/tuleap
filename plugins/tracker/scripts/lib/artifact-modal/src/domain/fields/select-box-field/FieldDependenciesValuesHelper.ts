@@ -30,7 +30,7 @@ export type FieldDependenciesRule = {
 
 export const FieldDependenciesValuesHelper = (
     event_dispatcher: EventDispatcher,
-    field_dependencies_rules: readonly FieldDependenciesRule[]
+    field_dependencies_rules: readonly FieldDependenciesRule[],
 ): void => {
     event_dispatcher.addObserver("DidChangeListFieldValue", (event) => {
         const possible_values_map = field_dependencies_rules

@@ -36,14 +36,14 @@ describe("formatFromPhpToMoment", () => {
         `Given %s is provided, then it returns the moment format`,
         (format_title, php_date_format, expected_moment_format) => {
             expect(formatFromPhpToMoment(php_date_format)).toBe(expected_moment_format);
-        }
+        },
     );
 
     it("Given non supported format is provided, then it throws an Error", () => {
         const php_date_format = "dd/mm/YYYY";
 
         expect(() => formatFromPhpToMoment(php_date_format)).toThrow(
-            "Only french and english date are supported for display"
+            "Only french and english date are supported for display",
         );
     });
 });

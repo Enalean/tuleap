@@ -14,7 +14,7 @@ function ArtifactLinksGraphService(
     TlpModalService,
     ArtifactLinksGraphModalLoading,
     ArtifactLinksGraphRestService,
-    ArtifactLinksModelService
+    ArtifactLinksModelService,
 ) {
     var self = this;
 
@@ -37,10 +37,10 @@ function ArtifactLinksGraphService(
     }
 
     function showGraph(artifact_id) {
-        return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function (
-            artifact
-        ) {
-            return ArtifactLinksModelService.getGraphStructure(artifact);
-        });
+        return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(
+            function (artifact) {
+                return ArtifactLinksModelService.getGraphStructure(artifact);
+            },
+        );
     }
 }

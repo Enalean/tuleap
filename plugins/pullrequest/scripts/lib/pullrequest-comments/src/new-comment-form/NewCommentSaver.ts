@@ -37,7 +37,7 @@ import { getContentFormat } from "../helpers/content-format";
 export interface SaveNewComment {
     postComment: (
         content: string,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ) => ResultAsync<PullRequestComment, Fault>;
 }
 
@@ -65,11 +65,11 @@ export interface InlineCommentContext {
 }
 
 export const NewCommentSaver = (
-    comment_creation_context: CommentCreationContext
+    comment_creation_context: CommentCreationContext,
 ): SaveNewComment => ({
     postComment: (
         content: string,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ): ResultAsync<PullRequestComment, Fault> => {
         if (comment_creation_context.type === TYPE_GLOBAL_COMMENT) {
             return postJSON<NewGlobalComment>(
@@ -78,7 +78,7 @@ export const NewCommentSaver = (
                     user_id: comment_creation_context.user_id,
                     content,
                     format: getContentFormat(is_comments_markdown_mode_enabled),
-                }
+                },
             ).map((comment) => ({
                 ...comment,
             }));
@@ -95,7 +95,7 @@ export const NewCommentSaver = (
                 content: content,
                 user_id: comment_creation_context.user_id,
                 format: getContentFormat(is_comments_markdown_mode_enabled),
-            }
+            },
         ).map((comment) => {
             return {
                 type: TYPE_INLINE_COMMENT,

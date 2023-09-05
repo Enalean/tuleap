@@ -60,11 +60,11 @@ import { useMutationObserver } from "@vueuse/core";
 const props = defineProps<{ task: Task }>();
 
 const header_class = computed(
-    (): string => "roadmap-gantt-task-popover-header-" + props.task.color_name
+    (): string => "roadmap-gantt-task-popover-header-" + props.task.color_name,
 );
 
 const popover_class = computed((): string =>
-    props.task.is_milestone ? "roadmap-gantt-task-milestone-popover" : ""
+    props.task.is_milestone ? "roadmap-gantt-task-milestone-popover" : "",
 );
 
 const is_loading = ref(true);
@@ -100,6 +100,6 @@ const observer = useMutationObserver(
     {
         attributes: true,
         attributeFilter: ["class"],
-    }
+    },
 );
 </script>

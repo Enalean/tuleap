@@ -65,7 +65,7 @@ describe("dry-run store", () => {
 
             dry_run_store.saveDryRunState(dry_run_state);
             expect(dry_run_store.is_move_possible).toBe(expected);
-        }
+        },
     );
 
     it.each([
@@ -95,6 +95,6 @@ describe("dry-run store", () => {
 
             dry_run_store.saveDryRunState(dry_run_state);
             expect(dry_run_store.is_confirmation_needed).toBe(expected);
-        }
+        },
     );
 });

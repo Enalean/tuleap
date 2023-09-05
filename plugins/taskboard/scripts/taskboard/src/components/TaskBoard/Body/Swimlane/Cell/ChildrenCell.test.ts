@@ -29,7 +29,7 @@ import type { RootState } from "../../../../../store/type";
 function createWrapper(
     swimlane: Swimlane,
     is_collapsed: boolean,
-    cards_in_cell: Card[]
+    cards_in_cell: Card[],
 ): Wrapper<ChildrenCell> {
     const todo: ColumnDefinition = {
         id: 2,

@@ -49,7 +49,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(pi_selector);
 
         expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
-            "admin-configuration-plannable-trackers element does not exist"
+            "admin-configuration-plannable-trackers element does not exist",
         );
     });
 
@@ -65,7 +65,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(plannable_trackers_selector);
 
         expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
-            "admin-configuration-permission-prioritize element does not exist"
+            "admin-configuration-permission-prioritize element does not exist",
         );
     });
 
@@ -86,7 +86,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(plannable_trackers_selector);
         doc.body.appendChild(permissions_selector);
         expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
-            "admin-configuration-iteration-tracker element does not exist"
+            "admin-configuration-iteration-tracker element does not exist",
         );
     });
 
@@ -115,11 +115,11 @@ describe("initListPickersMilestoneSection", () => {
         const create_list_picker = createListPickerSpy();
         const disabled_plannable_trackers = jest.spyOn(
             disabledPlannableTrackerHelper,
-            "disabledPlannableTrackers"
+            "disabledPlannableTrackers",
         );
         const disabled_iteration_tracker = jest.spyOn(
             disabledIterationTrackerHelper,
-            "disabledIterationTrackersFromProgramIncrementAndPlannableTrackers"
+            "disabledIterationTrackersFromProgramIncrementAndPlannableTrackers",
         );
 
         initListPickersMilestoneSection(doc, gettext);

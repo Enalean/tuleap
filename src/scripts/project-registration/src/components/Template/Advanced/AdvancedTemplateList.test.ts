@@ -31,7 +31,7 @@ describe("AdvancedTemplateList", () => {
 
     async function getWrapper(
         selected_company_template: null | TemplateData = null,
-        projects_user_is_admin_of: TemplateData[] = []
+        projects_user_is_admin_of: TemplateData[] = [],
     ): Promise<Wrapper<AdvancedTemplateList>> {
         return shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),

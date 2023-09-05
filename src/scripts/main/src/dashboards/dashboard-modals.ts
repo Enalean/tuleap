@@ -93,7 +93,7 @@ function initSingleButtonModals(): void {
             "#no-widgets-edit-dashboard-button",
             ".delete-widget-button",
             ".edit-widget-button",
-        ].join(", ")
+        ].join(", "),
     );
 
     [].forEach.call(buttons, function (button: HTMLElement) {
@@ -145,12 +145,12 @@ function loadDynamicallyEditModalContent(modal: Modal, modal_content: HTMLElemen
             document.dispatchEvent(
                 new CustomEvent("dashboard-edit-widget-modal-content-loaded", {
                     detail: { target: container },
-                })
+                }),
             );
         })
         .fail(function (data) {
             container.innerHTML = sanitize(
-                '<div class="tlp-alert-danger">' + data.responseJSON + "</div>"
+                '<div class="tlp-alert-danger">' + data.responseJSON + "</div>",
             );
         })
         .always(function () {
@@ -164,10 +164,10 @@ function loadDynamicallyEditModalContent(modal: Modal, modal_content: HTMLElemen
 function loadDynamicallyWidgetsContent(
     modal: Modal,
     modal_content: HTMLElement,
-    url: string
+    url: string,
 ): void {
     const widgets_categories = document.getElementById(
-        "dashboard-add-widget-list-table-placeholder"
+        "dashboard-add-widget-list-table-placeholder",
     );
     if (!widgets_categories) {
         throw new Error("dashboard-add-widget-list-table-placeholder element does not exist");
@@ -188,7 +188,7 @@ function loadDynamicallyWidgetsContent(
             const header = document.getElementById("dashboard-add-widget-list-header-filter-table");
             if (!(header instanceof HTMLInputElement)) {
                 throw new Error(
-                    "dashboard-add-widget-list-header-filter-table element does not exist"
+                    "dashboard-add-widget-list-header-filter-table element does not exist",
                 );
             }
             const filter = filterInlineTable(header);
@@ -210,7 +210,7 @@ function loadDynamicallyWidgetsContent(
             alert.innerHTML = sanitize(data.responseJSON);
 
             const header_filter = document.getElementById(
-                "dashboard-add-widget-list-header-filter"
+                "dashboard-add-widget-list-header-filter",
             );
             const list_table = document.getElementById("dashboard-add-widget-list-table");
             if (!header_filter) {
@@ -249,7 +249,7 @@ function initializeWidgets(table: Element, data: { widgets_categories: WidgetCat
 function displayWidgetSettings(
     table: Element,
     widget_element: HTMLElement,
-    data_widgets: Widget[]
+    data_widgets: Widget[],
 ): void {
     const widget_settings = document.getElementById("dashboard-add-widget-settings-placeholder");
     if (!widget_settings) {
@@ -261,7 +261,7 @@ function displayWidgetSettings(
     }
 
     const widget_data = data_widgets.find(
-        (widget) => widget.id === widget_element.dataset.widgetId
+        (widget) => widget.id === widget_element.dataset.widgetId,
     );
     if (widget_data === undefined) {
         return;
@@ -276,11 +276,11 @@ function displayWidgetSettings(
     document.dispatchEvent(
         new CustomEvent("dashboard-add-widget-settings-loaded", {
             detail: { target: settings },
-        })
+        }),
     );
 
     const already_selected_widget = table.querySelector(
-        ".dashboard-add-widget-list-table-widget-selected"
+        ".dashboard-add-widget-list-table-widget-selected",
     );
     if (already_selected_widget) {
         already_selected_widget.classList.remove("dashboard-add-widget-list-table-widget-selected");

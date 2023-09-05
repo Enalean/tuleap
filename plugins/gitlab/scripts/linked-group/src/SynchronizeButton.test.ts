@@ -67,7 +67,7 @@ describe(`SynchronizeButton`, () => {
                 </span>
                 <button type="button" id="synchronize-button">
                   <i class="fa-rotate" id="synchronize-icon"></i>
-                </button>`
+                </button>`,
             );
 
             SynchronizeButton(doc, gettext, GROUP_LINK_ID).init();
@@ -109,7 +109,7 @@ describe(`SynchronizeButton`, () => {
 
             expect(postSpy).toHaveBeenCalledWith(
                 uri`/api/gitlab_groups/${GROUP_LINK_ID}/synchronize`,
-                undefined
+                undefined,
             );
         });
 

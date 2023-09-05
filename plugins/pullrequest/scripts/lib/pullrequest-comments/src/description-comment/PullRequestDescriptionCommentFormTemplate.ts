@@ -24,7 +24,7 @@ import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComm
 
 export const getDescriptionCommentFormTemplate = (
     host: PullRequestDescriptionComment,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestDescriptionComment> => {
     if (!host.edition_form_presenter) {
         return html``;

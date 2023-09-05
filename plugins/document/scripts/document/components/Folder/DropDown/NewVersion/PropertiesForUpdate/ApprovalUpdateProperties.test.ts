@@ -33,7 +33,7 @@ describe("ApprovalUpdateProperties", () => {
         const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
-            'input[id="document-new-file-upload-approval-table-action-copy"]'
+            'input[id="document-new-file-upload-approval-table-action-copy"]',
         );
         radio_input.setChecked();
 
@@ -50,7 +50,7 @@ describe("ApprovalUpdateProperties", () => {
         const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
-            'input[id="document-new-file-upload-approval-table-action-reset"]'
+            'input[id="document-new-file-upload-approval-table-action-reset"]',
         );
         radio_input.setChecked();
 
@@ -67,7 +67,7 @@ describe("ApprovalUpdateProperties", () => {
         const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
-            'input[id="document-new-file-upload-approval-table-action-empty"]'
+            'input[id="document-new-file-upload-approval-table-action-empty"]',
         );
         radio_input.setChecked();
 

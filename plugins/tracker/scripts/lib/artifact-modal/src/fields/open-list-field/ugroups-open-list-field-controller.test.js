@@ -36,7 +36,9 @@ describe("UgroupsOpenListFieldController", function () {
     describe("init() -", function () {
         it("When initializing the controller, then a select2 will be created", function () {
             $element.append(
-                angular.element('<select class="tuleap-artifact-modal-open-list-ugroups"></select>')
+                angular.element(
+                    '<select class="tuleap-artifact-modal-open-list-ugroups"></select>',
+                ),
             );
             const tlpSelect2Spy = jest.spyOn(tlp, "select2");
 

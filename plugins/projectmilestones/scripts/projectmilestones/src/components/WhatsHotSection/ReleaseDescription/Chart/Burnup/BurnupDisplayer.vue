@@ -57,14 +57,14 @@ export default class BurnupDisplayer extends Vue {
     get message_error_duration(): string {
         return this.$gettextInterpolate(
             this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.label_timeframe }
+            { field_name: this.label_timeframe },
         );
     }
 
     get message_error_start_date(): string {
         return this.$gettextInterpolate(
             this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.label_start_date }
+            { field_name: this.label_start_date },
         );
     }
 

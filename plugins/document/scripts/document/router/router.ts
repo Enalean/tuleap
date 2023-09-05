@@ -76,7 +76,7 @@ export const routes: RouteRecordRaw[] = [
 export function createInitializedRouter(
     store: Store<RootState>,
     project_name: string,
-    $gettext: GettextProvider["$gettext"]
+    $gettext: GettextProvider["$gettext"],
 ): Router {
     routes.push({
         path: "/search/:folder_id?",
@@ -86,7 +86,7 @@ export function createInitializedRouter(
             getSearchPropsFromRoute(
                 route,
                 store.state.configuration.root_id,
-                store.state.configuration.criteria
+                store.state.configuration.criteria,
             ),
     });
 

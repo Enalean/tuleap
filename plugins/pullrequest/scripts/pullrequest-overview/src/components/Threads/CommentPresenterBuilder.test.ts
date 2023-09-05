@@ -70,7 +70,7 @@ describe("CommentPresenterBuilder", () => {
             payload,
             base_url,
             pull_request_id,
-            $gettext
+            $gettext,
         );
 
         expect(presenter).toStrictEqual({
@@ -107,7 +107,7 @@ describe("CommentPresenterBuilder", () => {
             payload,
             base_url,
             pull_request_id,
-            $gettext
+            $gettext,
         );
 
         expect(presenter).toStrictEqual({
@@ -151,7 +151,7 @@ describe("CommentPresenterBuilder", () => {
                 payload,
                 base_url,
                 pull_request_id,
-                $gettext
+                $gettext,
             );
 
             expect(presenter).toStrictEqual({
@@ -165,6 +165,6 @@ describe("CommentPresenterBuilder", () => {
                 parent_id: 0,
                 color: "",
             });
-        }
+        },
     );
 });

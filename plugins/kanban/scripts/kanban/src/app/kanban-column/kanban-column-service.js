@@ -16,7 +16,7 @@ function KanbanColumnService(
     $filter,
     KanbanFilterValue,
     KanbanItemRestService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -61,7 +61,7 @@ function KanbanColumnService(
         id,
         source_column,
         destination_column,
-        ordered_destination_column_items_ids
+        ordered_destination_column_items_ids,
     ) {
         const promised_item = findItem(id, source_column);
 
@@ -86,7 +86,7 @@ function KanbanColumnService(
         id,
         source_column,
         destination_column,
-        ordered_destination_column_item_ids
+        ordered_destination_column_item_ids,
     ) {
         const item = findItemInColumnById(id, source_column);
         if (!item) {

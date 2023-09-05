@@ -26,7 +26,7 @@ export interface PositionPlaceholder {
 }
 
 export const SideBySidePlaceholderPositioner = (
-    file_lines_state: FileLinesState
+    file_lines_state: FileLinesState,
 ): PositionPlaceholder => ({
     getDisplayAboveLineForWidget(handle: FileLineHandle): boolean {
         const line_of_handle = file_lines_state.getLineOfHandle(handle);

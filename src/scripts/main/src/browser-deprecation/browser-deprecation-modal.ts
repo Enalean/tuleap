@@ -23,10 +23,10 @@ export function displayBrowserDeprecationModalIfNeeded(
     mount_point: Document,
     showModal: (modal: Element) => void,
     showNonDismissibleModal: (modal: Element) => void,
-    storage: Storage
+    storage: Storage,
 ): void {
     const browser_deprecation_modal_element = mount_point.getElementById(
-        "browser-deprecation-modal"
+        "browser-deprecation-modal",
     );
     if (browser_deprecation_modal_element === null) {
         throw new Error("Browser deprecation modal #browser-deprecation-modal not found");

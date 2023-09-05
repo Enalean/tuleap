@@ -80,7 +80,7 @@ describe("LinkField", () => {
                 field_presenter: LabeledFieldStub.withDefaults(),
                 current_artifact_reference,
                 is_loading_links,
-            } as HostElement);
+            }) as HostElement;
 
         it("should render a skeleton row when the links are being loaded", () => {
             is_loading_links = true;
@@ -100,7 +100,8 @@ describe("LinkField", () => {
 
             const renderField = (): void => {
                 const presenters: ReadonlyArray<LinkedArtifactPresenter> = linked_artifacts.map(
-                    (artifact) => LinkedArtifactPresenter.fromLinkedArtifact(artifact, false, false)
+                    (artifact) =>
+                        LinkedArtifactPresenter.fromLinkedArtifact(artifact, false, false),
                 );
                 const host = {
                     linked_artifact_presenters: presenters,
@@ -121,7 +122,7 @@ describe("LinkField", () => {
                     LinkedArtifactPresenter.fromLinkedArtifact(
                         LinkedArtifactStub.withDefaults(),
                         false,
-                        false
+                        false,
                     ),
                 ];
                 renderField();
@@ -222,7 +223,7 @@ describe("LinkField", () => {
             });
 
             const setTypes = (
-                presenter: CollectionOfAllowedLinksTypesPresenters | undefined
+                presenter: CollectionOfAllowedLinksTypesPresenters | undefined,
             ): CollectionOfAllowedLinksTypesPresenters => {
                 return setAllowedTypes(host, presenter);
             };
@@ -239,8 +240,8 @@ describe("LinkField", () => {
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                         true,
-                        LinkTypesCollectionStub.withParentPair()
-                    )
+                        LinkTypesCollectionStub.withParentPair(),
+                    ),
                 );
 
                 expect(LinkType.isUntypedLink(host.current_link_type)).toBe(true);
@@ -376,7 +377,7 @@ describe("LinkField", () => {
                 host,
                 new CustomEvent<TypeChangedEvent>("type-changed", {
                     detail: { new_link_type: LinkTypeStub.buildChildLinkType() },
-                })
+                }),
             );
             expect(LinkType.isReverseChild(host.current_link_type)).toBe(true);
         });
@@ -413,7 +414,7 @@ describe("LinkField", () => {
             const artifact = LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID });
             onArtifactCreated(
                 host,
-                new CustomEvent<ArtifactCreatedEvent>("artifact-created", { detail: { artifact } })
+                new CustomEvent<ArtifactCreatedEvent>("artifact-created", { detail: { artifact } }),
             );
 
             expect(host.is_artifact_creator_shown).toBe(false);

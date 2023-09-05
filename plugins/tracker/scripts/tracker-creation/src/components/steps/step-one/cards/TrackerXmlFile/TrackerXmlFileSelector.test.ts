@@ -26,7 +26,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TrackerXmlFileSelector", () => {
     async function getWrapper(
-        state: State = {} as State
+        state: State = {} as State,
     ): Promise<Wrapper<TrackerXmlFileSelector>> {
         const wrapper = shallowMount(TrackerXmlFileSelector, {
             mocks: {
@@ -53,7 +53,7 @@ describe("TrackerXmlFileSelector", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTrackerXmlFileInput",
-            file_input.element
+            file_input.element,
         );
         expect(wrapper.vm.$el.appendChild).not.toHaveBeenCalled();
     });

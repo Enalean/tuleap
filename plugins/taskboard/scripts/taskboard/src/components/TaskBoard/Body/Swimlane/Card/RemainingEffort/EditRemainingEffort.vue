@@ -53,7 +53,7 @@ export default class EditRemainingEffort extends Vue {
 
     @swimlane.Action
     readonly saveRemainingEffort!: (
-        new_remaining_effort: NewRemainingEffortPayload
+        new_remaining_effort: NewRemainingEffortPayload,
     ) => Promise<void>;
 
     @swimlane.Mutation

@@ -28,7 +28,7 @@ export function init(): void {
 
     const has_sidebar = document.body.classList.contains("has-sidebar");
     const has_sidebar_with_pinned_header = document.body.classList.contains(
-        "has-sidebar-with-pinned-header"
+        "has-sidebar-with-pinned-header",
     );
     if (has_sidebar && !has_sidebar_with_pinned_header) {
         return;

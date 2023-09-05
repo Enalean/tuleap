@@ -158,7 +158,7 @@ export default class GanttTask extends Vue {
             return [];
         }
         let dependencies_to_filter = dependencies_for_current_task.get(
-            this.dependencies_nature_to_display
+            this.dependencies_nature_to_display,
         );
 
         let dependencies_to_display: Task[] = [];

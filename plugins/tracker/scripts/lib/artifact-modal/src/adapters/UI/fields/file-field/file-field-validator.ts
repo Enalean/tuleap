@@ -39,7 +39,7 @@ type ValidatedFileFieldValue = Pick<FileFieldValueModel, "field_id" | "value">;
 export function validateFileField(
     file_value_model: FileValueModel | undefined,
     text_field_value_models: ReadonlyArray<TextFieldValueModel>,
-    followup_value_model: FollowupValueModel
+    followup_value_model: FollowupValueModel,
 ): ValidatedFileFieldValue | null {
     if (file_value_model === undefined) {
         return null;
@@ -53,7 +53,7 @@ export function validateFileField(
     const filtered_value = value.filter((file_id) => {
         const file_added_by_text_field = findFileThatWasAddedByATextField(
             file_value_model.images_added_by_text_fields,
-            file_id
+            file_id,
         );
 
         if (file_added_by_text_field === null) {
@@ -72,24 +72,24 @@ export function validateFileField(
 
 function findFileThatWasAddedByATextField(
     images_added_by_text_fields: ReadonlyArray<UploadedImage>,
-    file_id: number
+    file_id: number,
 ): UploadedImage | null {
     return images_added_by_text_fields.find(({ id }) => id === file_id) ?? null;
 }
 
 function isFileReferencedByAnyTextField(
     file: UploadedImage,
-    text_field_value_models: ReadonlyArray<TextFieldValueModel>
+    text_field_value_models: ReadonlyArray<TextFieldValueModel>,
 ): boolean {
     return text_field_value_models.some(({ value }) =>
-        isFileReferencedByAnEditor(file, value.content, value.format)
+        isFileReferencedByAnEditor(file, value.content, value.format),
     );
 }
 
 function isFileReferencedByAnEditor(
     file: UploadedImage,
     text_content: string,
-    text_format: TextFieldFormat
+    text_format: TextFieldFormat,
 ): boolean {
     if (!text_content) {
         return false;

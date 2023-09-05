@@ -36,7 +36,7 @@ export interface VueGettextPOFile {
 
 const loadTranslations = (
     locale: string | undefined,
-    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>,
 ): PromiseLike<GettextTranslationsMap> => {
     if (!locale) {
         return Promise.resolve({});
@@ -50,13 +50,13 @@ const loadTranslations = (
         () => {
             // default to en_US
             return {};
-        }
+        },
     );
 };
 
 export async function initVueGettext(
     vue_instance: VueConstructor,
-    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>,
 ): Promise<void> {
     const locale = document.body.dataset.userLocale;
     const translations = await loadTranslations(locale, load_translations_callback);
@@ -81,7 +81,7 @@ export type POGettextPluginPOFile = {
 
 export async function initVueGettextFromPoGettextPlugin(
     vue_instance: VueConstructor,
-    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): Promise<void> {
     const locale = document.body.dataset.userLocale;
     const translations = await loadTranslations(locale, (locale) =>
@@ -93,10 +93,10 @@ export async function initVueGettextFromPoGettextPlugin(
                     msgctxt: null,
                     flags: {},
                     obsolete: false,
-                })
+                }),
             );
             return { messages: sanitizePoData(mapped) };
-        })
+        }),
     );
     vue_instance.use(VueGettext, { translations, silent: true });
     if (locale) {

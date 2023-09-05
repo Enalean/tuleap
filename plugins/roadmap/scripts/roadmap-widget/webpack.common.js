@@ -22,7 +22,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/roadmap/roadmap-widget/"
+    "/assets/roadmap/roadmap-widget/",
 );
 
 module.exports = [
@@ -42,7 +42,7 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_chrome_firefox
+                    webpack_configurator.babel_options_chrome_firefox,
                 ),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,

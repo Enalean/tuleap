@@ -155,7 +155,7 @@ describe("Time tracking", function () {
 
         // select some trackers
         cy.intercept(`*trackers?representation=minimal&limit=*&offset=*&query=*`).as(
-            "loadTrackers"
+            "loadTrackers",
         );
 
         cy.get("[data-test=overview-toggle-reading-mode]").click();

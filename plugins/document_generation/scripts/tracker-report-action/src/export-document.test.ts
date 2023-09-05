@@ -38,7 +38,7 @@ describe("export-document", () => {
         await startDownloadExportDocument(
             {} as GlobalExportProperties,
             { locale: "en_US" } as GetText,
-            document_exporter
+            document_exporter,
         );
 
         expect(export_creator).toHaveBeenCalled();

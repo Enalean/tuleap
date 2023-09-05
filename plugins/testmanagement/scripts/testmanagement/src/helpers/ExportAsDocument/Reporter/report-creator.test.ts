@@ -58,7 +58,7 @@ describe("Create an export report", () => {
                     });
                 }
                 throw Error("Unknown tracker id");
-            }
+            },
         );
 
         const getArtifactsMock = jest.spyOn(docgen_docx, "getArtifacts");
@@ -67,12 +67,12 @@ describe("Create an export report", () => {
                 [123, { id: 123 } as ArtifactResponse],
                 [1231, { id: 1231 } as ArtifactResponse],
                 [1232, { id: 1232 } as ArtifactResponse],
-            ])
+            ]),
         );
 
         const retrieveArtifactsStructureMock = jest.spyOn(
             docgen_docx,
-            "retrieveArtifactsStructure"
+            "retrieveArtifactsStructure",
         );
         retrieveArtifactsStructureMock.mockResolvedValue([
             { id: 123 } as ArtifactFromReport,
@@ -83,7 +83,7 @@ describe("Create an export report", () => {
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
         formatArtifactMock.mockImplementation(
             (
-                artifact: ArtifactFromReport
+                artifact: ArtifactFromReport,
             ): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> => {
                 if (artifact.id === 123) {
                     return {
@@ -101,7 +101,7 @@ describe("Create an export report", () => {
                     } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
                 }
                 throw Error("Unknown artifact");
-            }
+            },
         );
 
         jest.spyOn(querier, "getExecutions").mockResolvedValue([
@@ -154,7 +154,7 @@ describe("Create an export report", () => {
                 testdefinition_tracker_id: 10,
             },
             { id: 101, label: "Tuleap 13.5" } as Campaign,
-            { locale: "en-US", timezone: "UTC" }
+            { locale: "en-US", timezone: "UTC" },
         );
 
         expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);

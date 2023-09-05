@@ -27,7 +27,7 @@ import type { Folder, RootState } from "../../../../../type";
 describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
     function createWrapper(
         status_value: string,
-        is_status_property_used: boolean
+        is_status_property_used: boolean,
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForFolderCreate>> {
         return shallowMount(StatusPropertyWithCustomBindingForFolderCreate, {
             props: { status_value },
@@ -55,7 +55,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
         const wrapper = createWrapper("none", true);
 
         expect(
-            wrapper.find("[data-test=document-status-property-for-item-create]").exists()
+            wrapper.find("[data-test=document-status-property-for-item-create]").exists(),
         ).toBeTruthy();
     });
 
@@ -63,7 +63,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
         const wrapper = createWrapper("none", false);
 
         expect(
-            wrapper.find("[data-test=document-status-property-for-item-create]").exists()
+            wrapper.find("[data-test=document-status-property-for-item-create]").exists(),
         ).toBeFalsy();
     });
 });

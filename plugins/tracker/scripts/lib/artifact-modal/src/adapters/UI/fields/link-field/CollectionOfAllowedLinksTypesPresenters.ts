@@ -34,7 +34,7 @@ export interface AllowedLinkTypesPresenterContainer {
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
         has_parent_link: boolean,
-        allowed_types: LinkTypesCollection
+        allowed_types: LinkTypesCollection,
     ): CollectionOfAllowedLinksTypesPresenters => ({
         is_parent_type_disabled: has_parent_link,
         types: allowed_types.getAll().map((pair) => {

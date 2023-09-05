@@ -71,7 +71,7 @@ describe("admin-header-background", () => {
 
     it("throws an error if the form cannot be found", () => {
         expect(() =>
-            setupFormSubmission(document.implementation.createHTMLDocument(), window.location)
+            setupFormSubmission(document.implementation.createHTMLDocument(), window.location),
         ).toThrowError();
     });
 

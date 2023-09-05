@@ -61,7 +61,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         var text_option = Builder.node(
             "option",
             { value: text_value, id: "comment_format_text" + this.options.id },
-            "Text"
+            "Text",
         );
         selectbox.appendChild(text_option);
 
@@ -75,7 +75,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         var html_option = Builder.node(
             "option",
             { value: html_value, id: "comment_format_html" + this.options.id },
-            "HTML"
+            "HTML",
         );
         selectbox.appendChild(html_option);
 

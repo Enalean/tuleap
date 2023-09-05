@@ -52,7 +52,7 @@ export default {
         ...mapGetters(["global_upload_progress"]),
         progress_bar_tooltip() {
             return this.$gettext(
-                "Some files are being uploaded, click here to see the whole list."
+                "Some files are being uploaded, click here to see the whole list.",
             );
         },
         should_display_progress_bar() {
@@ -71,7 +71,7 @@ export default {
 
                 this.nb_uploads_in_error = uploads_in_error.length;
             },
-            { deep: true }
+            { deep: true },
         );
     },
 };

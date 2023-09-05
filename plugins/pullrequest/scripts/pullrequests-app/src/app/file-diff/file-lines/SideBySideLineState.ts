@@ -43,7 +43,7 @@ export interface FileLinesState {
 export const SideBySideLineState = (
     file_lines: readonly FileLine[],
     side_by_side_line_grouper: GroupSideBySideLines,
-    side_by_side_line_mapper: MapSideBySideLines
+    side_by_side_line_mapper: MapSideBySideLines,
 ): FileLinesState => {
     first_line_to_group_map = side_by_side_line_grouper.buildFirstLineToGroupMap();
     line_to_group_map = side_by_side_line_grouper.buildLineToGroupMap();

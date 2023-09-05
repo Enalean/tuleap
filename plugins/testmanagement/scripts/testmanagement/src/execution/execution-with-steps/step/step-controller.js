@@ -74,9 +74,9 @@ export default function controller($sce, $element, gettextCatalog, ExecutionRest
                     setError(
                         gettextCatalog.getString(
                             "An error occurred while executing this step. Please try again later. {{ error }}",
-                            { error }
-                        )
-                    )
+                            { error },
+                        ),
+                    ),
             )
             .finally(() => {
                 self.saving = false;
@@ -87,7 +87,7 @@ export default function controller($sce, $element, gettextCatalog, ExecutionRest
         return $sce.trustAsHtml(
             sanitize(html_content, {
                 ADD_TAGS: ["tlp-mermaid-diagram"],
-            })
+            }),
         );
     }
 }

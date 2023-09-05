@@ -34,7 +34,7 @@ export class DrekkenovState implements AfterDropEventSource {
 
     constructor(
         private readonly options: DrekkenovInitOptions,
-        private readonly document: Document
+        private readonly document: Document,
     ) {}
 
     public attachAfterDropListener(listener: AfterDropListener): void {

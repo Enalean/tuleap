@@ -23,5 +23,5 @@ export default angular.module("angular-tlp", []).service(
     "TlpModalService",
     class {
         open() {}
-    }
+    },
 ).name;

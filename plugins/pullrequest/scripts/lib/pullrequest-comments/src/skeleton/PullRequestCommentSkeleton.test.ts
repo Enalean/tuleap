@@ -35,13 +35,13 @@ describe("PullRequestCommentSkeleton", () => {
 
     it("should not display the follow ups section when has_replies is false", () => {
         expect(
-            renderSkeleton(false).querySelector("[data-test=skeleton-follow-ups-section]")
+            renderSkeleton(false).querySelector("[data-test=skeleton-follow-ups-section]"),
         ).toBeNull();
     });
 
     it("should  display the follow ups section when has_replies is true", () => {
         expect(
-            renderSkeleton(true).querySelector("[data-test=skeleton-follow-ups-section]")
+            renderSkeleton(true).querySelector("[data-test=skeleton-follow-ups-section]"),
         ).not.toBeNull();
     });
 });

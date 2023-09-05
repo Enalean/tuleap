@@ -47,7 +47,7 @@ export const Classifier = (search_input: string): ClassifierType => {
                 .map((part) =>
                     regexp.test(part)
                         ? HighlightedText.highlight(part)
-                        : HighlightedText.background(part)
+                        : HighlightedText.background(part),
                 );
         },
     };

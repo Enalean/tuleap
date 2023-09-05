@@ -85,7 +85,7 @@ function bindCheckboxesEvent(): void {
     }
 
     const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll(
-        '#allowed-projects-list input[type="checkbox"]:not(#check-all)'
+        '#allowed-projects-list input[type="checkbox"]:not(#check-all)',
     );
 
     (function toggleAll(): void {
@@ -120,7 +120,7 @@ function bindCheckboxesEvent(): void {
         }
 
         const checked_checkboxes = document.querySelectorAll(
-            '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked'
+            '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked',
         );
 
         revoke_project_button.disabled = checked_checkboxes.length <= 0;

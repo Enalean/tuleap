@@ -117,7 +117,7 @@ function addLegendBox(
     colors,
     onOverValue,
     onOutValue,
-    getLegendClass
+    getLegendClass,
 ) {
     const legend_x = width - legend_width - right;
     const legend_y = Math.max(0, height / 2 - (20 / 2) * colors.length);

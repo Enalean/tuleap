@@ -216,7 +216,7 @@ describe("retrieveArtifactsStructure", () => {
                         values: [],
                     },
                 ],
-            ])
+            ]),
         );
 
         const tracker_structure: TrackerStructure = {
@@ -346,7 +346,7 @@ describe("retrieveArtifactsStructure", () => {
         const artifacts = await retrieveArtifactsStructure(
             new Map([[102, tracker_structure]]),
             artifacts_report_response,
-            get_test_exec
+            get_test_exec,
         );
 
         expect(artifacts).toStrictEqual([

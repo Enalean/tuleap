@@ -54,59 +54,56 @@ describe("TuleapArtifactModalController", () => {
 
         angular.mock.module(artifact_modal_module, function () {});
 
-        angular.mock.inject(function (
-            _$controller_,
-            $rootScope,
-            _$timeout_,
-            _TuleapArtifactModalLoading_
-        ) {
-            TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
+        angular.mock.inject(
+            function (_$controller_, $rootScope, _$timeout_, _TuleapArtifactModalLoading_) {
+                TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
 
-            tlp_modal = {
-                hide: jest.fn(),
-                addEventListener: jest.fn(),
-            };
-            const modal_instance = { tlp_modal };
+                tlp_modal = {
+                    hide: jest.fn(),
+                    addEventListener: jest.fn(),
+                };
+                const modal_instance = { tlp_modal };
 
-            mockCallback = jest.fn();
-            $scope = $rootScope.$new();
+                mockCallback = jest.fn();
+                $scope = $rootScope.$new();
 
-            $controller = _$controller_;
-            controller_params = {
-                $scope: $scope,
-                modal_instance: modal_instance,
-                modal_model: {
-                    title: {
-                        content: "",
-                    },
-                    ordered_fields: [
-                        {
-                            label: "field01",
+                $controller = _$controller_;
+                controller_params = {
+                    $scope: $scope,
+                    modal_instance: modal_instance,
+                    modal_model: {
+                        title: {
+                            content: "",
                         },
-                        {
-                            label: "fieldset01",
-                            is_hidden: true,
-                        },
-                        {
-                            label: "fieldset02",
-                            is_hidden: false,
-                        },
-                    ],
-                    color: "inca_silver",
-                    tracker: {
-                        item_name: "story",
-                        project: { id: PROJECT_ID },
-                        workflow: {
-                            rules: {
-                                lists: [],
+                        ordered_fields: [
+                            {
+                                label: "field01",
+                            },
+                            {
+                                label: "fieldset01",
+                                is_hidden: true,
+                            },
+                            {
+                                label: "fieldset02",
+                                is_hidden: false,
+                            },
+                        ],
+                        color: "inca_silver",
+                        tracker: {
+                            item_name: "story",
+                            project: { id: PROJECT_ID },
+                            workflow: {
+                                rules: {
+                                    lists: [],
+                                },
                             },
                         },
                     },
-                },
-                TuleapArtifactModalLoading,
-                displayItemCallback: mockCallback,
-            };
-        });
+                    TuleapArtifactModalLoading,
+                    displayItemCallback: mockCallback,
+                };
+            },
+        );
 
         const spy_create_artifact_feature_flag = jest.spyOn(fetch_result, "getJSON");
         spy_create_artifact_feature_flag.mockReturnValue(okAsync("1"));
@@ -115,7 +112,7 @@ describe("TuleapArtifactModalController", () => {
         editArtifact = jest.spyOn(rest_service, "editArtifact");
         editArtifactWithConcurrencyChecking = jest.spyOn(
             rest_service,
-            "editArtifactWithConcurrencyChecking"
+            "editArtifactWithConcurrencyChecking",
         );
         getAllFileFields = jest.spyOn(file_field_detector, "getAllFileFields");
         validateValues = jest.spyOn(fields_validator, "validateArtifactFieldsValues");
@@ -159,7 +156,7 @@ describe("TuleapArtifactModalController", () => {
 
             expect(field_dependencies_helper.FieldDependenciesValuesHelper).toHaveBeenCalledWith(
                 expect.any(Object),
-                controller_params.modal_model.tracker.workflow.rules.lists
+                controller_params.modal_model.tracker.workflow.rules.lists,
             );
         });
 
@@ -220,7 +217,7 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 true,
                 followup_comment,
-                expect.any(Object)
+                expect.any(Object),
             );
             expect(createArtifact).toHaveBeenCalled();
             expect(editArtifact).not.toHaveBeenCalled();
@@ -261,14 +258,14 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 false,
                 followup_comment,
-                expect.any(Object)
+                expect.any(Object),
             );
             expect(editArtifactWithConcurrencyChecking).toHaveBeenCalledWith(
                 8155,
                 values,
                 followup_comment,
                 "etag",
-                1629098929
+                1629098929,
             );
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
@@ -322,7 +319,7 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 false,
                 followup_comment,
-                expect.any(Object)
+                expect.any(Object),
             );
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
@@ -353,7 +350,7 @@ describe("TuleapArtifactModalController", () => {
                 ArtifactModalController.setFieldValueForComputedFieldElement(
                     new CustomEvent("value-changed", {
                         detail: { field_id: 552, autocomputed: false, manual_value: 67 },
-                    })
+                    }),
                 );
 
                 expect(ArtifactModalController.values[552].is_autocomputed).toBe(false);
@@ -366,7 +363,7 @@ describe("TuleapArtifactModalController", () => {
                 const format = "html";
                 const body = `<p>Lorem ipsum dolor sit amet</p>`;
                 ArtifactModalController.setFollowupComment(
-                    new CustomEvent("value-changed", { detail: { format, body } })
+                    new CustomEvent("value-changed", { detail: { format, body } }),
                 );
 
                 expect(ArtifactModalController.new_followup_comment.format).toBe(format);

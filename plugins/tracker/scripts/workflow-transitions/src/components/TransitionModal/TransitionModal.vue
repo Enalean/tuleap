@@ -104,7 +104,7 @@ export default {
                 } else {
                     modal.hide();
                 }
-            }
+            },
         );
     },
     methods: {

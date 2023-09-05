@@ -34,10 +34,10 @@ interface OptionsUserSelect2 {
 
 export function autocomplete_projects_for_select2(
     element: Element,
-    options: OptionsProjectSelect2
+    options: OptionsProjectSelect2,
 ): void;
 
 export function autocomplete_users_for_select2(
     element: Element,
-    options: OptionsUserSelect2
+    options: OptionsUserSelect2,
 ): Select2Plugin;

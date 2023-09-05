@@ -84,7 +84,7 @@ const {
     campaigns,
 } = useNamespacedState<Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">>(
     "campaign",
-    ["is_loading", "has_loading_error", "campaigns"]
+    ["is_loading", "has_loading_error", "campaigns"],
 );
 const {
     project_name,
@@ -181,7 +181,7 @@ async function exportTestPlanAsXlsx(): Promise<void> {
             milestone_title.value,
             user_display_name.value,
             backlog_items.value,
-            campaigns.value
+            campaigns.value,
         );
     } catch (e) {
         has_encountered_error_during_the_export.value = true;
@@ -224,7 +224,7 @@ async function exportTestPlanAsDocx(): Promise<void> {
             gettext_provider,
             downloadDocx,
             backlog_items.value,
-            campaigns.value
+            campaigns.value,
         );
     } catch (e) {
         has_encountered_error_during_the_export.value = true;

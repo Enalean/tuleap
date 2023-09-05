@@ -36,7 +36,7 @@ export class RichTextEditorsCreator {
     constructor(
         private readonly doc: Document,
         private readonly image_upload_factory: UploadImageFormFactory,
-        private readonly editor_factory: RichTextEditorFactory
+        private readonly editor_factory: RichTextEditorFactory,
     ) {}
 
     public createNewFollowupEditor(): void {
@@ -59,7 +59,7 @@ export class RichTextEditorsCreator {
 
     public createEditFollowupEditor(changeset_id: number, format: TextFieldFormat): void {
         const edit_followup_textarea = this.doc.getElementById(
-            EDIT_FOLLOWUP_TEXTAREA_BASE_ID + changeset_id
+            EDIT_FOLLOWUP_TEXTAREA_BASE_ID + changeset_id,
         );
         if (!(edit_followup_textarea instanceof HTMLTextAreaElement)) {
             // When copying artifacts or browsing as anonymous, there is no "edit follow-up" textarea
@@ -88,7 +88,7 @@ export class RichTextEditorsCreator {
                     observer.unobserve(entry.target);
                     this.createTextFieldEditor(entry.target);
                 }
-            }
+            },
         );
         for (const text_field_textarea of text_field_textareas) {
             observer.observe(text_field_textarea);
@@ -103,7 +103,7 @@ export class RichTextEditorsCreator {
         const match = text_field_textarea.id.match(/_(\d+)$/);
         if (!match) {
             throw new Error(
-                `Text field textarea's id must finish by an underscore and the field ID. Got ${text_field_textarea.id} instead`
+                `Text field textarea's id must finish by an underscore and the field ID. Got ${text_field_textarea.id} instead`,
             );
         }
         const field_id = match[1];

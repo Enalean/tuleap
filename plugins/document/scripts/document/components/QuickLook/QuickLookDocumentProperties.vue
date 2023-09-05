@@ -105,7 +105,7 @@ const get_custom_properties = computed((): Array<Property> => {
     const hardcoded_properties = ["title", "description", "owner", "create_date", "update_date"];
 
     return props.item.properties.filter(
-        ({ short_name }) => !hardcoded_properties.includes(short_name)
+        ({ short_name }) => !hardcoded_properties.includes(short_name),
     );
 });
 

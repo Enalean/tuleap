@@ -52,7 +52,7 @@ describe("Column module actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/deletePreference",
                 { key: "plugin_taskboard_collapse_column_42_69" },
-                { root: true }
+                { root: true },
             );
         });
     });
@@ -68,7 +68,7 @@ describe("Column module actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/setPreference",
                 { key: "plugin_taskboard_collapse_column_42_69", value: "1" },
-                { root: true }
+                { root: true },
             );
         });
     });

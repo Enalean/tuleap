@@ -37,6 +37,6 @@ describe("relative-dates-preference-helper", () => {
         "isPreferenceAbsoluteDateFirst() should return %s when the preference is %s",
         (expected_result, preference) => {
             expect(isPreferenceAbsoluteDateFirst(preference)).toStrictEqual(expected_result);
-        }
+        },
     );
 });

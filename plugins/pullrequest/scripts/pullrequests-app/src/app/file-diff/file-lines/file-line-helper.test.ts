@@ -30,7 +30,7 @@ describe("file-line-helper", () => {
         "isAnUnmovedLine() should return %s when the line is %s",
         (is_unmoved, line_description, line) => {
             expect(isAnUnmovedLine(line)).toBe(is_unmoved);
-        }
+        },
     );
 
     it.each([
@@ -42,7 +42,7 @@ describe("file-line-helper", () => {
         "isAnAddedLine() should return %s when the line is %s",
         (is_added, line_description, line) => {
             expect(isAnAddedLine(line)).toBe(is_added);
-        }
+        },
     );
 
     it.each([
@@ -54,6 +54,6 @@ describe("file-line-helper", () => {
         "isARemovedLine() should return %s when the line is %s",
         (is_removed, line_description, line) => {
             expect(isARemovedLine(line)).toBe(is_removed);
-        }
+        },
     );
 });

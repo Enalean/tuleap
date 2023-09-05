@@ -56,18 +56,18 @@ function Graph($window, gettextCatalog) {
                     .svg()
                     .attr(
                         "width",
-                        cumulative_chart.width() + options.margin.left + options.margin.right
+                        cumulative_chart.width() + options.margin.left + options.margin.right,
                     )
                     .attr(
                         "height",
-                        cumulative_chart.height() + options.margin.top + options.margin.bottom
+                        cumulative_chart.height() + options.margin.top + options.margin.bottom,
                     );
 
                 cumulative_chart
                     .g()
                     .attr(
                         "transform",
-                        "translate(" + options.margin.left + "," + options.margin.top + ")"
+                        "translate(" + options.margin.left + "," + options.margin.top + ")",
                     );
 
                 cumulative_chart.redraw();

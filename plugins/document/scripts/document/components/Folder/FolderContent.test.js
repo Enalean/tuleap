@@ -86,7 +86,7 @@ describe("FolderContent", () => {
 
             expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
                 expect.anything(),
-                item
+                item,
             );
             expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });
@@ -107,7 +107,7 @@ describe("FolderContent", () => {
 
             expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
                 expect.anything(),
-                item
+                item,
             );
             expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });
@@ -126,7 +126,7 @@ describe("FolderContent", () => {
 
             expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
                 expect.anything(),
-                item
+                item,
             );
             expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });

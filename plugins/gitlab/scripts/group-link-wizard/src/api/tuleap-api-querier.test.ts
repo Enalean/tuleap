@@ -43,7 +43,7 @@ describe("tuleap-api-querier", () => {
             gitlab_server_url,
             gitlab_token,
             create_branch_prefix,
-            allow_artifact_closure
+            allow_artifact_closure,
         );
 
         if (!result.isOk()) {

@@ -60,7 +60,7 @@ describe("CredentialsFormModal", () => {
     it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
         const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
-            "fa-long-arrow-alt-right"
+            "fa-long-arrow-alt-right",
         );
 
         wrapper.setData({
@@ -75,7 +75,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled
+            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
 
@@ -98,7 +98,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
-            "Error message"
+            "Error message",
         );
     });
 
@@ -141,7 +141,7 @@ describe("CredentialsFormModal", () => {
         });
         await wrapper.vm.$nextTick();
         expect(
-            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled
+            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
     });
 
@@ -159,7 +159,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toBe(
-            "No repository is available with your GitLab account"
+            "No repository is available with your GitLab account",
         );
     });
 
@@ -180,7 +180,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
-            "You must provide a valid GitLab server and user API token"
+            "You must provide a valid GitLab server and user API token",
         );
     });
 
@@ -201,7 +201,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
-            "Server url is invalid"
+            "Server url is invalid",
         );
     });
 
@@ -223,7 +223,7 @@ describe("CredentialsFormModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.empty_message).toBe(
-            "No repository is available with your GitLab account"
+            "No repository is available with your GitLab account",
         );
     });
 });

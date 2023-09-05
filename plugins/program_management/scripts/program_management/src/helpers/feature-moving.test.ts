@@ -75,7 +75,7 @@ describe("FeatureMoving", () => {
                     source_dropzone,
                     target_dropzone,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).not.toHaveBeenCalled();
@@ -94,7 +94,7 @@ describe("FeatureMoving", () => {
                 {
                     dropped_element,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -103,7 +103,7 @@ describe("FeatureMoving", () => {
                     feature: { id: 125 },
                     order: { compared_to: 12, direction: "after" },
                     to_program_increment_id: 101,
-                }
+                },
             );
 
             expect(plan_feature).toHaveBeenCalledWith({
@@ -132,7 +132,7 @@ describe("FeatureMoving", () => {
                     dropped_element,
                     target_dropzone,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -141,7 +141,7 @@ describe("FeatureMoving", () => {
                     feature: { id: 125 },
                     order: { compared_to: 12, direction: "after" },
                     to_program_increment_id: 101,
-                }
+                },
             );
 
             expect(plan_feature).toHaveBeenCalledWith({
@@ -167,7 +167,7 @@ describe("FeatureMoving", () => {
                     source_dropzone,
                     target_dropzone,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).not.toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe("FeatureMoving", () => {
 
             const move_element_from_program_increment_to_top_backlog = jest.spyOn(
                 backlogAdder,
-                "moveElementFromProgramIncrementToTopBackLog"
+                "moveElementFromProgramIncrementToTopBackLog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -193,7 +193,7 @@ describe("FeatureMoving", () => {
                     next_sibling,
                     program_id: 101,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
@@ -217,7 +217,7 @@ describe("FeatureMoving", () => {
 
             const move_element_from_program_increment_to_top_backlog = jest.spyOn(
                 backlogAdder,
-                "moveElementFromProgramIncrementToTopBackLog"
+                "moveElementFromProgramIncrementToTopBackLog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
@@ -230,7 +230,7 @@ describe("FeatureMoving", () => {
                     next_sibling: null,
                     program_id: 101,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
@@ -254,7 +254,7 @@ describe("FeatureMoving", () => {
 
             const move_element_from_program_increment_to_top_backlog = jest.spyOn(
                 backlogAdder,
-                "moveElementFromProgramIncrementToTopBackLog"
+                "moveElementFromProgramIncrementToTopBackLog",
             );
             const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
@@ -268,7 +268,7 @@ describe("FeatureMoving", () => {
                     dropped_element,
                     program_id: 101,
                 } as HandleDropContextWithProgramId,
-                101
+                101,
             );
 
             expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
@@ -299,7 +299,7 @@ describe("FeatureMoving", () => {
                     dropped_element,
                 } as HandleDropContextWithProgramId,
                 101,
-                102
+                102,
             );
 
             expect(context.commit).not.toHaveBeenCalled();
@@ -323,7 +323,7 @@ describe("FeatureMoving", () => {
                 context,
                 handle_drop,
                 2,
-                1
+                1,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -333,7 +333,7 @@ describe("FeatureMoving", () => {
                     order: null,
                     from_program_increment_id: 1,
                     to_program_increment_id: 2,
-                }
+                },
             );
 
             expect(plan_feature).toHaveBeenCalledWith({
@@ -363,7 +363,7 @@ describe("FeatureMoving", () => {
                     program_id: 101,
                 } as HandleDropContextWithProgramId,
                 1,
-                1
+                1,
             );
 
             expect(plan_feature).not.toHaveBeenCalled();
@@ -391,7 +391,7 @@ describe("FeatureMoving", () => {
                 context,
                 handle_drop,
                 2,
-                1
+                1,
             );
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -401,7 +401,7 @@ describe("FeatureMoving", () => {
                     order: null,
                     from_program_increment_id: 1,
                     to_program_increment_id: 2,
-                }
+                },
             );
 
             expect(plan_feature).toHaveBeenCalledWith({

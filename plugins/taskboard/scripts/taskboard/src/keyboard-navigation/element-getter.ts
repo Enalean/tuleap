@@ -42,7 +42,7 @@ export function getPreviousElement(element: HTMLElement): HTMLElement | null {
 
 export function getFirstElement(
     parent: Document | HTMLElement,
-    element_navigation_datatype: NavigationElement
+    element_navigation_datatype: NavigationElement,
 ): HTMLElement | null {
     const first_element = parent.querySelector(`[data-navigation=${element_navigation_datatype}]`);
     return first_element instanceof HTMLElement ? first_element : null;
@@ -50,7 +50,7 @@ export function getFirstElement(
 
 export function getLastElement(
     parent: Document | HTMLElement,
-    element_navigation_datatype: NavigationElement
+    element_navigation_datatype: NavigationElement,
 ): HTMLElement | null {
     const elements = parent.querySelectorAll(`[data-navigation=${element_navigation_datatype}]`);
     if (elements.length === 0) {
@@ -62,14 +62,14 @@ export function getLastElement(
 
 export function getFirstChildElement(parent: HTMLElement): HTMLElement | null {
     const first_child_element = parent.querySelector(
-        `[data-navigation=${CARD}], [data-navigation=${ADDFORM}]`
+        `[data-navigation=${CARD}], [data-navigation=${ADDFORM}]`,
     );
     return first_child_element instanceof HTMLElement ? first_child_element : null;
 }
 
 export function getParent(
     child: HTMLElement,
-    parent_navigation_datatype: NavigationElement
+    parent_navigation_datatype: NavigationElement,
 ): HTMLElement {
     const parent_element = child.closest(`[data-navigation=${parent_navigation_datatype}]`);
     if (!(parent_element instanceof HTMLElement)) {

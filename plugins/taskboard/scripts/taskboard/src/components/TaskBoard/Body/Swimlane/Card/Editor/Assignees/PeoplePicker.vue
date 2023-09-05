@@ -108,7 +108,7 @@ export default class PeoplePicker extends Vue {
                 </div>
                 {{ display_name }}
             </div>`,
-            user
+            user,
         );
     }
 
@@ -117,7 +117,7 @@ export default class PeoplePicker extends Vue {
     }
 
     formatUserWhenSelected(
-        user: IdTextPair | LoadingData | DataFormat | GroupedDataFormat
+        user: IdTextPair | LoadingData | DataFormat | GroupedDataFormat,
     ): string {
         if (!this.isForPeoplePicker(user)) {
             return user.text;
@@ -128,7 +128,7 @@ export default class PeoplePicker extends Vue {
                 <img src="{{ avatar_url }}">
             </div>
             {{ display_name }}`,
-            user
+            user,
         );
     }
 }

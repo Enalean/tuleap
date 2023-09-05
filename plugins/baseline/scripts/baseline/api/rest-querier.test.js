@@ -51,7 +51,7 @@ describe("Rest queries:", () => {
                         limit: 10,
                         offset: 0,
                     },
-                })
+                }),
             );
         });
     });
@@ -74,7 +74,7 @@ describe("Rest queries:", () => {
                         limit: 50,
                         offset: 0,
                     },
-                })
+                }),
             );
         });
     });
@@ -97,7 +97,7 @@ describe("Rest queries:", () => {
                         limit: 50,
                         offset: 0,
                     },
-                })
+                }),
             );
         });
     });
@@ -144,7 +144,7 @@ describe("Rest queries:", () => {
 
         it("calls baselines API to get baseline artifacts by ids", () =>
             expect(get).toHaveBeenCalledWith(
-                "/api/baselines/1/artifacts?query=%7B%22ids%22%3A%5B1%2C2%2C3%2C4%5D%7D"
+                "/api/baselines/1/artifacts?query=%7B%22ids%22%3A%5B1%2C2%2C3%2C4%5D%7D",
             ));
     });
 });

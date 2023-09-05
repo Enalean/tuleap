@@ -49,7 +49,7 @@ export function createPopover(
     doc: Document,
     popover_trigger: HTMLElement,
     popover_content: HTMLElement,
-    options: PopoverOptions = {}
+    options: PopoverOptions = {},
 ): Popover {
     const configuration = getConfiguration(popover_trigger, options);
 
@@ -57,7 +57,7 @@ export function createPopover(
 
     const updatePositionOfContent = getUpdatePositionOfContentCallback(
         popover_content,
-        configuration
+        configuration,
     );
 
     const cleanup = autoUpdate(configuration.anchor, popover_content, updatePositionOfContent);
@@ -70,7 +70,7 @@ export function createPopover(
         popover_content,
         dismiss_buttons,
         configuration,
-        updatePositionOfContent
+        updatePositionOfContent,
     );
     attachListeners(listeners);
 
@@ -88,7 +88,7 @@ export function createPopover(
 
 function getUpdatePositionOfContentCallback(
     popover_content: HTMLElement,
-    configuration: Configuration
+    configuration: Configuration,
 ): () => void {
     const middleware = [
         offset({
@@ -105,7 +105,7 @@ function getUpdatePositionOfContentCallback(
             arrow({
                 element: arrow_element,
                 padding: 15,
-            })
+            }),
         );
     }
 
@@ -174,7 +174,7 @@ function getConfiguration(popover_trigger: HTMLElement, options: PopoverOptions)
             "Invalid placement received: " +
                 placement +
                 ". Allowed values are: " +
-                allowed_placements.join(",")
+                allowed_placements.join(","),
         );
     }
 
@@ -203,7 +203,7 @@ function buildListeners(
     popover_content: HTMLElement,
     dismiss_buttons: NodeListOf<Element>,
     configuration: Configuration,
-    updatePositionOfContent: () => void
+    updatePositionOfContent: () => void,
 ): EventListener[] {
     if (configuration.trigger === "focus") {
         return [
@@ -223,7 +223,7 @@ function buildListeners(
                 doc,
                 popover_trigger,
                 popover_content,
-                updatePositionOfContent
+                updatePositionOfContent,
             ),
             buildDocumentClickListener(doc, popover_trigger, popover_content),
             buildEscapeListener(doc, popover_content),
@@ -253,7 +253,7 @@ function buildFocusListener(
     doc: Document,
     popover_trigger: HTMLElement,
     popover_content: HTMLElement,
-    updatePositionOfContent: () => void
+    updatePositionOfContent: () => void,
 ): EventListener {
     return {
         element: popover_trigger,
@@ -268,7 +268,7 @@ function buildFocusListener(
 function buildBlurListener(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: HTMLElement
+    popover_content: HTMLElement,
 ): EventListener {
     return {
         element: popover_trigger,
@@ -284,7 +284,7 @@ function buildMouseOverListener(
     doc: Document,
     popover_trigger: HTMLElement,
     popover_content: HTMLElement,
-    updatePositionOfContent: () => void
+    updatePositionOfContent: () => void,
 ): EventListener {
     return {
         element: popover_trigger,
@@ -299,7 +299,7 @@ function buildMouseOverListener(
 function buildMouseOutListener(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: HTMLElement
+    popover_content: HTMLElement,
 ): EventListener {
     return {
         element: popover_trigger,
@@ -315,7 +315,7 @@ function buildTriggerClickListener(
     doc: Document,
     popover_trigger: HTMLElement,
     popover_content: HTMLElement,
-    updatePositionOfContent: () => void
+    updatePositionOfContent: () => void,
 ): EventListener {
     return {
         element: popover_trigger,
@@ -334,7 +334,7 @@ function buildTriggerClickListener(
 function buildDocumentClickListener(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: HTMLElement
+    popover_content: HTMLElement,
 ): EventListener {
     return {
         element: doc,

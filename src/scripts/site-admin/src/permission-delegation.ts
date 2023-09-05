@@ -22,26 +22,26 @@ import { autocomplete_users_for_select2 as autocomplete } from "@tuleap/autocomp
 document.addEventListener("DOMContentLoaded", function () {
     const add_group = document.querySelector("#siteadmin-permission-delegation-add-group"),
         add_group_modal_element = document.querySelector(
-            "#siteadmin-permission-delegation-add-group-modal"
+            "#siteadmin-permission-delegation-add-group-modal",
         ),
         delete_group = document.querySelector(
-            "#siteadmin-permission-delegation-group-actions-delete"
+            "#siteadmin-permission-delegation-group-actions-delete",
         ),
         delete_group_modal_element = document.querySelector(
-            "#siteadmin-permission-delegation-delete-group-modal"
+            "#siteadmin-permission-delegation-delete-group-modal",
         ),
         edit_group = document.querySelector("#siteadmin-permission-delegation-group-actions-edit"),
         edit_group_modal_element = document.querySelector(
-            "#siteadmin-permission-delegation-edit-group-modal"
+            "#siteadmin-permission-delegation-edit-group-modal",
         ),
         add_perm = document.querySelector(
-            "#siteadmin-permission-delegation-group-details-perms-actions-add"
+            "#siteadmin-permission-delegation-group-details-perms-actions-add",
         ),
         add_perm_modal_element = document.querySelector(
-            "#siteadmin-permission-delegation-add-perm-modal"
+            "#siteadmin-permission-delegation-add-perm-modal",
         ),
         add_user = document.getElementById(
-            "siteadmin-permission-delegation-group-details-users-actions-add-input"
+            "siteadmin-permission-delegation-group-details-users-actions-add-input",
         );
 
     if (!add_group_modal_element) {
@@ -92,22 +92,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     handlePrimaryButtonState(
         '#siteadmin-permission-delegation-group-details-perms input[type="checkbox"][name="permissions[]"]',
-        "#siteadmin-permission-delegation-group-details-perms-actions-delete"
+        "#siteadmin-permission-delegation-group-details-perms-actions-delete",
     );
 
     handlePrimaryButtonState(
         '#siteadmin-permission-delegation-add-perm-modal input[type="checkbox"][name="permissions[]"]',
-        "#siteadmin-permission-delegation-add-perm-modal-submit"
+        "#siteadmin-permission-delegation-add-perm-modal-submit",
     );
 
     handlePrimaryButtonState(
         'input[type="checkbox"][name="user-ids[]"]',
-        "#siteadmin-permission-delegation-group-details-users-actions-delete"
+        "#siteadmin-permission-delegation-group-details-users-actions-delete",
     );
 
     function handlePrimaryButtonState(
         source_selector: string,
-        target_button_selector: string
+        target_button_selector: string,
     ): void {
         const source_elements = document.querySelectorAll(source_selector),
             target_button = document.querySelector(target_button_selector);

@@ -82,7 +82,7 @@
                 {{ $gettext("Adding a second server will restrict the existing one.") }}
                 {{
                     $gettext(
-                        "Users won't have access anymore and will lose unsaved modifications until their projects are explicitelly allowed."
+                        "Users won't have access anymore and will lose unsaved modifications until their projects are explicitelly allowed.",
                     )
                 }}
             </div>

@@ -31,7 +31,7 @@ export async function deleteBannerForPlatform(): Promise<void> {
 export async function saveBannerForPlatform(
     new_message: string,
     new_importance: Importance,
-    new_expiration_date: string
+    new_expiration_date: string,
 ): Promise<void> {
     let expiration_date = null;
 

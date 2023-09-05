@@ -31,7 +31,7 @@ describe(`MatchingArtifactsGroup`, () => {
         const artifact = LinkableArtifactStub.withDefaults({ id: 123 });
         const group = MatchingArtifactsGroup.fromMatchingArtifact(
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
-            artifact
+            artifact,
         );
 
         expect(group.is_loading).toBe(false);

@@ -26,7 +26,7 @@ describe("canDeleteProperties", () => {
         [
             Pick<ConfigurationState, "forbid_writers_to_delete">,
             Pick<Item, "user_can_write" | "can_user_manage">,
-            boolean
+            boolean,
         ]
     >([
         [
@@ -69,6 +69,6 @@ describe("canDeleteProperties", () => {
         "Given configuration is %s and item is %s then expected result is %s",
         (configuration, item, expected) => {
             expect(canDelete(configuration.forbid_writers_to_delete, item as Item)).toBe(expected);
-        }
+        },
     );
 });

@@ -90,14 +90,14 @@ export default class WritingMode extends Vue {
         try {
             this.writingCrossTrackerReport.addTracker(
                 payload.selected_project,
-                payload.selected_tracker
+                payload.selected_tracker,
             );
             this.updateSelectedTrackers();
         } catch (error) {
             if (error instanceof TooManyTrackersSelectedError) {
                 this.$store.commit(
                     "setErrorMessage",
-                    this.$gettext("Tracker selection is limited to 25 trackers")
+                    this.$gettext("Tracker selection is limited to 25 trackers"),
                 );
             } else {
                 throw error;

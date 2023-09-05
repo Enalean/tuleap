@@ -44,7 +44,7 @@ describe("DropDownButton", () => {
         isAppended: boolean,
         isInQuickLookMode: boolean,
         isInLargeMode: boolean,
-        isInFolderEmptyState: boolean
+        isInFolderEmptyState: boolean,
     ): VueWrapper<InstanceType<typeof DropDownButton>> {
         return shallowMount(DropDownButton, {
             props: { isAppended, isInQuickLookMode, isInLargeMode, isInFolderEmptyState },

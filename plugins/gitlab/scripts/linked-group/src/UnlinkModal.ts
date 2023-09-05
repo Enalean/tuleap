@@ -37,14 +37,14 @@ export const UnlinkModal = (
     loc: Location,
     doc: Document,
     gettext_provider: GetText,
-    group_id: number
+    group_id: number,
 ): UnlinkModalType => {
     const unlink_modal = selectOrThrow(doc, UNLINK_MODAL_SELECTOR);
     const modal_feedback = selectOrThrow(unlink_modal, UNLINK_MODAL_FEEDBACK_SELECTOR);
     const confirm_unlink_button = selectOrThrow(
         unlink_modal,
         UNLINK_CONFIRM_SELECTOR,
-        HTMLButtonElement
+        HTMLButtonElement,
     );
     const confirm_unlink_icon = selectOrThrow(confirm_unlink_button, UNLINK_CONFIRM_ICON_SELECTOR);
 
@@ -68,10 +68,10 @@ export const UnlinkModal = (
                 modal_feedback.classList.remove(FEEDBACK_HIDDEN_CLASSNAME);
                 alert_block.textContent = sprintf(
                     gettext_provider.gettext("Error during the removal of the link: %(error)s"),
-                    { error: String(fault) }
+                    { error: String(fault) },
                 );
                 toggleLoadingState(false);
-            }
+            },
         );
     };
 

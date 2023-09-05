@@ -34,7 +34,7 @@ interface StoreOption {
 describe("AddGitlabRepositoryActionButton", () => {
     let localVue;
     function instantiateComponent(
-        store_option: StoreOption
+        store_option: StoreOption,
     ): Wrapper<AddGitlabRepositoryActionButton> {
         localVue = createLocalVue();
         localVue.use(GetTextPlugin, {

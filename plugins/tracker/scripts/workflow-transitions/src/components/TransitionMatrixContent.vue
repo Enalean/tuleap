@@ -93,7 +93,7 @@ export default {
         transition() {
             return this.current_workflow_transitions.find(
                 (transition) =>
-                    transition.from_id === this.from.id && transition.to_id === this.to.id
+                    transition.from_id === this.from.id && transition.to_id === this.to.id,
             );
         },
         is_allowed() {
@@ -134,7 +134,7 @@ export default {
         openModal() {
             this.$store.dispatch(
                 "transitionModal/showTransitionConfigurationModal",
-                this.transition
+                this.transition,
             );
         },
     },

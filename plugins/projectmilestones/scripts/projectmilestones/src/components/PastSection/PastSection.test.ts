@@ -29,7 +29,7 @@ const project_id = 102;
 const component_options: ShallowMountOptions<PastSection> = {};
 
 async function getPersonalWidgetInstance(
-    store_options: StoreOptions
+    store_options: StoreOptions,
 ): Promise<Wrapper<PastSection>> {
     const store = createStoreMock(store_options);
 
@@ -67,7 +67,7 @@ describe("PastSection", () => {
         expect(wrapper.get("[data-test=past-releases-link]").attributes("href")).toContain(
             "/plugins/agiledashboard/?action=show-top&group_id=" +
                 encodeURIComponent(project_id) +
-                "&pane=topplanning-v2&load-all=1"
+                "&pane=topplanning-v2&load-all=1",
         );
     });
 

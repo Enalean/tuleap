@@ -56,7 +56,10 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildFocused(
-                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                    WritingZonePresenter.buildInitial(
+                        project_id,
+                        is_comments_markdown_mode_enabled,
+                    ),
                 ),
             } as HostElement);
 
@@ -67,7 +70,10 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                    WritingZonePresenter.buildInitial(
+                        project_id,
+                        is_comments_markdown_mode_enabled,
+                    ),
                 ),
             } as HostElement);
 
@@ -81,7 +87,10 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled)
+                    WritingZonePresenter.buildInitial(
+                        project_id,
+                        is_comments_markdown_mode_enabled,
+                    ),
                 ),
                 textarea: document.implementation.createHTMLDocument().createElement("textarea"),
             } as HostElement);
@@ -108,9 +117,9 @@ describe("WritingZoneTabsTemplate", () => {
                 presenter: WritingZonePresenter.buildPreviewMode(
                     WritingZonePresenter.buildInitial(
                         project_id,
-                        is_comments_markdown_mode_enabled
+                        is_comments_markdown_mode_enabled,
                     ),
-                    "<p>Previewed content</p>"
+                    "<p>Previewed content</p>",
                 ),
             } as HostElement);
 
@@ -124,10 +133,10 @@ describe("WritingZoneTabsTemplate", () => {
                     WritingZonePresenter.buildPreviewMode(
                         WritingZonePresenter.buildInitial(
                             project_id,
-                            is_comments_markdown_mode_enabled
+                            is_comments_markdown_mode_enabled,
                         ),
-                        "<p>Previewed content</p>"
-                    )
+                        "<p>Previewed content</p>",
+                    ),
                 ),
             } as HostElement);
 
@@ -144,10 +153,10 @@ describe("WritingZoneTabsTemplate", () => {
                     WritingZonePresenter.buildPreviewMode(
                         WritingZonePresenter.buildInitial(
                             project_id,
-                            is_comments_markdown_mode_enabled
+                            is_comments_markdown_mode_enabled,
                         ),
-                        "<p>Previewed content</p>"
-                    )
+                        "<p>Previewed content</p>",
+                    ),
                 ),
             } as HostElement);
 

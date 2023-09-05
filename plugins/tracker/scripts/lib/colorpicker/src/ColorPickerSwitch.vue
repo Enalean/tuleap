@@ -46,9 +46,9 @@ const { $gettext } = useGettext();
 const switch_title = computed((): string =>
     props.is_switch_disabled
         ? $gettext(
-              "You can't switch to old colors because the field is currently being used by the card background color semantic"
+              "You can't switch to old colors because the field is currently being used by the card background color semantic",
           )
-        : ""
+        : "",
 );
 
 const emit = defineEmits<{

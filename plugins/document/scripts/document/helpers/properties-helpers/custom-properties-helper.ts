@@ -38,7 +38,7 @@ export function getCustomProperties(item: Item): Array<Property> {
     ];
 
     const filter = filtered_properties.filter(
-        ({ short_name }) => !hardcoded_properties.includes(short_name)
+        ({ short_name }) => !hardcoded_properties.includes(short_name),
     );
 
     return filter.map((property) => {

@@ -41,19 +41,15 @@ describe("BacklogService", () => {
             });
         });
 
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _$filter_,
-            _BacklogService_,
-            _ProjectService_
-        ) {
-            $q = _$q_;
-            $scope = _$rootScope_.$new();
-            $filter = _$filter_;
-            BacklogService = _BacklogService_;
-            ProjectService = _ProjectService_;
-        });
+        angular.mock.inject(
+            function (_$q_, _$rootScope_, _$filter_, _BacklogService_, _ProjectService_) {
+                $q = _$q_;
+                $scope = _$rootScope_.$new();
+                $filter = _$filter_;
+                BacklogService = _BacklogService_;
+                ProjectService = _ProjectService_;
+            },
+        );
     });
 
     describe("appendBacklogItems()", () => {

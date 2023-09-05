@@ -105,7 +105,7 @@ export const RadioButtonsField = define<InternalRadioButtonsField>({
                         />
                         ${value.label}
                     </label>
-                `
+                `,
             )}
         </div>
     `,

@@ -36,7 +36,7 @@ function hasTimePeriodError(a: Task): boolean {
 
 export async function retrieveAll(
     url: string,
-    additional_defaults: Partial<Task>
+    additional_defaults: Partial<Task>,
 ): Promise<Task[]> {
     const tasks = await recursiveGet<Array<unknown>, Task>(url);
 

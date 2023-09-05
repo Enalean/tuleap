@@ -23,7 +23,7 @@ import { NaturesLabels } from "../type";
 export function getNatureLabelsForTasks(
     tasks: Task[],
     dependencies: TasksDependencies,
-    visible_natures: NaturesLabels
+    visible_natures: NaturesLabels,
 ): NaturesLabels {
     return tasks.reduce((available_natures: NaturesLabels, task: Task): NaturesLabels => {
         const dependencies_for_task = dependencies.get(task);
@@ -32,7 +32,7 @@ export function getNatureLabelsForTasks(
         }
 
         const unknown_used_natures = Array.from(dependencies_for_task.keys()).filter(
-            (nature) => !available_natures.has(nature) && visible_natures.has(nature)
+            (nature) => !available_natures.has(nature) && visible_natures.has(nature),
         );
 
         for (const nature of unknown_used_natures) {

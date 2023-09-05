@@ -60,10 +60,10 @@ describe("GitRepositoryTableFineGrainedPermission", () => {
         const wrapper = instantiateComponent();
 
         expect(
-            wrapper.find("[data-test=git-permission-badge-project_member_writters]").exists()
+            wrapper.find("[data-test=git-permission-badge-project_member_writters]").exists(),
         ).toBeTruthy();
         expect(
-            wrapper.find("[data-test=git-permission-badge-project_member_rewinders]").exists()
+            wrapper.find("[data-test=git-permission-badge-project_member_rewinders]").exists(),
         ).toBeTruthy();
     });
 });

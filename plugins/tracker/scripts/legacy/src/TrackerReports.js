@@ -63,7 +63,7 @@ Ajax.Responders.register({
             if (save_or_revert) {
                 $$(".tracker_report_updated_by").invoke(
                     "update",
-                    response.getHeader("X-Codendi-Tracker-Report-IsObsolete")
+                    response.getHeader("X-Codendi-Tracker-Report-IsObsolete"),
                 );
                 if (
                     !save_or_revert.hasClassName("tracker_report_isobsolete") &&
@@ -95,7 +95,7 @@ codendi.tracker.report.table.saveColumnsWidth = function (table, onComplete) {
         var id = cells[i].readAttribute("data-column-id");
         if (id) {
             parameters["renderer_table[resize-column][" + id + "]"] = Math.round(
-                (cells[i].offsetWidth * 100) / total
+                (cells[i].offsetWidth * 100) / total,
             );
         }
     }
@@ -123,9 +123,9 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
                     function (event) {
                         this.toggle(criterion);
                         event.stop();
-                    }.bind(this)
+                    }.bind(this),
                 );
-            }.bind(this)
+            }.bind(this),
         );
     },
     /**
@@ -185,7 +185,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                 parameters = {
                     func: "renderer",
                     renderer: $("tracker_report_renderer_current").readAttribute(
-                        "data-renderer-id"
+                        "data-renderer-id",
                     ),
                     "renderer_table[add-column][field-id]": field_id,
                 };
@@ -228,7 +228,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                     //reorder
                     codendi.reorder_columns[$("tracker_report_table").identify()].register(
-                        new_column
+                        new_column,
                     );
 
                     //resize
@@ -236,7 +236,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                     if (artlink_type !== null) {
                         codendi.tracker.report.table.initTypeColumnEditor(
-                            new_column.down(".type-column-editor")
+                            new_column.down(".type-column-editor"),
                         );
                     }
                 },
@@ -287,7 +287,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     parameters: {
                         func: "renderer",
                         renderer: $("tracker_report_renderer_current").readAttribute(
-                            "data-renderer-id"
+                            "data-renderer-id",
                         ),
                         "renderer_table[remove-column]": column_id,
                     },
@@ -317,7 +317,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         dropdown.setUnused(li);
                         codendi.tracker.report.setHasChanged();
                     },
-                }
+                },
             );
         }
     },
@@ -375,7 +375,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
 
                         //initialize events and other dynamic stuffs
                         codendi.tracker.report.loadAdvancedCriteria(
-                            crit.down("img.tracker_report_criteria_advanced_toggle")
+                            crit.down("img.tracker_report_criteria_advanced_toggle"),
                         );
 
                         tuleap.dateTimePicker.init();
@@ -444,7 +444,7 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
 
                     //initialize events and other dynamic stuffs
                     codendi.tracker.report.loadAdvancedCriteria(
-                        li.down("img.tracker_report_criteria_advanced_toggle")
+                        li.down("img.tracker_report_criteria_advanced_toggle"),
                     );
                     tuleap.dateTimePicker.init();
                 },
@@ -458,14 +458,14 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
 document.observe("dom:loaded", function () {
     if ($("tracker_query")) {
         $$("img.tracker_report_criteria_advanced_toggle").map(
-            codendi.tracker.report.loadAdvancedCriteria
+            codendi.tracker.report.loadAdvancedCriteria,
         );
 
         //User add criteria
         if ($("tracker_report_add_criteria_dropdown")) {
             new tuleap.tracker.report.FieldsDropDown(
                 $("tracker_report_add_criteria_dropdown"),
-                new codendi.tracker.report.AddRemoveCriteria()
+                new codendi.tracker.report.AddRemoveCriteria(),
             );
         }
 
@@ -473,7 +473,7 @@ document.observe("dom:loaded", function () {
         if ($("tracker_report_add_columns_dropdown")) {
             new tuleap.tracker.report.FieldsDropDown(
                 $("tracker_report_add_columns_dropdown"),
-                new codendi.tracker.report.table.AddRemoveColumn()
+                new codendi.tracker.report.table.AddRemoveColumn(),
             );
         }
 
@@ -501,7 +501,7 @@ document.observe("dom:loaded", function () {
                             $$(".tracker_report_table_masschange input[type=checkbox]").each(
                                 function (cb) {
                                     cb.checked = false;
-                                }
+                                },
                             );
                             Event.stop(evt);
                         })
@@ -518,7 +518,7 @@ document.observe("dom:loaded", function () {
                             $$(".tracker_report_table_masschange input[type=checkbox]").each(
                                 function (cb) {
                                     cb.checked = true;
-                                }
+                                },
                             );
                             Event.stop(evt);
                         })
@@ -533,7 +533,7 @@ document.observe("dom:loaded", function () {
                                 type: "hidden",
                                 name: "masschange_aids[]",
                                 value: $(e).value,
-                            })
+                            }),
                         );
                     }
                 });
@@ -574,8 +574,8 @@ document.observe("dom:loaded", function () {
                         })
                         .update(
                             '<i class="fas fa-pencil-alt"></i> ' +
-                                codendi.locales.tracker_artifact.masschange
-                        )
+                                codendi.locales.tracker_artifact.masschange,
+                        ),
                 );
 
                 $("tracker_renderer_options").insert({ top: " " });
@@ -598,7 +598,7 @@ document.observe("dom:loaded", function () {
                     .update(
                         '<img src="' +
                             codendi.imgroot +
-                            'ic/clipboard-paste.png" style="vertical-align:top" /> export'
+                            'ic/clipboard-paste.png" style="vertical-align:top" /> export',
                     )
                     .setStyle({
                         marginLeft: "1em",

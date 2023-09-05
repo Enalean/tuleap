@@ -64,7 +64,7 @@ describe("create-shortcut-cell.ts", () => {
             } as Shortcut;
             const keyboard_input_element = createKeyboardInputElement(
                 doc,
-                shortcut.keyboard_inputs
+                shortcut.keyboard_inputs,
             );
 
             expect(keyboard_input_element.innerHTML).toBe("<kbd>a</kbd> + <kbd>b</kbd>");

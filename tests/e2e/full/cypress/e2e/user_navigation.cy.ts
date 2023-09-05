@@ -83,7 +83,7 @@ describe("Navigation", function () {
                 cy.get("[data-test=switch-to-projects-project-admin-icon]").first().click();
 
                 cy.get("[data-test=project-administration-title]").contains(
-                    "Project administration"
+                    "Project administration",
                 );
 
                 cy.get("[data-test=switch-to-modal]").should("not.be.visible");

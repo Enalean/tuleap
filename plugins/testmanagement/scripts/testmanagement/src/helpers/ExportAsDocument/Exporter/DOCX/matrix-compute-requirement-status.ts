@@ -21,7 +21,7 @@ import type { TraceabilityMatrixTest } from "../../../../type";
 import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
 
 export function computeRequirementStatus(
-    tests: ReadonlyArray<TraceabilityMatrixTest>
+    tests: ReadonlyArray<TraceabilityMatrixTest>,
 ): ArtifactFieldValueStatus {
     let nb_failed = 0;
     let nb_blocked = 0;

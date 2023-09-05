@@ -25,7 +25,7 @@ import type { RetrieveMatchingArtifact } from "../../src/domain/fields/link-fiel
 
 export const RetrieveMatchingArtifactStub = {
     withMatchingArtifact: (
-        artifact: ResultAsync<LinkableArtifact, never>
+        artifact: ResultAsync<LinkableArtifact, never>,
     ): RetrieveMatchingArtifact => ({
         getMatchingArtifact: (): ResultAsync<LinkableArtifact, Fault> => artifact,
     }),

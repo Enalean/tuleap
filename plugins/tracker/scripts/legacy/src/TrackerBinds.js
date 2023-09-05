@@ -117,7 +117,7 @@ codendi.tracker.bind.Editor = Class.create({
             link = new Element("span").update(tuleap.escaper.html(tf_label.value));
         } else {
             link = new Element("a", { href: "#", title: "Edit " + tf_label.value }).update(
-                tuleap.escaper.html(tf_label.value)
+                tuleap.escaper.html(tf_label.value),
             );
         }
         var descr = new Element("div")
@@ -195,7 +195,7 @@ codendi.tracker.bind.Editor = Class.create({
                         list.appendChild(li);
                     });
                 this.setValuesOrderField(list);
-            }.bind(this)
+            }.bind(this),
         );
 
         let none_child;
@@ -243,7 +243,7 @@ codendi.tracker.bind.Editor = Class.create({
             $("tracker-bind-factory").select(".tracker-bind-def").invoke("hide");
             (
                 $("tracker-bind-factory").down(
-                    'input[name="formElement_data[bind-type]"][checked="checked"]'
+                    'input[name="formElement_data[bind-type]"][checked="checked"]',
                 ) || $("tracker-bind-factory").down('input[name="formElement_data[bind-type]"]')
             )
                 .up(".tracker-bind-type")

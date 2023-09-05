@@ -36,7 +36,7 @@ export const DispatchEventsStub = {
         return {
             dispatch(event, ...other_events): void {
                 const current_event_types = [event, ...other_events].map(
-                    (mapped_event) => mapped_event.type
+                    (mapped_event) => mapped_event.type,
                 );
                 event_types.push(...current_event_types);
             },

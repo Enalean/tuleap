@@ -64,7 +64,7 @@ export default {
                 this.post_actions.filter(
                     (post_action) =>
                         post_action.type ===
-                        EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT
+                        EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT,
                 ).length > 0
             );
         },

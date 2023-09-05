@@ -24,21 +24,23 @@ describe("KanbanColumnService -", () => {
             });
         });
 
-        angular.mock.inject(function (
-            _$filter_,
-            _$q_,
-            _$rootScope_,
-            _KanbanColumnService_,
-            _KanbanFilterValue_,
-            _KanbanItemRestService_
-        ) {
-            $filter = _$filter_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            KanbanColumnService = _KanbanColumnService_;
-            KanbanFilterValue = _KanbanFilterValue_;
-            KanbanItemRestService = _KanbanItemRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$filter_,
+                _$q_,
+                _$rootScope_,
+                _KanbanColumnService_,
+                _KanbanFilterValue_,
+                _KanbanItemRestService_,
+            ) {
+                $filter = _$filter_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                KanbanColumnService = _KanbanColumnService_;
+                KanbanFilterValue = _KanbanFilterValue_;
+                KanbanItemRestService = _KanbanItemRestService_;
+            },
+        );
     });
 
     describe("moveItem() -", function () {
@@ -81,7 +83,7 @@ describe("KanbanColumnService -", () => {
                         item,
                         source_column,
                         destination_column,
-                        compared_to
+                        compared_to,
                     );
 
                     expect(item.in_column).toBe(2);
@@ -96,7 +98,7 @@ describe("KanbanColumnService -", () => {
                         item,
                     ]);
                     expect(destination_column.filtered_content).not.toBe(
-                        destination_column.content
+                        destination_column.content,
                     );
                 });
 
@@ -112,7 +114,7 @@ describe("KanbanColumnService -", () => {
                         item,
                         source_column,
                         destination_column,
-                        compared_to
+                        compared_to,
                     );
 
                     expect(item.in_column).toBe(2);
@@ -123,7 +125,7 @@ describe("KanbanColumnService -", () => {
                     expect(destination_column.content).toEqual([item, { id: 56 }, { id: 21 }]);
                     expect(destination_column.filtered_content).toEqual([{ id: 21 }, item]);
                     expect(destination_column.filtered_content).not.toBe(
-                        destination_column.content
+                        destination_column.content,
                     );
                 });
             });
@@ -343,7 +345,7 @@ describe("KanbanColumnService -", () => {
                 50,
                 source_column,
                 destination_column,
-                [46, 50, 37, 62]
+                [46, 50, 37, 62],
             );
             $rootScope.$apply();
 
@@ -352,7 +354,7 @@ describe("KanbanColumnService -", () => {
                 item,
                 source_column,
                 destination_column,
-                null
+                null,
             );
             expect(KanbanColumnService.filterItems).not.toHaveBeenCalledWith(destination_column);
             expect(destination_column.filtered_content).toEqual([]);
@@ -379,7 +381,7 @@ describe("KanbanColumnService -", () => {
                 50,
                 source_column,
                 destination_column,
-                [46, 50, 37, 62]
+                [46, 50, 37, 62],
             );
             $rootScope.$apply();
 
@@ -387,7 +389,7 @@ describe("KanbanColumnService -", () => {
                 item,
                 source_column,
                 destination_column,
-                null
+                null,
             );
             expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
             expect(KanbanItemRestService.getItem).not.toHaveBeenCalled();
@@ -415,7 +417,7 @@ describe("KanbanColumnService -", () => {
                 50,
                 source_column,
                 destination_column,
-                [46, 50, 37, 62]
+                [46, 50, 37, 62],
             );
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
@@ -441,7 +443,7 @@ describe("KanbanColumnService -", () => {
                 50,
                 source_column,
                 destination_column,
-                [46, 50, 37, 62]
+                [46, 50, 37, 62],
             );
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);

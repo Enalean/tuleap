@@ -16,19 +16,21 @@ describe("DiagramRestService -", () => {
         angular.mock.module(kanban_module);
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$httpBackend_,
-            _SharedPropertiesService_,
-            _FilterTrackerReportService_,
-            _DiagramRestService_
-        ) {
-            $rootScope = _$rootScope_;
-            $httpBackend = _$httpBackend_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            FilterTrackerReportService = _FilterTrackerReportService_;
-            DiagramRestService = _DiagramRestService_;
-        });
+        angular.mock.inject(
+            function (
+                _$rootScope_,
+                _$httpBackend_,
+                _SharedPropertiesService_,
+                _FilterTrackerReportService_,
+                _DiagramRestService_,
+            ) {
+                $rootScope = _$rootScope_;
+                $httpBackend = _$httpBackend_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                FilterTrackerReportService = _FilterTrackerReportService_;
+                DiagramRestService = _DiagramRestService_;
+            },
+        );
 
         jest.spyOn(SharedPropertiesService, "getUUID").mockImplementation(() => {});
 
@@ -47,7 +49,7 @@ describe("DiagramRestService -", () => {
             SharedPropertiesService.getUUID.mockReturnValue(UUID);
             jest.spyOn(
                 FilterTrackerReportService,
-                "getSelectedFilterTrackerReportId"
+                "getSelectedFilterTrackerReportId",
             ).mockImplementation(() => {});
         });
 
@@ -77,7 +79,7 @@ describe("DiagramRestService -", () => {
                 kanban_id,
                 start_date,
                 end_date,
-                interval_between_points
+                interval_between_points,
             );
             $httpBackend.flush();
 
@@ -110,7 +112,7 @@ describe("DiagramRestService -", () => {
                 kanban_id,
                 start_date,
                 end_date,
-                interval_between_points
+                interval_between_points,
             );
             $httpBackend.flush();
 

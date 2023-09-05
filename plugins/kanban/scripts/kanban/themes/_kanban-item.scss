@@ -62,8 +62,7 @@ $accessibility-pattern-right-margin: 4px;
             --extra-padding-right: calc(
                 #{$accessibility-pattern-width} +
                     2 *
-                    #{$accessibility-pattern-right-margin} -
-                    var(--tlp-small-spacing)
+                    #{$accessibility-pattern-right-margin} - var(--tlp-small-spacing)
             );
         }
     }
@@ -132,7 +131,9 @@ $accessibility-pattern-right-margin: 4px;
     }
 
     &.updating kanban-item {
-        transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+        transition:
+            box-shadow 150ms ease-in-out,
+            background-color 150ms ease-in-out;
         animation: blink-kanban-card 1200ms ease-in-out alternate infinite;
     }
 
@@ -140,7 +141,9 @@ $accessibility-pattern-right-margin: 4px;
         animation: pulse-kanban-card 500ms ease-in-out;
 
         kanban-item {
-            transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+            transition:
+                box-shadow 150ms ease-in-out,
+                background-color 150ms ease-in-out;
             background: var(--tlp-success-color-lighter-90);
             box-shadow: 0 0 0 1px var(--tlp-success-color-transparent-50);
         }
@@ -150,7 +153,9 @@ $accessibility-pattern-right-margin: 4px;
 kanban-item {
     display: flex;
     position: relative;
-    transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+    transition:
+        box-shadow 150ms ease-in-out,
+        background-color 150ms ease-in-out;
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
     box-shadow: var(--box-shadow, var(--tlp-card-shadow));

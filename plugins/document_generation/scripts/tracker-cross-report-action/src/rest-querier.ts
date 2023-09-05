@@ -28,7 +28,7 @@ import type { LinkedArtifactsResponse, ArtifactForCrossReportDocGen } from "./ty
 export function getReportArtifacts(
     report_id: number,
     report_has_changed: boolean,
-    table_renderer_id: number | undefined
+    table_renderer_id: number | undefined,
 ): Promise<ArtifactForCrossReportDocGen[]> {
     const params: Record<string, number | string | boolean> = {
         values: "from_table_renderer",
@@ -45,7 +45,7 @@ export function getReportArtifacts(
 
 export function getLinkedArtifacts(
     artifact_id: number,
-    artifact_link_type: string
+    artifact_link_type: string,
 ): Promise<LinkedArtifactsResponse[]> {
     return recursiveGet(`/api/v1/artifacts/${encodeURIComponent(artifact_id)}/linked_artifacts`, {
         params: {
@@ -61,7 +61,7 @@ export function getTrackerReports(tracker_id: number): Promise<TrackerReportResp
 }
 
 export function getTrackerCurrentlyUsedArtifactLinkTypes(
-    tracker_id: number
+    tracker_id: number,
 ): Promise<TrackerUsedArtifactLinkResponse[]> {
     return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/used_artifact_links`);
 }

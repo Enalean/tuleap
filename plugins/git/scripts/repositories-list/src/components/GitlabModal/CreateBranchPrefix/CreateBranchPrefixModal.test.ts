@@ -50,7 +50,7 @@ describe("CreateBranchPrefixModal", () => {
                     },
                 },
                 create_branch_prefix: "previous/",
-            }
+            },
         );
 
         return shallowMount(CreateBranchPrefixModal, {
@@ -88,7 +88,7 @@ describe("CreateBranchPrefixModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
-                true
+                true,
             );
 
             const save_button = wrapper.find("[data-test=create-branch-prefix-modal-save-button]")
@@ -106,7 +106,7 @@ describe("CreateBranchPrefixModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
-                false
+                false,
             );
 
             const save_button = wrapper.find("[data-test=create-branch-prefix-modal-save-button]")
@@ -124,7 +124,7 @@ describe("CreateBranchPrefixModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=create-branch-prefix-modal-icon-spin]").exists()).toBe(
-                false
+                false,
             );
 
             const save_button = wrapper.find("[data-test=create-branch-prefix-modal-save-button]")
@@ -151,7 +151,7 @@ describe("CreateBranchPrefixModal", () => {
                     status: 400,
                     json: (): Promise<{ error: { code: number; message: string } }> =>
                         Promise.resolve({ error: { code: 400, message: "Error on server" } }),
-                } as Response)
+                } as Response),
             );
 
             jest.spyOn(gitlab_error_handler, "handleError");

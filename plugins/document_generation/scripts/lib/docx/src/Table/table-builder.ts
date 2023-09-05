@@ -29,7 +29,7 @@ export const TABLE_MARGINS = {
 };
 
 export const buildCellContentOptions = (
-    content: TextRun | InternalHyperlink
+    content: TextRun | InternalHyperlink,
 ): ITableCellOptions => {
     return {
         children: [
@@ -45,14 +45,14 @@ export const buildCellContentOptions = (
 export const buildCellContentStatus = (
     status: ArtifactFieldValueStatus,
     status_to_label: (status: ArtifactFieldValueStatus) => string,
-    rowSpan: number
+    rowSpan: number,
 ): TableCell => {
     const text = status_to_label(status);
     const table_cell_options = buildCellContentOptions(
         new TextRun({
             text,
             color: "ffffff",
-        })
+        }),
     );
 
     const additional_cell_options: { shading?: IShadingAttributesProperties } = {};

@@ -41,7 +41,7 @@ describe("ChartBadgeGenerator -", () => {
     });
 
     function getSelectionSVG(
-        chart_div: HTMLElement
+        chart_div: HTMLElement,
     ): Selection<SVGSVGElement, unknown, null, undefined> {
         return select(chart_div).append("svg").attr("width", 100).attr("height", 100);
     }

@@ -128,10 +128,10 @@ export function initSingleLazybox() {
             const matching_items = items.filter(
                 (item) =>
                     String(item.value.id).includes(lowercase_query) ||
-                    item.value.title.toLowerCase().includes(lowercase_query)
+                    item.value.title.toLowerCase().includes(lowercase_query),
             );
             const matching_recent = recent_items.filter((item) =>
-                item.value.title.toLowerCase().includes(lowercase_query)
+                item.value.title.toLowerCase().includes(lowercase_query),
             );
             const matching_items_group = { ...items_group, items: matching_items };
             const matching_recent_group = { ...recent_group, items: matching_recent };
@@ -200,10 +200,10 @@ export function initMultipleLazybox() {
             }
             const lowercase_query = query.toLowerCase();
             const matching_users = users.filter((user) =>
-                user.value.display_name.toLowerCase().includes(lowercase_query)
+                user.value.display_name.toLowerCase().includes(lowercase_query),
             );
             const matching_recent = recent_users.filter((user) =>
-                user.value.display_name.toLowerCase().includes(lowercase_query)
+                user.value.display_name.toLowerCase().includes(lowercase_query),
             );
             const matching_users_group = { ...users_group, items: matching_users };
             const matching_recent_group = { ...recent_group, items: matching_recent };

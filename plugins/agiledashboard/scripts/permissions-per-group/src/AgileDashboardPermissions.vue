@@ -125,7 +125,7 @@ export default {
                 this.is_loading = true;
                 const { plannings_permissions } = await getAgiledashboardPermissions(
                     this.selectedProjectId,
-                    this.selectedUgroupId
+                    this.selectedUgroupId,
                 );
                 this.is_loaded = true;
                 this.permissions = plannings_permissions;

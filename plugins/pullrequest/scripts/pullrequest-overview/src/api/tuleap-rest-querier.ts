@@ -49,20 +49,20 @@ export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
 };
 
 export const fetchPullRequestTimelineItems = (
-    pull_request_id: number
+    pull_request_id: number,
 ): ResultAsync<readonly TimelineItem[], Fault> => {
     return getAllJSON<TimelineItem, TimelineItemsCollection>(
         uri`/api/v1/pull_requests/${pull_request_id}/timeline`,
         {
             params: { limit: 50 },
             getCollectionCallback: (payload) => payload.collection,
-        }
+        },
     );
 };
 
 export const patchTitle = (
     pull_request_id: number,
-    updated_title: string
+    updated_title: string,
 ): ResultAsync<PullRequest, Fault> => {
     return patchJSON(uri`/api/v1/pull_requests/${pull_request_id}`, {
         title: updated_title,
@@ -70,7 +70,7 @@ export const patchTitle = (
 };
 
 export const fetchReviewersInfo = (
-    pull_request_id: number
+    pull_request_id: number,
 ): ResultAsync<ReviewersCollection, Fault> => {
     return getJSON(uri`/api/v1/pull_requests/${pull_request_id}/reviewers`);
 };
@@ -105,38 +105,38 @@ export const fetchMatchingUsers = (query: string): ResultAsync<User[], Fault> =>
 
 export const putReviewers = (
     pull_request_id: number,
-    reviewers: ReadonlyArray<User>
+    reviewers: ReadonlyArray<User>,
 ): ResultAsync<Response, Fault> => {
     return put(
         uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
         {},
         {
             users: reviewers.map(({ id }) => ({ id })),
-        }
+        },
     );
 };
 
 export const fetchPullRequestLabels = (
-    pull_request_id: number
+    pull_request_id: number,
 ): ResultAsync<readonly ProjectLabel[], Fault> => {
     return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
         uri`/api/v1/pull_requests/${pull_request_id}/labels`,
         {
             params: { limit: 50 },
             getCollectionCallback: (payload) => payload.labels,
-        }
+        },
     );
 };
 
 export const fetchProjectLabels = (
-    project_id: number
+    project_id: number,
 ): ResultAsync<readonly ProjectLabel[], Fault> => {
     return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
         uri`/api/v1/projects/${project_id}/labels`,
         {
             params: { limit: 50 },
             getCollectionCallback: (payload) => payload.labels,
-        }
+        },
     );
 };
 
@@ -144,7 +144,7 @@ export const patchPullRequestLabels = (
     pull_request_id: number,
     added_labels: ReadonlyArray<number>,
     removed_labels: ReadonlyArray<number>,
-    labels_to_create: ReadonlyArray<string>
+    labels_to_create: ReadonlyArray<string>,
 ): ResultAsync<Response | null, Fault> => {
     const payload: PatchPullRequestLabelsPayload = {};
     const labels_to_add = [

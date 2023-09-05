@@ -73,7 +73,7 @@ describe(`ResponseRetriever`, () => {
                 throw new Error("Expected a request init");
             }
             expect(request_init.method).toBe(method);
-        }
+        },
     );
 
     it(`will pass credentials, mode, headers and body along to fetch if given in options`, async () => {

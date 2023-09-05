@@ -21,7 +21,7 @@ import type { UserStory } from "../type";
 
 export function getAccessibilityClasses(
     user_story: UserStory,
-    should_display_accessibility: boolean
+    should_display_accessibility: boolean,
 ): string[] {
     const classnames = [`element-card-${user_story.tracker.color_name}`];
 
@@ -38,7 +38,7 @@ export function getAccessibilityClasses(
 
 export function showAccessibilityPattern(
     user_story: UserStory,
-    should_display_accessibility: boolean
+    should_display_accessibility: boolean,
 ): boolean {
     return should_display_accessibility && user_story.background_color !== "";
 }

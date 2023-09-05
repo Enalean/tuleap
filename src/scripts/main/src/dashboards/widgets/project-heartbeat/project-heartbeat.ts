@@ -37,13 +37,13 @@ interface Entry {
 
 function init(): void {
     const heartbeat_widgets = document.querySelectorAll(
-        ".dashboard-widget-content-projectheartbeat-content"
+        ".dashboard-widget-content-projectheartbeat-content",
     );
 
     [].forEach.call(heartbeat_widgets, async (widget_content: HTMLElement) => {
         try {
             const response = await get(
-                "/api/v1/projects/" + widget_content.dataset.projectId + "/heartbeats"
+                "/api/v1/projects/" + widget_content.dataset.projectId + "/heartbeats",
             );
             const json = await response.json();
             if (json.entries.length > 0) {
@@ -60,13 +60,13 @@ function init(): void {
 function displayActivities(widget_content: HTMLElement, entries: Entry[]): void {
     hideEverything(widget_content);
     const activities = widget_content.querySelector(
-        ".dashboard-widget-content-projectheartbeat-activities"
+        ".dashboard-widget-content-projectheartbeat-activities",
     );
     if (!(activities instanceof Element)) {
         throw new Error("No activies defined in projectheartbeat");
     }
     const template = widget_content.querySelector(
-        ".dashboard-widget-content-projectheartbeat-placeholder"
+        ".dashboard-widget-content-projectheartbeat-placeholder",
     )?.textContent;
 
     if (!template) {
@@ -75,7 +75,7 @@ function displayActivities(widget_content: HTMLElement, entries: Entry[]): void 
 
     const rendered_activities = mustache.render(
         template,
-        getGroupedEntries(widget_content, entries)
+        getGroupedEntries(widget_content, entries),
     );
     insertRenderedActivitiesInDOM(rendered_activities, activities);
 
@@ -172,15 +172,15 @@ function displayError(widget_content: HTMLElement): void {
 
 function displayEmptyState(
     widget_content: HTMLElement,
-    json: { are_there_activities_user_cannot_see: boolean }
+    json: { are_there_activities_user_cannot_see: boolean },
 ): void {
     hideEverything(widget_content);
 
     const empty_no_activity = widget_content.querySelector(
-        ".dashboard-widget-content-projectheartbeat-empty-no-activity"
+        ".dashboard-widget-content-projectheartbeat-empty-no-activity",
     );
     const empty_no_perms = widget_content.querySelector(
-        ".dashboard-widget-content-projectheartbeat-empty-no-perms"
+        ".dashboard-widget-content-projectheartbeat-empty-no-perms",
     );
 
     if (json.are_there_activities_user_cannot_see) {
@@ -195,6 +195,6 @@ function displayEmptyState(
 
 function hideEverything(widget_content: HTMLElement): void {
     [].forEach.call(widget_content.children, (child: HTMLElement) =>
-        child.classList.remove("shown")
+        child.classList.remove("shown"),
     );
 }

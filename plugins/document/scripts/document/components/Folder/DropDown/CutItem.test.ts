@@ -67,7 +67,7 @@ describe("CutItem", () => {
                             },
                         },
                     },
-                    pinia
+                    pinia,
                 ),
             },
             props: { item },

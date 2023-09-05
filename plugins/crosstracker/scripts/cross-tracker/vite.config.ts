@@ -40,5 +40,5 @@ export default vite.defineAppConfig(
         resolve: {
             dedupe: ["vue"],
         },
-    }
+    },
 );

@@ -71,9 +71,9 @@ describe("Swimlane state actions", () => {
                         }
 
                         return Promise.resolve(
-                            init.getCollectionCallback([{ id: 43 } as Card, { id: 44 } as Card])
+                            init.getCollectionCallback([{ id: 43 } as Card, { id: 44 } as Card]),
                         );
-                    }
+                    },
                 );
             await actions.loadSwimlanes(context);
             expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
@@ -126,9 +126,9 @@ describe("Swimlane state actions", () => {
                                 card_with_children,
                                 other_card_with_children,
                                 card_without_children,
-                            ])
+                            ]),
                         );
-                    }
+                    },
                 );
             await actions.loadSwimlanes(context);
             expect(context.dispatch).toHaveBeenCalledWith(
@@ -140,7 +140,7 @@ describe("Swimlane state actions", () => {
                         is_being_saved: false,
                         is_just_saved: false,
                     },
-                })
+                }),
             );
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
@@ -151,7 +151,7 @@ describe("Swimlane state actions", () => {
                         is_being_saved: false,
                         is_just_saved: false,
                     },
-                })
+                }),
             );
             expect(context.dispatch).not.toHaveBeenCalledWith(
                 "loadChildrenCards",
@@ -162,7 +162,7 @@ describe("Swimlane state actions", () => {
                         is_being_saved: false,
                         is_just_saved: false,
                     },
-                })
+                }),
             );
         });
 
@@ -201,7 +201,7 @@ describe("Swimlane state actions", () => {
                         limit: 100,
                     },
                     getCollectionCallback: expect.any(Function),
-                }
+                },
             );
         });
 
@@ -216,7 +216,7 @@ describe("Swimlane state actions", () => {
                         }
 
                         return Promise.resolve(init.getCollectionCallback(children_cards));
-                    }
+                    },
                 );
 
             await actions.loadChildrenCards(context, swimlane);
@@ -251,7 +251,7 @@ describe("Swimlane state actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/deletePreference",
                 { key: "plugin_taskboard_collapse_42_69" },
-                { root: true }
+                { root: true },
             );
         });
     });
@@ -270,7 +270,7 @@ describe("Swimlane state actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/setPreference",
                 { key: "plugin_taskboard_collapse_42_69", value: "1" },
-                { root: true }
+                { root: true },
             );
         });
     });

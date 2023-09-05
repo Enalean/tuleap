@@ -64,18 +64,18 @@ const has_item_in_clipboard = computed((): boolean => {
 const moving_title = computed((): string => {
     return interpolate(
         $gettext(
-            'You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down. You also cannot move the item somewhere where the name is already used by another item.'
+            'You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down. You also cannot move the item somewhere where the name is already used by another item.',
         ),
-        { title: clipboard.item_title }
+        { title: clipboard.item_title },
     );
 });
 
 const copying_title = computed((): string => {
     return interpolate(
         $gettext(
-            'You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down.'
+            'You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down.',
         ),
-        { title: clipboard.item_title }
+        { title: clipboard.item_title },
     );
 });
 const item_being_moved_title = computed((): string => {

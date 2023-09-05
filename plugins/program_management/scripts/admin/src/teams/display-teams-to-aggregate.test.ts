@@ -34,7 +34,7 @@ describe("DisplayTeamsToAggregate", () => {
             const doc = createDocument();
 
             expect(() => displayTeamsToAggregate(gettext, doc)).toThrowError(
-                "No list to pick teams"
+                "No list to pick teams",
             );
         });
 

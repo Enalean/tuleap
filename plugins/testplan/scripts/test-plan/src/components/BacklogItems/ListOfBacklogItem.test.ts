@@ -30,7 +30,7 @@ describe("ListOfBacklogItems", () => {
     const load_backlog_items_spy = jest.fn();
 
     function createWrapper(
-        backlog_item_state: BacklogItemState
+        backlog_item_state: BacklogItemState,
     ): VueWrapper<InstanceType<typeof ListOfBacklogItems>> {
         load_backlog_items_spy.mockReset();
         const backlog_item_module = {

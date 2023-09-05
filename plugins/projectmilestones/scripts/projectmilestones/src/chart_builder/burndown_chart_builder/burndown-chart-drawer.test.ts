@@ -113,7 +113,7 @@ describe("BurndownChartDrawer -", () => {
                 chart_svg_element,
                 getChartProps(),
                 getBurndownDataWithoutPointsWithDate(),
-                101
+                101,
             );
 
             expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
@@ -126,7 +126,7 @@ describe("BurndownChartDrawer -", () => {
                 chart_svg_element,
                 getChartProps(),
                 getBurndownDataWith0RemainingEffort(),
-                101
+                101,
             );
 
             expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();

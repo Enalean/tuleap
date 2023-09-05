@@ -44,7 +44,7 @@ describe("SearchResultPagination", () => {
 
     function getPagination(
         from: number,
-        to: number
+        to: number,
     ): VueWrapper<InstanceType<typeof SearchResultPagination>> {
         if (from !== 0) {
             query.offset = String(from);
@@ -72,7 +72,7 @@ describe("SearchResultPagination", () => {
         const wrapper = getPagination(0, 49);
 
         expect(wrapper.vm.pages).toBe(
-            '<span class="tlp-pagination-number">1</span> – <span class="tlp-pagination-number">50</span> of <span class="tlp-pagination-number">172</span>'
+            '<span class="tlp-pagination-number">1</span> – <span class="tlp-pagination-number">50</span> of <span class="tlp-pagination-number">172</span>',
         );
     });
 
@@ -124,7 +124,7 @@ describe("SearchResultPagination", () => {
                     params: {},
                     query: { q: "Lorem ipsum" },
                 });
-            }
+            },
         );
 
         it.each([[1], [49], [50]])(
@@ -136,7 +136,7 @@ describe("SearchResultPagination", () => {
                     params: {},
                     query: { q: "Lorem ipsum" },
                 });
-            }
+            },
         );
 
         it.each([
@@ -154,7 +154,7 @@ describe("SearchResultPagination", () => {
                         offset: String(expected_offset),
                     },
                 });
-            }
+            },
         );
 
         it.each([
@@ -173,7 +173,7 @@ describe("SearchResultPagination", () => {
                         offset: String(expected_offset),
                     },
                 });
-            }
+            },
         );
     });
 });

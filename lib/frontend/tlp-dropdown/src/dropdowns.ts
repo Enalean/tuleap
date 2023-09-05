@@ -50,7 +50,7 @@ interface EventListener {
 export const createDropdown = (
     doc: Document,
     trigger: Element,
-    options?: DropdownOptions
+    options?: DropdownOptions,
 ): Dropdown => new Dropdown(doc, trigger, options);
 
 export class Dropdown {
@@ -88,7 +88,7 @@ export class Dropdown {
         this.cleanup = autoUpdate(
             this.anchor_element,
             this.dropdown_menu,
-            this.updatePositionOfMenu.bind(this)
+            this.updatePositionOfMenu.bind(this),
         );
         this.dropdown_menu.setAttribute("data-dropdown", "menu");
         this.keyboard = keyboard;

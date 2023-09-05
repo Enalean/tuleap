@@ -22,7 +22,7 @@ import { sprintf } from "sprintf-js";
 
 export function getProjectsFromDataset(
     projects: string | undefined,
-    $gettext: (msgid: string) => string
+    $gettext: (msgid: string) => string,
 ): Project[] {
     if (projects === undefined) {
         return [];
@@ -36,7 +36,7 @@ export function getProjectsFromDataset(
                   {
                       name: sprintf(
                           $gettext("Go to project administration of %s"),
-                          project.project_name
+                          project.project_name,
                       ),
                       html_url: project.project_config_uri,
                       icon_name: "fa-solid fa-gear",

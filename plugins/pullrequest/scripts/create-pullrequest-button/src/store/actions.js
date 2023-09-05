@@ -29,7 +29,7 @@ export async function init(
         parent_repository_name,
         parent_project_id,
         user_can_see_parent_repository,
-    }
+    },
 ) {
     try {
         const branches = (await getBranches(repository_id)).map(extendBranch);
@@ -38,7 +38,7 @@ export async function init(
 
         if (parent_repository_id && user_can_see_parent_repository) {
             const parent_repository_branches = (await getBranches(parent_repository_id)).map(
-                extendBranchForParent
+                extendBranchForParent,
             );
             context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
         } else {
@@ -74,10 +74,10 @@ export async function create(context, { source_branch, destination_branch }) {
             source_branch.repository_id,
             source_branch.name,
             destination_branch.repository_id,
-            destination_branch.name
+            destination_branch.name,
         );
         redirectTo(
-            `/plugins/git/?action=pull-requests&tab=overview&repo_id=${destination_branch.repository_id}&group_id=${destination_branch.project_id}#/pull-requests/${pullrequest.id}/overview`
+            `/plugins/git/?action=pull-requests&tab=overview&repo_id=${destination_branch.repository_id}&group_id=${destination_branch.project_id}#/pull-requests/${pullrequest.id}/overview`,
         );
     } catch (e) {
         const { error } = await e.response.json();

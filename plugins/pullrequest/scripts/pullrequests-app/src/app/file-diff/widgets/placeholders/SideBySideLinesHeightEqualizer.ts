@@ -40,7 +40,7 @@ export interface EqualizeLinesHeights {
 export const SideBySideLinesHeightEqualizer = (
     left_code_mirror: Editor,
     right_code_mirror: Editor,
-    positionner: PositionPlaceholder
+    positionner: PositionPlaceholder,
 ): EqualizeLinesHeights => ({
     equalizeSides: (handles: SynchronizedLineHandles): PlaceholderCreationParams | null => {
         const { left_handle, right_handle } = handles;
@@ -60,7 +60,7 @@ export const SideBySideLinesHeightEqualizer = (
                 right_handle,
                 right_line_height,
                 right_code_mirror,
-                positionner
+                positionner,
             );
         }
 
@@ -71,7 +71,7 @@ export const SideBySideLinesHeightEqualizer = (
             left_handle,
             left_line_height,
             left_code_mirror,
-            positionner
+            positionner,
         );
     },
 });
@@ -88,7 +88,7 @@ function getTotalHeight(handle: FileLineHandle): number {
     }
 
     const widgets = handle.widgets.filter(
-        (widget) => isCommentWidget(widget.node) || isCodeCommentPlaceholderWidget(widget.node)
+        (widget) => isCommentWidget(widget.node) || isCodeCommentPlaceholderWidget(widget.node),
     );
 
     return getSumOfWidgetsHeights(widgets);
@@ -109,7 +109,7 @@ function getCommentsHeight(handle: FileLineHandle): number {
 
 function adjustPlaceholderHeight(
     placeholder: FileDiffPlaceholderWidget,
-    widget_height: number
+    widget_height: number,
 ): void {
     placeholder.height = Math.max(widget_height, 0);
 }
@@ -121,7 +121,7 @@ function adjustHeights(
     opposite_handle: FileLineHandle,
     opposite_line_height: number,
     opposite_code_mirror: Editor,
-    positionner: PositionPlaceholder
+    positionner: PositionPlaceholder,
 ): PlaceholderCreationParams | null {
     const placeholder = getCommentPlaceholderWidget(handle);
     let optimum_height = opposite_line_height - getCommentsHeight(handle);

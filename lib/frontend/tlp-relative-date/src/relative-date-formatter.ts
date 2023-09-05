@@ -20,7 +20,7 @@
 export default function formatRelativeDate(
     locale: string,
     date: Date,
-    reference_date: Date
+    reference_date: Date,
 ): string {
     const diff = reference_date.getTime() - date.getTime();
     const sign = diff >= 0 ? -1 : +1;
@@ -35,31 +35,31 @@ export default function formatRelativeDate(
     if (diff_in_ms <= 59000) {
         return new Intl.RelativeTimeFormat(locale).format(
             sign * Math.round(diff_in_ms / 1000),
-            "seconds"
+            "seconds",
         );
     } else if (diff_in_minutes <= 44) {
         return new Intl.RelativeTimeFormat(locale).format(
             sign * Math.round(diff_in_minutes),
-            "minutes"
+            "minutes",
         );
     } else if (diff_in_minutes < a_day_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
             sign * Math.round(diff_in_minutes / 60),
-            "hours"
+            "hours",
         );
     } else if (diff_in_minutes < a_month_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
             sign * Math.round(diff_in_minutes / a_day_in_minutes),
-            "days"
+            "days",
         );
     } else if (diff_in_minutes < a_year_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
             sign * Math.round(diff_in_minutes / a_month_in_minutes),
-            "months"
+            "months",
         );
     }
     return new Intl.RelativeTimeFormat(locale).format(
         sign * Math.round(diff_in_minutes / a_year_in_minutes),
-        "years"
+        "years",
     );
 }

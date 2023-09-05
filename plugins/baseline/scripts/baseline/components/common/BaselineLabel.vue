@@ -42,6 +42,6 @@ const { users_by_id } = useState<{ users_by_id: Record<number, User> }>(["users_
 const props = defineProps<{ baseline: Baseline }>();
 const author = computed((): User => users_by_id.value[props.baseline.author_id]);
 const humanized_snapshot_date = computed((): string =>
-    DateUtils.humanFormat(props.baseline.snapshot_date)
+    DateUtils.humanFormat(props.baseline.snapshot_date),
 );
 </script>

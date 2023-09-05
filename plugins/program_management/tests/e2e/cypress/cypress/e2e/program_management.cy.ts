@@ -70,7 +70,7 @@ function createProject(team_project_name: string, is_team: boolean): void {
 function createProjects(
     program_project_name: string,
     team_project_name: string,
-    other_team_project_name: string
+    other_team_project_name: string,
 ): void {
     cy.log("Create team project");
     createProject(team_project_name, true);
@@ -101,7 +101,7 @@ function configureProgram(program_project_name: string, team_project_name: strin
 function createAndLinkUserStory(
     program_project_name: string,
     team_project_name: string,
-    feature_id: string
+    feature_id: string,
 ): void {
     cy.log("Create a user story");
     cy.visitProjectService(team_project_name, "Trackers");
@@ -119,7 +119,7 @@ function createAndLinkUserStory(
             program_project_name,
             team_project_name,
             feature_id,
-            user_story_id
+            user_story_id,
         );
     });
 }
@@ -128,7 +128,7 @@ function planFeatureIntoProgramIncrement(
     program_project_name: string,
     team_project_name: string,
     feature_id: string,
-    user_story_id: string
+    user_story_id: string,
 ): void {
     cy.log("Link User story to feature");
     cy.visit("https://tuleap/plugins/tracker/?&aid=" + feature_id);
@@ -218,12 +218,12 @@ function planUserStory(team_project_name: string, program_project_name: string):
 
 function checkThatProgramAndTeamsAreCorrect(
     program_project_name: string,
-    team_project_name: string
+    team_project_name: string,
 ): void {
     cy.visitProjectService(program_project_name, "Program");
     cy.log("Check sidebar for program");
     cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
-        team_project_name
+        team_project_name,
     );
 
     cy.log("Check that feature is linked to program increment");
@@ -233,7 +233,7 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.log("Check sidebar for team");
     cy.visitProjectService(team_project_name, "Backlog");
     cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
-        program_project_name
+        program_project_name,
     );
 
     checkPIExistsInReleases("My first PI", team_project_name);
@@ -249,7 +249,7 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
     const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Backlog");
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
-            `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
+            `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`,
         );
         return cy
             .get("[data-test=milestone]")
@@ -258,14 +258,14 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
     cy.reloadUntilCondition(
         reloadCallback,
         conditionCallback,
-        "Timed out while checking if mirror program increment has been created"
+        "Timed out while checking if mirror program increment has been created",
     );
 }
 
 function checkMirrorIterationExistsInSprint(
     parent_pi: string,
     expected_text: string,
-    team_project_name: string
+    team_project_name: string,
 ): void {
     cy.get("[data-test=milestone]")
         .contains(parent_pi)
@@ -276,7 +276,7 @@ function checkMirrorIterationExistsInSprint(
     const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Backlog");
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
-            `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
+            `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`,
         );
         return cy
             .get("[data-test=milestone]")
@@ -285,7 +285,7 @@ function checkMirrorIterationExistsInSprint(
     cy.reloadUntilCondition(
         reloadCallback,
         conditionCallback,
-        "Timed out while checking if mirror iteration has been created"
+        "Timed out while checking if mirror iteration has been created",
     );
 }
 
@@ -314,12 +314,12 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     checkMirrorIterationExistsInSprint(
         "My first PI updated",
         "Iteration One updated",
-        team_project_name
+        team_project_name,
     );
 }
 
 function selectLabelInListPickerDropdown(
-    label: string
+    label: string,
 ): Cypress.Chainable<JQuery<HTMLHtmlElement>> {
     cy.get("[data-test=list-picker-selection]").first().click();
     return cy.root().within(() => {
@@ -331,7 +331,7 @@ function selectLabelInListPickerDropdown(
 
 function linkANewTeamToProgram(
     other_team_project_name: string,
-    program_project_name: string
+    program_project_name: string,
 ): void {
     cy.log("Add new team in program");
     cy.visit(`program_management/admin/${program_project_name}`);
@@ -344,7 +344,7 @@ function linkANewTeamToProgram(
     cy.log("Check sidebar for team");
     cy.visitProjectService(other_team_project_name, "Backlog");
     cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
-        program_project_name
+        program_project_name,
     );
 
     checkPIExistsInReleases("My first PI updated", other_team_project_name);

@@ -56,7 +56,7 @@ export function getForkedRepositoryList(
     project_id: number,
     owner_id: string,
     order_by: string,
-    displayCallback: RepositoryCallback
+    displayCallback: RepositoryCallback,
 ): Promise<Array<Repository>> {
     return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
@@ -75,7 +75,7 @@ export function getForkedRepositoryList(
 export function getRepositoryList(
     project_id: number,
     order_by: string,
-    displayCallback: RepositoryCallback
+    displayCallback: RepositoryCallback,
 ): Promise<Array<Repository>> {
     return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
@@ -92,7 +92,7 @@ export function getRepositoryList(
 
 export async function postRepository(
     project_id: number,
-    repository_name: string
+    repository_name: string,
 ): Promise<Repository> {
     const headers = {
         "content-type": "application/json",

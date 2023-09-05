@@ -75,7 +75,7 @@ export default class TaskBoard extends Vue {
     @swimlane.Getter
     readonly cards_in_cell!: (
         current_swimlane: Swimlane,
-        current_column: ColumnDefinition
+        current_column: ColumnDefinition,
     ) => Card[];
 
     @Getter

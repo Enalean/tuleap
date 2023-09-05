@@ -35,7 +35,7 @@ describe("ReplyCommentFormPresenter", () => {
     it("should build an empty presenter with defaults", () => {
         const presenter = ReplyCommentFormPresenter.buildEmpty(
             comment_author,
-            current_pull_request
+            current_pull_request,
         );
 
         expect(presenter).toStrictEqual({
@@ -57,14 +57,14 @@ describe("ReplyCommentFormPresenter", () => {
         it("should return a presenter with its content updated", () => {
             const updated_presenter = ReplyCommentFormPresenter.updateContent(
                 presenter,
-                "Please rebase"
+                "Please rebase",
             );
             expect(updated_presenter.comment_content).toBe("Please rebase");
             expect(updated_presenter.is_submittable).toBe(true);
 
             const another_updated_presenter = ReplyCommentFormPresenter.updateContent(
                 updated_presenter,
-                ""
+                "",
             );
             expect(another_updated_presenter.comment_content).toBe("");
             expect(another_updated_presenter.is_submittable).toBe(false);
@@ -73,7 +73,7 @@ describe("ReplyCommentFormPresenter", () => {
         it("should return a presenter with the is_being_submitted property set to true", () => {
             const updated_presenter = ReplyCommentFormPresenter.updateContent(
                 presenter,
-                "Please rebase"
+                "Please rebase",
             );
             expect(updated_presenter.is_being_submitted).toBe(false);
 

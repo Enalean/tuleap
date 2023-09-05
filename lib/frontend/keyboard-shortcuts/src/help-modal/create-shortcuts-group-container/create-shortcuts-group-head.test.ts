@@ -42,7 +42,7 @@ describe("createShortcutsGroupHead", () => {
         expect(shortcuts_group_head.outerHTML).toBe(
             `<div class="help-modal-shortcuts-group-head">` +
                 `<h2 class="tlp-modal-subtitle">shortcuts_group title</h2>` +
-                `</div>`
+                `</div>`,
         );
     });
 
@@ -52,7 +52,7 @@ describe("createShortcutsGroupHead", () => {
             `<div class="help-modal-shortcuts-group-head">` +
                 `<h2 class="tlp-modal-subtitle">shortcuts_group title</h2>` +
                 `<p class="help-modal-shortcuts-group-details">shortcuts_group details</p>` +
-                `</div>`
+                `</div>`,
         );
     });
 });

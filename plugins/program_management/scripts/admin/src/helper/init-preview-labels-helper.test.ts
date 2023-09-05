@@ -30,7 +30,7 @@ describe("init-preview-labels-helper", () => {
             const doc = createDocument();
 
             expect(() =>
-                initPreviewTrackerLabels(new DocumentAdapter(doc), gettext_provider)
+                initPreviewTrackerLabels(new DocumentAdapter(doc), gettext_provider),
             ).not.toThrow();
         });
     });

@@ -54,7 +54,7 @@ const isGitLabFault = (fault: Fault): boolean =>
 export const TokenModal = (
     doc: Document,
     gettext_provider: GetText,
-    group: GroupInformation
+    group: GroupInformation,
 ): TokenModalType => {
     const edit_button = selectOrThrow(doc, EDIT_TOKEN_BUTTON_SELECTOR, HTMLButtonElement);
     const token_modal = selectOrThrow(doc, TOKEN_MODAL_SELECTOR);
@@ -95,7 +95,7 @@ export const TokenModal = (
             .andThen(() =>
                 patchJSON<undefined>(uri`/api/gitlab_groups/${group.id}`, {
                     gitlab_token: new_token,
-                })
+                }),
             )
             .match(
                 () => {
@@ -108,26 +108,26 @@ export const TokenModal = (
                     modal_feedback.classList.remove(FEEDBACK_HIDDEN_CLASSNAME);
                     if (isCredentialsFault(fault)) {
                         modal_alert.textContent = gettext_provider.gettext(
-                            "Unable to connect to the GitLab server, please check your credentials."
+                            "Unable to connect to the GitLab server, please check your credentials.",
                         );
                         return;
                     }
                     if (isGitLabFault(fault)) {
                         modal_alert.textContent = sprintf(
                             gettext_provider.gettext(
-                                "Unable to reach the GitLab server: %(error)s"
+                                "Unable to reach the GitLab server: %(error)s",
                             ),
-                            { error: String(fault) }
+                            { error: String(fault) },
                         );
                         return;
                     }
                     modal_alert.textContent = sprintf(
                         gettext_provider.gettext(
-                            "Error during the update of the access token: %(error)s"
+                            "Error during the update of the access token: %(error)s",
                         ),
-                        { error: String(fault) }
+                        { error: String(fault) },
                     );
-                }
+                },
             );
     };
 

@@ -32,8 +32,8 @@ export async function startDownloadExportDocument(
         doc: ExportDocument<ArtifactFieldValueStepDefinitionContent>,
         gettext_provider: GetText,
         global_export_properties: GlobalExportProperties,
-        datetime_locale_information: DateTimeLocaleInformation
-    ) => Promise<void>
+        datetime_locale_information: DateTimeLocaleInformation,
+    ) => Promise<void>,
 ): Promise<void> {
     const datetime_locale_information = {
         locale: gettext_provider.locale.replace("_", "-"),
@@ -48,13 +48,13 @@ export async function startDownloadExportDocument(
         global_export_properties.tracker_shortname,
         datetime_locale_information,
         global_export_properties.base_url,
-        global_export_properties.artifact_links_types
+        global_export_properties.artifact_links_types,
     );
 
     await document_exporter(
         export_document,
         gettext_provider,
         global_export_properties,
-        datetime_locale_information
+        datetime_locale_information,
     );
 }

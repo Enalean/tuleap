@@ -21,10 +21,10 @@ import "../themes/labels-box.scss";
 import { create } from "./labels-box";
 
 document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event) =>
-    initLabelsBox(event.detail.target)
+    initLabelsBox(event.detail.target),
 );
 document.addEventListener("dashboard-add-widget-settings-loaded", (event) =>
-    initLabelsBox(event.detail.target)
+    initLabelsBox(event.detail.target),
 );
 
 function initLabelsBox(widget_container) {
@@ -47,6 +47,6 @@ function initLabelsBox(widget_container) {
         container,
         container.dataset.labelsEndpoint,
         selected_labels,
-        container.dataset.placeholder
+        container.dataset.placeholder,
     );
 }

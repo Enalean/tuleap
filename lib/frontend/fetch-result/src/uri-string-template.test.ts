@@ -37,7 +37,7 @@ describe(`uri-string-template`, () => {
         const encoded_uri = uri`https://example.com/page/${param}${uri_part}`;
 
         expect(getEncodedURIString(encoded_uri)).toBe(
-            "https://example.com/page/R%26D/sub_page/a%23a"
+            "https://example.com/page/R%26D/sub_page/a%23a",
         );
     });
 

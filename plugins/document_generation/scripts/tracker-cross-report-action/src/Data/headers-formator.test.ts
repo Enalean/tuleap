@@ -36,7 +36,7 @@ describe("headers-formator", () => {
             new TextCellWithMerges("Tracker02", 1),
         ];
         vi.spyOn(tracker_names_formattor, "formatTrackerNames").mockReturnValue(
-            expected_tracker_names
+            expected_tracker_names,
         );
         const expected_reports_fields_labels = [
             new TextCell("Artifact ID"),
@@ -45,7 +45,7 @@ describe("headers-formator", () => {
             new TextCell("Artifact ID"),
         ];
         vi.spyOn(reports_fields_labels_formator, "formatReportsFieldsLabels").mockReturnValue(
-            expected_reports_fields_labels
+            expected_reports_fields_labels,
         );
 
         const fake_organized_reports_data: OrganizedReportsData = {
@@ -78,7 +78,7 @@ describe("headers-formator", () => {
         };
 
         expect(() => formatHeaders(organized_reports_data)).toThrowError(
-            "This must not happen. Check must be done before."
+            "This must not happen. Check must be done before.",
         );
     });
 });

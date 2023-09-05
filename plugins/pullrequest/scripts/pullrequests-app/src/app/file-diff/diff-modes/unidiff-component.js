@@ -74,15 +74,15 @@ function controller($element, $scope, SharedPropertiesService) {
                     SharedPropertiesService.getUserAvatarUrl(),
                     SharedPropertiesService.getUserLocale(),
                     SharedPropertiesService.getDateTimeFormat(),
-                    SharedPropertiesService.getRelativeDateDisplay()
+                    SharedPropertiesService.getRelativeDateDisplay(),
                 ),
                 PullRequestPresenterBuilder.fromPullRequest(
-                    SharedPropertiesService.getPullRequest()
-                )
+                    SharedPropertiesService.getPullRequest(),
+                ),
             ),
             getStore(),
             comment_widgets_map,
-            SharedPropertiesService.isCommentsMarkdownModeEnabled()
+            SharedPropertiesService.isCommentsMarkdownModeEnabled(),
         ),
     });
 
@@ -102,7 +102,7 @@ function controller($element, $scope, SharedPropertiesService) {
 
         const collapsible_sections = getCollapsibleCodeSections(
             self.diff.lines,
-            getStore().getAllRootComments()
+            getStore().getAllRootComments(),
         );
 
         collapseCommonSectionsUnidiff(document, unidiff_codemirror, collapsible_sections);
@@ -127,7 +127,7 @@ function controller($element, $scope, SharedPropertiesService) {
         FileDiffCommentScroller(
             getStore(),
             self.diff.lines,
-            comment_widgets_map
+            comment_widgets_map,
         ).scrollToUnifiedDiffComment(comment_id, unidiff_codemirror);
     }
 
@@ -156,7 +156,7 @@ function controller($element, $scope, SharedPropertiesService) {
             context: NewInlineCommentContextBuilder.fromContext(
                 self.filePath,
                 Number(line_number) + 1,
-                comment_position
+                comment_position,
             ),
             post_rendering_callback: () => {
                 // Nothing to do
@@ -175,26 +175,26 @@ function controller($element, $scope, SharedPropertiesService) {
                 unidiff_codemirror.setGutterMarker(
                     line_number,
                     GUTTER_OLDLINES,
-                    document.createTextNode(line.old_offset)
+                    document.createTextNode(line.old_offset),
                 );
             } else {
                 unidiff_codemirror.addLineClass(
                     line_number,
                     "background",
-                    "pull-request-file-diff-added-lines"
+                    "pull-request-file-diff-added-lines",
                 );
             }
             if (line.new_offset) {
                 unidiff_codemirror.setGutterMarker(
                     line_number,
                     GUTTER_NEWLINES,
-                    document.createTextNode(line.new_offset)
+                    document.createTextNode(line.new_offset),
                 );
             } else {
                 unidiff_codemirror.addLineClass(
                     line_number,
                     "background",
-                    "pull-request-file-diff-deleted-lines"
+                    "pull-request-file-diff-deleted-lines",
                 );
             }
         });

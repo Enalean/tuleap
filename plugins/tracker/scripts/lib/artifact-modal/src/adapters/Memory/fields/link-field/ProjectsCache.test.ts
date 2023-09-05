@@ -34,7 +34,7 @@ describe(`ProjectsCache`, () => {
     const getCache = (): RetrieveProjects => {
         const actual_retriever = RetrieveProjectsStub.withSuccessiveProjects(
             [first_project, second_project],
-            []
+            [],
         );
         return ProjectsCache(actual_retriever);
     };

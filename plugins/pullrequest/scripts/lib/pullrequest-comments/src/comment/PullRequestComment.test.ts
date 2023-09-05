@@ -166,8 +166,8 @@ describe("PullRequestComment", () => {
             expect(
                 selectOrThrow(
                     tooltip_target,
-                    "[data-test=pull-request-comment-text]"
-                ).textContent?.trim()
+                    "[data-test=pull-request-comment-text]",
+                ).textContent?.trim(),
             ).toStrictEqual(last_reply_text);
         });
     });

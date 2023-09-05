@@ -32,6 +32,6 @@ export function getLinkedUserStoriesToFeature(feature_id: number): Promise<UserS
                 limit: 50,
                 offset: 0,
             },
-        }
+        },
     );
 }

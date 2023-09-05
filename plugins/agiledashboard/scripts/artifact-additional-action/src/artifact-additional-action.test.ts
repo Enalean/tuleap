@@ -153,7 +153,7 @@ describe("Artifact additional action", () => {
                 expect(current_button_title).not.toBe(local_action.title_element.textContent);
                 expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(false);
                 expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(
-                    true
+                    true,
                 );
                 done();
             });
@@ -186,7 +186,7 @@ describe("Artifact additional action", () => {
                 expect(current_button_title).not.toBe(local_action.title_element.textContent);
                 expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(true);
                 expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(
-                    false
+                    false,
                 );
                 done();
             });

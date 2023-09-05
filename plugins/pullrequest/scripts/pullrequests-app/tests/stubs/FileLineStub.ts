@@ -33,7 +33,7 @@ export const FileLineStub = {
     buildRemovedLine: (
         unidiff_offset: number,
         old_offset: number,
-        content = ""
+        content = "",
     ): RemovedFileLine => ({
         unidiff_offset,
         new_offset: null,
@@ -44,7 +44,7 @@ export const FileLineStub = {
         unidiff_offset: number,
         new_offset: number,
         old_offset: number,
-        content = ""
+        content = "",
     ): UnMovedFileLine => ({
         unidiff_offset,
         new_offset,

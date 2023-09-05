@@ -54,7 +54,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
             organized_reports_data.second_level
         ) {
             const first_level_artifact_cells = transformArtifactRepresentationAsCells(
-                first_level_artifact_representation
+                first_level_artifact_representation,
             );
 
             const second_level_linked_artifacts_cells: Map<
@@ -63,7 +63,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
             > = buildFollowingLevelLinkedArtifactsCells(
                 first_level_artifact_representation.id,
                 organized_reports_data.first_level.linked_artifacts,
-                organized_reports_data.second_level.artifact_representations
+                organized_reports_data.second_level.artifact_representations,
             );
 
             if (second_level_linked_artifacts_cells.size > 0) {
@@ -81,7 +81,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                         > = buildFollowingLevelLinkedArtifactsCells(
                             second_level_artifact_id,
                             organized_reports_data.second_level.linked_artifacts,
-                            organized_reports_data.third_level.artifact_representations
+                            organized_reports_data.third_level.artifact_representations,
                         );
 
                         if (third_level_linked_artifacts_cells.size > 0) {
@@ -91,17 +91,17 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                                 all_artifact_rows.push(
                                     first_level_artifact_cells
                                         .concat(second_level_artifact_cells)
-                                        .concat(third_level_artifact_cells)
+                                        .concat(third_level_artifact_cells),
                                 );
                             }
                         } else {
                             all_artifact_rows.push(
-                                first_level_artifact_cells.concat(second_level_artifact_cells)
+                                first_level_artifact_cells.concat(second_level_artifact_cells),
                             );
                         }
                     } else {
                         all_artifact_rows.push(
-                            first_level_artifact_cells.concat(second_level_artifact_cells)
+                            first_level_artifact_cells.concat(second_level_artifact_cells),
                         );
                     }
                 }
@@ -110,7 +110,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
             }
         } else {
             all_artifact_rows.push(
-                transformArtifactRepresentationAsCells(first_level_artifact_representation)
+                transformArtifactRepresentationAsCells(first_level_artifact_representation),
             );
         }
     }
@@ -124,7 +124,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 function buildFollowingLevelLinkedArtifactsCells(
     current_artifact_id: number,
     current_level_linked_artifacts: Map<number, ReadonlyArray<number>>,
-    following_level_artifacts_representations: Map<number, ArtifactForCrossReportDocGen>
+    following_level_artifacts_representations: Map<number, ArtifactForCrossReportDocGen>,
 ): Map<number, Array<ReportCell>> {
     const following_level_linked_artifact_ids =
         current_level_linked_artifacts.get(current_artifact_id);
@@ -142,13 +142,13 @@ function buildFollowingLevelLinkedArtifactsCells(
             throw new Error(
                 "Artifact " +
                     following_level_linked_artifact_id +
-                    " representation not found in collection."
+                    " representation not found in collection.",
             );
         }
 
         linked_artifacts_cells.set(
             following_level_linked_artifact_id,
-            transformArtifactRepresentationAsCells(following_level_artifact_representation)
+            transformArtifactRepresentationAsCells(following_level_artifact_representation),
         );
     }
 
@@ -156,7 +156,7 @@ function buildFollowingLevelLinkedArtifactsCells(
 }
 
 function transformArtifactRepresentationAsCells(
-    artifact_representation: ArtifactForCrossReportDocGen
+    artifact_representation: ArtifactForCrossReportDocGen,
 ): Array<ReportCell> {
     const artifact_value_rows = [];
 

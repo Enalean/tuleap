@@ -26,7 +26,7 @@ export class IterationActivator {
         private readonly iteration_label: TimeboxLabel,
         private readonly iteration_sub_label: TimeboxLabel,
         private readonly iteration_selector: TrackerSelector,
-        private readonly actualizer: PreviewActualizer
+        private readonly actualizer: PreviewActualizer,
     ) {}
 
     watchIterationSelection(): void {

@@ -27,12 +27,12 @@ import "../themes/style.scss";
 export type { ListPicker, ListPickerOptions };
 export function createListPicker(
     source_select_box: HTMLSelectElement,
-    options: ListPickerOptions
+    options: ListPickerOptions,
 ): ListPicker {
     const gettext_provider = initGettextSync(
         "tuleap-list-picker",
         { fr_FR, pt_BR },
-        options.locale
+        options.locale,
     );
     return creator.createListPicker(source_select_box, gettext_provider, options);
 }

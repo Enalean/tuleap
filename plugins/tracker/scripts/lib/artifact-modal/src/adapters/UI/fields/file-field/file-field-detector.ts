@@ -27,5 +27,5 @@ const isEnabledFileField = (field: Field): field is FileFieldValueModel =>
     isFileField(field) && !isDisabled(field);
 
 export const getAllFileFields = (
-    tracker_fields: readonly Field[]
+    tracker_fields: readonly Field[],
 ): readonly FileFieldValueModel[] => tracker_fields.filter(isEnabledFileField);

@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 describe("PreviewFilenameProperty", () => {
     function getWrapper(
         item: DefaultFileItem,
-        configuration: ConfigurationState
+        configuration: ConfigurationState,
     ): VueWrapper<InstanceType<typeof PreviewFilenameProperty>> {
         return shallowMount(PreviewFilenameProperty, {
             props: {

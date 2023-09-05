@@ -53,7 +53,7 @@ codendi.ReorderColumns = Class.create({
                     this.has_just_been_dragged[cell.identify()] = false;
                     Event.stop(evt);
                 }
-            }.bind(this)
+            }.bind(this),
         );
         //eslint-disable-next-line @typescript-eslint/no-unused-vars
         var d = new Draggable(cell.down("table"), {
@@ -79,10 +79,10 @@ codendi.ReorderColumns = Class.create({
                 //don't change column order if it is not necessary
                 if (from !== to) {
                     var renderer_id = $("tracker_report_renderer_current").readAttribute(
-                        "data-renderer-id"
+                        "data-renderer-id",
                     );
                     var report_id = $("tracker_report_renderer_current").readAttribute(
-                        "data-report-id"
+                        "data-report-id",
                     );
 
                     var parameters = {
@@ -120,7 +120,7 @@ codendi.ReorderColumns = Class.create({
                                 this.reorder(dropped.up("table"), from, to);
                                 codendi.tracker.report.setHasChanged();
                             }.bind(this),
-                        }
+                        },
                     );
                 }
             }.bind(this),

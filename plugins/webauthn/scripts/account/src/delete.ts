@@ -27,6 +27,6 @@ export function deleteKey(key_id: string, csrf_token: string): ResultAsync<null,
         {
             key_id: key_id,
             csrf_token: csrf_token,
-        }
+        },
     ).map(() => null);
 }

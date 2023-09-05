@@ -39,7 +39,7 @@ describe(`PossibleParentsCache`, () => {
     const getCache = (): RetrievePossibleParents => {
         const actual_retriever = RetrievePossibleParentsStub.withSuccessiveParents(
             [first_parent, second_parent],
-            []
+            [],
         );
         return PossibleParentsCache(actual_retriever);
     };

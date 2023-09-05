@@ -92,7 +92,7 @@ function ArtifactModalController(
     modal_model,
     gettextCatalog,
     displayItemCallback,
-    TuleapArtifactModalLoading
+    TuleapArtifactModalLoading,
 ) {
     const self = this;
     let confirm_action_to_edit = false;
@@ -102,10 +102,10 @@ function ArtifactModalController(
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
     const current_artifact_option = CurrentArtifactIdentifierProxy.fromModalArtifactId(
-        modal_model.artifact_id
+        modal_model.artifact_id,
     );
     const current_project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(
-        modal_model.tracker
+        modal_model.tracker,
     );
     const api_client = TuleapAPIClient(current_artifact_option, current_project_identifier);
     const links_store = LinksStore();
@@ -114,10 +114,10 @@ function ArtifactModalController(
     const possible_parents_cache = PossibleParentsCache(api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
     const parent_artifact_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
-        modal_model.parent_artifact_id
+        modal_model.parent_artifact_id,
     );
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
-        modal_model.tracker_id
+        modal_model.tracker_id,
     );
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
@@ -145,14 +145,14 @@ function ArtifactModalController(
         link_field_value_formatter: LinkFieldValueFormatter(
             links_store,
             links_marked_for_removal_store,
-            new_links_store
+            new_links_store,
         ),
         date_picker_initializer: DatePickerInitializer(),
         readonly_date_field_formatter: ReadonlyDateFieldFormatter(user_locale),
         parent_feedback_controller: ParentFeedbackController(
             api_client,
             event_dispatcher,
-            parent_artifact_identifier
+            parent_artifact_identifier,
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(event_dispatcher),
@@ -167,7 +167,7 @@ function ArtifactModalController(
                 is_comment_order_inverted: modal_model.invert_followups_comments_order,
                 is_allowed_to_add_comment: isNotAnonymousUser(),
                 text_format: modal_model.text_fields_format,
-            }
+            },
         ),
         getLinkFieldController: (field) => {
             return LinkFieldController(
@@ -191,10 +191,10 @@ function ArtifactModalController(
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_option,
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
-                    modal_model.tracker.color_name
+                    modal_model.tracker.color_name,
                 ),
                 LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types),
-                current_project_identifier
+                current_project_identifier,
             );
         },
         getLinkFieldAutoCompleter: () => {
@@ -205,7 +205,7 @@ function ArtifactModalController(
                 api_client,
                 event_dispatcher,
                 current_artifact_option,
-                UserIdentifierProxy.fromUserId(modal_model.user_id)
+                UserIdentifierProxy.fromUserId(modal_model.user_id),
             );
         },
         getArtifactCreatorController() {
@@ -216,7 +216,7 @@ function ArtifactModalController(
                 LinkableArtifactCreator(api_client, api_client, api_client),
                 current_project_identifier,
                 current_tracker_identifier,
-                user_locale
+                user_locale,
             );
         },
         getFileFieldController: (field) => {
@@ -226,14 +226,14 @@ function ArtifactModalController(
             return PermissionFieldController(
                 field,
                 self.values[field.field_id],
-                self.isDisabled(field)
+                self.isDisabled(field),
             );
         },
         getCheckboxFieldController: (field) => {
             return CheckboxFieldController(
                 field,
                 self.values[field.field_id].bind_value_ids,
-                self.isDisabled(field)
+                self.isDisabled(field),
             );
         },
         getSelectBoxFieldController: (field) => {
@@ -242,14 +242,14 @@ function ArtifactModalController(
                 field,
                 self.values[field.field_id],
                 self.isDisabled(field),
-                user_locale
+                user_locale,
             );
         },
         getFormattedTextController: () => {
             return FormattedTextController(
                 event_dispatcher,
                 api_client,
-                modal_model.text_fields_format
+                modal_model.text_fields_format,
             );
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
@@ -339,7 +339,7 @@ function ArtifactModalController(
 
     function reopenFieldsetsWithInvalidInput(form) {
         const closed_fieldsets_that_contain_invalid_elements = form.querySelectorAll(
-            "fieldset.tlp-pane-collapsed:invalid > div > legend"
+            "fieldset.tlp-pane-collapsed:invalid > div > legend",
         );
         for (const fieldset of closed_fieldsets_that_contain_invalid_elements) {
             if (fieldset instanceof HTMLElement) {
@@ -364,14 +364,14 @@ function ArtifactModalController(
                     event_dispatcher.dispatch(WillNotifyFault(fault));
                     is_error_already_handled = true;
                     return Promise.reject();
-                }
+                },
             )
             .then(() => {
                 const validated_values = validateArtifactFieldsValues(
                     self.values,
                     isInCreationMode(),
                     self.new_followup_comment,
-                    self.link_field_value_formatter
+                    self.link_field_value_formatter,
                 );
 
                 if (isInCreationMode()) {
@@ -383,14 +383,14 @@ function ArtifactModalController(
                                 event_dispatcher.dispatch(WillNotifyFault(fault));
                                 is_error_already_handled = true;
                                 return Promise.reject();
-                            }
+                            },
                         );
                 }
                 if (self.confirm_action_to_edit) {
                     return editArtifact(
                         modal_model.artifact_id,
                         validated_values,
-                        self.new_followup_comment
+                        self.new_followup_comment,
                     );
                 }
                 return editArtifactWithConcurrencyChecking(
@@ -398,7 +398,7 @@ function ArtifactModalController(
                     validated_values,
                     self.new_followup_comment,
                     modal_model.etag,
-                    modal_model.last_modified
+                    modal_model.last_modified,
                 );
             })
             .then(function (new_artifact) {
@@ -433,8 +433,8 @@ function ArtifactModalController(
             ) {
                 setError(
                     gettextCatalog.getString(
-                        "Someone updated this artifact while you were editing it. Please note that your modifications will be applied on top of previous changes. You need to confirm your action to submit your modification."
-                    )
+                        "Someone updated this artifact while you were editing it. Please note that your modifications will be applied on top of previous changes. You need to confirm your action to submit your modification.",
+                    ),
                 );
                 self.confirm_action_to_edit = true;
             } else {

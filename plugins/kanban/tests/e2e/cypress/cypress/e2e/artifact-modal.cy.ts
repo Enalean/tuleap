@@ -28,7 +28,7 @@ describe(`Artifact Modal`, function () {
         cy.getProjectId("kanban-artifact-modal")
             .as("project_id")
             .then((project_id) =>
-                cy.getTrackerIdFromREST(project_id, "all_fields").as("tracker_id")
+                cy.getTrackerIdFromREST(project_id, "all_fields").as("tracker_id"),
             )
             .then((tracker_id) => {
                 getArtifactLinkIdFromREST(tracker_id).as("artifact_link_id");
@@ -85,7 +85,7 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
                     cy.get("[data-test=file-field-file-input]").selectFile(
-                        "cypress/fixtures/attachment.json"
+                        "cypress/fixtures/attachment.json",
                     );
                     cy.get("[data-test=file-field-description-input]").type("My JSON attachment");
                 });
@@ -106,7 +106,7 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel(
                     "Selectbox users (members)",
-                    "[data-test=selectbox-field]"
+                    "[data-test=selectbox-field]",
                 ).within(() => {
                     cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
                 });
@@ -122,7 +122,7 @@ describe(`Artifact Modal`, function () {
                 getFieldWithLabel("Radio users (members)", "[data-test=radiobutton-field]").within(
                     () => {
                         checkRadioButtonWithLabel("ProjectMember (ProjectMember)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Radio ugroups", "[data-test=radiobutton-field]").within(() => {
@@ -136,11 +136,11 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel(
                     "MSB users (members)",
-                    "[data-test=multi-selectbox-field]"
+                    "[data-test=multi-selectbox-field]",
                 ).within(() => {
                     cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
                     cy.searchItemInListPickerDropdown(
-                        "ProjectAdministrator (ProjectAdministrator)"
+                        "ProjectAdministrator (ProjectAdministrator)",
                     ).click();
                 });
 
@@ -157,7 +157,7 @@ describe(`Artifact Modal`, function () {
                     () => {
                         checkBoxWithLabel("ProjectAdministrator (ProjectAdministrator)");
                         checkBoxWithLabel("ProjectMember (ProjectMember)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Checkbox ugroups", "[data-test=checkbox-field]").within(() => {
@@ -179,7 +179,7 @@ describe(`Artifact Modal`, function () {
                         // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("input[type=search]").type("proj");
                         selectLabelInSelect2Dropdown("ProjectMember (ProjectMember)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Openlist ugroups", "[data-test=openlist-field]").within(() => {
@@ -191,7 +191,7 @@ describe(`Artifact Modal`, function () {
             getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
                 cy.searchItemInLazyboxDropdown(
                     String(this.artifact_link_id),
-                    LINKABLE_ARTIFACT_TITLE
+                    LINKABLE_ARTIFACT_TITLE,
                 ).click();
             });
 
@@ -256,7 +256,7 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
                     cy.get("[data-test=file-field-file-input]").selectFile(
-                        "cypress/fixtures/svg_attachment.svg"
+                        "cypress/fixtures/svg_attachment.svg",
                     );
                     cy.get("[data-test=file-field-description-input]").type("My SVG attachment");
                 });
@@ -276,10 +276,10 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel(
                     "Selectbox users (members)",
-                    "[data-test=selectbox-field]"
+                    "[data-test=selectbox-field]",
                 ).within(() => {
                     cy.searchItemInListPickerDropdown(
-                        "ProjectAdministrator (ProjectAdministrator)"
+                        "ProjectAdministrator (ProjectAdministrator)",
                     ).click();
                 });
 
@@ -294,7 +294,7 @@ describe(`Artifact Modal`, function () {
                 getFieldWithLabel("Radio users (members)", "[data-test=radiobutton-field]").within(
                     () => {
                         checkRadioButtonWithLabel("ProjectAdministrator (ProjectAdministrator)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Radio ugroups", "[data-test=radiobutton-field]").within(() => {
@@ -308,7 +308,7 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel(
                     "MSB users (members)",
-                    "[data-test=multi-selectbox-field]"
+                    "[data-test=multi-selectbox-field]",
                 ).within(() => {
                     cy.searchItemInListPickerDropdown("ProjectMember (ProjectMember)").click();
                 });
@@ -329,7 +329,7 @@ describe(`Artifact Modal`, function () {
                     () => {
                         checkBoxWithLabel("ProjectMember (ProjectMember)");
                         uncheckBoxWithLabel("ProjectAdministrator (ProjectAdministrator)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Checkbox ugroups", "[data-test=checkbox-field]").within(() => {
@@ -350,7 +350,7 @@ describe(`Artifact Modal`, function () {
                         // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("input[type=search]").type("proj");
                         selectLabelInSelect2Dropdown("ProjectMember (ProjectMember)");
-                    }
+                    },
                 );
 
                 getFieldWithLabel("Openlist ugroups", "[data-test=openlist-field]").within(() => {
@@ -377,7 +377,7 @@ describe(`Artifact Modal`, function () {
 function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
     return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`).then((response) => {
         return response.body.find(
-            (artifact: Artifact) => artifact.title === LINKABLE_ARTIFACT_TITLE
+            (artifact: Artifact) => artifact.title === LINKABLE_ARTIFACT_TITLE,
         ).id;
     });
 }

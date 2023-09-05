@@ -51,7 +51,7 @@ export default class ChildrenCell extends Mixins(SkeletonMixin) {
     @swimlane.Getter
     readonly cards_in_cell!: (
         current_swimlane: Swimlane,
-        current_column: ColumnDefinition
+        current_column: ColumnDefinition,
     ) => Card[];
 
     get cards(): Card[] {

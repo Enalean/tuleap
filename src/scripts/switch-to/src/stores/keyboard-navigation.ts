@@ -113,7 +113,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
         }
 
         const current_index = root_store.filtered_projects.findIndex(
-            (project: Project) => project.project_uri === payload.project.project_uri
+            (project: Project) => project.project_uri === payload.project.project_uri,
         );
         const is_the_last_project = current_index === root_store.filtered_projects.length - 1;
 
@@ -182,7 +182,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
         }
 
         const current_index = root_store.filtered_history.entries.findIndex(
-            (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
+            (entry: ItemDefinition) => entry.html_url === payload.entry.html_url,
         );
         const is_the_first_entry = current_index === 0;
         if (is_the_first_entry && payload.key === "ArrowUp" && root_store.keywords.length !== 0) {
@@ -206,7 +206,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
     function navigateInCollection(
         collection: ItemDefinition[] | Project[],
         current_index: number,
-        key: "ArrowUp" | "ArrowDown"
+        key: "ArrowUp" | "ArrowDown",
     ): void {
         if (current_index === -1) {
             return;
@@ -222,7 +222,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
     }
 
     function setProgrammaticallyFocusedElement(
-        element: Project | ItemDefinition | QuickLink | null
+        element: Project | ItemDefinition | QuickLink | null,
     ): void {
         programmatically_focused_element.value = element;
     }

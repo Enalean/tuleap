@@ -22,7 +22,7 @@
         <p>
             {{
                 $gettext(
-                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once.",
                 )
             }}
         </p>

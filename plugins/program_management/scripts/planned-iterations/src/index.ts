@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const AppComponent = Vue.extend(App);
@@ -50,18 +50,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             program_flags: JSON.parse(getDatasetItemOrThrow(vue_mount_point, "programFlags")),
             is_program_admin: Boolean(vue_mount_point.dataset.isUserAdmin),
             program_increment: JSON.parse(
-                getDatasetItemOrThrow(vue_mount_point, "programIncrement")
+                getDatasetItemOrThrow(vue_mount_point, "programIncrement"),
             ),
             iterations_labels: JSON.parse(
-                getDatasetItemOrThrow(vue_mount_point, "iterationsLabels")
+                getDatasetItemOrThrow(vue_mount_point, "iterationsLabels"),
             ),
             user_locale: user_locale.replace("_", "-"),
             iteration_tracker_id: parseInt(
                 getDatasetItemOrThrow(vue_mount_point, "iterationTrackerId"),
-                10
+                10,
             ),
             is_accessibility_mode_enabled: Boolean(
-                vue_mount_point.dataset.isAccessibilityModeEnabled
+                vue_mount_point.dataset.isAccessibilityModeEnabled,
             ),
         }),
     }).$mount(vue_mount_point);

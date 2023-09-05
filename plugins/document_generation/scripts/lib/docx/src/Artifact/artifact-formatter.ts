@@ -36,7 +36,7 @@ export function formatArtifact<StepDefFieldValue>(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
     artifact_links_types: ReadonlyArray<ArtifactLinkType>,
-    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>,
 ): FormattedArtifact<StepDefFieldValue> {
     const artifact_id = artifact.id;
     const artifact_title = artifact.title;
@@ -57,14 +57,14 @@ export function formatArtifact<StepDefFieldValue>(
             datetime_locale_information,
             base_url,
             artifact_links_types,
-            transform_step_def_field
+            transform_step_def_field,
         ),
         containers: formatContainers(
             artifact.containers,
             datetime_locale_information,
             base_url,
             artifact_links_types,
-            transform_step_def_field
+            transform_step_def_field,
         ),
     };
 }
@@ -74,7 +74,7 @@ function formatFieldValues<StepDefFieldValue>(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
     artifact_links_types: ReadonlyArray<ArtifactLinkType>,
-    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>,
 ): ReadonlyArray<ArtifactFieldValue<StepDefFieldValue>> {
     return values.flatMap((value) => {
         const formatted_field_value = formatFieldValue(
@@ -82,7 +82,7 @@ function formatFieldValues<StepDefFieldValue>(
             datetime_locale_information,
             base_url,
             artifact_links_types,
-            transform_step_def_field
+            transform_step_def_field,
         );
         if (formatted_field_value === null) {
             return [];
@@ -96,7 +96,7 @@ function formatFieldValue<StepDefFieldValue>(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
     artifact_links_types: ReadonlyArray<ArtifactLinkType>,
-    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>,
 ): ArtifactFieldValue<StepDefFieldValue> | null {
     if (value.type === "text") {
         return {
@@ -265,7 +265,7 @@ function formatFieldValue<StepDefFieldValue>(
 
 function getArtifactLinkLabel(
     link: ArtifactLink,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
 ): string {
     if (link.type === null) {
         return "";
@@ -282,7 +282,7 @@ function getArtifactLinkLabel(
 
 function getArtifactLinkReverseLabel(
     reverse_link: ArtifactLink,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
 ): string {
     if (reverse_link.type === null) {
         return "";
@@ -302,7 +302,7 @@ function formatContainers<StepDefFieldValue>(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
     artifact_links_types: ReadonlyArray<ArtifactLinkType>,
-    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>,
 ): ReadonlyArray<ArtifactContainer<StepDefFieldValue>> {
     return containers.map((container) => {
         return {
@@ -312,14 +312,14 @@ function formatContainers<StepDefFieldValue>(
                 datetime_locale_information,
                 base_url,
                 artifact_links_types,
-                transform_step_def_field
+                transform_step_def_field,
             ),
             containers: formatContainers(
                 container.containers,
                 datetime_locale_information,
                 base_url,
                 artifact_links_types,
-                transform_step_def_field
+                transform_step_def_field,
             ),
         };
     });

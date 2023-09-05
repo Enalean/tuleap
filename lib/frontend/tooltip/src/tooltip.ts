@@ -31,7 +31,7 @@ interface SemiStructuredContent {
 type SparklineHrefCollection = Record<string, HTMLAnchorElement[]>;
 
 function isSemiStructuredContent(
-    content: string | SemiStructuredContent
+    content: string | SemiStructuredContent,
 ): content is SemiStructuredContent {
     return typeof content !== "string";
 }
@@ -64,7 +64,7 @@ export const load = loadTooltips;
 function createTooltip(
     element: HTMLElement,
     reference_url: string,
-    options: { at_cursor_position?: boolean } = {}
+    options: { at_cursor_position?: boolean } = {},
 ): void {
     let fetching = false;
     let fetched = false;
@@ -180,7 +180,7 @@ function createTooltip(
 }
 
 export async function retrieveTooltipData(
-    url: URL
+    url: URL,
 ): Promise<string | SemiStructuredContent | undefined> {
     url.searchParams.append("as-json-for-tooltip", "1");
 

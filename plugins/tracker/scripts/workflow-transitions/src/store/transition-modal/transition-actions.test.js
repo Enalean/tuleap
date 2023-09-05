@@ -74,7 +74,7 @@ describe("Transition modal actions", () => {
             expect(context.commit).toHaveBeenCalledWith("showModal");
             expect(context.commit).toHaveBeenCalledWith(
                 "failModalOperation",
-                "You are not allowed to see that"
+                "You are not allowed to see that",
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
         });

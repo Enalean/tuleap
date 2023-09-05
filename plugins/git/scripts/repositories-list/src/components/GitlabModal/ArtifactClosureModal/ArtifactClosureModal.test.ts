@@ -45,7 +45,7 @@ describe("ArtifactClosureModal", () => {
                 gitlab: {
                     artifact_closure_repository: { integration_id: 10, label: "wow gitlab" },
                 },
-            }
+            },
         );
 
         return shallowMount(ArtifactClosureModal, {
@@ -83,11 +83,11 @@ describe("ArtifactClosureModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(
-                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists()
+                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
             ).toBe(true);
 
             const save_button = wrapper.find(
-                "[data-test=update-artifact-closure-modal-save-button]"
+                "[data-test=update-artifact-closure-modal-save-button]",
             ).element as HTMLButtonElement;
             if (!(save_button instanceof HTMLButtonElement)) {
                 throw new Error("Could not find the help button");
@@ -102,11 +102,11 @@ describe("ArtifactClosureModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(
-                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists()
+                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
             ).toBe(false);
 
             const save_button = wrapper.find(
-                "[data-test=update-artifact-closure-modal-save-button]"
+                "[data-test=update-artifact-closure-modal-save-button]",
             ).element as HTMLButtonElement;
             if (!(save_button instanceof HTMLButtonElement)) {
                 throw new Error("Could not find the help button");
@@ -121,11 +121,11 @@ describe("ArtifactClosureModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(
-                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists()
+                wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
             ).toBe(false);
 
             const save_button = wrapper.find(
-                "[data-test=update-artifact-closure-modal-save-button]"
+                "[data-test=update-artifact-closure-modal-save-button]",
             ).element as HTMLButtonElement;
             if (!(save_button instanceof HTMLButtonElement)) {
                 throw new Error("Could not find the help button");
@@ -157,7 +157,7 @@ describe("ArtifactClosureModal", () => {
 
                 const success_message = `Artifact closure is now ${expected_keyword_message} for 'wow gitlab'!`;
                 expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
-            }
+            },
         );
 
         it("set the message error and display this error in the console if there is error during the update", async () => {
@@ -174,7 +174,7 @@ describe("ArtifactClosureModal", () => {
                     status: 404,
                     json: (): Promise<{ error: { code: number; message: string } }> =>
                         Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-                } as Response)
+                } as Response),
             );
 
             jest.spyOn(gitlab_error_handler, "handleError");

@@ -41,7 +41,7 @@ vi.mock("@tuleap/vue-strict-inject");
 
 const getWrapper = (
     pull_request: PullRequest,
-    relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+    relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
 ): VueWrapper => {
     vi.spyOn(strict_inject, "strictInject").mockReturnValue(relative_date_preference);
 
@@ -65,7 +65,7 @@ describe("PullRequestAlreadyMergedState", () => {
             const wrapper = getWrapper({ status } as PullRequest);
 
             expect(wrapper.element.children).toBeUndefined();
-        }
+        },
     );
 
     it("Should display the pull-request merge date and the user who merged it", () => {
@@ -84,13 +84,13 @@ describe("PullRequestAlreadyMergedState", () => {
         } as PullRequest);
 
         expect(wrapper.find("[data-test=status-updater-avatar]").attributes("src")).toStrictEqual(
-            status_info.status_updater.avatar_url
+            status_info.status_updater.avatar_url,
         );
         expect(wrapper.find("[data-test=status-updater-name]").text()).toStrictEqual(
-            status_info.status_updater.display_name
+            status_info.status_updater.display_name,
         );
         expect(
-            wrapper.find("[data-test=pull-request-merge-date]").attributes("date")
+            wrapper.find("[data-test=pull-request-merge-date]").attributes("date"),
         ).toStrictEqual(status_info.status_date);
     });
 
@@ -114,10 +114,10 @@ describe("PullRequestAlreadyMergedState", () => {
                         },
                     },
                 } as PullRequest,
-                preference
+                preference,
             );
 
             expect(wrapper.find("[data-test=status-merged-date]").text()).toContain(prefix);
-        }
+        },
     );
 });

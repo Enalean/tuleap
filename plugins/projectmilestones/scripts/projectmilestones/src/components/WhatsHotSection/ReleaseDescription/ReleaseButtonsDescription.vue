@@ -102,7 +102,7 @@ export default class ReleaseButtonsDescription extends Vue {
 
     get get_additional_panes(): undefined | Pane[] {
         return this.release_data.resources.additional_panes.filter((pane) =>
-            ["taskboard", "testplan"].includes(pane.identifier)
+            ["taskboard", "testplan"].includes(pane.identifier),
         );
     }
 }

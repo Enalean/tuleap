@@ -92,7 +92,7 @@ describe("TransitionMatrixContent", () => {
                     await wrapper.vm.$nextTick();
 
                     expect(wrapper.get(create_transition_selector).classes()).toContain(
-                        "tracker-workflow-transition-action-disabled"
+                        "tracker-workflow-transition-action-disabled",
                     );
 
                     wrapper.get(create_transition_selector).trigger("click");
@@ -108,7 +108,7 @@ describe("TransitionMatrixContent", () => {
                     store.dispatch.mockReturnValue(
                         new Promise((resolve) => {
                             resolveCreateTransition = resolve;
-                        })
+                        }),
                     );
                     wrapper.get(create_transition_selector).trigger("click");
                 });
@@ -169,12 +169,12 @@ describe("TransitionMatrixContent", () => {
 
                 it("shows an 'updated' animation", () => {
                     const configure_transition_button = wrapper.get(
-                        transition_configuration_selector
+                        transition_configuration_selector,
                     );
 
                     expect(configure_transition_button.classes()).toContain("tlp-button-success");
                     expect(wrapper.classes()).toContain(
-                        "tracker-workflow-transition-action-updated"
+                        "tracker-workflow-transition-action-updated",
                     );
                 });
             });

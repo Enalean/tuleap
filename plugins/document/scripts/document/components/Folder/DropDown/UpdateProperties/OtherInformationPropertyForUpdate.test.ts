@@ -40,7 +40,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
         is_obsolescence_date_property_used: boolean,
         has_loaded_properties: boolean,
         item: Item,
-        propertyToUpdate: Array<Property>
+        propertyToUpdate: Array<Property>,
     ): VueWrapper<InstanceType<typeof OtherInformationPropertiesForUpdate>> {
         load_properties.mockReset();
         return shallowMount(OtherInformationPropertiesForUpdate, {
@@ -84,7 +84,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
             expect(
-                wrapper.find("[data-test=document-other-information-spinner]").exists()
+                wrapper.find("[data-test=document-other-information-spinner]").exists(),
             ).toBeTruthy();
         });
 

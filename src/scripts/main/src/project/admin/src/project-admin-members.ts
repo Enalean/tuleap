@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(
                 /* webpackChunkName: "project-admin-po-" */ "../po/" +
                     getPOFileFromLocale(user_locale)
-            )
+            ),
     );
 
     initProjectMembersSelect2();
@@ -90,7 +90,7 @@ function initModals(): void {
 
 function updateDeleteModalContent(button: HTMLElement): void {
     const button_confirm_remove = document.getElementById(
-        "project-admin-members-confirm-member-removal-modal-user-id"
+        "project-admin-members-confirm-member-removal-modal-user-id",
     );
     if (!(button_confirm_remove instanceof HTMLInputElement)) {
         throw new Error("No button to confirm removal user");
@@ -106,7 +106,7 @@ function updateDeleteModalContent(button: HTMLElement): void {
 
 function updateDeleteModalDescription(button: HTMLElement): void {
     const modal_description = document.getElementById(
-        "project-admin-members-confirm-member-removal-modal-description"
+        "project-admin-members-confirm-member-removal-modal-description",
     );
     if (!modal_description) {
         throw new Error("No modal description");
@@ -125,11 +125,11 @@ function updateDeleteModalDescription(button: HTMLElement): void {
         sanitize(
             sprintf(
                 gettext_provider.gettext(
-                    "You're about to remove <b>%s</b> from this project. Please confirm your action."
+                    "You're about to remove <b>%s</b> from this project. Please confirm your action.",
                 ),
-                escaper.html(user_name)
-            )
-        )
+                escaper.html(user_name),
+            ),
+        ),
     );
 }
 

@@ -49,7 +49,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
     };
 
     function getWrapper(
-        config: TestConfig
+        config: TestConfig,
     ): VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>> {
         return shallowMount(TimeframeBasedOnFieldsConfig, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -70,7 +70,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
     function getHTMLInputElement(
         wrapper: VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>>,
-        selector: string
+        selector: string,
     ): HTMLInputElement {
         const target = wrapper.find(selector).element;
         if (!(target instanceof HTMLInputElement)) {
@@ -82,7 +82,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
     function getHTMLSelectElement(
         wrapper: VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>>,
-        selector: string
+        selector: string,
     ): HTMLSelectElement {
         const target = wrapper.find(selector).element;
         if (!(target instanceof HTMLSelectElement)) {
@@ -94,12 +94,12 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
     function assertSelectContainsValues(
         select_box: HTMLSelectElement,
-        expected_values: string[]
+        expected_values: string[],
     ): void {
         expect(
             Array.from(select_box.options)
                 .map((option: HTMLOptionElement) => option.value)
-                .sort()
+                .sort(),
         ).toStrictEqual(expected_values);
     }
 
@@ -111,11 +111,11 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
                 const option_duration_radio_button = getHTMLInputElement(
                     wrapper,
-                    "[data-test=option-duration]"
+                    "[data-test=option-duration]",
                 );
                 const option_end_date_radio_button = getHTMLInputElement(
                     wrapper,
-                    "[data-test=option-end-date]"
+                    "[data-test=option-end-date]",
                 );
 
                 expect(option_duration_radio_button.checked).toBe(false);
@@ -123,39 +123,39 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
                 const start_date_select_box = getHTMLSelectElement(
                     wrapper,
-                    "[data-test=start-date-field-select-box]"
+                    "[data-test=start-date-field-select-box]",
                 );
                 const end_date_select_box = getHTMLSelectElement(
                     wrapper,
-                    "[data-test=end-date-field-select-box]"
+                    "[data-test=end-date-field-select-box]",
                 );
                 const duration_select_box = getHTMLSelectElement(
                     wrapper,
-                    "[data-test=duration-field-select-box]"
+                    "[data-test=duration-field-select-box]",
                 );
 
                 expect(start_date_select_box.value).toStrictEqual(
-                    String(timeframe_config.selected_start_date_field_id)
+                    String(timeframe_config.selected_start_date_field_id),
                 );
                 expect(end_date_select_box.value).toStrictEqual(
-                    String(timeframe_config.selected_end_date_field_id)
+                    String(timeframe_config.selected_end_date_field_id),
                 );
                 expect(duration_select_box.value).toStrictEqual(
-                    String(timeframe_config.selected_duration_field_id)
+                    String(timeframe_config.selected_duration_field_id),
                 );
 
                 expect(duration_select_box.hasAttribute("disabled")).toBe(true);
                 expect(duration_select_box.hasAttribute("required")).toBe(false);
                 expect(
-                    wrapper.find("[data-test=duration-field-highlight-field-required").exists()
+                    wrapper.find("[data-test=duration-field-highlight-field-required").exists(),
                 ).toBe(false);
 
                 expect(end_date_select_box.hasAttribute("disabled")).toBe(false);
                 expect(end_date_select_box.hasAttribute("required")).toBe(true);
                 expect(
-                    wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()
+                    wrapper.find("[data-test=end-date-field-highlight-field-required]").exists(),
                 ).toBe(true);
-            }
+            },
         );
 
         it("should select the start date/duration mode when active at initialisation", async () => {
@@ -163,11 +163,11 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
             const option_duration_radio_button = getHTMLInputElement(
                 wrapper,
-                "[data-test=option-duration]"
+                "[data-test=option-duration]",
             );
             const option_end_date_radio_button = getHTMLInputElement(
                 wrapper,
-                "[data-test=option-end-date]"
+                "[data-test=option-end-date]",
             );
 
             expect(option_duration_radio_button.checked).toBe(true);
@@ -175,37 +175,37 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
             const start_date_select_box = getHTMLSelectElement(
                 wrapper,
-                "[data-test=start-date-field-select-box]"
+                "[data-test=start-date-field-select-box]",
             );
             const end_date_select_box = getHTMLSelectElement(
                 wrapper,
-                "[data-test=end-date-field-select-box]"
+                "[data-test=end-date-field-select-box]",
             );
             const duration_select_box = getHTMLSelectElement(
                 wrapper,
-                "[data-test=duration-field-select-box]"
+                "[data-test=duration-field-select-box]",
             );
 
             expect(start_date_select_box.value).toStrictEqual(
-                String(config_using_duration_mode.selected_start_date_field_id)
+                String(config_using_duration_mode.selected_start_date_field_id),
             );
             expect(end_date_select_box.value).toStrictEqual(
-                String(config_using_duration_mode.selected_end_date_field_id)
+                String(config_using_duration_mode.selected_end_date_field_id),
             );
             expect(duration_select_box.value).toStrictEqual(
-                String(config_using_duration_mode.selected_duration_field_id)
+                String(config_using_duration_mode.selected_duration_field_id),
             );
 
             expect(duration_select_box.hasAttribute("disabled")).toBe(false);
             expect(duration_select_box.hasAttribute("required")).toBe(true);
             expect(
-                wrapper.find("[data-test=duration-field-highlight-field-required]").exists()
+                wrapper.find("[data-test=duration-field-highlight-field-required]").exists(),
             ).toBe(true);
 
             expect(end_date_select_box.hasAttribute("disabled")).toBe(true);
             expect(end_date_select_box.hasAttribute("required")).toBe(false);
             expect(
-                wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()
+                wrapper.find("[data-test=end-date-field-highlight-field-required]").exists(),
             ).toBe(false);
         });
     });
@@ -214,31 +214,31 @@ describe("TimeframeBasedOnFieldsConfig", () => {
         const wrapper = await getWrapper(config_using_end_date_mode);
         const option_duration_radio_button = getHTMLInputElement(
             wrapper,
-            "[data-test=option-duration]"
+            "[data-test=option-duration]",
         );
         const option_end_date_radio_button = getHTMLInputElement(
             wrapper,
-            "[data-test=option-end-date]"
+            "[data-test=option-end-date]",
         );
 
         option_duration_radio_button.dispatchEvent(new Event("click"));
         await wrapper.vm.$nextTick();
 
         expect(
-            getHTMLSelectElement(wrapper, "[data-test=end-date-field-select-box]").disabled
+            getHTMLSelectElement(wrapper, "[data-test=end-date-field-select-box]").disabled,
         ).toBe(true);
         expect(wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()).toBe(
-            false
+            false,
         );
 
         option_end_date_radio_button.dispatchEvent(new Event("click"));
         await wrapper.vm.$nextTick();
 
         expect(
-            getHTMLSelectElement(wrapper, "[data-test=duration-field-select-box]").disabled
+            getHTMLSelectElement(wrapper, "[data-test=duration-field-select-box]").disabled,
         ).toBe(true);
         expect(wrapper.find("[data-test=duration-field-highlight-field-required]").exists()).toBe(
-            false
+            false,
         );
     });
 
@@ -247,11 +247,11 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
         const start_date_select_box = getHTMLSelectElement(
             wrapper,
-            "[data-test=start-date-field-select-box]"
+            "[data-test=start-date-field-select-box]",
         );
         const end_date_select_box = getHTMLSelectElement(
             wrapper,
-            "[data-test=end-date-field-select-box]"
+            "[data-test=end-date-field-select-box]",
         );
 
         assertSelectContainsValues(start_date_select_box, ["", "1001", "1002", "1003"]);

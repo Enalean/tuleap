@@ -29,7 +29,7 @@ jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyDate", () => {
     function createWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof CustomPropertyDate>> {
         return shallowMount(CustomPropertyDate, {
             props: { currentlyUpdatedItemProperty: property },

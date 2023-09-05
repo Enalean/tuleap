@@ -59,7 +59,7 @@ describe("Breadcrumb", () => {
     it("When user is program admin, Then administration link is displayed", async () => {
         const wrapper = await getWrapper(true);
         expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContainEqual(
-            "breadcrumb-switchable"
+            "breadcrumb-switchable",
         );
         expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBeTruthy();
     });

@@ -72,7 +72,7 @@ describe("Global store:", () => {
 
                 it("dispatches 'loadBaseline' once", () => {
                     const loadBaseline_calls = context.dispatch.mock.calls.filter(
-                        (call) => call[0] === "loadBaseline"
+                        (call) => call[0] === "loadBaseline",
                     );
                     expect(loadBaseline_calls).toHaveLength(1);
                 });
@@ -257,7 +257,7 @@ describe("Global store:", () => {
                 () =>
                     (state.users_by_id = {
                         1: user,
-                    })
+                    }),
             );
 
             it("returns user with given id", () => {
@@ -271,7 +271,7 @@ describe("Global store:", () => {
                 () =>
                     (state.artifacts_by_id = {
                         1: artifact,
-                    })
+                    }),
             );
 
             it("returns artifact with given id", () => {
@@ -285,7 +285,7 @@ describe("Global store:", () => {
                 () =>
                     (state.trackers_by_id = {
                         1: tracker,
-                    })
+                    }),
             );
 
             it("returns tracker with given id", () => {

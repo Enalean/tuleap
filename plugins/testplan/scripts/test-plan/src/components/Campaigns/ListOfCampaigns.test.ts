@@ -30,7 +30,7 @@ describe("ListOfCampaigns", () => {
     const load_campaigns_spy = jest.fn();
 
     function createWrapper(
-        campaign_state: CampaignState
+        campaign_state: CampaignState,
     ): VueWrapper<InstanceType<typeof ListOfCampaigns>> {
         load_campaigns_spy.mockReset();
         const campaign_module = {

@@ -47,7 +47,7 @@
                 <p class="tlp-alert-title">{{ $gettext("Non fast-forward merge") }}</p>
                 {{
                     $gettext(
-                        "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request"
+                        "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request",
                     )
                 }}
             </div>
@@ -99,7 +99,7 @@ import {
 const { $gettext, $ngettext } = useGettext();
 
 const are_merge_commits_allowed_in_repository = strictInject(
-    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY
+    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
 );
 
 const props = defineProps<{
@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
 });
 
 const may_need_rebase = computed(
-    () => !isFastForwardMerge(props.pull_request) && are_merge_commits_allowed_in_repository
+    () => !isFastForwardMerge(props.pull_request) && are_merge_commits_allowed_in_repository,
 );
 const is_missing_ci_validation = computed(() => !isCIHappy(props.pull_request));
 
@@ -159,7 +159,7 @@ const getModalTitle = () => {
         "Please be aware of the following warning before you decide to merge:",
         "Please be aware of these %{ nb_warnings } warnings before you decide to merge:",
         nb_warnings,
-        { nb_warnings: String(nb_warnings) }
+        { nb_warnings: String(nb_warnings) },
     );
 };
 

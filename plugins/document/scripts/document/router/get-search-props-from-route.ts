@@ -30,7 +30,7 @@ import { isAdditionalFieldNumber } from "../helpers/additional-custom-properties
 export function getSearchPropsFromRoute(
     route: Route,
     root_id: number,
-    criteria: SearchCriteria
+    criteria: SearchCriteria,
 ): {
     folder_id: number;
     query: AdvancedSearchParams;
@@ -62,7 +62,7 @@ export function getSearchPropsFromRoute(
 
 function getCustomProperties(
     route: Route,
-    criteria: SearchCriteria
+    criteria: SearchCriteria,
 ): Record<AdditionalFieldNumber, string | SearchDate | null> {
     const additional: Record<AdditionalFieldNumber, string | SearchDate | null> = {};
 
@@ -76,7 +76,7 @@ function getCustomProperties(
         if (criterion.type === "date") {
             additional[key] = getSearchDate(
                 String(route.query[key] || ""),
-                String(route.query[key + "_op"] || "")
+                String(route.query[key + "_op"] || ""),
             );
         } else {
             additional[key] = String(route.query[key] || "");

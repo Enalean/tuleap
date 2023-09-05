@@ -26,7 +26,7 @@ const CELL_CONTENT_MAX_LENGTH = 32767;
 const CELL_TEXT_CONTENT_TRUNCATED_ENDING = "[...]";
 
 export function transformReportCellIntoASheetCell(
-    report_cell: ReportCell
+    report_cell: ReportCell,
 ): CellObjectWithExtraInfo {
     let sheet_cell: CellObjectWithExtraInfo;
     switch (report_cell.type) {
@@ -77,14 +77,14 @@ export function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
         text_value =
             text_value.substring(
                 0,
-                CELL_CONTENT_MAX_LENGTH - CELL_TEXT_CONTENT_TRUNCATED_ENDING.length
+                CELL_CONTENT_MAX_LENGTH - CELL_TEXT_CONTENT_TRUNCATED_ENDING.length,
             ) + CELL_TEXT_CONTENT_TRUNCATED_ENDING;
     }
     const text_value_by_lines = text_value.split("\n");
     const max_length_line = text_value_by_lines.reduce(
         (previous: string, current: string) =>
             previous.length > current.length ? previous : current,
-        ""
+        "",
     ).length;
     return {
         t: "s",

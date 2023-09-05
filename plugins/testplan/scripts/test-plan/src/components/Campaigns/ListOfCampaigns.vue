@@ -51,10 +51,12 @@ import type { CampaignActions } from "../../store/campaign/campaign-actions";
 import type { CampaignState } from "../../store/campaign/type";
 
 const CampaignEmptyState = defineAsyncComponent(
-    () => import(/* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue")
+    () =>
+        import(/* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue"),
 );
 const CampaignErrorState = defineAsyncComponent(
-    () => import(/* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue")
+    () =>
+        import(/* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue"),
 );
 
 const { is_loading, has_loading_error, campaigns } = useNamespacedState<
@@ -65,7 +67,7 @@ const show_create_modal = shallowRef<undefined | unknown>(undefined);
 
 function showCreateModal(): void {
     show_create_modal.value = defineAsyncComponent(
-        () => import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue")
+        () => import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue"),
     );
 }
 
@@ -75,7 +77,7 @@ loadCampaigns();
 
 onMounted(() => {
     const new_dropdown_link = document.querySelector(
-        "[data-shortcut-create-option][data-test-plan-create-new-campaign]"
+        "[data-shortcut-create-option][data-test-plan-create-new-campaign]",
     );
     if (new_dropdown_link instanceof HTMLAnchorElement) {
         new_dropdown_link.addEventListener("click", (event) => {

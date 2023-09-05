@@ -37,7 +37,7 @@ export function setBreadcrumbSettings(
     proj_url: string,
     proj_privacy: ProjectPrivacy,
     proj_flags: Array<ProjectFlag>,
-    proj_icon: string
+    proj_icon: string,
 ): void {
     administration_url = admin_url;
     repository_list_url = repositories_url;

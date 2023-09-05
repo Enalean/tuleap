@@ -108,7 +108,7 @@
                     />
                     {{
                         $gettext(
-                            "Create a merge request based on this new branch to the default branch"
+                            "Create a merge request based on this new branch to the default branch",
                         )
                     }}
                 </label>
@@ -212,12 +212,12 @@ const branch_name_placeholder = computed((): string => {
 const update_button_label = computed((): string =>
     must_create_gitlab_mr.value
         ? $gettext("Create branch and merge request")
-        : $gettext("Create branch")
+        : $gettext("Create branch"),
 );
 
 const createMergeRequest = (
     integration: GitlabIntegrationWithDefaultBranch,
-    branch: GitLabIntegrationCreatedBranchInformation
+    branch: GitLabIntegrationCreatedBranchInformation,
 ): ResultAsync<void, Fault> =>
     postGitlabMergeRequest(integration.id, props.artifact_id, branch.branch_name)
         .map(() => {
@@ -238,14 +238,14 @@ function onClickCreateBranch(): Promise<void> {
         .andThen((branch) => {
             const success_message = interpolate(
                 $gettext(
-                    'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
+                    'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>',
                 ),
                 {
                     branch_name: branch.branch_name,
                     branch_url: integration.gitlab_repository_url + "/-/tree/" + branch.branch_name, // The branch name is not escaped in the URL on purpose: GL expects it raw
                     repo_url: integration.gitlab_repository_url,
                     repo_name: integration.name,
-                }
+                },
             );
 
             addFeedback("info", success_message);
@@ -265,21 +265,21 @@ function onClickCreateBranch(): Promise<void> {
                 if (isBranchCreationFault(fault)) {
                     error_message.value = interpolate(
                         $gettext("An error occurred while creating %{ branch_name }: %{ error }"),
-                        { branch_name: props.branch_name, error: String(fault) }
+                        { branch_name: props.branch_name, error: String(fault) },
                     );
                     return;
                 }
                 if (isMergeRequestCreationFault(fault)) {
                     error_message.value = interpolate(
                         $gettext(
-                            "An error occurred while creating the associated merge request: %{ error }"
+                            "An error occurred while creating the associated merge request: %{ error }",
                         ),
-                        { error: String(fault) }
+                        { error: String(fault) },
                     );
                     return;
                 }
                 error_message.value = String(fault);
-            }
+            },
         );
 }
 </script>

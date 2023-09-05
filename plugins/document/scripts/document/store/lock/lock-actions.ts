@@ -41,7 +41,7 @@ export interface LockActions extends ActionTree<State, RootState> {
 
 export const lockDocument = async (
     context: ActionContext<State, State>,
-    item: Item
+    item: Item,
 ): Promise<void> => {
     try {
         if (isFile(item)) {
@@ -66,7 +66,7 @@ export const lockDocument = async (
 
 export const unlockDocument = async (
     context: ActionContext<State, State>,
-    item: Item
+    item: Item,
 ): Promise<void> => {
     try {
         if (isFile(item)) {

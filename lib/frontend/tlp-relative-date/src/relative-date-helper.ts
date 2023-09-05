@@ -38,7 +38,7 @@ export const PREFERENCE_CHOICES = [
 ];
 
 export function relativeDatePreference(
-    relative_dates_display: RelativeDatesDisplayPreference
+    relative_dates_display: RelativeDatesDisplayPreference,
 ): FirstDateShown {
     if (
         relative_dates_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN ||
@@ -52,7 +52,7 @@ export function relativeDatePreference(
 
 export function relativeDatePlacement(
     relative_dates_display: RelativeDatesDisplayPreference,
-    position_when_shown: "right" | "top"
+    position_when_shown: "right" | "top",
 ): OtherDatePlacement {
     if (
         relative_dates_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP ||

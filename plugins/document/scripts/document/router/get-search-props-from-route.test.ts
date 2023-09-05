@@ -30,7 +30,7 @@ describe("get-search-props-from-route", () => {
                     query: {},
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(folder_id).toBe(102);
         });
@@ -39,7 +39,7 @@ describe("get-search-props-from-route", () => {
             const { folder_id } = getSearchPropsFromRoute(
                 { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(folder_id).toBe(101);
         });
@@ -50,7 +50,7 @@ describe("get-search-props-from-route", () => {
             const { offset } = getSearchPropsFromRoute(
                 { params: {}, query: { offset: 50 } } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(offset).toBe(50);
         });
@@ -59,7 +59,7 @@ describe("get-search-props-from-route", () => {
             const { offset } = getSearchPropsFromRoute(
                 { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(offset).toBe(0);
         });
@@ -70,7 +70,7 @@ describe("get-search-props-from-route", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams());
         });
@@ -82,10 +82,10 @@ describe("get-search-props-from-route", () => {
                     query: { q: "Lorem ipsum" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(
-                buildAdvancedSearchParams({ global_search: "Lorem ipsum" })
+                buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
             );
         });
 
@@ -93,7 +93,7 @@ describe("get-search-props-from-route", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: { id: "123" } } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ id: "123" }));
         });
@@ -105,7 +105,7 @@ describe("get-search-props-from-route", () => {
                     query: { filename: "bob.jpg" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ filename: "bob.jpg" }));
         });
@@ -114,7 +114,7 @@ describe("get-search-props-from-route", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: { type: "wiki" } } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ type: "wiki" }));
         });
@@ -126,7 +126,7 @@ describe("get-search-props-from-route", () => {
                     query: { type: "unknown" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ type: "" }));
         });
@@ -138,7 +138,7 @@ describe("get-search-props-from-route", () => {
                     query: { title: "Lorem ipsum" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ title: "Lorem ipsum" }));
         });
@@ -150,7 +150,7 @@ describe("get-search-props-from-route", () => {
                     query: { description: "Lorem ipsum" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ description: "Lorem ipsum" }));
         });
@@ -162,7 +162,7 @@ describe("get-search-props-from-route", () => {
                     query: { owner: "jdoe" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ owner: "jdoe" }));
         });
@@ -176,12 +176,12 @@ describe("get-search-props-from-route", () => {
                         query: { create_date: "2022-01-30", create_date_op: operator },
                     } as unknown as RouteLocationNormalizedLoaded,
                     101,
-                    []
+                    [],
                 );
                 expect(query).toStrictEqual(
-                    buildAdvancedSearchParams({ create_date: { operator, date: "2022-01-30" } })
+                    buildAdvancedSearchParams({ create_date: { operator, date: "2022-01-30" } }),
                 );
-            }
+            },
         );
 
         it.each([["<"], ["="], [">"]])(
@@ -193,12 +193,12 @@ describe("get-search-props-from-route", () => {
                         query: { update_date: "2022-01-30", update_date_op: operator },
                     } as unknown as RouteLocationNormalizedLoaded,
                     101,
-                    []
+                    [],
                 );
                 expect(query).toStrictEqual(
-                    buildAdvancedSearchParams({ update_date: { operator, date: "2022-01-30" } })
+                    buildAdvancedSearchParams({ update_date: { operator, date: "2022-01-30" } }),
                 );
-            }
+            },
         );
 
         it.each([["<"], ["="], [">"]])(
@@ -210,14 +210,14 @@ describe("get-search-props-from-route", () => {
                         query: { obsolescence_date: "2022-01-30", obsolescence_date_op: operator },
                     } as unknown as RouteLocationNormalizedLoaded,
                     101,
-                    []
+                    [],
                 );
                 expect(query).toStrictEqual(
                     buildAdvancedSearchParams({
                         obsolescence_date: { operator, date: "2022-01-30" },
-                    })
+                    }),
                 );
-            }
+            },
         );
 
         it("should accept status parameter", () => {
@@ -227,7 +227,7 @@ describe("get-search-props-from-route", () => {
                     query: { status: "draft" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ status: "draft" }));
         });
@@ -244,15 +244,15 @@ describe("get-search-props-from-route", () => {
                     [
                         { name: "field_1", label: "Toto", type: "text" },
                         { name: "field_2", label: "Le choix dans la date", type: "date" },
-                    ]
+                    ],
                 );
                 expect(query).toStrictEqual(
                     buildAdvancedSearchParams({
                         field_1: "lorem",
                         field_2: { operator, date: "2022-01-30" },
-                    })
+                    }),
                 );
-            }
+            },
         );
 
         it("should add default value if custom properties are not part of the query", () => {
@@ -265,13 +265,13 @@ describe("get-search-props-from-route", () => {
                 [
                     { name: "field_1", label: "Toto", type: "text" },
                     { name: "field_2", label: "Le choix dans la date", type: "date" },
-                ]
+                ],
             );
             expect(query).toStrictEqual(
                 buildAdvancedSearchParams({
                     field_1: "",
                     field_2: null,
-                })
+                }),
             );
         });
 
@@ -282,7 +282,7 @@ describe("get-search-props-from-route", () => {
                     query: { field_1: "lorem", field_2: "2022-01-30", field_2_op: ">" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({}));
         });
@@ -296,7 +296,7 @@ describe("get-search-props-from-route", () => {
                     query: { sort: "title" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query.sort).toStrictEqual({ name: "title", order: "asc" });
         });
@@ -308,7 +308,7 @@ describe("get-search-props-from-route", () => {
                     query: { sort: "title:desc" },
                 } as unknown as RouteLocationNormalizedLoaded,
                 101,
-                []
+                [],
             );
             expect(query.sort).toStrictEqual({ name: "title", order: "desc" });
         });

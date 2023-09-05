@@ -62,7 +62,7 @@ describe("PullRequestErrorModal", () => {
         expect(modal_instance.show).not.toHaveBeenCalled();
         expect(modal_instance.addEventListener).toHaveBeenCalledWith(
             "tlp-modal-hidden",
-            expect.any(Function)
+            expect.any(Function),
         );
 
         wrapper.setProps({
@@ -86,7 +86,7 @@ describe("PullRequestErrorModal", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=pullrequest-error-modal-details]").exists()).toBe(true);
         expect(
-            wrapper.find("[data-test=pullrequest-error-modal-details-message]").text()
+            wrapper.find("[data-test=pullrequest-error-modal-details-message]").text(),
         ).toStrictEqual(String(fault));
     });
 

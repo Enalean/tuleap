@@ -140,10 +140,10 @@ describe("PostAction", () => {
         it("displays the content of the PostAction component", () => {
             expect(wrapper.find("[data-test=post-action-action-card]").exists()).toBe(true);
             expect(wrapper.findComponent(AddToBacklogAgileDashboardPostActionOption).exists()).toBe(
-                true
+                true,
             );
             expect(
-                wrapper.findComponent(AddToBacklogProgramManagementPostActionOption).exists()
+                wrapper.findComponent(AddToBacklogProgramManagementPostActionOption).exists(),
             ).toBe(true);
         });
     });

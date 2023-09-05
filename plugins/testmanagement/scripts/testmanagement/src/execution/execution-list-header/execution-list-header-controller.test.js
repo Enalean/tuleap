@@ -20,19 +20,15 @@ describe("ExecutionListHeaderController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _CampaignService_,
-            _ExecutionService_,
-            _$rootScope_,
-            _$q_
-        ) {
-            $controller = _$controller_;
-            CampaignService = _CampaignService_;
-            ExecutionService = _ExecutionService_;
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-        });
+        angular.mock.inject(
+            function (_$controller_, _CampaignService_, _ExecutionService_, _$rootScope_, _$q_) {
+                $controller = _$controller_;
+                CampaignService = _CampaignService_;
+                ExecutionService = _ExecutionService_;
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+            },
+        );
 
         ExecutionListHeaderController = $controller(BaseController, {
             CampaignService,
@@ -72,14 +68,14 @@ describe("ExecutionListHeaderController -", () => {
             CampaignService.triggerAutomatedTests.mockReturnValue(
                 $q.reject({
                     message: "Message: The requested URL returned error: 403 Forbidden",
-                })
+                }),
             );
 
             ExecutionListHeaderController.launchAutomatedTests();
             $rootScope.$apply();
 
             expect(setError).toHaveBeenCalledWith(
-                "Message: The requested URL returned error: 403 Forbidden"
+                "Message: The requested URL returned error: 403 Forbidden",
             );
             expect(ExecutionListHeaderController.triggered).toBe(false);
         });

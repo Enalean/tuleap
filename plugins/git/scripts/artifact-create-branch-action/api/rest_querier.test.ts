@@ -49,7 +49,7 @@ describe("API querier", () => {
                         limit: 50,
                         query: '{"scope":"project","allow_creation_of_branch":"acme"}',
                     },
-                })
+                }),
             );
             expect(result.isOk()).toBe(true);
         });

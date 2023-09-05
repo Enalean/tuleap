@@ -55,7 +55,7 @@ export default class SubtaskSkeletonBar extends Vue {
     randomStyleLeft(): string {
         const left = this.getRandomInt(
             40,
-            (this.time_period.units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX
+            (this.time_period.units.length - 3) * Styles.TIME_UNIT_WIDTH_IN_PX,
         );
 
         return `left: ${left}px;`;
@@ -64,7 +64,7 @@ export default class SubtaskSkeletonBar extends Vue {
     randomStyleWidth(): string {
         const width = this.getRandomInt(
             30,
-            (this.time_period.units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3
+            (this.time_period.units.length * Styles.TIME_UNIT_WIDTH_IN_PX) / 3,
         );
 
         return `width: ${width}px;`;

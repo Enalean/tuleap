@@ -23,7 +23,7 @@ const XML_MIME_TYPE = "text/xml";
 const TRACKER_DEFAULT_COLOR = "inca-silver";
 
 export async function extractNameAndShortnameFromXmlFile(
-    file: File
+    file: File,
 ): Promise<TrackerToBeCreatedMandatoryData> {
     if (file.type !== XML_MIME_TYPE) {
         return Promise.reject("Not a xml file");

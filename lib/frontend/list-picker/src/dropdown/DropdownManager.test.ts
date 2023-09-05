@@ -84,7 +84,7 @@ describe("dropdown-manager", () => {
             list,
             selection_element,
             scroll_manager,
-            field_focus_manager
+            field_focus_manager,
         );
     });
 
@@ -157,7 +157,7 @@ describe("dropdown-manager", () => {
 
     describe("dropdown positioning", () => {
         function getDropdownManagerWithSizedElements(
-            document_client_height: number
+            document_client_height: number,
         ): DropdownManager {
             const mocked_doc = {
                 documentElement: {
@@ -174,7 +174,7 @@ describe("dropdown-manager", () => {
                 list,
                 selection_container,
                 scroll_manager,
-                field_focus_manager
+                field_focus_manager,
             );
         }
 

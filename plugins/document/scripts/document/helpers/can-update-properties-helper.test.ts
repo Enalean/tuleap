@@ -26,7 +26,7 @@ describe("canUpdateProperties", () => {
         [
             Pick<ConfigurationState, "forbid_writers_to_update">,
             Pick<Item, "user_can_write" | "can_user_manage">,
-            boolean
+            boolean,
         ]
     >([
         [
@@ -69,8 +69,8 @@ describe("canUpdateProperties", () => {
         "Given configuration is %s and item is %s then expected result is %s",
         (configuration, item, expected) => {
             expect(canUpdateProperties(configuration.forbid_writers_to_update, item as Item)).toBe(
-                expected
+                expected,
             );
-        }
+        },
     );
 });

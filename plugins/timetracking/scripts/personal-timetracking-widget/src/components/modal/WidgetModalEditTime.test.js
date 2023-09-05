@@ -80,7 +80,7 @@ describe("Given a personal timetracking widget modal", () => {
             "2020-04-03",
             10,
             "00:10",
-            ""
+            "",
         );
         expect(wrapper.vm.$data.is_loading).toBe(true);
     });

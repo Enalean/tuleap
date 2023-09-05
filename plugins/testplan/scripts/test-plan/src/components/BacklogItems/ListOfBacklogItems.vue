@@ -50,13 +50,13 @@ const BacklogItemEmptyState = defineAsyncComponent(
     () =>
         import(
             /* webpackChunkName: "testplan-backlog-items-emptystate" */ "./BacklogItemEmptyState.vue"
-        )
+        ),
 );
 const BacklogItemErrorState = defineAsyncComponent(
     () =>
         import(
             /* webpackChunkName: "testplan-backlog-items-errorstate" */ "./BacklogItemErrorState.vue"
-        )
+        ),
 );
 
 const { is_loading, has_loading_error, backlog_items } = useNamespacedState<
@@ -65,7 +65,7 @@ const { is_loading, has_loading_error, backlog_items } = useNamespacedState<
 
 const { loadBacklogItems } = useNamespacedActions<Pick<BacklogItemActions, "loadBacklogItems">>(
     "backlog_item",
-    ["loadBacklogItems"]
+    ["loadBacklogItems"],
 );
 
 loadBacklogItems();

@@ -45,7 +45,7 @@ function ProjectService($q) {
                         compared_to: compared_to.item_id,
                     },
                 }),
-            })
+            }),
         );
     }
 
@@ -64,7 +64,7 @@ function ProjectService($q) {
                         remove_from: milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -78,7 +78,7 @@ function ProjectService($q) {
                         remove_from: milestone_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -88,7 +88,7 @@ function ProjectService($q) {
                 .then((response) => response.json())
                 .then((project) => {
                     return { data: project };
-                })
+                }),
         );
     }
 
@@ -110,7 +110,7 @@ function ProjectService($q) {
                         has_user_priority_change_permission:
                             backlog.has_user_priority_change_permission,
                     };
-                })
+                }),
         );
     }
 

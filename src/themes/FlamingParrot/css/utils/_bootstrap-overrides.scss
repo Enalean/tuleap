@@ -73,7 +73,9 @@ select {
     }
 
     &:focus {
-        transition: border-color 150ms linear, box-shadow 350ms;
+        transition:
+            border-color 150ms linear,
+            box-shadow 350ms;
         border-color: var(--tlp-main-color);
         box-shadow: var(--tlp-shadow-focus);
 
@@ -506,7 +508,9 @@ legend {
 }
 
 @mixin btn-hover($color) {
-    transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
+    transition:
+        box-shadow 75ms ease-in-out,
+        background 75ms ease-in-out,
         border-color 75ms ease-in-out;
     border-color: $color !important;
     background: $color !important;
@@ -710,7 +714,10 @@ select.input-small {
         text-shadow: none;
 
         &:hover {
-            transition: border-color 100ms linear, box-shadow 350ms, opacity 100ms ease-in-out;
+            transition:
+                border-color 100ms linear,
+                box-shadow 350ms,
+                opacity 100ms ease-in-out;
             opacity: 0.5;
         }
 

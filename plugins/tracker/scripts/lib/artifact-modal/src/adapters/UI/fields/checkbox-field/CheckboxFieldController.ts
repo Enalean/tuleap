@@ -25,14 +25,14 @@ export interface CheckboxFieldControllerType {
     setCheckboxValue: (
         value_id: number,
         value_index: number,
-        is_checked: boolean
+        is_checked: boolean,
     ) => CheckboxFieldPresenter;
 }
 
 export const CheckboxFieldController = (
     field: CheckboxFieldType,
     bind_value_ids: Array<number | null>,
-    is_field_disabled: boolean
+    is_field_disabled: boolean,
 ): CheckboxFieldControllerType => ({
     buildPresenter(): CheckboxFieldPresenter {
         return CheckboxFieldPresenter.fromField(field, bind_value_ids, is_field_disabled);
@@ -40,7 +40,7 @@ export const CheckboxFieldController = (
     setCheckboxValue(
         value_id: number,
         value_index: number,
-        is_checked: boolean
+        is_checked: boolean,
     ): CheckboxFieldPresenter {
         bind_value_ids[value_index] = is_checked ? value_id : null;
         return this.buildPresenter();

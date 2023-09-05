@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const rich_text_editor_creator = new RichTextEditorsCreatorWithoutImageUpload(
         document,
-        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
 
     rich_text_editor_creator.createTextFieldEditorForMassChange();

@@ -42,19 +42,21 @@ describe("ExecutionLinkIssueController", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _ExecutionRestService_,
-            _SharedPropertiesService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            ExecutionRestService = _ExecutionRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _ExecutionRestService_,
+                _SharedPropertiesService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                ExecutionRestService = _ExecutionRestService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
         $scope = $rootScope.$new();
@@ -132,7 +134,7 @@ describe("ExecutionLinkIssueController", () => {
             expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("52");
             expect(ExecutionLinkIssueController.issue_artifact).toBe(artifact);
             expect(ExecutionLinkIssueController.issue_artifact.tracker.color_name).toBe(
-                "flamingo_pink"
+                "flamingo_pink",
             );
         });
 
@@ -183,7 +185,7 @@ describe("ExecutionLinkIssueController", () => {
 
             expect(ExecutionRestService.linkIssue).toHaveBeenCalledWith(
                 issue_artifact.id,
-                modal_model.test_execution
+                modal_model.test_execution,
             );
             expect(modal_instance.tlp_modal.hide).toHaveBeenCalled();
             expect(modal_callback).toHaveBeenCalledWith(issue_artifact);

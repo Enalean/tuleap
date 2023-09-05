@@ -24,7 +24,7 @@ import { del, patch } from "@tuleap/tlp-fetch";
 
 export async function setPreference(
     context: ActionContext<UserState, RootState>,
-    preference: UserPreferenceValue
+    preference: UserPreferenceValue,
 ): Promise<void> {
     const user_id = context.state.user_id;
     if (!user_id) {
@@ -44,7 +44,7 @@ export async function setPreference(
 
 export async function deletePreference(
     context: ActionContext<UserState, RootState>,
-    preference: UserPreference
+    preference: UserPreference,
 ): Promise<void> {
     const user_id = context.state.user_id;
     if (!user_id) {
@@ -53,8 +53,8 @@ export async function deletePreference(
 
     await del(
         `/api/v1/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(
-            preference.key
-        )}`
+            preference.key,
+        )}`,
     ).catch(() => {
         // no display of error
         // we don't need to stop the flow of the users just because a user pref has not been saved

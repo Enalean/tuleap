@@ -36,7 +36,7 @@ function CampaignEditAutomatedCtrl(
     $state,
     SharedPropertiesService,
     CampaignService,
-    editCampaignAutomatedCallback
+    editCampaignAutomatedCallback,
 ) {
     let campaign_id;
     const self = this;
@@ -70,7 +70,7 @@ function CampaignEditAutomatedCtrl(
                 }
 
                 modal_instance.tlp_modal.hide();
-            }
+            },
         );
     }
 }

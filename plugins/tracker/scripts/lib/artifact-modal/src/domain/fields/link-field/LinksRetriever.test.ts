@@ -68,7 +68,7 @@ describe(`LinksRetriever`, () => {
         linked_artifacts_retriever =
             RetrieveLinkedArtifactsByTypeStub.withSuccessiveLinkedArtifacts(
                 [first_parent, second_parent],
-                [first_child, second_child]
+                [first_child, second_child],
             );
 
         links_adder = AddLinkedArtifactCollectionStub.withCount();
@@ -79,7 +79,7 @@ describe(`LinksRetriever`, () => {
             types_retriever,
             linked_artifacts_retriever,
             links_adder,
-            current_artifact_option
+            current_artifact_option,
         );
         return retriever.getLinkedArtifacts();
     };
@@ -117,7 +117,7 @@ describe(`LinksRetriever`, () => {
 
     it(`when there is an error during retrieval of the linked artifacts, it will return a Fault`, async () => {
         linked_artifacts_retriever = RetrieveLinkedArtifactsByTypeStub.withFault(
-            Fault.fromMessage("Network error")
+            Fault.fromMessage("Network error"),
         );
         const result = await getLinkedArtifacts();
         expect(result.isErr()).toBe(true);

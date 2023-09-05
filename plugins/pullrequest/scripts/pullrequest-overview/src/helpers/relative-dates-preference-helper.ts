@@ -24,7 +24,7 @@ import {
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export const isPreferenceAbsoluteDateFirst = (
-    relative_date_display_preference: RelativeDatesDisplayPreference
+    relative_date_display_preference: RelativeDatesDisplayPreference,
 ): boolean =>
     relative_date_display_preference === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN ||
     relative_date_display_preference === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP;

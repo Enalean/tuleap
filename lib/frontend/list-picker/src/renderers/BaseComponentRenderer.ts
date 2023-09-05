@@ -23,7 +23,7 @@ export class BaseComponentRenderer {
     constructor(
         private readonly doc: HTMLDocument,
         private readonly source_select_box: HTMLSelectElement,
-        private readonly options?: ListPickerOptions
+        private readonly options?: ListPickerOptions,
     ) {}
 
     public renderBaseComponent(): ListPickerComponent {
@@ -63,7 +63,7 @@ export class BaseComponentRenderer {
             list_picker_element,
             search_field_element,
             selection_element,
-            search_section_multiple
+            search_section_multiple,
         );
         element_attributes_updater();
 
@@ -149,7 +149,7 @@ export class BaseComponentRenderer {
         list_picker_element: Element,
         search_field_element: HTMLInputElement,
         selection_element: HTMLElement,
-        search_section_multiple: Element | null
+        search_section_multiple: Element | null,
     ): () => void {
         return (): void => {
             const LIST_PICKER_DISABLED_CLASS = "list-picker-disabled";
@@ -160,13 +160,13 @@ export class BaseComponentRenderer {
                 list_picker_element.classList.add(LIST_PICKER_DISABLED_CLASS);
                 search_field_element.setAttribute("disabled", "disabled");
                 search_section_multiple?.classList.add(
-                    LIST_PICKER_MULTIPLE_SEARCH_SECTION_DISABLED_CLASS
+                    LIST_PICKER_MULTIPLE_SEARCH_SECTION_DISABLED_CLASS,
                 );
             } else {
                 list_picker_element.classList.remove(LIST_PICKER_DISABLED_CLASS);
                 search_field_element.removeAttribute("disabled");
                 search_section_multiple?.classList.remove(
-                    LIST_PICKER_MULTIPLE_SEARCH_SECTION_DISABLED_CLASS
+                    LIST_PICKER_MULTIPLE_SEARCH_SECTION_DISABLED_CLASS,
                 );
             }
             this.updateSelectionElementAttributes(selection_element);

@@ -11,7 +11,7 @@ function WipHeaderCtrl(
     KanbanService,
     FilterTrackerReportService,
     SharedPropertiesService,
-    RestErrorService
+    RestErrorService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -47,7 +47,7 @@ function WipHeaderCtrl(
             },
             (response) => {
                 RestErrorService.reload(response);
-            }
+            },
         );
     }
 }

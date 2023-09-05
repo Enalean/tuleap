@@ -33,7 +33,7 @@ export interface NewCommentFormPresenter {
 export const NewCommentFormPresenter = {
     buildFromAuthor: (
         author: NewCommentFormAuthorPresenter,
-        config: NewCommentFormComponentConfig
+        config: NewCommentFormComponentConfig,
     ): NewCommentFormPresenter => ({
         comment: "",
         is_saving_comment: false,
@@ -42,7 +42,7 @@ export const NewCommentFormPresenter = {
     }),
     buildWithUpdatedComment: (
         presenter: NewCommentFormPresenter,
-        new_comment: string
+        new_comment: string,
     ): NewCommentFormPresenter => ({
         ...presenter,
         comment: new_comment,

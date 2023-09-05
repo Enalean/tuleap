@@ -173,8 +173,8 @@ describe("highlight-filter-template", () => {
     it("should escape regexp search terms", () => {
         expect(
             getElementFromTemplate(
-                highlightFilterElements("Prefix (Highlight) Suffix", "(Highlight)")
-            )
+                highlightFilterElements("Prefix (Highlight) Suffix", "(Highlight)"),
+            ),
         ).toMatchInlineSnapshot(`
             <div>
               

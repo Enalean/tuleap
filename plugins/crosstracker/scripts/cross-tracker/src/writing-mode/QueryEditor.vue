@@ -103,7 +103,7 @@ export default class QueryEditor extends Vue {
         this.code_mirror_instance = codeMirrorify(
             textarea_element,
             TQL_cross_tracker_autocomplete_keywords,
-            submitFormCallback
+            submitFormCallback,
         );
 
         if (!this.code_mirror_instance) {

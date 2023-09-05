@@ -47,7 +47,7 @@ const retry_options = {
 
 export async function saveRemainingEffort(
     context: ActionContext<SwimlaneState, RootState>,
-    new_remaining_effort: NewRemainingEffortPayload
+    new_remaining_effort: NewRemainingEffortPayload,
 ): Promise<void> {
     const card = new_remaining_effort.card;
     context.commit("startSavingRemainingEffort", new_remaining_effort);
@@ -65,7 +65,7 @@ export async function saveRemainingEffort(
 
 export async function saveCard(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: UpdateCardPayload
+    payload: UpdateCardPayload,
 ): Promise<void> {
     const card = payload.card;
     context.commit("startSavingCard", card);
@@ -89,7 +89,7 @@ export async function saveCard(
 
 export async function addCard(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: NewCardPayload
+    payload: NewCardPayload,
 ): Promise<void> {
     context.commit("startCreatingCard");
     try {
@@ -112,12 +112,12 @@ export async function addCard(
 async function injectNewCardInStore(
     context: ActionContext<SwimlaneState, RootState>,
     new_artifact_id: number,
-    swimlane: Swimlane
+    swimlane: Swimlane,
 ): Promise<Card> {
     const card_response = await get(
         `/api/v1/taskboard_cards/${encodeURIComponent(
-            new_artifact_id
-        )}?milestone_id=${encodeURIComponent(context.rootState.milestone_id)}`
+            new_artifact_id,
+        )}?milestone_id=${encodeURIComponent(context.rootState.milestone_id)}`,
     );
     const card: Card = await card_response.json();
     injectDefaultPropertiesInCard(card);
@@ -134,7 +134,7 @@ async function injectNewCardInStore(
 function linkCardToItsParent(
     context: ActionContext<SwimlaneState, RootState>,
     new_artifact_id: number,
-    payload: NewCardPayload
+    payload: NewCardPayload,
 ): Promise<void> {
     return pRetry(
         () =>
@@ -145,17 +145,17 @@ function linkCardToItsParent(
 
                 throw error;
             }),
-        retry_options
+        retry_options,
     );
 }
 
 async function tryToLinkCardToItsParent(
     context: ActionContext<SwimlaneState, RootState>,
     new_artifact_id: number,
-    payload: NewCardPayload
+    payload: NewCardPayload,
 ): Promise<void> {
     const parent_artifact_response = await get(
-        `/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`
+        `/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`,
     );
     const { values } = await parent_artifact_response.json();
 
@@ -172,15 +172,15 @@ async function tryToLinkCardToItsParent(
                 payload,
                 context.rootState.trackers,
                 new_artifact_id,
-                values
-            )
+                values,
+            ),
         ),
     });
 }
 
 export async function loadPossibleAssignees(
     context: ActionContext<SwimlaneState, RootState>,
-    tracker: Tracker
+    tracker: Tracker,
 ): Promise<void> {
     if (
         tracker.assigned_to_field === null ||
@@ -192,8 +192,8 @@ export async function loadPossibleAssignees(
     try {
         const response = await get(
             `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
-                tracker.assigned_to_field.id
-            )}`
+                tracker.assigned_to_field.id,
+            )}`,
         );
         const users: User[] = await response.json();
 
@@ -204,7 +204,7 @@ export async function loadPossibleAssignees(
                     ...user,
                     text: user.display_name,
                     id: Number(user.id),
-                })
+                }),
             ),
         });
     } catch (error) {

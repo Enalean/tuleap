@@ -32,7 +32,7 @@ import { planElementInProgramIncrement } from "./ProgramIncrement/Feature/featur
 export async function moveFeatureFromBacklogToProgramIncrement(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId,
-    plan_in_program_increment_id: number
+    plan_in_program_increment_id: number,
 ): Promise<void> {
     const data_element_id = handle_drop.dropped_element.dataset.elementId;
     if (!data_element_id) {
@@ -52,7 +52,7 @@ export async function moveFeatureFromBacklogToProgramIncrement(
         context.getters.getToBePlannedElementFromId(element_id),
         sibling_feature,
         context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
-        plan_in_program_increment_id
+        plan_in_program_increment_id,
     );
 
     context.commit("moveFeatureFromBacklogToProgramIncrement", feature_planning_change);
@@ -70,7 +70,7 @@ export async function moveFeatureFromBacklogToProgramIncrement(
 export async function moveFeatureFromProgramIncrementToBacklog(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId,
-    remove_from_program_increment_id: number
+    remove_from_program_increment_id: number,
 ): Promise<void> {
     const data_element_id = handle_drop.dropped_element.dataset.elementId;
     if (!data_element_id) {
@@ -80,7 +80,7 @@ export async function moveFeatureFromProgramIncrementToBacklog(
     let sibling_feature = null;
     if (handle_drop.next_sibling instanceof HTMLElement) {
         sibling_feature = context.getters.getSiblingFeatureFromProgramBacklog(
-            handle_drop.next_sibling
+            handle_drop.next_sibling,
         );
     }
 
@@ -97,7 +97,7 @@ export async function moveFeatureFromProgramIncrementToBacklog(
     const feature_planning_change = getFeaturePlanningChange(
         feature_to_unplan,
         sibling_feature,
-        context.state.to_be_planned_elements
+        context.state.to_be_planned_elements,
     );
 
     context.commit("addToBePlannedElement", feature_planning_change);
@@ -106,7 +106,7 @@ export async function moveFeatureFromProgramIncrementToBacklog(
         context.commit("startMoveElementInAProgramIncrement", element_id);
         await moveElementFromProgramIncrementToTopBackLog(
             handle_drop.program_id,
-            feature_planning_change
+            feature_planning_change,
         );
     } catch (error) {
         await handleModalError(context, error);
@@ -119,7 +119,7 @@ export async function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId,
     plan_in_program_increment_id: number,
-    remove_from_program_increment_id: number
+    remove_from_program_increment_id: number,
 ): Promise<void> {
     if (plan_in_program_increment_id === remove_from_program_increment_id) {
         return;
@@ -147,12 +147,12 @@ export async function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
             sibling_feature,
             context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
             remove_from_program_increment_id,
-            plan_in_program_increment_id
+            plan_in_program_increment_id,
         );
 
     context.commit(
         "moveFeatureFromProgramIncrementToAnotherProgramIncrement",
-        feature_planning_change
+        feature_planning_change,
     );
 
     try {

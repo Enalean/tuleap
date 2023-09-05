@@ -71,7 +71,7 @@ describe(`fetch-wrapper`, () => {
                 expect.objectContaining({
                     method: "GET",
                     credentials: "same-origin",
-                })
+                }),
             );
         });
 
@@ -82,7 +82,7 @@ describe(`fetch-wrapper`, () => {
 
             expect(window.fetch).toHaveBeenCalledWith(
                 expect.any(String),
-                expect.objectContaining({ cache: "force-cache", redirect: "error" })
+                expect.objectContaining({ cache: "force-cache", redirect: "error" }),
             );
         });
 
@@ -135,7 +135,7 @@ describe(`fetch-wrapper`, () => {
             mockFetchSuccess(globalFetch, { headers: { get: (): null => null } });
 
             await expect(wrapper.recursiveGet(url)).rejects.toThrow(
-                "No X-PAGINATION-SIZE field in the header."
+                "No X-PAGINATION-SIZE field in the header.",
             );
         });
 
@@ -214,7 +214,7 @@ describe(`fetch-wrapper`, () => {
 
         it(`rejects call when no request can be sent`, async () => {
             await expect(wrapper.recursiveGet(url, {}, 0)).rejects.toThrowError(
-                /At least one request/
+                /At least one request/,
             );
         });
     });
@@ -244,7 +244,7 @@ describe(`fetch-wrapper`, () => {
             await methodUnderTest(url, { params: {} });
             expect(window.fetch).toHaveBeenCalledWith(
                 "https://example.com/fetch-wrapper-test",
-                expect.any(Object)
+                expect.any(Object),
             );
         });
     });
@@ -267,11 +267,11 @@ describe(`fetch-wrapper`, () => {
                 expect.objectContaining({
                     method: expectedMethod,
                     credentials: "same-origin",
-                })
+                }),
             );
             const json = await response.json();
             expect(json.value).toBe("success");
-        }
+        },
     );
 
     it.each([[wrapper.put], [wrapper.patch], [wrapper.post]])(
@@ -288,9 +288,9 @@ describe(`fetch-wrapper`, () => {
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
-                expect.objectContaining(expected_options)
+                expect.objectContaining(expected_options),
             );
-        }
+        },
     );
 
     it.each([
@@ -318,10 +318,10 @@ describe(`fetch-wrapper`, () => {
                 expect.objectContaining({
                     method: expectedMethod,
                     credentials: "same-origin",
-                })
+                }),
             );
             expect(result.headers.get("X-PAGINATION-SIZE")).toBe("2");
-        }
+        },
     );
 
     it.each([
@@ -342,9 +342,9 @@ describe(`fetch-wrapper`, () => {
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
-                expect.objectContaining({ cache: "force-cache", redirect: "error" })
+                expect.objectContaining({ cache: "force-cache", redirect: "error" }),
             );
-        }
+        },
     );
 
     it.each([
@@ -369,6 +369,6 @@ describe(`fetch-wrapper`, () => {
             const expected_error = new Error("Not found");
             Object.assign(expected_error, { response: expected_response });
             await expect(methodUnderTest(url)).rejects.toEqual(expected_error);
-        }
+        },
     );
 });

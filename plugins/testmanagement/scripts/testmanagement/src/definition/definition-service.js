@@ -39,7 +39,7 @@ function DefinitionService($q, SharedPropertiesService) {
 
     function getDefinitions(project_id, report_id) {
         return $q.when(
-            tlpGetDefinitions(project_id, report_id).then((definitions) => categorize(definitions))
+            tlpGetDefinitions(project_id, report_id).then((definitions) => categorize(definitions)),
         );
     }
 
@@ -56,27 +56,27 @@ function DefinitionService($q, SharedPropertiesService) {
         return $q.when(
             recursiveGet(encodeURI(`/api/v1/trackers/${def_tracker_id}/tracker_reports`), {
                 params: { limit: 10 },
-            })
+            }),
         );
     }
 
     function getArtifactById(artifact_id) {
         return $q.when(
-            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json())
+            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json()),
         );
     }
 
     function getDefinitionById(artifact_id) {
         return $q.when(
             get(encodeURI(`/api/v1/testmanagement_definitions/${artifact_id}`)).then((response) =>
-                response.json()
-            )
+                response.json(),
+            ),
         );
     }
 
     function getTracker(tracker_id) {
         return $q.when(
-            get(encodeURI(`/api/v1/trackers/${tracker_id}`)).then((response) => response.json())
+            get(encodeURI(`/api/v1/trackers/${tracker_id}`)).then((response) => response.json()),
         );
     }
 }

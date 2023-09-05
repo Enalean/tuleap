@@ -100,9 +100,9 @@ describe("root-actions", () => {
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "setApplicationInErrorStateDueToRestError",
-                    expect.anything()
+                    expect.anything(),
                 );
-            }
+            },
         );
 
         it.each([[403], [404]])(
@@ -124,7 +124,7 @@ describe("root-actions", () => {
                 await Vue.nextTick();
 
                 expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState");
-            }
+            },
         );
 
         it("should store the tasks in the store", async () => {
@@ -198,13 +198,13 @@ describe("root-actions", () => {
                     [task_1, task_2],
                     {
                         root: true,
-                    }
+                    },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "setApplicationInErrorStateDueToRestError",
-                    expect.anything()
+                    expect.anything(),
                 );
-            }
+            },
         );
 
         it.each([[1], [2]])("should store the level %i iterations in the store", async (level) => {
@@ -234,7 +234,7 @@ describe("root-actions", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 `iterations/setLvl${level}Iterations`,
                 iterations,
-                { root: true }
+                { root: true },
             );
         });
     });

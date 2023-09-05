@@ -19,7 +19,7 @@
 
 export function buildIterationCreationUrl(
     program_increment_id: number,
-    iteration_tracker_id: number
+    iteration_tracker_id: number,
 ): string {
     const url_params = new URLSearchParams({
         "redirect-to-planned-iterations": "create",
@@ -33,7 +33,7 @@ export function buildIterationCreationUrl(
 
 export function buildIterationEditionUrl(
     iteration_id: number,
-    program_increment_id: number
+    program_increment_id: number,
 ): string {
     const url_params = new URLSearchParams({
         aid: String(iteration_id),

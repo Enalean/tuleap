@@ -41,8 +41,8 @@ describe("GitPermissions", () => {
                     status: 404,
                     json: (): Promise<{ error: string }> =>
                         Promise.resolve({ error: "Error during get permissions" }),
-                } as Response)
-            )
+                } as Response),
+            ),
         );
 
         wrapper.find("[data-test=git-permission-button-load]").trigger("click");
@@ -50,7 +50,7 @@ describe("GitPermissions", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=git-permission-error]").text()).toBe(
-            "Error during get permissions"
+            "Error during get permissions",
         );
     });
 

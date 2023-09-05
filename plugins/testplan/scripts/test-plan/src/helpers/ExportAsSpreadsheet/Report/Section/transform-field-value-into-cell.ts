@@ -23,7 +23,7 @@ import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-doc
 import type { TextChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 
 export function transformFieldValueIntoACell(
-    field_value: Readonly<ArtifactReportResponseFieldValue>
+    field_value: Readonly<ArtifactReportResponseFieldValue>,
 ): ReportCell | null {
     switch (field_value.type) {
         case "string":
@@ -63,7 +63,7 @@ function getCellFromPossibleNumber(n: number | null): NumberCell | EmptyCell {
 }
 
 export function transformTextFieldValueIntoACell(
-    text_field_value: TextChangesetValue
+    text_field_value: TextChangesetValue,
 ): TextCell | HTMLCell {
     if (text_field_value.format === "text") {
         return new TextCell(text_field_value.value ?? "");

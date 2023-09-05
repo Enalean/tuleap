@@ -31,7 +31,7 @@ export class DropdownManager {
         private readonly dropdown_list_element: Element,
         private readonly selection_element: HTMLElement,
         private readonly scrolling_manager: ScrollingManager,
-        private readonly field_focus_manager: FieldFocusManager
+        private readonly field_focus_manager: FieldFocusManager,
     ) {
         const resize_dropdown_callback = (entries: readonly ResizeObserverEntry[]): void => {
             if (!this.isDropdownOpen()) {

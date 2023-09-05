@@ -30,7 +30,7 @@ describe("Project Milestones Widget", function () {
 
             cy.get("[data-test=dashboard-widget-dashboardprojectmilestone]").should(
                 "contain",
-                "ProjectMilestones Widget Milestones"
+                "ProjectMilestones Widget Milestones",
             );
 
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
@@ -52,13 +52,13 @@ describe("Project Milestones Widget", function () {
             cy.get(".select2-search__field").type("ProjectMilestones{enter}");
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get(
-                "#select2-select-project-milestones-widget-results .select2-results__option--highlighted"
+                "#select2-select-project-milestones-widget-results .select2-results__option--highlighted",
             ).click();
             cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
             cy.get("[data-test=dashboard-widget-myprojectmilestone]").should(
                 "contain",
-                "ProjectMilestones Widget Milestones"
+                "ProjectMilestones Widget Milestones",
             );
 
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");

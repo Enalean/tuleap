@@ -54,7 +54,7 @@ describe(`CustomLicenseModalController`, () => {
         it(`will publish custom license information`, () => {
             expect(CustomLicenseModalController.title).toBe("Bitterheartedness tacheometer");
             expect(CustomLicenseModalController.content).toBe(
-                `<p>enwreathe unbordered precatively atypical betimes counterpray faucitis premake unsurging</p>`
+                `<p>enwreathe unbordered precatively atypical betimes counterpray faucitis premake unsurging</p>`,
             );
         });
     });

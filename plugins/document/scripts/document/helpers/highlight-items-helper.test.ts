@@ -100,7 +100,7 @@ describe("highlight-items-helper", () => {
 
             expect(closest_row.classList.contains("document-tree-item-highlighted")).toBe(true);
             expect(
-                closest_row.classList.contains("document-tree-item-hightlighted-forbidden")
+                closest_row.classList.contains("document-tree-item-hightlighted-forbidden"),
             ).toBe(true);
         });
 
@@ -116,7 +116,7 @@ describe("highlight-items-helper", () => {
             highlightItem(item, closest_row);
 
             expect(closest_row.classList.contains("quick-look-pane-highlighted-forbidden")).toBe(
-                true
+                true,
             );
         });
     });

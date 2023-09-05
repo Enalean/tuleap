@@ -92,11 +92,11 @@ describe("Show and hide platform banner", () => {
 
         local_document.close_button.click();
         expect(local_document.document.body.classList).not.toContain(
-            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS
+            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS,
         );
         expect(local_document.platform_banner.classList).toContain(PLATFORM_BANNER_HIDDEN_CLASS);
         expect(local_document.platform_banner_navbar_information.classList).not.toContain(
-            PLATFORM_BANNER_HIDDEN_CLASS
+            PLATFORM_BANNER_HIDDEN_CLASS,
         );
         expect(tlpPatchSpy).toHaveBeenCalledWith(
             `/api/users/${USER_ID}/preferences`,
@@ -105,7 +105,7 @@ describe("Show and hide platform banner", () => {
                     key: "platform_banner",
                     value: "hidden",
                 }),
-            })
+            }),
         );
 
         let click_event: Event | undefined;
@@ -113,18 +113,18 @@ describe("Show and hide platform banner", () => {
             "click",
             (event: Event) => {
                 click_event = event;
-            }
+            },
         );
 
         local_document.platform_banner_navbar_information.click();
         expect(local_document.document.body.classList).toContain(
-            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS
+            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS,
         );
         expect(local_document.platform_banner.classList).not.toContain(
-            PLATFORM_BANNER_HIDDEN_CLASS
+            PLATFORM_BANNER_HIDDEN_CLASS,
         );
         expect(local_document.platform_banner_navbar_information.classList).toContain(
-            PLATFORM_BANNER_HIDDEN_CLASS
+            PLATFORM_BANNER_HIDDEN_CLASS,
         );
         expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
         expect(click_event).toBeDefined();

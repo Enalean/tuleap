@@ -116,7 +116,7 @@ export default class TemplateSelection extends Vue {
     mounted(): void {
         this.external_templates.forEach((template) => {
             const category_templates = this.categorised_external_templates_map.get(
-                template.template_category.shortname
+                template.template_category.shortname,
             );
             if (category_templates) {
                 category_templates.push(template);

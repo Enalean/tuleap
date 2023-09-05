@@ -23,7 +23,7 @@ import { Classifier } from "./highlight/Classifier";
 import { HighlightedText } from "./highlight/HighlightedText";
 export function highlightFilterElements(
     content: string | number | undefined,
-    search: string | number | undefined
+    search: string | number | undefined,
 ): UpdateFunctionWithMethods<unknown> {
     const text_content = content?.toString();
     if (

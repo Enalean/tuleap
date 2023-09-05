@@ -43,12 +43,12 @@ export async function createExportReport(
     user_display_name: string,
     current_date: Date,
     backlog_items: ReadonlyArray<BacklogItem>,
-    campaigns: ReadonlyArray<Campaign>
+    campaigns: ReadonlyArray<Campaign>,
 ): Promise<ExportReport> {
     const planned_test_cases = getPlannedTestCasesAssociatedWithCampaignAndTestExec(
         gettext_provider,
         backlog_items,
-        campaigns
+        campaigns,
     );
 
     const requirements_section = buildRequirementsSection(gettext_provider, backlog_items);
@@ -61,7 +61,7 @@ export async function createExportReport(
                 project_name,
                 milestone_title,
                 user_display_name,
-                current_date
+                current_date,
             ),
             await requirements_section,
             buildTestResultsSection(gettext_provider, planned_test_cases),

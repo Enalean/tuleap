@@ -18,7 +18,7 @@ export class RealtimeMercure {
         url: string,
         eventDispatcher: (event: fetch.EventSourceMessage) => void,
         errorCallback: (err?: Error) => void,
-        sucessCallback: () => void
+        sucessCallback: () => void,
     ) {
         this.token = token;
         this.mercureEventSourceController = new AbortController();

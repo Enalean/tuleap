@@ -29,19 +29,19 @@ describe("Path", () => {
 
     it("Starts at the given position and automatically move forward to the right", () => {
         expect(removeExtraWhitespaces(startAt(50, 50, 100, 100).toString())).toMatchInlineSnapshot(
-            `"M50 50 L58 50"`
+            `"M50 50 L58 50"`,
         );
     });
 
     it("Displays an arrow on the left", () => {
         expect(
-            removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheLeftGap())
+            removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheLeftGap()),
         ).toMatchInlineSnapshot(`"M0 50 L8 50 L17 50 L12 45 M17 50 L12 55"`);
     });
 
     it("Displays an arrow on the right", () => {
         expect(
-            removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheRightGap())
+            removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheRightGap()),
         ).toMatchInlineSnapshot(`"M0 50 L8 50 L83 50 L78 45 M83 50 L78 55"`);
     });
 
@@ -54,37 +54,37 @@ describe("Path", () => {
 
         it("Turns to the left", () => {
             expect(removeExtraWhitespaces(path.turnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 58 34"`
+                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 58 34"`,
             );
         });
 
         it("Turns to the right", () => {
             expect(removeExtraWhitespaces(path.turnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 74 34"`
+                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 74 34"`,
             );
         });
 
         it("Forwards but stop before the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 25"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 9"`);
         });
 
         it("Half turns to the left", () => {
             expect(removeExtraWhitespaces(path.halfTurnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 58 34 L53 34 Q45 34, 45 42"`
+                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 58 34 L53 34 Q45 34, 45 42"`,
             );
         });
 
         it("Half turns to the right", () => {
             expect(removeExtraWhitespaces(path.halfTurnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 74 34 L79 34 Q87 34, 87 42"`
+                `"M50 50 L58 50 Q66 50, 66 42 Q66 34, 74 34 L79 34 Q87 34, 87 42"`,
             );
         });
     });
@@ -98,37 +98,37 @@ describe("Path", () => {
 
         it("Turns to the left", () => {
             expect(removeExtraWhitespaces(path.turnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42"`
+                `"M50 50 L58 50 Q66 50, 66 42"`,
             );
         });
 
         it("Turns to the right", () => {
             expect(removeExtraWhitespaces(path.turnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58"`
+                `"M50 50 L58 50 Q66 50, 66 58"`,
             );
         });
 
         it("Forwards but stop before the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 L75 50"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 L91 50"`);
         });
 
         it("Half turns to the left", () => {
             expect(removeExtraWhitespaces(path.halfTurnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 42 L66 37 Q66 29, 58 29"`
+                `"M50 50 L58 50 Q66 50, 66 42 L66 37 Q66 29, 58 29"`,
             );
         });
 
         it("Half turns to the right", () => {
             expect(removeExtraWhitespaces(path.halfTurnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 L66 63 Q66 71, 58 71"`
+                `"M50 50 L58 50 Q66 50, 66 58 L66 63 Q66 71, 58 71"`,
             );
         });
     });
@@ -142,37 +142,37 @@ describe("Path", () => {
 
         it("Turns to the left", () => {
             expect(removeExtraWhitespaces(path.turnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 74 66"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 74 66"`,
             );
         });
 
         it("Turns to the right", () => {
             expect(removeExtraWhitespaces(path.turnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66"`,
             );
         });
 
         it("Forwards but stop before the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 75"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 91"`);
         });
 
         it("Half turns to the left", () => {
             expect(removeExtraWhitespaces(path.halfTurnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 74 66 L79 66 Q87 66, 87 58"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 74 66 L79 66 Q87 66, 87 58"`,
             );
         });
 
         it("Half turns to the right", () => {
             expect(removeExtraWhitespaces(path.halfTurnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L53 66 Q45 66, 45 58"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L53 66 Q45 66, 45 58"`,
             );
         });
     });
@@ -186,37 +186,37 @@ describe("Path", () => {
 
         it("Turns to the left", () => {
             expect(removeExtraWhitespaces(path.turnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 74"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 74"`,
             );
         });
 
         it("Turns to the right", () => {
             expect(removeExtraWhitespaces(path.turnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 58"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 58"`,
             );
         });
 
         it("Forwards but stop before the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L25 66"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
-                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
+                removeExtraWhitespaces(path.forwardAndStopIntoGap().toString()),
             ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L9 66"`);
         });
 
         it("Half turns to the left", () => {
             expect(removeExtraWhitespaces(path.halfTurnLeft().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 74 L50 79 Q50 87, 58 87"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 74 L50 79 Q50 87, 58 87"`,
             );
         });
 
         it("Half turns to the right", () => {
             expect(removeExtraWhitespaces(path.halfTurnRight().toString())).toMatchInlineSnapshot(
-                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 58 L50 53 Q50 45, 58 45"`
+                `"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 Q50 66, 50 58 L50 53 Q50 45, 58 45"`,
             );
         });
     });

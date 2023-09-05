@@ -32,7 +32,7 @@ describe("add-original-filename-extension", () => {
             const file = new File([], dropped_filename);
 
             expect(addOriginalFilenameExtension("myfile", file)).toBe(expected);
-        }
+        },
     );
 
     it("does not throw when filename is not defined", () => {

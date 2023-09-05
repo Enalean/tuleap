@@ -23,10 +23,10 @@ export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
 
 export function allowToHideAndShowProjectBanner(
     mount_point: Document,
-    tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>
+    tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
 ): void {
     const project_banner_message_close_button = mount_point.getElementById(
-        PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID
+        PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID,
     );
 
     if (project_banner_message_close_button === null) {
@@ -36,7 +36,7 @@ export function allowToHideAndShowProjectBanner(
     const full_project_banner = project_banner_message_close_button.parentElement;
     if (full_project_banner === null) {
         throw new Error(
-            "Project banner close button is supposed to be contained in the project banner"
+            "Project banner close button is supposed to be contained in the project banner",
         );
     }
 
@@ -49,7 +49,7 @@ export function allowToHideAndShowProjectBanner(
     const user_id = project_banner_message_close_button.dataset.userId;
     if (project_id === undefined || user_id === undefined) {
         throw new Error(
-            "Project banner close button is supposed to have information about the current user and project"
+            "Project banner close button is supposed to have information about the current user and project",
         );
     }
     project_banner_message_close_button.addEventListener("click", async (): Promise<void> => {
@@ -58,7 +58,7 @@ export function allowToHideAndShowProjectBanner(
             mount_point.body,
             full_project_banner,
             Number.parseInt(project_id, 10),
-            Number.parseInt(user_id, 10)
+            Number.parseInt(user_id, 10),
         );
     });
 }
@@ -66,7 +66,7 @@ export function allowToHideAndShowProjectBanner(
 function toggleProjectBannerMessage(
     event: Event,
     document_body: HTMLElement,
-    full_project_banner: HTMLElement
+    full_project_banner: HTMLElement,
 ): void {
     event.preventDefault();
     window.scrollTo(0, 0);
@@ -79,7 +79,7 @@ async function hideProjectBannerMessage(
     document_body: HTMLElement,
     full_project_banner: HTMLElement,
     project_id: number,
-    user_id: number
+    user_id: number,
 ): Promise<void> {
     document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);

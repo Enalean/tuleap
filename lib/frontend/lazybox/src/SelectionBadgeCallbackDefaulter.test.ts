@@ -52,7 +52,7 @@ describe("SelectionBadgeCallbackDefaulter", () => {
         That should render a default primary outlined badge containing the item's template`, () => {
         const templating_callback = TemplatingCallbackStub.build();
         const callback = getSelectionBadgeCallback(
-            OptionsBuilder.withMultiple().withTemplatingCallback(templating_callback).build()
+            OptionsBuilder.withMultiple().withTemplatingCallback(templating_callback).build(),
         );
 
         const default_badge = callback(LazyboxItemStub.withDefaults({ value: { id: 12 } }));

@@ -49,7 +49,7 @@ describe("Time formatters", () => {
         it("When I call this method with an ISO string date, then it should return a human readable date in french format", () => {
             const formatted_date = formatDateUsingPreferredUserFormat(
                 "2018-12-11T12:00:00+01:00",
-                "fr-FR"
+                "fr-FR",
             );
 
             expect(formatted_date).toBe("11/12/2018");
@@ -58,7 +58,7 @@ describe("Time formatters", () => {
         it("When I call this method with an ISO string date, then it should return a human readable date depending in english format", () => {
             const formatted_date = formatDateUsingPreferredUserFormat(
                 "2018-11-12T12:00:00+01:00",
-                "en-US"
+                "en-US",
             );
 
             expect(formatted_date).toBe("11/12/2018");

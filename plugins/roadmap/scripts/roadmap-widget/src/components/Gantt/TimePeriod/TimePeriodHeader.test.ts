@@ -42,7 +42,7 @@ describe("TimePeriodHeader", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-30T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -50,7 +50,7 @@ describe("TimePeriodHeader", () => {
         });
 
         expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
-            new NbUnitsPerYear([[2020, 5]])
+            new NbUnitsPerYear([[2020, 5]]),
         );
         expect(wrapper.findComponent(TimePeriodUnits).props().time_units).toEqual([
             new Date("2020-03-01T00:00:00.000Z"),
@@ -75,7 +75,7 @@ describe("TimePeriodHeader", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2019-12-15T22:00:00.000Z"),
                             new Date("2021-05-15T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -87,7 +87,7 @@ describe("TimePeriodHeader", () => {
                 [2019, 1],
                 [2020, 12],
                 [2021, 6],
-            ])
+            ]),
         );
     });
 });

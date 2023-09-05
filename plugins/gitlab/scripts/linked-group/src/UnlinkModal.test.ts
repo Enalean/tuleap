@@ -63,7 +63,7 @@ describe(`UnlinkModal`, () => {
                         <button type="button" id="unlink-confirm">
                             <i id="unlink-icon" class="fa-solid ${HIDDEN_ICON_CLASSNAME}"></i>
                         </button>
-                    </div>`
+                    </div>`,
             );
 
             UnlinkModal(loc, doc, gettext, GROUP_LINK_ID).init();
@@ -96,7 +96,7 @@ describe(`UnlinkModal`, () => {
             assertLoadingState(true);
 
             const expected_url = new URL(
-                "https://gitlab.example.com/plugins/git/project_101/administration/gitlab/"
+                "https://gitlab.example.com/plugins/git/project_101/administration/gitlab/",
             );
             expected_url.searchParams.append("unlink_group", "1");
 

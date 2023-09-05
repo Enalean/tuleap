@@ -27,7 +27,7 @@ function DroppedService(KanbanService) {
                 kanban_id,
                 dropped_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
         }
         if (column_id === "backlog") {
@@ -35,7 +35,7 @@ function DroppedService(KanbanService) {
                 kanban_id,
                 dropped_item_id,
                 compared_to,
-                from_column
+                from_column,
             );
         }
 
@@ -44,7 +44,7 @@ function DroppedService(KanbanService) {
             column_id,
             dropped_item_id,
             compared_to,
-            from_column
+            from_column,
         );
     }
 

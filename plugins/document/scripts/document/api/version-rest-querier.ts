@@ -45,7 +45,7 @@ export function getAllFileVersionHistory(id: number): ResultAsync<readonly FileH
 }
 
 export function getAllEmbeddedFileVersionHistory(
-    id: number
+    id: number,
 ): ResultAsync<readonly EmbeddedFileVersion[], Fault> {
     return getAllJSON<EmbeddedFileVersion>(uri`/api/docman_embedded_files/${id}/versions`, {
         params: { limit: 50 },
@@ -67,7 +67,7 @@ export function deleteEmbeddedFileVersion(id: number): ResultAsync<Response, Fau
 }
 
 export function getEmbeddedFileVersionContent(
-    id: number
+    id: number,
 ): ResultAsync<EmbeddedFileSpecificVersionContent, Fault> {
     return getJSON(uri`/api/docman_embedded_file_versions/${id}/content`);
 }

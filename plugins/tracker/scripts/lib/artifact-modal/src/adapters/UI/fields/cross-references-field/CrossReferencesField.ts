@@ -69,7 +69,7 @@ export const CrossReferencesField = define<CrossReferencesField>({
                                     ${value.ref}
                                 </a>
                             </li>
-                        `
+                        `,
                     )}
                 </ul>
             `}

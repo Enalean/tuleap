@@ -60,7 +60,7 @@ import {
 } from "./merge-status-helper";
 const { $gettext } = useGettext();
 const are_merge_commits_allowed_in_repository = strictInject(
-    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY
+    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
 );
 
 const props = defineProps<{
@@ -74,13 +74,13 @@ const merge_status_warning = computed(() => {
 
     if (isUnknownMerge(props.pull_request)) {
         return $gettext(
-            "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
+            "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.",
         );
     }
 
     if (isSameReferenceMerge(props.pull_request)) {
         return $gettext(
-            "Pull request cannot be merged because source and destination branches have the very same content."
+            "Pull request cannot be merged because source and destination branches have the very same content.",
         );
     }
 
@@ -94,13 +94,13 @@ const merge_status_error = computed(() => {
 
     if (!isFastForwardMerge(props.pull_request) && !are_merge_commits_allowed_in_repository) {
         return $gettext(
-            "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request."
+            "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request.",
         );
     }
 
     if (isMergeConflicting(props.pull_request)) {
         return $gettext(
-            "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request."
+            "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.",
         );
     }
 
@@ -111,7 +111,7 @@ const is_section_displayed = computed(
     () =>
         isPullRequestAlreadyMerged(props.pull_request) ||
         isPullRequestAbandoned(props.pull_request) ||
-        (isPullRequestInReview(props.pull_request) && props.pull_request.user_can_merge)
+        (isPullRequestInReview(props.pull_request) && props.pull_request.user_can_merge),
 );
 </script>
 

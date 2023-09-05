@@ -50,7 +50,7 @@ export default () => {
 
             scope.$watchGroup(
                 [(scope) => scope.filter_terms, (scope) => scope.card_field],
-                handler.onWatch
+                handler.onWatch,
             );
         },
     };

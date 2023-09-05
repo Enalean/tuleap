@@ -19,7 +19,7 @@
 
 export async function getEmptyOfficeFileFromMimeType(
     locale: string,
-    mime_type: string
+    mime_type: string,
 ): Promise<{ file: File; badge_class: string; extension: string }> {
     let response: Response;
     let extension: string;
@@ -40,15 +40,11 @@ export async function getEmptyOfficeFileFromMimeType(
     /* eslint-disable no-unsanitized/method -- The imports are safe, they will be replaced by the bundler anyway */
     try {
         response = await fetch(
-            (
-                await import(`./empty_document_templates/${locale}/new.${extension}`)
-            ).default
+            (await import(`./empty_document_templates/${locale}/new.${extension}`)).default,
         );
     } catch (e) {
         response = await fetch(
-            (
-                await import(`./empty_document_templates/en-US/new.${extension}`)
-            ).default
+            (await import(`./empty_document_templates/en-US/new.${extension}`)).default,
         );
     }
     /* eslint-enable */

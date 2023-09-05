@@ -45,7 +45,7 @@ describe(`JWTService`, () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 

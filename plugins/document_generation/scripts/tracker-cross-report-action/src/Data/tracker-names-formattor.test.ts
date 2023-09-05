@@ -27,7 +27,7 @@ describe("tracker-names-formattor", () => {
     it("Formats tracker names", (): void => {
         const spy_extract_field_labels = vi.spyOn(
             report_field_label_extractor,
-            "extractFieldsLabels"
+            "extractFieldsLabels",
         );
         spy_extract_field_labels.mockReturnValue(["Something"]);
 

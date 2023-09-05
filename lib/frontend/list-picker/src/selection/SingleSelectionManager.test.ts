@@ -66,7 +66,7 @@ describe("SingleSelectionManager", () => {
             selection_container,
             placeholder,
             dropdown_manager,
-            items_map_manager
+            items_map_manager,
         );
         items_map_manager.refreshItemsMap();
         item_1 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
@@ -161,7 +161,7 @@ describe("SingleSelectionManager", () => {
             const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             const remove_item_button = selectOrThrow(
                 selection_container,
-                ".list-picker-selected-value-remove-button"
+                ".list-picker-selected-value-remove-button",
             );
 
             // Now unselect the item
@@ -179,7 +179,7 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item_1.element);
             const remove_item_button = selectOrThrow(
                 selection_container,
-                ".list-picker-selected-value-remove-button"
+                ".list-picker-selected-value-remove-button",
             );
 
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
@@ -286,7 +286,7 @@ describe("SingleSelectionManager", () => {
                 expectItemToBeSelected(new_item_2);
                 expect(selection_container.contains(placeholder)).toBe(false);
                 expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-            }
+            },
         );
     });
 });

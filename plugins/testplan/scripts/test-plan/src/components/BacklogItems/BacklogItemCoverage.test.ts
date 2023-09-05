@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("BacklogItemCoverage", () => {
     function createWrapper(
-        backlog_item: BacklogItem
+        backlog_item: BacklogItem,
     ): VueWrapper<InstanceType<typeof BacklogItemCoverage>> {
         return shallowMount(BacklogItemCoverage, {
             props: {
@@ -93,7 +93,7 @@ describe("BacklogItemCoverage", () => {
         expect(
             wrapper
                 .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-failed")
+                .classes("test-plan-backlog-item-coverage-icon-failed"),
         ).toBe(true);
     });
 
@@ -112,7 +112,7 @@ describe("BacklogItemCoverage", () => {
         expect(
             wrapper
                 .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-blocked")
+                .classes("test-plan-backlog-item-coverage-icon-blocked"),
         ).toBe(true);
     });
 
@@ -131,7 +131,7 @@ describe("BacklogItemCoverage", () => {
         expect(
             wrapper
                 .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-notrun")
+                .classes("test-plan-backlog-item-coverage-icon-notrun"),
         ).toBe(true);
     });
 
@@ -150,7 +150,7 @@ describe("BacklogItemCoverage", () => {
         expect(
             wrapper
                 .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-passed")
+                .classes("test-plan-backlog-item-coverage-icon-passed"),
         ).toBe(true);
     });
 });

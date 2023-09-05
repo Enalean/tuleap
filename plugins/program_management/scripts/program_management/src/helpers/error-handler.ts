@@ -24,7 +24,7 @@ import type { State } from "../type";
 
 export async function handleError(
     rest_error: unknown,
-    gettext_provider: VueGettextProvider
+    gettext_provider: VueGettextProvider,
 ): Promise<string> {
     if (!(rest_error instanceof FetchWrapperError)) {
         return gettext_provider.$gettext("Oops, an error occurred!");
@@ -45,7 +45,7 @@ export async function handleError(
 
 export async function handleModalError(
     context: ActionContext<State, State>,
-    rest_error: unknown
+    rest_error: unknown,
 ): Promise<void> {
     try {
         if (!(rest_error instanceof FetchWrapperError)) {

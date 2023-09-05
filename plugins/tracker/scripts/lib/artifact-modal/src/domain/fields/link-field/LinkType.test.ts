@@ -37,7 +37,7 @@ describe(`LinkType`, () => {
         `isReverseChild() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
             expect(LinkType.isReverseChild(link_type)).toBe(expected_return);
-        }
+        },
     );
 
     it.each([
@@ -48,7 +48,7 @@ describe(`LinkType`, () => {
         `isForwardChild() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
             expect(LinkType.isForwardChild(link_type)).toBe(expected_return);
-        }
+        },
     );
 
     it.each([
@@ -59,6 +59,6 @@ describe(`LinkType`, () => {
         `isMirroredMilestone() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
             expect(LinkType.isMirroredMilestone(link_type)).toBe(expected_return);
-        }
+        },
     );
 });

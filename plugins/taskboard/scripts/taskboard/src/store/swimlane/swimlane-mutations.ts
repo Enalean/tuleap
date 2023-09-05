@@ -49,7 +49,7 @@ export function refreshCard(state: SwimlaneState, payload: RefreshCardMutationPa
     if (state_card.remaining_effort !== null) {
         remaining_effort = Object.assign(
             state_card.remaining_effort,
-            payload.refreshed_card.remaining_effort
+            payload.refreshed_card.remaining_effort,
         );
     }
     Object.assign(state_card, payload.refreshed_card, { remaining_effort });
@@ -65,7 +65,7 @@ export function endLoadingSwimlanes(state: SwimlaneState): void {
 
 export function addChildrenToSwimlane(
     state: SwimlaneState,
-    payload: AddChildrenToSwimlanePayload
+    payload: AddChildrenToSwimlanePayload,
 ): void {
     const state_swimlane = findSwimlane(state, payload.swimlane);
     const new_swimlane: Swimlane = {

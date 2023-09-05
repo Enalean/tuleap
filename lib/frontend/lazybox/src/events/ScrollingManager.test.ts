@@ -56,7 +56,7 @@ describe("ScrollingManager", () => {
 
                     const scrolling_manager = new ScrollingManager(wrapper_element);
                     expect(
-                        scrolling_manager.findLazyboxFirstScrollableParent(wrapper_element)
+                        scrolling_manager.findLazyboxFirstScrollableParent(wrapper_element),
                     ).toEqual(modal_section);
                 });
             });

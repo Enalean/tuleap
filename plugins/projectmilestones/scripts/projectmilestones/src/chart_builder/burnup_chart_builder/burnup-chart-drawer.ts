@@ -41,7 +41,7 @@ const DEFAULT_TOTAL_EFFORT = 5;
 export function createBurnupChart(
     chart_container: HTMLElement,
     chart_props: ChartPropsWithoutTooltip,
-    generic_burnup_data: GenericBurnupData
+    generic_burnup_data: GenericBurnupData,
 ): void {
     const x_axis_tick_values = getDaysToDisplay(generic_burnup_data),
         displayable_data = getDisplayableDataForBurnup(generic_burnup_data.points_with_date),
@@ -73,13 +73,13 @@ export function createBurnupChart(
             chart_props,
             { x_scale, y_scale },
             nb_ticks,
-            tick_padding
+            tick_padding,
         );
 
         drawIdealLine(
             svg_burnup,
             { x_scale, y_scale },
-            { line_start: 0, line_end: getLastDataTotal() }
+            { line_start: 0, line_end: getLastDataTotal() },
         );
         select(chart_container).selectAll("circle").remove();
         select(chart_container).selectAll(".chart-y-axis > .tick > line").remove();
@@ -100,7 +100,7 @@ export function createBurnupChart(
             { x_scale, y_scale },
             displayable_data,
             "progression",
-            curveMonotoneX
+            curveMonotoneX,
         );
     }
 

@@ -127,7 +127,7 @@ export default class EditAccessTokenGitlabModal extends Vue {
             this.$gettext("Token of GitLab repository %{ label } has been successfully updated."),
             {
                 label: this.repository.normalized_path,
-            }
+            },
         );
     }
 

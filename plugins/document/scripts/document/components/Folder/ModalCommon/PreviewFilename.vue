@@ -47,7 +47,7 @@ const preview = computed((): string => {
             .replace("${VERSION_NAME}", "")
             // eslint-disable-next-line no-template-curly-in-string
             .replace("${STATUS}", props.item.status),
-        props.item.file_properties.file
+        props.item.file_properties.file,
     );
 });
 

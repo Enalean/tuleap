@@ -56,16 +56,16 @@ describe("add-to-help-modal.ts", () => {
         specific_shortcuts_section = doc.createElement("section");
 
         vi.spyOn(getter_shortcuts_group_head, "createShortcutsGroupHead").mockReturnValue(
-            shortcuts_group_head
+            shortcuts_group_head,
         );
         vi.spyOn(getter_shortcuts_group_table, "createShortcutsGroupTable").mockReturnValue(
-            shortcuts_group_table
+            shortcuts_group_table,
         );
         vi.spyOn(getter_shortcut_section, "getGlobalShortcutsSection").mockReturnValue(
-            global_shortcuts_section
+            global_shortcuts_section,
         );
         vi.spyOn(getter_shortcut_section, "getSpecificShortcutsSection").mockReturnValue(
-            specific_shortcuts_section
+            specific_shortcuts_section,
         );
     });
 
@@ -73,7 +73,7 @@ describe("add-to-help-modal.ts", () => {
         it("adds to the global shortcuts section in the shortcuts modal if GLOBAL_SCOPE is provided", () => {
             const get_global_shortcuts_section = vi.spyOn(
                 getter_shortcut_section,
-                "getGlobalShortcutsSection"
+                "getGlobalShortcutsSection",
             );
             addShortcutsGroupToShortcutsModal(doc, shortcuts_group, GLOBAL_SCOPE);
 
@@ -83,7 +83,7 @@ describe("add-to-help-modal.ts", () => {
         it("adds to the specific shortcuts section in the shortcuts modal if no scope is provided", () => {
             const get_specific_shortcuts_section = vi.spyOn(
                 getter_shortcut_section,
-                "getSpecificShortcutsSection"
+                "getSpecificShortcutsSection",
             );
             addShortcutsGroupToShortcutsModal(doc, shortcuts_group);
 
@@ -94,7 +94,7 @@ describe("add-to-help-modal.ts", () => {
             shortcuts_template.remove();
             const get_specific_shortcuts_section = vi.spyOn(
                 getter_shortcut_section,
-                "getSpecificShortcutsSection"
+                "getSpecificShortcutsSection",
             );
             addShortcutsGroupToShortcutsModal(doc, shortcuts_group);
 

@@ -21,7 +21,7 @@ import { showLoaderWhileProcessing } from "./show-loader-processing";
 
 export function setupLinkForTheSpreadsheetExport(): void {
     const generate_spreadsheet_link = document.getElementById(
-        "tracker-document-generation-xlsx-all-report-columns"
+        "tracker-document-generation-xlsx-all-report-columns",
     );
     if (!generate_spreadsheet_link) {
         throw new Error("Missing generate spreadsheet all report columns button");

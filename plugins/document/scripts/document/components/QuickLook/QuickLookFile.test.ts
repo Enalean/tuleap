@@ -66,7 +66,7 @@ describe("QuickLookFile", () => {
         });
 
         const cta = wrapper.find<HTMLAnchorElement>(
-            "[data-test=document-quick-look-document-cta-open]"
+            "[data-test=document-quick-look-document-cta-open]",
         ).element;
         expect(cta.href).toContain("/path/to/open/119");
     });

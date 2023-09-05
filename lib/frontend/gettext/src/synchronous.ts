@@ -24,7 +24,7 @@ import { DEFAULT_LANGUAGE } from "./constants";
 export function initGettextSync(
     domain: string,
     translations: GettextParserPoFile | Record<string, GettextParserPoFile>,
-    locale = DEFAULT_LANGUAGE
+    locale = DEFAULT_LANGUAGE,
 ): GettextProvider {
     const gettext_provider = new Gettext();
 
@@ -43,7 +43,7 @@ export function initGettextSync(
 }
 
 function isGettextParserPoFile(
-    translations: GettextParserPoFile | Record<string, GettextParserPoFile>
+    translations: GettextParserPoFile | Record<string, GettextParserPoFile>,
 ): translations is GettextParserPoFile {
     return "translations" in translations;
 }

@@ -95,7 +95,7 @@ describe(`EditConfigurationModal`, () => {
                   <i id="edit-icon" class="${HIDDEN_ICON_CLASSNAME}"></i>
                 </button>
               </form>
-            </div>`
+            </div>`,
         );
 
         modal_instance = {
@@ -168,7 +168,7 @@ describe(`EditConfigurationModal`, () => {
             const allow_closure_checkbox = selectOrThrow(
                 edit_modal,
                 ALLOW_ARTIFACT_CLOSURE_INPUT_SELECTOR,
-                HTMLInputElement
+                HTMLInputElement,
             );
             prefix_input = selectOrThrow(edit_modal, PREFIX_INPUT_SELECTOR, HTMLInputElement);
             allow_closure_checkbox.checked = true;
@@ -182,7 +182,7 @@ describe(`EditConfigurationModal`, () => {
             expect(confirm_button.disabled).toBe(is_loading);
             edit_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
                 expect(form_element.classList.contains(FORM_ELEMENT_DISABLED_CLASSNAME)).toBe(
-                    is_loading
+                    is_loading,
                 );
             });
             edit_modal.querySelectorAll(INPUTS_SELECTOR).forEach((input) => {
@@ -213,7 +213,7 @@ describe(`EditConfigurationModal`, () => {
             });
             const allow_closure_display = selectOrThrow(
                 body,
-                ALLOW_ARTIFACT_CLOSURE_DISPLAY_SELECTOR
+                ALLOW_ARTIFACT_CLOSURE_DISPLAY_SELECTOR,
             );
             const prefix_display = selectOrThrow(body, PREFIX_DISPLAY_SELECTOR);
             expect(allow_closure_display.textContent).toBe("Yes");

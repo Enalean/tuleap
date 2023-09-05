@@ -27,7 +27,7 @@ import { createTestingPinia } from "@pinia/testing";
 
 export function getGlobalTestOptions(
     store_options: StoreOptions<RootState>,
-    pinia?: Pinia
+    pinia?: Pinia,
 ): MountingOptions<unknown>["global"] {
     return {
         plugins: [

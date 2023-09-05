@@ -45,10 +45,10 @@ describe("CreationModalPermissionsSection", () => {
         });
 
         expect(wrapper.find(".document-permissions-creation-modal-title-spinner").exists()).toBe(
-            true
+            true,
         );
         expect(
-            wrapper.find("[data-test=document-creation-permissions-section-selector]").exists()
+            wrapper.find("[data-test=document-creation-permissions-section-selector]").exists(),
         ).toBe(false);
     });
 
@@ -63,10 +63,10 @@ describe("CreationModalPermissionsSection", () => {
         });
 
         expect(wrapper.find(".document-permissions-creation-modal-title-spinner").exists()).toBe(
-            false
+            false,
         );
         expect(
-            wrapper.find("[data-test=document-creation-permissions-section-selector]").exists()
+            wrapper.find("[data-test=document-creation-permissions-section-selector]").exists(),
         ).toBe(true);
     });
 });

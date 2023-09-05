@@ -25,7 +25,7 @@ import WritingCrossTrackerReport from "./writing-cross-tracker-report";
 
 describe("QueryEditor", () => {
     async function instantiateComponent(
-        writingCrossTrackerReport: WritingCrossTrackerReport
+        writingCrossTrackerReport: WritingCrossTrackerReport,
     ): Promise<Wrapper<QueryEditor>> {
         return shallowMount(QueryEditor, {
             propsData: {

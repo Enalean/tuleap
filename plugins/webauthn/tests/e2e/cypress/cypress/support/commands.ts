@@ -44,9 +44,9 @@ Cypress.Commands.add("createAuthenticator", () =>
                         isUserVerified: true,
                     },
                 },
-            })
+            }),
         )
-        .then((result) => result.authenticatorId)
+        .then((result) => result.authenticatorId),
 );
 
 export {};

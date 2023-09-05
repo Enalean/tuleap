@@ -36,7 +36,7 @@ describe("SelectionBadge", () => {
                     outline,
                 } as HostElement;
                 expect(getBadgeClasses(host)["tlp-badge-outline"]).toBe(outline);
-            }
+            },
         );
 
         it.each([["primary"], ["fiesta-red"]])(
@@ -46,7 +46,7 @@ describe("SelectionBadge", () => {
                     color: color,
                 } as HostElement;
                 expect(Object.keys(getBadgeClasses(host))).toContain(`tlp-badge-${color}`);
-            }
+            },
         );
     });
 

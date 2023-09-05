@@ -28,5 +28,5 @@ import { createPopover as createPopoverImplementation } from "./popovers";
 export const createPopover = (
     popover_trigger: HTMLElement,
     popover_content: HTMLElement,
-    options?: PopoverOptions
+    options?: PopoverOptions,
 ): Popover => createPopoverImplementation(document, popover_trigger, popover_content, options);

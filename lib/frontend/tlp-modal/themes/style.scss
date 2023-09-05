@@ -101,7 +101,10 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     width: 1rem;
     height: 1rem;
     padding: 0;
-    transition: border-color 100ms linear, box-shadow 350ms, opacity 100ms ease-in-out;
+    transition:
+        border-color 100ms linear,
+        box-shadow 350ms,
+        opacity 100ms ease-in-out;
     border: 0;
     border-radius: 50%;
     background-color: unset;
@@ -109,12 +112,18 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     cursor: pointer;
 
     &:hover {
-        transition: border-color 100ms linear, box-shadow 350ms, opacity 100ms ease-in-out;
+        transition:
+            border-color 100ms linear,
+            box-shadow 350ms,
+            opacity 100ms ease-in-out;
         opacity: 0.5;
     }
 
     &:focus {
-        transition: border-color 100ms linear, box-shadow 350ms, opacity 100ms ease-in-out;
+        transition:
+            border-color 100ms linear,
+            box-shadow 350ms,
+            opacity 100ms ease-in-out;
         border-color: var(--tlp-main-color);
         box-shadow: var(--tlp-shadow-focus);
     }

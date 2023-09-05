@@ -36,7 +36,7 @@ export interface MarkdownTextEditorArea extends HTMLOrTextEditorArea {
 
 export const renderHTMLOrTextEditor = (
     presenter: HTMLOrTextEditorArea,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): void => {
     render(
         html`
@@ -45,23 +45,23 @@ export const renderHTMLOrTextEditor = (
             </div>
             ${presenter.textarea}
         `,
-        presenter.mount_point
+        presenter.mount_point,
     );
 };
 
 export const renderMarkdownEditor = (
     presenter: MarkdownTextEditorArea,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): void => {
     render(
         html`
             <div class="rte_format">
                 ${gettext_provider.gettext(
-                    "Format:"
+                    "Format:",
                 )}${presenter.selectbox}${presenter.hidden_format_input}${presenter.preview_button}${presenter.help_button}
             </div>
             ${presenter.textarea}${presenter.preview_area}
         `,
-        presenter.mount_point
+        presenter.mount_point,
     );
 };

@@ -25,7 +25,7 @@ import * as actions from "./column-actions";
 import * as getters from "./column-getters";
 
 export function createColumnModule(
-    initial_column_state: ColumnState
+    initial_column_state: ColumnState,
 ): Module<ColumnState, RootState> {
     return {
         namespaced: true,

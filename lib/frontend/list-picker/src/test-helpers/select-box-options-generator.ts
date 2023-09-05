@@ -48,7 +48,7 @@ export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement):
         data-item-id="list-picker-item-bad_colored"
         data-color-value="#ffffff"
       ></option>
-    `
+    `,
     );
 }
 
@@ -66,6 +66,6 @@ export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement)
         <option value="value_4" data-item-id="list-picker-item-value4">Value 4</option>
         <option value="value_5" data-item-id="list-picker-item-value5" disabled="disabled">Value 5</option>
       </optgroup>
-    `
+    `,
     );
 }

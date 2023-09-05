@@ -43,13 +43,13 @@ export const DISPLAY_TULEAP_API_ERROR: StrictInjectionKey<DisplayErrorCallback> 
 export const DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT: StrictInjectionKey<DisplayNewlyCreatedGlobalCommentCallback> =
     Symbol("display_newly_created_global_comment");
 export const ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY: StrictInjectionKey<boolean> = Symbol(
-    "are_merge_commits_allowed_in_repository"
+    "are_merge_commits_allowed_in_repository",
 );
 export const POST_PULL_REQUEST_UPDATE_CALLBACK: StrictInjectionKey<PostPullRequestUpdateCallback> =
     Symbol("post_pull_request_update_callback");
 
 export const IS_COMMENTS_MARKDOWN_MODE_ENABLED: StrictInjectionKey<boolean> = Symbol(
-    "is_comments_markdown_mode_enabled"
+    "is_comments_markdown_mode_enabled",
 );
 
 export const VIEW_OVERVIEW_NAME = "overview";

@@ -52,7 +52,7 @@ describe("FolderCellTitle", () => {
 
     function getWrapper(
         is_expanded: boolean,
-        is_uploading: boolean
+        is_uploading: boolean,
     ): VueWrapper<InstanceType<typeof FolderCellTitle>> {
         get_sub_folder_content.mockReset();
 
@@ -109,7 +109,7 @@ describe("FolderCellTitle", () => {
         const toggle = wrapper.get("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-down");
         expect(wrapper.get("[data-test=document-folder-icon-open]").classes()).toContain(
-            "fa-folder-open"
+            "fa-folder-open",
         );
     });
 

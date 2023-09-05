@@ -33,7 +33,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/trackers/workflow-transitions/"
+        "/assets/trackers/workflow-transitions/",
     ),
     externals: {
         tlp: "tlp",

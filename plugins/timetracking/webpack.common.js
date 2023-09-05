@@ -22,7 +22,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/timetracking/"
+    "/assets/timetracking/",
 );
 
 let entry_points = {

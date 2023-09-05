@@ -89,7 +89,7 @@ export default {
         const title = sprintf(
             this.$gettext("Baselines comparison #%u/#%u"),
             this.comparison.base_baseline_id,
-            this.comparison.compared_to_baseline_id
+            this.comparison.compared_to_baseline_id,
         );
         this.$emit("title", title);
     },

@@ -58,7 +58,7 @@ function MainController($element, $window, SharedPropertiesService, amMoment, ge
         SharedPropertiesService.setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog);
         setAccessibilityMode(planning_init_data.userAccessibilityMode === "1");
         SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
-            JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay)
+            JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay),
         );
         const is_split_feature_flag_enabled = planning_init_data.isSplitFeatureFlagEnabled === "1";
         SharedPropertiesService.setIsSplitFeatureFlagEnabled(is_split_feature_flag_enabled);

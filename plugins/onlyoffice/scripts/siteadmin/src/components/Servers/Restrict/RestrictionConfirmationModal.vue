@@ -42,12 +42,12 @@
             <p>
                 {{
                     $gettext(
-                        "You are about to disallow access to the server for every projects on the platform."
+                        "You are about to disallow access to the server for every projects on the platform.",
                     )
                 }}
                 {{
                     $gettext(
-                        "This will induce loosing of modifications for users that are currently using it."
+                        "This will induce loosing of modifications for users that are currently using it.",
                     )
                 }}
             </p>

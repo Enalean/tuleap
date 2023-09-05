@@ -100,19 +100,19 @@ describe("Show and hide project banner", () => {
 
         local_document.close_button.click();
         expect(local_document.document.body.classList).not.toContain(
-            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS,
         );
         expect(local_document.project_banner.classList).toContain(PROJECT_BANNER_HIDDEN_CLASS);
         expect(tlpPatchSpy).toHaveBeenCalledWith(
             `/api/users/${USER_ID}/preferences`,
             expect.objectContaining({
                 body: expect.stringContaining(PROJECT_ID),
-            })
+            }),
         );
 
         local_document.project_sidebar.dispatchEvent(new CustomEvent("show-project-announcement"));
         expect(local_document.document.body.classList).toContain(
-            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS,
         );
         expect(local_document.project_banner.classList).not.toContain(PROJECT_BANNER_HIDDEN_CLASS);
         expect(windowScrollToSpy).toHaveBeenCalledTimes(1);

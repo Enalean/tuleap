@@ -17,7 +17,7 @@ function CommitsController(
     $window,
     gettextCatalog,
     CommitsRestService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     const self = this;
 
@@ -31,7 +31,7 @@ function CommitsController(
         relative_date_helper: RelativeDateHelper(
             SharedPropertiesService.getDateTimeFormat(),
             SharedPropertiesService.getRelativeDateDisplay(),
-            SharedPropertiesService.getUserLocale()
+            SharedPropertiesService.getUserLocale(),
         ),
         $onInit: init,
     });

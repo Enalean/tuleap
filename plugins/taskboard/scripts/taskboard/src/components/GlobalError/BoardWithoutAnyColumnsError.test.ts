@@ -27,7 +27,7 @@ describe("BoardWithoutAnyColumnsError", () => {
             mocks: { $store: createStoreMock({ state: { user: { user_is_admin: false } } }) },
         });
         expect(wrapper.element).toMatchInlineSnapshot(
-            `<board-without-any-columns-error-for-users-stub />`
+            `<board-without-any-columns-error-for-users-stub />`,
         );
     });
     it("is displays misconfiguration error for admin user", () => {
@@ -35,7 +35,7 @@ describe("BoardWithoutAnyColumnsError", () => {
             mocks: { $store: createStoreMock({ state: { user: { user_is_admin: true } } }) },
         });
         expect(wrapper.element).toMatchInlineSnapshot(
-            `<board-without-any-columns-error-for-admin-stub />`
+            `<board-without-any-columns-error-for-admin-stub />`,
         );
     });
 });

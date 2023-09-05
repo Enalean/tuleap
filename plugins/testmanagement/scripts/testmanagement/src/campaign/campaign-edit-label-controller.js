@@ -36,7 +36,7 @@ function CampaignEditLabelCtrl(
     $state,
     SharedPropertiesService,
     CampaignService,
-    editCampaignLabelCallback
+    editCampaignLabelCallback,
 ) {
     let campaign_id;
     const self = this;
@@ -70,7 +70,7 @@ function CampaignEditLabelCtrl(
                 }
 
                 modal_instance.tlp_modal.hide();
-            }
+            },
         );
     }
 }

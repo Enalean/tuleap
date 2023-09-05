@@ -28,7 +28,7 @@ export type FaultFeedbackControllerType = {
 };
 
 export const FaultFeedbackController = (
-    event_dispatcher: EventDispatcher
+    event_dispatcher: EventDispatcher,
 ): FaultFeedbackControllerType => ({
     registerFaultListener: (handler: OnFaultHandler): void => {
         event_dispatcher.addObserver("WillNotifyFault", (event) => {

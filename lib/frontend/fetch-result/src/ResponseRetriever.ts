@@ -41,14 +41,14 @@ export type ResponseRetrieverOptions = GeneralOptions | PostPutPatchOptions;
 export type RetrieveResponse = {
     retrieveResponse(
         uri: EncodedURI,
-        options: ResponseRetrieverOptions
+        options: ResponseRetrieverOptions,
     ): ResultAsync<Response, Fault>;
 };
 
 export const ResponseRetriever = (fetcher: FetchInterface): RetrieveResponse => ({
     retrieveResponse(
         uri: EncodedURI,
-        options: ResponseRetrieverOptions
+        options: ResponseRetrieverOptions,
     ): ResultAsync<Response, Fault> {
         const init: RequestInit = { ...options };
         const fetch_promise = fetcher.fetch(getEncodedURIString(uri), init);

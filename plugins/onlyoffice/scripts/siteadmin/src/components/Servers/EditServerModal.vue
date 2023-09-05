@@ -106,7 +106,7 @@ const props = defineProps<{ server: Server }>();
 const { $gettext } = useGettext();
 
 const placeholder = computed((): string =>
-    props.server.has_existing_secret ? $gettext("Current secret not displayed") : ""
+    props.server.has_existing_secret ? $gettext("Current secret not displayed") : "",
 );
 
 let modal: Modal | null = null;

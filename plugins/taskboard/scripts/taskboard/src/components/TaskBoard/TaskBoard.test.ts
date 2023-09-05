@@ -31,7 +31,7 @@ jest.mock("../../keyboard-navigation/keyboard-navigation");
 
 async function createWrapper(
     swimlanes: Swimlane[],
-    are_closed_items_displayed: boolean
+    are_closed_items_displayed: boolean,
 ): Promise<Wrapper<TaskBoard>> {
     return shallowMount(TaskBoard, {
         localVue: await createTaskboardLocalVue(),
@@ -146,7 +146,7 @@ describe("TaskBoard", () => {
 
                 expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                     "column/pointerEntersColumn",
-                    column
+                    column,
                 );
             });
 
@@ -189,7 +189,7 @@ describe("TaskBoard", () => {
 
                 expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                     "column/pointerLeavesColumn",
-                    column
+                    column,
                 );
             });
 

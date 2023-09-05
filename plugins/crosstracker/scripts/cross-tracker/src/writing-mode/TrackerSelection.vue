@@ -129,7 +129,7 @@ export default class TrackerSelection extends Vue {
     get tracker_options(): TrackerSelectOption[] {
         return this.trackers.map(({ id, label }) => {
             const is_already_selected = this.selectedTrackers.find(
-                ({ tracker_id }) => tracker_id === id
+                ({ tracker_id }) => tracker_id === id,
             );
             return {
                 id,
@@ -161,7 +161,7 @@ export default class TrackerSelection extends Vue {
         } catch (error) {
             this.$store.commit(
                 "setErrorMessage",
-                this.$gettext("Error while fetching the list of projects you are member of")
+                this.$gettext("Error while fetching the list of projects you are member of"),
             );
         } finally {
             this.is_loader_shown = false;
@@ -175,7 +175,7 @@ export default class TrackerSelection extends Vue {
         } catch (error) {
             this.$store.commit(
                 "setErrorMessage",
-                this.$gettext("Error while fetching the list of trackers of this project")
+                this.$gettext("Error while fetching the list of trackers of this project"),
             );
         } finally {
             this.is_loader_shown = false;

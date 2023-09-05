@@ -31,7 +31,7 @@ export class ListItemMapBuilder {
 
     constructor(
         private readonly source_select_box: HTMLSelectElement,
-        private readonly options?: ListPickerOptions
+        private readonly options?: ListPickerOptions,
     ) {
         this.items_templates_cache = new Map();
     }
@@ -86,7 +86,7 @@ export class ListItemMapBuilder {
     private getRenderedListItem(
         option_id: string,
         template: TemplateResult,
-        is_disabled: boolean
+        is_disabled: boolean,
     ): Element {
         let class_name = "list-picker-dropdown-option-value";
         if (is_disabled) {
@@ -106,7 +106,7 @@ export class ListItemMapBuilder {
                     ${template}
                 </li>
             `,
-            document_fragment
+            document_fragment,
         );
 
         const list_item = document_fragment.firstElementChild;
@@ -151,7 +151,7 @@ export class ListItemMapBuilder {
             const custom_template = this.options.items_template_formatter(
                 html,
                 option.value,
-                option_label
+                option_label,
             );
             this.items_templates_cache.set(item_id, custom_template);
 

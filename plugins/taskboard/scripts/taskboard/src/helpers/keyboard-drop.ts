@@ -34,7 +34,7 @@ export function focusDraggedCard(doc: Document, state: State): void {
 export function getContext(
     doc: Document,
     state: State,
-    direction: ArrowKey
+    direction: ArrowKey,
 ): SuccessfulDropCallbackParameter | null {
     const card = getDraggedCard(doc, state);
     if (!card) {
@@ -85,7 +85,7 @@ export function getTargetCell(cell: HTMLElement, direction: ArrowKey): HTMLEleme
 export function getNextSiblingAfterMove(
     card: HTMLElement,
     cell: HTMLElement,
-    direction: ArrowKey
+    direction: ArrowKey,
 ): HTMLElement | null {
     if (direction === LEFT || direction === RIGHT) {
         return null;

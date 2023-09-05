@@ -48,7 +48,7 @@ describe("action", () => {
         it("When api is called, Then url is formatted", async () => {
             const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabRepositoryList"
+                "getAsyncGitlabRepositoryList",
             );
 
             getAsyncGitlabRepositoryList.mockReturnValue(
@@ -60,7 +60,7 @@ describe("action", () => {
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
                     } as unknown as Response);
-                })
+                }),
             );
             const credentials: GitLabCredentials = {
                 server_url: "https://example/",
@@ -78,7 +78,7 @@ describe("action", () => {
         it("When there is 2 pages, Then api is called twice", async () => {
             const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabRepositoryList"
+                "getAsyncGitlabRepositoryList",
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
@@ -89,7 +89,7 @@ describe("action", () => {
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
                     } as unknown as Response);
-                })
+                }),
             );
             const credentials: GitLabCredentials = {
                 server_url: "https://example/",
@@ -106,14 +106,14 @@ describe("action", () => {
         it("When en error retrieved from api, Then an error is thrown", async () => {
             const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabRepositoryList"
+                "getAsyncGitlabRepositoryList",
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
                         status: 401,
                     } as Response);
-                })
+                }),
             );
             const credentials: GitLabCredentials = {
                 server_url: "https://example/",
@@ -140,7 +140,7 @@ describe("action", () => {
         it("When api is called, Then url is formatted", async () => {
             const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabRepositoryList"
+                "getAsyncGitlabRepositoryList",
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
@@ -149,7 +149,7 @@ describe("action", () => {
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
                     } as unknown as Response);
-                })
+                }),
             );
             const credentials: GitLabCredentials = {
                 server_url: "https://example/",
@@ -157,7 +157,7 @@ describe("action", () => {
             };
 
             await expect(
-                getGitlabRepositoryFromId(context, { credentials, id: 12 })
+                getGitlabRepositoryFromId(context, { credentials, id: 12 }),
             ).resolves.toEqual([{ id: 10 }]);
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url: "https://example/api/v4/projects/12",
@@ -168,14 +168,14 @@ describe("action", () => {
         it("When an error is retrieved from api, Then an error is thrown", async () => {
             const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabRepositoryList"
+                "getAsyncGitlabRepositoryList",
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
                         status: 401,
                     } as unknown as Response);
-                })
+                }),
             );
             const credentials: GitLabCredentials = {
                 server_url: "https://example/",
@@ -183,7 +183,7 @@ describe("action", () => {
             };
 
             await expect(
-                getGitlabRepositoryFromId(context, { credentials, id: 12 })
+                getGitlabRepositoryFromId(context, { credentials, id: 12 }),
             ).rejects.toEqual(new Error());
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url: "https://example/api/v4/projects/12",
@@ -204,7 +204,7 @@ describe("action", () => {
                         get: () => "1",
                         status: 200,
                     } as unknown as Response);
-                })
+                }),
             );
 
             const payload: GitLabDataWithTokenPayload = {
@@ -229,7 +229,7 @@ describe("action", () => {
                     reject({
                         status: 401,
                     });
-                })
+                }),
             );
 
             const payload: GitLabDataWithTokenPayload = {
@@ -267,13 +267,13 @@ describe("action", () => {
             showEditAccessTokenGitlabRepositoryModal(context, repository);
             expect(context.commit).toHaveBeenCalledWith(
                 "setEditAccessTokenGitlabRepository",
-                repository
+                repository,
             );
             if (!context.state.edit_access_token_gitlab_repository_modal) {
                 throw new Error("Modal is null");
             }
             expect(
-                context.state.edit_access_token_gitlab_repository_modal.toggle
+                context.state.edit_access_token_gitlab_repository_modal.toggle,
             ).toHaveBeenCalled();
         });
     });
@@ -320,7 +320,7 @@ describe("action", () => {
             showCreateBranchPrefixModal(context, repository);
             expect(context.commit).toHaveBeenCalledWith(
                 "setCreateBranchPrefixRepository",
-                repository
+                repository,
             );
             if (!context.state.create_branch_prefix_modal) {
                 throw new Error("Modal is null");

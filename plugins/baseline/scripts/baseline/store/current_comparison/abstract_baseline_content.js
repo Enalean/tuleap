@@ -57,19 +57,19 @@ export default {
             }
 
             const linked_artifact_ids = ArrayUtils.unique(
-                ArrayUtils.mapAttribute(artifacts, "linked_artifact_ids").flat()
+                ArrayUtils.mapAttribute(artifacts, "linked_artifact_ids").flat(),
             );
             if (linked_artifact_ids.length === 0) {
                 return;
             }
 
             let new_already_linked_artifact = ArrayUtils.unique(
-                already_linked_artifact.concat(linked_artifact_ids)
+                already_linked_artifact.concat(linked_artifact_ids),
             );
 
             const linked_artifacts = await getBaselineArtifactsByIds(
                 state.baseline_id,
-                linked_artifact_ids
+                linked_artifact_ids,
             );
 
             linked_artifacts.forEach((artifact) => {
@@ -120,7 +120,7 @@ export default {
                     id: artifact.tracker_id,
                     name: artifact.tracker_name,
                 })),
-                "id"
+                "id",
             ),
     },
 };

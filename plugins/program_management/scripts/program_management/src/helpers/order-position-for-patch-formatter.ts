@@ -26,7 +26,7 @@ export interface OrderPositionForPatch {
 }
 
 export function formatOrderPositionForPatch(
-    reorder_position: FeaturePlanningChange
+    reorder_position: FeaturePlanningChange,
 ): OrderPositionForPatch | null {
     if (!reorder_position.order) {
         return null;

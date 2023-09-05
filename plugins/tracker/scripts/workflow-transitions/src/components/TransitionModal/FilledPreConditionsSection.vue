@@ -149,7 +149,7 @@ export default {
             {
                 locale: document.body.dataset.userLocale,
                 is_filterable: true,
-            }
+            },
         );
         this.not_empty_fields_list_picker = createListPicker(
             this.$refs.workflow_configuration_not_empty_fields,
@@ -157,7 +157,7 @@ export default {
                 locale: document.body.dataset.userLocale,
                 is_filterable: true,
                 placeholder: this.$gettext("Choose a field"),
-            }
+            },
         );
     },
     beforeDestroy() {
@@ -168,7 +168,7 @@ export default {
         updateAuthorizedUserGroupIds() {
             this.$store.commit(
                 "transitionModal/updateAuthorizedUserGroupIds",
-                this.authorized_user_group_ids
+                this.authorized_user_group_ids,
             );
         },
         updateNotEmptyFieldIds() {

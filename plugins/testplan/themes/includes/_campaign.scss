@@ -47,7 +47,9 @@
 
 .test-plan-campaign {
     margin: 0 0 var(--tlp-small-spacing);
-    transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    transition:
+        border-color 75ms ease-in-out,
+        background-color 75ms ease-in-out;
     cursor: pointer;
 
     &.test-plan-campaign-is-error {

@@ -22,7 +22,7 @@ import { isFolder } from "./type-check-helper";
 
 export function getFolderSubtree(
     folder_content: Array<Item>,
-    subtree_root_folder_id: number
+    subtree_root_folder_id: number,
 ): Array<Item> {
     const children = folder_content.filter((item) => item.parent_id === subtree_root_folder_id);
 

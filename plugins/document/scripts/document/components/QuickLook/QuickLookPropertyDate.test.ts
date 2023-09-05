@@ -28,7 +28,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookPropertyDate", () => {
     function getWrapper(
-        property: Property
+        property: Property,
     ): VueWrapper<InstanceType<typeof QuickLookPropertyDate>> {
         return shallowMount(QuickLookPropertyDate, {
             props: { property },

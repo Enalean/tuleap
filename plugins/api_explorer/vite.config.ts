@@ -36,5 +36,5 @@ export default vite.defineAppConfig(
         optimizeDeps: {
             disabled: false,
         },
-    }
+    },
 );

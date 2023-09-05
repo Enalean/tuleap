@@ -32,7 +32,7 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets"),
-        "/assets/svn/permissions-per-group/"
+        "/assets/svn/permissions-per-group/",
     ),
     resolve: {
         extensions: [".js", ".ts", ".vue"],

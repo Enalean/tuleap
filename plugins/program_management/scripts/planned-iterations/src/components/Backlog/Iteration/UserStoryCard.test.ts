@@ -28,7 +28,7 @@ import type { Feature } from "../../../type";
 
 describe("UserStoryCard", () => {
     async function getWrapper(
-        is_accessibility_mode_enabled: boolean
+        is_accessibility_mode_enabled: boolean,
     ): Promise<Wrapper<UserStoryCard>> {
         return shallowMount(UserStoryCard, {
             localVue: await createPlanIterationsLocalVue(),

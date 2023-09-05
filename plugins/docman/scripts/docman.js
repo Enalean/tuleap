@@ -35,7 +35,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 folderSpinner: false,
                 action: "browse",
             },
-            options || {}
+            options || {},
         );
         if (options) {
             this.options.newItem = Object.extend(
@@ -45,7 +45,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                     hide_news: true,
                     default_position: false,
                 },
-                options.newItem || {}
+                options.newItem || {},
             );
             this.options.move = Object.extend({}, options.move || {});
             this.options.language = Object.extend({}, options.language || {});
@@ -146,7 +146,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         this.showOptions_Menus[item_id] = new com.xerox.codendi.Menu(
                             item_id,
                             this,
-                            { close: this.options.language.btn_close }
+                            { close: this.options.language.btn_close },
                         );
                     }
 
@@ -168,7 +168,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                             node.observe("mouseout", this.itemHighlight[item_id].mouseout);
                         }
                     }
-                }.bind(this)
+                }.bind(this),
             );
     },
     //}}}
@@ -204,7 +204,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 this.onNewItemCheckboxChangeEvent =
                     this.onNewItemCheckboxChange.bindAsEventListener(this);
                 Event.observe(checkbox, "click", this.onNewItemCheckboxChangeEvent);
-            }.bind(this)
+            }.bind(this),
         );
 
         //{{{Location
@@ -226,7 +226,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             folders = folders.reverse().join(" / ");
             new Insertion.Top(
                 "docman_new_item_location_current_folder",
-                this.options.language.new_in + folders + "&nbsp;"
+                this.options.language.new_in + folders + "&nbsp;",
             );
 
             //3. Hide other folders
@@ -236,7 +236,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             var a = Builder.node(
                 "a",
                 { href: "" },
-                "[" + this.options.language.new_other_folders + "]"
+                "[" + this.options.language.new_other_folders + "]",
             );
             $("docman_new_item_location_current_folder").appendChild(a);
             Event.observe(a, "click", function (evt) {
@@ -256,7 +256,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 "docman_new_item_location_position",
                 '<img src="' +
                     this.options.spinner +
-                    '" id="docman_new_item_location_spinner" style="display:none" />'
+                    '" id="docman_new_item_location_spinner" style="display:none" />',
             );
 
             //6. listen for changes => need Ajax call
@@ -269,9 +269,9 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                             "change",
                             function () {
                                 return this.onNewItemParentChange(folder_id);
-                            }.bind(this)
+                            }.bind(this),
                         );
-                    }.bind(this)
+                    }.bind(this),
                 );
 
             //7. Do manually the first ajax call for the preselected parent
@@ -295,13 +295,13 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         "new Insertion.Before('docman_new_permissions_panel', '<input type=hidden name=user_has_displayed_permissions value=1 />'); " +
                         'return false;">[' +
                         this.options.language.new_view_change +
-                        "]</a></div>"
+                        "]</a></div>",
                 );
                 Element.hide("docman_new_permissions_panel");
             } else {
                 new Insertion.Before(
                     "docman_new_permissions_panel",
-                    "<input type=hidden name=user_has_displayed_permissions value=1 />"
+                    "<input type=hidden name=user_has_displayed_permissions value=1 />",
                 );
             }
         }
@@ -320,13 +320,13 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         "new Insertion.Before('docman_new_news_panel', '<input type=hidden name=user_has_displayed_news value=1 />'); " +
                         'return false;">[' +
                         this.options.language.new_news_displayform +
-                        "]</a></div>"
+                        "]</a></div>",
                 );
                 Element.hide("docman_new_news_panel");
             } else {
                 new Insertion.Before(
                     "docman_new_news_panel",
-                    "<input type=hidden name=user_has_displayed_news value=1 />"
+                    "<input type=hidden name=user_has_displayed_news value=1 />",
                 );
             }
         }
@@ -358,13 +358,13 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 onLoading: function () {
                     Element.show("docman_new_item_location_spinner");
                 },
-            }
+            },
         );
     },
     newItem_update_permissions: function (folder_id) {
         new Ajax.Updater(
             "docman_new_permissions_panel",
-            "?group_id=" + this.group_id + "&action=permissionsForItem&id=" + folder_id
+            "?group_id=" + this.group_id + "&action=permissionsForItem&id=" + folder_id,
         );
     },
     _highlight: function (element_name) {
@@ -422,7 +422,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         var item_ = new RegExp("^item_.*");
 
         var folders = parent_element.querySelectorAll(
-            ".docman_item_type_folder, .docman_item_type_folder_open"
+            ".docman_item_type_folder, .docman_item_type_folder_open",
         );
         [].forEach.call(
             folders,
@@ -454,7 +454,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                         node.id.split("_")[1],
                                     {
                                         asynchronous: true,
-                                    }
+                                    },
                                 );
                             } else {
                                 const old_icon_src = icon.src;
@@ -508,14 +508,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                     node.id.split("_")[1],
                                 {
                                     asynchronous: true,
-                                }
+                                },
                             );
                         }
                         Event.stop(event);
                         return false;
-                    }.bind(this)
+                    }.bind(this),
                 );
-            }.bind(this)
+            }.bind(this),
         );
     },
     //}}}
@@ -530,7 +530,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             $("plugin_docman_report_add_filter").observe("change", this.reportSelectAddFilter);
             $("plugin_docman_report_save").observe(
                 "change",
-                this.reportSelectSave.bindAsEventListener(this)
+                this.reportSelectSave.bindAsEventListener(this),
             );
 
             var btn_name = $("plugin_docman_report_form_global").down("input[type=submit]").name;
@@ -554,7 +554,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $("docman_filters_fieldset").show();
         $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
             "toggle_plus.png",
-            "toggle_minus.png"
+            "toggle_minus.png",
         );
         $("plugin_docman_report_form_global")
             .select("input")
@@ -567,7 +567,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $("docman_filters_fieldset").hide();
         $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
             "toggle_minus.png",
-            "toggle_plus.png"
+            "toggle_plus.png",
         );
         $("plugin_docman_report_form_global")
             .select("input")
@@ -617,7 +617,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 //eslint-disable-next-line no-alert
                 const name = window.prompt(
                     this.options.language.report_name_upd,
-                    select.options[select.selectedIndex].innerHTML.unescapeHTML()
+                    select.options[select.selectedIndex].innerHTML.unescapeHTML(),
                 );
                 if (name != null && name.strip() != "") {
                     nameField.value = name.escapeHTML().replace(/"/, "&quot;");
@@ -743,7 +743,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                     Event.stop(evt);
                     return false;
                 }
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
 
         // Display the pointer when the mouse is over the image (as a link does)
@@ -893,7 +893,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 });
                 Event.stop(evt);
                 return false;
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
         return this._createLi(a);
     },
@@ -922,7 +922,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 });
                 Event.stop(evt);
                 return false;
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
         return this._createLi(a);
     },
@@ -979,13 +979,13 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                                             this.docman.actionsForItem[id].canPaste = true;
                                         }
                                     }
-                                }.bind(this)
+                                }.bind(this),
                             );
                     }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
         return this._createLi(a);
     },
@@ -1044,13 +1044,13 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                                     if (this.docman.actionsForItem[id].canNewDocument) {
                                         this.docman.actionsForItem[id].canPaste = true;
                                     }
-                                }.bind(this)
+                                }.bind(this),
                             );
                     }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
         return this._createLi(a);
     },
@@ -1095,7 +1095,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                             .each(
                                 function (id) {
                                     this.docman.actionsForItem[id].canPaste = false;
-                                }.bind(this)
+                                }.bind(this),
                             );
 
                         // Hide previous feedback
@@ -1109,7 +1109,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 });
                 Event.stop(evt);
                 return false;
-            }.bindAsEventListener(this)
+            }.bindAsEventListener(this),
         );
 
         // Display the pointer when the mouse is over the image (as a link does)

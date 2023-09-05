@@ -34,7 +34,7 @@ export const NewFileToAttach = {
 
     fromDescriptionAndPrevious: (
         previous: NewFileToAttach,
-        description: string
+        description: string,
     ): NewFileToAttach => ({
         file: previous.file,
         description,

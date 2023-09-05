@@ -128,7 +128,7 @@ describe("PullRequestEditTitleModal", () => {
         expect(tlp_modal.createModal).toHaveBeenCalledOnce();
         expect(modal_instance.addEventListener).toHaveBeenCalledWith(
             "tlp-modal-hidden",
-            expect.any(Function)
+            expect.any(Function),
         );
     });
 
@@ -136,7 +136,7 @@ describe("PullRequestEditTitleModal", () => {
         vi.spyOn(tuleap_api, "patchTitle").mockReturnValue(
             okAsync({
                 title: "My updated title",
-            } as PullRequest)
+            } as PullRequest),
         );
 
         await openModalAnSubmitANewTitle();

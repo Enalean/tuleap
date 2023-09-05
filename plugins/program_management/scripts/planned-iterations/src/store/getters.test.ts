@@ -36,7 +36,7 @@ describe("getters", () => {
 
         it("should return false when the content of an iteration is not stored yet", () => {
             expect(getters.hasIterationContentInStore(state)({ id: 1280 } as Iteration)).toBe(
-                false
+                false,
             );
         });
     });
@@ -44,7 +44,7 @@ describe("getters", () => {
     describe("getIterationContentFromStore", () => {
         it("should return an empty array when there is no stored content for the given iteration", () => {
             expect(getters.getIterationContentFromStore(state)({ id: 1280 } as Iteration)).toEqual(
-                []
+                [],
             );
         });
 

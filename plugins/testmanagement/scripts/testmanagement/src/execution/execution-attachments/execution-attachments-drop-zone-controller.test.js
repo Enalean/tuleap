@@ -34,7 +34,7 @@ describe("execution-attachments-drop-zone", () => {
             },
             {
                 executionAttachmentsDropZoneAllowDnd: is_dnd_allowed,
-            }
+            },
         );
     }
 
@@ -62,22 +62,22 @@ describe("execution-attachments-drop-zone", () => {
 
             expect($element[0].addEventListener).toHaveBeenCalledWith(
                 "dragover",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect($element[0].addEventListener).toHaveBeenCalledWith(
                 "dragleave",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect($element[0].addEventListener).toHaveBeenCalledWith(
                 "drop",
                 expect.any(Function),
-                true
+                true,
             );
 
             expect($root_scope.$on).toHaveBeenCalledWith("drop-zone-active", expect.any(Function));
             expect($root_scope.$on).toHaveBeenCalledWith(
                 "drop-zone-inactive",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
     });
@@ -93,15 +93,15 @@ describe("execution-attachments-drop-zone", () => {
 
             expect($element[0].removeEventListener).toHaveBeenCalledWith(
                 "dragover",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect($element[0].removeEventListener).toHaveBeenCalledWith(
                 "dragleave",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect($element[0].removeEventListener).toHaveBeenCalledWith(
                 "drop",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
     });

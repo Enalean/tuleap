@@ -75,14 +75,14 @@ export function filterInlineTable(filter: HTMLInputElement): { filterTable: () =
 
                 should_force_current_section_to_be_displayed = toggleSection(
                     current_section,
-                    search
+                    search,
                 );
             } else {
                 nb_total_displayed += toggleLineInSection(
                     tbody,
                     should_force_current_section_to_be_displayed,
                     search,
-                    current_section
+                    current_section,
                 );
             }
         }
@@ -92,7 +92,7 @@ export function filterInlineTable(filter: HTMLInputElement): { filterTable: () =
 
     function toggleLinesWithoutSections(search: string): number {
         const lines = target_table.querySelectorAll(
-            "tbody > tr:not(." + EMPTY_STATE_CLASS_NAME + ")"
+            "tbody > tr:not(." + EMPTY_STATE_CLASS_NAME + ")",
         );
 
         return toggleLines(lines, search);
@@ -115,7 +115,7 @@ function toggleLineInSection(
     tbody: HTMLTableSectionElement,
     should_force_current_section_to_be_displayed: boolean,
     search: string,
-    current_section: HTMLTableSectionElement | null
+    current_section: HTMLTableSectionElement | null,
 ): number {
     const lines = tbody.querySelectorAll("tr:not(." + EMPTY_STATE_CLASS_NAME + ")"),
         search_term = should_force_current_section_to_be_displayed ? reset_search_term : search,
@@ -140,7 +140,7 @@ function toggleSection(current_section: HTMLTableSectionElement, search: string)
     if (is_filterable) {
         should_force_current_section_to_be_displayed = shouldTheLineBeDisplayed(
             current_section.children[0],
-            search
+            search,
         );
         if (should_force_current_section_to_be_displayed) {
             current_section.classList.remove(HIDDEN_SECTION_CLASS_NAME);
@@ -205,7 +205,7 @@ function getTargetTable(filter: HTMLElement): HTMLTableElement {
     const target_table = document.getElementById(target_table_id);
     if (!target_table || !(target_table instanceof HTMLTableElement)) {
         throw new Error(
-            'Filter input attribute references an unknown table "' + target_table_id + '"'
+            'Filter input attribute references an unknown table "' + target_table_id + '"',
         );
     }
 

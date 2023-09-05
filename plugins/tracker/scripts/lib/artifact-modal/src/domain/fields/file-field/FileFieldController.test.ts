@@ -126,7 +126,7 @@ describe(`FileFieldController`, () => {
     describe(`setFileOfNewFileToAttach()`, () => {
         const setFile = (
             file_to_attach: NewFileToAttach,
-            file: File
+            file: File,
         ): NewFileToAttachCollection => {
             const field = {} as FileFieldType;
             const value_model = {

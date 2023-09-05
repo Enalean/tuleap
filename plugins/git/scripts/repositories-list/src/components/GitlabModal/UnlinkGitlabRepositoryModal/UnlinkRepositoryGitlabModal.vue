@@ -116,11 +116,11 @@ export default class UnlinkRepositoryGitlabModal extends Vue {
 
         return this.$gettextInterpolate(
             this.$gettext(
-                "Wow, wait a minute. You are about to unlink the GitLab repository %{ label }. Please confirm your action."
+                "Wow, wait a minute. You are about to unlink the GitLab repository %{ label }. Please confirm your action.",
             ),
             {
                 label: this.repository.normalized_path,
-            }
+            },
         );
     }
 
@@ -141,7 +141,7 @@ export default class UnlinkRepositoryGitlabModal extends Vue {
             this.$gettext("GitLab repository %{ label } has been successfully unlinked!"),
             {
                 label: this.repository.normalized_path,
-            }
+            },
         );
     }
 

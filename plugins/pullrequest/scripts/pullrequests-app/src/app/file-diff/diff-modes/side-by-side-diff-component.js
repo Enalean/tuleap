@@ -74,7 +74,7 @@ function controller($element, $scope, SharedPropertiesService) {
 
     function $onInit() {
         const [left_element, right_element] = $element[0].querySelectorAll(
-            ".pull-request-side-by-side-diff"
+            ".pull-request-side-by-side-diff",
         );
         const options =
             getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible({
@@ -97,14 +97,14 @@ function controller($element, $scope, SharedPropertiesService) {
 
         const collapsible_sections = getCollapsibleSectionsSideBySide(
             file_lines,
-            getStore().getAllRootComments()
+            getStore().getAllRootComments(),
         );
 
         collapseCommonSectionsSideBySide(
             document,
             left_code_mirror,
             right_code_mirror,
-            collapsible_sections
+            collapsible_sections,
         );
     }
 
@@ -112,7 +112,7 @@ function controller($element, $scope, SharedPropertiesService) {
         const code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
             file_lines,
             left_code_mirror,
-            right_code_mirror
+            right_code_mirror,
         );
 
         const comment_widgets_map = FileDiffCommentWidgetsMap();
@@ -126,27 +126,27 @@ function controller($element, $scope, SharedPropertiesService) {
                     SharedPropertiesService.getUserAvatarUrl(),
                     SharedPropertiesService.getUserLocale(),
                     SharedPropertiesService.getDateTimeFormat(),
-                    SharedPropertiesService.getRelativeDateDisplay()
+                    SharedPropertiesService.getRelativeDateDisplay(),
                 ),
                 PullRequestPresenterBuilder.fromPullRequest(
-                    SharedPropertiesService.getPullRequest()
-                )
+                    SharedPropertiesService.getPullRequest(),
+                ),
             ),
             getStore(),
             comment_widgets_map,
-            SharedPropertiesService.isCommentsMarkdownModeEnabled()
+            SharedPropertiesService.isCommentsMarkdownModeEnabled(),
         );
 
         const file_lines_state = SideBySideLineState(
             file_lines,
             SideBySideLineGrouper(file_lines),
-            SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
+            SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror),
         );
 
         const code_placeholder_creation_manager = SideBySideCodePlaceholderCreationManager(
             code_mirrors_content_manager,
             file_lines_state,
-            widget_creator
+            widget_creator,
         );
 
         const widget_creation_manager = SideBySideCodeMirrorWidgetsCreationManager(
@@ -154,12 +154,12 @@ function controller($element, $scope, SharedPropertiesService) {
             SideBySideLinesHeightEqualizer(
                 left_code_mirror,
                 right_code_mirror,
-                SideBySidePlaceholderPositioner(file_lines_state)
+                SideBySidePlaceholderPositioner(file_lines_state),
             ),
             code_mirrors_content_manager,
             widget_creator,
             widget_creator,
-            widget_creator
+            widget_creator,
         );
 
         file_lines.forEach((line) => {
@@ -178,7 +178,7 @@ function controller($element, $scope, SharedPropertiesService) {
                 SharedPropertiesService.getUserId(),
                 SharedPropertiesService.getUserAvatarUrl(),
                 self.filePath,
-                line_number
+                line_number,
             );
         });
         right_code_mirror.on("gutterClick", (right_code_mirror, line_number) => {
@@ -189,7 +189,7 @@ function controller($element, $scope, SharedPropertiesService) {
                 SharedPropertiesService.getUserId(),
                 SharedPropertiesService.getUserAvatarUrl(),
                 self.filePath,
-                line_number
+                line_number,
             );
         });
 
@@ -198,7 +198,7 @@ function controller($element, $scope, SharedPropertiesService) {
         FileDiffCommentScroller(
             getStore(),
             file_lines,
-            comment_widgets_map
+            comment_widgets_map,
         ).scrollToSideBySideDiffComment(comment_id, left_code_mirror, right_code_mirror);
     }
 
@@ -207,14 +207,14 @@ function controller($element, $scope, SharedPropertiesService) {
             left_code_mirror.setGutterMarker(
                 line.old_offset - 1,
                 "gutter-lines",
-                document.createTextNode(line.old_offset)
+                document.createTextNode(line.old_offset),
             );
 
             if (line.new_offset === null) {
                 left_code_mirror.addLineClass(
                     line.old_offset - 1,
                     "background",
-                    "pull-request-file-diff-deleted-lines"
+                    "pull-request-file-diff-deleted-lines",
                 );
             }
         }
@@ -223,14 +223,14 @@ function controller($element, $scope, SharedPropertiesService) {
             right_code_mirror.setGutterMarker(
                 line.new_offset - 1,
                 "gutter-lines",
-                document.createTextNode(line.new_offset)
+                document.createTextNode(line.new_offset),
             );
 
             if (line.old_offset === null) {
                 right_code_mirror.addLineClass(
                     line.new_offset - 1,
                     "background",
-                    "pull-request-file-diff-added-lines"
+                    "pull-request-file-diff-added-lines",
                 );
             }
         }

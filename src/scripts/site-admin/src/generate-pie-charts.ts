@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!pie_chart_element.dataset.statistics) {
                 throw new Error(
-                    `Pie chart ${pie_chart_element.id} does not have a statistics dataset attribute`
+                    `Pie chart ${pie_chart_element.id} does not have a statistics dataset attribute`,
                 );
             }
 
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initializePieChartsLegendSize(): void {
         let legend_max_width = 0;
         const legend_li_elements = document.querySelectorAll(
-            ".siteadmin-homepage-pie-chart-legend > li"
+            ".siteadmin-homepage-pie-chart-legend > li",
         );
 
         [].forEach.call(legend_li_elements, function (li_element: HTMLElement) {

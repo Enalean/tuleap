@@ -60,7 +60,7 @@
                 <p class="tlp-text-info">
                     {{
                         $gettext(
-                            "Only the table structure will be kept. Reviewer comments and commitments will be discarded."
+                            "Only the table structure will be kept. Reviewer comments and commitments will be discarded.",
                         )
                     }}
                 </p>

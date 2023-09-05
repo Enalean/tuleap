@@ -34,26 +34,26 @@ export type GitlabIntegrationWithDefaultBranch = Readonly<
 >;
 
 export function getGitlabRepositoriesWithDefaultBranches(
-    integrations: ReadonlyArray<GitlabIntegration>
+    integrations: ReadonlyArray<GitlabIntegration>,
 ): Promise<ReadonlyArray<GitlabIntegrationWithDefaultBranch>> {
     return limitConcurrencyPool(
         MAX_CONCURRENT_REQUESTS,
         integrations,
-        fetchGitlabRepositoryWithDefaultBranch
+        fetchGitlabRepositoryWithDefaultBranch,
     );
 }
 
 function fetchGitlabRepositoryWithDefaultBranch(
-    gitlab_integration: GitlabIntegration
+    gitlab_integration: GitlabIntegration,
 ): Promise<GitlabIntegrationWithDefaultBranch> {
     return getGitLabRepositoryBranchInformation(gitlab_integration.id).match(
         (
-            branch_information: GitLabIntegrationBranchInformation
+            branch_information: GitLabIntegrationBranchInformation,
         ): GitlabIntegrationWithDefaultBranch => {
             return { ...gitlab_integration, default_branch: branch_information.default_branch };
         },
         () => {
             return { ...gitlab_integration, default_branch: "" };
-        }
+        },
     );
 }

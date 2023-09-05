@@ -59,7 +59,7 @@ describe("PasteItem", () => {
         operation_type: string | null,
         item_title: string | null,
         pasting_in_progress: boolean,
-        item_type: string = TYPE_FOLDER
+        item_type: string = TYPE_FOLDER,
     ): VueWrapper<PasteItem> {
         const pinia = createTestingPinia({
             initialState: {
@@ -92,7 +92,7 @@ describe("PasteItem", () => {
                             folder_content: [],
                         } as unknown as RootState,
                     },
-                    pinia
+                    pinia,
                 ),
             },
             props: { destination },
@@ -111,7 +111,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_COPY,
             "My item",
-            false
+            false,
         );
         expect(wrapper.text()).toContain("My item");
 
@@ -145,7 +145,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_COPY,
             "My item",
-            true
+            true,
         );
 
         expect(wrapper.html()).toBe("<!--v-if-->");
@@ -164,7 +164,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_COPY,
             "My item",
-            true
+            true,
         );
 
         expect(wrapper.html()).toBe("<!--v-if-->");
@@ -178,7 +178,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_COPY,
             "My item",
-            true
+            true,
         );
 
         expect(wrapper.attributes().disabled).toBe("");
@@ -200,7 +200,7 @@ describe("PasteItem", () => {
             CLIPBOARD_OPERATION_CUT,
             "My item",
             true,
-            TYPE_EMPTY
+            TYPE_EMPTY,
         );
 
         expect(wrapper.html()).toBe("<!--v-if-->");
@@ -216,7 +216,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_CUT,
             "My item",
-            true
+            true,
         );
 
         expect(wrapper.html()).toBe("<!--v-if-->");
@@ -233,7 +233,7 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_CUT,
             "My item",
-            true
+            true,
         );
 
         expect(wrapper.html()).toBe("<!--v-if-->");

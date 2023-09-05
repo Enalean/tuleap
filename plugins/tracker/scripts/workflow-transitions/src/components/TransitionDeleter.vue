@@ -89,7 +89,7 @@ export default {
         },
         transitions_of_the_same_column() {
             return this.current_workflow_transitions.filter(
-                (transition) => transition.to_id === this.transition.to_id
+                (transition) => transition.to_id === this.transition.to_id,
             );
         },
         is_last_transition_of_column() {

@@ -31,7 +31,8 @@ $tlp-popover-click-transition: 75ms ease-out;
     z-index: 1000;
     flex-direction: column;
     width: 400px;
-    transition: opacity $tlp-popover-hover-transition-hide,
+    transition:
+        opacity $tlp-popover-hover-transition-hide,
         box-shadow $tlp-popover-hover-transition-hide;
     border-radius: $tlp-popover-radius;
     box-shadow: none;
@@ -40,17 +41,21 @@ $tlp-popover-click-transition: 75ms ease-out;
     &.tlp-popover-shown {
         display: flex;
         transform: translateY(0);
-        transition: opacity $tlp-popover-hover-transition-show,
+        transition:
+            opacity $tlp-popover-hover-transition-show,
             box-shadow $tlp-popover-hover-transition-show;
         box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
     }
 
     &[data-popover-trigger="click"] {
-        transition: opacity $tlp-popover-click-transition, box-shadow $tlp-popover-click-transition;
+        transition:
+            opacity $tlp-popover-click-transition,
+            box-shadow $tlp-popover-click-transition;
 
         &.tlp-popover-shown {
-            transition: opacity $tlp-popover-click-transition,
+            transition:
+                opacity $tlp-popover-click-transition,
                 box-shadow $tlp-popover-click-transition;
         }
     }

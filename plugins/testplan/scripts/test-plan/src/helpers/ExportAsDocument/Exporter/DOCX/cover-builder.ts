@@ -43,7 +43,7 @@ import { buildMilestoneTitle } from "./cover-milestone-title-builder";
 export async function buildCoverPage(
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Promise<ReadonlyArray<XmlComponent>> {
     const {
         platform_name,
@@ -76,7 +76,7 @@ export async function buildCoverPage(
             parent_milestone_name,
             milestone_url,
             user_display_name,
-            exported_formatted_date
+            exported_formatted_date,
         ),
         new Paragraph({ children: [new PageBreak()] }),
     ];
@@ -90,7 +90,7 @@ function buildCoverTable(
     parent_milestone_name: string,
     milestone_url: string,
     user_name: string,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Table {
     return new Table({
         width: {
@@ -105,12 +105,12 @@ function buildCoverTable(
             buildCoverTableRow(gettext_provider.$gettext("Project"), new TextRun(project_name)),
             buildCoverTableRow(
                 gettext_provider.$gettext("Milestone"),
-                new TextRun(buildMilestoneTitle(milestone_name, parent_milestone_name))
+                new TextRun(buildMilestoneTitle(milestone_name, parent_milestone_name)),
             ),
             buildCoverTableRow(gettext_provider.$gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
                 gettext_provider.$gettext("Exported on"),
-                new TextRun(exported_formatted_date)
+                new TextRun(exported_formatted_date),
             ),
             buildCoverTableRow(
                 gettext_provider.$gettext("Milestone URL"),
@@ -122,7 +122,7 @@ function buildCoverTable(
                         }),
                     ],
                     link: milestone_url,
-                })
+                }),
             ),
         ],
     });

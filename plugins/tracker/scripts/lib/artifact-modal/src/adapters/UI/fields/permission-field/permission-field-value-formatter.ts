@@ -20,7 +20,7 @@
 import type { PermissionFieldValueModel } from "./PermissionFieldValueModel";
 
 export function formatPermissionFieldValue(
-    field_value?: PermissionFieldValueModel
+    field_value?: PermissionFieldValueModel,
 ): PermissionFieldValueModel | null {
     if (field_value === undefined) {
         return null;

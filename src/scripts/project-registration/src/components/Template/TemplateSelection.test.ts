@@ -37,7 +37,7 @@ describe("TemplateSelection", () => {
         company_templates: TemplateData[],
         external_templates: ExternalTemplateData[],
         company_name: string,
-        selected_template_category: null | string = null
+        selected_template_category: null | string = null,
     ): Promise<Wrapper<TemplateSelection>> {
         const configuration_state: ConfigurationState = {
             tuleap_templates,
@@ -118,13 +118,13 @@ describe("TemplateSelection", () => {
                 tuleap_templates,
                 company_templates,
                 external_templates,
-                "ACME"
+                "ACME",
             );
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
-                    .element.innerHTML.trim()
+                    .element.innerHTML.trim(),
             ).toBe("ACME");
         });
 
@@ -133,13 +133,13 @@ describe("TemplateSelection", () => {
                 tuleap_templates,
                 company_templates,
                 external_templates,
-                "Tuleap"
+                "Tuleap",
             );
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
-                    .element.innerHTML.trim()
+                    .element.innerHTML.trim(),
             ).toBe("Custom templates");
         });
 
@@ -147,7 +147,7 @@ describe("TemplateSelection", () => {
             const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
             await wrapper.vm.$nextTick();
             expect(
-                wrapper.find("[data-test=project-registration-acme-templates-tab]").exists()
+                wrapper.find("[data-test=project-registration-acme-templates-tab]").exists(),
             ).toBe(false);
 
             expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
@@ -161,7 +161,7 @@ describe("TemplateSelection", () => {
                 company_templates,
                 external_templates,
                 "ACME",
-                "Tuleap"
+                "Tuleap",
             );
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
@@ -170,7 +170,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
-                    .element.classList.contains("tlp-tab-active")
+                    .element.classList.contains("tlp-tab-active"),
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
@@ -181,12 +181,12 @@ describe("TemplateSelection", () => {
                 tuleap_templates,
                 company_templates,
                 external_templates,
-                "ACME"
+                "ACME",
             );
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setSelectedTemplateCategory",
-                "ACME"
+                "ACME",
             );
             wrapper.vm.$store.state.selected_template_category = "ACME";
 
@@ -194,7 +194,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
-                    .element.classList.contains("tlp-tab-active")
+                    .element.classList.contains("tlp-tab-active"),
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
@@ -205,7 +205,7 @@ describe("TemplateSelection", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setSelectedTemplateCategory",
-                "Tuleap"
+                "Tuleap",
             );
             wrapper.vm.$store.state.selected_template_category = "Tuleap";
 
@@ -213,7 +213,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
-                    .element.classList.contains("tlp-tab-active")
+                    .element.classList.contains("tlp-tab-active"),
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
@@ -224,7 +224,7 @@ describe("TemplateSelection", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setSelectedTemplateCategory",
-                "SAFe"
+                "SAFe",
             );
             wrapper.vm.$store.state.selected_template_category = "SAFe";
 
@@ -232,7 +232,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-SAFe-templates-tab]")
-                    .element.classList.contains("tlp-tab-active")
+                    .element.classList.contains("tlp-tab-active"),
             ).toBe(true);
 
             expect(wrapper.findComponent(CategorisedExternalTemplatesList).isVisible()).toBe(true);
@@ -243,7 +243,7 @@ describe("TemplateSelection", () => {
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setSelectedTemplateCategory",
-                "Advanced"
+                "Advanced",
             );
             wrapper.vm.$store.state.selected_template_category = "Advanced";
 
@@ -251,7 +251,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-advanced-templates-tab]")
-                    .element.classList.contains("tlp-tab-active")
+                    .element.classList.contains("tlp-tab-active"),
             ).toBe(true);
 
             expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
@@ -263,29 +263,29 @@ describe("TemplateSelection", () => {
             tuleap_templates,
             company_templates,
             external_templates,
-            "ACME"
+            "ACME",
         );
         const tab_tuleap_templates = wrapper.get(
-            "[data-test=project-registration-tuleap-templates-tab]"
+            "[data-test=project-registration-tuleap-templates-tab]",
         );
         const tab_acme_templates = wrapper.get(
-            "[data-test=project-registration-acme-templates-tab]"
+            "[data-test=project-registration-acme-templates-tab]",
         );
         const tab_advanced_templates = wrapper.get(
-            "[data-test=project-registration-advanced-templates-tab]"
+            "[data-test=project-registration-advanced-templates-tab]",
         );
         const tab_safe_templates = wrapper.get(
-            "[data-test=project-registration-SAFe-templates-tab]"
+            "[data-test=project-registration-SAFe-templates-tab]",
         );
         const tab_dummy_templates = wrapper.get(
-            "[data-test=project-registration-dummies-templates-tab]"
+            "[data-test=project-registration-dummies-templates-tab]",
         );
 
         tab_safe_templates.trigger("click");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
-            "SAFe"
+            "SAFe",
         );
         wrapper.vm.$store.state.selected_template_category = "SAFe";
 
@@ -295,17 +295,17 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            true
+            true,
         );
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false
+            false,
         );
 
         tab_acme_templates.trigger("click");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
-            "ACME"
+            "ACME",
         );
         wrapper.vm.$store.state.selected_template_category = "ACME";
 
@@ -315,17 +315,17 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false
+            false,
         );
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false
+            false,
         );
 
         tab_dummy_templates.trigger("click");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
-            "dummies"
+            "dummies",
         );
         wrapper.vm.$store.state.selected_template_category = "dummies";
 
@@ -335,17 +335,17 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false
+            false,
         );
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            true
+            true,
         );
 
         tab_advanced_templates.trigger("click");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
-            "Advanced"
+            "Advanced",
         );
         wrapper.vm.$store.state.selected_template_category = "Advanced";
 
@@ -355,17 +355,17 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false
+            false,
         );
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false
+            false,
         );
 
         tab_tuleap_templates.trigger("click");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
-            "Tuleap"
+            "Tuleap",
         );
         wrapper.vm.$store.state.selected_template_category = "Tuleap";
 
@@ -375,10 +375,10 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
-            false
+            false,
         );
         expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
-            false
+            false,
         );
     });
 });

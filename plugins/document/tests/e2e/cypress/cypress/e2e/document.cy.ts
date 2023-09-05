@@ -55,7 +55,7 @@ describe("Document new UI", () => {
                     cy.get("[data-test=document-new-item-title]").type("My folder");
 
                     cy.get("[data-test=document-custom-property-text]").contains(
-                        "my custom property"
+                        "my custom property",
                     );
                 });
 
@@ -65,7 +65,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=docman-admin-properties-delete-confirm-button]").click();
 
                 cy.get("[data-test=feedback]").contains(
-                    '"my custom property" successfully deleted'
+                    '"my custom property" successfully deleted',
                 );
             });
 
@@ -86,7 +86,7 @@ describe("Document new UI", () => {
                             };
                             return cy.postFromTuleapApi(
                                 `api/docman_folders/${root_folder_id}/embedded_files`,
-                                embedded_payload
+                                embedded_payload,
                             );
                         })
                         .then((response) => response.body.id)
@@ -99,12 +99,12 @@ describe("Document new UI", () => {
                             };
                             cy.postFromTuleapApi(
                                 `api/docman_embedded_files/${item}/versions`,
-                                updated_embedded_payload
+                                updated_embedded_payload,
                             );
                             cy.visit(
-                                `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`
+                                `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`,
                             );
-                        })
+                        }),
                 );
             }
 
@@ -123,7 +123,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=confirm-deletion]").click();
 
                 cy.get("[data-test=feedback]").contains(
-                    "Cannot delete last version of a file. If you want to continue, please delete the document itself."
+                    "Cannot delete last version of a file. If you want to continue, please delete the document itself.",
                 );
             });
         });
@@ -162,7 +162,7 @@ describe("Document new UI", () => {
                 cy.projectAdministratorSession();
                 cy.createNewPublicProject(permission_project_name, "issues")
                     .then((project_id) =>
-                        cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
+                        cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`),
                     )
                     .then((response) => {
                         const root_folder_id = response.body.root_item.id;
@@ -177,7 +177,7 @@ describe("Document new UI", () => {
                         };
                         return cy.postFromTuleapApi(
                             `api/docman_folders/${root_folder_id}/embedded_files`,
-                            embedded_payload
+                            embedded_payload,
                         );
                     });
 
@@ -202,7 +202,7 @@ describe("Document new UI", () => {
 
                     cy.assertUserMessagesReceivedByWithSpecificContent(
                         "ProjectAdministrator@example.com",
-                        message
+                        message,
                     );
                 });
             });
@@ -219,7 +219,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-new-folder-modal]").within(() => {
                     cy.get("[data-test=document-new-item-title]").type("My new folder");
                     cy.get("[data-test=document-property-description]").type(
-                        "With a description because I like to describe what I'm doing"
+                        "With a description because I like to describe what I'm doing",
                     );
 
                     cy.get("[data-test=document-modal-submit-button-create-folder]").click();
@@ -269,7 +269,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-new-version-modal]").within(() => {
                     cy.get("[data-test=document-new-item-link-url]").clear();
                     cy.get("[data-test=document-new-item-link-url]").type(
-                        "https://example-bis.com"
+                        "https://example-bis.com",
                     );
 
                     cy.get("[data-test=document-modal-submit-button-create-link-version]").click();
@@ -294,7 +294,7 @@ describe("Document new UI", () => {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         win.CKEDITOR.instances["document-new-item-embedded"].setData(
-                            `<strong>This is the story of my life </strong>`
+                            `<strong>This is the story of my life </strong>`,
                         );
                     });
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
@@ -315,7 +315,7 @@ describe("Document new UI", () => {
             function createProjectWithDownloadableDocuments(): void {
                 cy.createNewPublicProject(`download-${now}`, "issues")
                     .then((document_project_id) =>
-                        cy.getFromTuleapAPI(`api/projects/${document_project_id}/docman_service`)
+                        cy.getFromTuleapAPI(`api/projects/${document_project_id}/docman_service`),
                     )
                     .then((response) => {
                         const root_folder_id = response.body.root_item.id;
@@ -327,7 +327,7 @@ describe("Document new UI", () => {
                         };
                         return cy.postFromTuleapApi(
                             `api/docman_folders/${root_folder_id}/folders`,
-                            folder_payload
+                            folder_payload,
                         );
                     })
                     .then((response) => {
@@ -343,7 +343,7 @@ describe("Document new UI", () => {
                         };
                         return cy.postFromTuleapApi(
                             `api/docman_folders/${folder}/embedded_files`,
-                            item
+                            item,
                         );
                     });
             }
@@ -360,14 +360,14 @@ describe("Document new UI", () => {
                         // We cannot click the download button, otherwise the browser will ask "Where to save this file ?"
                         // and will stop the test.
                         cy.get("[data-test=document-dropdown-download-folder-as-zip]").should(
-                            "exist"
+                            "exist",
                         );
                         const folder_id = $row.data("itemId");
                         if (folder_id === undefined) {
                             throw new Error("Could not retrieve the folder id from its <tr>");
                         }
                         const download_uri = `/plugins/document/document-project-${now}/folders/${encodeURIComponent(
-                            folder_id
+                            folder_id,
                         )}/download-folder-as-zip`;
 
                         // Verify the download URI returns code 200 and has the correct headers
@@ -377,7 +377,7 @@ describe("Document new UI", () => {
                             expect(response.status).to.equal(200);
                             expect(response.headers["content-type"]).to.equal("application/zip");
                             expect(response.headers["content-disposition"]).to.equal(
-                                'attachment; filename="Folder download.zip"'
+                                'attachment; filename="Folder download.zip"',
                             );
                         });
                     });
@@ -392,7 +392,7 @@ describe("Document new UI", () => {
 
         function createAProjectWithAnEmptyDocument(
             project_name: string,
-            document_name: string
+            document_name: string,
         ): void {
             cy.createNewPublicProject(project_name, "issues").then((project_id) => {
                 cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then(
@@ -406,9 +406,9 @@ describe("Document new UI", () => {
                         };
                         cy.postFromTuleapApi(
                             `api/docman_folders/${root_folder_id}/empties`,
-                            payload
+                            payload,
                         );
-                    }
+                    },
                 );
             });
         }

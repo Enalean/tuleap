@@ -130,7 +130,7 @@ describe("TaskBar", () => {
             expect(
                 wrapper
                     .find("[data-test=container] > [data-test=bar] > [data-test=percentage]")
-                    .text()
+                    .text(),
             ).toBe("42%");
         });
 
@@ -159,9 +159,9 @@ describe("TaskBar", () => {
             expect(
                 wrapper
                     .find(
-                        "[data-test=container] > [data-test=bar] > [data-test=progress] > [data-test=percentage]"
+                        "[data-test=container] > [data-test=bar] > [data-test=progress] > [data-test=percentage]",
                     )
-                    .text()
+                    .text(),
             ).toBe("98%");
         });
 
@@ -188,7 +188,7 @@ describe("TaskBar", () => {
             });
 
             expect(wrapper.find("[data-test=container] > [data-test=percentage]").text()).toBe(
-                "50%"
+                "50%",
             );
         });
     });
@@ -219,12 +219,12 @@ describe("TaskBar", () => {
             expect(
                 wrapper
                     .find(
-                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]"
+                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]",
                     )
-                    .exists()
+                    .exists(),
             ).toBe(true);
             expect(
-                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists()
+                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists(),
             ).toBe(false);
             expect(wrapper.find("[data-test=progress]").exists()).toBe(false);
         });
@@ -254,12 +254,12 @@ describe("TaskBar", () => {
             expect(
                 wrapper
                     .find(
-                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]"
+                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]",
                     )
-                    .exists()
+                    .exists(),
             ).toBe(false);
             expect(
-                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists()
+                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists(),
             ).toBe(true);
             expect(wrapper.find("[data-test=progress]").exists()).toBe(false);
         });

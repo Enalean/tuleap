@@ -53,11 +53,11 @@ describe("Feature planner", () => {
                     to_program_increment_id: 1,
                     feature: { id: 45 } as Feature,
                     order: null,
-                })
+                }),
             ).rejects.toEqual(
                 new Error(
-                    "Cannot reorder element #45 in program increment #1 because order is null"
-                )
+                    "Cannot reorder element #45 in program increment #1 because order is null",
+                ),
             );
         });
 

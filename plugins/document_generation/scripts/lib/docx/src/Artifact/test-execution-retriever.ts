@@ -21,10 +21,10 @@ import { get } from "@tuleap/tlp-fetch";
 import type { TestExecutionResponse } from "../type";
 
 export async function getTestManagementExecution(
-    artifact_id: number
+    artifact_id: number,
 ): Promise<TestExecutionResponse> {
     const test_execution_response = await get(
-        `/api/v1/testmanagement_executions/${encodeURIComponent(artifact_id)}`
+        `/api/v1/testmanagement_executions/${encodeURIComponent(artifact_id)}`,
     );
 
     return test_execution_response.json();

@@ -117,7 +117,7 @@ const is_saving = ref(false);
 const reviewer_input = ref<Lazybox | undefined>();
 const currently_selected_users = ref<Array<User>>([]);
 const has_no_user_selected = computed(
-    () => props.reviewers_list.length > 0 && currently_selected_users.value.length === 0
+    () => props.reviewers_list.length > 0 && currently_selected_users.value.length === 0,
 );
 
 const users_transformer = UsersToLazyboxItemsTransformer();

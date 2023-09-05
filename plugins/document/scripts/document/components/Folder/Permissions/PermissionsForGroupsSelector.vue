@@ -30,7 +30,7 @@
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     {{
                         $gettext(
-                            "Writers and Managers are also Readers. Redundant permissions are automatically de-duplicated."
+                            "Writers and Managers are also Readers. Redundant permissions are automatically de-duplicated.",
                         )
                     }}
                 </p>
@@ -47,7 +47,7 @@
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     {{
                         $gettext(
-                            "Managers are also Writers. Redundant permissions are automatically de-duplicated."
+                            "Managers are also Writers. Redundant permissions are automatically de-duplicated.",
                         )
                     }}
                 </p>

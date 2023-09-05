@@ -64,7 +64,7 @@ describe("getLabeledItems", () => {
             project_id,
             labels_id,
             0,
-            1
+            1,
         );
 
         expect(are_there_items_user_cannot_see).toBe(false);
@@ -132,7 +132,7 @@ describe("getLabeledItems", () => {
                             labeled_items: [],
                             are_there_items_user_cannot_see: true,
                         }),
-                })
+                }),
             )
             .mockReturnValueOnce(
                 Promise.resolve({
@@ -145,7 +145,7 @@ describe("getLabeledItems", () => {
                             labeled_items: [],
                             are_there_items_user_cannot_see: true,
                         }),
-                })
+                }),
             )
             .mockReturnValueOnce(
                 Promise.resolve({
@@ -158,7 +158,7 @@ describe("getLabeledItems", () => {
                             labeled_items: [{ title: "Le title" }],
                             are_there_items_user_cannot_see: false,
                         }),
-                })
+                }),
             );
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);

@@ -77,7 +77,7 @@ const add_button_href = computed((): string => {
     return buildCreateNewTestDefinitionLink(
         testdefinition_tracker_id.value,
         milestone_id.value,
-        props.backlog_item
+        props.backlog_item,
     );
 });
 

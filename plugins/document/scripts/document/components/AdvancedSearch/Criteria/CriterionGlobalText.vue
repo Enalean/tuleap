@@ -50,7 +50,7 @@ defineProps<{ value: string }>();
 
 const popover_description = computed((): string => {
     return $gettext(
-        "Global search will search in all text properties of document (but does not look inside the document)."
+        "Global search will search in all text properties of document (but does not look inside the document).",
     );
 });
 </script>

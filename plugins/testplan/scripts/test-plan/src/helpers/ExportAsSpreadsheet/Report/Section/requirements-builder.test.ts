@@ -269,7 +269,7 @@ describe("Build requirements section", () => {
                         tracker: bug_tracker,
                     },
                 ],
-            ])
+            ]),
         );
         jest.spyOn(trackers_retriever, "retrieveTrackers").mockResolvedValue([
             story_tracker,
@@ -298,7 +298,7 @@ describe("Build requirements section", () => {
                     new TextCell("Passed"),
                     new EmptyCell(),
                     new NumberCell(12).withComment(
-                        "This requirement have multiple fields with this label, only one value is visible"
+                        "This requirement have multiple fields with this label, only one value is visible",
                     ),
                     new DateCell(new Date("2020-08-01T00:00:00+01:00")),
                     new TextCell("Text 1"),
@@ -310,7 +310,7 @@ describe("Build requirements section", () => {
                     new TextCell("Blocked"),
                     new NumberCell(24),
                     new NumberCell(22).withComment(
-                        "This requirement have multiple fields with this label, only one value is visible"
+                        "This requirement have multiple fields with this label, only one value is visible",
                     ),
                     new EmptyCell(),
                     new TextCell("Text 2"),

@@ -15,7 +15,7 @@ function FileDiffRestService($q, $http, ErrorModalService) {
                 "/api/v1/pull_requests/" +
                     encodeURIComponent(pull_request_id) +
                     "/file_diff?path=" +
-                    encodeURIComponent(file_path)
+                    encodeURIComponent(file_path),
             )
             .then(({ data }) => data)
             .catch((response) => {

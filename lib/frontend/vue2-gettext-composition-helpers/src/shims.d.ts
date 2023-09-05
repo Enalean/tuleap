@@ -29,7 +29,7 @@ declare module "vue/types/vue" {
         $gettextInterpolate: (
             msgid: string,
             context: object,
-            disable_html_escaping?: boolean
+            disable_html_escaping?: boolean,
         ) => string;
     }
 }

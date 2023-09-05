@@ -61,7 +61,7 @@ const post_submit_callback = (new_comment: PullRequestComment): void => {
     }
 
     displayNewlyCreatedGlobalComment(
-        CommentPresenterBuilder.fromPayload(new_comment, base_url, pull_request_id, $gettext)
+        CommentPresenterBuilder.fromPayload(new_comment, base_url, pull_request_id, $gettext),
     );
 };
 
@@ -74,6 +74,6 @@ const controller = NewCommentFormController(
     { avatar_url },
     { is_cancel_allowed: false, is_autofocus_enabled: false, project_id },
     post_submit_callback,
-    displayTuleapAPIFault
+    displayTuleapAPIFault,
 );
 </script>

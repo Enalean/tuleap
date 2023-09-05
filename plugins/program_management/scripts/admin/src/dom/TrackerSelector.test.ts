@@ -34,7 +34,7 @@ describe(`TrackerSelector`, () => {
                       <option value=""></option>
                       <option value="101" selected></option>
                       <option value="126"></option>
-                  </select>`
+                  </select>`,
             );
             const selector = TrackerSelector.fromId(new DocumentAdapter(doc), "select");
 
@@ -48,7 +48,7 @@ describe(`TrackerSelector`, () => {
                       <option value="" selected></option>
                       <option value="101"></option>
                       <option value="126"></option>
-                </select>`
+                </select>`,
             );
             const selector = TrackerSelector.fromId(new DocumentAdapter(doc), "select");
 
@@ -66,7 +66,7 @@ describe(`TrackerSelector`, () => {
                       <option value=""></option>
                       <option value="101" selected></option>
                       <option value="126"></option>
-                  </select>`
+                  </select>`,
             );
             const retriever = new DocumentAdapter(doc);
             const select_element = retriever.getSelectById("select");
@@ -89,7 +89,7 @@ describe(`TrackerSelector`, () => {
                       <option value="" selected></option>
                       <option value="101"></option>
                       <option value="126"></option>
-                </select>`
+                </select>`,
             );
             const retriever = new DocumentAdapter(doc);
             const select_element = retriever.getSelectById("select");

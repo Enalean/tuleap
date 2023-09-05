@@ -46,7 +46,7 @@ describe(`SearchResultsGroup`, () => {
         const second_artifact = LinkableArtifactStub.withDefaults({ id: 457 });
         const group = SearchResultsGroup.fromSearchResults(
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
-            [first_artifact, second_artifact]
+            [first_artifact, second_artifact],
         );
 
         expect(group.is_loading).toBe(false);

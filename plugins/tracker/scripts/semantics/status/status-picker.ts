@@ -36,7 +36,7 @@ export async function initStatusListPicker(mount_point: Document): Promise<void>
         (locale) =>
             import(
                 /* webpackChunkName: "status-picker-po-" */ "../po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     createListPicker(document.querySelector("#semantic-status-value"), {

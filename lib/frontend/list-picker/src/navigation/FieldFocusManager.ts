@@ -24,7 +24,7 @@ export class FieldFocusManager {
         private readonly doc: HTMLDocument,
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_element: HTMLElement,
-        private readonly search_field_element: HTMLInputElement | null
+        private readonly search_field_element: HTMLInputElement | null,
     ) {}
 
     public init(): void {
@@ -35,14 +35,14 @@ export class FieldFocusManager {
 
         this.source_select_box.addEventListener(
             "focus",
-            this.steal_focus_event_from_source_select_box_handler
+            this.steal_focus_event_from_source_select_box_handler,
         );
     }
 
     public destroy(): void {
         this.source_select_box.removeEventListener(
             "focus",
-            this.steal_focus_event_from_source_select_box_handler
+            this.steal_focus_event_from_source_select_box_handler,
         );
     }
 

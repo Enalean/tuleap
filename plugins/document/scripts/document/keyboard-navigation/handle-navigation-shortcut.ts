@@ -41,7 +41,7 @@ export function callNavigationShortcut(doc: Document, direction: Direction): voi
 
 function getTargetRow(doc: Document, direction: Direction): HTMLElement | null {
     const table_body: HTMLTableSectionElement | null = doc.querySelector(
-        ".document-folder-pane tbody"
+        ".document-folder-pane tbody",
     );
     if (!table_body || (table_body && !table_body.hasChildNodes())) {
         return null;

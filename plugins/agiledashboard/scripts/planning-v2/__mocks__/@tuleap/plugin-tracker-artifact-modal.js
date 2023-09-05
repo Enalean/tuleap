@@ -25,5 +25,5 @@ export default angular.module("tuleap.artifact-modal", []).service(
     class {
         showCreation() {}
         showEdition() {}
-    }
+    },
 ).name;

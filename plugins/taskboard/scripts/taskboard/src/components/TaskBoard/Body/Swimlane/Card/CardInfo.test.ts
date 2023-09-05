@@ -33,7 +33,7 @@ function getWrapper(card: Card, slots: Slots = {}): Wrapper<CardInfo> {
 function getCard(
     definition: Card = {
         is_in_edit_mode: false,
-    } as Card
+    } as Card,
 ): Card {
     return {
         ...definition,

@@ -45,9 +45,9 @@ export default class NoMappingMessage extends Vue {
 
         return this.$gettextInterpolate(
             this.$gettext(
-                "This card has status <strong>%{ label }</strong> that does not map to current taskboard columns."
+                "This card has status <strong>%{ label }</strong> that does not map to current taskboard columns.",
             ),
-            { label: this.card.mapped_list_value.label }
+            { label: this.card.mapped_list_value.label },
         );
     }
 }

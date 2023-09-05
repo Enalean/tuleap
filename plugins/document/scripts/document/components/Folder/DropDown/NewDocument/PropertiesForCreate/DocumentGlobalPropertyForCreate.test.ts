@@ -26,7 +26,7 @@ import type { Folder, ItemFile } from "../../../../../type";
 describe("DocumentGlobalPropertyForCreate", () => {
     function createWrapper(
         item: ItemFile,
-        parent: Folder
+        parent: Folder,
     ): VueWrapper<InstanceType<typeof DocumentGlobalPropertyForCreate>> {
         return shallowMount(DocumentGlobalPropertyForCreate, {
             props: { currentlyUpdatedItem: item, parent },

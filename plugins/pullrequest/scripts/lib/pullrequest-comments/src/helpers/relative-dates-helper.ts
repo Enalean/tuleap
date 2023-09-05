@@ -32,7 +32,7 @@ export interface HelpRelativeDatesDisplay {
 export const RelativeDatesHelper = (
     date_format: string,
     relative_date_display: RelativeDatesDisplayPreference,
-    user_locale: string
+    user_locale: string,
 ): HelpRelativeDatesDisplay => ({
     getRelativeDatePreference: (): string => relativeDatePreference(relative_date_display),
     getRelativeDatePlacement: (): string => relativeDatePlacement(relative_date_display, "right"),

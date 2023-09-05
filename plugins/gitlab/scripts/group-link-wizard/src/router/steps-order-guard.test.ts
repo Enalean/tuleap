@@ -74,14 +74,14 @@ describe("step-order-guard", () => {
         (
             navigation_description: string,
             from: RouteLocationNormalized,
-            to: RouteLocationNormalized
+            to: RouteLocationNormalized,
         ) => {
             const redirect = ensureStepsHaveBeenCompletedInTheRightOrder(to, from);
 
             expect(redirect).toStrictEqual({
                 name: NO_GROUP_LINKED_EMPTY_STATE,
             });
-        }
+        },
     );
 
     it.each([
@@ -125,11 +125,11 @@ describe("step-order-guard", () => {
         (
             navigation_description: string,
             from: RouteLocationNormalized,
-            to: RouteLocationNormalized
+            to: RouteLocationNormalized,
         ) => {
             const redirect = ensureStepsHaveBeenCompletedInTheRightOrder(to, from);
 
             expect(redirect).toBeUndefined();
-        }
+        },
     );
 });

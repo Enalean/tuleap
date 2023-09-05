@@ -107,14 +107,14 @@ function showUpdateItemPropertiesModal(event: UpdatePropertiesEvent): void {
             () =>
                 import(
                     /* webpackChunkName: "update-folder-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
-                )
+                ),
         );
     } else {
         shown_update_properties_modal.value = defineAsyncComponent(
             () =>
                 import(
                     /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                )
+                ),
         );
     }
 }
@@ -131,7 +131,7 @@ function showCreateNewItemVersionModal(event: NewVersionEvent): void {
                 () =>
                     import(
                         /* webpackChunkName: "document-new-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionFileModal.vue"
-                    )
+                    ),
             );
             break;
         case TYPE_EMBEDDED:
@@ -139,7 +139,7 @@ function showCreateNewItemVersionModal(event: NewVersionEvent): void {
                 () =>
                     import(
                         /* webpackChunkName: "document-new-embedded-version-file-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                    )
+                    ),
             );
             break;
         case TYPE_WIKI:
@@ -147,7 +147,7 @@ function showCreateNewItemVersionModal(event: NewVersionEvent): void {
                 () =>
                     import(
                         /* webpackChunkName: "document-new-wiki-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionWikiModal.vue"
-                    )
+                    ),
             );
             break;
         case TYPE_LINK:
@@ -155,7 +155,7 @@ function showCreateNewItemVersionModal(event: NewVersionEvent): void {
                 () =>
                     import(
                         /* webpackChunkName: "document-new-link-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionLinkModal.vue"
-                    )
+                    ),
             );
             break;
         case TYPE_EMPTY:
@@ -163,7 +163,7 @@ function showCreateNewItemVersionModal(event: NewVersionEvent): void {
                 () =>
                     import(
                         /* webpackChunkName: "document-new-empty-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
-                    )
+                    ),
             );
             break;
         default: //nothing
@@ -187,7 +187,7 @@ function showArchiveSizeWarningModal(event: ArchiveSizeWarningModalEvent): void 
 const current_folder_size = ref<number | null>(null);
 
 function showMaxArchiveSizeThresholdExceededErrorModal(
-    event: MaxArchiveSizeThresholdExceededEvent
+    event: MaxArchiveSizeThresholdExceededEvent,
 ): void {
     current_folder_size.value = event.detail.current_folder_size;
 }
@@ -221,7 +221,7 @@ onMounted(() => {
     emitter.on("show-update-permissions-modal", showUpdateItemPermissionsModal);
     emitter.on(
         "show-max-archive-size-threshold-exceeded-modal",
-        showMaxArchiveSizeThresholdExceededErrorModal
+        showMaxArchiveSizeThresholdExceededErrorModal,
     );
     emitter.on("show-archive-size-warning-modal", showArchiveSizeWarningModal);
     emitter.on("item-is-being-uploaded", itemIsBeingUploaded);
@@ -234,7 +234,7 @@ onUnmounted(() => {
     emitter.off("show-update-permissions-modal", showUpdateItemPermissionsModal);
     emitter.off(
         "show-max-archive-size-threshold-exceeded-modal",
-        showMaxArchiveSizeThresholdExceededErrorModal
+        showMaxArchiveSizeThresholdExceededErrorModal,
     );
     emitter.off("show-archive-size-warning-modal", showArchiveSizeWarningModal);
     emitter.off("item-is-being-uploaded", itemIsBeingUploaded);

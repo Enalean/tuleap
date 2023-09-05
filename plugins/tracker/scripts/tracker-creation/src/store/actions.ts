@@ -24,7 +24,7 @@ import type { ActionContext } from "vuex";
 
 export async function getJiraProjectList(
     context: ActionContext<State, State>,
-    credentials: Credentials
+    credentials: Credentials,
 ): Promise<ProjectList[]> {
     const response = await post(
         "/plugins/tracker/" +
@@ -35,7 +35,7 @@ export async function getJiraProjectList(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ credentials }),
-        }
+        },
     );
 
     return response.json();
@@ -43,7 +43,7 @@ export async function getJiraProjectList(
 
 export async function getJiraTrackerList(
     context: ActionContext<State, State>,
-    project_tracker_payload: ProjectTrackerPayload
+    project_tracker_payload: ProjectTrackerPayload,
 ): Promise<TrackerList[]> {
     const response = await post(
         "/plugins/tracker/" +
@@ -56,7 +56,7 @@ export async function getJiraTrackerList(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ credentials: project_tracker_payload.credentials }),
-        }
+        },
     );
 
     return response.json();

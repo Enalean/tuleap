@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale: string) =>
             import(
                 /* webpackChunkName: "platform-admin-banner-po-" */ `../po/${getPOFileFromLocale(
-                    locale
+                    locale,
                 )}`
-            )
+            ),
     );
 
     const AppComponent = Vue.extend(App);

@@ -33,25 +33,25 @@ import { isAnAddedLine, isAnUnmovedLine } from "../file-lines/file-line-helper";
 export interface ScrollToFileDiffComment {
     scrollToUnifiedDiffComment: (
         comment_id_param: number | null,
-        unidiff_codemirror: Editor
+        unidiff_codemirror: Editor,
     ) => void;
     scrollToSideBySideDiffComment: (
         comment_id_param: number | null,
         left_codemirror: Editor,
-        right_codemirror: Editor
+        right_codemirror: Editor,
     ) => void;
 }
 
 const getComment = (
     comments_store: StorePullRequestCommentReplies,
-    comment_id: number
+    comment_id: number,
 ): PullRequestInlineCommentPresenter | null => {
     return (
         comments_store
             .getAllRootComments()
             .filter(
                 (comment): comment is PullRequestInlineCommentPresenter =>
-                    comment.type === TYPE_INLINE_COMMENT
+                    comment.type === TYPE_INLINE_COMMENT,
             )
             .find((comment) => comment.id === comment_id) ?? null
     );
@@ -59,7 +59,7 @@ const getComment = (
 
 export const getLineNumberFromComment = (
     comment: PullRequestInlineCommentPresenter,
-    file_lines: readonly FileLine[]
+    file_lines: readonly FileLine[],
 ): number => {
     const line = file_lines[comment.file.unidiff_offset - 1];
     if (!line) {
@@ -79,7 +79,7 @@ const scrollToCommentWidget = (
     comment_widgets_map: MapCommentWidgets,
     codemirror: Editor,
     comment_id: number,
-    line_number: number
+    line_number: number,
 ): void => {
     const widget = comment_widgets_map.getCommentWidget(comment_id);
     if (!widget) {
@@ -96,7 +96,7 @@ const scrollToCommentWidget = (
 export const FileDiffCommentScroller = (
     comments_store: StorePullRequestCommentReplies,
     file_lines: readonly FileLine[],
-    comment_widgets_map: MapCommentWidgets
+    comment_widgets_map: MapCommentWidgets,
 ): ScrollToFileDiffComment => ({
     scrollToUnifiedDiffComment: (comment_id: number | null, unidiff_codemirror: Editor): void => {
         if (comment_id === null) {
@@ -112,13 +112,13 @@ export const FileDiffCommentScroller = (
             comment_widgets_map,
             unidiff_codemirror,
             comment_id,
-            comment.file.unidiff_offset
+            comment.file.unidiff_offset,
         );
     },
     scrollToSideBySideDiffComment: (
         comment_id: number | null,
         left_codemirror: Editor,
-        right_codemirror: Editor
+        right_codemirror: Editor,
     ): void => {
         if (comment_id === null) {
             return;
@@ -135,7 +135,7 @@ export const FileDiffCommentScroller = (
                 ? left_codemirror
                 : right_codemirror,
             comment_id,
-            getLineNumberFromComment(comment, file_lines)
+            getLineNumberFromComment(comment, file_lines),
         );
     },
 });

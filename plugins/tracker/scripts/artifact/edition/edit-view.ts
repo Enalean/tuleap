@@ -34,7 +34,7 @@ document.addEventListener("readystatechange", () => {
     const creator = new RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
-        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
     );
     creator.createNewFollowupEditor();
     creator.createTextFieldEditors();

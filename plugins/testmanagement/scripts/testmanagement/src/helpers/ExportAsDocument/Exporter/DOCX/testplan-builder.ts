@@ -38,7 +38,7 @@ import { sprintf } from "sprintf-js";
 
 export function getMilestoneTestPlanTitle(
     gettext_provider: GettextProvider,
-    global_export_properties: GenericGlobalExportProperties
+    global_export_properties: GenericGlobalExportProperties,
 ): { id: string; text: string } {
     return {
         id: "testplan",
@@ -51,7 +51,7 @@ export function getMilestoneTestPlanTitle(
 export async function buildMilestoneTestPlan(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: GettextProvider,
-    global_export_properties: GenericGlobalExportProperties
+    global_export_properties: GenericGlobalExportProperties,
 ): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneTestPlanTitle(gettext_provider, global_export_properties);
 
@@ -79,12 +79,12 @@ export async function buildMilestoneTestPlan(
 
 function buildTestPlanSection(
     tests: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
         gettext_provider,
         tests,
         HEADER_LEVEL_ARTIFACT_TITLE,
-        HEADER_STYLE_ARTIFACT_TITLE
+        HEADER_STYLE_ARTIFACT_TITLE,
     );
 }

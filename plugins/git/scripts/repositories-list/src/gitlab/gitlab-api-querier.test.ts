@@ -60,14 +60,14 @@ describe("Gitlab Api Querier", () => {
                 jest.spyOn(tlp_fetch, "recursiveGet").mockImplementation(
                     <T>(
                         url: string,
-                        init?: RecursiveGetInit<Array<Repository>, T>
+                        init?: RecursiveGetInit<Array<Repository>, T>,
                     ): Promise<T[]> => {
                         if (!init || !init.getCollectionCallback) {
                             throw new Error();
                         }
 
                         return Promise.resolve(init.getCollectionCallback(repositories));
-                    }
+                    },
                 );
 
                 function displayCallback(result: Array<Repository>): void {

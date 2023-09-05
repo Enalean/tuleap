@@ -29,7 +29,7 @@ export type LazyboxSelectionCallback = (selected_value: unknown | null) => void;
 export type HTMLTemplateResult = UpdateFunction<HTMLElement>;
 export type LazyboxTemplatingCallback = (
     html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem
+    item: LazyboxItem,
 ) => HTMLTemplateResult;
 
 export type LazyboxNewItemClickedCallback = (item_name: string) => void;

@@ -130,7 +130,7 @@ describe("Copy item", () => {
             {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: JSON.stringify({ copy: { item_id: copied_item_id } }),
-            }
+            },
         );
     });
 
@@ -144,7 +144,7 @@ describe("Copy item", () => {
             {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: JSON.stringify({ copy: { item_id: copied_item_id } }),
-            }
+            },
         );
     });
 
@@ -180,7 +180,7 @@ describe("Copy item", () => {
             {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: JSON.stringify({ copy: { item_id: copied_item_id } }),
-            }
+            },
         );
     });
 });

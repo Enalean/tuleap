@@ -34,7 +34,7 @@ describe(`ProjectProxy`, () => {
 
             expect(result.id).toBe(project.id);
             expect(result.label).toBe(expected_label);
-        }
+        },
     );
 
     it.each([

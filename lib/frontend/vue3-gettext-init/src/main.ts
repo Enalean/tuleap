@@ -33,7 +33,7 @@ interface Vue3GettextTranslationMap {
 
 const loadTranslations = (
     locale: string | undefined,
-    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): PromiseLike<Vue3GettextTranslationMap> => {
     if (!locale) {
         return Promise.resolve({});
@@ -47,7 +47,7 @@ const loadTranslations = (
         () => {
             // default to en_US
             return {};
-        }
+        },
     );
 };
 
@@ -66,7 +66,7 @@ export type POGettextPluginPOFile = {
 
 export async function initVueGettext(
     create_gettext: typeof createGettext,
-    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): Promise<VueGettext> {
     const locale = document.body.dataset.userLocale;
     return create_gettext({
@@ -77,7 +77,7 @@ export async function initVueGettext(
 }
 
 function transformTranslationToVue3GettextFormat(
-    po_file: POGettextPluginPOFile
+    po_file: POGettextPluginPOFile,
 ): Vue3GettextTranslationData {
     const vue3_gettext_data: Vue3GettextTranslationData = {};
     for (const [, value] of Object.entries(po_file.translations[""])) {

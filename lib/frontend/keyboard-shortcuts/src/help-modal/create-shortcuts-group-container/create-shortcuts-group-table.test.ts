@@ -91,7 +91,7 @@ describe("createShortcutsGroupTable", () => {
             "beforeend",
             `<template data-shortcuts-help-header-template="">` +
                 table_head_snapshot +
-                `</template>`
+                `</template>`,
         );
     }
 });

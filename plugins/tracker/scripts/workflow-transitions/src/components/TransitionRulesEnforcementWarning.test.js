@@ -51,10 +51,10 @@ describe("TransitionRulesEnforcementWarning", () => {
         it("shows only rules enforcement active message", async () => {
             const wrapper = await getWrapper();
             expect(
-                wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
+                wrapper.find('[data-test-message="rules-enforcement-active"]').exists(),
             ).toBeTruthy();
             expect(
-                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists()
+                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists(),
             ).toBeFalsy();
         });
     });
@@ -65,10 +65,10 @@ describe("TransitionRulesEnforcementWarning", () => {
         it("shows only rule enforcement inactive message", async () => {
             const wrapper = await getWrapper();
             expect(
-                wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
+                wrapper.find('[data-test-message="rules-enforcement-active"]').exists(),
             ).toBeFalsy();
             expect(
-                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists()
+                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists(),
             ).toBeTruthy();
         });
     });

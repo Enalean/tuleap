@@ -125,7 +125,7 @@ describe("CreateModal", () => {
         });
         const expected_error = new Error("Something bad happened");
         jest.spyOn(tracker_report_retriever, "getTrackerReports").mockRejectedValueOnce(
-            expected_error
+            expected_error,
         );
 
         const wrapper = shallowMount(CreateModal, {
@@ -139,7 +139,7 @@ describe("CreateModal", () => {
                     },
                     (e): void => {
                         expect(e).toBe(expected_error);
-                    }
+                    },
                 ),
             },
         });

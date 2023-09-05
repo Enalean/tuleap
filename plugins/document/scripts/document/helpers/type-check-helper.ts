@@ -39,7 +39,7 @@ import {
 } from "../constants";
 
 export function isFile(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem,
 ): item is ItemFile {
     return item.type === TYPE_FILE;
 }
@@ -57,13 +57,13 @@ export function isWiki(item: Item | Embedded | Empty | ItemFile | Link | Wiki): 
 }
 
 export function isEmbedded(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki,
 ): item is Embedded {
     return item.type === TYPE_EMBEDDED;
 }
 
 export function isFolder(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem,
 ): item is Folder {
     return item.type === TYPE_FOLDER;
 }

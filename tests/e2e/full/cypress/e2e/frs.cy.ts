@@ -80,13 +80,13 @@ describe("Frs", function () {
                     () => cy.visitProjectService(`frs-${now}`, "Files"),
                     (number_of_attempts, max_attempts) => {
                         cy.log(
-                            `Check that My release${now} has been created (attempt ${number_of_attempts}/${max_attempts})`
+                            `Check that My release${now} has been created (attempt ${number_of_attempts}/${max_attempts})`,
                         );
                         return cy
                             .get('[data-test="release-name"]')
                             .then((releases) => releases.text().includes(`My release${now}`));
                     },
-                    `Timed out while checking if My release${now} has been created`
+                    `Timed out while checking if My release${now} has been created`,
                 );
 
                 cy.intercept({

@@ -38,7 +38,7 @@ describe("ItemsMapManager", () => {
     describe("findListPickerItemInItemMap", () => {
         it("Given an item map and an item id, Then it should return the corresponding ListPickerItem", () => {
             const item = items_manager.findListPickerItemInItemMap(
-                "list-picker-item-group1-value_2"
+                "list-picker-item-group1-value_2",
             );
 
             expect(item.id).toBe("list-picker-item-group1-value_2");
@@ -46,7 +46,7 @@ describe("ItemsMapManager", () => {
 
         it("should throw an error when the given item id does not reference a ListPickerItem", () => {
             expect(() =>
-                items_manager.findListPickerItemInItemMap("the-item-that-does-not-exist")
+                items_manager.findListPickerItemInItemMap("the-item-that-does-not-exist"),
             ).toThrowError("Item with id the-item-that-does-not-exist not found in item map");
         });
     });

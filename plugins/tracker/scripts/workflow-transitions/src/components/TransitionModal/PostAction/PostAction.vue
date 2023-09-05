@@ -152,7 +152,7 @@ export default {
                     valid: false,
                     option: this.$gettext("Freeze fields (incompatible)"),
                     title: this.$gettext(
-                        "Advanced configuration is incompatible with this post-action"
+                        "Advanced configuration is incompatible with this post-action",
                     ),
                 };
             }
@@ -162,7 +162,7 @@ export default {
                     valid: false,
                     option: this.$gettext("Freeze fields (incompatible)"),
                     title: this.$gettext(
-                        "Your tracker doesn't seem to have available writable fields"
+                        "Your tracker doesn't seem to have available writable fields",
                     ),
                 };
             }
@@ -186,7 +186,7 @@ export default {
                     valid: false,
                     option: this.$gettext("Hide fieldsets (incompatible)"),
                     title: this.$gettext(
-                        "Advanced configuration is incompatible with this post-action"
+                        "Advanced configuration is incompatible with this post-action",
                     ),
                 };
             }
@@ -227,7 +227,7 @@ export default {
                 valid: false,
                 option: this.$gettext("Change the value of a field (incompatible)"),
                 title: this.$gettext(
-                    "Your tracker doesn't seem to have integer, float or date fields."
+                    "Your tracker doesn't seem to have integer, float or date fields.",
                 ),
             };
         },
@@ -240,7 +240,7 @@ export default {
         available_fields_for_set_value() {
             // Side effect is prevented with array duplication before sort
             return [...this.set_value_action_fields].sort((field1, field2) =>
-                compare(field1.label, field2.label)
+                compare(field1.label, field2.label),
             );
         },
         frozen_fields_is_valid() {
@@ -256,7 +256,7 @@ export default {
         frozen_fields_is_already_present() {
             return (
                 this.post_actions.filter(
-                    (post_action) => post_action.type === this.POST_ACTION_TYPE.FROZEN_FIELDS
+                    (post_action) => post_action.type === this.POST_ACTION_TYPE.FROZEN_FIELDS,
                 ).length > 0
             );
         },
@@ -276,7 +276,7 @@ export default {
         hidden_fieldsets_is_already_present() {
             return (
                 this.post_actions.filter(
-                    (post_action) => post_action.type === this.POST_ACTION_TYPE.HIDDEN_FIELDSETS
+                    (post_action) => post_action.type === this.POST_ACTION_TYPE.HIDDEN_FIELDSETS,
                 ).length > 0
             );
         },

@@ -50,7 +50,7 @@ describe("FieldFocusManager", () => {
                 document.implementation.createHTMLDocument(),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             ).init();
 
             source_select_box.dispatchEvent(new Event("focus"));
@@ -67,7 +67,7 @@ describe("FieldFocusManager", () => {
                 document.implementation.createHTMLDocument(),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             ).init();
 
             source_select_box.dispatchEvent(new Event("focus"));
@@ -82,7 +82,7 @@ describe("FieldFocusManager", () => {
                 document.implementation.createHTMLDocument(),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             );
 
             focus_manager.init();
@@ -100,7 +100,7 @@ describe("FieldFocusManager", () => {
                 getDocumentWithActiveElement(document.createElement("body")),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             );
 
             expect(focus_manager.doesSelectionElementHaveTheFocus()).toBe(false);
@@ -111,7 +111,7 @@ describe("FieldFocusManager", () => {
                 getDocumentWithActiveElement(selection_element),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             );
 
             expect(focus_manager.doesSelectionElementHaveTheFocus()).toBe(true);
@@ -126,7 +126,7 @@ describe("FieldFocusManager", () => {
                 getDocumentWithActiveElement(selection_element),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             );
         });
 
@@ -149,7 +149,7 @@ describe("FieldFocusManager", () => {
                 getDocumentWithActiveElement(selection_element),
                 source_select_box,
                 selection_element,
-                search_field_element
+                search_field_element,
             );
 
             focus_manager.applyFocusOnSearchField();

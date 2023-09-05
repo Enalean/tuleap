@@ -66,7 +66,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         tracker_id,
         parent_artifact_id,
         displayItemCallback,
-        prefill_values
+        prefill_values,
     ) {
         TuleapArtifactModalLoading.loading = true;
 
@@ -80,7 +80,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     user_id,
                     tracker_id,
                     parent_artifact_id,
-                    prefill_values
+                    prefill_values,
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : noop,
             },
@@ -135,7 +135,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
 
             const initial_values = mapPrefillsToFieldValues(
                 prefill_values || [],
-                modal_model.tracker.fields
+                modal_model.tracker.fields,
             );
             applyWorkflowTransitions(transformed_tracker, {});
             modal_model.values = getSelectedValues(initial_values, transformed_tracker);
@@ -175,7 +175,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 const artifact_values = getArtifactFieldValues(promises[0]);
                 let tracker_with_field_values = addFieldValuesToTracker(
                     artifact_values,
-                    transformed_tracker
+                    transformed_tracker,
                 );
 
                 applyWorkflowTransitions(tracker_with_field_values, artifact_values);

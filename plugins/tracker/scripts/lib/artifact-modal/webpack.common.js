@@ -49,7 +49,7 @@ const webpack_config = {
             hybrids: path.resolve(__dirname, "node_modules/hybrids/src/index.js"),
             "@floating-ui/dom": path.resolve(
                 __dirname,
-                "../../../../../lib/frontend/lazybox/node_modules/@floating-ui/dom"
+                "../../../../../lib/frontend/lazybox/node_modules/@floating-ui/dom",
             ),
             "tus-js-client": path.resolve(__dirname, "node_modules/tus-js-client"),
             "@tuleap/tlp-fetch": path.resolve(__dirname, "node_modules/@tuleap/tlp-fetch"),

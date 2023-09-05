@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const gettext_provider = await initGetTextProvider();
     const error_message_empty = gettext_provider.gettext(
-        "Message sent to administrators should not be the default one."
+        "Message sent to administrators should not be the default one.",
     );
 
     message_to_admin.setCustomValidity(error_message_empty);
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function checkMessageValidity(
         message_to_admin: HTMLTextAreaElement,
-        error_message_empty: string
+        error_message_empty: string,
     ): void {
         const message =
             message_to_admin.value === message_to_admin.placeholder ? error_message_empty : "";
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 import(
                     /* webpackChunkName: "access-denied-error-po-" */ "../po/" +
                         getPOFileFromLocale(locale)
-                )
+                ),
         );
     }
 });

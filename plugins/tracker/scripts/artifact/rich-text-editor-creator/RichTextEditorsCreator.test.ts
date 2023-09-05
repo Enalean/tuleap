@@ -88,7 +88,7 @@ describe(`RichTextEditorsCreator`, () => {
                 const options = createRichTextEditor.mock.calls[0][1];
                 if (options.onEditorInit === undefined) {
                     throw new Error(
-                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed"
+                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed",
                     );
                 }
                 const fake_ckeditor = {} as CKEDITOR.editor;
@@ -136,7 +136,7 @@ describe(`RichTextEditorsCreator`, () => {
                 const options = createRichTextEditor.mock.calls[0][1];
                 if (options.onEditorInit === undefined) {
                     throw new Error(
-                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed"
+                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed",
                     );
                 }
                 const fake_ckeditor = {} as CKEDITOR.editor;
@@ -165,7 +165,7 @@ describe(`RichTextEditorsCreator`, () => {
                                 isIntersecting: true,
                             } as IntersectionObserverEntry,
                         ],
-                        this
+                        this,
                     );
                 }
                 takeRecords(): IntersectionObserverEntry[] {
@@ -188,7 +188,7 @@ describe(`RichTextEditorsCreator`, () => {
             it throws`, () => {
             doc.body.insertAdjacentHTML(
                 "beforeend",
-                `<div class="tracker_artifact_field"><textarea id="bad_id"></textarea>`
+                `<div class="tracker_artifact_field"><textarea id="bad_id"></textarea>`,
             );
 
             expect(() => creator.createTextFieldEditors()).toThrow();
@@ -200,7 +200,7 @@ describe(`RichTextEditorsCreator`, () => {
                 and defaults the format to "commonmark"`, () => {
                 doc.body.insertAdjacentHTML(
                     "beforeend",
-                    `<div class="tracker_artifact_field"><textarea id="field_1234"></textarea>`
+                    `<div class="tracker_artifact_field"><textarea id="field_1234"></textarea>`,
                 );
                 const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
@@ -227,7 +227,7 @@ describe(`RichTextEditorsCreator`, () => {
                     <div class="tracker_artifact_field">
                       <textarea id="field_4567"></textarea>
                       <input type="hidden" id="artifact[4567]_body_format" value="text">
-                  </div>`
+                  </div>`,
                 );
                 const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 

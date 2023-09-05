@@ -45,17 +45,17 @@ function initThemeColorSelector(): void {
                 `<i class="fa fa-circle user-preferences-color-selector-selection-{{ id }}" aria-hidden="true"></i>
                     {{ text }}
                 </div>`,
-                result
+                result,
             );
         },
         templateSelection(
-            result: IdTextPair | LoadingData | DataFormat | GroupedDataFormat
+            result: IdTextPair | LoadingData | DataFormat | GroupedDataFormat,
         ): string {
             return mustache.render(
                 `<i class="fa fa-circle user-preferences-color-selector-selection-{{ id }}" aria-hidden="true"></i>
                     {{ text }}
                 </div>`,
-                result
+                result,
             );
         },
     });
@@ -106,7 +106,7 @@ function initSelectBoxesPreviews(): void {
         "#relative-dates-display",
         "#user-preferences-section-appearance-relative-dates-preview",
         ".user-preferences-section-appearance-relative-dates-preview-option",
-        "data-relative-date-option-name"
+        "data-relative-date-option-name",
     );
 
     // init usernames format preview
@@ -115,7 +115,7 @@ function initSelectBoxesPreviews(): void {
         "#user-prefs-username-display-format-select",
         "#user-preferences-section-appearance-usernames-display-preview",
         ".user-preference-appearance-section-usernames-display-preview-option",
-        "data-usernames-display-option-value"
+        "data-usernames-display-option-value",
     );
 }
 
@@ -124,7 +124,7 @@ export function initSelectBoxPreview(
     selectbox_id: string,
     preview_id: string,
     option_css_class: string,
-    data_attribute_name: string
+    data_attribute_name: string,
 ): void {
     const selector = doc.querySelector(selectbox_id);
     const preview = doc.querySelector(preview_id);
@@ -144,7 +144,7 @@ export function initSelectBoxPreview(
             selector,
             preview,
             option_css_class,
-            data_attribute_name
+            data_attribute_name,
         );
     });
 }
@@ -153,7 +153,7 @@ function changePreviewAccordingToSelectedValue(
     selector: HTMLSelectElement,
     preview: SVGElement,
     option_css_class: string,
-    data_attribute_name: string
+    data_attribute_name: string,
 ): void {
     const previously_selected_option = preview.querySelector(option_css_class + ".shown");
 
@@ -163,7 +163,7 @@ function changePreviewAccordingToSelectedValue(
 
     const selected_option_name = selector.value;
     const selected_option = preview.querySelector(
-        `[${data_attribute_name}="${selected_option_name}"]`
+        `[${data_attribute_name}="${selected_option_name}"]`,
     );
 
     if (selected_option === null || !(selected_option instanceof SVGElement)) {

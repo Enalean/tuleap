@@ -61,6 +61,6 @@ export const global_upload_progress = (state: State): number => {
 
 export const is_uploading = (state: State): boolean => {
     return Boolean(
-        state.folder_content.find((item: Item | FakeItem) => isFakeItem(item) && item.is_uploading)
+        state.folder_content.find((item: Item | FakeItem) => isFakeItem(item) && item.is_uploading),
     );
 };

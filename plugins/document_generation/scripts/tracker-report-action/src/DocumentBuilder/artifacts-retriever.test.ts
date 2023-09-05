@@ -52,7 +52,7 @@ describe("artifacts-retriever", () => {
         const get_test_exec = vi.fn();
 
         await expect(
-            retrieveReportArtifacts(123, 852, false, get_test_exec)
+            retrieveReportArtifacts(123, 852, false, get_test_exec),
         ).resolves.toStrictEqual(artifacts_structure);
     });
 });

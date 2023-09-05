@@ -78,25 +78,28 @@ const onClickShowMore = (host: InternalArtifactCreator): void => {
 };
 
 const getErrorTemplate = (host: InternalArtifactCreator): UpdateFunction<ArtifactCreatorElement> =>
-    host.error_message.mapOr((error_message) => {
-        const buttonOrDetails = !host.show_error_details
-            ? html`<button
-                  type="button"
-                  class="tlp-button-primary tlp-button-outline tlp-button-small"
-                  onclick="${onClickShowMore}"
-              >
-                  ${getArtifactFeedbackShowMoreLabel()}
-              </button>`
-            : html`<p data-test="creation-error-details">${error_message}</p>`;
+    host.error_message.mapOr(
+        (error_message) => {
+            const buttonOrDetails = !host.show_error_details
+                ? html`<button
+                      type="button"
+                      class="tlp-button-primary tlp-button-outline tlp-button-small"
+                      onclick="${onClickShowMore}"
+                  >
+                      ${getArtifactFeedbackShowMoreLabel()}
+                  </button>`
+                : html`<p data-test="creation-error-details">${error_message}</p>`;
 
-        return html`<div
-            class="tlp-alert-danger link-field-artifact-creator-alert"
-            data-test="creation-error"
-        >
-            <p>${getArtifactCreationFeedbackErrorMessage()}</p>
-            ${buttonOrDetails}
-        </div>`;
-    }, html``);
+            return html`<div
+                class="tlp-alert-danger link-field-artifact-creator-alert"
+                data-test="creation-error"
+            >
+                <p>${getArtifactCreationFeedbackErrorMessage()}</p>
+                ${buttonOrDetails}
+            </div>`;
+        },
+        html``,
+    );
 
 export const onClickCancel = (host: HostElement): void => {
     host.controller.enableSubmit();
@@ -115,7 +118,7 @@ export const onSubmit = async (host: HostElement, event: Event): Promise<void> =
     host.is_loading = true;
     const created_artifact = await host.controller.createArtifact(
         title_input.value,
-        WillDisableSubmit(getSubmitDisabledForLinkableArtifactCreationReason())
+        WillDisableSubmit(getSubmitDisabledForLinkableArtifactCreationReason()),
     );
     host.is_loading = false;
     created_artifact.apply((artifact) => {
@@ -124,7 +127,7 @@ export const onSubmit = async (host: HostElement, event: Event): Promise<void> =
 };
 
 const getProjectOptions = (
-    host: InternalArtifactCreator
+    host: InternalArtifactCreator,
 ): UpdateFunction<ArtifactCreatorElement>[] =>
     host.projects.map(
         (project) =>
@@ -134,18 +137,18 @@ const getProjectOptions = (
                 data-test="artifact-modal-link-creator-projects-option"
             >
                 ${project.label}
-            </option>`
+            </option>`,
     );
 
 export const getTrackerSelectClasses = (
-    host: InternalArtifactCreator
+    host: InternalArtifactCreator,
 ): Record<string, boolean> => ({
     "tlp-form-element": true,
     "tlp-form-element-error": host.has_tracker_selection_error,
 });
 
 const getTrackersOptions = (
-    host: InternalArtifactCreator
+    host: InternalArtifactCreator,
 ): UpdateFunction<ArtifactCreatorElement>[] =>
     host.trackers.map(
         (tracker) =>
@@ -153,13 +156,13 @@ const getTrackersOptions = (
                 value="${tracker.id}"
                 selected="${host.selected_tracker.mapOr(
                     (identifier) => identifier.id === tracker.id,
-                    false
+                    false,
                 )}"
                 disabled="${tracker.cannot_create_reason !== ""}"
                 data-test="artifact-modal-link-creator-trackers-option"
             >
                 ${tracker.label}
-            </option>`
+            </option>`,
     );
 
 export const onProjectChange = (host: InternalArtifactCreator, event: Event): void => {
@@ -168,7 +171,7 @@ export const onProjectChange = (host: InternalArtifactCreator, event: Event): vo
         return host.controller
             .selectProjectAndGetItsTrackers(
                 project_identifier,
-                WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason())
+                WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason()),
             )
             .then((trackers) => {
                 host.controller.enableSubmit();
@@ -187,7 +190,7 @@ export const onTrackerChange = (host: InternalArtifactCreator, event: Event): vo
         },
         () => {
             host.selected_tracker = host.controller.clearTracker();
-        }
+        },
     );
 };
 
@@ -205,7 +208,7 @@ const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
         is_filterable: true,
         items_template_formatter: (html, value_id, option_label) => {
             const current_tracker = host.trackers.find(
-                (tracker) => Number.parseInt(value_id, 10) === tracker.id
+                (tracker) => Number.parseInt(value_id, 10) === tracker.id,
             );
             if (!current_tracker) {
                 return html``;
@@ -234,7 +237,7 @@ const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
 
 export const setErrorMessage = (
     host: InternalArtifactCreator,
-    new_value: Option<string> | undefined
+    new_value: Option<string> | undefined,
 ): Option<string> => {
     if (new_value) {
         host.content().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
@@ -285,7 +288,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
             selectOrThrow(
                 host.content(),
                 "#artifact-modal-link-creator-projects",
-                HTMLSelectElement
+                HTMLSelectElement,
             ),
     },
     has_tracker_selection_error: false,
@@ -294,7 +297,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
             selectOrThrow(
                 host.content(),
                 "#artifact-modal-link-creator-trackers",
-                HTMLSelectElement
+                HTMLSelectElement,
             ),
     },
     content: (host) =>

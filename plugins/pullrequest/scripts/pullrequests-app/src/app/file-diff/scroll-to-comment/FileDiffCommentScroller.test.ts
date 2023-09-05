@@ -47,7 +47,7 @@ const buildCommentWidget = (comment: PullRequestInlineCommentPresenter): InlineC
 
 const buildScroller = (
     comment: PullRequestInlineCommentPresenter,
-    comment_widget: InlineCommentWidget
+    comment_widget: InlineCommentWidget,
 ): ScrollToFileDiffComment => {
     const comments_store = PullRequestCommentRepliesStore([comment]);
 
@@ -57,7 +57,7 @@ const buildScroller = (
     return FileDiffCommentScroller(
         comments_store,
         [FileLineStub.buildUnMovedFileLine(1, 1, 1)],
-        comment_widgets_map
+        comment_widgets_map,
     );
 };
 
@@ -82,7 +82,7 @@ describe("file-diff-comment-scroller", () => {
         it("Given a comment id and an editor, then it should scroll the widget displaying it into view", () => {
             const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter(
                 { unidiff_offset: 1 },
-                target_comment_id
+                target_comment_id,
             );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
@@ -108,7 +108,7 @@ describe("file-diff-comment-scroller", () => {
                     unidiff_offset: 1,
                     position: INLINE_COMMENT_POSITION_LEFT,
                 },
-                target_comment_id
+                target_comment_id,
             );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
@@ -116,7 +116,7 @@ describe("file-diff-comment-scroller", () => {
             scroller.scrollToSideBySideDiffComment(
                 target_comment_id,
                 left_code_mirror,
-                right_code_mirror
+                right_code_mirror,
             );
 
             jest.advanceTimersByTime(1);
@@ -136,7 +136,7 @@ describe("file-diff-comment-scroller", () => {
                     unidiff_offset: 1,
                     position: INLINE_COMMENT_POSITION_RIGHT,
                 },
-                target_comment_id
+                target_comment_id,
             );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
@@ -144,7 +144,7 @@ describe("file-diff-comment-scroller", () => {
             scroller.scrollToSideBySideDiffComment(
                 target_comment_id,
                 left_code_mirror,
-                right_code_mirror
+                right_code_mirror,
             );
 
             jest.advanceTimersByTime(1);

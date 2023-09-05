@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     var types_modals_edit_buttons = document.querySelectorAll(
-        ".siteadmin-config-types-modal-edit-button"
+        ".siteadmin-config-types-modal-edit-button",
     );
     [].forEach.call(types_modals_edit_buttons, function (types_modals_edit_button) {
         var dom_types_modal_edit = document.getElementById(
-            types_modals_edit_button.getAttribute("data-edit-modal-id")
+            types_modals_edit_button.getAttribute("data-edit-modal-id"),
         );
         var tlp_types_modal_edit = createModal(dom_types_modal_edit);
 
@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     var types_modals_delete_buttons = document.querySelectorAll(
-        ".siteadmin-config-types-modal-delete-button"
+        ".siteadmin-config-types-modal-delete-button",
     );
     [].forEach.call(types_modals_delete_buttons, function (types_modals_delete_button) {
         var dom_types_modal_delete = document.getElementById(
-            types_modals_delete_button.getAttribute("data-delete-modal-id")
+            types_modals_delete_button.getAttribute("data-delete-modal-id"),
         );
         var tlp_types_modal_delete = createModal(dom_types_modal_delete, {});
 

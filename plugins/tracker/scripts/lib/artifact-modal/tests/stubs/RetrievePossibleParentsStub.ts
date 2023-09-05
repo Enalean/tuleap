@@ -25,7 +25,7 @@ import type { LinkableArtifact } from "../../src/domain/fields/link-field/Linkab
 
 export const RetrievePossibleParentsStub = {
     withParents: (
-        possible_parents: ResultAsync<readonly LinkableArtifact[], never>
+        possible_parents: ResultAsync<readonly LinkableArtifact[], never>,
     ): RetrievePossibleParents => ({
         getPossibleParents: () => possible_parents,
     }),

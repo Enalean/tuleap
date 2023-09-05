@@ -71,7 +71,7 @@ describe(`AllGetter`, () => {
 
     it(`will throw when max parallel requests is ≤ 0`, () => {
         expect(() => buildGetter().getAllJSON(uri, { max_parallel_requests: 0 })).toThrowError(
-            /At least one request/
+            /At least one request/,
         );
     });
 
@@ -84,7 +84,7 @@ describe(`AllGetter`, () => {
         await buildGetter().getAllJSON(uri, { params });
 
         expect(fetcher.getRequestInfo(0)).toBe(
-            "https://example.com/all-getter-test?quinonyl=mem&R%26D=91&Jwahar=false&limit=100&offset=0"
+            "https://example.com/all-getter-test?quinonyl=mem&R%26D=91&Jwahar=false&limit=100&offset=0",
         );
     });
 
@@ -131,7 +131,7 @@ describe(`AllGetter`, () => {
         fetcher = FetchInterfaceStub.withSuccessiveResponses(response);
 
         await expect(buildGetter().getAllJSON(uri)).rejects.toThrow(
-            "No X-PAGINATION-SIZE field in the header."
+            "No X-PAGINATION-SIZE field in the header.",
         );
     });
 
@@ -154,7 +154,7 @@ describe(`AllGetter`, () => {
         });
 
         const buildResponseWithTotalSix = <TypeOfJSONPayload>(
-            payload: TypeOfJSONPayload
+            payload: TypeOfJSONPayload,
         ): Response => buildResponse(payload, 6);
 
         it(`will query all the remaining batches in parallel
@@ -163,7 +163,7 @@ describe(`AllGetter`, () => {
             fetcher = FetchInterfaceStub.withSuccessiveResponses(
                 buildResponseWithTotalSix(batch_A),
                 buildResponseWithTotalSix(batch_B),
-                buildResponseWithTotalSix(batch_C)
+                buildResponseWithTotalSix(batch_C),
             );
 
             const result = await buildGetter().getAllJSON(uri, { params: { limit: 2 } });
@@ -188,7 +188,7 @@ describe(`AllGetter`, () => {
             fetcher = FetchInterfaceStub.withSuccessiveResponses(
                 buildResponseWithTotalSix({ collection: batch_A }),
                 buildResponseWithTotalSix({ collection: batch_B }),
-                buildResponseWithTotalSix({ collection: batch_C })
+                buildResponseWithTotalSix({ collection: batch_C }),
             );
 
             const result = await buildGetter().getAllJSON(uri, {

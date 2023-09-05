@@ -50,7 +50,7 @@ describe(`lit-html-adapter`, () => {
                     preview_area,
                     hidden_format_input,
                 },
-                gettext_provider
+                gettext_provider,
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "
@@ -74,7 +74,7 @@ describe(`lit-html-adapter`, () => {
                     selectbox,
                     textarea,
                 },
-                gettext_provider
+                gettext_provider,
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "

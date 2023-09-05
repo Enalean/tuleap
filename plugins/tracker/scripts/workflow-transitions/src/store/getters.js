@@ -29,7 +29,7 @@ export const current_workflow_field = (state) => {
     }
 
     return state.current_tracker.fields.find(
-        (field) => field.field_id === state.current_tracker.workflow.field_id
+        (field) => field.field_id === state.current_tracker.workflow.field_id,
     );
 };
 
@@ -79,7 +79,7 @@ export const selectbox_fields = (state) => {
 
     return state.current_tracker.fields
         .filter(
-            (field) => field.type === SELECTBOX_FIELD && field.bindings.type === LIST_BIND_STATIC
+            (field) => field.type === SELECTBOX_FIELD && field.bindings.type === LIST_BIND_STATIC,
         )
         .map((field) => ({ id: field.field_id, label: field.label }))
         .sort((field1, field2) => compare(field1.label, field2.label));

@@ -20,6 +20,6 @@ import HoveringStateForCollapsedColumnMixin from "../../Body/Swimlane/Cell/hover
 })
 export default class CollapsedLabel extends Mixins(
     ExpandCollapsedColumnMixin,
-    HoveringStateForCollapsedColumnMixin
+    HoveringStateForCollapsedColumnMixin,
 ) {}
 </script>

@@ -51,7 +51,7 @@ describe("DescriptionProperty", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "update-description-property",
-            "My new description"
+            "My new description",
         );
     });
 });

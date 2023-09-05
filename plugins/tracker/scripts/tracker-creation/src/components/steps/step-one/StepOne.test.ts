@@ -56,7 +56,7 @@ describe("StepOne", () => {
         });
 
         expect(wrapper.get("[data-test=platform-template-name]").text()).toBe(
-            "Nichya company templates"
+            "Nichya company templates",
         );
     });
 

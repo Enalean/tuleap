@@ -48,7 +48,7 @@ export function createBurndownChart(
     chart_container: HTMLElement,
     chart_props: ChartPropsWithoutTooltip,
     burndown_data: BurndownData,
-    id_milestone: number
+    id_milestone: number,
 ): void {
     const x_axis_tick_values = getDaysToDisplay(burndown_data),
         displayable_data = getDisplayableData(burndown_data.points_with_date),
@@ -81,13 +81,13 @@ export function createBurndownChart(
             chart_props,
             { x_scale, y_scale },
             nb_ticks,
-            tick_padding
+            tick_padding,
         );
 
         drawIdealLine(
             svg_burndown,
             { x_scale, y_scale },
-            { line_start: first_ideal_line_point, line_end: 0 }
+            { line_start: first_ideal_line_point, line_end: 0 },
         );
         select(chart_container).selectAll("circle").remove();
         select(chart_container).selectAll(".chart-y-axis > .tick > line").remove();
@@ -106,7 +106,7 @@ export function createBurndownChart(
             { x_scale, y_scale },
             displayable_data,
             "remaining_effort",
-            curveMonotoneX
+            curveMonotoneX,
         );
 
         const last_point = getLastData(displayable_data);
@@ -134,7 +134,7 @@ export function createBurndownChart(
             x_scale_last_date,
             last_point.remaining_effort,
             svg_burndown,
-            id_milestone
+            id_milestone,
         );
     }
 }
@@ -142,7 +142,7 @@ export function createBurndownChart(
 export function getMaxRemainingEffort({ points_with_date, capacity }: BurndownData): number {
     const max_remaining_effort = max(
         points_with_date,
-        ({ remaining_effort }: { remaining_effort: number | null }) => remaining_effort
+        ({ remaining_effort }: { remaining_effort: number | null }) => remaining_effort,
     );
 
     if (!max_remaining_effort && !capacity) {

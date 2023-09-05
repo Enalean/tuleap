@@ -29,7 +29,8 @@ tuleap-lazybox-selection {
                 var(--tlp-form-element-select-background-size)
         )
         0 var(--tlp-form-element-padding-horizontal);
-    transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+    transition:
+        border-color var(--tlp-form-element-border-transition-duration) linear,
         box-shadow 350ms;
     border: 1px solid var(--tlp-form-element-border-color);
     border-radius: var(--tlp-form-element-border-radius);

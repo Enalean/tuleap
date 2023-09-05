@@ -36,7 +36,7 @@ export interface ExportSettings {
 
 export async function downloadXLSXDocument(
     export_settings: ExportSettings,
-    download_document: (export_settings: ExportSettings, formatted_data: ReportSection) => void
+    download_document: (export_settings: ExportSettings, formatted_data: ReportSection) => void,
 ): Promise<void> {
     const formatted_data: ReportSection = await formatData(export_settings);
 

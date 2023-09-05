@@ -27,7 +27,7 @@ import "../writing-zone/WritingZone";
 
 export const getSubmitButton = (
     host: NewCommentForm,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<NewCommentForm> => {
     const is_disabled = host.presenter.is_saving_comment || host.presenter.comment.length === 0;
     const onClickSave = (): void => {
@@ -56,7 +56,7 @@ export const getSubmitButton = (
 
 export const getCancelButton = (
     host: NewCommentForm,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<NewCommentForm> => {
     if (!host.presenter.is_cancel_allowed) {
         return html``;
@@ -81,7 +81,7 @@ export const getCancelButton = (
 
 export const getNewCommentFormContent = (
     host: NewCommentForm,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<NewCommentForm> => html`
     <div class="pull-request-comment pull-request-new-comment-component">
         ${getCommentAvatarTemplate(host.presenter.author)}

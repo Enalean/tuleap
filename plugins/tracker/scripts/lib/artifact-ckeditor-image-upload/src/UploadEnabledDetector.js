@@ -28,7 +28,7 @@ export class UploadEnabledDetector {
     isUploadEnabled() {
         return Boolean(
             this.doc.body.querySelector(UPLOAD_IS_ENABLED_DATA_SELECTOR) &&
-                this.element.dataset.uploadUrl
+                this.element.dataset.uploadUrl,
         );
     }
 }

@@ -19,7 +19,7 @@ import { createDropdown } from "@tuleap/tlp-dropdown";
 
 document.addEventListener("DOMContentLoaded", () => {
     const dropdown_triggers = document.querySelectorAll(
-        ".siteadmin-projectlist-result-project-more"
+        ".siteadmin-projectlist-result-project-more",
     );
 
     [].forEach.call(dropdown_triggers, (dropdown_trigger) => {

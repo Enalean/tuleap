@@ -85,7 +85,7 @@ Cypress.Commands.add(
             Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
             Object.prototype.hasOwnProperty.call(
                 cache_service_urls[project_unixname],
-                service_label
+                service_label,
             )
         ) {
             cy.visit(cache_service_urls[project_unixname][service_label]);
@@ -97,7 +97,7 @@ Cypress.Commands.add(
             cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
             cache_service_urls[project_unixname][service_label] = href;
         });
-    }
+    },
 );
 
 Cypress.Commands.add("visitProjectAdministration", (project_unixname: string) => {
@@ -111,7 +111,7 @@ Cypress.Commands.add("visitProjectAdministrationInCurrentProject", () => {
 
 function visitServiceInCurrentProject(
     service_label: string,
-    before_visit_callback: (href: string) => void
+    before_visit_callback: (href: string) => void,
 ): void {
     cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
         .contains("[data-test=project-sidebar-tool]", service_label, { includeShadowDom: true })
@@ -152,8 +152,8 @@ Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chaina
     return cy
         .getFromTuleapAPI(
             `/api/projects?limit=1&query=${encodeURIComponent(
-                JSON.stringify({ shortname: project_shortname })
-            )}`
+                JSON.stringify({ shortname: project_shortname }),
+            )}`,
         )
         .then((response) => response.body[0].id);
 });
@@ -185,7 +185,7 @@ Cypress.Commands.add(
         return cy.postFromTuleapApi("https://tuleap/api/projects/", payload).then((response) => {
             return Number.parseInt(response.body.id, 10);
         });
-    }
+    },
 );
 
 Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
@@ -235,7 +235,7 @@ Cypress.Commands.add(
         return cy.getFromTuleapAPI(`/api/projects/${project_id}/trackers`).then((response) => {
             return response.body.find((tracker: Tracker) => tracker.item_name === tracker_name).id;
         });
-    }
+    },
 );
 
 export interface ArtifactCreationPayload {
@@ -250,7 +250,7 @@ const statusFieldGuard = (field: StructureFields): field is StaticBoundListField
 
 function getStatusPayload(
     status_label: string | undefined,
-    fields: readonly StructureFields[]
+    fields: readonly StructureFields[],
 ): ListNewChangesetValue[] {
     if (status_label === undefined) {
         return [];
@@ -279,7 +279,7 @@ Cypress.Commands.add(
             const result = response.body;
 
             const title_id = result.fields.find(
-                (field: StructureFields) => field.name === payload.title_field_name
+                (field: StructureFields) => field.name === payload.title_field_name,
             ).field_id;
             const artifact_payload = {
                 tracker: { id: payload.tracker_id },
@@ -295,7 +295,7 @@ Cypress.Commands.add(
             return cy
                 .postFromTuleapApi("/api/artifacts/", artifact_payload)
                 .then((response) => response.body.id);
-        })
+        }),
 );
 
 Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
@@ -318,10 +318,10 @@ Cypress.Commands.add(
             },
         }).then((response) => {
             expect(quotedPrintable.decode(response.body.items[0].Content.Body)).contains(
-                specific_content_of_mail
+                specific_content_of_mail,
             );
         });
-    }
+    },
 );
 
 const MAX_ATTEMPTS = 10;
@@ -332,7 +332,7 @@ Cypress.Commands.add(
         reloadCallback: ReloadCallback,
         conditionCallback: ConditionPredicate,
         max_attempts_reached_message: string,
-        number_of_attempts = 0
+        number_of_attempts = 0,
     ): PromiseLike<void> => {
         if (number_of_attempts > MAX_ATTEMPTS) {
             throw new Error(max_attempts_reached_message);
@@ -349,18 +349,18 @@ Cypress.Commands.add(
                     reloadCallback,
                     conditionCallback,
                     max_attempts_reached_message,
-                    number_of_attempts + 1
+                    number_of_attempts + 1,
                 );
-            }
+            },
         );
-    }
+    },
 );
 
 Cypress.Commands.add(
     "getContains",
     (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
         return cy.get(selector).contains(label).parents(selector);
-    }
+    },
 );
 
 const LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
@@ -392,7 +392,10 @@ Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => 
         cy.wrap(body)
             .find("[data-test-list-picker-dropdown-open]")
             .then((dropdown) =>
-                cy.wrap(dropdown).find("[data-test=list-picker-item]").contains(dropdown_item_label)
+                cy
+                    .wrap(dropdown)
+                    .find("[data-test=list-picker-item]")
+                    .contains(dropdown_item_label),
             );
     });
 });

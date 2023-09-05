@@ -53,6 +53,6 @@ describe(`FaultDisplayer`, () => {
             const message = format(fault);
             expect(message).toContain(FAULT_MESSAGE);
             expect(message).not.toBe(FAULT_MESSAGE);
-        }
+        },
     );
 });

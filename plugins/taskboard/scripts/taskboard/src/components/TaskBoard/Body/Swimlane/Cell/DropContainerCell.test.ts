@@ -28,7 +28,7 @@ import AddCard from "../Card/Add/AddCard.vue";
 function getWrapper(
     column: ColumnDefinition,
     can_add_in_place: boolean,
-    slots: Slots = {}
+    slots: Slots = {},
 ): Wrapper<DropContainerCell> {
     const swimlane = { card: { id: 1 } } as Swimlane;
 

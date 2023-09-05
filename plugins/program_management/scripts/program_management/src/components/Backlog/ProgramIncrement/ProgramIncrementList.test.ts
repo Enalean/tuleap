@@ -159,10 +159,10 @@ describe("ProgramIncrementList", () => {
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
         expect(wrapper.find("[data-test=program-increment-title]").text()).toBe(
-            "Program Increments"
+            "Program Increments",
         );
         expect(wrapper.find("[data-test=button-add-program-increment-label]").text()).toBe(
-            "New program increment"
+            "New program increment",
         );
     });
 

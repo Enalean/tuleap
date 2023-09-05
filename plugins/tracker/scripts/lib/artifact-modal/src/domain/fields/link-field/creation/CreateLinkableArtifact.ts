@@ -25,6 +25,6 @@ import type { LinkableArtifact } from "../LinkableArtifact";
 export type CreateLinkableArtifact = {
     createLinkableArtifact(
         tracker_identifier: TrackerIdentifier,
-        artifact_title: string
+        artifact_title: string,
     ): ResultAsync<LinkableArtifact, Fault>;
 };

@@ -42,7 +42,7 @@ describe("AddToBacklogAgileDashboardPostAction", () => {
         });
         expect(wrapper.findComponent(PostAction).exists()).toBe(true);
         expect(wrapper.find("[data-test=add-to-backlog-post-action-description]").exists()).toBe(
-            true
+            true,
         );
     });
 });

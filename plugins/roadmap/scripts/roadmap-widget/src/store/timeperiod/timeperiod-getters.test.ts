@@ -62,7 +62,7 @@ describe("timeperiod-getters", () => {
                         { start: new Date(2020, 3, 15) } as Task,
                         { start: new Date(2020, 4, 15) } as Task,
                     ],
-                }
+                },
             );
 
             expect(first_date.getMonth()).toBe(3);
@@ -102,7 +102,7 @@ describe("timeperiod-getters", () => {
                         { start: new Date(2020, 3, 15) } as Task,
                         { start: new Date(2020, 4, 15) } as Task,
                     ],
-                }
+                },
             );
 
             expect(first_date.getMonth()).toBe(1);
@@ -142,7 +142,7 @@ describe("timeperiod-getters", () => {
                         { start: new Date(2020, 3, 15) } as Task,
                         { start: new Date(2020, 4, 15) } as Task,
                     ],
-                }
+                },
             );
 
             expect(first_date.getMonth()).toBe(2);
@@ -172,7 +172,7 @@ describe("timeperiod-getters", () => {
                         { start: new Date(2020, 3, 15) } as Task,
                         { start: new Date(2020, 4, 15) } as Task,
                     ],
-                }
+                },
             );
             expect(last_date.getMonth()).toBe(6);
         });

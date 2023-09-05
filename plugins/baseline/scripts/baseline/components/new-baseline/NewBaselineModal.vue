@@ -160,7 +160,7 @@ export default {
         },
         snapshot_date_tooltip() {
             return this.$gettext(
-                "Without date, the baseline will be created with the current date"
+                "Without date, the baseline will be created with the current date",
             );
         },
     },

@@ -49,7 +49,7 @@ export interface RootActionsCreate {
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
-    [item, parent, current_folder]: [Item, Folder, Folder]
+    [item, parent, current_folder]: [Item, Folder, Folder],
 ): Promise<CreatedItem | undefined> => {
     try {
         let should_display_item = true;
@@ -72,7 +72,7 @@ export const createNewItem = async (
                 context,
                 item_to_create,
                 parent,
-                should_display_item
+                should_display_item,
             );
             return item_reference;
         }
@@ -89,7 +89,7 @@ export const createNewItem = async (
         } else {
             await context.dispatch(
                 "error/handleErrorsForModal",
-                new Error("Item type " + item_to_create.type + " is not supported for creation")
+                new Error("Item type " + item_to_create.type + " is not supported for creation"),
             );
             return undefined;
         }
@@ -112,8 +112,8 @@ export const addNewUploadFile = async (
         Folder,
         string,
         string,
-        boolean
-    ]
+        boolean,
+    ],
 ): Promise<void> => {
     try {
         const item = {
@@ -144,7 +144,7 @@ export interface AdjustItemPayload {
 
 export async function adjustItemToContentAfterItemCreationInAFolder(
     context: ActionContext<State, State>,
-    payload: AdjustItemPayload
+    payload: AdjustItemPayload,
 ): Promise<void> {
     const created_item = await getItem(payload.item_id);
 

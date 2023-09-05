@@ -66,7 +66,7 @@ describe("UsersOpenListFieldController", () => {
     describe("init() -", function () {
         it("When initializing the controller, then a select2 will be created and its events will be listened", function () {
             $element.append(
-                angular.element('<select class="tuleap-artifact-modal-open-list-users"></select>')
+                angular.element('<select class="tuleap-artifact-modal-open-list-users"></select>'),
             );
             jest.spyOn($element, "on").mockImplementation(() => {});
             const tlpSelect2Spy = jest.spyOn(tlp, "select2");
@@ -158,7 +158,7 @@ describe("UsersOpenListFieldController", () => {
 
             var result = UsersOpenListFieldController.templateUserResult(
                 user_representation,
-                container
+                container,
             );
 
             expect($rootScope.$new).toHaveBeenCalled();

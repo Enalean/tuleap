@@ -37,12 +37,12 @@ import { FieldFocusManager } from "./navigation/FieldFocusManager";
 export function createListPicker(
     source_select_box: HTMLSelectElement,
     gettext_provider: GettextProvider,
-    options?: ListPickerOptions
+    options?: ListPickerOptions,
 ): ListPicker {
     hideSourceSelectBox(source_select_box);
 
     const items_map_manager = new ItemsMapManager(
-        new ListItemMapBuilder(source_select_box, options)
+        new ListItemMapBuilder(source_select_box, options),
     );
     items_map_manager.refreshItemsMap();
     const base_renderer = new BaseComponentRenderer(document, source_select_box, options);
@@ -62,7 +62,7 @@ export function createListPicker(
         document,
         source_select_box,
         selection_element,
-        search_field_element
+        search_field_element,
     );
     field_focus_manager.init();
 
@@ -74,7 +74,7 @@ export function createListPicker(
         dropdown_list_element,
         selection_element,
         scrolling_manager,
-        field_focus_manager
+        field_focus_manager,
     );
 
     let selection_manager: SelectionManager;
@@ -93,7 +93,7 @@ export function createListPicker(
             dropdown_manager,
             items_map_manager,
             gettext_provider,
-            none_item ?? null
+            none_item ?? null,
         );
     } else {
         selection_manager = new SingleSelectionManager(
@@ -102,7 +102,7 @@ export function createListPicker(
             selection_element,
             placeholder_element,
             dropdown_manager,
-            items_map_manager
+            items_map_manager,
         );
     }
 
@@ -110,7 +110,7 @@ export function createListPicker(
         source_select_box,
         dropdown_list_element,
         items_map_manager,
-        gettext_provider
+        gettext_provider,
     );
 
     dropdown_content_renderer.renderListPickerDropdownContent();
@@ -118,7 +118,7 @@ export function createListPicker(
     const highlighter = new ListItemHighlighter(dropdown_list_element);
     const keyboard_navigation_manager = new KeyboardNavigationManager(
         dropdown_list_element,
-        highlighter
+        highlighter,
     );
     const event_manager = new EventManager(
         document,
@@ -132,7 +132,7 @@ export function createListPicker(
         dropdown_content_renderer,
         keyboard_navigation_manager,
         highlighter,
-        field_focus_manager
+        field_focus_manager,
     );
 
     event_manager.attachEvents();
@@ -144,7 +144,7 @@ export function createListPicker(
         items_map_manager,
         dropdown_content_renderer,
         selection_manager,
-        event_manager
+        event_manager,
     );
     list_options_observer.startWatchingChanges();
 

@@ -33,7 +33,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
 
     if (project_id === undefined || artifact_id === undefined) {
         throw new Error(
-            "Action button is supposed to have information about the current artifact and project."
+            "Action button is supposed to have information about the current artifact and project.",
         );
     }
 
@@ -62,7 +62,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         const gettext_provider = await initGettext(
             language,
             "artifact-additional-action",
-            (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+            (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
         );
 
         clearAllFeedbacks();
@@ -81,8 +81,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 addFeedback(
                     "error",
                     gettext_provider.gettext(
-                        "An error occurred while adding this artifact to top backlog."
-                    )
+                        "An error occurred while adding this artifact to top backlog.",
+                    ),
                 );
 
                 return;
@@ -92,7 +92,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
 
             addFeedback(
                 "info",
-                gettext_provider.gettext("This artifact has been added to top backlog.")
+                gettext_provider.gettext("This artifact has been added to top backlog."),
             );
             action_button_icon.classList.remove("fa-tlp-add-to-backlog");
             action_button_icon.classList.add("fa-tlp-remove-from-backlog");
@@ -113,8 +113,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 addFeedback(
                     "error",
                     gettext_provider.gettext(
-                        "An error occurred while removing this artifact from top backlog."
-                    )
+                        "An error occurred while removing this artifact from top backlog.",
+                    ),
                 );
 
                 return;
@@ -123,7 +123,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             }
             addFeedback(
                 "info",
-                gettext_provider.gettext("This artifact has been removed from top backlog.")
+                gettext_provider.gettext("This artifact has been removed from top backlog."),
             );
             action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
             action_button_icon.classList.add("fa-tlp-add-to-backlog");

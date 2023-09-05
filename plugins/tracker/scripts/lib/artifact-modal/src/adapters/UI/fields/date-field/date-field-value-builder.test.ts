@@ -55,7 +55,7 @@ describe("date-field-value-builder", () => {
             const date_field = getDateField(is_time_displayed);
 
             expect(
-                buildEditableDateFieldValue(date_field, "2015-05-29T18:09:43+03:00")
+                buildEditableDateFieldValue(date_field, "2015-05-29T18:09:43+03:00"),
             ).toStrictEqual({
                 field_id: date_field.field_id,
                 permissions: date_field.permissions,
@@ -64,7 +64,7 @@ describe("date-field-value-builder", () => {
             });
 
             expect(format).toHaveBeenCalledWith(expected_format);
-        }
+        },
     );
 
     it("When the date is null, Then it should return the value as an empty string", () => {

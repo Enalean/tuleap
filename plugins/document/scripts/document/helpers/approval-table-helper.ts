@@ -37,7 +37,7 @@ export interface ApprovalTableBadge {
 }
 
 export function hasAnApprovalTable(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem,
 ): item is ApprovableDocument {
     return "has_approval_table" in item && item.approval_table !== null;
 }
@@ -45,7 +45,7 @@ export function hasAnApprovalTable(
 export function extractApprovalTableData(
     translated_approval_states_map: Map<string, string>,
     approval_table_state: string,
-    is_in_folder_content_row: boolean
+    is_in_folder_content_row: boolean,
 ): ApprovalTableBadge {
     let additional_class = "";
     if (is_in_folder_content_row) {

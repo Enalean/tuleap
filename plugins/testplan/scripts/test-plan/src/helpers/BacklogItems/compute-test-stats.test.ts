@@ -51,6 +51,6 @@ describe("Compute test stats", () => {
         "determines global status from statistics",
         (stats: TestStats, expected_status: string | null) => {
             expect(getTestStatusFromStats(stats)).toBe(expected_status);
-        }
+        },
     );
 });

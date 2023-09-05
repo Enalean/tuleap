@@ -69,13 +69,13 @@ const is_reset_disabled = computed((): boolean => {
 const cannot_reset_message = computed((): string => {
     if (props.has_other_trackers_implying_their_timeframes) {
         return gettext_provider.$gettext(
-            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
+            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one.",
         );
     }
 
     if (props.has_tracker_charts) {
         return gettext_provider.$gettext(
-            "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin"
+            "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin",
         );
     }
 

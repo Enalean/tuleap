@@ -197,8 +197,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -214,8 +214,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "123"
-            )
+                "123",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -231,8 +231,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "3.14"
-            )
+                "3.14",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -248,8 +248,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -265,8 +265,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -282,8 +282,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -303,8 +303,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -324,8 +324,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -341,8 +341,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -360,8 +360,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -379,8 +379,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         ["sb", "rb", "cb", "msb", "shared"].forEach(function (list_type) {
             expect(
@@ -401,8 +401,8 @@ describe("InPropertiesItemFilter", () => {
                             ],
                         },
                     ],
-                    "open"
-                )
+                    "open",
+                ),
             ).toHaveLength(1);
             expect(
                 in_properties_filter(
@@ -422,8 +422,8 @@ describe("InPropertiesItemFilter", () => {
                             ],
                         },
                     ],
-                    "toto"
-                )
+                    "toto",
+                ),
             ).toHaveLength(1);
             expect(
                 in_properties_filter(
@@ -438,8 +438,8 @@ describe("InPropertiesItemFilter", () => {
                             ],
                         },
                     ],
-                    "toto"
-                )
+                    "toto",
+                ),
             ).toHaveLength(0);
         });
         expect(
@@ -456,8 +456,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "toto"
-            )
+                "toto",
+            ),
         ).toHaveLength(1);
         ["date", "lud", "subon"].forEach(function (date_type) {
             var today = new Date();
@@ -476,8 +476,8 @@ describe("InPropertiesItemFilter", () => {
                             ],
                         },
                     ],
-                    "today"
-                )
+                    "today",
+                ),
             ).toHaveLength(1);
         });
         expect(
@@ -495,8 +495,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
         expect(
             in_properties_filter(
@@ -513,8 +513,8 @@ describe("InPropertiesItemFilter", () => {
                         ],
                     },
                 ],
-                "42"
-            )
+                "42",
+            ),
         ).toHaveLength(1);
     });
 

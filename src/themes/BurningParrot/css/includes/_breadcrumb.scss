@@ -122,7 +122,9 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     max-width: 350px;
     padding: 6px 0 0;
     transform: translateY(-10px);
-    transition: opacity $step-transition-duration, transform $step-transition-duration;
+    transition:
+        opacity $step-transition-duration,
+        transform $step-transition-duration;
     opacity: 0;
     pointer-events: none;
 }

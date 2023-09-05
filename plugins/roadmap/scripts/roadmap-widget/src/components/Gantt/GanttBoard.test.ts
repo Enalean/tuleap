@@ -94,7 +94,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -129,7 +129,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -159,7 +159,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -188,7 +188,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -217,7 +217,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -250,7 +250,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -288,7 +288,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -329,7 +329,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -375,7 +375,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -391,7 +391,7 @@ describe("GanttBoard", () => {
             .findAllComponents(BarPopover)
             .wrappers.map((wrapper) => wrapper.element.id);
         const unique_popover_ids = popover_ids.filter(
-            (id, index, ids) => ids.indexOf(id) === index
+            (id, index, ids) => ids.indexOf(id) === index,
         );
         expect(unique_popover_ids).toHaveLength(4);
     });
@@ -422,7 +422,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -462,7 +462,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -517,7 +517,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -561,7 +561,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                     },
                 }),
@@ -628,7 +628,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -675,7 +675,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -711,7 +711,7 @@ describe("GanttBoard", () => {
                         "timeperiod/time_period": new TimePeriodMonth(
                             new Date("2020-03-31T22:00:00.000Z"),
                             new Date("2020-04-31T22:00:00.000Z"),
-                            "en-US"
+                            "en-US",
                         ),
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],

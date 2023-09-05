@@ -70,7 +70,7 @@ const error_message = computed((): string => {
     return $ngettext(
         "Oops… Unable to upload file",
         "Oops… Unable to upload files",
-        props.reasons.length
+        props.reasons.length,
     );
 });
 </script>

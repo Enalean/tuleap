@@ -54,7 +54,7 @@ describe("getExecutions", () => {
             "/api/v1/testmanagement_campaigns/101/testmanagement_executions",
             {
                 params: { limit: 50 },
-            }
+            },
         );
     });
 });

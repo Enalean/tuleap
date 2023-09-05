@@ -20,7 +20,7 @@ import type { Property, ListValue } from "../../../type";
 
 export type PropertyListValue = Array<number> | Array<ListValue>;
 export function assertListIsOnlyMultipleValue(
-    list_value: PropertyListValue
+    list_value: PropertyListValue,
 ): list_value is Array<ListValue> {
     return typeof list_value[0] === "object";
 }

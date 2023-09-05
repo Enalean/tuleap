@@ -32,8 +32,8 @@ describe("Internationalize test status", () => {
         expect(
             getInternationalizedTestStatus(
                 createGettextProviderPassthrough(),
-                status as ArtifactFieldValueStatus
-            )
+                status as ArtifactFieldValueStatus,
+            ),
         ).toBe(expected);
     });
 });

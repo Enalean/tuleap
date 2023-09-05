@@ -112,7 +112,7 @@ describe("API querier", () => {
             await getTrackerReports(tracker_id);
 
             expect(recursive_get_spy).toHaveBeenCalledWith(
-                `/api/v1/trackers/${tracker_id}/tracker_reports`
+                `/api/v1/trackers/${tracker_id}/tracker_reports`,
             );
         });
     });
@@ -137,7 +137,7 @@ describe("API querier", () => {
             await getTrackerCurrentlyUsedArtifactLinkTypes(tracker_id);
 
             expect(recursive_get_spy).toHaveBeenCalledWith(
-                `/api/v1/trackers/${tracker_id}/used_artifact_links`
+                `/api/v1/trackers/${tracker_id}/used_artifact_links`,
             );
         });
     });

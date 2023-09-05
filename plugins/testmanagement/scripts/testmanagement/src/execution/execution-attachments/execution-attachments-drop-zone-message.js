@@ -55,9 +55,9 @@ function controller($rootScope, $scope, gettextCatalog, SharedPropertiesService)
     function getMessage() {
         return sprintf(
             gettextCatalog.getString(
-                "Drop files here to attach them to your comment (max size is %ss)."
+                "Drop files here to attach them to your comment (max size is %ss).",
             ),
-            prettyKibibytes(SharedPropertiesService.getFileUploadMaxSize())
+            prettyKibibytes(SharedPropertiesService.getFileUploadMaxSize()),
         );
     }
 }

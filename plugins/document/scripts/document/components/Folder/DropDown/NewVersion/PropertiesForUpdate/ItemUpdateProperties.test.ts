@@ -23,7 +23,7 @@ import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 describe("ItemUpdateProperties", () => {
     function getWrapper(
         item = {},
-        isOpenAfterDnd = false
+        isOpenAfterDnd = false,
     ): VueWrapper<InstanceType<typeof ItemUpdateProperties>> {
         return shallowMount(ItemUpdateProperties, {
             props: {
@@ -65,16 +65,16 @@ describe("ItemUpdateProperties", () => {
                 const wrapper = getWrapper({ has_approval_table: true }, true);
 
                 expect(
-                    wrapper.find("[data-test='update-property-version-title']").exists()
+                    wrapper.find("[data-test='update-property-version-title']").exists(),
                 ).toBeTruthy();
                 expect(
-                    wrapper.find("[data-test='update-property-changelog']").exists()
+                    wrapper.find("[data-test='update-property-changelog']").exists(),
                 ).toBeTruthy();
                 expect(
-                    wrapper.find("[data-test='update-approval-properties']").exists()
+                    wrapper.find("[data-test='update-approval-properties']").exists(),
                 ).toBeTruthy();
                 expect(
-                    wrapper.find("[data-test='update-property-lock-version']").exists()
+                    wrapper.find("[data-test='update-property-lock-version']").exists(),
                 ).toBeFalsy();
             });
         });

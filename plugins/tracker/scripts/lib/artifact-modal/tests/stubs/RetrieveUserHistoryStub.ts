@@ -25,7 +25,7 @@ import type { Fault } from "@tuleap/fault";
 
 export const RetrieveUserHistoryStub = {
     withUserHistory: (
-        entries: ResultAsync<readonly LinkableArtifact[], never>
+        entries: ResultAsync<readonly LinkableArtifact[], never>,
     ): RetrieveUserHistory => ({
         getUserArtifactHistory: () => entries,
     }),

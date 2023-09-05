@@ -51,7 +51,7 @@ const getCrossRefClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOf
 
 export const getTypeTemplate = (
     host: HostElement,
-    artifact: LinkedArtifactPresenter
+    artifact: LinkedArtifactPresenter,
 ): UpdateFunction<HostElement> => {
     if (!host.controller.canChangeType(artifact)) {
         return html`<span class="link-field-artifact-readonly-type" data-test="readonly-type"
@@ -61,7 +61,7 @@ export const getTypeTemplate = (
     const onTypeChanged = (host: HostElement, event: CustomEvent<TypeChangedEvent>): void => {
         host.linked_artifacts = host.controller.changeLinkType(
             artifact,
-            event.detail.new_link_type
+            event.detail.new_link_type,
         );
     };
 
@@ -76,7 +76,7 @@ export const getTypeTemplate = (
 
 export const getActionButton = (
     host: HostElement,
-    artifact: LinkedArtifactPresenter
+    artifact: LinkedArtifactPresenter,
 ): UpdateFunction<HostElement> => {
     if (!host.controller.canMarkForRemoval(artifact)) {
         return html``;
@@ -113,7 +113,7 @@ export const getActionButton = (
 
 export const getLinkedArtifactTemplate = (
     host: HostElement,
-    artifact: LinkedArtifactPresenter
+    artifact: LinkedArtifactPresenter,
 ): UpdateFunction<HostElement> =>
     html`<div class="${getArtifactRowClasses(artifact)}" data-test="artifact-row">
         <span class="link-field-row-type ${getRemoveClass(artifact)}"

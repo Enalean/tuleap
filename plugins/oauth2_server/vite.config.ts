@@ -30,10 +30,10 @@ export default vite.defineAppConfig(
                     "user-preferences": path.resolve(__dirname, "scripts/src/user-preferences.ts"),
                     "authorization-form-style": path.resolve(
                         __dirname,
-                        "themes/authorization-form.scss"
+                        "themes/authorization-form.scss",
                     ),
                 },
             },
         },
-    }
+    },
 );

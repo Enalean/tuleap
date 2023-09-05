@@ -118,7 +118,7 @@ export default class TrackerFromJiraProject extends Vue {
     @Action
     readonly getJiraTrackerList!: (
         credentials: Credentials,
-        project_key: string
+        project_key: string,
     ) => Promise<TrackerList[]>;
 
     is_a_project_selected = false;

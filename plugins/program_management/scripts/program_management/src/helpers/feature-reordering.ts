@@ -54,7 +54,7 @@ export interface SiblingFeatureHTMLElementWithProgramIncrement {
 
 function getFeatureReorderPosition(
     sibling: Feature | null,
-    features_in_program_backlog: Feature[]
+    features_in_program_backlog: Feature[],
 ): FeatureReorderPosition | null {
     if (!sibling) {
         if (features_in_program_backlog.length === 0) {
@@ -75,7 +75,7 @@ function getFeatureReorderPosition(
 export function getFeaturePlanningChange(
     feature: Feature,
     sibling: Feature | null,
-    features_in_program_backlog: Feature[]
+    features_in_program_backlog: Feature[],
 ): FeaturePlanningChange {
     return {
         feature,
@@ -87,7 +87,7 @@ export function getFeaturePlanningChangeInProgramIncrement(
     feature: Feature,
     sibling: Feature | null,
     features_in_program_backlog: Feature[],
-    program_increment_id: number
+    program_increment_id: number,
 ): FeaturePlanningChangeInProgramIncrement {
     return {
         feature,
@@ -101,7 +101,7 @@ export function getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncr
     sibling: Feature | null,
     features_in_program_backlog: Feature[],
     from_program_increment_id: number,
-    to_program_increment_id: number
+    to_program_increment_id: number,
 ): FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement {
     return {
         feature,
@@ -113,10 +113,10 @@ export function getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncr
 
 function getFeatureToCompareWith(
     features_to_compare: Feature[],
-    sibling: Feature
+    sibling: Feature,
 ): { direction: Direction; compared_to: number } {
     const index = features_to_compare.findIndex(
-        (column_feature) => column_feature.id === sibling.id
+        (column_feature) => column_feature.id === sibling.id,
     );
 
     if (index === -1) {
@@ -138,7 +138,7 @@ function getFeatureToCompareWith(
 
 export async function reorderFeatureInProgramBacklog(
     context: ActionContext<State, State>,
-    handle_drop: HandleDropContextWithProgramId
+    handle_drop: HandleDropContextWithProgramId,
 ): Promise<void> {
     const data_element_id = handle_drop.dropped_element.dataset.elementId;
     if (!data_element_id) {
@@ -147,14 +147,14 @@ export async function reorderFeatureInProgramBacklog(
     let sibling_feature = null;
     if (handle_drop.next_sibling instanceof HTMLElement) {
         sibling_feature = context.getters.getSiblingFeatureFromProgramBacklog(
-            handle_drop.next_sibling
+            handle_drop.next_sibling,
         );
     }
     const element_id = parseInt(data_element_id, 10);
     const feature_planning_change = getFeaturePlanningChange(
         context.getters.getToBePlannedElementFromId(element_id),
         sibling_feature,
-        context.state.to_be_planned_elements
+        context.state.to_be_planned_elements,
     );
 
     context.commit("changeFeaturePositionInProgramBacklog", feature_planning_change);
@@ -173,7 +173,7 @@ export async function reorderFeatureInProgramBacklog(
 export async function reorderFeatureInSameProgramIncrement(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId,
-    program_increment_id: number
+    program_increment_id: number,
 ): Promise<void> {
     const data_element_id = handle_drop.dropped_element.dataset.elementId;
     if (!data_element_id) {
@@ -195,7 +195,7 @@ export async function reorderFeatureInSameProgramIncrement(
         }),
         sibling_feature,
         context.getters.getFeaturesInProgramIncrement(program_increment_id),
-        program_increment_id
+        program_increment_id,
     );
 
     context.commit("changeFeaturePositionInSameProgramIncrement", feature_planning_change);

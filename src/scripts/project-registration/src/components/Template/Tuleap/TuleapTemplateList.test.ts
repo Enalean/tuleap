@@ -32,7 +32,7 @@ describe("TuleapTemplateList", () => {
     let wrapper: Wrapper<TuleapTemplateList>;
 
     async function createWrapper(
-        tuleap_templates: TemplateData[]
+        tuleap_templates: TemplateData[],
     ): Promise<Wrapper<TuleapTemplateList>> {
         const configuration_state: ConfigurationState = {
             tuleap_templates: tuleap_templates,

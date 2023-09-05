@@ -20,7 +20,7 @@ import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2
 
 document.addEventListener("DOMContentLoaded", () => {
     const sub_events_panels = document.querySelectorAll(
-            ".siteadmin-project-history-filter-form-subevents"
+            ".siteadmin-project-history-filter-form-subevents",
         ),
         events = document.getElementById("siteadmin-project-history-events"),
         by_filter = document.getElementById("siteadmin-project-history-by");

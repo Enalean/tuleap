@@ -26,7 +26,7 @@ import type { BindValueId } from "../../../../domain/fields/select-box-field/Bin
 function getSelectBox(
     presenter: SelectBoxFieldPresenter,
     target: ShadowRoot,
-    bind_value_ids: number[] = []
+    bind_value_ids: number[] = [],
 ): HTMLSelectElement {
     const host = {
         field_presenter: presenter,
@@ -152,7 +152,7 @@ describe("SelectBoxFieldTemplate", () => {
         });
 
         const injectSelectedOptionsFromValues = (
-            bind_value_ids: ReadonlyArray<BindValueId>
+            bind_value_ids: ReadonlyArray<BindValueId>,
         ): void => {
             select.append(
                 ...bind_value_ids.map((value) => {
@@ -160,7 +160,7 @@ describe("SelectBoxFieldTemplate", () => {
                     option.value = String(value);
                     option.selected = true;
                     return option;
-                })
+                }),
             );
         };
 

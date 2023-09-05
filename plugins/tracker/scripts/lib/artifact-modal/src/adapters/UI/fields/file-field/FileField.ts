@@ -40,7 +40,7 @@ import type {
 
 export const getActionButton = (
     file: AttachedFileDescription,
-    is_disabled: boolean
+    is_disabled: boolean,
 ): UpdateFunction<FileField> => {
     if (!file.marked_for_removal) {
         const markForRemoval = (host: HostElement): void => {
@@ -81,7 +81,7 @@ export const getActionButton = (
 
 export const getAttachedFileTemplate = (
     file: AttachedFileDescription,
-    is_disabled: boolean
+    is_disabled: boolean,
 ): UpdateFunction<FileField> => {
     const removal_classes = file.marked_for_removal
         ? ["tuleap-artifact-modal-field-file", "marked-for-removal"]
@@ -149,7 +149,7 @@ const onClickAddNewFileToAttach = (host: HostElement): void => {
 export const isRequired = (host: HostElement): boolean => {
     if (host.attached_files) {
         const all_marked_as_removed = host.attached_files.every(
-            (attached_file: AttachedFileDescription) => attached_file.marked_for_removal
+            (attached_file: AttachedFileDescription) => attached_file.marked_for_removal,
         );
         if (!all_marked_as_removed) {
             return false;
@@ -158,19 +158,20 @@ export const isRequired = (host: HostElement): boolean => {
     return host.field.required;
 };
 
-export const getAddNewFileToAttachButtonTemplate = (host: FileField): UpdateFunction<FileField> =>
-    html`
-        <button
-            type="button"
-            class="tlp-button-primary tlp-button-outline tlp-button-small"
-            onclick="${onClickAddNewFileToAttach}"
-            disabled="${host.disabled}"
-            data-test="add-new-file"
-        >
-            <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-            ${getAddFileButtonLabel()}
-        </button>
-    `;
+export const getAddNewFileToAttachButtonTemplate = (
+    host: FileField,
+): UpdateFunction<FileField> => html`
+    <button
+        type="button"
+        class="tlp-button-primary tlp-button-outline tlp-button-small"
+        onclick="${onClickAddNewFileToAttach}"
+        disabled="${host.disabled}"
+        data-test="add-new-file"
+    >
+        <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+        ${getAddFileButtonLabel()}
+    </button>
+`;
 
 export interface FileField {
     readonly field: FileFieldType;
@@ -206,13 +207,13 @@ export const FileField = define<FileField>({
                 const onFileChanged = (host: HostElement, event: CustomEvent): void => {
                     host.new_files = host.controller.setFileOfNewFileToAttach(
                         file,
-                        event.detail.file
+                        event.detail.file,
                     );
                 };
                 const onDescriptionChanged = (host: HostElement, event: CustomEvent): void => {
                     host.new_files = host.controller.setDescriptionOfNewFileToAttach(
                         file,
-                        event.detail.description
+                        event.detail.description,
                     );
                 };
                 const onReset = (host: HostElement): void => {

@@ -29,6 +29,6 @@ export const TextErrorHandler = (): ErrorResponseHandler => ({
         response.ok
             ? okAsync(response)
             : decodeAsText(response).andThen((error_text) =>
-                  errAsync(TuleapAPIFault.fromCodeAndMessage(response.status, error_text))
+                  errAsync(TuleapAPIFault.fromCodeAndMessage(response.status, error_text)),
               ),
 });

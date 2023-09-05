@@ -58,7 +58,7 @@ import { isPullRequestAlreadyMerged } from "../merge-status-helper";
 
 const { $gettext } = useGettext();
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
 
 const props = defineProps<{
@@ -66,7 +66,7 @@ const props = defineProps<{
 }>();
 
 const status_info = computed(() =>
-    isPullRequestAlreadyMerged(props.pull_request) ? props.pull_request.status_info : null
+    isPullRequestAlreadyMerged(props.pull_request) ? props.pull_request.status_info : null,
 );
 
 const getMergedText = (): string => {

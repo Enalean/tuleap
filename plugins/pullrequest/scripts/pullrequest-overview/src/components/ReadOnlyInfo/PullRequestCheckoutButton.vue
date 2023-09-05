@@ -110,7 +110,7 @@ watch(
         }
 
         createDropdown(dropdown_button.value);
-    }
+    },
 );
 
 function updateCheckoutOption(event: Event): void {

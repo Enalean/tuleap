@@ -33,7 +33,7 @@ export type TQLCodeMirrorEditor = CodeMirror.Editor;
 export function codeMirrorify(
     textarea_element: HTMLTextAreaElement,
     autocomplete_keywords: ReadonlyArray<string>,
-    submitFormCallback: () => void
+    submitFormCallback: () => void,
 ): TQLCodeMirrorEditor {
     CodeMirror.commands.autocomplete = autocomplete;
 

@@ -58,7 +58,7 @@ describe("ModalConfirmDeletion", () => {
     function createWrapper(
         item: Item,
         currently_previewed_item: Item | null,
-        wiki_referencing_same_page: Array<Wiki> | null
+        wiki_referencing_same_page: Array<Wiki> | null,
     ): VueWrapper<InstanceType<typeof ModalConfirmDeletion>> {
         get_wikis = jest.fn().mockReturnValue(wiki_referencing_same_page);
 
@@ -128,7 +128,7 @@ describe("ModalConfirmDeletion", () => {
             const deletion_modal = await createWrapper(
                 item,
                 null,
-                USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE
+                USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
             );
 
             expect(get_wikis).toHaveBeenCalled();
@@ -215,7 +215,7 @@ describe("ModalConfirmDeletion", () => {
                     currently_previewed_item: item,
                     error: { has_modal_error: false },
                 },
-                null
+                null,
             );
             expect(mock_replace).toHaveBeenCalledWith({
                 name: "folder",

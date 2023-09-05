@@ -28,7 +28,7 @@ import type { Project, TrackerMinimalRepresentation } from "../../type";
 describe("UserStoryDisplayer", () => {
     const getWrapper = async (
         user_story?: Partial<UserStory>,
-        accessibility = false
+        accessibility = false,
     ): Promise<Wrapper<UserStoryDisplayer>> => {
         const defaulted_user_story = {
             id: 14,

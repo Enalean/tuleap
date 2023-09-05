@@ -65,12 +65,12 @@ function getWidthForTask(task: Task, time_period: TimePeriod, left: number): num
     if (task.start && task.end && task.start.toISOString() !== task.end.toISOString()) {
         const task_end_date = new Date(task.end);
         const task_end_date_plus_one_day = new Date(
-            task_end_date.setUTCDate(task_end_date.getUTCDate() + 1)
+            task_end_date.setUTCDate(task_end_date.getUTCDate() + 1),
         );
 
         return Math.max(
             getLeftForDate(task_end_date_plus_one_day, time_period) - left,
-            Styles.TASK_BAR_MIN_WIDTH_IN_PX
+            Styles.TASK_BAR_MIN_WIDTH_IN_PX,
         );
     }
 

@@ -38,7 +38,7 @@ describe("SwitchToHeader", () => {
                                 filter_value: "abc",
                             },
                         },
-                    })
+                    }),
                 ),
                 provide: {
                     [IS_SEARCH_AVAILABLE as symbol]: false,
@@ -66,7 +66,7 @@ describe("SwitchToHeader", () => {
                                 filter_value: "",
                             },
                         },
-                    })
+                    }),
                 ),
                 provide: {
                     [IS_SEARCH_AVAILABLE as symbol]: true,
@@ -94,7 +94,7 @@ describe("SwitchToHeader", () => {
                                 filter_value: "abc",
                             },
                         },
-                    })
+                    }),
                 ),
                 provide: {
                     [IS_SEARCH_AVAILABLE as symbol]: true,

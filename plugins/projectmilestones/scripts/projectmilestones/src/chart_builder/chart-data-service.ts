@@ -48,7 +48,7 @@ export function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWith
 }
 
 export function getLastGenericBurnupData(
-    dataset: PointsWithDateForGenericBurnup[]
+    dataset: PointsWithDateForGenericBurnup[],
 ): PointsWithDateForGenericBurnup | null {
     if (!dataset.length) {
         return null;
@@ -58,7 +58,7 @@ export function getLastGenericBurnupData(
 }
 
 export function getDisplayableDataForBurnup(
-    generic_burnup_data: PointsWithDateForGenericBurnup[]
+    generic_burnup_data: PointsWithDateForGenericBurnup[],
 ): PointsNotNullWithDateForGenericBurnup[] {
     const formatted_data = getFormattedDates(generic_burnup_data);
     const points_not_null: PointsNotNullWithDateForGenericBurnup[] = [];

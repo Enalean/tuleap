@@ -28,7 +28,7 @@ export class DropdownContentRenderer {
         private readonly source_select_box: HTMLSelectElement,
         private readonly dropdown_list_element: Element,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly gettext_provider: GettextProvider
+        private readonly gettext_provider: GettextProvider,
     ) {
         this.groups_map = new Map();
     }

@@ -108,7 +108,7 @@ describe("PermissionsUpdateModal", () => {
         const wrapper = factory({ item: {} }, null);
 
         expect(wrapper.find("[class=document-permissions-modal-loading-state]").exists()).toBe(
-            true
+            true,
         );
     });
 

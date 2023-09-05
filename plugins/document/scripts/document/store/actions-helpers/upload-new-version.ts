@@ -29,8 +29,8 @@ export async function uploadNewVersion(
         string,
         string,
         boolean,
-        ApprovalTable | null
-    ]
+        ApprovalTable | null,
+    ],
 ): Promise<void> {
     const new_version = await createNewVersion(
         item,
@@ -38,7 +38,7 @@ export async function uploadNewVersion(
         changelog,
         uploaded_file,
         is_file_locked,
-        approval_table_action
+        approval_table_action,
     );
 
     if (uploaded_file.size === 0) {
@@ -57,7 +57,7 @@ function uploadVersionAndAssignUploader(
     context: ActionContext<RootState, RootState>,
     item: ItemFile,
     uploaded_file: File,
-    new_version: CreatedItemFileProperties
+    new_version: CreatedItemFileProperties,
 ): void {
     item.uploader = uploadVersion(context, uploaded_file, item, new_version);
 }

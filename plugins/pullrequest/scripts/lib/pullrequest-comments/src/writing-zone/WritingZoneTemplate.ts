@@ -34,7 +34,7 @@ const displayWritingMode = (host: InternalWritingZone): UpdateFunction<InternalW
 
 const displayPreviewMode = (
     host: InternalWritingZone,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
     if (!host.presenter.is_comments_markdown_mode_enabled || !host.presenter.is_in_preview_mode) {
         return html``;
@@ -48,7 +48,7 @@ const displayPreviewMode = (
             >
                 <div class="tlp-alert-danger">
                     ${gettext_provider.gettext(
-                        "Oops, an error occurred. Unable to generate the preview."
+                        "Oops, an error occurred. Unable to generate the preview.",
                     )}
                 </div>
             </div>
@@ -70,7 +70,7 @@ const displayPreviewMode = (
 
 export const getWritingZoneTemplate = (
     host: InternalWritingZone,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
     return html`
         <div class="pull-request-comment-writing-zone-header">

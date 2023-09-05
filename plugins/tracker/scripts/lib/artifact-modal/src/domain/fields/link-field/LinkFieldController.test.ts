@@ -121,7 +121,7 @@ describe(`LinkFieldController`, () => {
             ParentLinkVerifier(
                 links_retriever_sync,
                 new_links_retriever,
-                parent_artifact_identifier
+                parent_artifact_identifier,
             ),
             parents_retriever,
             link_verifier,
@@ -131,7 +131,7 @@ describe(`LinkFieldController`, () => {
             parent_tracker_identifier,
             cross_reference,
             LinkTypesCollectionStub.withParentPair(),
-            CurrentProjectIdentifierStub.withId(CURRENT_PROJECT)
+            CurrentProjectIdentifierStub.withId(CURRENT_PROJECT),
         );
     };
 
@@ -202,7 +202,7 @@ describe(`LinkFieldController`, () => {
             and it will enable the modal submit again
             and it will return an empty array`, async () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
-                NoLinksInCreationModeFault()
+                NoLinksInCreationModeFault(),
             );
             const artifacts = await displayLinkedArtifacts();
 
@@ -365,7 +365,7 @@ describe(`LinkFieldController`, () => {
                 id: ARTIFACT_ID,
             });
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-                NewLinkStub.withIdAndType(ARTIFACT_ID, link_type)
+                NewLinkStub.withIdAndType(ARTIFACT_ID, link_type),
             );
             return getController().addNewLink(linkable_artifact, link_type);
         };
@@ -415,7 +415,7 @@ describe(`LinkFieldController`, () => {
             const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
             const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
             parents_retriever = RetrievePossibleParentsStub.withParents(
-                okAsync([first_parent, second_parent])
+                okAsync([first_parent, second_parent]),
             );
         });
 
@@ -451,12 +451,12 @@ describe(`LinkFieldController`, () => {
             "return %s if the artifact's project is %s as the current project",
             (result: boolean, expected_result: string, project_id: number) => {
                 const current_artifact = LinkedArtifactStub.withProject(
-                    ProjectStub.withDefaults({ id: project_id })
+                    ProjectStub.withDefaults({ id: project_id }),
                 );
                 expect(getController().isLinkedArtifactInCurrentProject(current_artifact)).toBe(
-                    result
+                    result,
                 );
-            }
+            },
         );
     });
 });

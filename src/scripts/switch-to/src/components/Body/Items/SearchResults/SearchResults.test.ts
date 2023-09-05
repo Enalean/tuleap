@@ -49,13 +49,13 @@ describe("SearchResults", () => {
                                 fulltext_search_is_error: false,
                             } as FullTextState,
                         },
-                    })
+                    }),
                 ),
             });
 
             expect(wrapper.attributes("aria-busy")).toBe("true");
             expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
-                true
+                true,
             );
             expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
             expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
@@ -78,13 +78,13 @@ describe("SearchResults", () => {
                                 fulltext_search_is_error: true,
                             } as FullTextState,
                         },
-                    })
+                    }),
                 ),
             });
 
             expect(wrapper.attributes("aria-busy")).toBe("false");
             expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.findComponent(SearchResultsError).exists()).toBe(true);
             expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
@@ -110,13 +110,13 @@ describe("SearchResults", () => {
                                 fulltext_search_has_more_results: false,
                             } as FullTextState,
                         },
-                    })
+                    }),
                 ),
             });
 
             expect(wrapper.attributes("aria-busy")).toBe("false");
             expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
             expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
@@ -163,7 +163,7 @@ describe("SearchResults", () => {
                 expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
                 expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(true);
                 expect(wrapper.findComponent(SearchResultsList).exists()).toBe(false);
-            }
+            },
         );
 
         it.each([
@@ -203,7 +203,7 @@ describe("SearchResults", () => {
                 });
 
                 expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
-            }
+            },
         );
 
         it(`Given the search query is less than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars
@@ -280,7 +280,7 @@ describe("SearchResults", () => {
                 expect(wrapper.attributes("aria-busy")).toBe("false");
                 expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
                 expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(true);
-            }
+            },
         );
 
         it.each([
@@ -313,7 +313,7 @@ describe("SearchResults", () => {
                     global: getGlobalTestOptions(pinia),
                 });
                 expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
-            }
+            },
         );
     });
 });

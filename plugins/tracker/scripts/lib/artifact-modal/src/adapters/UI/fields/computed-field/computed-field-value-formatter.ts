@@ -27,7 +27,7 @@ type ComputedFieldAutoComputedValue = Pick<ComputedFieldValue, "field_id" | "is_
 type ComputedFieldManualValue = Pick<ComputedFieldValue, "field_id" | "manual_value">;
 
 export function formatComputedFieldValue(
-    field_value: ComputedFieldValue | undefined
+    field_value: ComputedFieldValue | undefined,
 ): ComputedFieldAutoComputedValue | ComputedFieldManualValue | null {
     if (field_value === undefined) {
         return null;

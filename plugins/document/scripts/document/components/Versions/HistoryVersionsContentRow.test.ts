@@ -23,7 +23,7 @@ jest.mock("@tuleap/tlp-modal", () => {
         createModal: (): Modal =>
             ({
                 addEventListener: jest.fn(),
-            } as unknown as Modal),
+            }) as unknown as Modal,
     };
 });
 
@@ -54,7 +54,7 @@ describe("HistoryVersionsContentRow", () => {
     function getWrapper(
         item: Item,
         has_more_than_one_version: boolean,
-        authoring_tool = ""
+        authoring_tool = "",
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRow>> {
         jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
         return shallowMount(HistoryVersionsContentRow, {

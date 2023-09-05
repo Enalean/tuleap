@@ -30,7 +30,7 @@ describe("DocumentBreadcrumb", () => {
         current_folder_ascendant_hierarchy: Array<Folder>,
         is_loading_ascendant_hierarchy: boolean,
         currently_previewed_item: null | Item,
-        project_icon = ""
+        project_icon = "",
     ): VueWrapper<InstanceType<typeof DocumentBreadcrumb>> {
         return shallowMount(DocumentBreadcrumb, {
             global: {
@@ -154,7 +154,7 @@ describe("DocumentBreadcrumb", () => {
             false,
             current_folder_ascendant_hierarchy,
             false,
-            currently_previewed_item
+            currently_previewed_item,
         );
 
         expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeTruthy();

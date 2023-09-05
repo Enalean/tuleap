@@ -26,5 +26,5 @@ export let store: Store<State>;
 export function createInitializedStore(
     user_id: number,
     project_id: number,
-    configuration_state: ConfigurationState
+    configuration_state: ConfigurationState,
 ): Store<RootState>;

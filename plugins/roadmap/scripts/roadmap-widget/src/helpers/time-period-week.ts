@@ -26,7 +26,11 @@ export class TimePeriodWeek implements TimePeriod {
     readonly weeks: Date[];
     private readonly gettext_provider: VueGettextProvider;
 
-    constructor(readonly from: Date, readonly to: Date, gettext_provider: VueGettextProvider) {
+    constructor(
+        readonly from: Date,
+        readonly to: Date,
+        gettext_provider: VueGettextProvider,
+    ) {
         this.gettext_provider = gettext_provider;
         this.weeks = getWeeks(from, to);
     }
@@ -51,7 +55,7 @@ export class TimePeriodWeek implements TimePeriod {
             {
                 week: currentWeekNumber(unit),
                 year: unit.getUTCFullYear(),
-            }
+            },
         );
     }
 
@@ -60,7 +64,7 @@ export class TimePeriodWeek implements TimePeriod {
             this.gettext_provider.$gettext("W%{ week }"),
             {
                 week: currentWeekNumber(unit),
-            }
+            },
         );
     }
 
@@ -78,7 +82,7 @@ function getWeeks(start: Date, end: Date): Date[] {
 
     return getBeginningOfNextNthWeeks(
         start_of_first_week,
-        getDateDiffInWeeks(start_of_first_week, start_of_last_week)
+        getDateDiffInWeeks(start_of_first_week, start_of_last_week),
     );
 }
 
@@ -112,7 +116,7 @@ function getBeginningOfCurrentWeek(base_date: Date): Date {
     const MONDAY_INDEX_IN_WEEK = 1;
 
     first_day_of_week.setUTCDate(
-        first_day_of_week.getUTCDate() - current_day_of_week + MONDAY_INDEX_IN_WEEK
+        first_day_of_week.getUTCDate() - current_day_of_week + MONDAY_INDEX_IN_WEEK,
     );
     first_day_of_week.setUTCHours(0, 0, 0);
 
@@ -126,7 +130,7 @@ function getDateDiffInWeeks(start_date: Date, end_date: Date): number {
     const start_utc = Date.UTC(
         start_date.getFullYear(),
         start_date.getMonth(),
-        start_date.getDate()
+        start_date.getDate(),
     );
     const end_utc = Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate());
 

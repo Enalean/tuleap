@@ -56,7 +56,7 @@ describe(`IterationActivator`, () => {
         beforeEach(() => {
             iteration_select_element.insertAdjacentHTML(
                 "afterbegin",
-                `<option value=""></option><option value="101"></option><option value="125"></option>`
+                `<option value=""></option><option value="101"></option><option value="125"></option>`,
             );
         });
 
@@ -93,15 +93,15 @@ describe(`IterationActivator`, () => {
     function getActivator(): IterationActivator {
         const iteration_label = TimeboxLabel.fromId(
             RetrieveElementStub.withElements(iteration_label_element),
-            "some_id"
+            "some_id",
         );
         const iteration_sub_label = TimeboxLabel.fromId(
             RetrieveElementStub.withElements(iteration_sub_label_element),
-            "some_id"
+            "some_id",
         );
         const iteration_selector = TrackerSelector.fromId(
             RetrieveElementStub.withElements(iteration_select_element),
-            "some_id"
+            "some_id",
         );
         const gettext_stub = {
             gettext: (source: string): string => source,
@@ -112,18 +112,18 @@ describe(`IterationActivator`, () => {
                 iteration_illustration_label,
                 doc.createElementNS(svg_namespace, "tspan"),
                 doc.createElementNS(svg_namespace, "tspan"),
-                doc.createElementNS(svg_namespace, "tspan")
+                doc.createElementNS(svg_namespace, "tspan"),
             ),
             iteration_label,
             iteration_sub_label,
             "Default Iterations",
-            "default iteration lowercase"
+            "default iteration lowercase",
         );
         return new IterationActivator(
             iteration_label,
             iteration_sub_label,
             iteration_selector,
-            actualizer
+            actualizer,
         );
     }
 });

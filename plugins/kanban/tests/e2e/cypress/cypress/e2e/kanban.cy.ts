@@ -69,7 +69,7 @@ describe("Kanban service", () => {
             cy.dragAndDrop(
                 "[data-test=edit-kanban-column-review]",
                 "[data-test=edit-kanban-column-in_progress]",
-                "top"
+                "top",
             );
             cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
             cy.get("[data-test=edit-kanban-column-label]").spread(
@@ -77,7 +77,7 @@ describe("Kanban service", () => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
                     expect(third_column).to.contain("In progress");
-                }
+                },
             );
 
             // eslint-disable-next-line cypress/require-data-selectors
@@ -87,7 +87,7 @@ describe("Kanban service", () => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
                     expect(third_column).to.contain("In progress");
-                }
+                },
             );
             // The order of the columns should not change after reload
             cy.reload();
@@ -96,7 +96,7 @@ describe("Kanban service", () => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
                     expect(third_column).to.contain("In progress");
-                }
+                },
             );
         });
     });
@@ -130,9 +130,9 @@ describe("Kanban service", () => {
                                 expect(first_card.innerText).to.equal(this.second_title);
                                 expect(second_card.innerText).to.equal(this.first_title);
                                 expect(third_card.innerText).to.equal(this.third_title);
-                            }
+                            },
                         );
-                    }
+                    },
                 );
             });
 
@@ -142,7 +142,7 @@ describe("Kanban service", () => {
             cy.get("[data-test=kanban-item-content-expand-collapse]").first().click();
             cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
                 "have.class",
-                "fa-angle-up"
+                "fa-angle-up",
             );
 
             cy.log(`I can filter cards`);
@@ -159,7 +159,7 @@ describe("Kanban service", () => {
                 cy.get("[data-test=kanban-column-header-wip-count]").contains("2");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "have.class",
-                    "tlp-badge-warning"
+                    "tlp-badge-warning",
                 );
             });
 
@@ -167,7 +167,7 @@ describe("Kanban service", () => {
                 cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "not.have.class",
-                    "tlp-badge-warning"
+                    "tlp-badge-warning",
                 );
             });
 
@@ -194,7 +194,7 @@ describe("Kanban service", () => {
             cy.dragAndDrop(
                 `[data-test=kanban-item-content-${drag_label}]`,
                 `[data-test=kanban-item-content-${drop_label}]`,
-                "top"
+                "top",
             );
 
             // need to escape for drag and drop only works on body and global body seems erased by angular

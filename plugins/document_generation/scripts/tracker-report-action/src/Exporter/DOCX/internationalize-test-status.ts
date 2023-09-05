@@ -22,7 +22,7 @@ import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
 
 export function getInternationalizedTestStatus(
     gettext_provider: GettextProvider,
-    test_status: ArtifactFieldValueStatus
+    test_status: ArtifactFieldValueStatus,
 ): string {
     switch (test_status) {
         case null:

@@ -27,7 +27,7 @@ export const isBadge = (element: Element | null): element is HTMLElement & Selec
     element?.tagName === SELECTION_BADGE_TAG.toUpperCase();
 
 export const getSelectionBadgeCallback = (
-    options: LazyboxOptions
+    options: LazyboxOptions,
 ): LazyboxSelectionBadgeCallback => {
     return "selection_badge_callback" in options
         ? options.selection_badge_callback

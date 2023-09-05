@@ -55,7 +55,7 @@ export interface CreateInlineCommentWidget {
 
 export interface CreateNewInlineCommentFormWidget {
     displayNewInlineCommentFormWidget: (
-        widget_params: NewInlineCommentFormWidgetCreationParams
+        widget_params: NewInlineCommentFormWidgetCreationParams,
     ) => void;
 }
 
@@ -68,7 +68,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
     comments_widgets_map: MapCommentWidgets,
-    is_comments_markdown_mode_enabled: boolean
+    is_comments_markdown_mode_enabled: boolean,
 ): CreateFileDiffWidget => {
     const displayInlineCommentWidget = (widget_params: InlineCommentWidgetCreationParams): void => {
         const inline_comment_element = doc.createElement(PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME);
@@ -85,7 +85,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
         const widget = widget_params.code_mirror.addLineWidget(
             widget_params.line_number,
             inline_comment_element,
-            getWidgetPlacementOptions(widget_params)
+            getWidgetPlacementOptions(widget_params),
         );
 
         inline_comment_element.post_rendering_callback = (): void => {
@@ -111,7 +111,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 {
                     coverGutter: true,
                     above: widget_params.display_above_line,
-                }
+                },
             );
 
             placeholder.post_rendering_callback = (): void => {
@@ -120,10 +120,10 @@ export const SideBySideCodeMirrorWidgetCreator = (
         },
         displayInlineCommentWidget,
         displayNewInlineCommentFormWidget: (
-            widget_params: NewInlineCommentFormWidgetCreationParams
+            widget_params: NewInlineCommentFormWidgetCreationParams,
         ): void => {
             const new_comment_element = doc.createElement(
-                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME
+                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
             );
             if (!isANewInlineCommentWidget(new_comment_element)) {
                 return;
@@ -136,7 +136,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
             const widget = widget_params.code_mirror.addLineWidget(
                 widget_params.line_number,
                 new_comment_element,
-                getWidgetPlacementOptions(widget_params)
+                getWidgetPlacementOptions(widget_params),
             );
 
             const post_submit_callback = (comment_payload: PullRequestComment): void => {
@@ -186,7 +186,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
                     // eslint-disable-next-line no-console
                     console.error(String(fault));
                 },
-                on_cancel_callback
+                on_cancel_callback,
             );
         },
     };

@@ -47,7 +47,7 @@ describe("ToolPresenter", () => {
         expect(anchor_element.getAttribute("href")).toStrictEqual(tool_data.href);
         expect(anchor_element.getAttribute("title")).toStrictEqual(tool_data.description);
         expect(anchor_element.getAttribute("data-shortcut-sidebar")).toBe(
-            `sidebar-${tool_data.shortcut_id}`
+            `sidebar-${tool_data.shortcut_id}`,
         );
         expect(anchor.find("[data-test=tool-icon]").element.className).toContain(tool_data.icon);
         expect(anchor_element.getAttribute("target")).toBe("_self");

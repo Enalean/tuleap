@@ -58,7 +58,7 @@ function BacklogController(
     BacklogItemSelectedService,
     SharedPropertiesService,
     NewTuleapArtifactModalService,
-    ItemAnimatorService
+    ItemAnimatorService,
 ) {
     const self = this;
     Object.assign(self, {
@@ -104,7 +104,7 @@ function BacklogController(
 
             const clicked_tracker_id = parseInt($event.target.dataset.trackerId, 10);
             const backlog_item_tracker = self.details.accepted_types.content.find(
-                (tracker) => tracker.id === clicked_tracker_id
+                (tracker) => tracker.id === clicked_tracker_id,
             );
             if (backlog_item_tracker) {
                 showAddBacklogItemModal($event, backlog_item_tracker);
@@ -115,7 +115,7 @@ function BacklogController(
                 return;
             }
             const parent_tracker = self.details.accepted_types.parent_trackers.find(
-                (tracker) => tracker.id === clicked_tracker_id
+                (tracker) => tracker.id === clicked_tracker_id,
             );
             if (parent_tracker) {
                 showAddBacklogItemModal($event, parent_tracker);
@@ -128,7 +128,7 @@ function BacklogController(
 
         self.dragular_instance_for_backlog = dragularService(
             backlog_element,
-            self.dragularOptionsForBacklog()
+            self.dragularOptionsForBacklog(),
         );
 
         $scope.$on("dragulardrop", dragularDrop);
@@ -156,11 +156,11 @@ function BacklogController(
         if (!self.isMilestoneContext()) {
             BacklogService.loadProjectBacklog(self.project_id);
         } else {
-            MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function (
-                data
-            ) {
-                BacklogService.loadMilestoneBacklog(data.results);
-            });
+            MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(
+                function (data) {
+                    BacklogService.loadMilestoneBacklog(data.results);
+                },
+            );
         }
     }
 
@@ -176,7 +176,7 @@ function BacklogController(
         return self
             .fetchBacklogItems(
                 self.backlog_items.pagination.limit,
-                self.backlog_items.pagination.offset
+                self.backlog_items.pagination.offset,
             )
             .then(function (total) {
                 self.backlog_items.pagination.offset += self.backlog_items.pagination.limit;
@@ -219,7 +219,7 @@ function BacklogController(
     function filterBacklog() {
         self.fetchAllBacklogItems(
             self.backlog_items.pagination.limit,
-            self.backlog_items.pagination.offset
+            self.backlog_items.pagination.offset,
         )
             .catch(() => {
                 // ignore rejection
@@ -274,13 +274,13 @@ function BacklogController(
                         undefined,
                         self.details.rest_route_id,
                         [item_id],
-                        compared_to
+                        compared_to,
                     );
                 } else {
                     promise = ProjectService.removeAddToBacklog(
                         undefined,
                         self.details.rest_route_id,
-                        [item_id]
+                        [item_id],
                     );
                 }
             } else if (compared_to) {
@@ -288,13 +288,13 @@ function BacklogController(
                     undefined,
                     self.details.rest_route_id,
                     [item_id],
-                    compared_to
+                    compared_to,
                 );
             } else {
                 promise = MilestoneService.removeAddToBacklog(
                     undefined,
                     self.details.rest_route_id,
-                    [item_id]
+                    [item_id],
                 );
             }
 
@@ -313,7 +313,7 @@ function BacklogController(
             item_type.id,
             null,
             callback,
-            []
+            [],
         );
     }
 
@@ -352,7 +352,7 @@ function BacklogController(
 
         compared_to = DroppedService.defineComparedToBeFirstItem(
             self.backlog_items.content,
-            moved_items
+            moved_items,
         );
 
         self.reorderBacklogItems(moved_items, compared_to);
@@ -374,11 +374,11 @@ function BacklogController(
 
         self.fetchAllBacklogItems(
             self.backlog_items.pagination.limit,
-            self.backlog_items.pagination.offset
+            self.backlog_items.pagination.offset,
         ).finally(function () {
             compared_to = DroppedService.defineComparedToBeLastItem(
                 self.backlog_items.content,
-                moved_items
+                moved_items,
             );
 
             backlog_item.moving_to = false;
@@ -417,7 +417,7 @@ function BacklogController(
         source_model,
         initial_index,
         target_model,
-        target_index
+        target_index,
     ) {
         event.stopPropagation();
 
@@ -439,7 +439,7 @@ function BacklogController(
         var compared_to = DroppedService.defineComparedTo(
             target_model,
             target_model[target_index],
-            dropped_items
+            dropped_items,
         );
 
         saveChangesInBackend();
@@ -457,13 +457,13 @@ function BacklogController(
                     MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(
                         target_milestone_id,
                         dropped_items,
-                        compared_to
+                        compared_to,
                     );
 
                     DroppedService.moveFromBacklogToSubmilestone(
                         dropped_item_ids,
                         compared_to,
-                        target_milestone_id
+                        target_milestone_id,
                     )
                         .then(function () {
                             MilestoneCollectionService.refreshMilestone(target_milestone_id);
@@ -483,7 +483,7 @@ function BacklogController(
         return DroppedService.reorderBacklog(
             backlog_items.map((backlog_item) => backlog_item.id),
             compared_to,
-            BacklogService.backlog
+            BacklogService.backlog,
         )
             .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();

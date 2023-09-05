@@ -33,7 +33,7 @@ export const CreateNewInlineCommentFormWidgetStub = (): StubCreateNewInlineComme
     return {
         build: (): CreateNewInlineCommentFormWidget => ({
             displayNewInlineCommentFormWidget: (
-                widget_params: NewInlineCommentFormWidgetCreationParams
+                widget_params: NewInlineCommentFormWidgetCreationParams,
             ): void => {
                 last_call_params = widget_params;
                 nb_calls++;

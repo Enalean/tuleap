@@ -103,14 +103,14 @@ describe("Build justifications section", () => {
                         },
                     },
                 ],
-            ])
+            ]),
         );
 
         const section = await buildJustificationsSection(gettext_provider, planned_test_cases);
 
         expect(section).toStrictEqual({
             title: new TextCell(
-                "Justifications (for planned tests that are not-run, failed, blocked)"
+                "Justifications (for planned tests that are not-run, failed, blocked)",
             ),
             headers: [
                 new TextCell("Test execution ID"),
@@ -196,7 +196,7 @@ describe("Build justifications section", () => {
         ];
 
         jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
-            new Map([[99995, { id: 99995, values_by_field: {}, values: [], tracker: { id: 12 } }]])
+            new Map([[99995, { id: 99995, values_by_field: {}, values: [], tracker: { id: 12 } }]]),
         );
 
         const section = await buildJustificationsSection(gettext_provider, planned_test_cases);

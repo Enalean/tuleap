@@ -31,7 +31,7 @@ Vue.use(Vuex);
 
 export function createStore(
     root_state: RootState,
-    configuration_state: ConfigurationState
+    configuration_state: ConfigurationState,
 ): Store<RootState> {
     const configuration = createConfigurationModule(configuration_state);
 

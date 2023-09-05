@@ -78,7 +78,7 @@ function controller(
     EditItemService,
     ItemAnimatorService,
     ErrorState,
-    gettextCatalog
+    gettextCatalog,
 ) {
     const self = this;
 
@@ -153,7 +153,7 @@ function controller(
         UserPreferencesService.setPreference(
             self.user_id,
             "agiledashboard_planning_item_view_mode_" + self.project_id,
-            view_mode
+            view_mode,
         );
     }
 
@@ -189,7 +189,7 @@ function controller(
             async (error) => {
                 const message = await extractErrorMessage(error);
                 ErrorState.setError(message);
-            }
+            },
         );
     }
 
@@ -224,7 +224,7 @@ function controller(
             async (error) => {
                 const message = await extractErrorMessage(error);
                 ErrorState.setError(message);
-            }
+            },
         );
     }
 
@@ -275,14 +275,14 @@ function controller(
                         SESSION_STORAGE_KEY,
                         sprintf(
                             gettextCatalog.getString("Successfully updated milestone '%s'"),
-                            submilestone.label
-                        )
+                            submilestone.label,
+                        ),
                     );
                     $window.location.reload();
                     return;
                 }
                 self.refreshSubmilestone(submilestone_id);
-            }
+            },
         );
     }
 
@@ -304,7 +304,7 @@ function controller(
             submilestone_type.id,
             parent_artifact_id,
             callback,
-            []
+            [],
         );
     }
 
@@ -353,7 +353,7 @@ function controller(
                 promise = MilestoneService.addReorderToContent(
                     parent_item.id,
                     [item_id],
-                    compared_to
+                    compared_to,
                 );
             } else {
                 promise = MilestoneService.addToContent(parent_item.id, [item_id]);

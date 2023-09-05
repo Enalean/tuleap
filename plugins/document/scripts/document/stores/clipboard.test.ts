@@ -49,7 +49,7 @@ describe("Clipboard Store", () => {
         setActivePinia(createPinia());
         emit = jest.spyOn(emitter, "emit");
         jest.spyOn(vueuse, "useLocalStorage").mockImplementation((key: string, value) =>
-            ref(value)
+            ref(value),
         );
     });
     describe("PasteItem", () => {
@@ -89,7 +89,7 @@ describe("Clipboard Store", () => {
             expect(empty_clipboard_mock).toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
-                expect.anything()
+                expect.anything(),
             );
         });
 
@@ -110,7 +110,7 @@ describe("Clipboard Store", () => {
             expect(pasting_has_failed_mock).toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
-                expect.anything()
+                expect.anything(),
             );
         });
     });

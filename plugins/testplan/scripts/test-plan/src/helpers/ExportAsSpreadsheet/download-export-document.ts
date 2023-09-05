@@ -27,13 +27,13 @@ export async function downloadExportDocument(
     download_document: (
         gettext_provider: VueGettextProvider,
         milestone_title: string,
-        report: ExportReport
+        report: ExportReport,
     ) => void,
     project_name: string,
     milestone_title: string,
     user_display_name: string,
     backlog_items: ReadonlyArray<BacklogItem>,
-    campaigns: ReadonlyArray<Campaign>
+    campaigns: ReadonlyArray<Campaign>,
 ): Promise<void> {
     const current_date = new Date();
 
@@ -44,7 +44,7 @@ export async function downloadExportDocument(
         user_display_name,
         current_date,
         backlog_items,
-        campaigns
+        campaigns,
     );
     download_document(gettext_provider, milestone_title, report);
 }

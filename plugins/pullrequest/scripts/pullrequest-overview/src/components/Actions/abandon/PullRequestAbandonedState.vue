@@ -84,7 +84,7 @@ const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const updatePullRequest = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
 const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
 
 const props = defineProps<{
@@ -92,11 +92,11 @@ const props = defineProps<{
 }>();
 
 const status_info = computed(() =>
-    isPullRequestAbandoned(props.pull_request) ? props.pull_request.status_info : null
+    isPullRequestAbandoned(props.pull_request) ? props.pull_request.status_info : null,
 );
 
 const can_user_reopen_pull_request = computed(
-    () => props.pull_request && props.pull_request.user_can_reopen
+    () => props.pull_request && props.pull_request.user_can_reopen,
 );
 
 const getAbandonedText = (): string => {

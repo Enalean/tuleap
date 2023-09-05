@@ -33,6 +33,6 @@ export function retrieveSelectedOwner(owner_username: string): Promise<RestUser>
         },
         (): RestUser => {
             return { display_name: owner_username, username: "", id: "", realname: "" };
-        }
+        },
     );
 }

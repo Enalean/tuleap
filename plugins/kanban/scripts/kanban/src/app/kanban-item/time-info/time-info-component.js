@@ -20,12 +20,12 @@ function controller($sce, gettextCatalog) {
 
         timeinfo += getTimeInfoEntry(
             item.timeinfo.kanban,
-            gettextCatalog.getString("In Kanban since:")
+            gettextCatalog.getString("In Kanban since:"),
         );
         timeinfo += "\u000a\u000a";
         timeinfo += getTimeInfoEntry(
             item.timeinfo[item.in_column],
-            gettextCatalog.getString("In column since:")
+            gettextCatalog.getString("In column since:"),
         );
 
         return $sce.trustAsHtml(timeinfo);

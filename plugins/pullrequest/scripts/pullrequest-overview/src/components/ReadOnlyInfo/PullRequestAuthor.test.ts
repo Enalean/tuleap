@@ -55,7 +55,7 @@ describe("PullRequestAuthor", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-author-avatar]").attributes("src")).toBe(
-            "/url/to/author_avatar.png"
+            "/url/to/author_avatar.png",
         );
 
         const author_name = wrapper.find("[data-test=pullrequest-author-name]");

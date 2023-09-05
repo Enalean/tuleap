@@ -82,7 +82,7 @@ describe("TTM campaign", () => {
             cy.contains("A test campaign").click();
             cy.contains("First test case").click();
             cy.get("[data-test=current-test-requirement]").contains(
-                "Iterate interactive web-readiness"
+                "Iterate interactive web-readiness",
             );
         });
 
@@ -160,7 +160,7 @@ describe("TTM campaign", () => {
             changeTestStatus("blocked");
             cy.get("[data-test=warning-status-changed]").should("exist");
             cy.get("[data-test=current-test-comment-preview]").contains(
-                "I confirm that. It is ok. Fix works!"
+                "I confirm that. It is ok. Fix works!",
             );
 
             cy.log("Cancel the edition of the comment");
@@ -168,7 +168,7 @@ describe("TTM campaign", () => {
             addComment("<p>A new comment</p>");
             cy.get("[data-test=cancel-edit-comment-button]").click({ force: true });
             cy.get("[data-test=current-test-comment-preview]").contains(
-                "I confirm that. It is ok. Fix works!"
+                "I confirm that. It is ok. Fix works!",
             );
 
             cy.log("Edits the test");
@@ -214,7 +214,7 @@ describe("TTM campaign", () => {
                                 new Event("paste", { bubbles: true, cancelable: true }),
                                 {
                                     clipboardData: data_transfer,
-                                }
+                                },
                             );
 
                             $element[0].dispatchEvent(paste_event);

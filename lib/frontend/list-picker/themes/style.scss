@@ -70,7 +70,8 @@
     transition: border-color var(--tlp-form-element-border-transition-duration) linear;
 
     &:focus {
-        transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+        transition:
+            border-color var(--tlp-form-element-border-transition-duration) linear,
             box-shadow 350ms;
         border-color: var(--tlp-main-color);
         box-shadow: var(--tlp-shadow-focus);

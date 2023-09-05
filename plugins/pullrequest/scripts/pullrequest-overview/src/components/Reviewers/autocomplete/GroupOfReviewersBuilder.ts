@@ -27,13 +27,13 @@ export interface BuildGroupOfReviewers {
     buildLoading(): GroupOfItems;
     buildWithUsers(
         users: ReadonlyArray<User>,
-        currently_selected_users: ReadonlyArray<User>
+        currently_selected_users: ReadonlyArray<User>,
     ): GroupOfItems;
 }
 
 export const GroupOfReviewersBuilder = (
     users_transformer: TransformUsersToLazyboxItems,
-    $gettext: (msgid: string) => string
+    $gettext: (msgid: string) => string,
 ): BuildGroupOfReviewers => {
     const empty_group: GroupOfItems = {
         label: $gettext("Matching users"),
@@ -62,7 +62,7 @@ export const GroupOfReviewersBuilder = (
         },
         buildWithUsers(
             users: ReadonlyArray<User>,
-            currently_selected_users: ReadonlyArray<User>
+            currently_selected_users: ReadonlyArray<User>,
         ): GroupOfItems {
             return {
                 ...empty_group,

@@ -31,6 +31,6 @@ export function postMarkdown(markdown: string, project_id: string): Promise<stri
             error.response.text().then((error_text) => {
                 //Re-throw the error to trigger the next .catch()
                 throw new Error(error_text);
-            })
+            }),
     );
 }

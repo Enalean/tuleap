@@ -34,19 +34,21 @@ describe("LinkedArtifactsController -", function () {
     beforeEach(function () {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _$controller_,
-            _SharedPropertiesService_,
-            _ReleaseRestService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            ReleaseRestService = _ReleaseRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-        });
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$rootScope_,
+                _$controller_,
+                _SharedPropertiesService_,
+                _ReleaseRestService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                ReleaseRestService = _ReleaseRestService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+            },
+        );
 
         jest.spyOn(SharedPropertiesService, "getRelease").mockImplementation(() => {});
         jest.spyOn(ReleaseRestService, "getReleaseLinkNatures").mockImplementation(() => {});
@@ -76,7 +78,7 @@ describe("LinkedArtifactsController -", function () {
                 uri: "/scaphocephalus/grieved?a=junketing&b=drowner",
             };
             ReleaseRestService.getReleaseLinkNatures.mockReturnValue(
-                $q.when([nature_is_child, nature_fixed_in])
+                $q.when([nature_is_child, nature_fixed_in]),
             );
 
             var is_child_artifacts = [
@@ -110,28 +112,28 @@ describe("LinkedArtifactsController -", function () {
             $rootScope.$apply();
 
             expect(ReleaseRestService.getReleaseLinkNatures).toHaveBeenCalledWith(
-                release.artifact.id
+                release.artifact.id,
             );
             expect(ReleaseRestService.getAllLinkedArtifacts).toHaveBeenCalledWith(
                 nature_is_child.uri,
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(ReleaseRestService.getAllLinkedArtifacts).toHaveBeenCalledWith(
                 nature_fixed_in.uri,
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(ReleaseRestService.getAllLinkedArtifacts.mock.calls).toHaveLength(2);
             expect(LinkedArtifactsController.natures[0]).toEqual(
-                expect.objectContaining(nature_is_child)
+                expect.objectContaining(nature_is_child),
             );
             expect(LinkedArtifactsController.natures[0].linked_artifacts).toEqual(
-                is_child_artifacts
+                is_child_artifacts,
             );
             expect(LinkedArtifactsController.natures[1]).toEqual(
-                expect.objectContaining(nature_fixed_in)
+                expect.objectContaining(nature_fixed_in),
             );
             expect(LinkedArtifactsController.natures[1].linked_artifacts).toEqual(
-                fixed_in_artifacts
+                fixed_in_artifacts,
             );
             expect(LinkedArtifactsController.loading_natures).toBeFalsy();
         });
@@ -159,7 +161,7 @@ describe("LinkedArtifactsController -", function () {
                 uri: "/odinitic/prophase?a=nunlet&b=sabino",
             };
             ReleaseRestService.getReleaseLinkNatures.mockReturnValue(
-                $q.when([no_nature_forward, no_nature_reverse])
+                $q.when([no_nature_forward, no_nature_reverse]),
             );
             ReleaseRestService.getAllLinkedArtifacts.mockReturnValue($q.when());
 

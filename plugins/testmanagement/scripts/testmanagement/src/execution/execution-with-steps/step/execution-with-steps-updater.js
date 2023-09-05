@@ -27,7 +27,7 @@ import {
 function updateStatusWithStepResults(execution) {
     execution.status = computeTestStatusFromStepStatus(
         execution.definition.steps,
-        Object.values(execution.steps_results)
+        Object.values(execution.steps_results),
     );
 }
 

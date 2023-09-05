@@ -44,7 +44,7 @@ describe("PullRequestDescriptionCommentSaver", () => {
 
         PullRequestDescriptionCommentSaver().saveDescriptionComment(
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(current_description),
-            is_comments_markdown_mode_enabled
+            is_comments_markdown_mode_enabled,
         );
 
         expect(patchSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/${pull_request_id}`, {

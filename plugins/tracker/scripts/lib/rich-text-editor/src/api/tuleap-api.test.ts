@@ -38,7 +38,7 @@ describe(`tuleap-api`, () => {
             expect(result).toEqual(html_string);
             expect(post).toHaveBeenCalledWith(
                 `/project/110/interpret-commonmark`,
-                expect.anything()
+                expect.anything(),
             );
             const options = post.mock.calls[0][1];
             if (!options) {
@@ -58,7 +58,7 @@ describe(`tuleap-api`, () => {
             jest.spyOn(fetch_wrapper, "post").mockRejectedValue(error);
 
             await expect(() => postMarkdown(markdown_string, project_id)).rejects.toThrowError(
-                "Internal Server Error"
+                "Internal Server Error",
             );
         });
     });

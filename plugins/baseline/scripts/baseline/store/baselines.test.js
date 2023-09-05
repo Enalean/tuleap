@@ -40,7 +40,7 @@ describe("Baselines store:", () => {
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getBaselines").mockReturnValue(
-                    Promise.resolve([baseline1, baseline2])
+                    Promise.resolve([baseline1, baseline2]),
                 );
 
                 return store.actions.load(context, { project_id: 102 });
@@ -50,14 +50,14 @@ describe("Baselines store:", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadUsers",
                     { user_ids: [4, 5] },
-                    { root: true }
+                    { root: true },
                 );
             });
             it("dispatches 'loadArtifacts' for artifacts of baselines", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadArtifacts",
                     { artifact_ids: [1, 2] },
-                    { root: true }
+                    { root: true },
                 );
             });
             it("updated baselines", () => {

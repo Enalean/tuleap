@@ -64,7 +64,7 @@ describe("PullRequestAbandonedState", () => {
 
     const getWrapper = (
         pull_request: PullRequest,
-        relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+        relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     ): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
             switch (key) {
@@ -100,7 +100,7 @@ describe("PullRequestAbandonedState", () => {
             const wrapper = getWrapper({ status } as PullRequest);
 
             expect(wrapper.element.children).toBeUndefined();
-        }
+        },
     );
 
     it("Should display the pull-request abandon date and the user who abandoned it", () => {
@@ -120,13 +120,13 @@ describe("PullRequestAbandonedState", () => {
         } as PullRequest);
 
         expect(wrapper.find("[data-test=status-updater-avatar]").attributes("src")).toStrictEqual(
-            status_info.status_updater.avatar_url
+            status_info.status_updater.avatar_url,
         );
         expect(wrapper.find("[data-test=status-updater-name]").text()).toStrictEqual(
-            status_info.status_updater.display_name
+            status_info.status_updater.display_name,
         );
         expect(
-            wrapper.find("[data-test=pull-request-abandon-date]").attributes("date")
+            wrapper.find("[data-test=pull-request-abandon-date]").attributes("date"),
         ).toStrictEqual(status_info.status_date);
         expect(wrapper.find("[data-test=pull-request-reopen-button]").exists()).toBe(false);
     });
@@ -157,11 +157,11 @@ describe("PullRequestAbandonedState", () => {
                         },
                     },
                 } as PullRequest,
-                preference
+                preference,
             );
 
             expect(wrapper.find("[data-test=status-abandon-date]").text()).toContain(prefix);
-        }
+        },
     );
 
     describe("reopen", () => {
@@ -184,7 +184,7 @@ describe("PullRequestAbandonedState", () => {
             } as PullRequest;
 
             vi.spyOn(tuleap_api, "reopenPullRequest").mockReturnValue(
-                okAsync(updated_pull_request)
+                okAsync(updated_pull_request),
             );
 
             const reopen_button = wrapper.find("[data-test=pull-request-reopen-button]");

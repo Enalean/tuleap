@@ -38,7 +38,10 @@ header {
     top: 0;
     right: 0;
     justify-content: space-between;
-    transition: background ease-in-out 100ms, box-shadow ease-in-out 100ms, top ease-in-out 50ms;
+    transition:
+        background ease-in-out 100ms,
+        box-shadow ease-in-out 100ms,
+        top ease-in-out 50ms;
 
     &.full-width {
         width: 100%;
@@ -110,8 +113,11 @@ body.has-sidebar {
         margin: 0 0 0 var(--tlp-small-spacing);
         padding: 0 var(--tlp-medium-spacing);
         overflow: hidden;
-        transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
-            border-color 75ms ease-in-out, padding 75ms ease-in-out;
+        transition:
+            box-shadow 75ms ease-in-out,
+            background 75ms ease-in-out,
+            border-color 75ms ease-in-out,
+            padding 75ms ease-in-out;
         border-radius: 30px;
         border-color: var(--tlp-white-color) !important;
         background: var(--tlp-white-color) !important;
@@ -131,7 +137,9 @@ body.has-sidebar {
         &:hover:not(:disabled, .disabled, .active),
         &:active:not(:disabled, .disabled, .active),
         &:focus:not(:disabled, .disabled, .active) {
-            transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
+            transition:
+                box-shadow 75ms ease-in-out,
+                background 75ms ease-in-out,
                 border-color 75ms ease-in-out;
             border-color: var(--tlp-white-color) !important;
             background: #fafafa !important;

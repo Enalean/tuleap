@@ -17,55 +17,57 @@ describe("DroppedService", () => {
         angular.mock.module(planning_module);
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$q_,
-            _$rootScope_,
-            _DroppedService_,
-            _ProjectService_,
-            _MilestoneService_,
-            _BacklogItemService_,
-            _RestErrorService_
-        ) {
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            DroppedService = _DroppedService_;
-            ProjectService = _ProjectService_;
-            MilestoneService = _MilestoneService_;
-            BacklogItemService = _BacklogItemService_;
-            RestErrorService = _RestErrorService_;
+        angular.mock.inject(
+            function (
+                _$q_,
+                _$rootScope_,
+                _DroppedService_,
+                _ProjectService_,
+                _MilestoneService_,
+                _BacklogItemService_,
+                _RestErrorService_,
+            ) {
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                DroppedService = _DroppedService_;
+                ProjectService = _ProjectService_;
+                MilestoneService = _MilestoneService_;
+                BacklogItemService = _BacklogItemService_;
+                RestErrorService = _RestErrorService_;
 
-            var returnPromise = function (method) {
-                var self = this;
-                jest.spyOn(self, method).mockReturnValue($q.defer().promise);
-            };
+                var returnPromise = function (method) {
+                    var self = this;
+                    jest.spyOn(self, method).mockReturnValue($q.defer().promise);
+                };
 
-            ProjectService = _ProjectService_;
-            ["reorderBacklog", "removeAddReorderToBacklog", "removeAddToBacklog"].forEach(
-                returnPromise,
-                ProjectService
-            );
+                ProjectService = _ProjectService_;
+                ["reorderBacklog", "removeAddReorderToBacklog", "removeAddToBacklog"].forEach(
+                    returnPromise,
+                    ProjectService,
+                );
 
-            MilestoneService = _MilestoneService_;
-            [
-                "reorderBacklog",
-                "reorderContent",
-                "addReorderToContent",
-                "addToContent",
-                "removeAddReorderToBacklog",
-                "removeAddToBacklog",
-                "removeAddReorderToContent",
-                "removeAddToContent",
-            ].forEach(returnPromise, MilestoneService);
+                MilestoneService = _MilestoneService_;
+                [
+                    "reorderBacklog",
+                    "reorderContent",
+                    "addReorderToContent",
+                    "addToContent",
+                    "removeAddReorderToBacklog",
+                    "removeAddToBacklog",
+                    "removeAddReorderToContent",
+                    "removeAddToContent",
+                ].forEach(returnPromise, MilestoneService);
 
-            BacklogItemService = _BacklogItemService_;
-            [
-                "reorderBacklogItemChildren",
-                "removeAddReorderBacklogItemChildren",
-                "removeAddBacklogItemChildren",
-            ].forEach(returnPromise, BacklogItemService);
+                BacklogItemService = _BacklogItemService_;
+                [
+                    "reorderBacklogItemChildren",
+                    "removeAddReorderBacklogItemChildren",
+                    "removeAddBacklogItemChildren",
+                ].forEach(returnPromise, BacklogItemService);
 
-            jest.spyOn(RestErrorService, "setError").mockImplementation(() => {});
-        });
+                jest.spyOn(RestErrorService, "setError").mockImplementation(() => {});
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
 
@@ -88,7 +90,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 4 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "before", item_id: 1 });
             });
 
@@ -96,7 +98,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 1 }, { id: 4 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "after", item_id: 1 });
             });
 
@@ -104,7 +106,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }, { id: 4 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "after", item_id: 6 });
             });
         });
@@ -117,7 +119,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 5 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "before", item_id: 1 });
             });
 
@@ -125,7 +127,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 1 }, { id: 5 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "after", item_id: 1 });
             });
 
@@ -133,7 +135,7 @@ describe("DroppedService", () => {
                 var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }, { id: 5 }];
 
                 expect(
-                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items),
                 ).toEqual({ direction: "after", item_id: 6 });
             });
         });
@@ -205,7 +207,7 @@ describe("DroppedService", () => {
                 {
                     rest_base_route: "projects",
                     rest_route_id: 2,
-                }
+                },
             );
             expect(ProjectService.reorderBacklog).toHaveBeenCalledWith(2, 1, {});
         });
@@ -214,7 +216,7 @@ describe("DroppedService", () => {
             DroppedService.reorderBacklog(
                 1,
                 {},
-                { rest_base_route: "milestones", rest_route_id: 2 }
+                { rest_base_route: "milestones", rest_route_id: 2 },
             );
             expect(MilestoneService.reorderBacklog).toHaveBeenCalledWith(2, 1, {});
         });
@@ -233,7 +235,7 @@ describe("DroppedService", () => {
                 {
                     rest_base_route: "projects",
                     rest_route_id: 2,
-                }
+                },
             ).catch(() => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
@@ -326,7 +328,7 @@ describe("DroppedService", () => {
                 2,
                 3,
                 1,
-                {}
+                {},
             );
         });
 
@@ -340,7 +342,7 @@ describe("DroppedService", () => {
             then an error will be displayed`, () => {
             var move_request = $q.defer();
             BacklogItemService.removeAddReorderBacklogItemChildren.mockReturnValue(
-                move_request.promise
+                move_request.promise,
             );
 
             expect.assertions(1);
@@ -431,7 +433,7 @@ describe("DroppedService", () => {
                 () => {
                     // eslint-disable-next-line jest/no-conditional-expect
                     expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
-                }
+                },
             );
             move_request.reject(rest_error);
 

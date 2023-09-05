@@ -27,23 +27,25 @@ describe("KanbanColumnController -", function () {
 
         var $controller, $element;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$rootScope_,
-            _$q_,
-            _SharedPropertiesService_,
-            _KanbanColumnService_,
-            _ColumnCollectionService_,
-            _DroppedService_
-        ) {
-            $controller = _$controller_;
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            KanbanColumnService = _KanbanColumnService_;
-            ColumnCollectionService = _ColumnCollectionService_;
-            DroppedService = _DroppedService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$rootScope_,
+                _$q_,
+                _SharedPropertiesService_,
+                _KanbanColumnService_,
+                _ColumnCollectionService_,
+                _DroppedService_,
+            ) {
+                $controller = _$controller_;
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                KanbanColumnService = _KanbanColumnService_;
+                ColumnCollectionService = _ColumnCollectionService_;
+                DroppedService = _DroppedService_;
+            },
+        );
 
         jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
         jest.spyOn(DroppedService, "getComparedTo").mockImplementation(() => {});
@@ -136,7 +138,7 @@ describe("KanbanColumnController -", function () {
                 source_model,
                 initial_index,
                 target_model,
-                target_index
+                target_index,
             );
 
             $scope.$apply();
@@ -145,13 +147,13 @@ describe("KanbanColumnController -", function () {
                 current_kanban.id,
                 source_column.id,
                 dropped_item.id,
-                compared_to
+                compared_to,
             );
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
                 dropped_item,
                 source_column,
                 source_column,
-                compared_to
+                compared_to,
             );
 
             expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
@@ -183,7 +185,7 @@ describe("KanbanColumnController -", function () {
                 source_model,
                 initial_index,
                 target_model,
-                target_index
+                target_index,
             );
 
             $scope.$apply();
@@ -193,13 +195,13 @@ describe("KanbanColumnController -", function () {
                 target_column.id,
                 dropped_item.id,
                 compared_to,
-                dropped_item.in_column
+                dropped_item.in_column,
             );
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
                 dropped_item,
                 source_column,
                 target_column,
-                compared_to
+                compared_to,
             );
 
             expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
@@ -209,7 +211,7 @@ describe("KanbanColumnController -", function () {
     describe("dragularDrag() -", function () {
         it("When I start dragging an item, then all wip edition dropdowns will be closed", function () {
             jest.spyOn(ColumnCollectionService, "cancelWipEditionOnAllColumns").mockImplementation(
-                () => {}
+                () => {},
             );
             KanbanColumnController.dragularOptions().onInit();
 
@@ -232,7 +234,7 @@ describe("KanbanColumnController -", function () {
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
                 $container,
-                $handle_element
+                $handle_element,
             );
 
             expect(result).toBe(false);
@@ -244,7 +246,7 @@ describe("KanbanColumnController -", function () {
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
                 $container,
-                $handle_element
+                $handle_element,
             );
 
             expect(result).toBe(false);
@@ -258,7 +260,7 @@ describe("KanbanColumnController -", function () {
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
                 $container,
-                $handle_element
+                $handle_element,
             );
 
             expect(result).toBe(true);

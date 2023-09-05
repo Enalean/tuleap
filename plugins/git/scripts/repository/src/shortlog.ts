@@ -48,7 +48,7 @@ export default function initShortlog(): void {
 function redirectUserIfClickOnACard(
     event: Event,
     shortlog: HTMLElement,
-    nb_shown_dropdown: number
+    nb_shown_dropdown: number,
 ): void {
     const card_element = getCommitCardTheUserHasClickedOn(event, shortlog, nb_shown_dropdown);
     if (!card_element) {
@@ -64,14 +64,14 @@ function redirectUserIfClickOnACard(
 function getCommitCardTheUserHasClickedOn(
     event: Event,
     shortlog: HTMLElement,
-    nb_shown_dropdown: number
+    nb_shown_dropdown: number,
 ): null | HTMLElement {
     if (!(event.target instanceof HTMLElement)) {
         return null;
     }
 
     const element = event.target.closest(
-        "#git-repository-shortlog, .git-repository-commit-card, a, button"
+        "#git-repository-shortlog, .git-repository-commit-card, a, button",
     );
     if (!(element instanceof HTMLElement)) {
         return null;

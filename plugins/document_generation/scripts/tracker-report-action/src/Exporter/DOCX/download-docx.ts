@@ -118,11 +118,11 @@ export async function downloadDocx(
     document: ExportDocument<ArtifactFieldValueStepDefinitionContent>,
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
 ): Promise<void> {
     const exported_formatted_date = new Date().toLocaleDateString(
         datetime_locale_information.locale,
-        { timeZone: datetime_locale_information.timezone }
+        { timeZone: datetime_locale_information.timezone },
     );
 
     const footers = {
@@ -137,7 +137,7 @@ export async function downloadDocx(
         document.artifacts,
         HEADER_LEVEL_ARTIFACT_TITLE,
         HEADER_STYLE_ARTIFACT_TITLE,
-        gettext_provider
+        gettext_provider,
     );
 
     const table_of_contents = [
@@ -154,7 +154,7 @@ export async function downloadDocx(
             stylesWithLevels: [
                 new StyleLevel(
                     HEADER_STYLE_ARTIFACT_TITLE,
-                    Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))
+                    Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1)),
                 ),
             ],
         }),
@@ -169,7 +169,7 @@ export async function downloadDocx(
                 reference: MAIN_TITLES_NUMBERING_ID,
                 level: 0,
             },
-        })
+        }),
     );
 
     const report_criteria = global_export_properties.report_criteria;
@@ -178,12 +178,12 @@ export async function downloadDocx(
         if (report_criteria.query === "") {
             report_criteria_content = new Paragraph(
                 gettext_provider.gettext(
-                    "No filter has been applied to this report because no TQL query has been set"
-                )
+                    "No filter has been applied to this report because no TQL query has been set",
+                ),
             );
         } else {
             report_criteria_content = new Paragraph(
-                gettext_provider.gettext("TQL query: ") + report_criteria.query
+                gettext_provider.gettext("TQL query: ") + report_criteria.query,
             );
         }
     } else {
@@ -191,13 +191,13 @@ export async function downloadDocx(
             report_criteria_content = buildReportCriteriaDisplayZone(
                 report_criteria.criteria,
                 gettext_provider,
-                datetime_locale_information
+                datetime_locale_information,
             );
         } else {
             report_criteria_content = new Paragraph(
                 gettext_provider.gettext(
-                    "No filter has been applied to this report because no search criteria has a value set"
-                )
+                    "No filter has been applied to this report because no search criteria has a value set",
+                ),
             );
         }
     }
@@ -206,7 +206,7 @@ export async function downloadDocx(
 
     const traceability_matrix_children = buildTraceabilityMatrix(
         document.traceability_matrix,
-        gettext_provider
+        gettext_provider,
     );
     const traceability_matrix_sections = [];
     if (traceability_matrix_children.length > 0) {
@@ -351,7 +351,7 @@ export async function downloadDocx(
                     ...(await buildCoverPage(
                         gettext_provider,
                         global_export_properties,
-                        exported_formatted_date
+                        exported_formatted_date,
                     )),
                 ],
                 properties: {
@@ -423,7 +423,7 @@ function buildHeader(global_export_properties: GlobalExportProperties): Header {
 function buildFooter(
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Footer {
     return new Footer({
         children: [
@@ -434,7 +434,7 @@ function buildFooter(
                             sprintf(
                                 gettext_provider.gettext("Exported on %s by %s"),
                                 exported_formatted_date,
-                                global_export_properties.user_display_name
+                                global_export_properties.user_display_name,
                             ),
                         ],
                     }),
@@ -456,7 +456,7 @@ function buildFooter(
 async function buildCoverPage(
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Promise<ReadonlyArray<XmlComponent>> {
     const {
         platform_name,
@@ -488,7 +488,7 @@ async function buildCoverPage(
             tracker_name,
             report_url,
             user_display_name,
-            exported_formatted_date
+            exported_formatted_date,
         ),
         new Paragraph({ children: [new PageBreak()] }),
     ];
@@ -501,7 +501,7 @@ function buildCoverTable(
     tracker_name: string,
     report_url: string,
     user_name: string,
-    exported_formatted_date: string
+    exported_formatted_date: string,
 ): Table {
     return new Table({
         width: {
@@ -518,14 +518,14 @@ function buildCoverTable(
             buildCoverTableRow(gettext_provider.gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
                 gettext_provider.gettext("Exported on"),
-                new TextRun(exported_formatted_date)
+                new TextRun(exported_formatted_date),
             ),
             buildCoverTableRow(
                 gettext_provider.gettext("Report URL"),
                 new ExternalHyperlink({
                     children: [new TextRun(report_url)],
                     link: report_url,
-                })
+                }),
             ),
         ],
     });
@@ -540,7 +540,7 @@ function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): 
 function buildReportCriteriaDisplayZone(
     criterion_values: ReadonlyArray<ReportCriterionValue>,
     gettext_provider: GetText,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
 ): Table {
     const fields_rows = [
         new TableRow({
@@ -567,8 +567,8 @@ function buildReportCriteriaDisplayZone(
                 buildDateReportCriterionValue(
                     criterion_value,
                     gettext_provider,
-                    datetime_locale_information
-                )
+                    datetime_locale_information,
+                ),
             );
         }
     }
@@ -579,11 +579,11 @@ function buildReportCriteriaDisplayZone(
 function buildDateReportCriterionValue(
     date_criterion_value: DateReportCriterionValue,
     gettext_provider: GetText,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
 ): TableRow {
     if (!date_criterion_value.is_advanced) {
         const formatted_to_date = new Date(
-            date_criterion_value.criterion_to_value
+            date_criterion_value.criterion_to_value,
         ).toLocaleDateString(datetime_locale_information.locale, {
             timeZone: datetime_locale_information.timezone,
         });
@@ -592,17 +592,17 @@ function buildDateReportCriterionValue(
         if (date_criterion_value.criterion_value_operator === ">") {
             table_cell_date_criterion_content = sprintf(
                 gettext_provider.gettext("After %s"),
-                formatted_to_date
+                formatted_to_date,
             );
         } else if (date_criterion_value.criterion_value_operator === "<") {
             table_cell_date_criterion_content = sprintf(
                 gettext_provider.gettext("Before %s"),
-                formatted_to_date
+                formatted_to_date,
             );
         } else {
             table_cell_date_criterion_content = sprintf(
                 gettext_provider.gettext("As of %s"),
-                formatted_to_date
+                formatted_to_date,
             );
         }
 
@@ -617,13 +617,13 @@ function buildDateReportCriterionValue(
     let table_cell_date_criterion_content = "";
     if (date_criterion_value.criterion_from_value && date_criterion_value.criterion_to_value) {
         const formatted_from_date = new Date(
-            date_criterion_value.criterion_from_value
+            date_criterion_value.criterion_from_value,
         ).toLocaleDateString(datetime_locale_information.locale, {
             timeZone: datetime_locale_information.timezone,
         });
 
         const formatted_to_date = new Date(
-            date_criterion_value.criterion_to_value
+            date_criterion_value.criterion_to_value,
         ).toLocaleDateString(datetime_locale_information.locale, {
             timeZone: datetime_locale_information.timezone,
         });
@@ -631,35 +631,35 @@ function buildDateReportCriterionValue(
         table_cell_date_criterion_content = sprintf(
             gettext_provider.gettext("After %s and before %s"),
             formatted_from_date,
-            formatted_to_date
+            formatted_to_date,
         );
     } else if (
         date_criterion_value.criterion_from_value &&
         !date_criterion_value.criterion_to_value
     ) {
         const formatted_from_date = new Date(
-            date_criterion_value.criterion_from_value
+            date_criterion_value.criterion_from_value,
         ).toLocaleDateString(datetime_locale_information.locale, {
             timeZone: datetime_locale_information.timezone,
         });
 
         table_cell_date_criterion_content = sprintf(
             gettext_provider.gettext("After %s"),
-            formatted_from_date
+            formatted_from_date,
         );
     } else if (
         !date_criterion_value.criterion_from_value &&
         date_criterion_value.criterion_to_value
     ) {
         const formatted_to_date = new Date(
-            date_criterion_value.criterion_to_value
+            date_criterion_value.criterion_to_value,
         ).toLocaleDateString(datetime_locale_information.locale, {
             timeZone: datetime_locale_information.timezone,
         });
 
         table_cell_date_criterion_content = sprintf(
             gettext_provider.gettext("Before %s"),
-            formatted_to_date
+            formatted_to_date,
         );
     }
 
@@ -737,7 +737,7 @@ function buildTableCellLabel(name: string): TableCell {
 }
 
 function buildTableCellContent(
-    content: TextRun | ExternalHyperlink | InternalHyperlink
+    content: TextRun | ExternalHyperlink | InternalHyperlink,
 ): TableCell {
     return new TableCell({
         children: [
@@ -752,7 +752,7 @@ function buildTableCellContent(
 
 function buildTraceabilityMatrix(
     elements: ReadonlyArray<TraceabilityMatrixElement>,
-    gettext_provider: GetText
+    gettext_provider: GetText,
 ): (Paragraph | Table)[] {
     if (elements.length === 0) {
         return [];
@@ -788,7 +788,7 @@ function buildTraceabilityMatrix(
         return buildCellContentStatus(
             status,
             (status) => getInternationalizedTestStatus(gettext_provider, status),
-            1
+            1,
         );
     };
 
@@ -819,14 +819,14 @@ function buildTraceabilityMatrix(
                                 new InternalHyperlink({
                                     children: [new TextRun(element.test.title)],
                                     anchor: getAnchorToArtifactContent(element.test),
-                                })
+                                }),
                             ),
                             buildCellContent(new TextRun(element.campaign)),
                             buildCellContentResult(element.result),
                             buildCellContent(new TextRun(element.executed_by || "")),
                             buildCellContent(new TextRun(element.executed_on || "")),
                         ],
-                    })
+                    }),
             ),
         ],
     });

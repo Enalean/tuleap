@@ -28,7 +28,7 @@ describe("App", () => {
         has_content: boolean,
         columns: Array<ColumnDefinition>,
         has_global_error: boolean,
-        has_modal_error: boolean
+        has_modal_error: boolean,
     ): unknown {
         return createStoreMock({
             state: {
@@ -66,7 +66,7 @@ describe("App", () => {
                         { id: 3, label: "Done" },
                     ] as Array<ColumnDefinition>,
                     false,
-                    false
+                    false,
                 ),
             },
         });
@@ -82,7 +82,7 @@ describe("App", () => {
                         { id: 3, label: "Done" },
                     ] as Array<ColumnDefinition>,
                     false,
-                    false
+                    false,
                 ),
             },
         });
@@ -125,7 +125,7 @@ describe("App", () => {
 
             expect(document.removeEventListener).toHaveBeenCalledWith(
                 "keyup",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
     });

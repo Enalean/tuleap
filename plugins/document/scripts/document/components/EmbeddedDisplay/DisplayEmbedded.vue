@@ -65,7 +65,7 @@ const { does_document_have_any_error } = useNamespacedGetters<
 >("error", ["does_document_have_any_error"]);
 
 const has_an_error = computed(
-    (): boolean => does_document_have_any_error.value || is_loading_specific_version_in_error.value
+    (): boolean => does_document_have_any_error.value || is_loading_specific_version_in_error.value,
 );
 
 const has_loaded_without_error = computed((): boolean => !has_an_error.value && !is_loading.value);
@@ -74,7 +74,7 @@ const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAsce
 const { updateCurrentlyPreviewedItem } = useMutations(["updateCurrentlyPreviewedItem"]);
 const { getEmbeddedFileDisplayPreference } = useNamespacedActions<PreferenciesActions>(
     "preferencies",
-    ["getEmbeddedFileDisplayPreference"]
+    ["getEmbeddedFileDisplayPreference"],
 );
 const { shouldDisplayEmbeddedInLargeMode } = useNamespacedMutations("preferencies", [
     "shouldDisplayEmbeddedInLargeMode",
@@ -95,7 +95,7 @@ function loadContent(): void {
             () => {
                 is_loading_specific_version_in_error.value = true;
                 is_loading.value = false;
-            }
+            },
         );
     } else {
         if (!embedded_file.value) {

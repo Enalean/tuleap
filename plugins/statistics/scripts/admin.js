@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var modal_element = document.getElementById(button.dataset.modalId);
         if (!modal_element) {
             throw new Error(
-                "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'"
+                "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'",
             );
         }
 

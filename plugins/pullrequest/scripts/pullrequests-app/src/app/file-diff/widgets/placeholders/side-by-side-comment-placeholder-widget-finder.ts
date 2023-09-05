@@ -25,7 +25,7 @@ import {
 } from "../side-by-side-line-widgets-helper";
 
 export function getCommentPlaceholderWidget(
-    handle: FileLineHandle
+    handle: FileLineHandle,
 ): FileDiffPlaceholderWidget | null {
     if (!doesHandleHaveWidgets(handle)) {
         return null;
@@ -34,7 +34,7 @@ export function getCommentPlaceholderWidget(
     const line_widgets = handle.widgets.map((line_widget) => line_widget.node);
     return (
         line_widgets.find((widget_element): widget_element is FileDiffPlaceholderWidget =>
-            isCodeCommentPlaceholderWidget(widget_element)
+            isCodeCommentPlaceholderWidget(widget_element),
         ) ?? null
     );
 }

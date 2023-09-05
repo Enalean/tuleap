@@ -27,7 +27,7 @@ export interface DescriptionCommentFormPresenter {
 
 export const PullRequestDescriptionCommentFormPresenter = {
     fromCurrentDescription: (
-        current_description: PullRequestDescriptionCommentPresenter
+        current_description: PullRequestDescriptionCommentPresenter,
     ): DescriptionCommentFormPresenter => ({
         pull_request_id: current_description.pull_request_id,
         description_content: current_description.raw_content,
@@ -35,19 +35,19 @@ export const PullRequestDescriptionCommentFormPresenter = {
     }),
     updateDescriptionContent: (
         presenter: DescriptionCommentFormPresenter,
-        content: string
+        content: string,
     ): DescriptionCommentFormPresenter => ({
         ...presenter,
         description_content: content,
     }),
     buildSubmitted: (
-        presenter: DescriptionCommentFormPresenter
+        presenter: DescriptionCommentFormPresenter,
     ): DescriptionCommentFormPresenter => ({
         ...presenter,
         is_being_submitted: true,
     }),
     buildNotSubmitted: (
-        presenter: DescriptionCommentFormPresenter
+        presenter: DescriptionCommentFormPresenter,
     ): DescriptionCommentFormPresenter => ({
         ...presenter,
         is_being_submitted: false,

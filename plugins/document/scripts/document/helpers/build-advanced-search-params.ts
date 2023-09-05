@@ -20,7 +20,7 @@
 import type { AdvancedSearchParams } from "../type";
 
 export function buildAdvancedSearchParams(
-    params: Partial<AdvancedSearchParams> = {}
+    params: Partial<AdvancedSearchParams> = {},
 ): AdvancedSearchParams {
     const empty: AdvancedSearchParams = {
         global_search: "",

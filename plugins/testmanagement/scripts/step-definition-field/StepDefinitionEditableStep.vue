@@ -228,7 +228,7 @@ export default {
             const help_block = image_upload_factory.createHelpBlock(text_area);
             const editor = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(
                 document,
-                locale
+                locale,
             );
 
             const options = {

@@ -76,7 +76,7 @@ const getBaseDir = (tuleap_config: TuleapSpecificConfiguration): { base: string 
 
 export function defineAppConfig(
     tuleap_config: TuleapSpecificConfiguration,
-    config: OverloadedAppUserConfig
+    config: OverloadedAppUserConfig,
 ): UserConfigExport {
     const { base } = getBaseDir(tuleap_config);
 

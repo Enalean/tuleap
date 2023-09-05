@@ -39,7 +39,7 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
 
     it("fromCurrentDescription() should build a presenter from the current description's raw_content", () => {
         expect(
-            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(description)
+            PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(description),
         ).toStrictEqual({
             pull_request_id: description.pull_request_id,
             description_content: description.raw_content,
@@ -51,8 +51,8 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
         expect(
             PullRequestDescriptionCommentFormPresenter.updateDescriptionContent(
                 current_presenter,
-                "This commit fixes bug #456"
-            )
+                "This commit fixes bug #456",
+            ),
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
             description_content: "This commit fixes bug #456",
@@ -62,7 +62,7 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
 
     it("buildSubmitted() should return a clone of the provided presenter with is_being_submitted being true", () => {
         expect(
-            PullRequestDescriptionCommentFormPresenter.buildSubmitted(current_presenter)
+            PullRequestDescriptionCommentFormPresenter.buildSubmitted(current_presenter),
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
             description_content: current_presenter.description_content,
@@ -75,7 +75,7 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             PullRequestDescriptionCommentFormPresenter.buildSubmitted(current_presenter);
 
         expect(
-            PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(submitted_presenter)
+            PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(submitted_presenter),
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
             description_content: current_presenter.description_content,

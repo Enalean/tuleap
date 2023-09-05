@@ -47,7 +47,7 @@ const props = defineProps<{ item: Item }>();
 
 function wikiPageRedirect(): void {
     window.location.assign(
-        encodeURI(`/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`)
+        encodeURI(`/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`),
     );
 }
 </script>

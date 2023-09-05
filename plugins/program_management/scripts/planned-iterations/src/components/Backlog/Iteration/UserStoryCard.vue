@@ -85,7 +85,7 @@ export default class UserStoryCard extends Vue {
 
     get additional_classnames(): string {
         return getAccessibilityClasses(this.user_story, this.is_accessibility_mode_enabled).join(
-            " "
+            " ",
         );
     }
 

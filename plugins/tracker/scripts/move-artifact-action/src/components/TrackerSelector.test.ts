@@ -89,7 +89,7 @@ describe("TrackerSelector", () => {
         const wrapper = getWrapper(current_tracker_id);
 
         expect(wrapper.find("[data-test=tracker-selector-label]").attributes("title")).toBe(
-            "An artifact cannot be moved in the same tracker"
+            "An artifact cannot be moved in the same tracker",
         );
     });
 
@@ -103,7 +103,7 @@ describe("TrackerSelector", () => {
     it("the <select> should display the trackers", () => {
         const wrapper = getWrapper(current_tracker_id);
         const select = wrapper.find<HTMLSelectElement>(
-            "[data-test=move-artifact-tracker-selector]"
+            "[data-test=move-artifact-tracker-selector]",
         ).element;
 
         expect(select.options).toHaveLength(trackers.length);
@@ -122,7 +122,7 @@ describe("TrackerSelector", () => {
     it("When a tracker is selected, then the selected tracker's id should be commited", () => {
         const wrapper = getWrapper(current_tracker_id);
         const select_wrapper = wrapper.find<HTMLSelectElement>(
-            "[data-test=move-artifact-tracker-selector]"
+            "[data-test=move-artifact-tracker-selector]",
         );
 
         select_wrapper.element.selectedIndex = 1;

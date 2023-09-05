@@ -66,7 +66,7 @@ export default class ReleaseBadgesClosedSprints extends Vue {
         const translated = this.$ngettext(
             "%{total_closed_sprint} closed %{tracker_label}",
             "%{total_closed_sprint} closed %{tracker_label}",
-            closed_sprints
+            closed_sprints,
         );
 
         return this.$gettextInterpolate(translated, {

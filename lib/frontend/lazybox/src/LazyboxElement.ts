@@ -232,7 +232,7 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
                 return;
             }
             element.new_item_button_label = host.options.new_item_label_callback(
-                host.search_input_element.getQuery()
+                host.search_input_element.getQuery(),
             );
         });
         element.addEventListener("click-create-item", () => {

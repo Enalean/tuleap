@@ -58,7 +58,7 @@ describe("SearchContainer", () => {
 
     function getWrapper(
         query: string,
-        search_params: AdvancedSearchParams
+        search_params: AdvancedSearchParams,
     ): VueWrapper<InstanceType<typeof SearchContainer>> {
         return shallowMount(SearchContainer, {
             props: {
@@ -106,7 +106,7 @@ describe("SearchContainer", () => {
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit(
             "advanced-search",
-            buildAdvancedSearchParams({ global_search: "Lorem ipsum do" })
+            buildAdvancedSearchParams({ global_search: "Lorem ipsum do" }),
         );
 
         expect(push_route_spy).toHaveBeenCalledWith({
@@ -185,7 +185,7 @@ describe("SearchContainer", () => {
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit(
             "advanced-search",
-            buildAdvancedSearchParams({ global_search: "Lorem ipsum" })
+            buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
         );
 
         expect(push_route_spy).not.toHaveBeenCalled();
@@ -235,7 +235,7 @@ describe("SearchContainer", () => {
         expect(searchInFolderMock).toHaveBeenCalledWith(
             101,
             buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-            0
+            0,
         );
         expect(wrapper.findComponent(SearchResultTable).exists()).toBe(true);
         expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
@@ -247,7 +247,7 @@ describe("SearchContainer", () => {
                 status: 404,
                 json: (): Promise<{ error: { code: number; message: string } }> =>
                     Promise.reject({ error: { code: 404, message: "Error on server" } }),
-            } as Response)
+            } as Response),
         );
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());

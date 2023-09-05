@@ -48,7 +48,7 @@ describe("downloadCampaignAsDocx", () => {
             "https://example.com/",
             101,
             10,
-            []
+            [],
         );
 
         expect(downloadExportDocumentMock).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe("downloadCampaignAsDocx", () => {
                 testdefinition_tracker_id: 10,
             } as GlobalExportProperties,
             downloadDocxMock,
-            campaign
+            campaign,
         );
     });
 });

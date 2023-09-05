@@ -127,13 +127,13 @@ describe(`DrekkenovState`, () => {
             expect(ongoing_drag_constructor).toHaveBeenCalledWith(state, drag_start_context);
             expect(DropGhost.create).toHaveBeenCalledWith(
                 state,
-                expect.any(ongoing_drag_constructor)
+                expect.any(ongoing_drag_constructor),
             );
             expect(handlersFactory).toHaveBeenCalledWith(
                 options,
                 state,
                 expect.any(ongoing_drag_constructor),
-                drop_ghost
+                drop_ghost,
             );
 
             const document_constructor = DocumentEventsHandler as unknown as SpyInstance;

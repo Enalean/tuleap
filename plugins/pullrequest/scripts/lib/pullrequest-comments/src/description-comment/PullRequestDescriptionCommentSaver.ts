@@ -27,14 +27,14 @@ import { getContentFormat } from "../helpers/content-format";
 export interface SaveDescriptionComment {
     saveDescriptionComment: (
         description: DescriptionCommentFormPresenter,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ) => ResultAsync<PullRequest, Fault>;
 }
 
 export const PullRequestDescriptionCommentSaver = (): SaveDescriptionComment => ({
     saveDescriptionComment: (
         description: DescriptionCommentFormPresenter,
-        is_comments_markdown_mode_enabled: boolean
+        is_comments_markdown_mode_enabled: boolean,
     ): ResultAsync<PullRequest, Fault> => {
         return patchJSON<PullRequest>(uri`/api/v1/pull_requests/${description.pull_request_id}`, {
             description: description.description_content,

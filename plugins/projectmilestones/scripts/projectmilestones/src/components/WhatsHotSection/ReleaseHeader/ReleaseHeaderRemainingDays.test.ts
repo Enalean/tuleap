@@ -32,7 +32,7 @@ describe("ReleaseHeaderRemainingDays", () => {
     let store;
 
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions
+        store_options: StoreOptions,
     ): Promise<Wrapper<ReleaseHeaderRemainingDays>> {
         store = createStoreMock(store_options);
 
@@ -74,7 +74,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-success"
+                "release-remaining-progress-value-success",
             );
             expect(remaining_day_text.text()).toBe("10");
         });
@@ -97,7 +97,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("No start date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_day_text.text()).toBe("0");
         });
@@ -122,7 +122,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
             expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).not.toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-danger",
             );
             expect(remaining_day_text.text()).toBe("0");
         });
@@ -147,7 +147,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
             expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).not.toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-danger",
             );
             expect(remaining_day_text.text()).toBe("0");
         });
@@ -172,10 +172,10 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.classes()).not.toContain("release-remaining-value-danger");
             expect(wrapper.classes()).not.toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).not.toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-danger",
             );
             expect(remaining_day_value.classes()).not.toContain(
-                "release-remaining-progress-value-success"
+                "release-remaining-progress-value-success",
             );
             expect(remaining_day_text.text()).toBe("0");
         });
@@ -199,7 +199,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("No end date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
+                "release-remaining-progress-value-disabled",
             );
             expect(remaining_day_text.text()).toBe("0");
         });
@@ -223,7 +223,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("50.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-success"
+                "release-remaining-progress-value-success",
             );
             expect(remaining_day_text.text()).toBe("5");
         });
@@ -247,7 +247,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("80.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-danger",
             );
             expect(remaining_day_text.text()).toBe("2");
         });
@@ -271,7 +271,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("90.91%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-danger",
             );
             expect(remaining_day_text.text()).toBe("1");
         });

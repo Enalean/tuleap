@@ -74,7 +74,7 @@ describe("Card actions", () => {
             await actions.saveRemainingEffort(context, new_remaining_effort);
             expect(context.commit).toHaveBeenCalledWith(
                 "startSavingRemainingEffort",
-                new_remaining_effort
+                new_remaining_effort,
             );
             expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cards/123`, {
                 headers: {
@@ -103,7 +103,7 @@ describe("Card actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleModalError",
                 expect.anything(),
-                { root: true }
+                { root: true },
             );
         });
     });
@@ -351,7 +351,7 @@ describe("Card actions", () => {
                     expect.any(Error),
                     {
                         root: true,
-                    }
+                    },
                 );
             });
         });
@@ -448,7 +448,7 @@ describe("Card actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleModalError",
                 expect.anything(),
-                { root: true }
+                { root: true },
             );
         });
     });

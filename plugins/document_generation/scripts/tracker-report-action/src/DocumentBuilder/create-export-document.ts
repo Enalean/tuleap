@@ -41,7 +41,7 @@ export async function createExportDocument(
     tracker_shortname: string,
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
 ): Promise<ExportDocument<ArtifactFieldValueStepDefinitionContent>> {
     const get_test_execution = memoize(getTestManagementExecution);
 
@@ -49,13 +49,13 @@ export async function createExportDocument(
         tracker_id,
         report_id,
         report_has_changed,
-        get_test_execution
+        get_test_execution,
     );
 
     const traceability_matrix = createTraceabilityMatrix(
         report_artifacts,
         datetime_locale_information,
-        get_test_execution
+        get_test_execution,
     );
 
     const artifact_data: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>[] =
@@ -65,8 +65,8 @@ export async function createExportDocument(
                 datetime_locale_information,
                 base_url,
                 artifact_links_types,
-                formatStepDefinitionField
-            )
+                formatStepDefinitionField,
+            ),
         );
 
     return {

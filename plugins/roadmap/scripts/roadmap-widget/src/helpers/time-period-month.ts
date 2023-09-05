@@ -25,7 +25,11 @@ export class TimePeriodMonth implements TimePeriod {
     private readonly formatter_short: Intl.DateTimeFormat;
     private readonly formatter_long: Intl.DateTimeFormat;
 
-    constructor(readonly from: Date, readonly to: Date, readonly locale_bcp47: string) {
+    constructor(
+        readonly from: Date,
+        readonly to: Date,
+        readonly locale_bcp47: string,
+    ) {
         this.months = getMonths(from, to);
         this.formatter_short = new Intl.DateTimeFormat(locale_bcp47, {
             month: "short",

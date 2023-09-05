@@ -86,10 +86,10 @@ describe(`RadioButtonsField`, () => {
         const target = render(host);
 
         const inputs = target.querySelectorAll<HTMLInputElement>(
-            `[data-test=radiobutton-field-input]`
+            `[data-test=radiobutton-field-input]`,
         );
         const has_checked_input = Array.from(inputs).some(
-            (input) => input.value === "505" && input.checked
+            (input) => input.value === "505" && input.checked,
         );
         expect(has_checked_input).toBe(true);
     });
@@ -105,7 +105,7 @@ describe(`RadioButtonsField`, () => {
         const input = selectOrThrow(
             target,
             "[data-test=radiobutton-field-input]",
-            HTMLInputElement
+            HTMLInputElement,
         );
         input.select();
         input.dispatchEvent(new Event("change", { bubbles: true }));

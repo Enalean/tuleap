@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(
             /* webpackChunkName: "permissions-per-group-news-po-" */ "../po/" +
                 getPOFileFromLocale(locale)
-        )
+        ),
     );
 
     const rootComponent = Vue.extend(NewsPermissions);

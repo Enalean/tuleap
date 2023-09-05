@@ -74,7 +74,7 @@ export const nb_cards_in_column =
     (column: ColumnDefinition): number => {
         return state.swimlanes.reduce(
             (sum: number, swimlane) => nbCardsInColumnForSwimlane(swimlane, column) + sum,
-            0
+            0,
         );
     };
 
@@ -111,7 +111,7 @@ function isCardInEditMode(card: Card): boolean {
 export function taskboard_cell_swimlane_header_classes(
     state: SwimlaneState,
     getters: [],
-    root_state: RootState
+    root_state: RootState,
 ): string[] {
     const fullscreen_class = root_state.fullscreen.is_taskboard_in_fullscreen_mode
         ? "taskboard-fullscreen"

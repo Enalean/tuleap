@@ -39,7 +39,7 @@ describe("EmptyStateNoGitlabGroupLinked", () => {
         });
 
         expect(
-            wrapper.get("[data-test=gitlab-no-group-linked-empty-state-title]").element.textContent
+            wrapper.get("[data-test=gitlab-no-group-linked-empty-state-title]").element.textContent,
         ).toContain(public_name);
     });
 });

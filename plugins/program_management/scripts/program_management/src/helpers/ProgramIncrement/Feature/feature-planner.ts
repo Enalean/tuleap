@@ -22,11 +22,11 @@ import type { FeaturePlanningChangeInProgramIncrement } from "../../feature-reor
 import { formatOrderPositionForPatch } from "../../order-position-for-patch-formatter";
 
 export async function planElementInProgramIncrement(
-    feature_position: FeaturePlanningChangeInProgramIncrement
+    feature_position: FeaturePlanningChangeInProgramIncrement,
 ): Promise<void> {
     await patch(
         `/api/v1/program_increment/${encodeURIComponent(
-            feature_position.to_program_increment_id
+            feature_position.to_program_increment_id,
         )}/content`,
         {
             headers: {
@@ -36,11 +36,11 @@ export async function planElementInProgramIncrement(
                 add: [{ id: feature_position.feature.id }],
                 order: formatOrderPositionForPatch(feature_position),
             }),
-        }
+        },
     );
 }
 export async function reorderElementInProgramIncrement(
-    feature_position: FeaturePlanningChangeInProgramIncrement
+    feature_position: FeaturePlanningChangeInProgramIncrement,
 ): Promise<void> {
     const order_format = formatOrderPositionForPatch(feature_position);
 
@@ -50,13 +50,13 @@ export async function reorderElementInProgramIncrement(
                 feature_position.feature.id +
                 " in program increment #" +
                 feature_position.to_program_increment_id +
-                " because order is null"
+                " because order is null",
         );
     }
 
     await patch(
         `/api/v1/program_increment/${encodeURIComponent(
-            feature_position.to_program_increment_id
+            feature_position.to_program_increment_id,
         )}/content`,
         {
             headers: {
@@ -66,6 +66,6 @@ export async function reorderElementInProgramIncrement(
                 add: [],
                 order: order_format,
             }),
-        }
+        },
     );
 }

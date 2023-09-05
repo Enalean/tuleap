@@ -63,6 +63,6 @@ describe("ArtifactIdField", () => {
             expect(label.textContent?.trim()).toBe(field_label);
             expect(link.textContent?.trim()).toBe(expected_format);
             expect(link.href).toBe(`/plugins/tracker/?aid=${current_artifact_id}`);
-        }
+        },
     );
 });

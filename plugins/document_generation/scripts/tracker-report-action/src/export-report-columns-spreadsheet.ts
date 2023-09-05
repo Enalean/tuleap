@@ -27,7 +27,7 @@ interface Properties {
 }
 
 export async function startDownloadExportAllReportColumnsSpreadsheet(
-    properties: Properties
+    properties: Properties,
 ): Promise<void> {
     await downloadXLSXDocument(
         {
@@ -39,6 +39,6 @@ export async function startDownloadExportAllReportColumnsSpreadsheet(
                 artifact_link_types: [],
             },
         },
-        downloadXLSX
+        downloadXLSX,
     );
 }

@@ -134,7 +134,7 @@ function add_new_file() {
         function (evt, current_select_number, id, cell_trash, image) {
             onselectchange(this, current_select_number, id, cell_trash, image);
         }.bindAsEventListener(select, current_select_number, id, cell_trash, image),
-        true
+        true,
     );
     cell.appendChild(select);
 
@@ -285,7 +285,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         cell_trash.appendChild(image);
         $("td_file_" + id).firstChild.insertAdjacentText(
             "beforebegin",
-            select.options[select.selectedIndex].value
+            select.options[select.selectedIndex].value,
         );
 
         //remove entry from other select boxes
@@ -505,7 +505,7 @@ Event.observe(window, "load", function () {
                         group_id +
                         "&action=permissions_frs_package&package_id=" +
                         $("package_id").value,
-                    { method: "get" }
+                    { method: "get" },
                 );
             }
         });
@@ -567,7 +567,7 @@ document.observe("dom:loaded", function () {
             updateFeedbackBox(
                 '<ul class="feedback_error"><li>' +
                     codendi.locales.files.error_max_file_size +
-                    "</li></ul>"
+                    "</li></ul>",
             );
         }
     }

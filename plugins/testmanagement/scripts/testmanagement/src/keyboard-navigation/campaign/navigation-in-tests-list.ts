@@ -25,7 +25,7 @@ import { moveFocus } from "../shortcuts-handles/move-focus";
 
 export function createTestsListNavigation(
     doc: Document,
-    gettextCatalog: GettextProvider
+    gettextCatalog: GettextProvider,
 ): ShortcutsGroup {
     const move_to_next_test: Shortcut = {
         keyboard_inputs: "k,down",

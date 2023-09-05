@@ -33,6 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 focus: true,
             });
         },
-        window.localStorage
+        window.localStorage,
     );
 });

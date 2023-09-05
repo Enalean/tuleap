@@ -62,13 +62,17 @@
 
 .backlog-item-details {
     &.selected {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        transition:
+            border-color 75ms ease-in-out,
+            background-color 75ms ease-in-out;
         border-color: var(--tlp-info-color);
         background: var(--tlp-info-color-transparent-90);
     }
 
     &.shaking {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        transition:
+            border-color 75ms ease-in-out,
+            background-color 75ms ease-in-out;
         animation: shake 750ms ease-in-out;
         border-color: var(--tlp-danger-color);
         background-color: var(--tlp-danger-color-transparent-90);

@@ -65,7 +65,7 @@ export default class RoadmapEmptyStateSection extends Vue {
     get empty_state_label(): string {
         return this.$gettextInterpolate(
             this.$gettext("There is no item nor milestone in the %{ name } backlog yet."),
-            { name: this.project_name }
+            { name: this.project_name },
         );
     }
 }

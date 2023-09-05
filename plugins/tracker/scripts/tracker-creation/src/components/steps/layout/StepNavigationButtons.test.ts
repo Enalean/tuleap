@@ -31,7 +31,7 @@ describe("StepNavigationButtons", () => {
         is_ready_for_step_2 = true,
         is_ready_to_submit = true,
         has_form_been_submitted = false,
-        are_there_tv3 = false
+        are_there_tv3 = false,
     ): Promise<Wrapper<StepNavigationButtons>> {
         const router: VueRouter = createRouter("my-project");
 
@@ -100,7 +100,7 @@ describe("StepNavigationButtons", () => {
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setCreationFormHasBeenSubmitted",
-            expect.anything()
+            expect.anything(),
         );
     });
 

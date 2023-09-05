@@ -253,7 +253,7 @@ describe("Swimlane state getters", () => {
             swimlane_state.swimlanes.push(swimlane);
 
             expect(
-                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
+                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo),
             ).toEqual([
                 { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } },
                 { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } },
@@ -270,7 +270,7 @@ describe("Swimlane state getters", () => {
             swimlane_state.swimlanes.push(swimlane);
 
             expect(
-                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
+                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo),
             ).toEqual([]);
         });
     });
@@ -306,8 +306,8 @@ describe("Swimlane state getters", () => {
                 getters.is_there_at_least_one_children_to_display(
                     swimlane_state,
                     [],
-                    root_state
-                )(swimlane)
+                    root_state,
+                )(swimlane),
             ).toBe(false);
         });
 
@@ -323,8 +323,8 @@ describe("Swimlane state getters", () => {
                 getters.is_there_at_least_one_children_to_display(
                     swimlane_state,
                     [],
-                    root_state
-                )(swimlane)
+                    root_state,
+                )(swimlane),
             ).toBe(false);
         });
 
@@ -343,8 +343,8 @@ describe("Swimlane state getters", () => {
                 getters.is_there_at_least_one_children_to_display(
                     swimlane_state,
                     [],
-                    root_state
-                )(swimlane)
+                    root_state,
+                )(swimlane),
             ).toBe(true);
         });
     });

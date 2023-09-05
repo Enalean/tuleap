@@ -85,7 +85,7 @@ describe(`file-field-validator`, () => {
             const result = validateFileField(
                 undefined,
                 text_field_value_models,
-                followup_value_model
+                followup_value_model,
             );
 
             expect(result).toBeNull();
@@ -95,7 +95,7 @@ describe(`file-field-validator`, () => {
             const result = validateFileField(
                 getFileValueModel({ value: [] }),
                 text_field_value_models,
-                followup_value_model
+                followup_value_model,
             );
 
             expect(result).toStrictEqual({
@@ -108,7 +108,7 @@ describe(`file-field-validator`, () => {
             const result = validateFileField(
                 getFileValueModel({ value: [429, 481] }),
                 text_field_value_models,
-                followup_value_model
+                followup_value_model,
             );
 
             expect(result).toStrictEqual({
@@ -122,7 +122,7 @@ describe(`file-field-validator`, () => {
                 const result = validateFileField(
                     getFileValueModel({ value: [429, 481] }),
                     text_field_value_models,
-                    followup_value_model
+                    followup_value_model,
                 );
 
                 expect(result?.value).toContain(429);
@@ -166,7 +166,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).toContain(127);
@@ -191,7 +191,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).toContain(127);
@@ -208,7 +208,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).not.toContain(127);
@@ -233,7 +233,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).not.toContain(142);
@@ -256,7 +256,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).not.toContain(142);
@@ -268,7 +268,7 @@ describe(`file-field-validator`, () => {
                     const result = validateFileField(
                         file_value_model,
                         text_field_value_models,
-                        followup_value_model
+                        followup_value_model,
                     );
 
                     expect(result?.value).toContain(429);

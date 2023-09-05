@@ -29,7 +29,7 @@ describe("Mediawiki", function () {
         cy.get(".image").should(
             "have.attr",
             "href",
-            "/plugins/mediawiki/wiki/mediawiki-project/index.php?title=File:Tuleap.png"
+            "/plugins/mediawiki/wiki/mediawiki-project/index.php?title=File:Tuleap.png",
         );
 
         cy.get("[data-test=mediawiki-administration-link]").click({ force: true });

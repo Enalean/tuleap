@@ -20,7 +20,7 @@
 export function createAWikiDocument(
     document_title: string,
     page_name: string,
-    project_id: number
+    project_id: number,
 ): void {
     cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
         const root_folder_id = response.body.root_item.id;

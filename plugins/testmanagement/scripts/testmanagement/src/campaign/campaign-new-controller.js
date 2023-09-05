@@ -13,7 +13,7 @@ function CampaignNewCtrl(
     $state,
     CampaignService,
     DefinitionService,
-    SharedPropertiesService
+    SharedPropertiesService,
 ) {
     var project_id = SharedPropertiesService.getProjectId(),
         milestone_id = SharedPropertiesService.getCurrentMilestone().id;

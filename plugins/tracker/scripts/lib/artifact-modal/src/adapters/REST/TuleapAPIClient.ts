@@ -98,28 +98,28 @@ type AllLinkTypesResponse = {
 
 export const TuleapAPIClient = (
     current_artifact_option: Option<CurrentArtifactIdentifier>,
-    current_project_identifier: CurrentProjectIdentifier
+    current_project_identifier: CurrentProjectIdentifier,
 ): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         getJSON<ParentArtifact>(uri`/api/v1/artifacts/${artifact_id.id}`).mapErr(
-            ParentRetrievalFault
+            ParentRetrievalFault,
         ),
 
     getMatchingArtifact: (linkable_number: LinkableNumber): ResultAsync<LinkableArtifact, Fault> =>
         getJSON<ArtifactWithStatus>(uri`/api/v1/artifacts/${linkable_number.id}`).map(
-            LinkableArtifactProxy.fromAPIArtifact
+            LinkableArtifactProxy.fromAPIArtifact,
         ),
 
     getAllLinkTypes: (
-        artifact_id: CurrentArtifactIdentifier
+        artifact_id: CurrentArtifactIdentifier,
     ): ResultAsync<readonly LinkType[], Fault> =>
         getJSON<AllLinkTypesResponse>(uri`/api/v1/artifacts/${artifact_id.id}/links`).map(
-            ({ natures }) => natures
+            ({ natures }) => natures,
         ),
 
     getLinkedArtifactsByLinkType(
         artifact_id: CurrentArtifactIdentifier,
-        link_type: LinkType
+        link_type: LinkType,
     ): ResultAsync<readonly LinkedArtifact[], Fault> {
         const id = artifact_id.id;
         return getAllJSON<LinkedArtifact, LinkedArtifactCollection>(
@@ -132,9 +132,9 @@ export const TuleapAPIClient = (
                 },
                 getCollectionCallback: (payload): readonly LinkedArtifact[] =>
                     payload.collection.map((artifact) =>
-                        LinkedArtifactProxy.fromAPIArtifactAndType(artifact, link_type)
+                        LinkedArtifactProxy.fromAPIArtifactAndType(artifact, link_type),
                     ),
-            }
+            },
         );
     },
 
@@ -157,21 +157,21 @@ export const TuleapAPIClient = (
             (response): FileUploadCreated => ({
                 file_id: response.id,
                 upload_href: response.upload_href,
-            })
+            }),
         );
     },
 
     getUserArtifactHistory(
-        user_identifier: UserIdentifier
+        user_identifier: UserIdentifier,
     ): ResultAsync<readonly LinkableArtifact[], Fault> {
         return getJSON<UserHistoryResponse>(uri`/api/v1/users/${user_identifier.id}/history`).map(
             (history) => {
                 return history.entries
                     .filter((entry) =>
-                        LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option)
+                        LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option),
                     )
                     .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
-            }
+            },
         );
     },
 
@@ -181,7 +181,7 @@ export const TuleapAPIClient = (
         }).map((results) => {
             return results
                 .filter((entry) =>
-                    LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option)
+                    LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option),
                 )
                 .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
         });
@@ -190,7 +190,7 @@ export const TuleapAPIClient = (
     getComments(artifact_id, is_order_inverted): ResultAsync<readonly FollowUpComment[], Fault> {
         return getAllJSON<ChangesetWithCommentRepresentation>(
             uri`/api/v1/artifacts/${artifact_id.id}/changesets`,
-            { params: { limit: 50, fields: "comments", order: "asc" } }
+            { params: { limit: 50, fields: "comments", order: "asc" } },
         ).map((comments) => {
             const sorted_comments = is_order_inverted ? Array.from(comments).reverse() : comments;
             return sorted_comments.map(FollowUpCommentProxy.fromRepresentation);
@@ -209,7 +209,7 @@ export const TuleapAPIClient = (
             values: changeset_values,
         };
         return postJSON<JustCreatedArtifactResponse>(uri`/api/v1/artifacts`, payload).mapErr(
-            ArtifactCreationFault
+            ArtifactCreationFault,
         );
     },
 
@@ -222,7 +222,7 @@ export const TuleapAPIClient = (
                     representation: MINIMAL_REPRESENTATION,
                     with_creation_semantic_check: SEMANTIC_TO_CHECK,
                 },
-            }
+            },
         ).map((trackers) => trackers.map(TrackerProxy.fromAPIProject));
     },
 
@@ -235,7 +235,7 @@ export const TuleapAPIClient = (
         form_data.set("content", commonmark);
         return postFormWithTextResponse(
             uri`/project/${current_project_identifier.id}/interpret-commonmark`,
-            form_data
+            form_data,
         );
     },
 });

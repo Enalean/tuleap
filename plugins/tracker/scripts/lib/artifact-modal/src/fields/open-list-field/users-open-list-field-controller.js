@@ -50,7 +50,7 @@ function OpenListFieldController($element, $compile, $rootScope) {
         initOpenListFieldLabelAndSelectIds(
             $element[0],
             open_list_element,
-            self.value_model.field_id
+            self.value_model.field_id,
         );
 
         select2(open_list_element, {
@@ -67,7 +67,7 @@ function OpenListFieldController($element, $compile, $rootScope) {
                         },
                         function (error) {
                             failure(error);
-                        }
+                        },
                     );
                 },
             },

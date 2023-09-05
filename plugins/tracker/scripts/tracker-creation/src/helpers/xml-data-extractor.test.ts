@@ -34,11 +34,11 @@ describe("xml-data-extractor", () => {
         const file = new File(
             [`<tracker instantiate_for_new_projects="1"></tracker>`],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
-            "The provided XML file does not provide any name and/or shortname"
+            "The provided XML file does not provide any name and/or shortname",
         );
     });
 
@@ -52,11 +52,11 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
-            "The provided XML file does not provide any name and/or shortname"
+            "The provided XML file does not provide any name and/or shortname",
         );
     });
 
@@ -71,11 +71,11 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
-            "The provided XML file does not provide any name and/or shortname"
+            "The provided XML file does not provide any name and/or shortname",
         );
     });
 
@@ -90,11 +90,11 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
-            "The provided XML file does not provide any name and/or shortname"
+            "The provided XML file does not provide any name and/or shortname",
         );
     });
 
@@ -110,11 +110,11 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
-            "The tracker color cannot be an empty string"
+            "The tracker color cannot be an empty string",
         );
     });
 
@@ -128,7 +128,7 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         const result = await extractNameAndShortnameFromXmlFile(file);
@@ -151,7 +151,7 @@ describe("xml-data-extractor", () => {
                 </tracker>`,
             ],
             "tracker.xml",
-            { type: "text/xml" }
+            { type: "text/xml" },
         );
 
         const result = await extractNameAndShortnameFromXmlFile(file);

@@ -51,7 +51,7 @@ export const ReadonlyDateFieldFormatter = (locale: string): FormatReadonlyDateFi
             const map = getDatePartsMap(date_string);
 
             return `${map.get("year")}-${map.get("month")}-${map.get("day")} ${map.get(
-                "hour"
+                "hour",
             )}:${map.get("minute")}`;
         },
     };

@@ -53,7 +53,7 @@ describe("ChartBadgeServices -", () => {
 
     function getDocument(
         badge_value: number,
-        width: number
+        width: number,
     ): Selection<SVGTextElement, unknown, null, undefined> {
         const local_document = document.implementation.createHTMLDocument();
         const chart_div = local_document.createElement("svg");

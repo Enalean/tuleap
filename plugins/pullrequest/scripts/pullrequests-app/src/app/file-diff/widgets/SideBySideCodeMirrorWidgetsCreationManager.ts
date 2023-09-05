@@ -42,7 +42,7 @@ export interface ManageCodeMirrorWidgetsCreation {
         user_id: number,
         user_avatar_url: string,
         file_path: string,
-        line_number: number
+        line_number: number,
     ) => void;
 }
 
@@ -52,7 +52,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
     code_mirrors_content_manager: ManageCodeMirrorsContent,
     inline_comment_widget_creator: CreateInlineCommentWidget,
     new_inline_comment_form_widget_creator: CreateNewInlineCommentFormWidget,
-    placeholder_widget_creator: CreatePlaceholderWidget
+    placeholder_widget_creator: CreatePlaceholderWidget,
 ): ManageCodeMirrorWidgetsCreation => {
     const recomputeCommentPlaceholderHeight = (line: FileLine): void => {
         const line_handles = file_lines_state.getLineHandles(line);
@@ -81,8 +81,8 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                     post_rendering_callback: () => {
                         recomputeCommentPlaceholderHeight(
                             code_mirrors_content_manager.getLineInLeftCodeMirror(
-                                comment_line.old_offset - 1
-                            )
+                                comment_line.old_offset - 1,
+                            ),
                         );
                     },
                 });
@@ -98,8 +98,8 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                     post_rendering_callback: () => {
                         recomputeCommentPlaceholderHeight(
                             code_mirrors_content_manager.getLineInRightCodeMirror(
-                                comment_line.new_offset - 1
-                            )
+                                comment_line.new_offset - 1,
+                            ),
                         );
                     },
                 });
@@ -124,7 +124,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                     recomputeCommentPlaceholderHeight(
                         comment.file.position === INLINE_COMMENT_POSITION_LEFT
                             ? code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
-                            : code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
+                            : code_mirrors_content_manager.getLineInRightCodeMirror(line_number),
                     );
                 },
             });
@@ -136,13 +136,13 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
             user_id: number,
             user_avatar_url: string,
             file_path: string,
-            code_mirror_line_number: number
+            code_mirror_line_number: number,
         ): void => {
             const line =
                 position === INLINE_COMMENT_POSITION_LEFT
                     ? code_mirrors_content_manager.getLineInLeftCodeMirror(code_mirror_line_number)
                     : code_mirrors_content_manager.getLineInRightCodeMirror(
-                          code_mirror_line_number
+                          code_mirror_line_number,
                       );
 
             if (!line) {
@@ -164,7 +164,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                 context: NewInlineCommentContextBuilder.fromContext(
                     file_path,
                     line.unidiff_offset,
-                    position
+                    position,
                 ),
                 post_rendering_callback: () => {
                     recomputeCommentPlaceholderHeight(line);

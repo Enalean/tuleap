@@ -45,7 +45,7 @@ function BacklogItemService($q) {
                 .then((response) => response.json())
                 .then((backlog_item) => {
                     return { backlog_item: augment(backlog_item) };
-                })
+                }),
         );
     }
 
@@ -59,7 +59,7 @@ function BacklogItemService($q) {
                     const augmented = backlog_items.map(augment);
                     return { results: augmented, total };
                 });
-            })
+            }),
         );
     }
 
@@ -73,7 +73,7 @@ function BacklogItemService($q) {
                     const augmented = backlog_items.map(augment);
                     return { results: augmented, total };
                 });
-            })
+            }),
         );
     }
 
@@ -87,7 +87,7 @@ function BacklogItemService($q) {
                     const augmented = backlog_items.map(augment);
                     return { results: augmented, total };
                 });
-            })
+            }),
         );
     }
 
@@ -102,7 +102,7 @@ function BacklogItemService($q) {
                         compared_to: compared_to.item_id,
                     },
                 }),
-            })
+            }),
         );
     }
 
@@ -110,7 +110,7 @@ function BacklogItemService($q) {
         source_backlog_item_id,
         dest_backlog_item_id,
         dropped_item_ids,
-        compared_to
+        compared_to,
     ) {
         return $q.when(
             patch(encodeURI(`/api/v1/backlog_items/${dest_backlog_item_id}/children`), {
@@ -126,14 +126,14 @@ function BacklogItemService($q) {
                         remove_from: source_backlog_item_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
     function removeAddBacklogItemChildren(
         source_backlog_item_id,
         dest_backlog_item_id,
-        dropped_item_ids
+        dropped_item_ids,
     ) {
         return $q.when(
             patch(encodeURI(`/api/v1/backlog_items/${dest_backlog_item_id}/children`), {
@@ -144,7 +144,7 @@ function BacklogItemService($q) {
                         remove_from: source_backlog_item_id,
                     })),
                 }),
-            })
+            }),
         );
     }
 
@@ -157,7 +157,7 @@ function BacklogItemService($q) {
                         id: backlog_item.id,
                     })),
                 }),
-            })
+            }),
         );
     }
 }

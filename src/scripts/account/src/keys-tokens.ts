@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initGettext(
         locale,
         "core-account",
-        (locale) => import(`../po/${getPOFileFromLocale(locale)}`)
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
     );
 
     Initializer(gettext_provider).init();
@@ -63,9 +63,9 @@ function Initializer(gettext_provider: GetText): Initializer {
         if (isCouldNotCheckRegisteredPasskeys(fault)) {
             error_message = sprintf(
                 gettext_provider.gettext(
-                    "Error while checking whether you have registered passkeys: %s"
+                    "Error while checking whether you have registered passkeys: %s",
                 ),
-                fault
+                fault,
             );
         }
         error_div.innerText = error_message;
@@ -84,7 +84,7 @@ function Initializer(gettext_provider: GetText): Initializer {
 
         toggleButtonAccordingToCheckBoxesStateWithIds(
             "remove-ssh-keys-button",
-            "ssh_key_selected[]"
+            "ssh_key_selected[]",
         );
 
         const ssh_key = document.getElementById("ssh-key");
@@ -118,7 +118,7 @@ function Initializer(gettext_provider: GetText): Initializer {
             const button = selectOrThrow(
                 document,
                 "#generate-new-access-key-button",
-                HTMLButtonElement
+                HTMLButtonElement,
             );
             authenticateAndAttachResponseToForm(form, error, icon, button);
         }, handleWebAuthnModalFault);
@@ -126,11 +126,11 @@ function Initializer(gettext_provider: GetText): Initializer {
 
         toggleButtonAccordingToCheckBoxesStateWithIds(
             "button-revoke-access-tokens",
-            "access-keys-selected[]"
+            "access-keys-selected[]",
         );
         toggleButtonAccordingToCheckBoxesStateWithIds(
             "generate-new-access-key-button",
-            "access-key-scopes[]"
+            "access-key-scopes[]",
         );
     }
 
@@ -148,7 +148,7 @@ function authenticateAndAttachResponseToForm(
     form: HTMLFormElement,
     error: HTMLElement,
     icon: HTMLElement,
-    button: HTMLButtonElement
+    button: HTMLButtonElement,
 ): void {
     form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -172,7 +172,7 @@ function authenticateAndAttachResponseToForm(
                 button.disabled = false;
                 error.innerText = fault.toString();
                 error.classList.remove(HIDDEN_CLASS);
-            }
+            },
         );
     });
 }
@@ -189,7 +189,7 @@ function addAccessKeyDatePicker(): void {
 function handleSVNTokens(): void {
     toggleButtonAccordingToCheckBoxesStateWithIds(
         "button-revoke-svn-tokens",
-        "svn-tokens-selected[]"
+        "svn-tokens-selected[]",
     );
 }
 
@@ -223,12 +223,12 @@ function handleCopySecretsToClipboard(): void {
 
 function toggleButtonAccordingToCheckBoxesStateWithIds(
     button_id: string,
-    checkbox_name: string
+    checkbox_name: string,
 ): void {
     const button = document.getElementById(button_id);
 
     const checkboxes = [...document.getElementsByName(checkbox_name)].filter(
-        (element): element is HTMLInputElement => element instanceof HTMLInputElement
+        (element): element is HTMLInputElement => element instanceof HTMLInputElement,
     );
 
     if (!(button instanceof HTMLButtonElement)) {
@@ -240,7 +240,7 @@ function toggleButtonAccordingToCheckBoxesStateWithIds(
 
 function toggleButtonAccordingToCheckBoxesState(
     button: HTMLButtonElement,
-    checkboxes: HTMLInputElement[]
+    checkboxes: HTMLInputElement[],
 ): void {
     changeButtonStatusDependingCheckboxesStatus(button, checkboxes);
 
@@ -253,7 +253,7 @@ function toggleButtonAccordingToCheckBoxesState(
 
 function changeButtonStatusDependingCheckboxesStatus(
     button: HTMLButtonElement,
-    checkboxes: HTMLInputElement[]
+    checkboxes: HTMLInputElement[],
 ): void {
     const at_least_one_checkbox_is_checked = checkboxes.some((checkbox) => checkbox.checked);
 
@@ -266,7 +266,7 @@ function changeButtonStatusDependingCheckboxesStatus(
 
 function changeButtonStatusDependingTextareaStatus(
     button: HTMLButtonElement,
-    textarea: HTMLTextAreaElement
+    textarea: HTMLTextAreaElement,
 ): void {
     textarea.addEventListener("input", () => {
         const text = textarea.value;

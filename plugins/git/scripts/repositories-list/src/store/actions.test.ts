@@ -61,11 +61,11 @@ describe("Store actions", () => {
 
             const setRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "setRepositoriesSortedByPathUserPreference"
+                "setRepositoriesSortedByPathUserPreference",
             );
             const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "deleteRepositoriesSortedByPathUserPreference"
+                "deleteRepositoriesSortedByPathUserPreference",
             );
 
             expect(setRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
@@ -78,11 +78,11 @@ describe("Store actions", () => {
 
             const setRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "setRepositoriesSortedByPathUserPreference"
+                "setRepositoriesSortedByPathUserPreference",
             );
             const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "deleteRepositoriesSortedByPathUserPreference"
+                "deleteRepositoriesSortedByPathUserPreference",
             );
 
             mockFetchSuccess(setRepositoriesSortedByPathUserPreference);
@@ -101,11 +101,11 @@ describe("Store actions", () => {
 
             const setRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "setRepositoriesSortedByPathUserPreference"
+                "setRepositoriesSortedByPathUserPreference",
             );
             const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
                 rest_querier,
-                "deleteRepositoriesSortedByPathUserPreference"
+                "deleteRepositoriesSortedByPathUserPreference",
             );
 
             mockFetchSuccess(deleteRepositoriesSortedByPathUserPreference);
@@ -173,7 +173,7 @@ describe("Store actions", () => {
             expect(getRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
                 "push_date",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
@@ -205,7 +205,7 @@ describe("Store actions", () => {
                 current_project_id,
                 String(selected_owner_id),
                 "push_date",
-                expect.any(Function)
+                expect.any(Function),
             );
         });
 
@@ -229,13 +229,13 @@ describe("Store actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "gitlab/getGitlabRepositories",
                 "push_date",
-                { root: true }
+                { root: true },
             );
 
             expect(getRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
                 "push_date",
-                expect.any(Function)
+                expect.any(Function),
             );
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
@@ -255,7 +255,7 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("setIsLoadingNext", true);
             expect(context.commit).toHaveBeenCalledWith(
                 "pushRepositoriesForCurrentOwner",
-                repositories
+                repositories,
             );
 
             expect(context.commit).toHaveBeenCalledWith("setIsLoadingInitial", false);

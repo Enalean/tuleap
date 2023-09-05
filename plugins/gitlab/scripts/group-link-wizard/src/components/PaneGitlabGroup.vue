@@ -89,7 +89,7 @@
                                     >
                                         {{
                                             $gettext(
-                                                "There isn't any group, please verify the permissions on GitLab's side"
+                                                "There isn't any group, please verify the permissions on GitLab's side",
                                             )
                                         }}
                                     </td>

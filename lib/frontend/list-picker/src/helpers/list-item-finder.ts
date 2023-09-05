@@ -57,7 +57,7 @@ export function getPreviousItem(current_item: Element): Element | null {
     const current_group = current_item.closest(".list-picker-item-group");
     if (current_group && current_group.previousElementSibling) {
         const next_group_items = current_group.previousElementSibling.querySelectorAll(
-            ".list-picker-dropdown-option-value"
+            ".list-picker-dropdown-option-value",
         );
 
         return next_group_items[next_group_items.length - 1] ?? null;

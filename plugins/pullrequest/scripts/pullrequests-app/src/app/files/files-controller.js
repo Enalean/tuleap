@@ -22,7 +22,7 @@ function FilesController(
     SharedPropertiesService,
     FilesRestService,
     FilepathsService,
-    UserRestService
+    UserRestService,
 ) {
     const self = this;
 
@@ -64,7 +64,7 @@ function FilesController(
                     }
 
                     setMode(value);
-                }
+                },
             );
         });
     }
@@ -108,7 +108,7 @@ function FilesController(
             document.getElementById("file-switcher-dropdown-button"),
             {
                 keyboard: false,
-            }
+            },
         );
     }
 

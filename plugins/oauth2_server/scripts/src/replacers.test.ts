@@ -40,7 +40,7 @@ describe(`replacers`, () => {
             const delete_button = createAndAppendButton(doc);
 
             expect(() => hiddenInputReplaceCallback(delete_button)).toThrow(
-                "Missing data-app-id attribute on button"
+                "Missing data-app-id attribute on button",
             );
         });
 

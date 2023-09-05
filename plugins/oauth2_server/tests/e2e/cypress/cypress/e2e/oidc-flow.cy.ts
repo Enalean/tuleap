@@ -35,7 +35,7 @@ describe("OIDC flow", function () {
         cy.get("[data-test=oauth2-new-app-modal]").within(() => {
             cy.get("[data-test=oauth2-new-app-name]").type("Test OIDC flow");
             cy.get("[data-test=oauth2-new-app-redirect-uri]").type(
-                "https://oauth2-server-rp-oidc:8443/callback"
+                "https://oauth2-server-rp-oidc:8443/callback",
             );
 
             cy.get("[data-test=oauth2-new-app-modal-submit-button]").click();
@@ -49,7 +49,7 @@ describe("OIDC flow", function () {
 
             cy.request({
                 url: `https://oauth2-server-rp-oidc:8443/init-flow?client_id=${encodeURIComponent(
-                    client_id ?? ""
+                    client_id ?? "",
                 )}&client_secret=${encodeURIComponent(client_secret ?? "")}`,
                 followRedirect: false,
             }).then(function (resp) {

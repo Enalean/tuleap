@@ -40,7 +40,7 @@ describe("gitlab-error-handler", () => {
                         json: (): Promise<{ message: string }> => Promise.resolve({ message: "" }),
                     },
                 } as FetchWrapperError,
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("Oops, an error occurred!");
         });
@@ -59,7 +59,7 @@ describe("gitlab-error-handler", () => {
                             },
                         }),
                 } as Response),
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("My i18n Message");
         });
@@ -77,7 +77,7 @@ describe("gitlab-error-handler", () => {
                             },
                         }),
                 } as Response),
-                gettext_provider
+                gettext_provider,
             );
             expect(message).toBe("404 not found");
         });

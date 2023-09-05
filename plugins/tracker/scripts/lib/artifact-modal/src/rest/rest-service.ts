@@ -54,10 +54,10 @@ type ArtifactRepresentationWithConcurrencyHeaders = Pick<
 };
 
 export function getArtifactWithCompleteTrackerStructure(
-    artifact_id: number
+    artifact_id: number,
 ): Promise<ArtifactRepresentationWithConcurrencyHeaders> {
     return get(
-        encodeURI(`/api/v1/artifacts/${artifact_id}?tracker_structure_format=complete`)
+        encodeURI(`/api/v1/artifacts/${artifact_id}?tracker_structure_format=complete`),
     ).then(async (response) => {
         resetError();
         return {
@@ -79,7 +79,7 @@ type JustEditedArtifact = JustCreatedArtifactResponse;
 export function editArtifact(
     artifact_id: number,
     field_values: FieldValuesMap,
-    followup_comment: FollowupComment
+    followup_comment: FollowupComment,
 ): Promise<JustEditedArtifact> {
     const body = JSON.stringify({
         values: field_values,
@@ -100,7 +100,7 @@ export function editArtifactWithConcurrencyChecking(
     field_values: FieldValuesMap,
     followup_comment: FollowupComment,
     etag: EtagValue,
-    last_modified: LastModifiedTimestamp
+    last_modified: LastModifiedTimestamp,
 ): Promise<JustEditedArtifact> {
     const body = JSON.stringify({
         values: field_values,
@@ -118,7 +118,7 @@ export function editArtifactWithConcurrencyChecking(
 
 function getEditHeaders(
     etag: EtagValue,
-    last_modified: LastModifiedTimestamp
+    last_modified: LastModifiedTimestamp,
 ): Record<string, string> {
     const returned_headers: Record<string, string> = { ...headers };
     if (last_modified !== null) {
@@ -162,7 +162,7 @@ interface PreferenceRepresentation {
 
 export function getUserPreference(
     user_id: number,
-    preference_key: PreferenceKey
+    preference_key: PreferenceKey,
 ): Promise<PreferenceRepresentation> {
     return get(encodeURI(`/api/v1/users/${user_id}/preferences`), {
         cache: "force-cache",

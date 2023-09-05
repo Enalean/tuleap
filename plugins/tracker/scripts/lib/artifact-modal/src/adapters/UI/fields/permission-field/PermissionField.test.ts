@@ -63,7 +63,7 @@ describe("PermissionField", () => {
                     granted_groups: [],
                 },
             },
-            false
+            false,
         );
         return Object.assign(element, {
             controller,
@@ -81,7 +81,7 @@ describe("PermissionField", () => {
         const checkbox = selectOrThrow(
             host,
             "[data-test=permission-field-checkbox]",
-            HTMLInputElement
+            HTMLInputElement,
         );
         checkbox.checked = true;
         checkbox.dispatchEvent(new Event("change"));
@@ -100,7 +100,7 @@ describe("PermissionField", () => {
         const select = selectOrThrow(
             host,
             "[data-test=permission-field-select]",
-            HTMLSelectElement
+            HTMLSelectElement,
         );
         const [first_option] = select.options;
 
@@ -130,7 +130,7 @@ describe("PermissionField", () => {
         const checkbox = selectOrThrow(
             target,
             "[data-test=permission-field-checkbox]",
-            HTMLInputElement
+            HTMLInputElement,
         );
         checkbox.checked = true;
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
@@ -149,7 +149,7 @@ describe("PermissionField", () => {
         const select = selectOrThrow(
             target,
             "[data-test=permission-field-select]",
-            HTMLSelectElement
+            HTMLSelectElement,
         );
         const [first_option] = select.options;
         first_option.selected = true;

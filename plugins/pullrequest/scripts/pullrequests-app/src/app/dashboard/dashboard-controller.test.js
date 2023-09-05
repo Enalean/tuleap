@@ -12,33 +12,35 @@ describe("DashboardController", function () {
 
         angular.mock.module(tuleap_pullrequest);
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$q_,
-            _$rootScope_,
-            _PullRequestCollectionService_,
-            _TooltipService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope = _$rootScope_;
-            PullRequestCollectionService = _PullRequestCollectionService_;
-            TooltipService = _TooltipService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$q_,
+                _$rootScope_,
+                _PullRequestCollectionService_,
+                _TooltipService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $rootScope = _$rootScope_;
+                PullRequestCollectionService = _PullRequestCollectionService_;
+                TooltipService = _TooltipService_;
+            },
+        );
 
         jest.spyOn(PullRequestCollectionService, "loadOpenPullRequests").mockReturnValue($q.when());
         jest.spyOn(PullRequestCollectionService, "loadClosedPullRequests").mockImplementation(
-            () => {}
+            () => {},
         );
         jest.spyOn(PullRequestCollectionService, "loadAllPullRequests").mockImplementation(
-            () => {}
+            () => {},
         );
         jest.spyOn(PullRequestCollectionService, "areAllPullRequestsFullyLoaded").mockReturnValue(
-            false
+            false,
         );
         jest.spyOn(
             PullRequestCollectionService,
-            "areClosedPullRequestsFullyLoaded"
+            "areClosedPullRequestsFullyLoaded",
         ).mockImplementation(() => {});
         jest.spyOn(TooltipService, "setupTooltips").mockImplementation(() => {});
 

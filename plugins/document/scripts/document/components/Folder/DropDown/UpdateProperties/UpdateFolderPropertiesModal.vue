@@ -99,7 +99,7 @@ export default {
     beforeMount() {
         this.item_to_update = transformFolderPropertiesForRecursionAtUpdate(
             this.item,
-            this.is_status_property_used
+            this.is_status_property_used,
         );
     },
     mounted() {
@@ -128,7 +128,7 @@ export default {
         emitter.off("properties-recursion-option", this.setRecursionOption);
         emitter.off(
             "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue
+            this.updateMultiplePropertiesListValue,
         );
         if (this.is_status_property_used) {
             emitter.off("update-status-property", this.updateStatusValue);
@@ -173,7 +173,7 @@ export default {
                 return;
             }
             const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.detail.id
+                (property) => property.short_name === event.detail.id,
             );
             item_properties.list_value = event.detail.value;
         },
@@ -199,7 +199,7 @@ export default {
                 return;
             }
             const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.property_short_name
+                (property) => property.short_name === event.property_short_name,
             );
             item_properties.value = event.value;
         },

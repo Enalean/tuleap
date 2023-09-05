@@ -45,7 +45,7 @@ export class SingleSelectionManager implements SelectionManager {
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
         private readonly dropdown_manager: DropdownManager,
-        private readonly items_map_manager: ItemsMapManager
+        private readonly items_map_manager: ItemsMapManager,
     ) {
         this.selection_state = null;
     }
@@ -96,7 +96,7 @@ export class SingleSelectionManager implements SelectionManager {
 
     private readSelectedItemFromSelectElement(): ListPickerItem | null {
         const item_to_select = this.items_map_manager.getItemWithValue(
-            this.source_select_box.value
+            this.source_select_box.value,
         );
         if (item_to_select) {
             return item_to_select;
@@ -135,7 +135,7 @@ export class SingleSelectionManager implements SelectionManager {
                     ${item.template}
                 </span>
             `,
-            document_fragment
+            document_fragment,
         );
 
         return document_fragment;
@@ -144,7 +144,7 @@ export class SingleSelectionManager implements SelectionManager {
     private replacePlaceholderWithCurrentSelection(item: ListPickerItem): void {
         this.selection_element.replaceChildren(
             this.createCurrentSelectionElement(item),
-            this.createRemoveCurrentSelectionButton()
+            this.createRemoveCurrentSelectionButton(),
         );
 
         markItemSelected(item);
@@ -153,11 +153,11 @@ export class SingleSelectionManager implements SelectionManager {
 
     private replacePreviousSelectionWithCurrentOne(
         newly_selected_item: ListPickerItem,
-        selection_state: ListPickerSelectionStateSingle
+        selection_state: ListPickerSelectionStateSingle,
     ): void {
         this.selection_element.replaceChildren(
             this.createCurrentSelectionElement(newly_selected_item),
-            this.createRemoveCurrentSelectionButton()
+            this.createRemoveCurrentSelectionButton(),
         );
 
         markItemUnselected(selection_state.selected_item);

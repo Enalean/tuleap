@@ -44,7 +44,7 @@ function SocketService(
     SharedPropertiesService,
     JWTService,
     ExecutionRestService,
-    CampaignService
+    CampaignService,
 ) {
     var self = this;
 
@@ -163,17 +163,17 @@ function SocketService(
                 if (execution_to_remove) {
                     ExecutionService.displayPresencesByExecution(
                         execution_to_remove,
-                        execution_presences_to_remove
+                        execution_presences_to_remove,
                     );
                 }
                 if (execution_to_add) {
                     ExecutionService.displayPresencesByExecution(
                         execution_to_add,
-                        execution_presences_to_add
+                        execution_presences_to_add,
                     );
                     ExecutionService.updatePresenceOnCampaign(user);
                 }
-            }
+            },
         );
     }
 
@@ -203,7 +203,7 @@ function SocketService(
                         ExecutionService.updatePresenceOnCampaign(previous_user);
                     }
                 });
-            }
+            },
         );
     }
 
@@ -229,7 +229,7 @@ function SocketService(
             "testmanagement_execution:link_artifact",
             ({ artifact_id, added_artifact_link }) => {
                 ExecutionService.addArtifactLink(artifact_id, added_artifact_link);
-            }
+            },
         );
     }
 

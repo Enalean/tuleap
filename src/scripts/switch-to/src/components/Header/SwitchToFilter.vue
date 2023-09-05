@@ -72,7 +72,7 @@ watch(
     () => props.modal,
     () => {
         listenToHideModalEvent();
-    }
+    },
 );
 
 onUnmounted((): void => {

@@ -97,7 +97,7 @@ describe("Get planned test cases", () => {
                     id: 687,
                     label: "Campaign 687",
                 } as Campaign,
-            ]
+            ],
         );
 
         expect(planned_test_cases).toStrictEqual([

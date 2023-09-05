@@ -24,13 +24,13 @@ import { handleTeamRemove } from "../helper/button-to-remove-team-handler";
 export function removeTeam(program_id: number): void {
     openAllTargetModalsOnClick(
         document,
-        ".program-management-admin-remove-teams-open-modal-button"
+        ".program-management-admin-remove-teams-open-modal-button",
     );
 
     const aggregated_team_ids = extractAggregatedTeamIds(document);
 
     const buttons_confirm_remove_team = document.getElementsByClassName(
-        "program-management-remove-team-button"
+        "program-management-remove-team-button",
     );
 
     for (const button_confirm_remove_team of buttons_confirm_remove_team) {

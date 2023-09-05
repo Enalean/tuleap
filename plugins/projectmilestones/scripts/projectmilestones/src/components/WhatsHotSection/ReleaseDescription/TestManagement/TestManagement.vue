@@ -82,7 +82,7 @@ export default class TestManagement extends Vue {
     mounted(): void {
         if (this.release_data.campaign) {
             const chart_container = document.getElementById(
-                "release-widget-pie-chart-ttm-" + this.release_data.id
+                "release-widget-pie-chart-ttm-" + this.release_data.id,
             );
 
             if (chart_container) {

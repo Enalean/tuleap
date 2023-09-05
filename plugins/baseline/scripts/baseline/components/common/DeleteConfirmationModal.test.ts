@@ -35,7 +35,7 @@ describe("DeleteConfirmationModal", () => {
         confirm = jest.fn().mockReturnValue(
             new Promise((resolve) => {
                 confirmResolve = resolve;
-            })
+            }),
         );
 
         wrapper = shallowMount(DeleteConfirmationModal, {

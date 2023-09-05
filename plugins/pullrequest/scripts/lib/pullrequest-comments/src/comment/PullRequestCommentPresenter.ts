@@ -65,7 +65,7 @@ export type PullRequestCommentPresenter =
 export const PullRequestCommentPresenter = {
     fromCommentReply: (
         parent_comment: PullRequestCommentPresenter,
-        reply: PullRequestComment
+        reply: PullRequestComment,
     ): PullRequestCommentPresenter => {
         const common = {
             id: reply.id,

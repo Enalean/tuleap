@@ -24,7 +24,7 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 
 export const PossibleParentsCache = (
-    actual_retriever: RetrievePossibleParents
+    actual_retriever: RetrievePossibleParents,
 ): RetrievePossibleParents => {
     let is_first_call = true;
     let cache: ReadonlyArray<LinkableArtifact> = [];

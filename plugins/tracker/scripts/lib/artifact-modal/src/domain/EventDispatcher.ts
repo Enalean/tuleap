@@ -23,11 +23,11 @@ import type { EventType } from "./DomainEvent";
 export type EventDispatcher = DispatchEvents & {
     addObserver<TypeOfEvent extends EventType>(
         type: TypeOfEvent,
-        callback: EventObserver<TypeOfEvent>
+        callback: EventObserver<TypeOfEvent>,
     ): void;
     removeObserver<TypeOfEvent extends EventType>(
         type: TypeOfEvent,
-        callback: EventObserver<TypeOfEvent>
+        callback: EventObserver<TypeOfEvent>,
     ): void;
 };
 

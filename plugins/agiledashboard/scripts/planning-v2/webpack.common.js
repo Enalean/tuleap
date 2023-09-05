@@ -23,7 +23,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets/"),
-    "/assets/agiledashboard/planning-v2/"
+    "/assets/agiledashboard/planning-v2/",
 );
 
 const webpack_config_for_planning_v2 = {

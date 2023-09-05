@@ -115,7 +115,7 @@ describe(`FormatSelect`, () => {
                 select.value = new_format;
                 select.dispatchEvent(new InputEvent("input"));
                 expect(callback).toHaveBeenCalledWith(new_format);
-            }
+            },
         );
     });
 });

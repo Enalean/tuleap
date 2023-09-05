@@ -195,7 +195,7 @@ describe("Compared baseline store:", () => {
                     (state.artifacts_by_id = {
                         1: artifact1,
                         2: artifact2,
-                    })
+                    }),
             );
             it("returns all base artifacts with given ids", () => {
                 expect(store.getters.findArtifactsByIds(state)([1, 2])).toEqual([
@@ -216,8 +216,8 @@ describe("Compared baseline store:", () => {
                     () =>
                         (state.artifacts_where_depth_limit_reached = createList(
                             "baseline_artifact",
-                            2
-                        ))
+                            2,
+                        )),
                 );
                 it("returns true", () => {
                     expect(store.getters.is_depth_limit_reached(state)).toBeTruthy();
@@ -232,7 +232,7 @@ describe("Compared baseline store:", () => {
                 beforeEach(() => (getters.is_depth_limit_reached = false));
                 it("returns false", () => {
                     expect(
-                        store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                        store.getters.isLimitReachedOnArtifact(state, getters)(artifact),
                     ).toBeFalsy();
                 });
             });
@@ -244,7 +244,7 @@ describe("Compared baseline store:", () => {
                     beforeEach(() => (state.artifacts_where_depth_limit_reached = [artifact]));
                     it("returns true", () => {
                         expect(
-                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact),
                         ).toBeTruthy();
                     });
                 });
@@ -253,12 +253,12 @@ describe("Compared baseline store:", () => {
                         () =>
                             (state.artifacts_where_depth_limit_reached = createList(
                                 "baseline_artifact",
-                                2
-                            ))
+                                2,
+                            )),
                     );
                     it("returns false", () => {
                         expect(
-                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact),
                         ).toBeFalsy();
                     });
                 });
@@ -271,7 +271,7 @@ describe("Compared baseline store:", () => {
                         1: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
                         2: create("baseline_artifact", { tracker_id: 2, tracker_name: "Story" }),
                         3: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
-                    })
+                    }),
             );
 
             it("returns all distinct trackers", () => {

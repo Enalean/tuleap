@@ -39,7 +39,7 @@ export async function init(): Promise<void> {
             import(
                 /* webpackChunkName: "invitation-po-" */ "../invite-buddies/po/" +
                     getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     $("#invite-buddies-modal").on("shown", initFeedbacks).on("hidden", initFeedbacks);

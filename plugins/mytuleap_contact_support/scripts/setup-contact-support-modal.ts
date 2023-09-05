@@ -25,7 +25,7 @@ type ShowModalFn = (mount_point: Document, modal_element: Element) => void;
 export function setupContactSupportModalBurningParrot(
     mount_point: Document,
     tlp_get: typeof get,
-    showModal: ShowModalFn
+    showModal: ShowModalFn,
 ): void {
     setupContactSupportModal(mount_point, "1", tlp_get, showModal);
 }
@@ -33,7 +33,7 @@ export function setupContactSupportModalBurningParrot(
 export function setupContactSupportModalFlamingParrot(
     mount_point: Document,
     tlp_get: typeof get,
-    showModal: ShowModalFn
+    showModal: ShowModalFn,
 ): void {
     setupContactSupportModal(mount_point, "0", tlp_get, showModal);
 }
@@ -42,7 +42,7 @@ function setupContactSupportModal(
     mount_point: Document,
     is_burning_parrot_compatible: "0" | "1",
     tlp_get: typeof get,
-    showModal: ShowModalFn
+    showModal: ShowModalFn,
 ): void {
     mount_point.addEventListener("DOMContentLoaded", () => {
         const help_modal_trigger = mount_point.querySelector('.help-dropdown-link[href="/help/"]');
@@ -59,7 +59,7 @@ function setupContactSupportModal(
                 modal_element = await insertModalElement(
                     mount_point,
                     is_burning_parrot_compatible,
-                    tlp_get
+                    tlp_get,
                 );
             }
 
@@ -71,12 +71,12 @@ function setupContactSupportModal(
 async function insertModalElement(
     mount_point: Document,
     is_burning_parrot_compatible: "0" | "1",
-    tlp_get: typeof get
+    tlp_get: typeof get,
 ): Promise<Element> {
     const response_modal_data = await tlp_get(
         `/plugins/mytuleap_contact_support/get-modal-content?is-burning-parrot-compatible=${encodeURI(
-            is_burning_parrot_compatible
-        )}`
+            is_burning_parrot_compatible,
+        )}`,
     );
 
     const modal_fragment = sanitize(await response_modal_data.text(), {

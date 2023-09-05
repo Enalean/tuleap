@@ -25,7 +25,7 @@ export interface ItemPath {
 }
 export function buildItemPath(
     item: ItemReferencingWikiPageRepresentation,
-    parents: Array<Item>
+    parents: Array<Item>,
 ): ItemPath {
     const path = parents.reduce((path, parent) => path + `/${parent.title}`, "");
 

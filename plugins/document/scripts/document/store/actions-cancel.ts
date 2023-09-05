@@ -24,7 +24,7 @@ import { isFakeItem, isFile } from "../helpers/type-check-helper";
 
 export const cancelFileUpload = async (
     context: ActionContext<RootState, RootState>,
-    item: ItemFile | FakeItem
+    item: ItemFile | FakeItem,
 ): Promise<void> => {
     try {
         if (item.uploader) {
@@ -41,7 +41,7 @@ export const cancelFileUpload = async (
 
 export const cancelVersionUpload = async (
     context: ActionContext<RootState, RootState>,
-    item: ItemFile | FakeItem
+    item: ItemFile | FakeItem,
 ): Promise<void> => {
     try {
         if (item.uploader) {
@@ -57,11 +57,11 @@ export const cancelVersionUpload = async (
 
 export const cancelFolderUpload = (
     context: ActionContext<RootState, RootState>,
-    folder: Folder
+    folder: Folder,
 ): void => {
     try {
         const children = context.state.files_uploads_list.filter(
-            (item) => item.parent_id === folder.id
+            (item) => item.parent_id === folder.id,
         );
 
         children.forEach((child) => {
@@ -79,7 +79,7 @@ export const cancelFolderUpload = (
 };
 
 export const cancelAllFileUploads = (
-    context: ActionContext<RootState, RootState>
+    context: ActionContext<RootState, RootState>,
 ): Promise<void[]> => {
     return Promise.all(
         context.state.folder_content.reduce(
@@ -95,7 +95,7 @@ export const cancelAllFileUploads = (
                 promises.push(cancelFileUpload(context, item));
                 return promises;
             },
-            []
-        )
+            [],
+        ),
     );
 };

@@ -45,8 +45,8 @@ export const SaveNewCommentStub = {
         postComment: (): ResultAsync<PullRequestComment, Fault> =>
             errAsync(
                 Fault.fromMessage(
-                    "SaveNewCommentStub::postComment was called while it's not configured"
-                )
+                    "SaveNewCommentStub::postComment was called while it's not configured",
+                ),
             ),
     }),
 

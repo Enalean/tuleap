@@ -40,7 +40,7 @@ function stubMissingFileLinesAtTheBeginningIfNeeded(file_lines: FileLine[]): UnM
     const new_lines: UnMovedFileLine[] = [];
     for (let unidiff_offset = 1; unidiff_offset < file_lines[0].unidiff_offset; unidiff_offset++) {
         new_lines.push(
-            FileLineStub.buildUnMovedFileLine(unidiff_offset, unidiff_offset, unidiff_offset)
+            FileLineStub.buildUnMovedFileLine(unidiff_offset, unidiff_offset, unidiff_offset),
         );
     }
 
@@ -50,7 +50,7 @@ function stubMissingFileLinesAtTheBeginningIfNeeded(file_lines: FileLine[]): UnM
 export const FileLinesStateStub = (
     file_lines: FileLine[],
     groups_of_lines: GroupOfLines[],
-    line_to_handles_map: Map<FileLine, SynchronizedLineHandles>
+    line_to_handles_map: Map<FileLine, SynchronizedLineHandles>,
 ): StubFileLinesState => {
     const missing_lines = stubMissingFileLinesAtTheBeginningIfNeeded(file_lines);
     if (missing_lines) {
@@ -68,7 +68,7 @@ export const FileLinesStateStub = (
     const state = SideBySideLineState(
         all_file_lines,
         GroupSideBySideLinesStub().withGroupsOfLines(groups_of_lines),
-        MapSideBySideLinesStub().withSideBySideLineMap(line_to_handles_map)
+        MapSideBySideLinesStub().withSideBySideLineMap(line_to_handles_map),
     );
 
     return {

@@ -41,7 +41,7 @@ export type ControlPullRequestDescriptionComment =
 export const PullRequestDescriptionCommentController = (
     description_saver: SaveDescriptionComment,
     current_user: CurrentPullRequestUserPresenter,
-    on_error_callback: PullRequestCommentErrorCallback
+    on_error_callback: PullRequestCommentErrorCallback,
 ): ControlPullRequestDescriptionComment => ({
     showEditionForm(host: PullRequestDescriptionComment): void {
         host.edition_form_presenter =
@@ -49,53 +49,53 @@ export const PullRequestDescriptionCommentController = (
 
         host.writing_zone_controller.setWritingZoneContent(
             host.writing_zone,
-            host.description.raw_content
+            host.description.raw_content,
         );
     },
     hideEditionForm,
     handleWritingZoneContentChange: (
         host: PullRequestDescriptionComment,
-        new_description: string
+        new_description: string,
     ): void => {
         host.edition_form_presenter =
             PullRequestDescriptionCommentFormPresenter.updateDescriptionContent(
                 getExistingEditionFormPresenter(host),
-                new_description
+                new_description,
             );
     },
     saveDescriptionComment: (host: PullRequestDescriptionComment): void => {
         host.edition_form_presenter = PullRequestDescriptionCommentFormPresenter.buildSubmitted(
-            getExistingEditionFormPresenter(host)
+            getExistingEditionFormPresenter(host),
         );
 
         description_saver
             .saveDescriptionComment(
                 host.edition_form_presenter,
-                host.is_comments_markdown_mode_enabled
+                host.is_comments_markdown_mode_enabled,
             )
             .match(
                 (pull_request) => {
                     host.description =
                         PullRequestDescriptionCommentPresenter.fromPullRequestWithUpdatedDescription(
                             host.description,
-                            pull_request
+                            pull_request,
                         );
                     hideEditionForm(host);
                 },
                 (fault) => {
                     host.edition_form_presenter =
                         PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(
-                            getExistingEditionFormPresenter(host)
+                            getExistingEditionFormPresenter(host),
                         );
                     on_error_callback(fault);
-                }
+                },
             );
     },
     getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
         RelativeDatesHelper(
             current_user.preferred_date_format,
             current_user.preferred_relative_date_display,
-            current_user.user_locale
+            current_user.user_locale,
         ),
     shouldFocusWritingZoneOnceRendered: () => true,
 });
@@ -106,12 +106,12 @@ function hideEditionForm(host: PullRequestDescriptionComment): void {
 }
 
 function getExistingEditionFormPresenter(
-    host: PullRequestDescriptionComment
+    host: PullRequestDescriptionComment,
 ): DescriptionCommentFormPresenter {
     const edition_form_presenter = host.edition_form_presenter;
     if (edition_form_presenter === null) {
         throw new Error(
-            "Attempting to get edition form state while component is not in edition mode."
+            "Attempting to get edition form state while component is not in edition mode.",
         );
     }
     return edition_form_presenter;

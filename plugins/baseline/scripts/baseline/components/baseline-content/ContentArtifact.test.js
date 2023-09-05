@@ -96,7 +96,7 @@ describe("Artifact", () => {
 
         it("does not show description", () => {
             expect(
-                wrapper.get(artifact_fields_selector).find(artifact_description_selector).exists()
+                wrapper.get(artifact_fields_selector).find(artifact_description_selector).exists(),
             ).toBeFalsy();
         });
     });
@@ -123,7 +123,7 @@ describe("Artifact", () => {
 
         it("does not show status", () => {
             expect(
-                wrapper.get(artifact_fields_selector).find(artifact_status_selector).exists()
+                wrapper.get(artifact_fields_selector).find(artifact_status_selector).exists(),
             ).toBeFalsy();
         });
     });
@@ -149,13 +149,13 @@ describe("Artifact", () => {
             beforeEach(
                 () =>
                     ($store.getters["current_baseline/filterArtifacts"] = () =>
-                        filtered_linked_artifacts)
+                        filtered_linked_artifacts),
             );
 
             it("shows only visible linked artifacts", () => {
                 expect(wrapper.findComponent(ArtifactsList).exists()).toBeTruthy();
                 expect(wrapper.findComponent(ArtifactsList).props().artifacts).toEqual(
-                    filtered_linked_artifacts
+                    filtered_linked_artifacts,
                 );
             });
         });

@@ -40,11 +40,11 @@ describe("overview-url-builder", () => {
                 },
             },
             101,
-            1
+            1,
         );
 
         expect(url.toString()).toBe(
-            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=1&group_id=101&tab=overview#/pull-requests/15/overview"
+            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=1&group_id=101&tab=overview#/pull-requests/15/overview",
         );
     });
 });

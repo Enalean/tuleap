@@ -66,7 +66,7 @@ const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
 const { project_properties } = useNamespacedState<Pick<PropertiesState, "project_properties">>(
     "properties",
-    ["project_properties"]
+    ["project_properties"],
 );
 
 const multiple_list_values = computed({
@@ -89,7 +89,7 @@ const allowed_values = computed((): Array<ListValue> => {
         props.currentlyUpdatedItemProperty.type === "list"
     ) {
         const property = project_properties.value.find(
-            ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name
+            ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name,
         );
 
         if (property && property.allowed_list_values) {

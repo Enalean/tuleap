@@ -116,7 +116,7 @@ const project_privacy_icon = computed((): string => {
 });
 
 const target_id = computed(
-    (): string => "switch-to-project-" + encodeURI(props.project.project_uri)
+    (): string => "switch-to-project-" + encodeURI(props.project.project_uri),
 );
 function onClick(event: MouseEvent): void {
     if (!(event.target instanceof HTMLElement)) {

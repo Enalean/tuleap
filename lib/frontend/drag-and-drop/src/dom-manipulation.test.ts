@@ -259,7 +259,7 @@ function createChildrenWithRects(
     doc: Document,
     first_middle_coordinate: number,
     second_middle_coordinate: number,
-    third_middle_coordinate: number
+    third_middle_coordinate: number,
 ): Element[] {
     const first_child = doc.createElement("div");
     const first_rect = {

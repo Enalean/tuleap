@@ -23,7 +23,7 @@ import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
     const massmail_project_member_links: NodeListOf<HTMLElement> = document.querySelectorAll(
-        ".massmail-project-member-link"
+        ".massmail-project-member-link",
     );
 
     massmail_project_member_links.forEach((massmail_project_member_link) => {
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const project_id_element = document.getElementById(
-                "massmail-project-members-project-id"
+                "massmail-project-members-project-id",
             );
             if (!(project_id_element instanceof HTMLInputElement)) {
                 throw new Error("Massmail project id is undefined");
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
             project_id_element.value = project_id_data;
 
             const massmail_project_member_element = document.getElementById(
-                "massmail-project-members"
+                "massmail-project-members",
             );
             if (!massmail_project_member_element) {
                 throw new Error("Massmail project member element is undefined");

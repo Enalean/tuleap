@@ -113,7 +113,7 @@ describe("Properties actions", () => {
         describe("Given item is not the current folder -", () => {
             it("should send null when obsolescence date is permanent", async () => {
                 jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
 
                 const item = {
@@ -152,23 +152,23 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
 
             it("should update file properties", async () => {
                 jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
 
                 const item = {
@@ -204,22 +204,22 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
             it("should update embedded file properties", async () => {
                 jest.spyOn(properties_rest_querier, "putEmbeddedFileProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
                 const item = {
                     id: 123,
@@ -258,22 +258,22 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
             it("should update link document properties", async () => {
                 jest.spyOn(properties_rest_querier, "putLinkProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
                 const item = {
                     id: 123,
@@ -312,23 +312,23 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
 
             it("should update wiki document properties", async () => {
                 jest.spyOn(properties_rest_querier, "putWikiProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
                 const item = {
                     id: 123,
@@ -367,22 +367,22 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
             it("should update empty document properties", async () => {
                 jest.spyOn(properties_rest_querier, "putEmptyDocumentProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
                 const item = {
                     id: 123,
@@ -421,23 +421,23 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
 
             it("should update folder properties", async () => {
                 jest.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
                 const item = {
                     id: 123,
@@ -492,17 +492,17 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "updateCurrentItemForQuickLokDisplay",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
             });
 
@@ -577,7 +577,7 @@ describe("Properties actions", () => {
                         recursion: "all_item",
                     },
                     null,
-                    expect.anything()
+                    expect.anything(),
                 );
             });
         });
@@ -653,14 +653,14 @@ describe("Properties actions", () => {
                     recursion: "none",
                 },
                 null,
-                expect.anything()
+                expect.anything(),
             );
         });
 
         describe("Given I'm updating current folder -", () => {
             it("should update file properties", async () => {
                 jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response)
+                    Promise.resolve({} as unknown as Response),
                 );
 
                 const item = {
@@ -700,7 +700,7 @@ describe("Properties actions", () => {
                 expect(context.commit).toHaveBeenCalledWith(
                     "replaceCurrentFolder",
                     item_to_update,
-                    { root: true }
+                    { root: true },
                 );
                 expect(context.dispatch).toHaveBeenCalledWith("loadFolder", current_folder.id, {
                     root: true,
@@ -719,7 +719,7 @@ describe("Properties actions", () => {
                         total_size: 102546950,
                         nb_files: 27,
                     },
-                } as Folder)
+                } as Folder),
             );
 
             const properties = await getFolderProperties(context, {

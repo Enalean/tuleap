@@ -86,13 +86,13 @@ describe("Git", function () {
                     cy.root().submit();
                     cy.get("[data-test=git-repository-create-modal-body-error]").should(
                         "have.length",
-                        1
+                        1,
                     );
                     cy.get("[data-test=create_repository_name]").clear().type("Koenigsegg.git");
                     cy.root().submit();
                     cy.get("[data-test=git-repository-create-modal-body-error]").should(
                         "have.length",
-                        1
+                        1,
                     );
                 });
             });
@@ -122,10 +122,10 @@ describe("Git", function () {
                     .within(() => {
                         cy.get("[data-test=git-repository-card-description]").should(
                             "have.length",
-                            1
+                            1,
                         );
                         cy.get("[data-test=git-repository-card-description]").contains(
-                            "description"
+                            "description",
                         );
                     });
             });

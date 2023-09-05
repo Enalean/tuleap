@@ -134,7 +134,7 @@ document.observe("dom:loaded", function () {
                     const field_id = dragged.readAttribute("data-column-field-id");
                     parameters["artifact[field_id]"] = field_id;
                     let columns = document.getElementsByClassName(
-                        "cardwall_column_mapping_" + value_id + "_" + field_id
+                        "cardwall_column_mapping_" + value_id + "_" + field_id,
                     );
 
                     [].forEach.call(columns, function (element) {
@@ -164,7 +164,7 @@ document.observe("dom:loaded", function () {
                         }
                         function load_modal_callback() {
                             tuleap.tracker.artifactModalInPlace.showSubmitFailFeedback(
-                                response.responseText
+                                response.responseText,
                             );
                             resetCard();
                         }
@@ -173,7 +173,7 @@ document.observe("dom:loaded", function () {
                             artifact_id,
                             update_callback,
                             load_modal_callback,
-                            parameters
+                            parameters,
                         );
                     },
                 });
@@ -188,7 +188,7 @@ document.observe("dom:loaded", function () {
             $$(".valueOf_remaining_effort").each(function (remaining_effort_container) {
                 // eslint-disable-next-line no-new
                 new tuleap.agiledashboard.cardwall.card.TextElementEditor(
-                    remaining_effort_container
+                    remaining_effort_container,
                 );
             });
         })();
@@ -196,7 +196,7 @@ document.observe("dom:loaded", function () {
         (function enableAssignedToInPlaceEditing() {
             $$(".valueOf_assigned_to").each(function (assigned_to_container) {
                 var select_editor = new tuleap.agiledashboard.cardwall.card.SelectElementEditor(
-                    assigned_to_container
+                    assigned_to_container,
                 );
                 var card_id = assigned_to_container.up(".card").readAttribute("data-artifact-id");
                 tuleap.agiledashboard.cardwall.cards.selectEditors[card_id] = select_editor;
@@ -236,7 +236,7 @@ document.observe("dom:loaded", function () {
                         ".card-title",
                         ".dropdown-toggle",
                         ".valueOf_assigned_to",
-                        ".valueOf_remaining_effort"
+                        ".valueOf_remaining_effort",
                     );
 
                     return (

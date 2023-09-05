@@ -28,7 +28,7 @@ describe("CurrentFolderDropZone", () => {
 
     beforeEach(() => {
         current_folder_drop_zone_factory = (
-            props = {}
+            props = {},
         ): VueWrapper<InstanceType<typeof CurrentFolderDropZone>> => {
             return shallowMount(CurrentFolderDropZone, {
                 props: { ...props },
@@ -63,10 +63,10 @@ describe("CurrentFolderDropZone", () => {
             });
 
             expect(
-                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists()
+                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists(),
             ).toBeTruthy();
             expect(
-                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
+                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists(),
             ).toBeFalsy();
             expect(wrapper.props("error_reason")).toBe("");
         });
@@ -81,10 +81,10 @@ describe("CurrentFolderDropZone", () => {
             });
 
             expect(
-                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists()
+                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists(),
             ).toBe(false);
             expect(
-                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
+                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists(),
             ).toBe(true);
             expect(wrapper.props("error_reason")).toBe("Some error reason");
         });
@@ -101,7 +101,7 @@ describe("CurrentFolderDropZone", () => {
             });
 
             const current_folder_drop_zone = wrapper.get(
-                "[data-test=document-current-folder-dropzone]"
+                "[data-test=document-current-folder-dropzone]",
             );
             expect(current_folder_drop_zone.classes()).toContain("shown-success");
         });
@@ -116,7 +116,7 @@ describe("CurrentFolderDropZone", () => {
             });
 
             const current_folder_drop_zone = wrapper.get(
-                "[data-test=document-current-folder-dropzone]"
+                "[data-test=document-current-folder-dropzone]",
             );
             expect(current_folder_drop_zone.classes()).toContain("shown-error");
         });
@@ -131,7 +131,7 @@ describe("CurrentFolderDropZone", () => {
             });
 
             const current_folder_drop_zone = wrapper.get(
-                "[data-test=document-current-folder-dropzone]"
+                "[data-test=document-current-folder-dropzone]",
             );
             expect(current_folder_drop_zone.classes()).toEqual([
                 "document-upload-to-current-folder",
@@ -148,7 +148,7 @@ describe("CurrentFolderDropZone", () => {
             });
 
             const current_folder_drop_zone = wrapper.get(
-                "[data-test=document-current-folder-dropzone]"
+                "[data-test=document-current-folder-dropzone]",
             );
             expect(current_folder_drop_zone.classes()).toEqual([
                 "document-upload-to-current-folder",

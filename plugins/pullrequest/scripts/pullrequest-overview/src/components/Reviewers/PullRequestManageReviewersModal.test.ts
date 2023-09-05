@@ -135,7 +135,7 @@ describe("PullRequestManageReviewersModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=text-info-all-reviewers-cleared]").exists()).toBe(
-                false
+                false,
             );
 
             const lazybox_stub = wrapper.findComponent(LazyboxVueStub);

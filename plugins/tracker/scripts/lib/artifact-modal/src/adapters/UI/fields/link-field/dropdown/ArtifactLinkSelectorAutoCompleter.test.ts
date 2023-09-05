@@ -76,13 +76,13 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             FIRST_ARTIFACT_ID,
             "Do some stuff",
             `story #${FIRST_ARTIFACT_ID}`,
-            "army-green"
+            "army-green",
         );
         second_artifact = LinkableArtifactStub.withCrossReference(
             SECOND_ARTIFACT_ID,
             "A110",
             `alp #${SECOND_ARTIFACT_ID}`,
-            "daphne-blue"
+            "daphne-blue",
         );
 
         artifact_retriever = RetrieveMatchingArtifactStub.withFault(NotFoundFault());
@@ -116,7 +116,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             artifacts_searcher,
             event_dispatcher,
             current_artifact_option,
-            UserIdentifierStub.fromUserId(USER_ID)
+            UserIdentifierStub.fromUserId(USER_ID),
         );
         autocompleter.autoComplete(host, query);
     };
@@ -132,7 +132,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 autocomplete(query);
 
                 expect(host.matching_artifact_section).toHaveLength(0);
-            }
+            },
         );
 
         it(`when the query of the autocomplete is empty and the user has already seen some artifacts,
@@ -286,7 +286,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 expect(groups).toHaveLength(1);
                 expect(groups[0].items).toHaveLength(0);
                 expect(groups[0].empty_message).not.toBe("");
-            }
+            },
         );
     });
 
@@ -336,7 +336,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 const groups = host.possible_parents_section;
                 expect(groups).toHaveLength(1);
                 expect(groups[0].items).toHaveLength(expected_number_of_matching_parents);
-            }
+            },
         );
 
         it.each([
@@ -358,7 +358,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
                 const matching_artifact_group = host.matching_artifact_section;
                 expect(matching_artifact_group).toHaveLength(1);
-            }
+            },
         );
 
         it(`when the query is a number, it will retrieve a matching artifact

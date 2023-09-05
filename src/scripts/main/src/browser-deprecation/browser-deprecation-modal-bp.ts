@@ -35,6 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         (modal_element: Element) => {
             new NonDismissibleModal(document, modal_element).show();
         },
-        window.localStorage
+        window.localStorage,
     );
 });

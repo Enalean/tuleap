@@ -86,8 +86,8 @@ describe("PostActionsSection", () => {
                     (store.getters["transitionModal/post_actions"] = createList(
                         "post_action",
                         2,
-                        "presented"
-                    ))
+                        "presented",
+                    )),
             );
 
             it("shows only post actions", () => {
@@ -136,10 +136,10 @@ describe("PostActionsSection", () => {
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
             expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
-                false
+                false,
             );
         });
         it("displays all the component which are in the post_actions", async () => {
@@ -176,7 +176,7 @@ describe("PostActionsSection", () => {
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
             expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(true);
             expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
-                true
+                true,
             );
         });
 
@@ -188,10 +188,10 @@ describe("PostActionsSection", () => {
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(false);
             expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(
-                false
+                false,
             );
             expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
-                false
+                false,
             );
         });
     });

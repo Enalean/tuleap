@@ -74,7 +74,7 @@ export function initListPickersMilestoneSection(doc: Document, gettext_provider:
         doc,
         program_increment_tracker_element,
         plannable_trackers_element,
-        gettext_provider
+        gettext_provider,
     );
 }
 
@@ -82,7 +82,7 @@ function setIterationSection(
     doc: Document,
     program_increment_tracker_element: HTMLSelectElement,
     plannable_trackers_element: HTMLSelectElement,
-    gettext_provider: GetText
+    gettext_provider: GetText,
 ): void {
     const iteration_trackers_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
 
@@ -95,7 +95,7 @@ function setIterationSection(
     disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
         doc,
         program_increment_tracker_element.value,
-        [...plannable_trackers_element.selectedOptions].map((option) => option.value)
+        [...plannable_trackers_element.selectedOptions].map((option) => option.value),
     );
 
     program_increment_tracker_element.addEventListener("change", (event) => {
@@ -106,7 +106,7 @@ function setIterationSection(
         disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
             doc,
             event.target.value,
-            [...plannable_trackers_element.selectedOptions].map((option) => option.value)
+            [...plannable_trackers_element.selectedOptions].map((option) => option.value),
         );
     });
 
@@ -118,7 +118,7 @@ function setIterationSection(
         disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
             doc,
             program_increment_tracker_element.value,
-            [...event.target.selectedOptions].map((option) => option.value)
+            [...event.target.selectedOptions].map((option) => option.value),
         );
     });
 }

@@ -28,17 +28,14 @@ describe(`ArtifactLinksGraphRestService`, () => {
     beforeEach(() => {
         angular.mock.module(testmanagment_module);
         let $rootScope, mockBackend;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            $httpBackend,
-            _ArtifactLinksGraphRestService_
-        ) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            mockBackend = $httpBackend;
-            ArtifactLinksGraphRestService = _ArtifactLinksGraphRestService_;
-        });
+        angular.mock.inject(
+            function (_$rootScope_, _$q_, $httpBackend, _ArtifactLinksGraphRestService_) {
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                mockBackend = $httpBackend;
+                ArtifactLinksGraphRestService = _ArtifactLinksGraphRestService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
 
@@ -50,7 +47,7 @@ describe(`ArtifactLinksGraphRestService`, () => {
             $q.when({
                 headers,
                 json: () => $q.when(return_json),
-            })
+            }),
         );
     }
 

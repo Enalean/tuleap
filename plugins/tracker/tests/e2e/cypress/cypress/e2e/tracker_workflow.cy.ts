@@ -92,21 +92,21 @@ describe(`Tracker Workflow`, () => {
                     this.project_id + "_" + PROJECT_ADMINISTRATORS_ID;
                 cy.get("[data-test=authorized-ugroups-select]").select(
                     project_administrators_ugroup_id,
-                    { force: true }
+                    { force: true },
                 );
                 cy.get("[data-test=not-empty-field-form-element]").within(() => {
                     cy.get("[data-test=list-picker-search-field]").type(
-                        REMAINING_EFFORT_FIELD_LABEL + "{enter}"
+                        REMAINING_EFFORT_FIELD_LABEL + "{enter}",
                     );
                 });
                 cy.get("[data-test=not-empty-comment-checkbox]").check();
                 cy.get("[data-test=add-post-action]").click();
                 cy.get("[data-test=post-action-type-select]").select(
-                    POST_ACTION_TYPE.FROZEN_FIELDS
+                    POST_ACTION_TYPE.FROZEN_FIELDS,
                 );
                 cy.get("[data-test=frozen-fields-form-element]").within(() => {
                     cy.get("[data-test=list-picker-search-field]").type(
-                        INITIAL_EFFORT_FIELD_LABEL + "{enter}"
+                        INITIAL_EFFORT_FIELD_LABEL + "{enter}",
                     );
                 });
                 cy.get("[data-test=save-button]").click();
@@ -212,7 +212,7 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=summary]").type("My artifact");
 
             getFieldsetWithLabel("Access Information (Fieldset should be hidden)").should(
-                "be.visible"
+                "be.visible",
             );
 
             cy.get("[data-test=artifact-submit-options]").click();
@@ -225,7 +225,7 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             getFieldsetWithLabel("Access Information (Fieldset should be hidden)").should(
-                "not.be.visible"
+                "not.be.visible",
             );
         });
 

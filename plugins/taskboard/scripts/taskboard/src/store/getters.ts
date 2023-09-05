@@ -24,20 +24,20 @@ export const column_of_cell =
     (root_state: RootState) =>
     (cell: HTMLElement): ColumnDefinition | undefined => {
         return root_state.column.columns.find(
-            (column) => column.id === Number(cell.dataset.columnId)
+            (column) => column.id === Number(cell.dataset.columnId),
         );
     };
 
 export const column_and_swimlane_of_cell =
     (root_state: RootState) =>
     (
-        cell: HTMLElement
+        cell: HTMLElement,
     ): {
         swimlane: Swimlane | undefined;
         column: ColumnDefinition | undefined;
     } => {
         const swimlane = root_state.swimlane.swimlanes.find(
-            (swimlane) => swimlane.card.id === Number(cell.dataset.swimlaneId)
+            (swimlane) => swimlane.card.id === Number(cell.dataset.swimlaneId),
         );
 
         const column = column_of_cell(root_state)(cell);

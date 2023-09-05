@@ -27,7 +27,7 @@ interface ExecutionsPromiseTuple {
 }
 
 export async function getExecutionsForCampaigns(
-    campaigns: ReadonlyArray<Campaign>
+    campaigns: ReadonlyArray<Campaign>,
 ): Promise<ExecutionsForCampaignMap> {
     const executions_map: ExecutionsForCampaignMap = new Map();
 
@@ -44,7 +44,7 @@ export async function getExecutionsForCampaigns(
                 campaign: execution_tuple.campaign,
                 executions: await execution_tuple.execution_promise,
             });
-        }
+        },
     );
 
     return executions_map;

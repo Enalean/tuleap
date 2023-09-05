@@ -119,13 +119,13 @@ const pages = computed((): string => {
     return interpolate(
         $gettext("%{ from } – %{ to } of %{ total }").replace(
             /(%\{\s*(?:from|to|total)\s*\})/g,
-            '<span class="tlp-pagination-number">$1</span>'
+            '<span class="tlp-pagination-number">$1</span>',
         ),
         {
             from: props.from + 1,
             to: props.to + 1,
             total: props.total,
-        }
+        },
     );
 });
 

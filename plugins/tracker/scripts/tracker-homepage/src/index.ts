@@ -30,11 +30,11 @@ function handleTrackerStatisticsPopovers(): void {
         }
 
         const popover_content = document.getElementById(
-            "tracker-statistics-popover-" + trigger.dataset.trackerId
+            "tracker-statistics-popover-" + trigger.dataset.trackerId,
         );
         if (popover_content === null) {
             throw new Error(
-                `Statistics popover not found for tracker #${trigger.dataset.trackerId}`
+                `Statistics popover not found for tracker #${trigger.dataset.trackerId}`,
             );
         }
 

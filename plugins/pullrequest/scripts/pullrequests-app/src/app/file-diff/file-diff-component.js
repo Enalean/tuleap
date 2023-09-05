@@ -56,7 +56,9 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
                     doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText(diff);
 
                 initCommentsStore(
-                    diff.inline_comments.map(PullRequestCommentPresenterBuilder.fromFileDiffComment)
+                    diff.inline_comments.map(
+                        PullRequestCommentPresenterBuilder.fromFileDiffComment,
+                    ),
                 );
             })
             .finally(() => {

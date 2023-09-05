@@ -58,14 +58,14 @@ describe("side-by-side-code-mirrors-content-manager", () => {
                 "This is the project's description\n" +
                 "You will find interesting stuff inside\n" +
                 "\n" +
-                "Hello world !"
+                "Hello world !",
         );
 
         expect(right_code_mirror_content).toStrictEqual(
             "# Guinea Pig\n" +
                 "\n" +
                 "This is the project's description\n" +
-                "You will find interesting stuff inside\n"
+                "You will find interesting stuff inside\n",
         );
     });
 });

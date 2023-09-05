@@ -36,13 +36,13 @@ describe(`LinkableArtifactTemplate`, () => {
     describe(`getStatusClasses()`, () => {
         it(`will set the badge to the status color`, () => {
             expect(getStatusClasses({ value: "On going", color: "coral-pink" })).toContain(
-                "tlp-badge-coral-pink"
+                "tlp-badge-coral-pink",
             );
         });
 
         it(`will default to the secondary badge when there is no color`, () => {
             expect(getStatusClasses({ value: "In Review", color: null })).toContain(
-                "tlp-badge-secondary"
+                "tlp-badge-secondary",
             );
         });
     });

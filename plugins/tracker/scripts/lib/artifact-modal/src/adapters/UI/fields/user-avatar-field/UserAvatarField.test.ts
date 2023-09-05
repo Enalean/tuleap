@@ -67,6 +67,6 @@ describe("UserAvatarField", () => {
             expect(label.textContent?.trim()).toBe(field_label);
             expect(link.href).toBe(user_url);
             expect(link.textContent?.trim()).toBe(user_name);
-        }
+        },
     );
 });

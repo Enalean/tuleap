@@ -23,7 +23,7 @@ import { HighlightedText } from "./HighlightedText";
 const countBackgrounds = (array_of_texts: ReadonlyArray<HighlightedText>): number =>
     array_of_texts.reduce(
         (accumulator, text) => (HighlightedText.isHighlight(text) ? accumulator : accumulator + 1),
-        0
+        0,
     );
 
 describe(`Classifier`, () => {
@@ -87,7 +87,7 @@ describe(`Classifier`, () => {
             (content: string, expected_number_of_backgrounds: number) => {
                 const result = runClassify(content);
                 expect(countBackgrounds(result)).toBe(expected_number_of_backgrounds);
-            }
+            },
         );
 
         it(`will ignore case when matching`, () => {

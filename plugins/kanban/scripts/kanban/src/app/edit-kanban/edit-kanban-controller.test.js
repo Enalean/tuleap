@@ -38,25 +38,27 @@ describe("EditKanbanController", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function (
-            _$controller_,
-            _$rootScope_,
-            _$q_,
-            _KanbanService_,
-            _FilterTrackerReportService_,
-            _SharedPropertiesService_,
-            _ColumnCollectionService_,
-            _RestErrorService_
-        ) {
-            $controller = _$controller_;
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            KanbanService = _KanbanService_;
-            FilterTrackerReportService = _FilterTrackerReportService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            ColumnCollectionService = _ColumnCollectionService_;
-            RestErrorService = _RestErrorService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                _$rootScope_,
+                _$q_,
+                _KanbanService_,
+                _FilterTrackerReportService_,
+                _SharedPropertiesService_,
+                _ColumnCollectionService_,
+                _RestErrorService_,
+            ) {
+                $controller = _$controller_;
+                $rootScope = _$rootScope_;
+                $q = _$q_;
+                KanbanService = _KanbanService_;
+                FilterTrackerReportService = _FilterTrackerReportService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                ColumnCollectionService = _ColumnCollectionService_;
+                RestErrorService = _RestErrorService_;
+            },
+        );
 
         $scope = $rootScope.$new();
 
@@ -97,7 +99,7 @@ describe("EditKanbanController", () => {
             });
             jest.spyOn(KanbanService, "updateSelectableReports").mockImplementation(() => {});
             jest.spyOn(FilterTrackerReportService, "changeSelectableReports").mockImplementation(
-                () => {}
+                () => {},
             );
         });
 
@@ -112,10 +114,10 @@ describe("EditKanbanController", () => {
             expect(EditKanbanController.saved).toBe(true);
             expect(KanbanService.updateSelectableReports).toHaveBeenCalledWith(
                 EditKanbanController.kanban.id,
-                selectable_report_ids
+                selectable_report_ids,
             );
             expect(FilterTrackerReportService.changeSelectableReports).toHaveBeenCalledWith(
-                selectable_report_ids
+                selectable_report_ids,
             );
         });
 

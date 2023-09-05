@@ -65,7 +65,7 @@ function BacklogService($filter, ProjectService, BacklogItemCollectionService) {
         BacklogItemCollectionService.removeBacklogItemsFromCollection(self.items.content, items);
         BacklogItemCollectionService.removeBacklogItemsFromCollection(
             self.items.filtered_content,
-            items
+            items,
         );
     }
 
@@ -73,12 +73,12 @@ function BacklogService($filter, ProjectService, BacklogItemCollectionService) {
         BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(
             self.items.content,
             items,
-            compared_to
+            compared_to,
         );
         BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(
             self.items.filtered_content,
             items,
-            compared_to
+            compared_to,
         );
     }
 

@@ -115,7 +115,7 @@ const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
 const user_locale: string = strictInject(USER_LOCALE_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
 const is_comments_markdown_mode_enabled: boolean = strictInject(IS_COMMENTS_MARKDOWN_MODE_ENABLED);
 
@@ -140,8 +140,8 @@ const description_comment_controller = ref<ControlPullRequestDescriptionComment>
     PullRequestDescriptionCommentController(
         PullRequestDescriptionCommentSaver(),
         current_user_presenter.value,
-        displayTuleapAPIFault
-    )
+        displayTuleapAPIFault,
+    ),
 );
 
 provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
@@ -157,7 +157,7 @@ watch(
             DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(
                 props.pull_request_info,
                 props.pull_request_author,
-                project_id
+                project_id,
             );
 
         fetchPullRequestTimelineItems(pull_request_id)
@@ -166,20 +166,20 @@ watch(
                     comments_presenters.value = result
                         .filter(
                             (comment): comment is SupportedTimelineItem =>
-                                comment.type !== TYPE_EVENT_REVIEWER_CHANGE
+                                comment.type !== TYPE_EVENT_REVIEWER_CHANGE,
                         )
                         .map((comment) =>
                             CommentPresenterBuilder.fromPayload(
                                 comment,
                                 base_url,
                                 pull_request_id,
-                                $gettext
-                            )
+                                $gettext,
+                            ),
                         );
                 },
                 (fault) => {
                     displayTuleapAPIFault(fault);
-                }
+                },
             )
             .then(() => {
                 replies_store.value = PullRequestCommentRepliesStore(comments_presenters.value);
@@ -190,12 +190,12 @@ watch(
                     PullRequestCommentNewReplySaver(),
                     current_user_presenter.value,
                     current_pull_request_presenter.value,
-                    displayTuleapAPIFault
+                    displayTuleapAPIFault,
                 );
 
                 is_loading_threads.value = false;
             });
-    }
+    },
 );
 
 function addNewRootComment(comment: PullRequestCommentPresenter): void {

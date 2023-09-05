@@ -25,6 +25,6 @@ import type { FollowUpComment } from "./FollowUpComment";
 export type RetrieveComments = {
     getComments(
         artifact_id: CurrentArtifactIdentifier,
-        is_order_inverted: boolean
+        is_order_inverted: boolean,
     ): ResultAsync<readonly FollowUpComment[], Fault>;
 };

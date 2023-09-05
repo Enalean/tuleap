@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale: string) =>
             import(
                 /* webpackChunkName: "tracker-creation-po" */ "../po/" + getPOFileFromLocale(locale)
-            )
+            ),
     );
 
     const AppComponent = Vue.extend(App);
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             : {};
 
     const color_picker_data: DataForColorPicker[] = tracker_colors.colors_names.map(
-        (color_name: string) => ({ id: color_name, text: "" })
+        (color_name: string) => ({ id: color_name, text: "" }),
     );
 
     const display_jira_importer = vue_mount_point.dataset.displayJiraImporter;

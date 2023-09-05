@@ -73,7 +73,7 @@ describe("dates display", (): void => {
     describe("Elements not found during initialization", (): void => {
         it("throws an error when the <select> containing the relative dates display preference can't be found", (): void => {
             expect(() => listenToPreferenceChange(doc)).toThrowError(
-                "Unable to find the relative dates display preferences <select>"
+                "Unable to find the relative dates display preferences <select>",
             );
         });
 
@@ -81,7 +81,7 @@ describe("dates display", (): void => {
             appendTheDisplayPreferencesSelect(doc);
 
             expect(() => listenToPreferenceChange(doc)).toThrowError(
-                "Unable to find the <tlp-relative-date> component"
+                "Unable to find the <tlp-relative-date> component",
             );
         });
     });

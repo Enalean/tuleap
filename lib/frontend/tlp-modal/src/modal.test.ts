@@ -146,7 +146,7 @@ describe(`Modal`, () => {
             second_closing_element.dataset.dismiss = "modal";
             const removeSecondClickListener = vi.spyOn(
                 second_closing_element,
-                "removeEventListener"
+                "removeEventListener",
             );
             modal_element.append(first_closing_element, second_closing_element);
             modal = createModal(doc, modal_element, { destroy_on_hide: true });
@@ -448,7 +448,7 @@ describe(`Modal`, () => {
                     expect(element).not.toBe(document.activeElement);
 
                     element.remove();
-                }
+                },
             );
         });
     });

@@ -62,13 +62,13 @@ const fulltext_store = useFullTextStore();
 const is_query_too_small = computed(
     (): boolean =>
         fulltext_store.fulltext_search_is_available &&
-        root_store.keywords.length < FULLTEXT_MINIMUM_LENGTH_FOR_QUERY
+        root_store.keywords.length < FULLTEXT_MINIMUM_LENGTH_FOR_QUERY,
 );
 const should_be_displayed = computed(
     (): boolean =>
         (fulltext_store.fulltext_search_is_available && !is_query_too_small.value) ||
         (root_store.filtered_history.entries.length === 0 &&
-            root_store.filtered_projects.length === 0)
+            root_store.filtered_projects.length === 0),
 );
 
 const is_busy = computed((): boolean => fulltext_store.fulltext_search_is_loading);
@@ -76,6 +76,6 @@ const is_error = computed((): boolean => fulltext_store.fulltext_search_is_error
 const is_empty = computed(
     (): boolean =>
         Object.keys(fulltext_store.fulltext_search_results).length === 0 &&
-        !fulltext_store.fulltext_search_is_loading
+        !fulltext_store.fulltext_search_is_loading,
 );
 </script>

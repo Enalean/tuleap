@@ -27,7 +27,7 @@ export interface AutocompleteReviewers {
 }
 
 export const ReviewersAutocompleter = (
-    group_builder: BuildGroupOfReviewers
+    group_builder: BuildGroupOfReviewers,
 ): AutocompleteReviewers => {
     return {
         autocomplete(lazybox: Lazybox, currently_selected_users: User[], query: string): void {
@@ -46,7 +46,7 @@ export const ReviewersAutocompleter = (
                 },
                 () => {
                     lazybox.replaceDropdownContent([group_builder.buildEmpty()]);
-                }
+                },
             );
         },
     };

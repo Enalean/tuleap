@@ -67,7 +67,7 @@ export default {
 
     setAvailableProjectsUserIsAdminOf(
         state: RootState,
-        projects_user_is_admin_of: TemplateData[]
+        projects_user_is_admin_of: TemplateData[],
     ): void {
         state.projects_user_is_admin_of = projects_user_is_admin_of;
     },

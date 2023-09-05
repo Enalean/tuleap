@@ -21,7 +21,7 @@ import { isFieldTakenIntoAccount } from "./field-type-checker";
 import type { ArtifactForCrossReportDocGen } from "../type";
 
 export function extractFieldsLabels(
-    artifact_representations_map: Map<number, ArtifactForCrossReportDocGen>
+    artifact_representations_map: Map<number, ArtifactForCrossReportDocGen>,
 ): Array<string> {
     if (artifact_representations_map.size === 0) {
         return [];

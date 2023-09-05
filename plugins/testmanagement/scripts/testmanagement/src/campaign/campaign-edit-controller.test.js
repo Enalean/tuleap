@@ -43,27 +43,29 @@ describe("CampaignEditController -", () => {
 
         let $controller, $httpBackend;
 
-        angular.mock.inject(function (
-            _$controller_,
-            $rootScope,
-            _$q_,
-            _$httpBackend_,
-            _CampaignService_,
-            _DefinitionService_,
-            _ExecutionService_,
-            _SharedPropertiesService_,
-            _NewTuleapArtifactModalService_
-        ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $httpBackend = _$httpBackend_;
-            $scope = $rootScope.$new();
-            CampaignService = _CampaignService_;
-            ExecutionService = _ExecutionService_;
-            DefinitionService = _DefinitionService_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-        });
+        angular.mock.inject(
+            function (
+                _$controller_,
+                $rootScope,
+                _$q_,
+                _$httpBackend_,
+                _CampaignService_,
+                _DefinitionService_,
+                _ExecutionService_,
+                _SharedPropertiesService_,
+                _NewTuleapArtifactModalService_,
+            ) {
+                $controller = _$controller_;
+                $q = _$q_;
+                $httpBackend = _$httpBackend_;
+                $scope = $rootScope.$new();
+                CampaignService = _CampaignService_;
+                ExecutionService = _ExecutionService_;
+                DefinitionService = _DefinitionService_;
+                SharedPropertiesService = _SharedPropertiesService_;
+                NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+            },
+        );
 
         wrapPromise = createAngularPromiseWrapper($scope);
 

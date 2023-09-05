@@ -28,7 +28,7 @@ let app: App<Element> | null = null;
 
 export async function initModal(
     mount_point: Element,
-    properties: GlobalExportProperties
+    properties: GlobalExportProperties,
 ): Promise<void> {
     if (app !== null) {
         app.unmount();
@@ -37,7 +37,7 @@ export async function initModal(
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-        })
+        }),
     );
     app.mount(mount_point);
 }

@@ -63,7 +63,9 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
         display: block;
         position: absolute;
         inset: $tlp-switch-button-padding;
-        transition: background-color 200ms, box-shadow 350ms;
+        transition:
+            background-color 200ms,
+            box-shadow 350ms;
         border-radius: $tlp-switch-height / 2;
         background-color: $tlp-switch-background;
     }
@@ -78,7 +80,10 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
         align-items: center;
         justify-content: center;
         width: $tlp-switch-button-width;
-        transition: left 200ms, color 200ms, width 200ms;
+        transition:
+            left 200ms,
+            color 200ms,
+            width 200ms;
         border-radius: ($tlp-switch-height - (2 * $tlp-switch-button-padding)) / 2;
         background-color: $tlp-switch-button-background;
         color: #ffffff;

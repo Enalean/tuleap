@@ -31,28 +31,28 @@ export interface MilestoneRepresentation {
 
 export function getOpenTopMilestones<T>(
     project_id: number,
-    callback: MilestonesProgressCallback<T>
+    callback: MilestonesProgressCallback<T>,
 ): Promise<T[]> {
     return getMilestones("projects", project_id, 50, "open", callback);
 }
 
 export function getOpenSubMilestones<T>(
     milestone_id: number,
-    callback: MilestonesProgressCallback<T>
+    callback: MilestonesProgressCallback<T>,
 ): Promise<T[]> {
     return getMilestones("milestones", milestone_id, 100, "open", callback);
 }
 
 export function getClosedTopMilestones<T>(
     project_id: number,
-    callback: MilestonesProgressCallback<T>
+    callback: MilestonesProgressCallback<T>,
 ): Promise<T[]> {
     return getMilestones("projects", project_id, 50, "closed", callback);
 }
 
 export function getClosedSubMilestones<T>(
     milestone_id: number,
-    callback: MilestonesProgressCallback<T>
+    callback: MilestonesProgressCallback<T>,
 ): Promise<T[]> {
     return getMilestones("milestones", milestone_id, 100, "closed", callback);
 }
@@ -62,7 +62,7 @@ function getMilestones<T>(
     parent_id: number,
     limit: number,
     status: StatusQuery,
-    callback: MilestonesProgressCallback<T>
+    callback: MilestonesProgressCallback<T>,
 ): Promise<T[]> {
     return recursiveGet(encodeURI(`/api/v1/${parent_type}/${parent_id}/milestones`), {
         params: {

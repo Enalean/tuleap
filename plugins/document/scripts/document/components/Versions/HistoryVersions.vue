@@ -90,18 +90,19 @@ const is_in_error = ref(false);
 const file_versions = ref<readonly FileHistory[] | readonly EmbeddedFileVersion[]>([]);
 const link_versions = ref<readonly LinkVersion[]>([]);
 const is_empty = computed(
-    (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0
+    (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0,
 );
 
 const should_display_source_column_for_versions = strictInject(
-    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS
+    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 );
 
 const is_link = computed((): boolean => isLink(props.item));
 const is_embedded = computed((): boolean => isEmbedded(props.item));
 
 const should_display_source_column = computed(
-    (): boolean => should_display_source_column_for_versions && !is_embedded.value && !is_link.value
+    (): boolean =>
+        should_display_source_column_for_versions && !is_embedded.value && !is_link.value,
 );
 const colspan = computed((): number => {
     if (is_link.value) {
@@ -131,7 +132,7 @@ function loadVersions(): void {
             (): void => {
                 is_in_error.value = true;
                 is_loading.value = false;
-            }
+            },
         );
         return;
     }
@@ -145,7 +146,7 @@ function loadVersions(): void {
             (): void => {
                 is_in_error.value = true;
                 is_loading.value = false;
-            }
+            },
         );
         return;
     }
@@ -158,7 +159,7 @@ function loadVersions(): void {
         (): void => {
             is_in_error.value = true;
             is_loading.value = false;
-        }
+        },
     );
 }
 </script>

@@ -43,7 +43,7 @@ describe("LinkTypeSelectorElement", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 false,
-                LinkTypesCollectionStub.withParentPair()
+                LinkTypesCollectionStub.withParentPair(),
             );
         cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #150"));
     });
@@ -71,7 +71,7 @@ describe("LinkTypeSelectorElement", () => {
         expect(optgroup.label).toBe("story #150");
 
         const options_with_label = Array.from(select.options).filter(
-            (option) => option.label !== "–"
+            (option) => option.label !== "–",
         );
         const separators = Array.from(select.options).filter((option) => option.label === "–");
         expect(separators).toHaveLength(1);
@@ -90,12 +90,12 @@ describe("LinkTypeSelectorElement", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 true,
-                LinkTypesCollectionStub.withParentPair()
+                LinkTypesCollectionStub.withParentPair(),
             );
         const select = render(getHost());
 
         const child_of_is_disabled = Array.from(select.options).find(
-            (option) => option.value === "_is_child reverse"
+            (option) => option.value === "_is_child reverse",
         );
 
         if (!child_of_is_disabled) {

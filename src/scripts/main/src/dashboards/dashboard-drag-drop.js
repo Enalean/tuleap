@@ -170,7 +170,7 @@ function reorderWidget(widget, column) {
 
         if (response.deleted_ids && response.deleted_ids.deleted_line_id) {
             var line_to_delete = document.querySelector(
-                "[data-line-id='" + response.deleted_ids.deleted_line_id + "']"
+                "[data-line-id='" + response.deleted_ids.deleted_line_id + "']",
             );
             if (line_to_delete) {
                 line_to_delete.parentNode.removeChild(line_to_delete.nextElementSibling);
@@ -180,7 +180,7 @@ function reorderWidget(widget, column) {
 
         if (response.deleted_ids && response.deleted_ids.deleted_column_id) {
             var column_to_delete = document.querySelector(
-                "[data-column-id='" + response.deleted_ids.deleted_column_id + "']"
+                "[data-column-id='" + response.deleted_ids.deleted_column_id + "']",
             );
             if (column_to_delete) {
                 column_to_delete.parentNode.removeChild(column_to_delete.nextElementSibling);

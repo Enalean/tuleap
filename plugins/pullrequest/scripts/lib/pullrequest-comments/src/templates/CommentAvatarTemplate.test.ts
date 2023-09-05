@@ -33,7 +33,7 @@ describe("CommentAvatarTemplate", () => {
         render(host, target);
 
         expect(
-            selectOrThrow(target, "[data-test=comment-author-avatar-img]").getAttribute("src")
+            selectOrThrow(target, "[data-test=comment-author-avatar-img]").getAttribute("src"),
         ).toBe("url/to/avatar.png");
     });
 });

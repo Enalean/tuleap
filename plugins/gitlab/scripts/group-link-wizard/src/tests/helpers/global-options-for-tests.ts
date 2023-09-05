@@ -27,7 +27,7 @@ export function getGlobalTestOptions(
     store_options: StateTree = {},
     error_handler: (e: unknown) => void = (e): void => {
         throw e;
-    }
+    },
 ): MountingOptions<unknown>["global"] {
     return {
         config: {

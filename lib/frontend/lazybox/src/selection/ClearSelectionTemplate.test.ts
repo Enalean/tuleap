@@ -56,7 +56,7 @@ describe("ClearSelectionTemplate", () => {
         return selectOrThrow(
             target,
             "[data-test=clear-current-selection-button]",
-            HTMLButtonElement
+            HTMLButtonElement,
         );
     };
 

@@ -50,17 +50,17 @@ describe("LinkFieldValueFormatter", () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
             LinkedArtifactStub.withIdAndType(
                 FIRST_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildParentLinkType()
+                LinkTypeStub.buildParentLinkType(),
             ),
             LinkedArtifactStub.withIdAndType(
                 SECOND_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildParentLinkType()
+                LinkTypeStub.buildParentLinkType(),
             ),
-            LinkedArtifactStub.withIdAndType(THIRD_LINKED_ARTIFACT_ID, LinkTypeStub.buildUntyped())
+            LinkedArtifactStub.withIdAndType(THIRD_LINKED_ARTIFACT_ID, LinkTypeStub.buildUntyped()),
         );
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
             NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildUntyped()),
-            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildChildLinkType())
+            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildChildLinkType()),
         );
 
         verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
@@ -74,7 +74,7 @@ describe("LinkFieldValueFormatter", () => {
     it("should remove the links to be deleted from the list", () => {
         const artifact_link_to_delete = LinkedArtifactStub.withIdAndType(
             666,
-            LinkTypeStub.buildParentLinkType()
+            LinkTypeStub.buildParentLinkType(),
         );
         links_retriever =
             RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(artifact_link_to_delete);

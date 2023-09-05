@@ -26,7 +26,7 @@ jest.mock("@tuleap/tlp-modal", () => {
                 addEventListener: jest.fn(),
                 show: jest.fn(),
                 removeEventListener: jest.fn(),
-            } as unknown as Modal),
+            }) as unknown as Modal,
     };
 });
 

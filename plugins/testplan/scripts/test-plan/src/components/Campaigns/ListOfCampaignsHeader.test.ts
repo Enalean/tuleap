@@ -30,7 +30,7 @@ describe("ListOfCampaignsHeader", () => {
     function createWrapper(
         user_can_create_campaign: boolean,
         campaign: CampaignState,
-        show_create_modal = jest.fn()
+        show_create_modal = jest.fn(),
     ): VueWrapper<InstanceType<typeof ListOfCampaignsHeader>> {
         return shallowMount(ListOfCampaignsHeader, {
             mocks: {
@@ -116,7 +116,7 @@ describe("ListOfCampaignsHeader", () => {
                 has_loading_error: false,
                 campaigns: [{ id: 1 }] as Campaign[],
             },
-            show_create_modal
+            show_create_modal,
         );
 
         await wrapper.find("[data-test=new-campaign]").trigger("click");

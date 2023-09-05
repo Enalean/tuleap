@@ -25,7 +25,7 @@ export interface GeneralSection {
         readonly [TextCell, TextCell],
         readonly [TextCell, TextCell],
         readonly [TextCell, DateCell],
-        readonly [TextCell, TextCell]
+        readonly [TextCell, TextCell],
     ];
 }
 
@@ -34,7 +34,7 @@ export function buildGeneralSection(
     project_name: string,
     milestone_title: string,
     user_display_name: string,
-    current_date: Date
+    current_date: Date,
 ): GeneralSection {
     return {
         rows: [

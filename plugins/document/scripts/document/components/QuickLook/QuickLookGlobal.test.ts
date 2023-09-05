@@ -49,7 +49,7 @@ describe("QuickLookGlobal", () => {
 
         wrapper.get("[id=item-description]");
         expect(wrapper.vm.get_description).toContain(
-            currently_previewed_item.post_processed_description
+            currently_previewed_item.post_processed_description,
         );
     });
 });

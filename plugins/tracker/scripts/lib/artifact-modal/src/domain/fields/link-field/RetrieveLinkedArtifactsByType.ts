@@ -26,6 +26,6 @@ import type { LinkType } from "./LinkType";
 export interface RetrieveLinkedArtifactsByType {
     getLinkedArtifactsByLinkType(
         current_artifact_identifier: CurrentArtifactIdentifier,
-        link_type: LinkType
+        link_type: LinkType,
     ): ResultAsync<readonly LinkedArtifact[], Fault>;
 }

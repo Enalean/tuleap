@@ -83,7 +83,7 @@ document.observe("dom:loaded", function () {
         var trigger = new tuleap.trackers.trigger(),
             existing_triggers_table = $("triggers_existing").down("tbody"),
             triggering_field_template = detachElement(
-                existing_triggers_table.down(".trigger_description_triggering_field")
+                existing_triggers_table.down(".trigger_description_triggering_field"),
             ),
             trigger_template = detachElement(existing_triggers_table.down("tr"));
 
@@ -131,7 +131,7 @@ document.observe("dom:loaded", function () {
 
             function addTriggeringField(triggering_field, trigger_element) {
                 var triggering_fields_list = trigger_element.down(
-                        ".trigger_description_triggering_fields"
+                        ".trigger_description_triggering_fields",
                     ),
                     condition = codendi.locales.tracker_trigger[trigger_as_JSON.condition].name,
                     operator = codendi.locales.tracker_trigger[trigger_as_JSON.condition].operator,
@@ -190,7 +190,7 @@ document.observe("dom:loaded", function () {
                             onFailure: function (response) {
                                 alert(response.responseText); //eslint-disable-line no-alert
                             },
-                        }
+                        },
                     );
                 });
             }

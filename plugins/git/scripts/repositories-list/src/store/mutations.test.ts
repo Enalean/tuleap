@@ -62,7 +62,7 @@ describe("Store mutations", () => {
 
             const has_101 = Object.prototype.hasOwnProperty.call(
                 state.repositories_for_owner,
-                "101"
+                "101",
             );
             expect(has_101).toBe(true);
         });
@@ -158,7 +158,7 @@ describe("Store mutations", () => {
 
             const has_101 = Object.prototype.hasOwnProperty.call(
                 state.repositories_for_owner,
-                "101"
+                "101",
             );
             expect(has_101).toBe(true);
         });

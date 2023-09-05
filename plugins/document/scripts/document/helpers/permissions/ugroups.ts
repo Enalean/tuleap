@@ -30,7 +30,7 @@ function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): b
 }
 
 export async function getProjectUserGroupsWithoutServiceSpecialUGroups(
-    project_id: number
+    project_id: number,
 ): Promise<Array<UserGroup>> {
     const ugroups = await getProjectUserGroups(project_id);
 

@@ -71,7 +71,7 @@ function ReleaseRestService($http, $q, RestErrorService) {
             return recursiveGetLinkedArtifacts(uri, limit, offset + limit, progress_callback).then(
                 function (second_response) {
                     return results.concat(second_response);
-                }
+                },
             );
         });
     }

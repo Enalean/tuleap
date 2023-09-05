@@ -82,8 +82,8 @@ export default {
         trackers.forEach(function (tracker) {
             tracker.disabled = Boolean(
                 state.selected_trackers.find(
-                    (selected_tracker) => selected_tracker.id === tracker.id
-                )
+                    (selected_tracker) => selected_tracker.id === tracker.id,
+                ),
             );
         });
         state.trackers = trackers;
@@ -106,7 +106,7 @@ export default {
             if (
                 tracker.id === parseInt(tracker_id, 10) &&
                 !state.selected_trackers.find(
-                    (selected_tracker) => selected_tracker.id === tracker.id
+                    (selected_tracker) => selected_tracker.id === tracker.id,
                 )
             ) {
                 state.selected_trackers.push(tracker);

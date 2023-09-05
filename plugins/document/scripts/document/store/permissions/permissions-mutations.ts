@@ -21,7 +21,7 @@ import type { UserGroup } from "../../type";
 
 export function setProjectUserGroups(
     state: PermissionsState,
-    project_ugroups: Array<UserGroup>
+    project_ugroups: Array<UserGroup>,
 ): void {
     state.project_ugroups = project_ugroups;
 }

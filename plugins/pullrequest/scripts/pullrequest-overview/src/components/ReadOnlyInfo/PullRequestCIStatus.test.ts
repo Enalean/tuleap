@@ -43,7 +43,7 @@ vi.mock("@tuleap/vue-strict-inject");
 
 const getWrapper = (
     relative_date_pref: RelativeDatesDisplayPreference,
-    pull_request_info: PullRequest | null
+    pull_request_info: PullRequest | null,
 ): VueWrapper => {
     vi.spyOn(strict_inject, "strictInject").mockReturnValue(relative_date_pref);
     return mount(PullRequestCIStatus, {
@@ -88,14 +88,14 @@ describe("PullRequestCIStatus", () => {
             expect(badge.exists()).toBe(true);
             expect(badge.classes()).toStrictEqual(expected_badge_classes);
             expect(wrapper.find("[data-test=pullrequest-ci-badge-icon]").classes()).toContain(
-                expected_icon_class
+                expected_icon_class,
             );
             expect(
                 wrapper
                     .find("[data-test=pullrequest-ci-status-as-relative-date]")
-                    .attributes("date")
+                    .attributes("date"),
             ).toBe("2023-02-20T10:00:00Z");
-        }
+        },
     );
 
     it.each([
@@ -128,11 +128,11 @@ describe("PullRequestCIStatus", () => {
                 {
                     last_build_status: ci_status,
                     last_build_date: "2023-02-20T10:00:00Z",
-                } as PullRequest
+                } as PullRequest,
             );
             expect(wrapper.find("[data-test=pullrequest-ci-badge-status-name]").text()).toContain(
-                expected_badge_text
+                expected_badge_text,
             );
-        }
+        },
     );
 });

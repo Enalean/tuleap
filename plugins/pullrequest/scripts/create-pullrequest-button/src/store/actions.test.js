@@ -182,7 +182,7 @@ describe("Store actions", () => {
             await actions.create(context, { source_branch, destination_branch });
 
             expect(redirectTo).toHaveBeenCalledWith(
-                "/plugins/git/?action=pull-requests&tab=overview&repo_id=101&group_id=42#/pull-requests/1/overview"
+                "/plugins/git/?action=pull-requests&tab=overview&repo_id=101&group_id=42#/pull-requests/1/overview",
             );
         });
 
@@ -199,7 +199,7 @@ describe("Store actions", () => {
                             });
                         },
                     },
-                })
+                }),
             );
 
             await actions.create(context, { source_branch, destination_branch });
@@ -207,7 +207,7 @@ describe("Store actions", () => {
             expect(createPullrequest).toHaveBeenCalledWith(102, "feature/branch", 101, "master");
             expect(context.commit).toHaveBeenCalledWith(
                 "setCreateErrorMessage",
-                "You cannot create this pullrequest"
+                "You cannot create this pullrequest",
             );
         });
     });

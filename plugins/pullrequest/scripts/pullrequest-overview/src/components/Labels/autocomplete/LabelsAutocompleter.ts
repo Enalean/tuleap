@@ -27,7 +27,7 @@ export interface AutocompleteLabels {
         lazybox: Lazybox,
         project_labels: ReadonlyArray<LazyboxItem>,
         currently_selected_labels: ProjectLabel[],
-        query: string
+        query: string,
     ): void;
 }
 
@@ -37,7 +37,7 @@ export const LabelsAutocompleter = (group_builder: BuildGroupOfLabels): Autocomp
             lazybox: Lazybox,
             project_labels: ReadonlyArray<LazyboxItem>,
             currently_selected_labels: ProjectLabel[],
-            query: string
+            query: string,
         ): void {
             const trimmed_query = query.trim();
             if (trimmed_query === "") {
@@ -47,7 +47,7 @@ export const LabelsAutocompleter = (group_builder: BuildGroupOfLabels): Autocomp
 
             lazybox.replaceDropdownContent([
                 group_builder.buildWithLabels(
-                    findLabelMatchingValue(project_labels, trimmed_query)
+                    findLabelMatchingValue(project_labels, trimmed_query),
                 ),
             ]);
         },

@@ -31,7 +31,7 @@ export function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): Co
             const current_max_value = max_column_width[column_position];
             max_column_width[column_position] = Math.min(
                 Math.max(isNaN(current_max_value) ? 0 : current_max_value, cell.character_width),
-                CELL_MAX_CHARACTER_WIDTH
+                CELL_MAX_CHARACTER_WIDTH,
             );
         });
     });
@@ -47,7 +47,7 @@ export function fitRowHeightsToContent(cells: CellObjectWithExtraInfo[][]): RowI
         const nb_lines_row = row.reduce(
             (previous: { nb_lines: number }, current: { nb_lines: number }) =>
                 previous.nb_lines > current.nb_lines ? previous : current,
-            { nb_lines: 1 }
+            { nb_lines: 1 },
         ).nb_lines;
         if (nb_lines_row >= 2) {
             row_info.push({ hpt: nb_lines_row * LINE_HEIGHT_POINTS });

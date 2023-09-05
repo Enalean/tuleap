@@ -23,7 +23,7 @@
         <p class="tlp-alert-info">
             {{
                 $gettext(
-                    "Please be aware this configuration screen will be reworked in the future. The development team has knowledge of the visual and usability issues."
+                    "Please be aware this configuration screen will be reworked in the future. The development team has knowledge of the visual and usability issues.",
                 )
             }}
         </p>
@@ -32,14 +32,14 @@
             <li>
                 {{
                     $gettext(
-                        "The selected artifacts will be the linked ones that are not filtered by a criteria of the selected report."
+                        "The selected artifacts will be the linked ones that are not filtered by a criteria of the selected report.",
                     )
                 }}
             </li>
             <li>
                 {{
                     $gettext(
-                        "The columns exported are the ones used of the first table of the selected report."
+                        "The columns exported are the ones used of the first table of the selected report.",
                     )
                 }}
             </li>

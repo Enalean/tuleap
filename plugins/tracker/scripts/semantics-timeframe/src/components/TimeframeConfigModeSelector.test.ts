@@ -27,7 +27,7 @@ import { createGettext } from "vue3-gettext";
 
 describe("TimeframeConfigModeSelector", () => {
     function getWrapper(
-        is_implied: boolean
+        is_implied: boolean,
     ): VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>> {
         return shallowMount(TimeframeConfigModeSelector, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -38,7 +38,7 @@ describe("TimeframeConfigModeSelector", () => {
     }
 
     function getTimeframeModeSelectBox(
-        wrapper: VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>>
+        wrapper: VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>>,
     ): HTMLSelectElement {
         const select_box = wrapper.find("[data-test=timeframe-mode-select-box]").element;
         if (!(select_box instanceof HTMLSelectElement)) {

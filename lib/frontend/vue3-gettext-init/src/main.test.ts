@@ -60,7 +60,7 @@ describe("vue3-gettext-init", () => {
                 expect.objectContaining({
                     defaultLanguage: "fr_FR",
                     translations: { fr_FR: { "Hello world": ["Bonjour monde"] } },
-                })
+                }),
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
         });
@@ -69,11 +69,11 @@ describe("vue3-gettext-init", () => {
                 it will give an empty translations object to vue-gettext`, async () => {
             const create_gettext_spy = vi.fn(createGettext);
             const gettext = await initVueGettext(create_gettext_spy, () =>
-                Promise.reject("404 Not found")
+                Promise.reject("404 Not found"),
             );
 
             expect(create_gettext_spy).toHaveBeenCalledWith(
-                expect.objectContaining({ translations: {} })
+                expect.objectContaining({ translations: {} }),
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
         });
@@ -92,7 +92,7 @@ describe("vue3-gettext-init", () => {
 
             const gettext = await initVueGettext(create_gettext_spy, callback);
             expect(create_gettext_spy).toHaveBeenCalledWith(
-                expect.objectContaining({ translations: {} })
+                expect.objectContaining({ translations: {} }),
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
         });

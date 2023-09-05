@@ -75,7 +75,7 @@ function createFolderInProject(project_suscribers: string): void {
             };
             return cy.postFromTuleapApi(
                 `api/docman_folders/${root_folder_id}/folders`,
-                folder_payload
+                folder_payload,
             );
         });
     });
@@ -124,12 +124,12 @@ describe("Document notifications", () => {
         cy.log("assertion 1");
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            "New version of Wiki page wiki page was created by ProjectAdministrator"
+            "New version of Wiki page wiki page was created by ProjectAdministrator",
         );
         cy.log("assertion 2");
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            "https://tuleap/wiki/index.php?pagename=Wiki%20page&action=diff"
+            "https://tuleap/wiki/index.php?pagename=Wiki%20page&action=diff",
         );
     });
 
@@ -151,7 +151,7 @@ describe("Document notifications", () => {
 
         cy.assertUserMessagesReceivedByWithSpecificContent(
             "ProjectAdministrator@example.com",
-            `Folder has been removed by ProjectAdministrator.`
+            `Folder has been removed by ProjectAdministrator.`,
         );
     });
 

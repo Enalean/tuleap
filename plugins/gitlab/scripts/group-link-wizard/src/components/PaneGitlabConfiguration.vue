@@ -36,7 +36,7 @@
                         <p>
                             {{
                                 $gettext(
-                                    "Please note that the following settings will be applied to all linked repositories and may be changed by each repository afterwards."
+                                    "Please note that the following settings will be applied to all linked repositories and may be changed by each repository afterwards.",
                                 )
                             }}
                         </p>
@@ -52,7 +52,7 @@
                             <p class="tlp-text-info">
                                 {{
                                     $gettext(
-                                        "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository."
+                                        "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.",
                                     )
                                 }}
                             </p>
@@ -70,7 +70,7 @@
                             <p class="tlp-text-info">
                                 {{
                                     $gettext(
-                                        "If set, this prefix will be automatically added to the branch name in the create GitLab branch action."
+                                        "If set, this prefix will be automatically added to the branch name in the create GitLab branch action.",
                                     )
                                 }}
                             </p>
@@ -152,12 +152,12 @@ const { $gettext, interpolate } = useGettext();
 
 const is_branch_name_prefix_required = computed(() => uses_branch_name_prefix.value === true);
 const is_branch_name_prefix_disabled = computed(
-    () => !uses_branch_name_prefix.value || is_linking_group.value === true
+    () => !uses_branch_name_prefix.value || is_linking_group.value === true,
 );
 const is_synchronization_disabled = computed(
     () =>
         (uses_branch_name_prefix.value === true && branch_name_prefix.value === "") ||
-        is_linking_group.value
+        is_linking_group.value,
 );
 
 const disabled_checkbox_class = computed(() => ({
@@ -185,7 +185,7 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
         credentials_store.credentials.server_url.toString(),
         credentials_store.credentials.token,
         uses_branch_name_prefix.value ? branch_name_prefix.value : "",
-        is_artifact_closure_allowed.value
+        is_artifact_closure_allowed.value,
     ).match(
         () => {
             location.assign(root_store.base_url);
@@ -193,13 +193,13 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
         (fault) => {
             error_message.value = interpolate(
                 $gettext(
-                    "An error occurred while linking the selected group and synchronizing its repositories: %{ error }"
+                    "An error occurred while linking the selected group and synchronizing its repositories: %{ error }",
                 ),
                 { error: String(fault) },
-                true
+                true,
             );
             is_linking_group.value = false;
-        }
+        },
     );
 }
 </script>

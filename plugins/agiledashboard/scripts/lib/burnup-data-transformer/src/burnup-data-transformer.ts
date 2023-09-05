@@ -21,7 +21,7 @@ import type { BurnupData, GenericBurnupData } from "./index";
 
 export function transformToGenericBurnupData(
     burnup_data: BurnupData,
-    mode: "count" | "effort"
+    mode: "count" | "effort",
 ): GenericBurnupData {
     let points;
     if (mode === "count") {
