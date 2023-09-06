@@ -58,4 +58,12 @@ final class RedirectURITest extends TestCase
             (string) RedirectURI::buildLegacyAgileDashboardHomepage($this->project)
         );
     }
+
+    public function testItBuildsProjectBacklogURI(): void
+    {
+        self::assertSame(
+            '/plugins/agiledashboard/?group_id=' . self::PROJECT_ID . '&action=show-top&pane=topplanning-v2',
+            (string) RedirectURI::buildProjectBacklog($this->project)
+        );
+    }
 }

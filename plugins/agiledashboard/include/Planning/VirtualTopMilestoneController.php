@@ -75,7 +75,8 @@ final class VirtualTopMilestoneController extends BaseController
         $presenter = $this->presenter_builder->buildPresenter(
             $this->milestone,
             $this->project,
-            $this->getCurrentUser()
+            $this->getCurrentUser(),
+            new \CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin')
         );
         return $this->renderToString('show-top', $presenter);
     }

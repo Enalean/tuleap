@@ -23,13 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
+use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 
 final class VirtualTopMilestonePresenter
 {
+    public readonly string $create_backlog_uri;
+
     public function __construct(
         public readonly ?PlanningV2Presenter $planning_presenter,
         public readonly bool $is_admin,
         public readonly string $backlog_title,
+        CreateBacklogURI $create_backlog_uri,
     ) {
+        $this->create_backlog_uri = (string) $create_backlog_uri;
     }
 }

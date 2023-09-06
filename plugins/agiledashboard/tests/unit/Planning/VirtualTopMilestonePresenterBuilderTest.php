@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\AgileDashboard\Stub\VerifyProjectUsesExplicitBacklogStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
@@ -29,6 +30,7 @@ use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class VirtualTopMilestonePresenterBuilderTest extends TestCase
@@ -61,9 +63,17 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
 
     private function buildPresenter(): VirtualTopMilestonePresenter
     {
-        $builder = new VirtualTopMilestonePresenterBuilder($this->event_dispatcher, $this->explicit_backlog_verifier, new CheckSplitKanbanConfiguration());
-
-        return $builder->buildPresenter($this->milestone, $this->project, $this->user);
+        $builder = new VirtualTopMilestonePresenterBuilder(
+            $this->event_dispatcher,
+            $this->explicit_backlog_verifier,
+            new CheckSplitKanbanConfiguration()
+        );
+        return $builder->buildPresenter(
+            $this->milestone,
+            $this->project,
+            $this->user,
+            CSRFSynchronizerTokenStub::buildSelf()
+        );
     }
 
     public function testItBuildsPresenterWithVirtualTopBacklogMilestone(): void
@@ -108,6 +118,14 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
         $presenter = $this->buildPresenter();
         self::assertNull($presenter->planning_presenter);
         self::assertTrue($presenter->is_admin);
+        self::assertStringContainsString(
+            sprintf(
+                '/plugins/agiledashboard/?group_id=%s&action=updateConfiguration&activate-scrum=1&%s',
+                self::PROJECT_ID,
+                CreateBacklogURI::REDIRECT_TO_PROJECT_BACKLOG
+            ),
+            $presenter->create_backlog_uri
+        );
     }
 
     public function testItDoesNotMarkRegularUserAsAdmin(): void
