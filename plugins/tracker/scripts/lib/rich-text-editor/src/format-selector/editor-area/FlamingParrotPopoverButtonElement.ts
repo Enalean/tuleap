@@ -72,7 +72,7 @@ export class FlamingParrotPopoverButtonElement extends HTMLElement {
         this.hidePopover();
     }
 
-    private hidePopover(): void {
+    override hidePopover(): void {
         if (this.button) {
             jQuery(this.button).popover("hide");
         }

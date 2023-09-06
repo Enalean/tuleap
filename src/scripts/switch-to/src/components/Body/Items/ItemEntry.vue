@@ -51,13 +51,13 @@
                     >
                         <highlight-matching-text
                             v-bind:text="entry.xref"
-                            v-on:matches="(words) => (matching_words_in_xref = words.length)"
+                            v-on:matches="onXRefMatches"
                         />
                     </span>
                     <highlight-matching-text
                         class="switch-to-item-entry-label"
                         v-bind:text="entry.title || ''"
-                        v-on:matches="(words) => (matching_words_in_title = words.length)"
+                        v-on:matches="onTitleMatches"
                         data-test="item-title"
                     />
                 </a>
@@ -141,6 +141,14 @@ const should_display_content_matches = computed((): boolean => {
 
     return matching_words_in_xref.value + matching_words_in_title.value === 0;
 });
+
+function onXRefMatches(words: string[]): void {
+    matching_words_in_xref.value = words.length;
+}
+
+function onTitleMatches(words: string[]): void {
+    matching_words_in_title.value = words.length;
+}
 
 const should_display_cropped_content = computed((): boolean => {
     if (!is_in_search_mode.value) {

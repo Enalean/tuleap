@@ -25,7 +25,7 @@
         v-bind:split-by-space="true"
         v-bind:text-to-highlight="text"
         class="switch-to-recent-items-entry-label"
-        v-on:matches="(words) => $emit('matches', words)"
+        v-on:matches="emitMatches"
     />
 </template>
 
@@ -35,8 +35,12 @@ import { useRootStore } from "../../stores/root";
 import { computed } from "vue";
 
 defineProps<{ text: string }>();
-defineEmits<{ (e: "matches", words: string[]): void }>();
+const emit = defineEmits<{ (e: "matches", words: string[]): void }>();
 
 const root_store = useRootStore();
 const keywords = computed((): string => root_store.keywords);
+
+function emitMatches(words: string[]): void {
+    emit("matches", words);
+}
 </script>
