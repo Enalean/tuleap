@@ -64,8 +64,26 @@ $tlp-popover-click-transition: 75ms ease-out;
 .tlp-popover-dark {
     h1,
     h2,
-    h3 {
+    h3,
+    a,
+    blockquote,
+    code {
         color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
+
+    pre,
+    code {
+        background-color: var(--tlp-white-color-transparent-90);
+        white-space: unset;
+    }
+
+    pre > code {
+        background-color: transparent;
+    }
+
+    pre,
+    blockquote {
+        border-color: var(--tlp-neutral-normal-color);
     }
 
     > .tlp-popover-header,

@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/commonmark-popover':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/commonmark-popover
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/date-helper

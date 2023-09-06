@@ -25,6 +25,7 @@ import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 import { getWritingZoneElement, isWritingZoneElement } from "./WritingZone";
 import type { InternalWritingZone } from "./WritingZone";
+import "@tuleap/commonmark-popover/commonmark-popover-stub";
 
 type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
     _some_attribute: never;

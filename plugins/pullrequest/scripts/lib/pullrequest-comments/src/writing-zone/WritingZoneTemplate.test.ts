@@ -25,6 +25,7 @@ import type { HostElement } from "./WritingZone";
 import { WritingZonePresenter } from "./WritingZonePresenter";
 import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
+import "@tuleap/commonmark-popover/commonmark-popover-stub";
 
 const project_id = 105;
 const is_comments_markdown_mode_enabled = true;

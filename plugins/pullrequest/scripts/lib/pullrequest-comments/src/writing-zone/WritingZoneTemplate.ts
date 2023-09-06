@@ -76,6 +76,8 @@ export const getWritingZoneTemplate = (
         <div class="pull-request-comment-writing-zone-header">
             <div class="tlp-tabs pull-request-comment-writing-zone-header-tabs">
                 ${buildWriteTab(host, gettext_provider)} ${buildPreviewTab(host, gettext_provider)}
+                <div class="pull-request-comment-writing-zone-header-tabs-spacer"></div>
+                <tuleap-commonmark-popover />
             </div>
         </div>
         ${displayWritingMode(host)} ${displayPreviewMode(host, gettext_provider)}

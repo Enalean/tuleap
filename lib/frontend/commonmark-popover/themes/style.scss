@@ -1,0 +1,123 @@
+/**
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.commonmark-popover-content {
+    width: 430px;
+    cursor: default;
+}
+
+.commonmark-popover-trigger {
+    display: flex;
+    align-items: baseline;
+    padding: 0 var(--tlp-small-spacing);
+    font-size: 0.85rem;
+    font-weight: 500;
+    user-select: none;
+}
+
+.commonmark-popover-trigger-label {
+    $label-horizontal-padding: 4px;
+    $label-padding-inactive-state: $label-horizontal-padding 0;
+    $label-padding-active-state: $label-horizontal-padding 0 3px 0;
+
+    padding: $label-padding-inactive-state;
+    color: var(--tlp-dimmed-color);
+
+    &:hover {
+        padding: $label-padding-active-state;
+        border-bottom: 1px solid var(--tlp-dimmed-color);
+    }
+
+    &.common-mark-popover-trigger-active {
+        color: var(--tlp-main-color);
+    }
+
+    &.common-mark-popover-trigger-active:hover {
+        padding: $label-padding-active-state;
+        border-bottom: 1px solid var(--tlp-main-color);
+    }
+}
+
+.commonmark-popover-trigger-icon {
+    margin: 0 0 0 4px;
+    color: var(--tlp-dimmed-color);
+
+    &.common-mark-popover-trigger-active {
+        color: var(--tlp-main-color);
+    }
+}
+
+.commonmark-popover-header {
+    padding: 0;
+}
+
+.commonmark-popover-title {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    border-top-left-radius: var(--tlp-large-radius);
+    border-top-right-radius: var(--tlp-large-radius);
+
+    > div {
+        flex: 1;
+        padding: var(--tlp-medium-spacing);
+        font-weight: 600;
+    }
+}
+
+.commonmark-popover-body {
+    display: flex;
+    flex-direction: column;
+    height: 285px;
+    padding: 0;
+    overflow-y: scroll;
+
+    > .commonmark-popover-example-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--tlp-dimmed-color-darker-10);
+
+        > .commonmark-popover-example-column {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            padding: var(--tlp-medium-spacing);
+        }
+    }
+}
+
+.commonmark-example-blockquote,
+.commonmark-example-link,
+.commonmark-example-header {
+    margin: 0;
+}
+
+.commonmark-example-list {
+    line-height: 1.25rem;
+}
+
+.commonmark-example-code-block {
+    width: 50%;
+}
+
+.commonmark-example-image {
+    width: 62px;
+    height: 59px;
+    background: no-repeat url("./assets/image_example_commonmark.png");
+}

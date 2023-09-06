@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
-import "@tuleap/commonmark-popover";
+import { define } from "hybrids";
+import { TAG } from "../../src/CommonmarkPopover";
 
-export * from "./types";
-export * from "./comment/main";
-export * from "./new-comment-form/main";
-export * from "./description-comment/main";
-export * from "./skeleton/main";
+export const CommonmarkPopover = define({
+    tag: TAG,
+});
