@@ -31,9 +31,6 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
-        externals: {
-            tlp: "tlp",
-        },
         resolve: {
             extensions: [".ts", ".js"],
         },
@@ -46,7 +43,6 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(false),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
