@@ -107,7 +107,19 @@ msgstr ""
 
 #, php-format
 msgid ""
+"Artifact #%d not added in the backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+
+#, php-format
+msgid ""
 "Artifact #%d not added in the top backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+
+#, php-format
+msgid ""
+"Artifact #%d not removed from the backlog because it's already planned in a "
 "submilestone."
 msgstr ""
 

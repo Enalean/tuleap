@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Masschange;
 
 use Codendi_Request;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -34,84 +32,76 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
-class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+class AdditionalMasschangeActionProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var AdditionalMasschangeActionProcessor
-     */
-    private $processor;
+    private AdditionalMasschangeActionProcessor $processor;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
+    private Tracker|MockObject $tracker;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao|MockObject $artifacts_in_explicit_backlog_dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
+    private PlannedArtifactDao|MockObject $planned_artifact_dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
-     */
-    private $event_dispatcher;
+    private UnplannedArtifactsAdder|MockObject $unplanned_artifacts_adder;
+
+    private EventDispatcherInterface $event_dispatcher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planned_artifact_dao              = Mockery::mock(PlannedArtifactDao::class);
-        $this->unplanned_artifacts_adder         = Mockery::mock(UnplannedArtifactsAdder::class);
-        $this->event_dispatcher                  = Mockery::mock(EventDispatcherInterface::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->planned_artifact_dao              = $this->createMock(PlannedArtifactDao::class);
+        $this->unplanned_artifacts_adder         = $this->createMock(UnplannedArtifactsAdder::class);
+        $this->event_dispatcher                  = EventDispatcherStub::withIdentityCallback();
 
+
+        $this->tracker = $this->createMock(Tracker::class);
+
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->tracker
+            ->method('getProject')
+            ->willReturn($project);
+    }
+
+    private function processAction(Codendi_Request $request): void
+    {
         $this->processor = new AdditionalMasschangeActionProcessor(
             $this->artifacts_in_explicit_backlog_dao,
             $this->planned_artifact_dao,
             $this->unplanned_artifacts_adder,
-            $this->event_dispatcher
+            $this->event_dispatcher,
+            new CheckSplitKanbanConfiguration()
         );
-
-        $this->user    = Mockery::mock(PFUser::class);
-        $this->tracker = Mockery::mock(Tracker::class);
-
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
-        $this->tracker->shouldReceive('getProject')->andReturn($project);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $this->processor->processAction($user, $this->tracker, $request, ['125', '144']);
     }
 
     public function testItDoesNothingIfUserIsNotTrackerAdmin(): void
     {
         $request = new Codendi_Request([]);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnFalse();
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->shouldNotReceive('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -119,24 +109,24 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request([]);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->event_dispatcher->shouldReceive('dispatch')->andReturnUsing(function (object $event) {
+        $this->event_dispatcher =  EventDispatcherStub::withCallback(function (object $event) {
             if ($event instanceof BlockScrumAccess) {
                 $event->disableScrumAccess();
             }
             return $event;
         });
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->shouldNotReceive('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -144,18 +134,17 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request([]);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->shouldNotReceive('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -163,18 +152,17 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'unchanged']);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->shouldNotReceive('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -182,22 +170,18 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->once()
-            ->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(false);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')->andReturnFalse();
-
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -205,22 +189,18 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->once()
-            ->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')->andReturnTrue();
-
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -228,23 +208,16 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'add']);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->with(125, 101)
-            ->once();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->unplanned_artifacts_adder->method('addArtifactToTopBacklogFromIds')->withConsecutive([125, 101], [144, 101]);
 
-        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
-            ->with(144, 101)
-            ->once();
-
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 
@@ -252,18 +225,17 @@ class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'whatever']);
 
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+        $this->tracker
+            ->expects(self::once())
+            ->method('userIsAdmin')
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->shouldNotReceive('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(false);
 
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
+        $this->processAction(
             $request,
-            ['125', '144']
         );
     }
 }

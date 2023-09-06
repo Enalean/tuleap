@@ -25,44 +25,24 @@ namespace Tuleap\AgileDashboard\Masschange;
 use Codendi_Request;
 use Feedback;
 use PFUser;
+use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 class AdditionalMasschangeActionProcessor
 {
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
     public function __construct(
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder,
-        EventDispatcherInterface $event_dispatcher,
+        private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private readonly PlannedArtifactDao $planned_artifact_dao,
+        private readonly UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planned_artifact_dao              = $planned_artifact_dao;
-        $this->unplanned_artifacts_adder         = $unplanned_artifacts_adder;
-        $this->event_dispatcher                  = $event_dispatcher;
     }
 
     public function processAction(
@@ -85,15 +65,15 @@ class AdditionalMasschangeActionProcessor
             return;
         }
 
-        $project_id = (int) $tracker->getProject()->getID();
+        $project = $tracker->getProject();
 
         $action = $request->get('masschange-action-explicit-backlog');
         if ($action === 'unchanged') {
             return;
         } elseif ($action === 'remove') {
-            $this->removeUnplannedArtifactsToTopBacklog($masschange_aids, $project_id);
+            $this->removeUnplannedArtifactsToTopBacklog($masschange_aids, $project);
         } elseif ($action === 'add') {
-            $this->addUnplannedArtifactsToTopBacklog($masschange_aids, $project_id);
+            $this->addUnplannedArtifactsToTopBacklog($masschange_aids, $project);
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
@@ -102,15 +82,18 @@ class AdditionalMasschangeActionProcessor
         }
     }
 
-    private function removeUnplannedArtifactsToTopBacklog(array $masschange_aids, int $project_id): void
+    private function removeUnplannedArtifactsToTopBacklog(array $masschange_aids, Project $project): void
     {
         foreach ($masschange_aids as $masschange_aid) {
             $artifact_id = (int) $masschange_aid;
-            if ($this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($artifact_id, $project_id)) {
+            if ($this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($artifact_id, (int) $project->getID())) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     sprintf(
-                        dgettext(
+                        $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext(
+                            'tuleap-agiledashboard',
+                            "Artifact #%d not removed from the backlog because it's already planned in a submilestone."
+                        ) : dgettext(
                             'tuleap-agiledashboard',
                             "Artifact #%d not removed from the top backlog because it's already planned in a submilestone."
                         ),
@@ -121,12 +104,12 @@ class AdditionalMasschangeActionProcessor
         }
 
         $this->artifacts_in_explicit_backlog_dao->removeItemsFromExplicitBacklogOfProject(
-            $project_id,
+            (int) $project->getID(),
             $masschange_aids
         );
     }
 
-    private function addUnplannedArtifactsToTopBacklog(array $masschange_aids, int $project_id): void
+    private function addUnplannedArtifactsToTopBacklog(array $masschange_aids, Project $project): void
     {
         foreach ($masschange_aids as $masschange_aid) {
             $artifact_id = (int) $masschange_aid;
@@ -134,13 +117,16 @@ class AdditionalMasschangeActionProcessor
             try {
                 $this->unplanned_artifacts_adder->addArtifactToTopBacklogFromIds(
                     $artifact_id,
-                    $project_id
+                    (int) $project->getID()
                 );
             } catch (ArtifactAlreadyPlannedException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     sprintf(
-                        dgettext(
+                        $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext(
+                            'tuleap-agiledashboard',
+                            "Artifact #%d not added in the backlog because it's already planned in a submilestone."
+                        ) : dgettext(
                             'tuleap-agiledashboard',
                             "Artifact #%d not added in the top backlog because it's already planned in a submilestone."
                         ),

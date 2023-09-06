@@ -1481,7 +1481,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new ExplicitBacklogDao(),
             $this->getPlanningFactory(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange'),
-            EventManager::instance()
+            EventManager::instance(),
+            new CheckSplitKanbanConfiguration()
         );
 
         $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
@@ -1501,7 +1502,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
             $this->getUnplannedArtifactsAdder(),
-            EventManager::instance()
+            EventManager::instance(),
+            new CheckSplitKanbanConfiguration()
         );
 
         $processor->processAction(

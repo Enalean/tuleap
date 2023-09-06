@@ -130,11 +130,27 @@ msgstr ""
 
 #, php-format
 msgid ""
+"Artifact #%d not added in the backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+"L'artéfact #%d n'a pas été ajouté au backlog car il est déjà présent dans un "
+"sous jalon."
+
+#, php-format
+msgid ""
 "Artifact #%d not added in the top backlog because it's already planned in a "
 "submilestone."
 msgstr ""
 "L'artéfact #%d n'a pas été ajouté à la planification générale car il est "
 "déjà présent dans un sous jalon."
+
+#, php-format
+msgid ""
+"Artifact #%d not removed from the backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+"L'artéfact #%d n'a pas été supprimé du backlog car il est déjà présent dans "
+"un sous jalon."
 
 #, php-format
 msgid ""
