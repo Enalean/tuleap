@@ -463,6 +463,9 @@ msgstr ""
 msgid "Please come back later."
 msgstr "Veuillez revenir plus tard."
 
+msgid "Please welcome Backlog and Kanban tools"
+msgstr "Bienvenue aux outils Backlog et Kanban"
+
 #, php-format
 msgid ""
 "PostAction of type %s cannot be defined without explicit backlog management."
@@ -712,6 +715,9 @@ msgstr "Non planifié"
 msgid "Unset this semantic"
 msgstr "Réinitialiser la sémantique"
 
+msgid "Unterstood"
+msgstr "J'ai compris"
+
 msgid "Update of planning assignment may lead to errors in:"
 msgstr "La mise à jour des plannings peut causer des erreurs dans :"
 
@@ -723,6 +729,27 @@ msgstr "Vue du Planning"
 
 msgid "We created an initial scrum configuration for you. Enjoy!"
 msgstr "La configuration initiale de scrum a été effectuée pour vous !"
+
+msgid ""
+"We gave the Agile Dashboard a rejuvenation! Please welcome its new "
+"successors in two different tabs: %sBacklog%s & %sKanban%s."
+msgstr ""
+"Nous avons rajeuni l'Agile Dashboard ! Bienvenue à ses successeurs dans deux "
+"onglets différents : %sBacklog%s & %sKanban%s."
+
+msgid ""
+"We gave the Agile Dashboard a rejuvenation! Please welcome its new "
+"successors in two different tabs: %sBacklog%s & Kanban."
+msgstr ""
+"Nous avons rajeuni l'Agile Dashboard ! Bienvenue à ses successeurs dans deux "
+"onglets différents : %sBacklog%s & Kanban."
+
+msgid ""
+"We gave the Agile Dashboard a rejuvenation! Please welcome its new "
+"successors in two different tabs: Backlog & %sKanban%s."
+msgstr ""
+"Nous avons rajeuni l'Agile Dashboard ! Bienvenue à ses successeurs dans deux "
+"onglets différents : Backlog & %sKanban%s."
 
 #, php-format
 msgid ""
@@ -736,6 +763,9 @@ msgid ""
 "We tried to create an initial scrum configuration for you but an internal "
 "error prevented it."
 msgstr "Une erreur interne a empêché la configuration initiale de scrum."
+
+msgid "We've made some changes"
+msgstr "Nous avons fait quelques changements"
 
 msgid "What's hot"
 msgstr "En cours"

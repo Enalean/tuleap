@@ -1,0 +1,58 @@
+<section id="agiledashboard-split-kanban-modal"
+     class="tlp-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="agiledashboard-split-kanban-modal-title"
+     aria-hidden="true"
+>
+    <div class="tlp-modal-body agiledashboard-split-kanban-modal-body">
+        <h1 id="agiledashboard-split-kanban-modal-title" class="agiledashboard-split-kanban-modal-title">
+            {{# dgettext }}tuleap-agiledashboard | We've made some changes{{/ dgettext }}
+        </h1>
+
+        <p class="agiledashboard-split-kanban-modal-subtitle">{{# dgettext }}tuleap-agiledashboard | Please welcome Backlog and Kanban tools{{/ dgettext }}</p>
+
+        <hr class="agiledashboard-split-kanban-modal-separator" />
+
+        <video autoplay muted loop width="251" height="256" class="agiledashboard-split-kanban-modal-preview">
+            <source src="/plugins/agiledashboard/preview-split.webm" type="video/webm" />
+        </video>
+        <p class="agiledashboard-split-kanban-modal-explanation">
+            {{^ has_kanban }}
+                {{# dgettext }}
+                    tuleap-agiledashboard |
+                    We gave the Agile Dashboard a rejuvenation! Please welcome its new successors in two different tabs: %sBacklog%s & Kanban. |
+                    <a href="{{ backlog_service_url }}"> |
+                    </a>
+                {{/ dgettext }}
+            {{/ has_kanban }}
+            {{^ has_backlog }}
+                {{# dgettext }}
+                    tuleap-agiledashboard |
+                    We gave the Agile Dashboard a rejuvenation! Please welcome its new successors in two different tabs: Backlog & %sKanban%s. |
+                    <a href="{{ kanban_service_url }}"> |
+                    </a>
+                {{/ dgettext }}
+            {{/ has_backlog }}
+            {{# has_backlog }}
+                {{# has_kanban }}
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        We gave the Agile Dashboard a rejuvenation! Please welcome its new successors in two different tabs: %sBacklog%s & %sKanban%s. |
+                        <a href="{{ backlog_service_url }}"> |
+                        </a> |
+                        <a href="{{ kanban_service_url }}"> |
+                        </a>
+                    {{/ dgettext }}
+                {{/ has_kanban }}
+            {{/ has_backlog }}
+        </p>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-modal-action" id="agiledashboard-split-kanban-modal-understood">
+            <i class="fa-solid fa-check tlp-button-icon" id="agiledashboard-split-kanban-modal-understood-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-agiledashboard | Unterstood {{/ dgettext }}
+        </button>
+    </div>
+</section>

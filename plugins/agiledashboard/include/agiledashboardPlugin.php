@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
+use Tuleap\AgileDashboard\SplitModalPresenter;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
@@ -82,8 +83,12 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
+use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Layout\AfterStartProjectContainer;
+use Tuleap\Layout\BeforeStartProjectHeader;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -158,6 +163,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
     public const AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
+
+    public const USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_ad_split_modal';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
@@ -1824,5 +1831,67 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getFormElementFactory(): Tracker_FormElementFactory
     {
         return Tracker_FormElementFactory::instance();
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function beforeStartProjectHeader(BeforeStartProjectHeader $event): void
+    {
+        if (! $this->shouldDisplaySplitModal($event->project, $event->user)) {
+            return;
+        }
+
+        $event->layout->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/split-modal/frontend-assets',
+                    '/assets/agiledashboard/split-modal'
+                ),
+                'src/split-modal.ts',
+            ),
+        );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function afterStartProjectContainer(AfterStartProjectContainer $event): void
+    {
+        if (! $this->shouldDisplaySplitModal($event->project, $event->user)) {
+            return;
+        }
+
+        TemplateRendererFactory::build()
+            ->getRenderer(__DIR__ . '/../templates/')
+            ->renderToPage('split-modal', $this->getSplitModalPresenter($event->project));
+    }
+
+    private function shouldDisplaySplitModal(Project $project, PFUser $user): bool
+    {
+        if (! $user->getPreference(self::USER_PREF_DISPLAY_SPLIT_MODAL)) {
+            return false;
+        }
+
+        $kanban_service  = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $backlog_service = $project->getService($this->getServiceShortname());
+        if (! $kanban_service && ! $backlog_service) {
+            return false;
+        }
+
+        if (! (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($project)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getSplitModalPresenter(Project $project): SplitModalPresenter
+    {
+        $kanban_service  = $project->getService(KanbanService::SERVICE_SHORTNAME);
+        $backlog_service = $project->getService($this->getServiceShortname());
+
+        return new SplitModalPresenter(
+            (bool) $kanban_service,
+            (bool) $backlog_service,
+            $kanban_service?->getUrl(),
+            $backlog_service?->getUrl(),
+        );
     }
 }

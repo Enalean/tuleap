@@ -45,7 +45,6 @@ defineProps<{
 
 .git-tracker-create-branch-modal :deep() {
     @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
-    @include meta.load-css("@tuleap/tlp/src/scss/components/buttons");
     @include meta.load-css(
         "@tuleap/tlp/src/scss/components/forms",
         (
@@ -53,5 +52,6 @@ defineProps<{
         )
     );
     @include meta.load-css("@tuleap/tlp-modal");
+    @include meta.load-css("@tuleap/tlp-button");
 }
 </style>

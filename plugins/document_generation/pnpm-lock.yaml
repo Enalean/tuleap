@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/concurrency-limit-pool':
     specifier: workspace:*
@@ -22,6 +26,9 @@ dependencies:
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../../src/scripts/tlp
+  '@tuleap/tlp-button':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-button
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch

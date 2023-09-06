@@ -39,6 +39,8 @@ use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\Layout\AfterStartProjectContainer;
+use Tuleap\Layout\BeforeStartProjectHeader;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
@@ -114,6 +116,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function header(HeaderConfiguration|array $params): void
     {
+        if (is_array($params) && ! empty($params['group'])) {
+            $project = ProjectManager::instance()->getProject($params['group']);
+            EventManager::instance()->processEvent(new BeforeStartProjectHeader($project, $this, $this->getUser()));
+        }
+
         $this->addJavascriptAsset(new JavascriptViteAsset(
             new IncludeViteAssets(
                 __DIR__ . '/../../../scripts/switch-to/frontend-assets',
@@ -421,6 +428,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         array $main_classes,
     ): void {
         $project_context = null;
+        $project         = null;
 
         if (! empty($params['group'])) {
             $project = ProjectManager::instance()->getProject($params['group']);
@@ -460,6 +468,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $is_svg_logo_customized,
             $main_classes,
         ));
+
+        if ($project) {
+            EventManager::instance()->dispatch(new AfterStartProjectContainer($project, $this->getUser()));
+        }
     }
 
     public function footer(FooterConfiguration|array $params): void
