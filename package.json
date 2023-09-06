@@ -83,9 +83,9 @@
     "vue-loader": "^15.10.2",
     "vue-template-compiler": "^2.7.8",
     "vue-tsc": "^1.0.24",
-    "webpack": "^5.76.1",
+    "webpack": "^5.88.2",
     "webpack-assets-manifest": "^5.1.0",
-    "webpack-cli": "^4.10.0",
+    "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.8.0",
     "webpack-merge-and-include-globally": "^2.3.4",
     "webpack-remove-empty-scripts": "^1.0.1"
