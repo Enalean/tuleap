@@ -30,17 +30,31 @@ function compareRow(row_a: Row, row_b: Row): number {
     const task_a_parent_id = task_a.parent?.id;
     const task_b_parent_id = task_b.parent?.id;
     if (task_a_parent_id === task_b_parent_id) {
-        return compareTaskWithoutParentOrTheSameParent(task_a, task_b);
+        return compareTaskAtTheSameLevel(task_a, task_b);
     }
 
-    if (task_a_parent_id !== undefined && task_b_parent_id !== undefined) {
-        return task_b_parent_id - task_a_parent_id;
+    // Make sure children tasks are always below their parent tasks
+    if (task_a_parent_id === task_b.id) {
+        return 1;
+    }
+
+    if (task_a.id === task_b_parent_id) {
+        return -1;
+    }
+
+    // Make sure children tasks are put before another parent task
+    if (task_a.parent === undefined && task_b.parent !== undefined) {
+        return compareTaskAtTheSameLevel(task_a, task_b.parent);
+    }
+
+    if (task_a.parent !== undefined && task_b.parent === undefined) {
+        return compareTaskAtTheSameLevel(task_a.parent, task_b);
     }
 
     return -1;
 }
 
-function compareTaskWithoutParentOrTheSameParent(task_a: Task, task_b: Task): number {
+function compareTaskAtTheSameLevel(task_a: Task, task_b: Task): number {
     if (task_a.start !== null && task_b.start !== null) {
         return task_a.start.getTime() - task_b.start.getTime();
     }
