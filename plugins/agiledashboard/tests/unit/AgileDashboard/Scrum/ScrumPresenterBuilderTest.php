@@ -101,8 +101,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('useLabFeatures')->andReturn('0');
+        $user    = Mockery::mock(\PFUser::class);
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
@@ -146,7 +145,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -158,8 +157,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreDisabled(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('useLabFeatures')->andReturn('0');
+        $user    = Mockery::mock(\PFUser::class);
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
@@ -210,7 +208,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -222,8 +220,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreEnabled(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('useLabFeatures')->andReturn('0');
+        $user    = Mockery::mock(\PFUser::class);
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
@@ -276,7 +273,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -288,8 +285,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsPresenterInExplicitBacklogContext(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('useLabFeatures')->andReturn('0');
+        $user    = Mockery::mock(\PFUser::class);
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
@@ -340,7 +336,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
+            false,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));

@@ -29,7 +29,13 @@ use Tuleap\Config\FeatureFlagConfigKey;
 #[ConfigKeyCategory('Kanban')]
 final class SplitKanbanConfiguration
 {
-    #[FeatureFlagConfigKey('Should we split kanban in dedicated service for some projects? Comma separated list of project ids like 123,234. Default to 0 (no projects have split kanban). 1 to activate for all projects')]
+    #[FeatureFlagConfigKey(<<<'EOF'
+    Should we display kanban homepage back in Agile Dashboard homepage for some projects?
+    Comma separated list of project ids like 123,234. Default to 0 (no projects deactivate split kanban)
+    ⚠️  This flag is temporary, please get in touch with Enalean Team if you are using it.
+    EOF
+    )]
+
     #[ConfigKeyString('0')]
-    public const FEATURE_FLAG = 'activate_split_kanban_for_project';
+    public const FEATURE_FLAG = 'temporarily_deactivate_split_kanban_for_project';
 }
