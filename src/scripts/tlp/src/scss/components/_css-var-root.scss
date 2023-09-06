@@ -194,6 +194,9 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
 
     // Dark
     --tlp-danger-color-on-dark-background: #{color.mix($tlp-danger-color, $tlp-white-color, 85%)};
+    --tlp-warning-color-on-dark-background: #{color.mix($tlp-warning-color, $tlp-white-color, 85%)};
+    --tlp-info-color-on-dark-background: #{color.mix($tlp-info-color, $tlp-white-color, 85%)};
+    --tlp-success-color-on-dark-background: #{color.mix($tlp-success-color, $tlp-white-color, 85%)};
     --tlp-dimmed-color-on-dark-background: #{$tlp-neutral-dark-color};
     --tlp-main-color-on-dark-background: #{color.adjust($tlp-main-color, $lightness: 20%)};
     --tlp-dark-color-transparent-30: #{color.adjust($tlp-dark-color, $alpha: - 0.3)};
