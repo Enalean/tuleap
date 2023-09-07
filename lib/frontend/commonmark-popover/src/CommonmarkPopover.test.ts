@@ -31,6 +31,10 @@ const isCommonmarkPopover = (
     return true;
 };
 
+const noop = (): void => {
+    // Do nothing
+};
+
 vi.mock("@tuleap/tlp-popovers");
 
 describe("CommonmarkPopover", () => {
@@ -40,9 +44,8 @@ describe("CommonmarkPopover", () => {
         doc = document.implementation.createHTMLDocument();
         vi.useFakeTimers();
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({
-            destroy: () => {
-                // Do nothing
-            },
+            destroy: noop,
+            hide: noop,
         } as Popover);
     });
 
