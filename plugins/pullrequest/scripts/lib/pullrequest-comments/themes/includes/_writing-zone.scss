@@ -53,5 +53,6 @@ $writing-zone-content-height: 254px;
 .pull-request-comment-writing-zone-commonmark-preview {
     height: $writing-zone-content-height;
     padding: var(--tlp-medium-spacing);
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
