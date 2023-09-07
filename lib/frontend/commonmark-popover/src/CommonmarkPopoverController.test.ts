@@ -42,12 +42,16 @@ describe("CommonmarkPopoverController", () => {
     });
 
     describe("Popover instance management", () => {
-        let createPopover: SpyInstance, destroyPopoverInstance: SpyInstance;
+        let createPopover: SpyInstance,
+            destroyPopoverInstance: SpyInstance,
+            hidePopover: SpyInstance;
 
         beforeEach(() => {
             destroyPopoverInstance = vi.fn();
+            hidePopover = vi.fn();
             createPopover = vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({
                 destroy: destroyPopoverInstance,
+                hide: hidePopover,
             } as unknown as Popover);
         });
 
@@ -77,6 +81,7 @@ describe("CommonmarkPopoverController", () => {
             controller.initPopover(host);
             controller.destroyPopover();
 
+            expect(hidePopover).toHaveBeenCalledOnce();
             expect(destroyPopoverInstance).toHaveBeenCalledOnce();
         });
     });

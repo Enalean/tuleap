@@ -29,11 +29,11 @@ export type ControlCommonmarkPopover = {
 };
 
 export const CommonmarkPopoverController = (): ControlCommonmarkPopover => {
-    let popover_instance: Popover;
+    let popover_instance: Popover | null = null;
 
     return {
         initPopover: (host: HostElement): void => {
-            if (popover_instance) {
+            if (popover_instance !== null) {
                 return;
             }
 
@@ -49,7 +49,12 @@ export const CommonmarkPopoverController = (): ControlCommonmarkPopover => {
         },
 
         destroyPopover: (): void => {
-            popover_instance.destroy();
+            if (popover_instance !== null) {
+                popover_instance.hide();
+                popover_instance.destroy();
+            }
+
+            popover_instance = null;
         },
 
         onPopoverShown: (host: InternalCommonmarkPopover): void => {
