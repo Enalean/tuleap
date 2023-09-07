@@ -210,13 +210,13 @@ function buildListeners(
     if (configuration.trigger === "focus") {
         return [
             buildFocusListener(doc, popover_trigger, popover_content, updatePositionOfContent),
-            buildBlurListener(doc, popover_trigger),
+            buildBlurListener(doc, popover_trigger, popover_content),
         ];
     }
     if (configuration.trigger === "hover") {
         return [
             buildMouseOverListener(doc, popover_trigger, popover_content, updatePositionOfContent),
-            buildMouseOutListener(doc, popover_trigger),
+            buildMouseOutListener(doc, popover_trigger, popover_content),
         ];
     }
     if (configuration.trigger === "click") {
@@ -267,12 +267,17 @@ function buildFocusListener(
     };
 }
 
-function buildBlurListener(doc: Document, popover_trigger: HTMLElement): EventListener {
+function buildBlurListener(
+    doc: Document,
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement,
+): EventListener {
     return {
         element: popover_trigger,
         type: "blur",
         handler(): void {
             hideAllShownPopovers(doc);
+            hidePopover(popover_content);
         },
     };
 }
@@ -293,12 +298,17 @@ function buildMouseOverListener(
     };
 }
 
-function buildMouseOutListener(doc: Document, popover_trigger: HTMLElement): EventListener {
+function buildMouseOutListener(
+    doc: Document,
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement,
+): EventListener {
     return {
         element: popover_trigger,
         type: "mouseout",
         handler(): void {
             hideAllShownPopovers(doc);
+            hidePopover(popover_content);
         },
     };
 }
