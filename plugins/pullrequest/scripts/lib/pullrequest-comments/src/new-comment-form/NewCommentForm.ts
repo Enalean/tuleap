@@ -40,7 +40,6 @@ export interface NewCommentForm {
     readonly controller: ControlNewCommentForm;
     readonly writing_zone_controller: ControlWritingZone;
     readonly writing_zone: HTMLElement & InternalWritingZone;
-    readonly is_comments_markdown_mode_enabled: boolean;
     presenter: NewCommentFormPresenter;
 }
 
@@ -55,7 +54,6 @@ export const form_height_descriptor = {
 
 export const NewInlineCommentFormComponent = define<NewCommentForm>({
     tag: PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
-    is_comments_markdown_mode_enabled: false,
     post_rendering_callback: undefined,
     element_height: form_height_descriptor,
     writing_zone_controller: {
@@ -66,7 +64,6 @@ export const NewInlineCommentFormComponent = define<NewCommentForm>({
                 project_id: Number(host.controller.getProjectId()),
                 focus_writing_zone_when_connected:
                     host.controller.shouldFocusWritingZoneOnceRendered(),
-                is_comments_markdown_mode_enabled: host.is_comments_markdown_mode_enabled,
             }),
     },
     writing_zone: {

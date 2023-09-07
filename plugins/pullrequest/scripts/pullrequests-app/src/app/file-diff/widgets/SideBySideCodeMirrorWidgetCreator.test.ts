@@ -68,7 +68,6 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             controller,
             comments_store,
             FileDiffCommentWidgetsMap(),
-            true,
         );
 
     beforeEach(() => {

@@ -68,7 +68,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
     comments_widgets_map: MapCommentWidgets,
-    is_comments_markdown_mode_enabled: boolean,
 ): CreateFileDiffWidget => {
     const displayInlineCommentWidget = (widget_params: InlineCommentWidgetCreationParams): void => {
         const inline_comment_element = doc.createElement(PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME);
@@ -79,8 +78,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
         inline_comment_element.setAttribute("class", "inline-comment-element");
         inline_comment_element.comment = widget_params.comment;
         inline_comment_element.controller = controller;
-        inline_comment_element.is_comments_markdown_mode_enabled =
-            is_comments_markdown_mode_enabled;
 
         const widget = widget_params.code_mirror.addLineWidget(
             widget_params.line_number,
@@ -130,8 +127,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
             }
 
             new_comment_element.setAttribute("class", "inline-comment-element");
-            new_comment_element.is_comments_markdown_mode_enabled =
-                is_comments_markdown_mode_enabled;
 
             const widget = widget_params.code_mirror.addLineWidget(
                 widget_params.line_number,

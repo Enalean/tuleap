@@ -808,7 +808,7 @@ class PullRequestsResource extends AuthenticatedResource
                 $repository_dest,
                 $branch_dest,
                 $user,
-                $content->description_format
+                Comment::FORMAT_MARKDOWN,
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -1129,7 +1129,7 @@ class PullRequestsResource extends AuthenticatedResource
         $current_time        = time();
         $format              = $comment_data->format;
         if (! $format) {
-            $format = Comment::FORMAT_TEXT;
+            $format = Comment::FORMAT_MARKDOWN;
         }
 
         $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '', $format);

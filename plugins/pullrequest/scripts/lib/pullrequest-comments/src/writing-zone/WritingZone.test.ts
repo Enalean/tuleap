@@ -32,7 +32,6 @@ type ElementNeedingAWritingZone = ElementContainingAWritingZone<{
 }>;
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("WritingZone", () => {
     let doc: Document,
@@ -55,7 +54,6 @@ describe("WritingZone", () => {
         writing_zone_controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
-            is_comments_markdown_mode_enabled,
             project_id,
         });
 
@@ -95,7 +93,6 @@ describe("WritingZone", () => {
                 writing_zone_controller: WritingZoneController({
                     document: doc,
                     focus_writing_zone_when_connected: shouldFocusWritingZoneOnceRendered(),
-                    is_comments_markdown_mode_enabled,
                     project_id,
                 }),
             };

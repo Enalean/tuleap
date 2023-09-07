@@ -53,7 +53,7 @@ class InlineCommentCreator
 
         $format = $comment_data->format;
         if (! $format) {
-            $format = Comment::FORMAT_TEXT;
+            $format = Comment::FORMAT_MARKDOWN;
         }
 
         $inserted = $this->dao->insert(

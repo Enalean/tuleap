@@ -31,14 +31,14 @@ import type {
     NewGlobalComment,
     PullRequestComment,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
-import { getContentFormat } from "../helpers/content-format";
+import {
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+    FORMAT_COMMONMARK,
+} from "@tuleap/plugin-pullrequest-constants";
 
 export interface SaveNewComment {
-    postComment: (
-        content: string,
-        is_comments_markdown_mode_enabled: boolean,
-    ) => ResultAsync<PullRequestComment, Fault>;
+    postComment: (content: string) => ResultAsync<PullRequestComment, Fault>;
 }
 
 interface BaseCommentCreationContext {
@@ -67,17 +67,14 @@ export interface InlineCommentContext {
 export const NewCommentSaver = (
     comment_creation_context: CommentCreationContext,
 ): SaveNewComment => ({
-    postComment: (
-        content: string,
-        is_comments_markdown_mode_enabled: boolean,
-    ): ResultAsync<PullRequestComment, Fault> => {
+    postComment: (content: string): ResultAsync<PullRequestComment, Fault> => {
         if (comment_creation_context.type === TYPE_GLOBAL_COMMENT) {
             return postJSON<NewGlobalComment>(
                 uri`/api/v1/pull_requests/${comment_creation_context.pull_request_id}/comments`,
                 {
                     user_id: comment_creation_context.user_id,
                     content,
-                    format: getContentFormat(is_comments_markdown_mode_enabled),
+                    format: FORMAT_COMMONMARK,
                 },
             ).map((comment) => ({
                 ...comment,
@@ -94,7 +91,7 @@ export const NewCommentSaver = (
                 position: comment_context.position,
                 content: content,
                 user_id: comment_creation_context.user_id,
-                format: getContentFormat(is_comments_markdown_mode_enabled),
+                format: FORMAT_COMMONMARK,
             },
         ).map((comment) => {
             return {

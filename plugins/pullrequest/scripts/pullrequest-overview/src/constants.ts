@@ -48,8 +48,4 @@ export const ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY: StrictInjectionKey<boolean
 export const POST_PULL_REQUEST_UPDATE_CALLBACK: StrictInjectionKey<PostPullRequestUpdateCallback> =
     Symbol("post_pull_request_update_callback");
 
-export const IS_COMMENTS_MARKDOWN_MODE_ENABLED: StrictInjectionKey<boolean> = Symbol(
-    "is_comments_markdown_mode_enabled",
-);
-
 export const VIEW_OVERVIEW_NAME = "overview";

@@ -117,7 +117,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }
 
-    public function testWhenNoFormatIsDefinedDefaultFormatIsText(): void
+    public function testWhenNoFormatIsDefinedDefaultFormatIsMarkdown(): void
     {
         $user           = UserTestBuilder::anActiveUser()->withId($this->pullrequest->getUserId())->build();
         $project_id     = 104;
@@ -129,7 +129,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
             $this->pullrequest,
             $project_id,
             "a description",
-            Comment::FORMAT_TEXT
+            Comment::FORMAT_MARKDOWN
         );
 
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);

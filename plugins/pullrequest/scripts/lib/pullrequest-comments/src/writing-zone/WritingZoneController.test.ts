@@ -27,7 +27,6 @@ import { WritingZonePresenter } from "./WritingZonePresenter";
 import * as preview_fetcher from "./WritingZoneCommonMarkPreviewFetcher";
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("WritingZoneController", () => {
     let doc: Document, textarea: HTMLTextAreaElement, config: WritingZoneConfig;
@@ -38,7 +37,6 @@ describe("WritingZoneController", () => {
         config = {
             document: doc,
             focus_writing_zone_when_connected: false,
-            is_comments_markdown_mode_enabled,
             project_id,
         };
     });
@@ -46,7 +44,6 @@ describe("WritingZoneController", () => {
     it("initWritingZone() should assign the WritingZone a default presenter", () => {
         const host = {
             presenter: undefined,
-            is_comments_markdown_mode_enabled,
             project_id,
         } as unknown as HostElement;
 
@@ -59,7 +56,6 @@ describe("WritingZoneController", () => {
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled,
             project_id,
         });
     });
@@ -67,7 +63,6 @@ describe("WritingZoneController", () => {
     it("When there is some unsaved content, initWritingZone() should assign the WritingZone a default presenter containing the unsaved content", () => {
         const host = {
             presenter: undefined,
-            is_comments_markdown_mode_enabled,
             project_id,
             textarea,
             dispatchEvent: () => {
@@ -88,7 +83,6 @@ describe("WritingZoneController", () => {
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled,
             project_id,
         });
     });
@@ -157,7 +151,6 @@ describe("WritingZoneController", () => {
                 ...doc,
                 activeElement: textarea,
             },
-            is_comments_markdown_mode_enabled,
             project_id,
         }).blurWritingZone(host);
 
@@ -172,7 +165,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildPreviewMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
                 "<p>Previewed content</p>",
             ),
         } as HostElement;
@@ -197,7 +190,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
             ),
         } as HostElement;
 
@@ -234,7 +227,7 @@ describe("WritingZoneController", () => {
         const host = {
             textarea,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
             ),
         } as HostElement;
 
@@ -278,7 +271,6 @@ describe("WritingZoneController", () => {
                 activeElement: textarea,
             },
             project_id,
-            is_comments_markdown_mode_enabled,
         }).resetWritingZone(host);
 
         expect(textarea.value).toBe("");
@@ -297,7 +289,6 @@ describe("WritingZoneController", () => {
             expect(
                 WritingZoneController({
                     document: doc,
-                    is_comments_markdown_mode_enabled,
                     project_id,
                     focus_writing_zone_when_connected: should_focus_when_writing_zone_once_rendered,
                 }).shouldFocusWritingZoneWhenConnected(),
@@ -313,7 +304,6 @@ describe("WritingZoneController", () => {
 
         WritingZoneController({
             document: doc,
-            is_comments_markdown_mode_enabled,
             project_id,
             focus_writing_zone_when_connected: true,
         }).setWritingZoneContent(host, new_content);

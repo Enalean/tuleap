@@ -33,7 +33,6 @@ import type { SaveDescriptionComment } from "./PullRequestDescriptionCommentSave
 import { WritingZoneController } from "../writing-zone/WritingZoneController";
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("PullRequestDescriptionCommentController", () => {
     let onErrorCallback: PullRequestCommentErrorCallback;
@@ -58,7 +57,6 @@ describe("PullRequestDescriptionCommentController", () => {
         const writing_zone_controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: true,
-            is_comments_markdown_mode_enabled,
             project_id,
         });
         const setWritingZoneContent = vi.spyOn(writing_zone_controller, "setWritingZoneContent");

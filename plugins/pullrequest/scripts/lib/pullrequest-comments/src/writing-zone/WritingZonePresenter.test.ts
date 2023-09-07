@@ -26,7 +26,7 @@ describe("WritingZonePresenter", () => {
     let initial_presenter: WritingZonePresenter;
 
     beforeEach(() => {
-        initial_presenter = WritingZonePresenter.buildInitial(project_id, true);
+        initial_presenter = WritingZonePresenter.buildInitial(project_id);
     });
 
     it("buildInitial() should return an initial presenter", () => {
@@ -37,7 +37,6 @@ describe("WritingZonePresenter", () => {
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });
@@ -50,7 +49,6 @@ describe("WritingZonePresenter", () => {
             is_focused: true,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });
@@ -63,7 +61,6 @@ describe("WritingZonePresenter", () => {
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });
@@ -76,7 +73,6 @@ describe("WritingZonePresenter", () => {
             is_focused: true,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });
@@ -91,7 +87,6 @@ describe("WritingZonePresenter", () => {
             is_focused: true,
             is_in_writing_mode: false,
             is_in_preview_mode: true,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });
@@ -106,7 +101,6 @@ describe("WritingZonePresenter", () => {
             is_focused: false,
             is_in_writing_mode: true,
             is_in_preview_mode: false,
-            is_comments_markdown_mode_enabled: true,
             project_id,
         });
     });

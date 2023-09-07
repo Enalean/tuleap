@@ -25,14 +25,10 @@ export interface WritingZonePresenter {
     readonly is_in_writing_mode: boolean;
     readonly is_in_preview_mode: boolean;
     readonly has_preview_error: boolean;
-    readonly is_comments_markdown_mode_enabled: boolean;
 }
 
 export const WritingZonePresenter = {
-    buildInitial: (
-        project_id: number,
-        is_comments_markdown_mode_enabled = false,
-    ): WritingZonePresenter => ({
+    buildInitial: (project_id: number): WritingZonePresenter => ({
         initial_content: "",
         previewed_content: "",
         project_id,
@@ -40,7 +36,6 @@ export const WritingZonePresenter = {
         is_in_writing_mode: true,
         is_in_preview_mode: false,
         has_preview_error: false,
-        is_comments_markdown_mode_enabled,
     }),
     buildFocused: (presenter: WritingZonePresenter): WritingZonePresenter => ({
         ...presenter,

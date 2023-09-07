@@ -91,7 +91,7 @@ class PullRequestCreator
             $repo_dest_id,
             $branch_dest,
             $sha1_dest,
-            $description_format ?: Comment::FORMAT_TEXT
+            $description_format ?: Comment::FORMAT_MARKDOWN
         );
         $pull_request = $this->pull_request_factory->create($creator, $pull_request, (int) $repository_src->getProjectId());
 

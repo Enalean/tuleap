@@ -66,7 +66,7 @@ final class PullRequestInfoUpdater
         if ($body->description !== null) {
             $format = $body->description_format;
             if ($format === null) {
-                $format = Comment::FORMAT_TEXT;
+                $format = Comment::FORMAT_MARKDOWN;
             }
             $this->pull_request_factory->updateDescription(
                 $user,
