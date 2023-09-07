@@ -11,6 +11,7 @@
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
   }
