@@ -17,6 +17,7 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
+    "@tuleap/commonmark-popover": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",

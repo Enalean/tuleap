@@ -21,6 +21,8 @@ import type { Placement } from "@floating-ui/dom";
 import { computePosition, offset, shift, flip, autoUpdate, arrow } from "@floating-ui/dom";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
+export const EVENT_TLP_POPOVER_HIDDEN = "tlp-popover-hidden";
+export const EVENT_TLP_POPOVER_SHOWN = "tlp-popover-shown";
 
 type Configuration = {
     readonly anchor: HTMLElement;
@@ -80,7 +82,7 @@ export function createPopover(
             cleanup();
         },
         hide: (): void => {
-            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
+            hidePopover(popover_content);
             cleanup();
         },
     };
@@ -208,13 +210,13 @@ function buildListeners(
     if (configuration.trigger === "focus") {
         return [
             buildFocusListener(doc, popover_trigger, popover_content, updatePositionOfContent),
-            buildBlurListener(doc, popover_trigger, popover_content),
+            buildBlurListener(doc, popover_trigger),
         ];
     }
     if (configuration.trigger === "hover") {
         return [
             buildMouseOverListener(doc, popover_trigger, popover_content, updatePositionOfContent),
-            buildMouseOutListener(doc, popover_trigger, popover_content),
+            buildMouseOutListener(doc, popover_trigger),
         ];
     }
     if (configuration.trigger === "click") {
@@ -265,17 +267,12 @@ function buildFocusListener(
     };
 }
 
-function buildBlurListener(
-    doc: Document,
-    popover_trigger: HTMLElement,
-    popover_content: HTMLElement,
-): EventListener {
+function buildBlurListener(doc: Document, popover_trigger: HTMLElement): EventListener {
     return {
         element: popover_trigger,
         type: "blur",
         handler(): void {
             hideAllShownPopovers(doc);
-            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
         },
     };
 }
@@ -296,17 +293,12 @@ function buildMouseOverListener(
     };
 }
 
-function buildMouseOutListener(
-    doc: Document,
-    popover_trigger: HTMLElement,
-    popover_content: HTMLElement,
-): EventListener {
+function buildMouseOutListener(doc: Document, popover_trigger: HTMLElement): EventListener {
     return {
         element: popover_trigger,
         type: "mouseout",
         handler(): void {
             hideAllShownPopovers(doc);
-            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
         },
     };
 }
@@ -379,13 +371,19 @@ function buildDismissClickListener(doc: Document, dismiss: Element): EventListen
     };
 }
 
+function hidePopover(popover_content: Element): void {
+    popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
+    popover_content.dispatchEvent(new CustomEvent(EVENT_TLP_POPOVER_HIDDEN));
+}
+
 function hideAllShownPopovers(doc: Document): void {
     for (const popover of doc.querySelectorAll("." + POPOVER_SHOWN_CLASS_NAME)) {
-        popover.classList.remove(POPOVER_SHOWN_CLASS_NAME);
+        hidePopover(popover);
     }
 }
 
 function showPopover(popover_content: HTMLElement, updatePositionOfContent: () => void): void {
     popover_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
+    popover_content.dispatchEvent(new CustomEvent(EVENT_TLP_POPOVER_SHOWN));
     updatePositionOfContent();
 }

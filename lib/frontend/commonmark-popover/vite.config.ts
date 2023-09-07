@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
-import "@tuleap/commonmark-popover";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export * from "./types";
-export * from "./comment/main";
-export * from "./new-comment-form/main";
-export * from "./description-comment/main";
-export * from "./skeleton/main";
+export default vite.defineLibConfig({
+    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "CommonmarkPopover",
+        },
+    },
+});

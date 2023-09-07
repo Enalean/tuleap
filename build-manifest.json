@@ -13,6 +13,10 @@
             "src": "lib/frontend/webauthn/src",
             "po": "lib/frontend/webauthn/po"
         },
+        "commonmark-popover": {
+            "src": "lib/frontend/commonmark-popover/src",
+            "po": "lib/frontend/commonmark-popover/po"
+        },
         "access-denied-error": {
             "src": "src/scripts/main/src/BurningParrot/src/",
             "po": "src/scripts/main/src/BurningParrot/po"

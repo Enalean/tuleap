@@ -23,6 +23,7 @@ export type { Placement };
 import type { Popover, PopoverOptions } from "./popovers";
 export type { Popover, PopoverOptions };
 import { createPopover as createPopoverImplementation } from "./popovers";
+export { EVENT_TLP_POPOVER_SHOWN, EVENT_TLP_POPOVER_HIDDEN } from "./popovers";
 
 // Apply partially the popover creation function to pass document
 export const createPopover = (

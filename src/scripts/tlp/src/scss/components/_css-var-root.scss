@@ -165,6 +165,7 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-white-color-transparent-30: #{color.adjust($tlp-white-color, $alpha: - 0.3)};
     --tlp-white-color-transparent-40: #{color.adjust($tlp-white-color, $alpha: - 0.4)};
     --tlp-white-color-transparent-80: #{color.adjust($tlp-white-color, $alpha: - 0.8)};
+    --tlp-white-color-transparent-90: #{color.adjust($tlp-white-color, $alpha: - 0.9)};
 
     // Alerts
     --tlp-alert-danger-background: #{color.mix($tlp-danger-color, $tlp-white-color, 15%)};

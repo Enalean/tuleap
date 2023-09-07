@@ -1,0 +1,35 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/commonmark-popover",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/commonmark-popover.js",
+  "main": "dist/commonmark-popover.umd.cjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/commonmark-popover.js",
+      "require": "./dist/commonmark-popover.umd.cjs"
+    },
+    "./commonmark-popover-stub": "./tests/stubs/CommonmarkPopover"
+  },
+  "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:*",
+    "hybrids": "^8.2.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

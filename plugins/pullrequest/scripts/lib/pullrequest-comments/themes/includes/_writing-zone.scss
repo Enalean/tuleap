@@ -26,8 +26,14 @@ $writing-zone-content-height: 254px;
 }
 
 .pull-request-comment-writing-zone-header-tabs {
+    display: flex;
     margin: 0;
+    padding: 0 0 0 var(--tlp-medium-spacing);
     cursor: pointer;
+}
+
+.pull-request-comment-writing-zone-header-tabs-spacer {
+    flex: 1;
 }
 
 .pull-request-comment-writing-zone-textarea {
