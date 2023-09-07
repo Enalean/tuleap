@@ -295,8 +295,18 @@ msgid "Program service cannot be enabled for Team projects."
 msgstr ""
 
 msgid ""
-"Program service cannot be enabled when project have a Scrum configuration in "
-"AgileDashboard service."
+"Program service cannot be enabled when the project also uses the Backlog "
+"service."
+msgstr ""
+
+msgid ""
+"Program service cannot be enabled when the project has a Scrum configuration "
+"in the AgileDashboard service."
+msgstr ""
+
+msgid ""
+"Program service cannot be enabled when the project has a Scrum configuration "
+"in the Backlog service."
 msgstr ""
 
 #, php-format

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, php-format
 msgid "%s - Iterations - %s"
@@ -361,11 +361,25 @@ msgid "Program service cannot be enabled for Team projects."
 msgstr "Le service Programme ne peut pas être activé pour les projets Équipe."
 
 msgid ""
-"Program service cannot be enabled when project have a Scrum configuration in "
-"AgileDashboard service."
+"Program service cannot be enabled when the project also uses the Backlog "
+"service."
+msgstr ""
+"Le service Programme ne peut pas être activé quand le projet utilise aussi "
+"le service Backlog."
+
+msgid ""
+"Program service cannot be enabled when the project has a Scrum configuration "
+"in the AgileDashboard service."
 msgstr ""
 "Le service Programme ne peut pas être activé quand le projet utilise une "
 "configuration Scrum dans le service des tableaux de bord Agile."
+
+msgid ""
+"Program service cannot be enabled when the project has a Scrum configuration "
+"in the Backlog service."
+msgstr ""
+"Le service Programme ne peut pas être activé quand le projet utilise une "
+"configuration Scrum dans le service Backlog."
 
 #, php-format
 msgid ""

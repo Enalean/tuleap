@@ -24,7 +24,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-interface VerifyScrumBlocksServiceActivation
+use Tuleap\Option\Option;
+
+interface BacklogBlocksProgramServiceIfNeeded
 {
-    public function doesScrumBlockServiceUsage(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool;
+    /**
+     * @return Option<string>
+     */
+    public function shouldProgramServiceBeBlocked(
+        UserIdentifier $user_identifier,
+        ProjectIdentifier $project_identifier,
+    ): Option;
 }

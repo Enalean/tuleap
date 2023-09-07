@@ -25,13 +25,13 @@ namespace Tuleap\ProgramManagement\Domain\Service;
 
 use Tuleap\ProgramManagement\Domain\Events\ServiceDisabledCollectorEvent;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
+use Tuleap\ProgramManagement\Domain\Workspace\BacklogBlocksProgramServiceIfNeeded;
 
 final class ServiceDisabledCollectorHandler
 {
     public function __construct(
-        private VerifyIsTeam $verify_is_team,
-        private VerifyScrumBlocksServiceActivation $scrum_verifier,
+        private readonly VerifyIsTeam $verify_is_team,
+        private readonly BacklogBlocksProgramServiceIfNeeded $backlog_blocker,
     ) {
     }
 
@@ -47,10 +47,9 @@ final class ServiceDisabledCollectorHandler
             );
         }
 
-        if ($this->scrum_verifier->doesScrumBlockServiceUsage($collector->getUserIdentifier(), $collector->getProjectIdentifier())) {
-            $collector->disableWithMessage(
-                dgettext('tuleap-program_management', 'Program service cannot be enabled when project have a Scrum configuration in AgileDashboard service.')
-            );
-        }
+        $this->backlog_blocker->shouldProgramServiceBeBlocked(
+            $collector->getUserIdentifier(),
+            $collector->getProjectIdentifier()
+        )->apply($collector->disableWithMessage(...));
     }
 }
