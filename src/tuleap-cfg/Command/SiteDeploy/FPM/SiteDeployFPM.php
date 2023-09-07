@@ -31,6 +31,8 @@ final class SiteDeployFPM
 {
     public const PHP81_DST_CONF_DIR              = '/etc/opt/remi/php81';
     public const PHP81_SRC_CONF_DIR              = __DIR__ . '/../../../../etc/fpm81';
+    private const PHP82_DST_CONF_DIR             = '/etc/opt/remi/php82';
+    private const PHP82_SRC_CONF_DIR             = __DIR__ . '/../../../../etc/fpm82';
     private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php81-php-fpm.service', 'php74-php-fpm.service'];
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
@@ -131,6 +133,25 @@ final class SiteDeployFPM
             self::PHP_DEFAULT_UNIT_SERVICE_NAMES,
             self::PHP81_DST_CONF_DIR,
             self::PHP81_SRC_CONF_DIR,
+            []
+        );
+    }
+
+    public static function buildForPHP82(
+        ProcessFactory $process_factory,
+        LoggerInterface $logger,
+        string $application_user,
+        bool $development,
+    ): self {
+        return new self(
+            $process_factory,
+            $logger,
+            $application_user,
+            $development,
+            self::buildSessionFromEnv(),
+            self::PHP_DEFAULT_UNIT_SERVICE_NAMES,
+            self::PHP82_DST_CONF_DIR,
+            self::PHP82_SRC_CONF_DIR,
             []
         );
     }
