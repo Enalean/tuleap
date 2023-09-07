@@ -181,6 +181,10 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
         if ($this->runPreUp($buckets)) {
             $this->runUp($buckets);
         }
+        $remaining_buckets = $this->getBucketsToProceed($this->getBucketPaths());
+        if (count($remaining_buckets) !== 0) {
+            $this->doUpdate($remaining_buckets);
+        }
     }
 
     private function doCheckUpdate(array $buckets): void
