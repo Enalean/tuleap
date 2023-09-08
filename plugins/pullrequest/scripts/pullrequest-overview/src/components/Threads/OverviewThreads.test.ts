@@ -35,7 +35,6 @@ import {
     CURRENT_USER_AVATAR_URL,
     CURRENT_USER_ID,
     DISPLAY_TULEAP_API_ERROR,
-    IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
     PULL_REQUEST_ID_KEY,
@@ -88,8 +87,6 @@ describe("OverviewThreads", () => {
                     return "fr_FR";
                 case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
                     return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
-                case IS_COMMENTS_MARKDOWN_MODE_ENABLED:
-                    return true;
                 case PROJECT_ID:
                     return 105;
                 default:

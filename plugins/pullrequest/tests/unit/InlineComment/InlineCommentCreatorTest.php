@@ -36,7 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testNewInlineCommentCanBeCreated(): void
+    public function testNewInlineCommentCanBeCreatedInTextFormat(): void
     {
         $dao                     = $this->createMock(Dao::class);
         $reference_manager       = $this->createMock(ReferenceManager::class);
@@ -61,7 +61,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             10,
             "2",
             1,
-            Comment::FORMAT_MARKDOWN
+            Comment::FORMAT_TEXT
         );
 
         $inserted_id = 47;
@@ -81,7 +81,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(InsertedInlineComment::build($inserted_id, "graffiti-yellow"), $inline_comment);
     }
 
-    public function testWhenFormatIsNotDefinedThenDefaultCommentFormatIsText(): void
+    public function testWhenFormatIsNotDefinedThenDefaultCommentFormatIsMarkdown(): void
     {
         $dao                     = $this->createMock(Dao::class);
         $reference_manager       = $this->createMock(ReferenceManager::class);
@@ -122,7 +122,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $representation->content,
             $representation->position,
             (int) $representation->parent_id,
-            Comment::FORMAT_TEXT
+            Comment::FORMAT_MARKDOWN
         )->willReturn($inserted_id);
         $dao->expects(self::once())->method('setThreadColor');
         $reference_manager->expects(self::once())->method('extractCrossRef');

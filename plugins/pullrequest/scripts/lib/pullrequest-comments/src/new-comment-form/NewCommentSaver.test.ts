@@ -37,8 +37,6 @@ const user = {
     display_name: "Joe l'Asticot",
 };
 
-const is_comments_markdown_mode_enabled = true;
-
 describe("NewInlineCommentSaver", () => {
     it("should save the new inline comment and return a CommentOnFile", async () => {
         const postSpy = vi.spyOn(tuleap_api, "postJSON").mockReturnValue(
@@ -63,10 +61,7 @@ describe("NewInlineCommentSaver", () => {
             },
         });
 
-        const result = await comment_saver.postComment(
-            "This is fine",
-            is_comments_markdown_mode_enabled,
-        );
+        const result = await comment_saver.postComment("This is fine");
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }
@@ -111,10 +106,7 @@ describe("NewInlineCommentSaver", () => {
             pull_request_id: 1,
         });
 
-        const result = await comment_saver.postComment(
-            "This is fine",
-            is_comments_markdown_mode_enabled,
-        );
+        const result = await comment_saver.postComment("This is fine");
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }

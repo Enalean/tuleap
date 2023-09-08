@@ -27,7 +27,6 @@ import type { ControlWritingZone } from "./WritingZoneController";
 import { WritingZoneController } from "./WritingZoneController";
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("WritingZoneTabsTemplate", () => {
     let target: ShadowRoot, controller: ControlWritingZone;
@@ -40,7 +39,6 @@ describe("WritingZoneTabsTemplate", () => {
             document: doc,
             focus_writing_zone_when_connected: false,
             project_id,
-            is_comments_markdown_mode_enabled,
         });
     });
 
@@ -56,10 +54,7 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildFocused(
-                    WritingZonePresenter.buildInitial(
-                        project_id,
-                        is_comments_markdown_mode_enabled,
-                    ),
+                    WritingZonePresenter.buildInitial(project_id),
                 ),
             } as HostElement);
 
@@ -70,10 +65,7 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildInitial(
-                        project_id,
-                        is_comments_markdown_mode_enabled,
-                    ),
+                    WritingZonePresenter.buildInitial(project_id),
                 ),
             } as HostElement);
 
@@ -87,10 +79,7 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getWritingTab({
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
-                    WritingZonePresenter.buildInitial(
-                        project_id,
-                        is_comments_markdown_mode_enabled,
-                    ),
+                    WritingZonePresenter.buildInitial(project_id),
                 ),
                 textarea: document.implementation.createHTMLDocument().createElement("textarea"),
             } as HostElement);
@@ -115,10 +104,7 @@ describe("WritingZoneTabsTemplate", () => {
             const tab = getPreviewTab({
                 controller,
                 presenter: WritingZonePresenter.buildPreviewMode(
-                    WritingZonePresenter.buildInitial(
-                        project_id,
-                        is_comments_markdown_mode_enabled,
-                    ),
+                    WritingZonePresenter.buildInitial(project_id),
                     "<p>Previewed content</p>",
                 ),
             } as HostElement);
@@ -131,10 +117,7 @@ describe("WritingZoneTabsTemplate", () => {
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
                     WritingZonePresenter.buildPreviewMode(
-                        WritingZonePresenter.buildInitial(
-                            project_id,
-                            is_comments_markdown_mode_enabled,
-                        ),
+                        WritingZonePresenter.buildInitial(project_id),
                         "<p>Previewed content</p>",
                     ),
                 ),
@@ -151,10 +134,7 @@ describe("WritingZoneTabsTemplate", () => {
                 controller,
                 presenter: WritingZonePresenter.buildBlurred(
                     WritingZonePresenter.buildPreviewMode(
-                        WritingZonePresenter.buildInitial(
-                            project_id,
-                            is_comments_markdown_mode_enabled,
-                        ),
+                        WritingZonePresenter.buildInitial(project_id),
                         "<p>Previewed content</p>",
                     ),
                 ),

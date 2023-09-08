@@ -43,8 +43,6 @@ const getFormPresenter = (): ReplyCommentFormPresenter =>
         },
     }) as ReplyCommentFormPresenter;
 
-const is_comments_markdown_mode_enabled = true;
-
 describe("PullRequestCommentReplySaver", () => {
     it("Given a ReplyCommentFormPresenter and a global comment, then it should save it as a regular comment", async () => {
         const root_comment = PullRequestCommentPresenterStub.buildGlobalComment();
@@ -65,7 +63,6 @@ describe("PullRequestCommentReplySaver", () => {
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
             getFormPresenter(),
-            is_comments_markdown_mode_enabled,
         );
 
         if (!result.isOk()) {
@@ -107,7 +104,6 @@ describe("PullRequestCommentReplySaver", () => {
         const result = await PullRequestCommentNewReplySaver().saveReply(
             root_comment,
             form_presenter,
-            is_comments_markdown_mode_enabled,
         );
 
         if (!result.isOk()) {

@@ -134,7 +134,6 @@ describe("PullRequestCommentReplyFormTemplate", () => {
             writing_zone_controller: WritingZoneController({
                 document: document.implementation.createHTMLDocument(),
                 focus_writing_zone_when_connected: true,
-                is_comments_markdown_mode_enabled: true,
                 project_id: 105,
             }),
         } as unknown as HostElement;

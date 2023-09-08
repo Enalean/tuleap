@@ -28,7 +28,6 @@ import { WritingZoneController } from "./WritingZoneController";
 import "@tuleap/commonmark-popover/commonmark-popover-stub";
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("WritingZoneTemplate", () => {
     let controller: ControlWritingZone, textarea: HTMLTextAreaElement;
@@ -38,7 +37,6 @@ describe("WritingZoneTemplate", () => {
             document: document.implementation.createHTMLDocument(),
             focus_writing_zone_when_connected: false,
             project_id,
-            is_comments_markdown_mode_enabled,
         });
 
         textarea = document.implementation.createHTMLDocument().createElement("textarea");
@@ -59,10 +57,7 @@ describe("WritingZoneTemplate", () => {
     it("should display tabs", () => {
         const writing_zone = renderWritingZone({
             controller,
-            presenter: WritingZonePresenter.buildInitial(
-                project_id,
-                is_comments_markdown_mode_enabled,
-            ),
+            presenter: WritingZonePresenter.buildInitial(project_id),
         } as HostElement);
 
         const writing_tab = selectOrThrow(writing_zone, "[data-test=writing-tab]");
@@ -76,7 +71,7 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildWritingMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
             ),
             textarea,
         } as HostElement);
@@ -91,7 +86,7 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildPreviewMode(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
                 "<p>Previewed content</p>",
             ),
             textarea,
@@ -108,7 +103,7 @@ describe("WritingZoneTemplate", () => {
         const writing_zone = renderWritingZone({
             controller,
             presenter: WritingZonePresenter.buildPreviewWithError(
-                WritingZonePresenter.buildInitial(project_id, is_comments_markdown_mode_enabled),
+                WritingZonePresenter.buildInitial(project_id),
             ),
             textarea,
         } as HostElement);

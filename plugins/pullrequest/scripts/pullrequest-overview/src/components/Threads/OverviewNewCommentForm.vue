@@ -21,7 +21,6 @@
     <tuleap-pullrequest-new-comment-form
         data-test="pull-request-new-global-comment-component"
         v-bind:controller="controller"
-        v-bind:is_comments_markdown_mode_enabled="is_comments_markdown_mode_enabled"
     />
 </template>
 
@@ -37,7 +36,6 @@ import {
     CURRENT_USER_ID,
     DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
     DISPLAY_TULEAP_API_ERROR,
-    IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
     PULL_REQUEST_ID_KEY,
@@ -52,7 +50,6 @@ const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const displayNewlyCreatedGlobalComment = strictInject(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
-const is_comments_markdown_mode_enabled: boolean = strictInject(IS_COMMENTS_MARKDOWN_MODE_ENABLED);
 const project_id: number = strictInject(PROJECT_ID);
 
 const post_submit_callback = (new_comment: PullRequestComment): void => {

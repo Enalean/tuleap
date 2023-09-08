@@ -36,7 +36,7 @@ const displayPreviewMode = (
     host: InternalWritingZone,
     gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
-    if (!host.presenter.is_comments_markdown_mode_enabled || !host.presenter.is_in_preview_mode) {
+    if (!host.presenter.is_in_preview_mode) {
         return html``;
     }
 

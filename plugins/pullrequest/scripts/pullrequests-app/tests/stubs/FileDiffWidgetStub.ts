@@ -63,7 +63,6 @@ export const FileDiffWidgetStub = {
             shouldFocusWritingZoneOnceRendered: () => true,
             getProjectId: () => 105,
         },
-        is_comments_markdown_mode_enabled: true,
         post_rendering_callback: noop,
         ...data,
     }),
@@ -81,7 +80,6 @@ export const FileDiffWidgetStub = {
             shouldFocusWritingZoneOnceRendered: () => true,
             getProjectId: () => 105,
         },
-        is_comments_markdown_mode_enabled: true,
         post_rendering_callback: noop,
     }),
 

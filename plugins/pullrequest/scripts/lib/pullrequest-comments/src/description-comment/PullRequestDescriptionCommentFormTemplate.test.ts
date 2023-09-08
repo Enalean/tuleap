@@ -33,7 +33,6 @@ import {
 } from "../writing-zone/WritingZone";
 
 const project_id = 105;
-const is_comments_markdown_mode_enabled = true;
 
 describe("PullRequestDescriptionCommentFormTemplate", () => {
     let target: ShadowRoot, host: HostElement;
@@ -78,7 +77,6 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
             writing_zone_controller: WritingZoneController({
                 document: document.implementation.createHTMLDocument(),
                 focus_writing_zone_when_connected: true,
-                is_comments_markdown_mode_enabled,
                 project_id,
             }),
         } as unknown as HostElement;

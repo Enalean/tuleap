@@ -40,11 +40,9 @@ describe("PullRequestDescriptionCommentSaver", () => {
             raw_content: "This commit fixes bug #456",
             content: `This commit fixes <a class="cross-reference">bug #456</a>`,
         } as PullRequestDescriptionCommentPresenter;
-        const is_comments_markdown_mode_enabled = true;
 
         PullRequestDescriptionCommentSaver().saveDescriptionComment(
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(current_description),
-            is_comments_markdown_mode_enabled,
         );
 
         expect(patchSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/${pull_request_id}`, {

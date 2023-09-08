@@ -23,7 +23,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
@@ -104,7 +103,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 
-class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore
+class pullrequestPlugin extends Plugin // phpcs:ignore
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
@@ -766,10 +765,5 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
         );
 
         $pull_request_organizer->organizePullRequestReferences($organizer);
-    }
-
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(\Tuleap\PullRequest\Comment\FeatureFlagCommentsInMarkdown::class);
     }
 }

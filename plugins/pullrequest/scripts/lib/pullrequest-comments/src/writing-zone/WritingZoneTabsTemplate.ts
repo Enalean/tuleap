@@ -64,10 +64,6 @@ export const buildPreviewTab = (
     host: InternalWritingZone,
     gettext_provider: GettextProvider,
 ): UpdateFunction<InternalWritingZone> => {
-    if (!host.presenter.is_comments_markdown_mode_enabled) {
-        return html``;
-    }
-
     const tabs_classes = {
         "tlp-tab": true,
         "tlp-tab-active": isTabActive(TAB_PREVIEW, host.presenter),

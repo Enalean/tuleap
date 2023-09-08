@@ -40,7 +40,6 @@ export type WritingZoneConfig = {
     document: Document;
     project_id: number;
     focus_writing_zone_when_connected?: boolean;
-    is_comments_markdown_mode_enabled?: boolean;
 };
 
 export const PARENT_ELEMENT_ACTIVE_CLASS = "pull-request-comment-with-writing-zone-active";
@@ -75,10 +74,7 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
 
     return {
         initWritingZone: (host: HostElement): void => {
-            const presenter = WritingZonePresenter.buildInitial(
-                config.project_id,
-                config.is_comments_markdown_mode_enabled,
-            );
+            const presenter = WritingZonePresenter.buildInitial(config.project_id);
 
             if (unsaved_content) {
                 host.presenter = WritingZonePresenter.buildWithContent(presenter, unsaved_content);

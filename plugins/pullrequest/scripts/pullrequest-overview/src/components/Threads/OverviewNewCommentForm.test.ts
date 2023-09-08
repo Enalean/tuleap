@@ -27,7 +27,6 @@ import {
     CURRENT_USER_ID,
     DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
     DISPLAY_TULEAP_API_ERROR,
-    IS_COMMENTS_MARKDOWN_MODE_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
     PULL_REQUEST_ID_KEY,
@@ -57,8 +56,6 @@ describe("OverviewNewCommentForm", () => {
                 case DISPLAY_TULEAP_API_ERROR:
                 case DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT:
                     return noop;
-                case IS_COMMENTS_MARKDOWN_MODE_ENABLED:
-                    return true;
                 case PROJECT_ID:
                     return 105;
                 default:

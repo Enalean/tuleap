@@ -16,7 +16,6 @@ function SharedPropertiesService() {
         date_time_format: "",
         user_locale: "",
         relative_date_display: "",
-        is_comments_markdown_mode_enabled: false,
     };
 
     return {
@@ -44,8 +43,6 @@ function SharedPropertiesService() {
         setDateTimeFormat,
         setUserLocale,
         setRelativeDateDisplay,
-        setIsCommentsMarkdownModeEnabled,
-        isCommentsMarkdownModeEnabled,
     };
 
     function whenReady() {
@@ -142,13 +139,5 @@ function SharedPropertiesService() {
 
     function setUserAvatarUrl(user_avatar_url) {
         property.user_avatar_url = user_avatar_url;
-    }
-
-    function setIsCommentsMarkdownModeEnabled(is_comments_markdown_mode_enabled) {
-        property.is_comments_markdown_mode_enabled = is_comments_markdown_mode_enabled;
-    }
-
-    function isCommentsMarkdownModeEnabled() {
-        return property.is_comments_markdown_mode_enabled;
     }
 }
