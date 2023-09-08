@@ -163,7 +163,7 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItHasOnlyTheServiceAndTopBacklogBreadCrumbsWhenThereIsNoMilestone()
+    public function testItHasOnlyTheServiceBreadCrumbsWhenThereIsNoMilestone()
     {
         $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->nomilestone);
         $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
@@ -172,7 +172,7 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs($this->plugin_path);
 
-        $expected = [$this->service_breadcrumb, $this->top_backlog_breadcrumb];
+        $expected = [$this->service_breadcrumb];
 
         $this->assertEquals($expected, $breadcrumbs->getBreadcrumbs());
     }
@@ -197,7 +197,6 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [
             $this->service_breadcrumb,
-            $this->top_backlog_breadcrumb,
             $product_breadcrumb,
             $release_breadcrumb,
             $sprint_breadcrumb,
