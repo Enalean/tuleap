@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "module": "dist/plugin-tracker-artifact-ckeditor-image-upload.js",
   "main": "dist/plugin-tracker-artifact-ckeditor-image-upload.umd.cjs",
@@ -24,9 +23,8 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "css.escape": "^1.5.1",
     "@types/ckeditor": "4.9.10",
-    "@types/jest": "^29.0.3"
+    "css.escape": "^1.5.1"
   },
   "scripts": {
     "build": "vite build",
