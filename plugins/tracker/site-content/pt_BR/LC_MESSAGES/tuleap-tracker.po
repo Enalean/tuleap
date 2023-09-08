@@ -184,28 +184,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<p>The artifacts of this tracker does not have any <em>description</em> yet."
-"</p>"
-msgstr ""
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
-msgstr ""
-
-msgid ""
-"<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<p>The artifacts of this tracker will be described by the field "
-"<strong>%1$s</strong>.</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<p>The artifacts of this tracker will be summarized by the field "
-"<strong>%1$s</strong>.</p>"
 msgstr ""
 
 #, php-format
@@ -2744,8 +2723,24 @@ msgstr ""
 msgid "The artifact will be linked to %1$s"
 msgstr ""
 
+#, php-format
+msgid "The artifacts of this tracker do not have any %s description %s yet."
+msgstr ""
+
+#, php-format
+msgid "The artifacts of this tracker do not have any %s title %s yet."
+msgstr ""
+
 msgid ""
 "The artifacts of this tracker does not have any contributor/assignee yet."
+msgstr ""
+
+#, php-format
+msgid "The artifacts of this tracker will be described by the field %s."
+msgstr ""
+
+#, php-format
+msgid "The artifacts of this tracker will be summarized by the field %s."
 msgstr ""
 
 msgid "The changeset cannot be stored."

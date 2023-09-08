@@ -27,21 +27,6 @@ msgstr ""
 msgid "%s top backlog"
 msgstr ""
 
-#, php-format
-msgid ""
-"<p>The initial effort of this tracker will be represented in the Agile "
-"Dashboard by the field <strong>%1$s</strong>.</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<p>The initial effort of this tracker will be represented in the Backlog by "
-"the field <strong>%1$s</strong>.</p>"
-msgstr ""
-
-msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
-msgstr ""
-
 msgid ""
 "A first scrum configuration will be used during the activation. This "
 "operation can take a few seconds."
@@ -511,7 +496,19 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "The initial effort is now: %1$s"
+msgid "The initial effort is now: %s"
+msgstr ""
+
+#, php-format
+msgid ""
+"The initial effort of this tracker will be represented in the Agile "
+"Dashboard by the field %s."
+msgstr ""
+
+#, php-format
+msgid ""
+"The initial effort of this tracker will be represented in the Backlog by the "
+"field %s."
 msgstr ""
 
 msgid ""
@@ -581,6 +578,10 @@ msgid ""
 "configuration is not supported. You should remove this planning."
 msgstr ""
 
+#, php-format
+msgid "This tracker does not have an %s initial effort %s field yet."
+msgstr ""
+
 msgid "This tracker is not a planning tracker"
 msgstr ""
 
@@ -608,7 +609,7 @@ msgstr ""
 msgid "Unable to import the configuration!"
 msgstr ""
 
-msgid "Unable to save the <em>initial effort</em>"
+msgid "Unable to save the initial effort"
 msgstr ""
 
 msgid "Unknown masschange action."

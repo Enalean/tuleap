@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 msgid ""
 "\"AddToTopBacklog\" post action cannot be used because the project does not "
@@ -34,25 +34,6 @@ msgstr "%s backlog"
 #, php-format
 msgid "%s top backlog"
 msgstr "%s planification générale"
-
-#, php-format
-msgid ""
-"<p>The initial effort of this tracker will be represented in the Agile "
-"Dashboard by the field <strong>%1$s</strong>.</p>"
-msgstr ""
-"<p>L'effort estimé sera représenté par le champ <strong>%1$s</strong> dans "
-"ce tracker.</p>"
-
-#, php-format
-msgid ""
-"<p>The initial effort of this tracker will be represented in the Backlog by "
-"the field <strong>%1$s</strong>.</p>"
-msgstr ""
-"<p>L'effort estimé sera représenté par le champ <strong>%1$s</strong> dans "
-"ce tracker.</p>"
-
-msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
-msgstr "<p>Ce tracker n'a pas de champ <em>effort estimé</em>.</p>"
 
 msgid ""
 "A first scrum configuration will be used during the activation. This "
@@ -588,8 +569,24 @@ msgstr ""
 "supprimées prochainement."
 
 #, php-format
-msgid "The initial effort is now: %1$s"
-msgstr "L'effort estimé est maintenant : %1$s"
+msgid "The initial effort is now: %s"
+msgstr "L'effort estimé est maintenant : %s"
+
+#, php-format
+msgid ""
+"The initial effort of this tracker will be represented in the Agile "
+"Dashboard by the field %s."
+msgstr ""
+"L'effort estimé sera représenté dans le tableau de bord Agile par le champ "
+"%s dans ce tracker."
+
+#, php-format
+msgid ""
+"The initial effort of this tracker will be represented in the Backlog by the "
+"field %s."
+msgstr ""
+"L'effort estimé sera représenté dans le Backlog par le champ %s dans ce "
+"tracker."
 
 msgid ""
 "The post actions cannot be saved because this tracker is not a top backlog "
@@ -674,6 +671,10 @@ msgstr ""
 "Ce planning n'appartient pas à la hierarchie du planning racine (%1$s). "
 "Cette configuration n'est pas supportée. Vous devriez supprimer ce planning."
 
+#, php-format
+msgid "This tracker does not have an %s initial effort %s field yet."
+msgstr "Ce tracker n'a pas de champ %s effort estimé %s."
+
 msgid "This tracker is not a planning tracker"
 msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 
@@ -703,8 +704,8 @@ msgstr "Impossible de trouver le jalon"
 msgid "Unable to import the configuration!"
 msgstr "Impossible d'importer la configuration!"
 
-msgid "Unable to save the <em>initial effort</em>"
-msgstr "Impossible de sauvegarder la sémantique <em>effort estimé</em>"
+msgid "Unable to save the initial effort"
+msgstr "Impossible de sauvegarder la sémantique effort estimé"
 
 msgid "Unknown masschange action."
 msgstr "L'action de modification en masse n'est pas connue."

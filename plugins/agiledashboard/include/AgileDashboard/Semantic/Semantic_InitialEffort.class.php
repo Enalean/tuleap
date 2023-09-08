@@ -1,25 +1,25 @@
 <?php
 /**
-* Copyright Enalean (c) 2013 - Present. All rights reserved.
-* Tuleap and Enalean names and logos are registrated trademarks owned by
-* Enalean SAS. All other trademarks or names are properties of their respective
-* owners.
-*
-* This file is a part of Tuleap.
-*
-* Tuleap is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Tuleap is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 use Tuleap\AgileDashboard\Semantic\InitialEffortSemanticAdminPresenterBuilder;
 use Tuleap\AgileDashboard\Semantic\SemanticInitialEffortPossibleFieldRetriever;
@@ -35,11 +35,10 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
     protected static $_instances;
 
-
     /**
      * Constructor
      *
-     * @param Tracker                           $tracker    The tracker
+     * @param Tracker                   $tracker              The tracker
      * @param Tracker_FormElement_Field $initial_effort_field The field
      */
     public function __construct(Tracker $tracker, ?Tracker_FormElement_Field $initial_effort_field = null)
@@ -115,20 +114,30 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
 
-            $html .= sprintf(
-                dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'),
-                $purifier->purify($field->getLabel())
-            );
             if ($is_project_allowed_to_use_split_kanban) {
-                $html .= sprintf(
-                    dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Backlog by the field <strong>%1$s</strong>.</p>'),
-                    $purifier->purify($field->getLabel())
-                );
+                $html .= '<p>' . sprintf(
+                    dgettext(
+                        'tuleap-agiledashboard',
+                        'The initial effort of this tracker will be represented in the Backlog by the field %s.'
+                    ),
+                    '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
+                ) . '</p>';
+                return $html;
             }
-        } else {
-            $html .= dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
+            $html .= '<p>' . sprintf(
+                dgettext(
+                    'tuleap-agiledashboard',
+                    'The initial effort of this tracker will be represented in the Agile Dashboard by the field %s.'
+                ),
+                '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
+            ) . '</p>';
+            return $html;
         }
-
+        $html .= '<p>' . sprintf(
+            dgettext('tuleap-agiledashboard', 'This tracker does not have an %s initial effort %s field yet.'),
+            '<em>',
+            '</em>'
+        ) . '</p>';
         return $html;
     }
 
@@ -172,21 +181,36 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
                 $this->initial_effort_field = $field;
 
                 if ($this->save()) {
-                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-agiledashboard', 'The initial effort is now: %1$s'), $field->getLabel()));
+                    $GLOBALS['Response']->addFeedback(
+                        'info',
+                        sprintf(dgettext('tuleap-agiledashboard', 'The initial effort is now: %s'), $field->getLabel())
+                    );
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'Unable to save the <em>initial effort</em>'));
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        dgettext('tuleap-agiledashboard', 'Unable to save the initial effort')
+                    );
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'The field you submitted is not a numeric field'));
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    dgettext('tuleap-agiledashboard', 'The field you submitted is not a numeric field')
+                );
             }
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-agiledashboard', 'Initial effort semantic has been unset'));
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    dgettext('tuleap-agiledashboard', 'Initial effort semantic has been unset')
+                );
                 $GLOBALS['Response']->redirect($this->getUrl());
             } else {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'Unable to save the <em>initial effort</em>'));
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    dgettext('tuleap-agiledashboard', 'Unable to save the initial effort')
+                );
             }
         }
 

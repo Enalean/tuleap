@@ -102,7 +102,10 @@ class Tracker_Semantic_Description extends Tracker_Semantic
 
         if ($field) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $content  =  sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be described by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
+            $content  = '<p>' . sprintf(
+                dgettext('tuleap-tracker', 'The artifacts of this tracker will be described by the field %s.'),
+                '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
+            ) . '</p>';
 
             if (Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $field->getId(), ['string', 'ref'])) {
                 $warning = '<p class="alert alert-warning">' .
@@ -110,7 +113,14 @@ class Tracker_Semantic_Description extends Tracker_Semantic
                     '</p>';
             }
         } else {
-            $content = dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>description</em> yet.</p>');
+            $content = '<p>' . sprintf(
+                dgettext(
+                    'tuleap-tracker',
+                    'The artifacts of this tracker do not have any %s description %s yet.'
+                ),
+                '<em>',
+                '</em>'
+            ) . '</p>';
         }
 
         return $warning . '<p>' .

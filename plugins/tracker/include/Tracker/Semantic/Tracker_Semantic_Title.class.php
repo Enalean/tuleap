@@ -96,14 +96,20 @@ class Tracker_Semantic_Title extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $html = "<p>" . dgettext('tuleap-tracker', 'The title summarizes an artifact and will be used in various places: widgets, artifact links, email notifications, ...') . "</p>";
+        $html = '<p>' . dgettext('tuleap-tracker', 'The title summarizes an artifact and will be used in various places: widgets, artifact links, email notifications, ...') . '</p>';
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be summarized by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
-        } else {
-            $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>');
+            $html    .= '<p>' . sprintf(
+                dgettext('tuleap-tracker', 'The artifacts of this tracker will be summarized by the field %s.'),
+                '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
+            ) . '</p>';
+            return $html;
         }
-
+        $html .= '<p>' . sprintf(
+            dgettext('tuleap-tracker', 'The artifacts of this tracker do not have any %s title %s yet.'),
+            '<em>',
+            '</em>'
+        ) . '</p>';
         return $html;
     }
 
