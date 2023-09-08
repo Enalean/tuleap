@@ -27,6 +27,7 @@ import ExecutionAttachments from "./execution-attachments/execution-attachments-
 import ExecutionAttachmentsCreationErrorModal from "./execution-attachments/execution-attachments-creation-error-modal.js";
 import ExecutionAttachmentsDropZone from "./execution-attachments/execution-attachments-drop-zone.js";
 import ExecutionAttachmentsDropZoneMessage from "./execution-attachments/execution-attachments-drop-zone-message.js";
+import { loadOnlyTooltipOnAnchorElement, loadTooltips } from "@tuleap/tooltip";
 
 export default angular
     .module("execution", [
@@ -53,5 +54,26 @@ export default angular
     .component("step", Step)
     .component("robotSvgDisplayer", RobotSvgDisplayer)
     .directive("executionAttachmentsDropZone", ExecutionAttachmentsDropZone)
+    .directive("loadTooltip", () => {
+        return {
+            restrict: "A",
+            link: function (scope, element) {
+                loadOnlyTooltipOnAnchorElement(element[0]);
+            },
+        };
+    })
+    .directive("loadAllTooltips", () => {
+        return {
+            restrict: "A",
+            scope: {
+                element: "=",
+            },
+            link: function (scope, element) {
+                scope.$watch("element", () => {
+                    loadTooltips(element[0]);
+                });
+            },
+        };
+    })
     .filter("ExecutionListFilter", ExecutionListFilter)
     .filter("AutomatedTestsFilter", AutomatedTestsFilter).name;

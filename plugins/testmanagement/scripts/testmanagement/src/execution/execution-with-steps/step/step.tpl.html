@@ -10,9 +10,10 @@
 <div class="steps-step-description">
     <div ng-bind-html="$ctrl.sanitizedContentWithEnhancedCodeBlocks($ctrl.step.description)"
         ng-if="$ctrl.step.description_format === 'html'"
+        load-all-tooltips
     ></div>
     <div ng-if="$ctrl.step.description_format !== 'html'"
-    ><p ng-bind-html="$ctrl.step.description" class="steps-step-description-text">{{ $ctrl.step.description }}</p></div>
+    ><p ng-bind-html="$ctrl.step.description" class="steps-step-description-text" load-all-tooltips>{{ $ctrl.step.description }}</p></div>
     <div ng-if="$ctrl.step.expected_results" class="steps-step-expected">
         <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="steps-step-expected-arrow">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M1.31484 0V5.61109C1.31484 5.77965 1.45149 5.9163 1.62005 5.9163H3.61563V4.10854C3.61563 3.97312 3.77023 3.89581 3.87857 3.97707L7.05585 6.36002C7.14349 6.42576 7.14349 6.55723 7.05585 6.62297L3.87857 9.00592C3.77023 9.08718 3.61563 9.00987 3.61563 8.87445V7.23103H1.62005C0.725383 7.23103 0.000110626 6.50576 0.000110626 5.61109V0H1.31484Z" fill="#687A7C"/>
@@ -24,10 +25,11 @@
             <div class="steps-step-expected-content"
                     ng-bind-html="$ctrl.sanitizedContentWithEnhancedCodeBlocks($ctrl.step.expected_results)"
                     ng-if="$ctrl.step.expected_results_format === 'html'"
+                    load-all-tooltips
             ></div>
             <div class="steps-step-expected-content"
                     ng-if="$ctrl.step.expected_results_format !== 'html'"
-            ><p ng-bind-html="$ctrl.step.expected_results" class="steps-step-expected-text"></p></div>
+            ><p ng-bind-html="$ctrl.step.expected_results" class="steps-step-expected-text" load-all-tooltips></p></div>
         </div>
     </div>
 </div>

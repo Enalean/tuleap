@@ -2,6 +2,7 @@
 <div ng-bind-html="$ctrl.execution.definition.description"
         ng-if="$ctrl.execution.definition.description.length"
         class="steps-maindescription"
+        load-all-tooltips
 ></div>
 <step ng-repeat="step in $ctrl.execution.definition.steps track by step.id"
     step="step"

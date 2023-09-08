@@ -36,18 +36,25 @@ function isSemiStructuredContent(
     return typeof content !== "string";
 }
 
-export const loadTooltips = function (element?: HTMLElement, at_cursor_position?: boolean): void {
-    const sparkline_hrefs: SparklineHrefCollection = {};
-
+export const loadOnlyTooltipOnAnchorElement = function (
+    element: HTMLAnchorElement,
+    at_cursor_position?: boolean,
+): void {
     const options = {
         at_cursor_position: Boolean(at_cursor_position),
     };
+
+    createTooltip(element, options);
+};
+
+export const loadTooltips = function (element?: HTMLElement, at_cursor_position?: boolean): void {
+    const sparkline_hrefs: SparklineHrefCollection = {};
 
     const targets = (element || document).querySelectorAll(selectors.join(","));
 
     targets.forEach(function (a) {
         if (a instanceof HTMLAnchorElement) {
-            createTooltip(a, a.href, options);
+            loadOnlyTooltipOnAnchorElement(a, at_cursor_position);
             if (sparkline_hrefs[a.href]) {
                 sparkline_hrefs[a.href].push(a);
             } else {
@@ -62,8 +69,7 @@ export const loadTooltips = function (element?: HTMLElement, at_cursor_position?
 export const load = loadTooltips;
 
 function createTooltip(
-    element: HTMLElement,
-    reference_url: string,
+    element: HTMLAnchorElement,
     options: { at_cursor_position?: boolean } = {},
 ): void {
     let fetching = false;
@@ -162,7 +168,7 @@ function createTooltip(
 
         fetching = true;
         element.title = "";
-        const url = new URL(reference_url);
+        const url = new URL(element.href);
         const data = await retrieveTooltipData(url);
 
         fetching = false;
