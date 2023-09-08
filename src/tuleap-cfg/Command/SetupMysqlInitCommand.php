@@ -29,7 +29,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
@@ -44,8 +43,6 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_APP_DBNAME          = 'db-name';
     private const OPT_APP_USER            = 'app-user';
     private const OPT_APP_PASSWORD        = 'app-password';
-    private const OPT_NSS_USER            = 'nss-user';
-    private const OPT_NSS_PASSWORD        = 'nss-password';
     private const OPT_MEDIAWIKI           = 'mediawiki';
     private const OPT_SKIP_DATABASE       = 'skip-database';
     private const OPT_GRANT_HOSTNAME      = 'grant-hostname';
@@ -84,12 +81,6 @@ final class SetupMysqlInitCommand extends Command
         By using --app-password option, it will create the tuleap DB (`tuleap` by default or --db-name),
         the database admin user (`tuleapadm` or --admin-user) with the required GRANTS.
 
-        By using --nss-password., it will create the user to be used of lower level integration (used for subversion,
-        etc). Please note that, unless you are using subversion, it's unlikely that you will need to use this
-        option.
-
-        Both --app-password and --nss-password can be used independently or together.
-
         The connection to the database can be encrypted and you can control the way it's done with {$ssl_opt} with:
         - {$ssl_disabled}: no usage of encryption (default)
         - {$ssl_no_verify}: connection will be encrypted by host won't be verified
@@ -112,8 +103,6 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', DBConfig::DEFAULT_MYSQL_TULEAP_USER_NAME)
             ->addOption(self::OPT_GRANT_HOSTNAME, '', InputOption::VALUE_REQUIRED, 'Hostname value for mysql grant. This is the right hand side of `user`@`hostname`. Default is `%`', '%')
             ->addOption(self::OPT_APP_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for the application dbuser (typically tuleapadm)')
-            ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql', 'dbauthuser')
-            ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user')
             ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`')
             ->addOption(self::OPT_LOG_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Write user & password into given file')
             ->addOption(self::OPT_AZURE_SUFFIX, '', InputOption::VALUE_REQUIRED, 'Value to add to user\'s name to comply with Microsoft Azure rules')
@@ -183,12 +172,6 @@ final class SetupMysqlInitCommand extends Command
         assert(is_string($grant_hostname));
         $db_params = $db_params->withGrantHostname($grant_hostname);
 
-        $nss_user = $input->getOption(self::OPT_NSS_USER);
-        assert(is_string($nss_user));
-
-        $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
-        assert($nss_password === null || is_string($nss_password));
-
         $db = $this->connection_manager->getDBWithoutDBName(
             $io,
             \ForgeConfig::get(DBConfig::CONF_HOST),
@@ -204,16 +187,6 @@ final class SetupMysqlInitCommand extends Command
         $this->connection_manager->checkSQLModes($db);
 
         $this->initializeDatabase($input, $io, $db, $db_params);
-        $this->initializeNss(
-            $input,
-            $io,
-            $db,
-            \ForgeConfig::get(DBConfig::CONF_DBNAME),
-            $db_params->grant_hostname,
-            $db_params->azure_prefix,
-            $nss_user,
-            $nss_password
-        );
         $this->initializeMediawiki($input, $io, $db, $tuleap_user, $db_params->grant_hostname);
 
         $db->run('FLUSH PRIVILEGES');
@@ -261,47 +234,6 @@ final class SetupMysqlInitCommand extends Command
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
         if (is_string($log_password)) {
             file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", \ForgeConfig::get(DBConfig::CONF_DBUSER), \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)), FILE_APPEND);
-        }
-    }
-
-    private function initializeNss(
-        InputInterface $input,
-        SymfonyStyle $output,
-        DBWrapperInterface $db,
-        string $app_dbname,
-        string $grant_hostname,
-        string $azure_prefix,
-        string $nss_user,
-        ?string $nss_password,
-    ): void {
-        if (! $nss_password) {
-            return;
-        }
-
-        $this->database_configurator->setUpNss(
-            $output,
-            $db,
-            $app_dbname,
-            $nss_user,
-            $nss_password,
-            $grant_hostname,
-        );
-
-        $user = $azure_prefix !== '' ? sprintf('%s@%s', $nss_user, $azure_prefix) : $nss_user;
-
-        \ForgeConfig::store();
-        \ForgeConfig::set('sys_custom_dir', $this->base_directory . '/etc/tuleap');
-        $db->run('REPLACE INTO ' . $db->escapeIdentifier($app_dbname, true) . '.forgeconfig (name, value) VALUES (?, ?)', DBAuthUserConfig::USER, $user);
-        $db->run('REPLACE INTO ' . $db->escapeIdentifier($app_dbname, true) . '.forgeconfig (name, value) VALUES (? ,?)', DBAuthUserConfig::PASSWORD, \ForgeConfig::encryptValue(new ConcealedString($nss_password)));
-        \ForgeConfig::restore();
-
-        $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
-        if (is_string($log_password)) {
-            file_put_contents(
-                $log_password,
-                sprintf("MySQL dbauth user (%s): %s\n", $nss_user, $nss_password),
-                FILE_APPEND
-            );
         }
     }
 

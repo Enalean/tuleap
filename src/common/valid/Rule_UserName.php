@@ -29,22 +29,6 @@
 class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const RESERVED_PREFIX = 'forge__';
-    /**
-     * Test if value is a name on underlying OS.
-     *
-     * @param String $val Value to test
-     *
-     * @return bool
-     */
-    public function isSystemName($val)
-    {
-        $backend = $this->_getBackend();
-        if ($backend->unixUserExists($val) || $backend->unixGroupExists($val)) {
-            $this->error = $this->_getErrorExists();
-            return \true;
-        }
-        return \false;
-    }
 
     /**
      * Test is the value is Codendi username
@@ -212,23 +196,12 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function isValid($val)
     {
-        $is_valid = true;
-
-        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-            $is_valid = $this->isAvailableOnSystem($val);
-        }
-
-        return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && $this->getPendingUserRename($val) && $is_valid;
+        return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && $this->getPendingUserRename($val);
     }
 
     public function isUnixValid(string $val): bool
     {
-        $is_valid = true;
-        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-            $is_valid = $this->atLeastOneChar($val);
-        }
-
-        return $this->noSpaces($val) && $is_valid && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
+        return $this->noSpaces($val) && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
     }
 
     /**
@@ -288,25 +261,10 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     /**
      * Wrapper
      *
-     * @return Backend
-     */
-    protected function _getBackend($type = '') // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return \Backend::instance($type);
-    }
-
-    /**
-     * Wrapper
-     *
      * @return SystemEventManager
      */
     protected function _getSystemEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \SystemEventManager::instance();
-    }
-
-    private function isAvailableOnSystem(string $login): bool
-    {
-        return ! $this->isSystemName($login);
     }
 }

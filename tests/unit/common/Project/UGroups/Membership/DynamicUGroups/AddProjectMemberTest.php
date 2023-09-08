@@ -63,10 +63,6 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $an_active_project_id;
     /**
-     * @var M\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
      * @var \EventManager|M\MockInterface
      */
     private $event_manager;
@@ -83,7 +79,7 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->an_active_user_id    = '101';
-        $this->an_active_user       = new \PFUser(['user_id' => $this->an_active_user_id, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'unix_status' => \PFUser::UNIX_STATUS_NO_UNIX_ACCOUNT]);
+        $this->an_active_user       = new \PFUser(['user_id' => $this->an_active_user_id, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG]);
         $this->an_active_project_id = '202';
         $this->an_active_project    = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PUBLIC]);
         $this->user_permissions_dao = M::mock(UserPermissionsDao::class);
@@ -92,7 +88,6 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->an_active_project_id, $this->an_active_user_id)
             ->andReturnFalse()
             ->byDefault();
-        $this->user_manager   = M::mock(\UserManager::class);
         $this->event_manager  = M::mock(\EventManager::class);
         $this->history_dao    = M::mock(ProjectHistoryDao::class);
         $this->ugroup_binding = M::mock(\UGroupBinding::class);
@@ -206,48 +201,11 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
             ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
     }
 
-    public function testItGeneratesAUnixIdForNewProjectMembersWithUnixAccountButNoUnixId(): void
-    {
-        $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($this->an_active_project)->build();
-
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->with($this->an_active_project_id, $this->an_active_user_id)->once();
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any());
-        $this->history_dao->shouldReceive('addHistory');
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject');
-
-        $user = new \PFUser(['user_id' => $this->an_active_user_id, 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'unix_status' => \PFUser::UNIX_STATUS_ACTIVE, 'unix_uid' => '']);
-
-        $this->user_manager->shouldReceive('assignNextUnixUid')->with($user)->once()->ordered();
-        $this->user_manager->shouldReceive('updateDb')->with($user)->once()->ordered();
-
-        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
-            ->addProjectMember($user, $this->an_active_project, $project_admin);
-    }
-
-    public function testItDoesntGeneratesAUnixIdForNewProjectMembersWithUnixAccountThatAlreadyHaveAnUnixId(): void
-    {
-        $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($this->an_active_project)->build();
-
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->with($this->an_active_project_id, $this->an_active_user_id)->once();
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any());
-        $this->history_dao->shouldReceive('addHistory');
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject');
-
-        $user = new \PFUser(['user_id' => $this->an_active_user_id, 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'unix_status' => \PFUser::UNIX_STATUS_ACTIVE, 'unix_uid' => '202010']);
-
-        $this->user_manager->shouldNotReceive('assignNextUnixUid');
-        $this->user_manager->shouldNotReceive('updateDb');
-
-        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
-            ->addProjectMember($user, $this->an_active_project, $project_admin);
-    }
-
     private function buildAddProjectMember(
         EnsureUserCanManageProjectMembers $members_manager_checker,
     ): AddProjectMember {
         return new AddProjectMember(
             $this->user_permissions_dao,
-            $this->user_manager,
             $this->event_manager,
             $this->history_dao,
             $this->ugroup_binding,

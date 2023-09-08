@@ -62,24 +62,6 @@ class SystemEvent_USER_RENAME extends SystemEvent
         $renameState = true;
         if (($user = $this->getUser($user_id))) {
             $old_user_name = $user->getUserName();
-            //Rename home/users directory
-            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-                $backendSystem = $this->getBackend('System');
-                if ($backendSystem->userHomeExists($user->getUserName())) {
-                    if ($backendSystem->isUserNameAvailable($new_name)) {
-                        if (! $backendSystem->renameUserHomeDirectory($user, $new_name)) {
-                            $this->error("Could not rename user home");
-                            $renameState = $renameState & false;
-                        }
-                    } else {
-                        $this->error('Could not rename user home: Name ' . $new_name . ' not available');
-                        $renameState = $renameState & false;
-                    }
-                }
-
-                $backendSystem->setNeedRefreshGroupCache();
-                $backendSystem->setNeedRefreshUserCache();
-            }
 
             // Update DB
             if (! $this->updateDB($user, $new_name)) {

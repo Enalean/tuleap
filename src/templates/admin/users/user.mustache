@@ -146,41 +146,19 @@
                     </section>
                 {{/ has_additional_details }}
 
-                <section class="tlp-pane-section">
-                    <div class="siteadmin-user-details-row">
-                        <div class="tlp-form-element siteadmin-user-details-row-unix">
-                            <label class="tlp-label" for="unixstatus">{{ unix_status_label }} <i class="fa fa-asterisk"></i></label>
-                            <select class="tlp-select" id="unixstatus" name="form_unixstatus">
-                                {{# unix_status }}
-                                    <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
-                                        {{ status }}
-                                    </option>
-                                {{/ unix_status }}
-                            </select>
-                        </div>
-                        <div class="tlp-form-element siteadmin-user-details-row-unix">
-                            <label class="tlp-label" for="shell">{{ shell }} <i class="fa fa-asterisk"></i></label>
-                            <select class="tlp-select" id="shell" name="form_shell">
-                                {{# shells }}
-                                    <option value="{{ shell }}" {{# is_current }}selected{{/ is_current }}>
-                                        {{ shell }}
-                                    </option>
-                                {{/ shells }}
-                            </select>
-                        </div>
-                    </div>
-                    {{# display_purpose }}
-                        <div class="tlp-property" id="siteadmin-user-purpose">
-                            <label class="tlp-label">{{ purpose_label }}</label>
-                            {{# purpose }}
-                                <p>{{ purpose }}</p>
-                            {{/ purpose }}
-                            {{^ purpose }}
-                                <p class="tlp-property-empty">{{ empty_purpose }}</p>
-                            {{/ purpose }}
-                        </div>
-                    {{/ display_purpose }}
-                </section>
+                {{# display_purpose }}
+                    <section class="tlp-pane-section">
+                            <div class="tlp-property" id="siteadmin-user-purpose">
+                                <label class="tlp-label">{{ purpose_label }}</label>
+                                {{# purpose }}
+                                    <p>{{ purpose }}</p>
+                                {{/ purpose }}
+                                {{^ purpose }}
+                                    <p class="tlp-property-empty">{{ empty_purpose }}</p>
+                                {{/ purpose }}
+                            </div>
+                    </section>
+                {{/ display_purpose }}
 
                 <section class="tlp-pane-section tlp-pane-section-submit">
                     <button type="submit" class="tlp-button-primary" data-test="save-user">

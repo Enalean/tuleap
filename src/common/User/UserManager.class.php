@@ -967,26 +967,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * Assign to given user the next available unix_uid
-     *
-     * We need to pass the whole user object and to modify it in this
-     * method to avoid conflicts if updateDb is used after this call. As
-     * updateDb will perform a select on user table to check what changed
-     * between the user table and the user object, the user object must contains
-     * what was updated by this method.
-     *
-     * @param PFUser $user A user object to update
-     *
-     * @return bool
-     */
-    public function assignNextUnixUid($user)
-    {
-        $newUid = $this->getDao()->assignNextUnixUid($user->getId());
-        $user->setUnixUid($newUid);
-        return true;
-    }
-
-    /**
      * Create new account
      */
     public function createAccount(PFUser $user): ?PFUser
@@ -1000,10 +980,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $user->getRealName(),
             $user->getRegisterPurpose(),
             $user->getStatus(),
-            $user->getShell(),
-            $user->getUnixStatus(),
-            $user->getUnixUid(),
-            $user->getUnixBox(),
             $user->getLdapId(),
             $request_time,
             $user->getConfirmHash(),
@@ -1022,7 +998,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return null;
         } else {
             $user->setId($user_id);
-            $this->assignNextUnixUid($user);
 
             $em = $this->_getEventManager();
 

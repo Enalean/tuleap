@@ -21,7 +21,6 @@
 namespace common\User;
 
 use Cocur\Slugify\Slugify;
-use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Rule_UserName;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,7 +36,6 @@ class UserNameNormalizerTest extends TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('homedir_prefix', "");
         $this->rules               = \Mockery::mock(Rule_UserName::class);
         $this->username_normalizer = new UserNameNormalizer($this->rules, new Slugify());
     }
@@ -79,7 +77,6 @@ class UserNameNormalizerTest extends TestCase
     public function testGenerateThrowExceptionWhenUsernameIsNotUnixValid(): void
     {
         $slugified_username = "666";
-        ForgeConfig::set('homedir_prefix', "home/user");
 
         $this->rules->shouldReceive('atLeastOneChar')->andReturn(true);
         $this->rules->shouldReceive('isUnixValid')->with($slugified_username)->andReturn(false);

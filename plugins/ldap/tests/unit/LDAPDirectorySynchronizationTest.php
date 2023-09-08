@@ -149,8 +149,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
             ->method('updateDb')
             ->with(
                 self::callback(function (PFUser $user): bool {
-                    return $user->getStatus() === 'S' &&
-                    $user->getUnixStatus() === 'D';
+                    return $user->getStatus() === 'S';
                 })
             );
 

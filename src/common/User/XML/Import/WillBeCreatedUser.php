@@ -111,7 +111,6 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         $fake_user->setMailVA(0);
         $fake_user->setTimezone('GMT');
         $fake_user->setLanguageID('en_US');
-        $fake_user->setUnixStatus('N');
         $fake_user->setExpiryDate(0);
 
         $created_user = $user_manager->createAccount($fake_user);

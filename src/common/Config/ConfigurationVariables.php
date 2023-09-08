@@ -62,18 +62,6 @@ final class ConfigurationVariables
     #[ConfigKeyString('Tuleap')]
     public const LONG_ORG_NAME = 'sys_long_org_name';
 
-    #[ConfigKey('Prefix to add to the user\'s homedir')]
-    #[ConfigKeyHelp('This is a legacy value that should be left empty')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
-    public const HOMEDIR_PREFIX = 'homedir_prefix';
-
-    #[ConfigKey('Prefix to add to the project\'s homedir')]
-    #[ConfigKeyHelp('This is a legacy value that should be left empty')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
-    public const GRPDIR_PREFIX = 'grpdir_prefix';
-
     #[ConfigKey('When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyLegacyBool]

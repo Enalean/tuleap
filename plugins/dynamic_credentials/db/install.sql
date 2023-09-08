@@ -4,15 +4,13 @@ INSERT INTO user SET
   email = '',
   realname = 'Dynamic user',
   register_purpose = NULL,
-  status = 'D',
-  unix_status = 'N'
+  status = 'D'
 ON DUPLICATE KEY UPDATE
   user_name = 'forge__dynamic_credential',
   email = '',
   realname = 'Dynamic user',
   register_purpose = NULL,
-  status = 'D',
-  unix_status = 'N';
+  status = 'D';
 
 INSERT IGNORE INTO user_access SET user_id = 80, last_access_date = '0';
 

@@ -86,10 +86,6 @@ final class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->setStatus(\PFUser::STATUS_ACTIVE);
         self::assertEquals($expected_status, $user->getStatus());
 
-        $expected_unix_status = $user->getUnixStatus();
-        $user->setUnixStatus('A');
-        self::assertEquals($expected_unix_status, $user->getUnixStatus());
-
         $expected_expiry_date = $user->getExpiryDate();
         $user->setExpiryDate(time());
         self::assertEquals($expected_expiry_date, $user->getExpiryDate());

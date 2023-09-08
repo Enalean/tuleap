@@ -190,20 +190,8 @@ msgstr "Nom"
 msgid "No data to display"
 msgstr "Il n'y a pas de données à afficher"
 
-msgid "No matching data for this user"
-msgstr "Aucune données correspondantes pour cet utilisateur"
-
-msgid "No matching user data"
-msgstr "Aucune données utilisateur correspondantes"
-
 msgid "No motivation"
 msgstr "Pas de motivation donnée"
-
-msgid "No user selected"
-msgstr "Aucun utilisateur sélectionné"
-
-msgid "One user details"
-msgstr "Utilisation par utilisateur"
 
 msgid "Opened Artifacts (V3)"
 msgstr "Artéfacts ouverts (V3)"
@@ -347,9 +335,6 @@ msgstr "Il n'y a pas de quota défini pour le projet sélectionné"
 msgid "This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota."
 msgstr "Ce projet utilise <b>%1$s</b> de <b>%2$s</b> alloué."
 
-msgid "Top 10 users"
-msgstr "Top 10 des utilisateurs"
-
 msgid "Top projects"
 msgstr "Top des projets"
 
@@ -405,14 +390,8 @@ msgstr "Progression de l'utilisation"
 msgid "Used proportion"
 msgstr "Espace utilisé"
 
-msgid "User"
-msgstr "Utilisateur"
-
 msgid "User consumption over time"
 msgstr "Consommation de l'utilisateur en fonction du temps"
-
-msgid "User statistics"
-msgstr "Statistiques de l'utilisateur"
 
 msgid "Users"
 msgstr "Utilisateurs"

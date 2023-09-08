@@ -52,10 +52,6 @@ class UserDetailsPresenter
     public $has_projects;
     public $is_admin;
     public $no_project;
-    public $shell;
-    public $shells;
-    public $unix_status_label;
-    public $unix_status;
     public $status_label;
     public $email_label;
     public $status;
@@ -92,10 +88,8 @@ class UserDetailsPresenter
         \CSRFSynchronizerToken $csrf_token,
         array $additional_details,
         array $more,
-        array $shells,
         array $status,
         int $nb_project_user_is_member_of_that_dont_accept_restricted,
-        array $unix_status,
         bool $user_has_rest_read_only_administration_delegation,
         public readonly bool $webauthn_enabled,
         public readonly array $authenticators,
@@ -119,8 +113,6 @@ class UserDetailsPresenter
         $this->change_password                                          = $change_password;
         $this->csrf_token                                               = $csrf_token;
         $this->additional_details                                       = $additional_details;
-        $this->shells                                                   = $shells;
-        $this->unix_status                                              = $unix_status;
         $this->status                                                   = $status;
         $this->nb_project_user_is_member_of_that_dont_accept_restricted = $nb_project_user_is_member_of_that_dont_accept_restricted;
         $this->more                                                     = $more;
@@ -140,8 +132,6 @@ class UserDetailsPresenter
         $this->change_passwd      = $GLOBALS['Language']->getText('admin_usergroup', 'change_passwd');
         $this->administrator      = $GLOBALS['Language']->getText('admin_usergroup', 'is_admin');
         $this->no_project         = $GLOBALS['Language']->getText('admin_usergroup', 'no_project');
-        $this->shell              = $GLOBALS['Language']->getText('admin_usergroup', 'shell');
-        $this->unix_status_label  = $GLOBALS['Language']->getText('admin_usergroup', 'unix_status');
         $this->status_label       = $GLOBALS['Language']->getText('admin_usergroup', 'status');
         $this->email_label        = $GLOBALS['Language']->getText('admin_usergroup', 'email');
         $this->name_label         = _('Real name');

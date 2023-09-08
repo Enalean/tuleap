@@ -25,7 +25,6 @@ namespace Tuleap\SVN;
 
 use Backend;
 use BackendSVN;
-use BackendSystem;
 use ColinODell\PsrTestLogger\TestLogger;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
@@ -90,10 +89,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $backend_svn;
     /**
-     * @var Backend&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $backend_system;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator
      */
     private $access_file_history_creator;
@@ -123,7 +118,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->extraction_path              = vfsStream::setup()->url();
         $this->repository_creator           = $this->createMock(RepositoryCreator::class);
         $this->backend_svn                  = $this->createMock(BackendSVN::class);
-        $this->backend_system               = $this->createMock(BackendSystem::class);
         $this->access_file_history_creator  = $this->createMock(AccessFileHistoryCreator::class);
         $this->repository_manager           = $this->createMock(RepositoryManager::class);
         $this->user_manager                 = $this->createMock(UserManager::class);
@@ -136,7 +130,6 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             $this->repository_creator,
             $this->backend_svn,
-            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,

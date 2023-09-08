@@ -177,9 +177,6 @@ class Backend
 
     protected function getUnixGroupNameForProject(Project $project)
     {
-        if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
-            return $project->getUnixNameMixedCase();
-        }
         return $this->getHTTPUser();
     }
 
@@ -256,71 +253,6 @@ class Backend
     public function chmod($file, $mode)
     {
         return chmod($file, $mode);
-    }
-
-    /**
-     * Get entries from administrative database
-     *
-     * The getent program gathers entries from the specified administrative
-     * database using the specified search keys.
-     * Where database is one of aliases, ethers, group, hosts, netgroup, networks,
-     * passwd, protocols, rpc, services or shadow.
-     *
-     * The methods return false if the entry is not found or the database empty
-     * If one entry is specified and there is a result, the string corresponding to
-     * the entry is returned
-     * If no entries specified and database not empty, return an array of entries
-     * If either database or entry doesn't exist, return false.
-     *
-     * @param String $database Database
-     * @param String $entry    Entry to search
-     * @return String|Array|bool Result
-     */
-    protected function getent($database, $entry = false)
-    {
-        $cmd = 'getent ' . escapeshellarg($database);
-        if ($entry !== false) {
-            $cmd .= ' ' . escapeshellarg($entry);
-        }
-        $output      = [];
-        $returnValue = null;
-        exec($cmd, $output, $returnValue);
-        if ($returnValue === 0) {
-            if ($entry !== false) {
-                return $output[0];
-            } else {
-                return $output;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Return true if given name exists in passwd unix database
-     *
-     * @param String $name Identifier to search
-     * @return bool True if user exists
-     */
-    public function unixUserExists($name)
-    {
-        if ($name != '') {
-            return ($this->getent('passwd', $name) !== false);
-        }
-        return false;
-    }
-
-    /**
-     * Return true if given name exists in group unix database
-     *
-     * @param String $name Identifier to search
-     * @return bool True if group exists
-     */
-    public function unixGroupExists($name)
-    {
-        if ($name != '') {
-            return ($this->getent('group', $name) !== false);
-        }
-        return false;
     }
 
     /**

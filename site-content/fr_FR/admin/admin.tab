@@ -156,8 +156,6 @@ admin_usergroup	email	E-mail
 admin_usergroup	expiry_date	Date d'expiration
 admin_usergroup	data_not_parsed	Désolé, le format de la date d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_usergroup	ldap_id	Identifiant LDAP
-admin_usergroup	unix_details	Détails Unix :
-admin_usergroup	unix_status	Statut du compte Unix
 admin_usergroup	status	Statut
 admin_usergroup	no_account	Pas de compte Unix
 admin_usergroup	active	Actif

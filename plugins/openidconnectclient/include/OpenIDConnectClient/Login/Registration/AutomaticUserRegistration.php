@@ -93,7 +93,6 @@ class AutomaticUserRegistration
             $user->setTimezone($user_information['zoneinfo']);
         }
         $user->setStatus($this->getUserStatus());
-        $user->setUnixStatus('S');
         if (ForgeConfig::get(self::CONFIG_LDAP_ATTRIBUTE) !== false) {
             if (! isset($user_information[ForgeConfig::get(self::CONFIG_LDAP_ATTRIBUTE)])) {
                 throw new NotEnoughDataToRegisterUserException(

@@ -19,27 +19,21 @@
 
 .siteadmin-statistics-project-quota,
 #siteadmin-statistics-frequencies,
-#siteadmin-statistics-disk-usage,
-#siteadmin-statistics-disk-usage-top-users,
-#siteadmin-statistics-disk-usage-user-details {
+#siteadmin-statistics-disk-usage {
     display: flex;
     align-items: flex-start;
 }
 
 .siteadmin-statistics-project-quota-filter,
 #siteadmin-statistics-disk-usage-search,
-#siteadmin-statistics-frequencies-search,
-#siteadmin-statistics-disk-usage-top-users-search,
-#siteadmin-statistics-disk-usage-user-details-search {
+#siteadmin-statistics-frequencies-search {
     width: 300px;
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .siteadmin-statistics-project-quota-results,
 #siteadmin-statistics-disk-usage-data,
-#siteadmin-statistics-frequencies-graph,
-#siteadmin-statistics-disk-usage-top-users-data,
-#siteadmin-statistics-disk-usage-user-details-data {
+#siteadmin-statistics-frequencies-graph {
     width: 100%;
 }
 
@@ -108,17 +102,13 @@
 }
 
 @media screen and (max-width: 1200px) {
-    .siteadmin-statistics-project-quota,
-    #siteadmin-statistics-disk-usage-top-users,
-    #siteadmin-statistics-disk-usage-user-details {
+    .siteadmin-statistics-project-quota {
         display: flex;
         flex-direction: column;
         align-items: stretch;
     }
 
-    .siteadmin-statistics-project-quota-filter,
-    #siteadmin-statistics-disk-usage-top-users-search,
-    #siteadmin-statistics-disk-usage-user-details-search {
+    .siteadmin-statistics-project-quota-filter {
         width: 100%;
         margin: 0 0 var(--tlp-medium-spacing);
     }
@@ -130,22 +120,6 @@
             width: 100%;
         }
     }
-}
-
-.siteadmin-statistics-disk-usage-top-users-username-cell {
-    width: 100%;
-}
-
-.siteadmin-statistics-disk-usage-top-users-end-size-cell {
-    white-space: nowrap;
-}
-
-#siteadmin-statistics-disk-usage-user-details-data-row {
-    display: flex;
-}
-
-.siteadmin-statistics-disk-usage-user-details-data-property {
-    margin: 0 var(--tlp-large-spacing) 0 0;
 }
 
 #siteadmin-export-data {

@@ -66,10 +66,6 @@ class DynamicUser extends \PFUser
     {
     }
 
-    public function setUnixStatus($unixStatus)
-    {
-    }
-
     public function setExpiryDate($expiryDate)
     {
     }

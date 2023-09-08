@@ -883,9 +883,6 @@ class BackendSVN extends Backend
 
     private function getSvnFilesUnixGroupId(Project $project)
     {
-        if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
-            return $project->getUnixGID();
-        }
         return $this->getHTTPUserGID();
     }
 

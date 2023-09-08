@@ -134,9 +134,8 @@ final class DatabaseConfigurator
             $db->run('INSERT INTO tuleap_installed_version VALUES (?)', $tuleap_version);
 
             $db->run(
-                'UPDATE user SET password=?, unix_pw=?, email=?, add_date=? WHERE user_id=101',
+                'UPDATE user SET password=?, email=?, add_date=? WHERE user_id=101',
                 $this->password_handler->computeHashPassword($admin_password),
-                $this->password_handler->computeUnixPassword($admin_password),
                 $admin_email,
                 time(),
             );

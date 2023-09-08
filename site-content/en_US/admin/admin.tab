@@ -163,8 +163,6 @@ admin_usergroup	email	Email
 admin_usergroup	expiry_date	Expiry date
 admin_usergroup	data_not_parsed	Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format.
 admin_usergroup	ldap_id	LDAP Identifier
-admin_usergroup	unix_details	Unix details:
-admin_usergroup	unix_status	Unix status
 admin_usergroup	status	Status
 admin_usergroup	no_account	No unix account
 admin_usergroup	active	Active

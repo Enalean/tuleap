@@ -72,10 +72,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $repository_copier;
     private NotificationsEmailsBuilder $notification_emails_builder;
     /**
-     * @var \BackendSystem&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $backend_system;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&BackendSVN
      */
     private $backend_svn;
@@ -108,7 +104,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_file_history_creator = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
         $this->repository_manager          = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
         $this->backend_svn                 = $this->createMock(\BackendSVN::class);
-        $this->backend_system              = $this->createMock(\BackendSystem::class);
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
         $this->repository_copier           = $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class);
         $this->repository_creator          = $this->createMock(RepositoryCreator::class);
@@ -128,7 +123,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->arpath,
             $this->repository_creator,
             $this->backend_svn,
-            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
@@ -157,7 +151,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->arpath,
             $this->repository_creator,
             $this->backend_svn,
-            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,

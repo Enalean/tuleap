@@ -31,6 +31,7 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\DB\DBConfig;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
 /**
@@ -287,29 +288,6 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse(ForgeConfig::areAnonymousAllowed());
     }
 
-    public function testAreUnixUsersAvailableOnSystemReturnFalseIfNoHomeDir(): void
-    {
-        ForgeConfig::set('homedir_prefix', "");
-
-        $this->assertFalse(ForgeConfig::areUnixUsersAvailableOnSystem());
-    }
-
-    public function testAreUnixUsersAvailableOnSystemReturnFalseIfUnixUsersDisabled(): void
-    {
-        ForgeConfig::set('are_unix_users_disabled', 1);
-        ForgeConfig::set('homedir_prefix', "/home/users");
-
-        $this->assertFalse(ForgeConfig::areUnixUsersAvailableOnSystem());
-    }
-
-    public function testAreUnixUsersAvailableOnSystemReturnTrueIfHomeDirSetAndUnixUsersNotDisabled(): void
-    {
-        ForgeConfig::set('are_unix_users_disabled', 0);
-        ForgeConfig::set('homedir_prefix', "/home/users");
-
-        $this->assertTrue(ForgeConfig::areUnixUsersAvailableOnSystem());
-    }
-
     public function testFeatureFlag(): void
     {
         ForgeConfig::set('feature_flag_list_picker', true);
@@ -360,11 +338,11 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
         ForgeConfig::set(
-            \Tuleap\DB\DBAuthUserConfig::PASSWORD,
+            MailTransportBuilder::RELAYHOST_SMTP_PASSWORD,
             ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString('a very good secret')),
         );
 
-        self::assertEquals('a very good secret', ForgeConfig::getSecretAsClearText(\Tuleap\DB\DBAuthUserConfig::PASSWORD));
+        self::assertEquals('a very good secret', ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD));
     }
 
     /**

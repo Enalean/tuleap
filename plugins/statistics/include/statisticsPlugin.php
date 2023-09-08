@@ -51,7 +51,6 @@ class StatisticsPlugin extends Plugin
         $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook('usergroup_data', 'usergroup_data');
         $this->addHook('groupedit_data', 'groupedit_data');
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
@@ -181,26 +180,6 @@ class StatisticsPlugin extends Plugin
                 "statistics-disk-usage"
             )
         );
-    }
-
-    /**
-     * Display link to user disk usage for site admin
-     *
-     * @param $params
-     *
-     * @return void
-     */
-    public function usergroup_data($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user_url_params = [
-            'menu' => 'one_user_details',
-            'user' => $params['user']->getRealName() . ' (' . $params['user']->getUserName() . ')',
-        ];
-
-        $params['links'][] = [
-            'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($user_url_params),
-            'label' => dgettext('tuleap-statistics', 'Disk usage'),
-        ];
     }
 
     /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */

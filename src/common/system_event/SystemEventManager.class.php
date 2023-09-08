@@ -65,7 +65,6 @@ class SystemEventManager
             'project_admin_add_user',
             'project_admin_remove_user',
             'project_admin_activate_user',
-            'project_admin_delete_user',
             'project_is_private',
             'project_admin_ugroup_creation',
             'project_admin_ugroup_edition',
@@ -77,9 +76,6 @@ class SystemEventManager
             Event::SERVICE_IS_USED,
             'codendi_daily_start',
         ];
-        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-            $events_to_listen[] = Event::EDIT_SSH_KEYS;
-        }
         foreach ($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true);
         }
@@ -235,13 +231,6 @@ class SystemEventManager
                     SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE,
                     $params['user_id'],
                     SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-            case 'project_admin_delete_user':
-                $this->createEvent(
-                    SystemEvent::TYPE_USER_DELETE,
-                    $params['user_id'],
-                    SystemEvent::PRIORITY_LOW
                 );
                 break;
             case Event::USER_RENAME:
@@ -475,7 +464,6 @@ class SystemEventManager
             case SystemEvent::TYPE_PROJECT_RENAME:
             case SystemEvent::TYPE_MEMBERSHIP_CREATE:
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:
-            case SystemEvent::TYPE_USER_DELETE:
             case SystemEvent::TYPE_USER_RENAME:
             case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
             case SystemEvent::TYPE_ROOT_DAILY:

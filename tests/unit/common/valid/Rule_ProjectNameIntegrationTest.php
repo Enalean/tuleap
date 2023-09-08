@@ -30,21 +30,16 @@ final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCas
         $pm = $this->createMock(\ProjectManager::class);
         $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $backend = $this->createMock(\Backend::class);
-        $backend->method('unixUserExists')->willReturn(false);
-        $backend->method('unixGroupExists')->willReturn(false);
-
         $sm = $this->createMock(\SystemEventManager::class);
         $sm->method('isUserNameAvailable')->willReturn(true);
         $sm->method('isProjectNameAvailable')->willReturn(true);
 
         $r = $this->getMockBuilder(\Rule_ProjectName::class)
-            ->onlyMethods(['_getUserManager', '_getProjectManager', '_getBackend', '_getSystemEventManager', 'isNameAvailable'])
+            ->onlyMethods(['_getUserManager', '_getProjectManager', '_getSystemEventManager', 'isNameAvailable'])
             ->getMock();
 
         $r->method('_getUserManager')->willReturn($um);
         $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getBackend')->willReturn($backend);
         $r->method('_getSystemEventManager')->willReturn($sm);
 
         $r->method('isNameAvailable')->willReturnMap([

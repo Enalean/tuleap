@@ -53,8 +53,7 @@ class UserSuspensionDao extends DataAccessObject
     public function suspendAccount(int $user_id): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($user_id) {
-            $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
-                ' WHERE status != "D" AND user.user_id =  ? ';
+            $sql = 'UPDATE user SET status = "S" WHERE status != "D" AND user.user_id =  ? ';
             $this->getDB()->run($sql, $user_id);
 
             $this->invitation_dao->removePendingInvitationsMadeByUser($user_id);
@@ -92,7 +91,7 @@ class UserSuspensionDao extends DataAccessObject
 
         $ids = EasyStatement::open()->in('user_id IN (?*)', $to_be_suspended_user_ids);
         $this->getDB()->safeQuery(
-            "UPDATE user SET status = 'S', unix_status = 'S' WHERE $ids",
+            "UPDATE user SET status = 'S' WHERE $ids",
             $ids->values(),
         );
     }

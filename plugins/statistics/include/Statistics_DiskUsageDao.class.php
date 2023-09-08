@@ -125,12 +125,6 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         return $this->retrieve($sql);
     }
 
-    public function searchAllUsers()
-    {
-        $sql = 'SELECT user_id, user_name FROM user';
-        return $this->retrieve($sql);
-    }
-
     public function searchMostRecentDate()
     {
         $sql = 'SELECT max(date) as date FROM plugin_statistics_diskusage_site';
@@ -255,60 +249,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         return $this->searchServiceSize($dateStmt, $groupId);
     }
 
-    public function searchTotalUserSize($date)
-    {
-        $sql = 'SELECT sum(size) as size FROM plugin_statistics_diskusage_user WHERE ' . $this->returnDateStatement($date);
-        return $this->retrieve($sql);
-    }
-
     public function searchSiteSize($date)
     {
         $sql = 'SELECT service, size FROM plugin_statistics_diskusage_site WHERE ' . $this->returnDateStatement($date);
-        return $this->retrieve($sql);
-    }
-
-    public function searchTopUsers($endDate, $order, $limit = 10)
-    {
-        $sql = 'SELECT user_id, user_name, end_size ' .
-               ' FROM ( SELECT user_id, sum(size) as end_size
-                       FROM plugin_statistics_diskusage_user
-                       WHERE ' . ($this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_user') ?: 1) . '
-                       GROUP BY user_id) as end' .
-               ' LEFT JOIN user USING (user_id)' .
-               ' ORDER BY ' . $order . ' DESC' .
-               ' LIMIT ' . $this->da->escapeInt($limit);
-        return $this->retrieve($sql);
-    }
-
-    public function returnUserDetails($userId, $date)
-    {
-        $sql = 'SELECT user_id, user_name, service, sum(size) as size' .
-            ' FROM plugin_statistics_diskusage_user ' .
-            ' LEFT JOIN user USING (user_id)' .
-            ' WHERE ' . $this->returnDateStatement($date) .
-            ' AND user_id = ' . $this->da->escapeInt($userId) .
-            ' GROUP BY user_id';
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * Compute average size of user_id
-     *
-     * @param int $userId
-     *
-     */
-    public function searchSizePerUserForPeriod($userId, $dateMethod, $startDate, $endDate): LegacyDataAccessResultInterface|false
-    {
-        $this->_getGroupByFromDateMethod($dateMethod, $select, $groupBy);
-        $sql = 'SELECT  avg(size) as size, YEAR(date) as year' . $select .
-               ' FROM (SELECT service, sum(size) as size, date' .
-               '       FROM plugin_statistics_diskusage_user' .
-               '       WHERE user_id = ' . $this->da->escapeInt($userId) .
-               '       AND date > "' . $startDate . ' 00:00:00"' .
-               '       AND date < "' . $endDate . ' 23:59:59"' .
-               '       GROUP BY date) as p' .
-               ' GROUP BY year' . $groupBy .
-               ' ORDER BY date ASC, size DESC';
         return $this->retrieve($sql);
     }
 
@@ -348,31 +291,6 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         return $this->retrieve($sql);
     }
 
-    /**
-     * Compute evolution size of  user for a given period
-     *
-     * @param date $endDate , date $startDate
-     *
-     * @return LegacyDataAccessResultInterface
-     */
-    public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
-    {
-        $sql = 'SELECT  end_size, start_size, (end_size - start_size) as evolution, (end_size-start_size)/start_size as evolution_rate' .
-               ' FROM (SELECT user_id,  sum(size) as start_size
-                       FROM plugin_statistics_diskusage_user
-                       WHERE ' . ($this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_user') ?: 1) . '
-                       AND user_id = ' . $this->da->escapeInt($userId) . '
-                       GROUP BY user_id ) as start' .
-               ' LEFT JOIN (SELECT user_id,  sum(size) as end_size
-                       FROM plugin_statistics_diskusage_user
-                       WHERE ' . $this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_user') . '
-                       AND user_id = ' . $this->da->escapeInt($userId) . '
-                       GROUP BY user_id ) as end' .
-                ' USING (user_id)';
-
-        return $this->retrieve($sql);
-    }
-
     public function updateGroup(Project $project, DateTimeImmutable $time, string $service, string $size): void
     {
         $sql = 'UPDATE plugin_statistics_diskusage_group
@@ -388,15 +306,6 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         $sql = 'INSERT INTO plugin_statistics_diskusage_group' .
             ' (group_id, service, date, size)' .
             ' VALUES (' . $this->da->quoteSmart($groupId) . ',' . $this->da->quoteSmart($service) . ',FROM_UNIXTIME(' . $this->da->escapeInt($time) . '),' . $this->da->quoteSmart($size) . ')';
-        //echo $sql.PHP_EOL;
-        return $this->update($sql);
-    }
-
-    public function addUser($userId, $service, $size, $time)
-    {
-        $sql = 'INSERT INTO plugin_statistics_diskusage_user' .
-            ' (user_id, service, date, size)' .
-            ' VALUES (' . $this->da->quoteSmart($userId) . ',' . $this->da->quoteSmart($service) . ',FROM_UNIXTIME(' . $this->da->escapeInt($time) . '),' . $this->da->quoteSmart($size) . ')';
         //echo $sql.PHP_EOL;
         return $this->update($sql);
     }

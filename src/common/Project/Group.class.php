@@ -126,11 +126,6 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->data_array['type'];
     }
 
-    public function getUnixBox()
-    {
-        return $this->data_array['unix_box'];
-    }
-
     /**
      * Statuses include H,A,D
      *

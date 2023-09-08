@@ -34,7 +34,6 @@ class AddProjectMember
 {
     public function __construct(
         private UserPermissionsDao $dao,
-        private \UserManager $user_manager,
         private \EventManager $event_manager,
         private \ProjectHistoryDao $history_dao,
         private \UGroupBinding $ugroup_binding,
@@ -46,7 +45,6 @@ class AddProjectMember
     {
         return new self(
             new UserPermissionsDao(),
-            \UserManager::instance(),
             \EventManager::instance(),
             new \ProjectHistoryDao(),
             new \UGroupBinding(
@@ -71,11 +69,6 @@ class AddProjectMember
         $this->members_members_checker->checkUserCanManageProjectMembers($project_admin, $project);
 
         $this->dao->addUserAsProjectMember((int) $project->getID(), (int) $user->getId());
-
-        if ($user->hasActiveUnixAccount() && ! $user->getUnixUid()) {
-            $this->user_manager->assignNextUnixUid($user);
-            $this->user_manager->updateDb($user);
-        }
 
         $this->event_manager->processEvent(
             'project_admin_add_user',

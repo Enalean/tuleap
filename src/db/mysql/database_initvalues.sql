@@ -40,11 +40,6 @@ INSERT INTO user SET \
         realname = '0', \
         register_purpose = NULL, \
         status = 'S', \
-        shell = '0', \
-        unix_pw = '0', \
-        unix_status = '0', \
-        unix_uid = 0, \
-        unix_box = '0', \
         ldap_id = NULL, \
         add_date = 940000000, \
         confirm_hash = NULL, \
@@ -69,11 +64,6 @@ INSERT INTO user SET \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
         status = 'A', \
-        shell = '/bin/false', \
-        unix_pw = 'SITEADMIN_UNIX_PASSWORD', \
-        unix_status = 'A', \
-        unix_uid = 1, \
-        unix_box = 'shell1', \
         ldap_id = NULL, \
         add_date = 940000000, \
         confirm_hash = NULL, \
@@ -101,7 +91,6 @@ INSERT INTO `groups` SET \
   access = 'public', \
   status = 'A', \
   unix_group_name = 'admin', \
-  unix_box = 'shell1', \
   http_domain = 'admin._DOMAIN_NAME_', \
   short_description = 'Administration Project', \
   svn_box = 'svn1', \
@@ -121,7 +110,6 @@ INSERT INTO `groups` SET \
   access = 'private', \
   status = 'A', \
   unix_group_name = 'sitenews', \
-  unix_box = 'shell1', \
   http_domain = 'sitenews._DOMAIN_NAME_', \
   short_description = 'Site News Private Project. All Site News should be posted from this project', \
   svn_box = 'svn1', \
@@ -142,7 +130,6 @@ INSERT INTO `groups` SET \
   access = 'private', \
   status = 's', \
   unix_group_name = 'none', \
-  unix_box = 'shell1', \
   http_domain = '', \
   short_description = 'The default Tuleap template', \
   svn_box = '', \

@@ -21,15 +21,12 @@
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConnection;
-use Tuleap\User\UnixUserChecker;
 
 /**
  *  Data Access Object for User
  */
 class UserDao extends \Tuleap\DB\DataAccessObject
 {
-    private const NOT_VALID_UNIX_PASSWORD_HASH = 'no_password';
-
     /** @var PasswordHandler */
     private $password_handler;
 
@@ -150,10 +147,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      * @param $email
      * @param $register_purpose
      * @param $status
-     * @param $shell
-     * @param $unix_status
-     * @param $unix_uid
-     * @param $unix_box
      * @param $ldap_id
      * @param $add_date
      * @param $confirm_hash
@@ -167,7 +160,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      * @param $expiry_date
      * @param $last_pwd_update
      */
-    public function create($user_name, $email, ?ConcealedString $user_pw, ?string $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update): int
+    public function create($user_name, $email, ?ConcealedString $user_pw, ?string $realname, $register_purpose, $status, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update): int
     {
         $fields = [];
 
@@ -179,12 +172,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
         }
         if ($user_pw !== null) {
             $fields['password'] = $this->password_handler->computeHashPassword($user_pw);
-
-            if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user_name)) {
-                $fields['unix_pw'] = $this->password_handler->computeUnixPassword($user_pw);
-            } else {
-                $fields['unix_pw'] = self::NOT_VALID_UNIX_PASSWORD_HASH;
-            }
         }
         $fields['realname'] = $realname ?? '';
         if ($register_purpose !== null) {
@@ -192,18 +179,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
         }
         if ($status !== null) {
             $fields['status'] = $status;
-        }
-        if ($shell !== null) {
-            $fields['shell'] = $shell;
-        }
-        if ($unix_status !== null) {
-            $fields['unix_status'] = $unix_status;
-        }
-        if ($unix_uid !== null) {
-            $fields['unix_uid'] = $unix_uid;
-        }
-        if ($unix_box !== null) {
-            $fields['unix_box'] = $unix_box;
         }
         if ($ldap_id !== null) {
             $fields['ldap_id'] = $ldap_id;
@@ -265,14 +240,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
 
                 if (isset($user['clear_password'])) {
                     $values['password'] = $this->password_handler->computeHashPassword($user['clear_password']);
-                    /*
-                     * Legacy column that was used to store password hashed with MD5
-                     * We need to keep it for old instances with non migrated accounts yet
-                     */
-                    $values['unix_pw'] = self::NOT_VALID_UNIX_PASSWORD_HASH;
-                    if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user["user_name"])) {
-                        $values['unix_pw'] = $this->password_handler->computeUnixPassword($user['clear_password']);
-                    }
                     unset($user['clear_password']);
                     $values['last_pwd_update'] = $_SERVER['REQUEST_TIME'];
                 }
@@ -287,20 +254,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                 return true;
             }
         );
-    }
-
-    /**
-     * Assign to given user the next available unix_uid
-     *
-     * @param int $userId User ID
-     */
-    public function assignNextUnixUid($userId): int
-    {
-        $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R' .
-               ' SET unix_uid = max_uid' .
-               ' WHERE user_id = ?';
-        $this->getDB()->run($sql, $userId);
-        return $this->getDB()->single('SELECT unix_uid FROM user WHERE user_id = ?', [$userId]);
     }
 
     /**

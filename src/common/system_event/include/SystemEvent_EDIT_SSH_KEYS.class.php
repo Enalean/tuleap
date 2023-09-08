@@ -36,7 +36,6 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
     }
 
     /**
-     * @see BackendSystem::dumpSSHKeysForUser()
      * @see UserManager::updateUserSSHKeys()
      * @see SystemEventManager::addSystemEvent()
      *
@@ -44,19 +43,6 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
      */
     public function process()
     {
-        $user_id = $this->getParameter(0);
-        if (! $this->int_ok($user_id)) {
-            $user_id = 0;
-        }
-        if ($user = UserManager::instance()->getUserById($user_id)) {
-            if (! Backend::instance('System')->dumpSSHKeysForUser($user, $this->getParameter(1))) {
-                $this->error("Could not dump ssh keys for user " . $user->getUserName());
-                return false;
-            }
-        } else {
-            $this->error("Could not create/initialize user object");
-            return false;
-        }
         $this->done();
         return true;
     }

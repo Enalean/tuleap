@@ -45,10 +45,6 @@ class User_LoginController extends MVC2_Controller
             } else {
                 $user->setStatus(PFUser::STATUS_ACTIVE);
             }
-            if ($user->getUnixUid() == 0) {
-                $user_manager->assignNextUnixUid($user);
-            }
-            $user->setUnixStatus(PFUser::STATUS_ACTIVE);
             $user_manager->updateDb($user);
 
             $user_manager->removeConfirmHash($confirm_hash);

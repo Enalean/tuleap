@@ -140,12 +140,6 @@ class Statistics_DiskUsageManager
         if ($date) {
             $res['date'] = $date;
 
-            $dar = $dao->searchTotalUserSize($date);
-            if ($dar && ! $dar->isError()) {
-                $row                            = $dar->getRow();
-                $res['service'][self::USR_HOME] = $row['size'];
-            }
-
             $dar = $dao->searchSiteSize($date);
             if ($dar && ! $dar->isError()) {
                 foreach ($dar as $row) {
@@ -278,33 +272,6 @@ class Statistics_DiskUsageManager
         return $values;
     }
 
-    public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
-    {
-        $dao = $this->_getDao();
-        $res = [];
-        $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate, $endDate);
-        if (! $dar || $dar->isError()) {
-            return false;
-        }
-        $res = $dar->getRow();
-        if (! $res) {
-            return false;
-        }
-
-        if (isset($res['start_size'])) {
-            if ($res['start_size'] != 0) {
-                $res['evolution_rate'] = ($res['end_size'] / $res['start_size']) - 1;
-            } else {
-                $res['evolution_rate'] = 1;
-            }
-        } else {
-            $res['start_size']     = 0;
-            $res['evolution']      = $res['end_size'];
-            $res['evolution_rate'] = 1;
-        }
-        return $res;
-    }
-
     public function returnTotalProjectSize($group_id)
     {
         $dao           = $this->_getDao();
@@ -400,31 +367,11 @@ class Statistics_DiskUsageManager
         );
     }
 
-    public function getTopUsers($endDate, $order)
-    {
-        $dao = $this->_getDao();
-        return $dao->searchTopUsers($endDate, $order);
-    }
-
     public function getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
         $dao     = $this->_getDao();
         $dar     = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
-        if ($dar && ! $dar->isError() && $dar->rowCount()) {
-            foreach ($dar as $row) {
-                $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
-            }
-            return $res;
-        }
-        return false;
-    }
-
-    public function getWeeklyEvolutionUserData($userId, $groupBy, $startDate, $endDate)
-    {
-        $groupBy = strtoupper($groupBy);
-        $dao     = $this->_getDao();
-        $dar     = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
         if ($dar && ! $dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
@@ -487,15 +434,6 @@ class Statistics_DiskUsageManager
         $time_to_collect[$service] += $time;
     }
 
-    public function storeForUser(DateTimeImmutable $collect_date, $userId, $service, $path)
-    {
-        $size = $this->getDirSize($path . '/');
-        if ($size) {
-            $dao = $this->_getDao();
-            $dao->addUser($userId, $service, $size, $collect_date->getTimestamp());
-        }
-    }
-
     public function storeForSite(DateTimeImmutable $collect_date, $service, $path)
     {
         $size = $this->getDirSize($path . '/');
@@ -512,7 +450,6 @@ class Statistics_DiskUsageManager
     {
         $collect_date    = new DateTimeImmutable();
         $time_to_collect = $this->collectProjects($collect_date);
-        $this->collectUsers($collect_date);
         $this->collectSite($collect_date);
 
         return $time_to_collect;
@@ -541,9 +478,6 @@ class Statistics_DiskUsageManager
 
             $this->storeForGroup($collect_date, $row['group_id'], self::FRS, ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($collect_date, $row['group_id'], self::FTP, ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
-            if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
-                $this->storeForGroup($collect_date, $row['group_id'], self::GRP_HOME, ForgeConfig::get('grpdir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
-            }
             $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, ForgeConfig::get('sys_wiki_attachment_data_dir') . "/" . $row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
             $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . "/" . $row['unix_group_name'], $time_to_collect);
@@ -587,24 +521,6 @@ class Statistics_DiskUsageManager
         $time = $end - $start;
 
         $time_to_collect[Service::SVN] += $time;
-    }
-
-    private function collectUsers(DateTimeImmutable $collect_date)
-    {
-        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-            $dao = $this->_getDao();
-            $dao->startTransaction();
-            $dar = $dao->searchAllUsers();
-            foreach ($dar as $row) {
-                $this->storeForUser(
-                    $collect_date,
-                    $row['user_id'],
-                    self::USR_HOME,
-                    ForgeConfig::get('homedir_prefix') . "/" . $row['user_name']
-                );
-            }
-            $dao->commit();
-        }
     }
 
     // dfMYSQL, LOG, backup
