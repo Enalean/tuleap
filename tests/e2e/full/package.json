@@ -1,6 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/core-cypress-e2e-full-tests",
+  "homepage": "https://www.tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
   "devDependencies": {

@@ -25,7 +25,6 @@ export const cypress_config = {
     screenshotsFolder: "/output/e2e-screenshots",
     videosFolder: "/output/e2e-videos",
     video: true,
-    videoUploadOnPasses: false,
     pageLoadTimeout: 120000,
     viewportWidth: 1366,
     viewportHeight: 768,

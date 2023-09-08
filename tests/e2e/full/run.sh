@@ -40,7 +40,7 @@ CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress verify
 
 has_failed=0
 
-su -c '/tuleap/node_modules/.bin/tsc --noEmit --skipLibCheck -p /tuleap/tests/e2e/full/cypress' -l runner
+su -c '/tuleap/node_modules/.bin/tsc --noEmit --skipLibCheck -p /tuleap/tests/e2e/full' -l runner
 su -c 'CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress run --project /tuleap/tests/e2e/full' -l runner || has_failed=1
 
 for project in $(find /tuleap/plugins/*/tests/e2e/ -maxdepth 1 -mindepth 1 -type d) ; do
