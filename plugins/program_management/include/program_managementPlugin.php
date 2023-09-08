@@ -133,7 +133,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
+use Tuleap\ProgramManagement\Adapter\BacklogPlugin\ProgramServiceBlocker;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
@@ -316,23 +316,32 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return ProgramService::SERVICE_SHORTNAME;
     }
 
-    public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        $handler = new ServiceDisabledCollectorHandler(
+        $user_retriever = new UserManagerAdapter(UserManager::instance());
+        $handler        = new ServiceDisabledCollectorHandler(
             new TeamDao(),
-            new ScrumBlocksServiceVerifier(
+            new ProgramServiceBlocker(
                 PlanningFactory::build(),
-                new UserManagerAdapter(UserManager::instance())
+                $user_retriever,
+                EventManager::instance(),
+                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever)
             )
         );
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($collector), $this->getServiceShortname());
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($event), $this->getServiceShortname());
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        $handler = new ProjectServiceBeforeActivationHandler(
+        $user_retriever = new UserManagerAdapter(UserManager::instance());
+        $handler        = new ProjectServiceBeforeActivationHandler(
             new TeamDao(),
-            new ScrumBlocksServiceVerifier(PlanningFactory::build(), new UserManagerAdapter(UserManager::instance()))
+            new ProgramServiceBlocker(
+                PlanningFactory::build(),
+                $user_retriever,
+                EventManager::instance(),
+                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever)
+            )
         );
 
         $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), $this->getServiceShortname());

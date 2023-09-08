@@ -6,5 +6,12 @@ layers:
     collectors:
       - type: directory
         regex: plugins/program_management/include/Domain/.*
+  - name: CoreLibraries
+    collectors:
+      - type: className
+        regex: Tuleap\\Option\\Option
 ruleset:
-  Domain: ~
+  Domain:
+    - Domain
+    - CoreLibraries
+  CoreLibraries: ~

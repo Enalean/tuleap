@@ -21,25 +21,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
-use Tuleap\AgileDashboard\Planning\RetrievePlannings;
+use Tuleap\Option\Option;
+use Tuleap\ProgramManagement\Domain\Workspace\BacklogBlocksProgramServiceIfNeeded;
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
+use function Psl\Type\string;
 
-final class ScrumBlocksServiceVerifier implements VerifyScrumBlocksServiceActivation
+final class BacklogBlocksProgramServiceIfNeededStub implements BacklogBlocksProgramServiceIfNeeded
 {
-    public function __construct(private RetrievePlannings $retrieve_plannings, private RetrieveUser $user_retriever)
+    /**
+     * @param Option<string> $blocked_message
+     */
+    private function __construct(private Option $blocked_message)
     {
     }
 
-    public function doesScrumBlockServiceUsage(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
+    public static function withBlocked(): self
     {
-        $user          = $this->user_retriever->getUserWithId($user_identifier);
-        $configuration = ScrumConfiguration::fromProjectId($this->retrieve_plannings, $project_identifier->getId(), $user);
+        return new self(Option::fromValue('Program service is blocked'));
+    }
 
-        return $configuration->isNotEmpty();
+    public static function withNotBlocked(): self
+    {
+        return new self(Option::nothing(string()));
+    }
+
+    public function shouldProgramServiceBeBlocked(
+        UserIdentifier $user_identifier,
+        ProjectIdentifier $project_identifier,
+    ): Option {
+        return $this->blocked_message;
     }
 }
