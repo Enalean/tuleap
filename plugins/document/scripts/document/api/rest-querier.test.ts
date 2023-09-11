@@ -58,8 +58,6 @@ import type {
 } from "../type";
 import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
 
-jest.mock("@tuleap/tlp-fetch");
-
 describe("rest-querier", () => {
     describe("getItem()", () => {
         it("Given an item id, then the REST API will be queried with it", async () => {
