@@ -26,30 +26,42 @@ namespace Tuleap\ProgramManagement\Domain\Service;
 use Tuleap\ProgramManagement\Domain\Events\ServiceDisabledCollectorEvent;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\BacklogBlocksProgramServiceIfNeeded;
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramBlocksBacklogServiceIfNeeded;
 
 final class ServiceDisabledCollectorHandler
 {
     public function __construct(
         private readonly VerifyIsTeam $verify_is_team,
-        private readonly BacklogBlocksProgramServiceIfNeeded $backlog_blocker,
+        private readonly BacklogBlocksProgramServiceIfNeeded $program_blocker,
+        private readonly ProgramBlocksBacklogServiceIfNeeded $backlog_blocker,
+        private readonly string $program_service_shortname,
+        private readonly string $backlog_service_shortname,
     ) {
     }
 
-    public function handle(ServiceDisabledCollectorEvent $collector, string $shortname): void
+    public function handle(ServiceDisabledCollectorEvent $collector): void
     {
-        if (! $collector->isForServiceShortName($shortname)) {
+        if ($collector->isForServiceShortName($this->program_service_shortname)) {
+            if ($this->verify_is_team->isATeam($collector->getProjectIdentifier()->getId())) {
+                $collector->disableWithMessage(
+                    dgettext('tuleap-program_management', 'Program service cannot be enabled for Team projects.')
+                );
+                return;
+            }
+
+            $this->program_blocker->shouldProgramServiceBeBlocked(
+                $collector->getUserIdentifier(),
+                $collector->getProjectIdentifier()
+            )->apply($collector->disableWithMessage(...));
             return;
         }
-
-        if ($this->verify_is_team->isATeam($collector->getProjectIdentifier()->getId())) {
+        if (
+            $collector->isForServiceShortName($this->backlog_service_shortname)
+            && $this->backlog_blocker->shouldBacklogServiceBeBlocked($collector->getProjectIdentifier())
+        ) {
             $collector->disableWithMessage(
-                dgettext('tuleap-program_management', 'Program service cannot be enabled for Team projects.')
+                dgettext('tuleap-program_management', 'Backlog service cannot be enabled when the project also uses the Program service.')
             );
         }
-
-        $this->backlog_blocker->shouldProgramServiceBeBlocked(
-            $collector->getUserIdentifier(),
-            $collector->getProjectIdentifier()
-        )->apply($collector->disableWithMessage(...));
     }
 }
