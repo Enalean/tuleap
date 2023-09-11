@@ -265,6 +265,12 @@ msgstr ""
 "agile). S'il est déjà présent, rien ne sera fait."
 
 msgid ""
+"The artifact is added to the backlog. If it's already present, nothing is "
+"done."
+msgstr ""
+"L'artéfact est ajouté au backlog. S'il est déjà présent, rien ne sera fait."
+
+msgid ""
 "The artifact is added to the top backlog. If it's already present, nothing "
 "is done."
 msgstr ""

@@ -34,6 +34,9 @@ msgstr ""
 "<a href='%s'>L'outil de suivi %s</a> du projet %s n'a pas de champ lien "
 "entre artéfact"
 
+msgid "Add to backlog"
+msgstr "Ajouter au backlog"
+
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
 
@@ -417,6 +420,9 @@ msgstr ""
 "Le projet est défini en tant que projet Équipe. Il ne peut pas être utilisé "
 "en tant que Programme."
 
+msgid "Remove from backlog"
+msgstr "Supprimer du backlog"
+
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
 
@@ -476,6 +482,12 @@ msgstr "Outil de suivi source pour les Itérations"
 
 msgid "Source tracker for Program Increments"
 msgstr "Outil de suivi source pour les Incréments de Programme"
+
+msgid ""
+"Status semantic is not defined, the artifact cannot be added to the backlog"
+msgstr ""
+"La sémantique status n'est pas définie, l'artéfact ne peut pas être ajouté "
+"au backlog"
 
 msgid ""
 "Status semantic is not defined, the artifact cannot be added to the top "
@@ -567,6 +579,12 @@ msgstr "Plage de temps"
 
 msgid "Title"
 msgstr "Titre"
+
+msgid ""
+"Title semantic is not defined, the artifact cannot be added to the backlog"
+msgstr ""
+"La sémantique titre n'est pas définie, l'artéfact ne peut pas être ajouté au "
+"backlog"
 
 msgid ""
 "Title semantic is not defined, the artifact cannot be added to the top "

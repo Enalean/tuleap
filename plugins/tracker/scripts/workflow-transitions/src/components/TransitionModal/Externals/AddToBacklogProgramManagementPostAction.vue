@@ -24,8 +24,8 @@
             class="tracker-workflow-transition-modal-action-details-element tlp-form-element"
             data-test="add-to-backlog-program-management-post-action-description"
         >
-            <p class="tlp-text-info" v-translate>
-                The artifact is added to the top backlog. If it's already present, nothing is done.
+            <p class="tlp-text-info">
+                {{ add_to_backlog_post_action_detail }}
             </p>
         </div>
     </post-action>
@@ -33,10 +33,23 @@
 
 <script>
 import PostAction from "../PostAction/PostAction.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "AddToBackLogProgramManagementPostAction",
     components: { PostAction },
+    computed: {
+        ...mapState("transitionModal", ["is_split_feature_flag_enabled"]),
+        add_to_backlog_post_action_detail() {
+            return this.is_split_feature_flag_enabled
+                ? this.$gettext(
+                      "The artifact is added to the backlog. If it's already present, nothing is done.",
+                  )
+                : this.$gettext(
+                      "The artifact is added to the top backlog. If it's already present, nothing is done.",
+                  );
+        },
+    },
     props: {
         post_action: {
             type: Object,

@@ -167,6 +167,10 @@ class AdditionalArtifactActionBuilder
                     'name'  => 'action',
                     'value' => $action,
                 ],
+                [
+                    'name'  => 'is-split-feature-flag-enabled',
+                    'value' => $is_split_feature_flag_enabled,
+                ],
             ]
         );
 

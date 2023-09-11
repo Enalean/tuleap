@@ -22,10 +22,21 @@ import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../../support/local-vue.js";
 import AddToBacklogProgramManagementPostAction from "./AddToBacklogProgramManagementPostAction.vue";
 import PostAction from "../PostAction/PostAction.vue";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("AddToBacklogProgramManagementPostAction", () => {
     it("spawns the component", async () => {
+        const store_options = {
+            state: {
+                transitionModal: {
+                    is_split_feature_flag_enabled: false,
+                },
+            },
+        };
+        const store = createStoreMock(store_options);
+
         const wrapper = shallowMount(AddToBacklogProgramManagementPostAction, {
+            mocks: { $store: store },
             propsData: { post_action: { type: "add_to_top_backlog_program_management" } },
             localVue: await createLocalVueForTests(),
         });

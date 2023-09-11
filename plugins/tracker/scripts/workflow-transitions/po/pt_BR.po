@@ -235,6 +235,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"The artifact is added to the backlog. If it's already present, nothing is "
+"done."
+msgstr ""
+
+msgid ""
 "The artifact is added to the top backlog. If it's already present, nothing "
 "is done."
 msgstr ""

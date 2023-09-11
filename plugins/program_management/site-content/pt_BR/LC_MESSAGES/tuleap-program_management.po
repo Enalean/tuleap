@@ -23,6 +23,9 @@ msgid ""
 "artifact link field"
 msgstr ""
 
+msgid "Add to backlog"
+msgstr ""
+
 msgid "Add to top backlog"
 msgstr "Adicionar ao backlog principal"
 
@@ -335,6 +338,9 @@ msgstr ""
 msgid "Project is defined as a Team project. It can not be used as a Program."
 msgstr ""
 
+msgid "Remove from backlog"
+msgstr ""
+
 msgid "Remove from top backlog"
 msgstr "Remover do backlog principal"
 
@@ -381,6 +387,10 @@ msgid "Source tracker for Iterations"
 msgstr ""
 
 msgid "Source tracker for Program Increments"
+msgstr ""
+
+msgid ""
+"Status semantic is not defined, the artifact cannot be added to the backlog"
 msgstr ""
 
 msgid ""
@@ -454,6 +464,10 @@ msgstr ""
 
 msgid "Title"
 msgstr "Título"
+
+msgid ""
+"Title semantic is not defined, the artifact cannot be added to the backlog"
+msgstr ""
 
 msgid ""
 "Title semantic is not defined, the artifact cannot be added to the top "

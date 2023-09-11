@@ -1,29 +1,55 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.3.2\n"
+
+msgid "Add to backlog"
+msgstr "Ajouter au backlog"
 
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
+
+msgid "An error occurred while adding this artifact to backlog."
+msgstr ""
+"Une erreur s'est produite lors de l'ajout de cet artéfact dans le backlog."
 
 msgid "An error occurred while adding this artifact to top backlog."
 msgstr ""
 "Une erreur s'est produite lors de l'ajout de cet artéfact dans la "
 "planification générale."
 
+msgid "An error occurred while removing this artifact from backlog."
+msgstr ""
+"Une erreur s'est produite lors de la suppression de cet artéfact du backlog."
+
 msgid "An error occurred while removing this artifact from top backlog."
 msgstr ""
 "Une erreur s'est produite lors de la suppression de cet artéfact dans la "
 "planification générale."
 
+msgid "Remove from backlog"
+msgstr "Supprimer du backlog"
+
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
 
+msgid "This artifact has been added to backlog."
+msgstr "Cet artéfact a été ajouté au backlog."
+
 msgid "This artifact has been added to top backlog."
 msgstr "Cet artéfact a été ajouté à la planification générale."
+
+msgid "This artifact has been removed from backlog."
+msgstr "Cet artéfact a été supprimé du backlog."
 
 msgid "This artifact has been removed from top backlog."
 msgstr "Cet artéfact a été supprimé de la planification générale."
