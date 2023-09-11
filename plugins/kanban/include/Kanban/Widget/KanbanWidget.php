@@ -174,7 +174,7 @@ abstract class KanbanWidget extends Widget
 
     public function getCategory(): string
     {
-        return dgettext('tuleap-kanban', 'Agile dashboard');
+        return dgettext('tuleap-kanban', 'Kanban');
     }
 
     /**

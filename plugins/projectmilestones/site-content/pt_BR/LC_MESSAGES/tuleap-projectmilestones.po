@@ -13,7 +13,7 @@ msgstr ""
 msgid "A widget for milestones monitoring."
 msgstr ""
 
-msgid "Agile dashboard"
+msgid "Backlog"
 msgstr ""
 
 msgid "Invalid Timeframe Semantic configuration."
