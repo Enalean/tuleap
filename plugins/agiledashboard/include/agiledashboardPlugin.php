@@ -164,7 +164,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public const AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
 
-    public const USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_ad_split_modal';
+    public const USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_agiledashboard_split_modal';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;

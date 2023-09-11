@@ -56,7 +56,7 @@ export function listenToUnderstoodButton(modal: Modal): void {
         fetch(
             "/api/v1/users/" +
                 encodeURIComponent(String(document.body.dataset.userId)) +
-                "/preferences?key=should_display_ad_split_modal",
+                "/preferences?key=should_display_agiledashboard_split_modal",
             { method: "DELETE", credentials: "same-origin" },
         ).then((response) => {
             if (response.ok) {
