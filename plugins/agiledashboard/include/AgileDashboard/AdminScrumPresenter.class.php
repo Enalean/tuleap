@@ -99,7 +99,6 @@ class AdminScrumPresenter
         bool $has_workflow_action_add_to_top_backlog_defined,
         array $additional_scrum_sections_controllers,
         bool $is_planning_administration_delegated,
-        public readonly bool $is_using_kanban_service,
         public readonly bool $is_legacy_agiledashboard,
     ) {
         $this->plannings                                   = $plannings;

@@ -12,11 +12,11 @@
         <a class="tlp-tab tlp-tab-active"
            href="?group_id={{ group_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
         </a>
-        {{^ is_using_kanban_service }}
+        {{# is_legacy_agiledashboard }}
             <a class="tlp-tab"
                href="?group_id={{ group_id }}&action=admin&pane=kanban" data-test="admin-kanban-pane">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}
             </a>
-        {{/ is_using_kanban_service }}
+        {{/ is_legacy_agiledashboard }}
         <a class="tlp-tab"
            href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
         </a>
@@ -35,7 +35,7 @@
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        {{^ is_using_kanban_service }}
+                        {{# is_legacy_agiledashboard }}
                             <div class="tlp-form-element">
                                 <label class="tlp-label tlp-checkbox">
                                     <input type="checkbox"
@@ -53,7 +53,7 @@
                                     {{/ has_plannings }}
                                 {{/ scrum_activated }}
                             </div>
-                        {{/ is_using_kanban_service }}
+                        {{/ is_legacy_agiledashboard }}
 
                         {{# can_scrum_mono_milestone_be_enabled }}
                             <div class="tlp-form-element">

@@ -530,7 +530,8 @@ class AgileDashboardRouter
             $this->admin_crumb_builder,
             $this->count_elements_mode_checker,
             $this->scrum_presenter_builder,
-            $layout
+            $layout,
+            new CheckSplitKanbanConfiguration(),
         );
     }
 

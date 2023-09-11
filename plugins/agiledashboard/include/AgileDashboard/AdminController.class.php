@@ -66,6 +66,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Layout\BaseLayout;
@@ -131,6 +132,7 @@ class AdminController extends BaseController
         CountElementsModeChecker $count_elements_mode_checker,
         ScrumPresenterBuilder $scrum_presenter_builder,
         private readonly BaseLayout $layout,
+        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -361,11 +363,14 @@ class AdminController extends BaseController
         $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
         $is_using_kanban_service = $service !== null;
 
+        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
+        $is_legacy_agiledashboard      = ! $is_split_feature_flag_enabled;
+
         return new AdminChartsPresenter(
             $project,
             $token,
             $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
-            $is_using_kanban_service,
+            $is_legacy_agiledashboard,
         );
     }
 }

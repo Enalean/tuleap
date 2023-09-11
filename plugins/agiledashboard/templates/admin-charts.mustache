@@ -4,11 +4,11 @@
         <li>
             <a href="?group_id={{ project_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}</a>
         </li>
-        {{^ is_using_kanban_service }}
+        {{# is_legacy_agiledashboard }}
             <li>
                 <a href="?group_id={{ project_id }}&action=admin&pane=kanban">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}</a>
             </li>
-        {{/ is_using_kanban_service }}
+        {{/ is_legacy_agiledashboard }}
         <li class="active">
             <a href="?group_id={{ project_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}</a>
         </li>

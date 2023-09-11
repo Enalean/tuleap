@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
 use Tuleap\Test\Builders\LayoutInspector;
@@ -88,7 +89,8 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(AdministrationCrumbBuilder::class),
             $this->count_element_mode_checker,
             $this->createStub(ScrumPresenterBuilder::class),
-            new TestLayout(new LayoutInspector())
+            new TestLayout(new LayoutInspector()),
+            new CheckSplitKanbanConfiguration(),
         );
         $controller->updateConfiguration();
     }

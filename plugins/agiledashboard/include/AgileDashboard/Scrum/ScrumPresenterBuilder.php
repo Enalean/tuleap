@@ -38,7 +38,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
-use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 class ScrumPresenterBuilder
@@ -109,10 +108,7 @@ class ScrumPresenterBuilder
         $this->event_manager->dispatch($planning_administration_delegation);
 
         $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-
-        $service                  = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service  = $service !== null && $is_split_feature_flag_enabled;
-        $is_legacy_agiledashboard = ! $is_split_feature_flag_enabled;
+        $is_legacy_agiledashboard      = ! $is_split_feature_flag_enabled;
 
 
         return new AdminScrumPresenter(
@@ -130,7 +126,6 @@ class ScrumPresenterBuilder
             $has_workflow_action_add_to_top_backlog_defined,
             $additional_scrum_sections->getAdditionalSectionsControllers(),
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
-            $is_using_kanban_service,
             $is_legacy_agiledashboard,
         );
     }
