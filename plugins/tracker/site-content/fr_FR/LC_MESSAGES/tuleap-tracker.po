@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -230,39 +230,10 @@ msgstr ""
 "</p>"
 
 msgid ""
-"<p>The artifacts of this tracker does not have any <em>description</em> yet."
-"</p>"
-msgstr ""
-"<p>Les artéfacts de cet outil de suivi n'ont pas de <em>description</em> "
-"définie.</p>"
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
 msgstr ""
 "<p>Les artéfacts de cet outil de suivi n'ont pas de sémantique <em>état</em> "
 "défini.</p>"
-
-msgid ""
-"<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>"
-msgstr ""
-"<p>Les artéfacts de cet outil de suivi n'ont pas de <em>titre</em> défini.</"
-"p>"
-
-#, php-format
-msgid ""
-"<p>The artifacts of this tracker will be described by the field "
-"<strong>%1$s</strong>.</p>"
-msgstr ""
-"<p>Les artéfacts de cet outil de suivi seront résumés par le champ "
-"<strong>%1$s</strong>.</p>"
-
-#, php-format
-msgid ""
-"<p>The artifacts of this tracker will be summarized by the field "
-"<strong>%1$s</strong>.</p>"
-msgstr ""
-"<p>Les artéfacts de cet outil de suivi seront décrits par le champ "
-"<strong>%1$s</strong>.</p>"
 
 #, php-format
 msgid ""
@@ -3067,10 +3038,27 @@ msgstr "L'artéfact n'a pas été mis à jour"
 msgid "The artifact will be linked to %1$s"
 msgstr "L'artifact sera lié à %1$s"
 
+#, php-format
+msgid "The artifacts of this tracker do not have any %s description %s yet."
+msgstr ""
+"Les artéfacts de cet outil de suivi n'ont pas de %s description %s définie."
+
+#, php-format
+msgid "The artifacts of this tracker do not have any %s title %s yet."
+msgstr "Les artéfacts de cet outil de suivi n'ont pas de %s titre %s défini."
+
 msgid ""
 "The artifacts of this tracker does not have any contributor/assignee yet."
 msgstr ""
 "Les artéfacts de cet outil de suivi n'ont pas encore de contributeur/assigné."
+
+#, php-format
+msgid "The artifacts of this tracker will be described by the field %s."
+msgstr "Les artéfacts de cet outil de suivi seront décrits par le champ %s."
+
+#, php-format
+msgid "The artifacts of this tracker will be summarized by the field %s."
+msgstr "Les artéfacts de cet outil de suivi seront résumés par le champ %s."
 
 msgid "The changeset cannot be stored."
 msgstr "Le changeset n'a pas pu être sauvegardé."
