@@ -51,9 +51,6 @@ msgstr "Ajouter à mon tableau de bord"
 msgid "Add to project dashboard"
 msgstr "Ajouter au tableau de bord du projet"
 
-msgid "Agile dashboard"
-msgstr "Tableau de bord agile"
-
 msgid "Cancel"
 msgstr "Annuler"
 

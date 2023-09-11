@@ -114,7 +114,7 @@ class MyProjectMilestones extends Widget
 
     public function getCategory()
     {
-        return dgettext('tuleap-projectmilestones', 'Agile dashboard');
+        return dgettext('tuleap-projectmilestones', 'Backlog');
     }
 
     public function isUnique()

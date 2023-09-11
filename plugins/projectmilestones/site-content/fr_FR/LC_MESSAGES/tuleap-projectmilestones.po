@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #, php-format
 msgid "%s Milestones"
@@ -19,8 +19,8 @@ msgstr "Jalons de %s"
 msgid "A widget for milestones monitoring."
 msgstr "Un widget pour le suivi de jalons."
 
-msgid "Agile dashboard"
-msgstr "Tableau de bord agile"
+msgid "Backlog"
+msgstr "Backlog"
 
 msgid "Invalid Timeframe Semantic configuration."
 msgstr "Mauvaise configuration de sémantique plage de temps."
