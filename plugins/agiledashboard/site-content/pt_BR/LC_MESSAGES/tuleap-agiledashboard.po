@@ -612,6 +612,9 @@ msgstr ""
 msgid "Unable to save the initial effort"
 msgstr ""
 
+msgid "Understood"
+msgstr ""
+
 msgid "Unknown masschange action."
 msgstr ""
 
@@ -619,9 +622,6 @@ msgid "Unplanned"
 msgstr ""
 
 msgid "Unset this semantic"
-msgstr ""
-
-msgid "Unterstood"
 msgstr ""
 
 msgid "Update of planning assignment may lead to errors in:"

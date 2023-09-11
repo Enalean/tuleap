@@ -707,6 +707,9 @@ msgstr "Impossible d'importer la configuration!"
 msgid "Unable to save the initial effort"
 msgstr "Impossible de sauvegarder la sémantique effort estimé"
 
+msgid "Understood"
+msgstr "J'ai compris"
+
 msgid "Unknown masschange action."
 msgstr "L'action de modification en masse n'est pas connue."
 
@@ -715,9 +718,6 @@ msgstr "Non planifié"
 
 msgid "Unset this semantic"
 msgstr "Réinitialiser la sémantique"
-
-msgid "Unterstood"
-msgstr "J'ai compris"
 
 msgid "Update of planning assignment may lead to errors in:"
 msgstr "La mise à jour des plannings peut causer des erreurs dans :"
