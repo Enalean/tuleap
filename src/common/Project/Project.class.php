@@ -70,7 +70,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     // All data concerning services for this project
     private $service_data_array = null;
-    private $cache_active_services;
     private $services;
 
     /**
@@ -130,10 +129,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
             $this->service_data_array[$short_name] = $res_row;
             $this->services[$short_name]           = $service;
-
-            if ($service->isActive()) {
-                $this->cache_active_services[] = $service;
-            }
         }
     }
 
@@ -190,22 +185,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     }
 
     /**
-     *
-     * @return array
-     */
-    public function getAllUsedServices()
-    {
-        $used_services = [];
-        foreach ($this->getServices() as $service) {
-            if ($service->isUsed()) {
-                $used_services[] = $service->getShortName();
-            }
-        }
-
-        return $used_services;
-    }
-
-    /**
      * @return Service[]
      */
     public function getServices()
@@ -214,34 +193,10 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->services;
     }
 
-    /**
-     * @return Service[]
-     */
-    public function getActiveServices(): array
-    {
-        $this->cacheServices();
-        return $this->cache_active_services;
-    }
-
     public function getFileService(): ?ServiceFile
     {
         $this->cacheServices();
         return $this->usesService(Service::FILE) ? $this->services[Service::FILE] : null;
-    }
-
-    public function usesHomePage()
-    {
-        return $this->usesService(Service::HOMEPAGE);
-    }
-
-    public function usesAdmin()
-    {
-        return $this->usesService(Service::ADMIN);
-    }
-
-    public function usesSummary()
-    {
-        return $this->usesService(Service::SUMMARY);
     }
 
     public function usesTracker()
@@ -315,14 +270,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         }
     }
 
-    /*
-        The URL for this project's home page
-    */
-    public function getHomePage()
-    {
-        return $this->usesHomePage() ? $this->getServiceLink(Service::HOMEPAGE) : '';
-    }
-
     public function getWikiPage()
     {
         return $this->getServiceLink(Service::WIKI);
@@ -331,16 +278,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function getForumPage()
     {
         return $this->getServiceLink(Service::FORUM);
-    }
-
-    public function getSvnPage()
-    {
-        return $this->getServiceLink(Service::SVN);
-    }
-
-    public function getTrackerPage()
-    {
-        return $this->getServiceLink(Service::TRACKERV3);
     }
 
     /*
@@ -378,11 +315,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     {
         // TODO XXXX not implemented yet.
         return false;
-    }
-
-    public function getSVNAccess()
-    {
-        return $this->project_data_array['svn_accessfile'];
     }
 
     /**
