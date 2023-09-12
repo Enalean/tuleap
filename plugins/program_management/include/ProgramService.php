@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement;
 
-class ProgramService extends \Service
+use Tuleap\Project\Service\ServiceForCreation;
+
+class ProgramService extends \Service implements ServiceForCreation
 {
     private const ICON_NAME         = 'fas fa-sitemap';
     public const  SERVICE_SHORTNAME = 'plugin_program_management';
