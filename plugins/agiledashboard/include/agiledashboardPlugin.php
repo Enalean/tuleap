@@ -98,6 +98,7 @@ use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
@@ -274,13 +275,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return self::PLUGIN_SHORTNAME;
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
+        $event->addService($this->getServiceShortname(), \Tuleap\AgileDashboard\AgileDashboardService::class);
     }
 
     /**

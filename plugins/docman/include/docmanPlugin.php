@@ -152,6 +152,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -217,10 +218,10 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return self::SERVICE_SHORTNAME;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICE_CLASSNAMES)]
-    public function serviceClassnames(&$params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Docman\ServiceDocman::class;
+        $event->addService(self::SERVICE_SHORTNAME, \Tuleap\Docman\ServiceDocman::class);
     }
 
     #[ListeningToEventClass]

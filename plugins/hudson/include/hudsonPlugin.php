@@ -29,6 +29,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
@@ -85,13 +86,10 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         return 'hudson';
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
+        $event->addService($this->getServiceShortname(), \Tuleap\Hudson\HudsonService::class);
     }
 
     /**

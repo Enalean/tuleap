@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use Event;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Service;
-use ServiceFile;
-use ServiceSVN;
 
 final class ServiceClassnameRetriever
 {
@@ -34,7 +32,7 @@ final class ServiceClassnameRetriever
      */
     private ?array $service_classnames = null;
 
-    public function __construct(private readonly \EventManager $event_manager)
+    public function __construct(private readonly EventDispatcherInterface $dispatcher)
     {
     }
 
@@ -67,14 +65,8 @@ final class ServiceClassnameRetriever
             return;
         }
 
-        $this->service_classnames = [
-            Service::FILE => ServiceFile::class,
-            Service::SVN  => ServiceSVN::class,
-        ];
-
-        $this->event_manager->processEvent(
-            Event::SERVICE_CLASSNAMES,
-            ['classnames' => &$this->service_classnames]
-        );
+        $this->service_classnames = $this->dispatcher
+            ->dispatch(new ServiceClassnamesCollector())
+            ->getServiceClassnames();
     }
 }

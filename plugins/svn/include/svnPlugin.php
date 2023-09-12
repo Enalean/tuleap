@@ -53,6 +53,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\GetReferenceEvent;
@@ -502,12 +503,10 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-    /**
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = \Tuleap\SVN\ServiceSvn::class;
+        $event->addService($this->getServiceShortname(), \Tuleap\SVN\ServiceSvn::class);
     }
 
     /**

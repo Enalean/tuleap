@@ -139,6 +139,7 @@ use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\EnqueueTask;
@@ -319,9 +320,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new EnqueueTask())->enqueue(new UpdateMediaWikiTask());
     }
 
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = $this->getServiceClass();
+        $event->addService($this->getServiceShortname(), $this->getServiceClass());
     }
 
     /**

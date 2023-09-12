@@ -26,6 +26,7 @@ use Tuleap\Layout\HomePage\LastMonthStatisticsCollectorSVN;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 
 final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -407,7 +408,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
     public function testImplementingPluginWithServiceIsEnoughToListenToEvents(): void
     {
         $plugin = new class extends \Plugin implements PluginWithService {
-            public function serviceClassnames(array &$params): void
+            public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
             {
             }
 
@@ -432,7 +433,6 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             }
         };
 
-        self::assertArrayHasKey(Event::SERVICE_CLASSNAMES, $plugin->getHooksAndCallbacks()->toArray());
         self::assertArrayHasKey(Event::SERVICES_ALLOWED_FOR_PROJECT, $plugin->getHooksAndCallbacks()->toArray());
         self::assertArrayHasKey(Event::SERVICE_IS_USED, $plugin->getHooksAndCallbacks()->toArray());
         self::assertArrayHasKey(ProjectServiceBeforeActivation::NAME, $plugin->getHooksAndCallbacks()->toArray());
