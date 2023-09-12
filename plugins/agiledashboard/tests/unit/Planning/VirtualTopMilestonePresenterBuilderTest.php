@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning;
 use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\AgileDashboard\Stub\VerifyProjectUsesExplicitBacklogStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Event\Dispatchable;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -66,7 +67,7 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
         $builder = new VirtualTopMilestonePresenterBuilder(
             $this->event_dispatcher,
             $this->explicit_backlog_verifier,
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration($this->event_dispatcher),
         );
         return $builder->buildPresenter(
             $this->milestone,
@@ -79,8 +80,10 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
     public function testItBuildsPresenterWithVirtualTopBacklogMilestone(): void
     {
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            function (AllowedAdditionalPanesToDisplayCollector $event) {
-                $event->add(self::ADDITIONAL_PANE);
+            function (Dispatchable $event) {
+                if ($event instanceof AllowedAdditionalPanesToDisplayCollector) {
+                    $event->add(self::ADDITIONAL_PANE);
+                }
                 return $event;
             }
         );

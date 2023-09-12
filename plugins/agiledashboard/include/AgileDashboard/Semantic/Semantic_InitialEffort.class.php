@@ -103,7 +103,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration(EventManager::instance()))
             ->isProjectAllowedToUseSplitKanban($this->tracker->getProject());
 
         $html = dgettext('tuleap-agiledashboard', 'This is used in the Agile Dashboard if enabled.');

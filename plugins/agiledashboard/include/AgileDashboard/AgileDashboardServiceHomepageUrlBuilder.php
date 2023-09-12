@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use EventManager;
 use Project;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
@@ -34,7 +35,7 @@ final class AgileDashboardServiceHomepageUrlBuilder
 
     public static function buildSelf(): self
     {
-        return self::buildWithSplitKanbanConfigurationChecker(new CheckSplitKanbanConfiguration());
+        return self::buildWithSplitKanbanConfigurationChecker(new CheckSplitKanbanConfiguration(EventManager::instance()));
     }
 
     public static function buildWithSplitKanbanConfigurationChecker(SplitKanbanConfigurationChecker $split_kanban_configuration_checker): self

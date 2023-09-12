@@ -22,10 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+
 final class CheckSplitKanbanConfiguration implements SplitKanbanConfigurationChecker
 {
+    public function __construct(private readonly EventDispatcherInterface $dispatcher)
+    {
+    }
+
     public function isProjectAllowedToUseSplitKanban(\Project $project): bool
     {
+        if ($this->dispatcher->dispatch(new ForceUsageOfSplitKanbanEvent($project))->isSplitKanbanMandatoryForProject()) {
+            return true;
+        }
+
         $list_of_project_ids_without_split_kanban = \ForgeConfig::getFeatureFlagArrayOfInt(SplitKanbanConfiguration::FEATURE_FLAG);
 
         if (! $list_of_project_ids_without_split_kanban) {

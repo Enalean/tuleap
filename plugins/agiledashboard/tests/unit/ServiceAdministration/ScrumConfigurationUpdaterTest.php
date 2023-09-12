@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
+use Tuleap\Event\Dispatchable;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
@@ -76,7 +77,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mono_milestone_checker,
             $this->explicit_backlog_updater,
             $this->event_dispatcher,
-            new \Tuleap\Kanban\CheckSplitKanbanConfiguration(),
+            new \Tuleap\Kanban\CheckSplitKanbanConfiguration($this->event_dispatcher),
         );
         $configuration_updater->updateConfiguration();
     }
@@ -84,7 +85,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBlockingAccessToScrumBlocksConfigurationChanges(): void
     {
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            function (PlanningAdministrationDelegation|BlockScrumAccess $event) {
+            function (Dispatchable $event) {
                 if ($event instanceof BlockScrumAccess) {
                     $event->disableScrumAccess();
                 }
@@ -187,7 +188,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config_manager->expects(self::once())->method('updateConfiguration');
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            function (PlanningAdministrationDelegation|BlockScrumAccess $event) {
+            function (Dispatchable $event) {
                 if ($event instanceof PlanningAdministrationDelegation) {
                     $event->enablePlanningAdministrationDelegation();
                 }

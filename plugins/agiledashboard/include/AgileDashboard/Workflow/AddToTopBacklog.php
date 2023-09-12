@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
+use EventManager;
 use Feedback;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
@@ -89,7 +90,7 @@ class AddToTopBacklog extends Transition_PostAction
      */
     public function after(Tracker_Artifact_Changeset $changeset)
     {
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($changeset->getTracker()->getProject());
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($changeset->getTracker()->getProject());
         try {
             $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
 

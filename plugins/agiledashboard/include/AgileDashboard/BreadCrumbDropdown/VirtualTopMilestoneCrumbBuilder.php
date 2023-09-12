@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 
+use EventManager;
 use Project;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
@@ -50,7 +51,7 @@ class VirtualTopMilestoneCrumbBuilder
             'group_id' => (int) $project->getGroupId(),
         ];
 
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($project);
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($project);
         return new BreadCrumb(
             new BreadCrumbLink(
                 $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Backlog') : dgettext('tuleap-agiledashboard', 'Top Backlog Planning'),

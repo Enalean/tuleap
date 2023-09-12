@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -90,7 +91,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->count_element_mode_checker,
             $this->createStub(ScrumPresenterBuilder::class),
             new TestLayout(new LayoutInspector()),
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
         $controller->updateConfiguration();
     }

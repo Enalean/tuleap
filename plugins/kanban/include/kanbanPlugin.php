@@ -331,7 +331,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventManager::instance()),
             EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -368,7 +368,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )
             ),
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventManager::instance()),
         );
     }
 
@@ -748,7 +748,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         if ($service->getShortName() !== KanbanService::SERVICE_SHORTNAME) {
             return;
         }
-        $configuration_checker = new CheckSplitKanbanConfiguration();
+        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($service->getProject())) {
             $event->hideService();
         }
@@ -759,7 +759,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function enableSplitFeatureFlagIfNeeded(SplitBacklogFeatureFlagEvent $event): void
     {
         $project               = $event->project;
-        $configuration_checker = new CheckSplitKanbanConfiguration();
+        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
         if ($configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
             $event->enableSplitFeatureFlag();
         }
@@ -768,7 +768,7 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
     {
         $project               = $event->project;
-        $configuration_checker = new CheckSplitKanbanConfiguration();
+        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
         if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
             return;
         }
