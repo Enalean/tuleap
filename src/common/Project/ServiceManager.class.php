@@ -19,14 +19,12 @@
 
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
+use Tuleap\Project\Service\ServiceClassnameRetriever;
 use Tuleap\Project\Service\ServiceNotFoundException;
 
 class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const CUSTOM_SERVICE_SHORTNAME = '';
-
-    /** @var ServiceDao */
-    private $dao;
 
     /** @var string[] */
     private $list_of_core_services = [
@@ -46,15 +44,12 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     /** @var ServiceManager */
     private static $instance;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
 
-    private function __construct(ServiceDao $dao, ProjectManager $project_manager)
-    {
-        $this->dao             = $dao;
-        $this->project_manager = $project_manager;
+    private function __construct(
+        private readonly ServiceDao $dao,
+        private readonly ProjectManager $project_manager,
+        private readonly ServiceClassnameRetriever $service_classname_retriever,
+    ) {
     }
 
     /**
@@ -64,8 +59,11 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c              = self::class;
-            self::$instance = new $c(new ServiceDao(), ProjectManager::instance());
+            self::$instance = new self(
+                new ServiceDao(),
+                ProjectManager::instance(),
+                new ServiceClassnameRetriever(EventManager::instance()),
+            );
         }
         return self::$instance;
     }
@@ -222,7 +220,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function instantiateFromRow(Project $project, array $row)
     {
-        $classname = $project->getServiceClassName($row['short_name']);
+        $classname = $this->service_classname_retriever->getServiceClassName($row['short_name']);
 
         return new $classname($project, $row);
     }
