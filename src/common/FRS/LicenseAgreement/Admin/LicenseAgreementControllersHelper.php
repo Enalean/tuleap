@@ -70,8 +70,8 @@ class LicenseAgreementControllersHelper
 
     private function getFileService(Project $project): \ServiceFile
     {
-        $file_service = $project->getFileService();
-        if (! $file_service) {
+        $file_service = $project->getService(\Service::FILE);
+        if (! $file_service instanceof \ServiceFile) {
             throw new NotFoundException('Service is not active for this project');
         }
         return $file_service;
