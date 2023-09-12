@@ -25,6 +25,7 @@ namespace Tuleap\Kanban;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class CheckSplitKanbanConfigurationTest extends TestCase
 {
@@ -34,7 +35,7 @@ final class CheckSplitKanbanConfigurationTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $checker = new CheckSplitKanbanConfiguration();
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback());
 
         self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -45,7 +46,7 @@ final class CheckSplitKanbanConfigurationTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '0');
 
-        $checker = new CheckSplitKanbanConfiguration();
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback());
 
         self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -56,7 +57,7 @@ final class CheckSplitKanbanConfigurationTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '123,456');
 
-        $checker = new CheckSplitKanbanConfiguration();
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback());
 
         self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -67,7 +68,7 @@ final class CheckSplitKanbanConfigurationTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '123,456');
 
-        $checker = new CheckSplitKanbanConfiguration();
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback());
 
         self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
     }
@@ -78,8 +79,22 @@ final class CheckSplitKanbanConfigurationTest extends TestCase
 
         \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '1');
 
-        $checker = new CheckSplitKanbanConfiguration();
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback());
 
         self::assertFalse($checker->isProjectAllowedToUseSplitKanban($project));
+    }
+
+    public function testPluginsCanForceUsageOfSplitKanbanEvenIfFeatureFlagDeactivateForTheProject(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(123)->build();
+
+        \ForgeConfig::setFeatureFlag(SplitKanbanConfiguration::FEATURE_FLAG, '1');
+
+        $checker = new CheckSplitKanbanConfiguration(EventDispatcherStub::withCallback(function (ForceUsageOfSplitKanbanEvent $event): object {
+            $event->splitKanbanIsMandatory();
+            return $event;
+        }));
+
+        self::assertTrue($checker->isProjectAllowedToUseSplitKanban($project));
     }
 }

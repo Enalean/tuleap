@@ -81,7 +81,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             $this->planned_artifact_dao,
             $this->unplanned_artifacts_adder,
             $this->event_dispatcher,
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration($this->event_dispatcher)
         );
         $user            = UserTestBuilder::buildWithDefaults();
         $this->processor->processAction($user, $this->tracker, $request, ['125', '144']);

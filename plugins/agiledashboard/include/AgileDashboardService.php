@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use EventManager;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 
 class AgileDashboardService extends \Service
@@ -65,7 +66,7 @@ class AgileDashboardService extends \Service
 
     private function isLegacyAgileDashboard(): bool
     {
-        return ! (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($this->project);
+        return ! (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($this->project);
     }
 
     public function urlCanChange(): bool

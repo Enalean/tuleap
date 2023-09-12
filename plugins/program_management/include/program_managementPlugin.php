@@ -31,6 +31,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Kanban\ForceUsageOfSplitKanbanEvent;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
@@ -1725,5 +1726,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             ),
             array_map(static fn ($link) => $link->getId(), $event->getArtifact()->getLinkedArtifacts($event->getUser()))
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function forceUsageOfSplitKanbanEvent(ForceUsageOfSplitKanbanEvent $event): void
+    {
+        if ($event->project->usesService(ProgramService::SERVICE_SHORTNAME)) {
+            $event->splitKanbanIsMandatory();
+        }
     }
 }

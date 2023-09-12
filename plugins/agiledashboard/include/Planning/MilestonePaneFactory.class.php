@@ -186,7 +186,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $project = $this->request->getProject();
 
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($project);
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration($this->event_manager))->isProjectAllowedToUseSplitKanban($project);
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,

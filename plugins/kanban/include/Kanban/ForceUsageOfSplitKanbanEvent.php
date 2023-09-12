@@ -22,21 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Event\Dispatchable;
 
-#[ConfigKeyCategory('Kanban')]
-final class SplitKanbanConfiguration
+final class ForceUsageOfSplitKanbanEvent implements Dispatchable
 {
-    #[FeatureFlagConfigKey(<<<'EOF'
-    Should we display kanban homepage back in Agile Dashboard homepage for some projects?
-    Comma separated list of project ids like 123,234. Default to 0 (no projects deactivate split kanban)
-    ℹ️  The split for projects using program service cannot be deactivated
-    ⚠️  This flag is temporary, please get in touch with Enalean Team if you are using it.
-    EOF
-    )]
+    private bool $is_split_kanban_mandatory_for_project = false;
 
-    #[ConfigKeyString('0')]
-    public const FEATURE_FLAG = 'temporarily_deactivate_split_kanban_for_project';
+    public function __construct(public readonly \Project $project)
+    {
+    }
+
+    public function isSplitKanbanMandatoryForProject(): bool
+    {
+        return $this->is_split_kanban_mandatory_for_project;
+    }
+
+    public function splitKanbanIsMandatory(): void
+    {
+        $this->is_split_kanban_mandatory_for_project = true;
+    }
 }

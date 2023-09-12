@@ -531,7 +531,7 @@ class AgileDashboardRouter
             $this->count_elements_mode_checker,
             $this->scrum_presenter_builder,
             $layout,
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventManager::instance()),
         );
     }
 
@@ -634,7 +634,7 @@ class AgileDashboardRouter
             $controller->getHeaderOptions($user)
         );
         $breadcrumbs                   = $controller->getBreadcrumbs();
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($service->getProject());
+        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($service->getProject());
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', []);
         $service->displayHeader(

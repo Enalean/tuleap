@@ -33,6 +33,7 @@ use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -134,7 +135,7 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->agile_dashboard_crumb_builder,
             $this->top_milestone_crumb_builder,
             $this->milestone_crumb_builder,
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
 
         $this->service_breadcrumb     = new BreadCrumb(

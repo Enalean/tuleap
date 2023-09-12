@@ -323,7 +323,7 @@ class AdminController extends BaseController
                 $this->event_manager
             ),
             $this->event_manager,
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration($this->event_manager),
         );
 
         $updater->updateConfiguration();

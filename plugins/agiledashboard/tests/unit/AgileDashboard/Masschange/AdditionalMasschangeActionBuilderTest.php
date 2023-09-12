@@ -85,7 +85,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
             $this->planning_factory,
             $this->template_renderer,
             $this->event_dispatcher,
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration($this->event_dispatcher)
         );
         $user          = UserTestBuilder::buildWithDefaults();
         return $this->builder->buildMasschangeAction($this->tracker, $user);

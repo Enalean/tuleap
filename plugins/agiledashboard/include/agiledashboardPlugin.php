@@ -627,7 +627,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
 
         if ($is_used_in_planning || $is_used_in_backlog) {
-            $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+            $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
                 ->isProjectAllowedToUseSplitKanban($tracker->getProject());
             $result['can_be_deleted']               = false;
             $result['message']                      = $is_project_allowed_to_use_split_kanban ? dgettext('tuleap-agiledashboard', 'Backlog') : 'Agile Dashboard';
@@ -1317,15 +1317,17 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getAllBreadCrumbsForMilestoneBuilder(): AllBreadCrumbsForMilestoneBuilder
     {
+        $split_kanban_configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
+
         return new AllBreadCrumbsForMilestoneBuilder(
-            new AgileDashboardCrumbBuilder(new \Tuleap\Kanban\CheckSplitKanbanConfiguration()),
+            new AgileDashboardCrumbBuilder($split_kanban_configuration_checker),
             new VirtualTopMilestoneCrumbBuilder($this->getPluginPath()),
             new MilestoneCrumbBuilder(
                 $this->getPluginPath(),
                 $this->getMilestonePaneFactory(),
                 $this->getMilestoneFactory()
             ),
-            new CheckSplitKanbanConfiguration(),
+            $split_kanban_configuration_checker,
         );
     }
 
@@ -1472,7 +1474,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             ),
             new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);
@@ -1489,7 +1491,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->getPlanningFactory(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange'),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
@@ -1510,7 +1512,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new PlannedArtifactDao(),
             $this->getUnplannedArtifactsAdder(),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration()
+            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $processor->processAction(
@@ -1758,7 +1760,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getSemanticProgressUsageEvent(GetSemanticProgressUsageEvent $event): void
     {
-        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+        $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
             ->isProjectAllowedToUseSplitKanban($event->tracker->getProject());
 
         $event->addFutureUsageLocation(
@@ -1774,7 +1776,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
-        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration())
+        $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
             ->isProjectAllowedToUseSplitKanban($project);
 
         $event->setExternalServicesDescriptions(
@@ -1875,7 +1877,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             return false;
         }
 
-        if (! (new CheckSplitKanbanConfiguration())->isProjectAllowedToUseSplitKanban($project)) {
+        if (! (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($project)) {
             return false;
         }
 

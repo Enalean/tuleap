@@ -52,6 +52,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -158,7 +159,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(PlanningEditionPresenterBuilder::class),
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
-            new CheckSplitKanbanConfiguration(),
+            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
     }
 
