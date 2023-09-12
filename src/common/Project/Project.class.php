@@ -72,11 +72,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     private $service_data_array = null;
     private $services;
 
-    /**
-     * @var array The classnames for services
-     */
-    private $serviceClassnames;
-
     public function __construct($param)
     {
         parent::__construct($param);
@@ -86,30 +81,11 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         $this->project_data_array = $this->data_array;
     }
 
-    private function cacheServiceClassnames()
-    {
-        if ($this->serviceClassnames !== null) {
-            return;
-        }
-
-        $this->serviceClassnames = [
-            Service::FILE => ServiceFile::class,
-            Service::SVN  => ServiceSVN::class,
-        ];
-
-        EventManager::instance()->processEvent(
-            Event::SERVICE_CLASSNAMES,
-            ['classnames' => &$this->serviceClassnames]
-        );
-    }
-
     private function cacheServices()
     {
         if ($this->services !== null) {
             return;
         }
-
-        $this->cacheServiceClassnames();
 
         // Get Service data
         $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
@@ -153,29 +129,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     {
         $this->cacheServices();
         return $this->service_data_array;
-    }
-
-    /**
-     * Return the name of the class to instantiate a service based on its short name
-     *
-     * @param string $short_name the short name of the service
-     *
-     * @psalm-return class-string
-     */
-    public function getServiceClassName($short_name): string
-    {
-        if (! $short_name) {
-            return \Tuleap\Project\Service\ProjectDefinedService::class;
-        }
-
-        $this->cacheServiceClassnames();
-
-        $classname = Service::class;
-        if (isset($this->serviceClassnames[$short_name])) {
-            $classname = $this->serviceClassnames[$short_name];
-        }
-
-        return $classname;
     }
 
     public function getService(string $service_name): ?Service
