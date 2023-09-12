@@ -77,6 +77,13 @@ msgid "Artifact links with \"%s\" type cannot be updated."
 msgstr ""
 "Les liens entre artéfacts de type \"%s\" ne peuvent pas être mis à jour."
 
+msgid ""
+"Backlog service cannot be enabled when the project also uses the Program "
+"service."
+msgstr ""
+"Le service Backlog ne peut pas être activé quand le projet utilise aussi le "
+"service Programme."
+
 msgid "Can prioritize features"
 msgstr "Peut prioriser des fonctionnalités"
 

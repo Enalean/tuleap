@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\ProvidedArtifactLinksTypesProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\BacklogPlugin\BacklogServiceBlocker;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\BuildRedirectFormActionEventProxy;
@@ -318,33 +319,42 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        $user_retriever = new UserManagerAdapter(UserManager::instance());
-        $handler        = new ServiceDisabledCollectorHandler(
+        $user_retriever    = new UserManagerAdapter(UserManager::instance());
+        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+        $event_dispatcher  = EventManager::instance();
+        $handler           = new ServiceDisabledCollectorHandler(
             new TeamDao(),
             new ProgramServiceBlocker(
                 PlanningFactory::build(),
                 $user_retriever,
-                EventManager::instance(),
-                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever)
-            )
+                $event_dispatcher,
+                $project_retriever
+            ),
+            new BacklogServiceBlocker($project_retriever, $event_dispatcher),
+            ProgramService::SERVICE_SHORTNAME,
+            \AgileDashboardPlugin::PLUGIN_SHORTNAME,
         );
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($event), $this->getServiceShortname());
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($event));
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        $user_retriever = new UserManagerAdapter(UserManager::instance());
-        $handler        = new ProjectServiceBeforeActivationHandler(
+        $user_retriever    = new UserManagerAdapter(UserManager::instance());
+        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+        $event_dispatcher  = EventManager::instance();
+        $handler           = new ProjectServiceBeforeActivationHandler(
             new TeamDao(),
             new ProgramServiceBlocker(
                 PlanningFactory::build(),
                 $user_retriever,
-                EventManager::instance(),
-                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever)
-            )
+                $event_dispatcher,
+                $project_retriever
+            ),
+            new BacklogServiceBlocker($project_retriever, $event_dispatcher),
+            ProgramService::SERVICE_SHORTNAME,
+            \AgileDashboardPlugin::PLUGIN_SHORTNAME,
         );
-
-        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), $this->getServiceShortname());
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event));
     }
 
     public function serviceIsUsed(array $params): void

@@ -58,6 +58,11 @@ msgstr ""
 msgid "Artifact links with \"%s\" type cannot be updated."
 msgstr ""
 
+msgid ""
+"Backlog service cannot be enabled when the project also uses the Program "
+"service."
+msgstr ""
+
 msgid "Can prioritize features"
 msgstr ""
 

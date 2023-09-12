@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Service;
 
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\ProgramService;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramBlocksBacklogServiceIfNeededStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\BacklogBlocksProgramServiceIfNeededStub;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -36,25 +37,34 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
     private ServiceDisabledCollector $event;
     private string $handled_shortname;
     private VerifyIsTeamStub $team_verifier;
-    private BacklogBlocksProgramServiceIfNeededStub $backlog_blocker;
+    private BacklogBlocksProgramServiceIfNeededStub $program_blocker;
+    private ProgramBlocksBacklogServiceIfNeededStub $backlog_blocker;
 
     protected function setUp(): void
     {
         $this->team_verifier   = VerifyIsTeamStub::withNotValidTeam();
-        $this->backlog_blocker = BacklogBlocksProgramServiceIfNeededStub::withNotBlocked();
+        $this->program_blocker = BacklogBlocksProgramServiceIfNeededStub::withNotBlocked();
+        $this->backlog_blocker = ProgramBlocksBacklogServiceIfNeededStub::withNotBlocked();
 
-        $this->event             = new ServiceDisabledCollector(
-            ProjectTestBuilder::aProject()->build(),
-            ProgramService::SERVICE_SHORTNAME,
-            UserTestBuilder::buildWithDefaults()
-        );
         $this->handled_shortname = ProgramService::SERVICE_SHORTNAME;
     }
 
     private function handle(): void
     {
-        $handler = new ServiceDisabledCollectorHandler($this->team_verifier, $this->backlog_blocker);
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), $this->handled_shortname);
+        $this->event = new ServiceDisabledCollector(
+            ProjectTestBuilder::aProject()->build(),
+            $this->handled_shortname,
+            UserTestBuilder::buildWithDefaults()
+        );
+
+        $handler = new ServiceDisabledCollectorHandler(
+            $this->team_verifier,
+            $this->program_blocker,
+            $this->backlog_blocker,
+            ProgramService::SERVICE_SHORTNAME,
+            \AgileDashboardPlugin::PLUGIN_SHORTNAME,
+        );
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event));
     }
 
     public function testItDoesNotBlockOtherServices(): void
@@ -79,7 +89,22 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDisablesProgramServiceWhenBacklogTellsItTo(): void
     {
-        $this->backlog_blocker = BacklogBlocksProgramServiceIfNeededStub::withBlocked();
+        $this->program_blocker = BacklogBlocksProgramServiceIfNeededStub::withBlocked();
+        $this->handle();
+        self::assertNotEmpty($this->event->getReason());
+    }
+
+    public function testItDoesNotBlockBacklogService(): void
+    {
+        $this->handled_shortname = \AgileDashboardPlugin::PLUGIN_SHORTNAME;
+        $this->handle();
+        self::assertEmpty($this->event->getReason());
+    }
+
+    public function testItDisablesBacklogServiceWhenProgramTellsItTo(): void
+    {
+        $this->handled_shortname = \AgileDashboardPlugin::PLUGIN_SHORTNAME;
+        $this->backlog_blocker   = ProgramBlocksBacklogServiceIfNeededStub::withBlocked();
         $this->handle();
         self::assertNotEmpty($this->event->getReason());
     }
