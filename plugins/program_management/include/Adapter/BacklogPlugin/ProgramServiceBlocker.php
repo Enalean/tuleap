@@ -52,13 +52,16 @@ final class ProgramServiceBlocker implements BacklogBlocksProgramServiceIfNeeded
         $project = $this->project_retriever->getProject($project_identifier->getId());
         $event   = $this->event_dispatcher->dispatch(new SplitBacklogFeatureFlagEvent($project));
 
-        if ($event->isSplitFeatureFlagEnabled() && $project->usesService(\AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
-            return Option::fromValue(
-                dgettext(
-                    'tuleap-program_management',
-                    'Program service cannot be enabled when the project also uses the Backlog service.'
-                )
-            );
+        if ($event->isSplitFeatureFlagEnabled()) {
+            if ($project->usesService(\AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
+                return Option::fromValue(
+                    dgettext(
+                        'tuleap-program_management',
+                        'Program service cannot be enabled when the project also uses the Backlog service.'
+                    )
+                );
+            }
+            return Option::nothing(string());
         }
 
         $user          = $this->user_retriever->getUserWithId($user_identifier);
@@ -69,14 +72,6 @@ final class ProgramServiceBlocker implements BacklogBlocksProgramServiceIfNeeded
         );
 
         if ($configuration->isNotEmpty()) {
-            if ($event->isSplitFeatureFlagEnabled()) {
-                return Option::fromValue(
-                    dgettext(
-                        'tuleap-program_management',
-                        'Program service cannot be enabled when the project has a Scrum configuration in the Backlog service.'
-                    )
-                );
-            }
             return Option::fromValue(
                 dgettext(
                     'tuleap-program_management',
