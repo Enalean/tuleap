@@ -103,15 +103,4 @@ final class ProgramServiceBlockerTest extends TestCase
 
         self::assertTrue($this->getBlockedMessage()->isValue());
     }
-
-    public function testItBlocksProgramServiceWhenBacklogServiceIsNotUsedButThereIsALeftoverScrumPlanning(): void
-    {
-        $this->event_dispatcher   = EventDispatcherStub::withCallback(function (SplitBacklogFeatureFlagEvent $event) {
-            $event->enableSplitFeatureFlag();
-            return $event;
-        });
-        $this->planning_retriever = RetrievePlanningStub::stubAllPlannings();
-
-        self::assertTrue($this->getBlockedMessage()->isValue());
-    }
 }

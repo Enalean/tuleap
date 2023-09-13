@@ -384,13 +384,6 @@ msgstr ""
 "Le service Programme ne peut pas être activé quand le projet utilise une "
 "configuration Scrum dans le service des tableaux de bord Agile."
 
-msgid ""
-"Program service cannot be enabled when the project has a Scrum configuration "
-"in the Backlog service."
-msgstr ""
-"Le service Programme ne peut pas être activé quand le projet utilise une "
-"configuration Scrum dans le service Backlog."
-
 #, php-format
 msgid ""
 "Project #%d cannot be a Team because it is not in the explicit backlog mode"

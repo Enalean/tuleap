@@ -312,11 +312,6 @@ msgid ""
 "in the AgileDashboard service."
 msgstr ""
 
-msgid ""
-"Program service cannot be enabled when the project has a Scrum configuration "
-"in the Backlog service."
-msgstr ""
-
 #, php-format
 msgid ""
 "Project #%d cannot be a Team because it is not in the explicit backlog mode"
