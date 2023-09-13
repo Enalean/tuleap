@@ -212,12 +212,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             TypeCoveredByPresenter::TYPE_COVERED_BY
         );
 
-        if ($project->usesService($service_short_name)) {
-            // Service is being deactivated
-            $event->serviceCanBeActivated();
-            return;
-        }
-
         if ($covered_by_type_is_activated) {
             $event->serviceCanBeActivated();
             return;
