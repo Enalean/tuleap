@@ -65,9 +65,10 @@ options: RichTextEditorOptions = {
         // Add additional CKEditor options, or return empty object
         return {};
     },
-    onFormatChange: (new_format: TextFieldFormat) => {
+    onFormatChange: (new_format: TextFieldFormat, new_content: string) => {
         // React on change of Format selectbox value
         // This is also called once at initialization
+        // Content of the editor can change when switching from one format to another.
     },
     onEditorInit: (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => {
         // React on creation of the CKEditor (only in "html" format)

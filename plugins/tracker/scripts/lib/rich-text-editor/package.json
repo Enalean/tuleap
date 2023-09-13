@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
   "module": "dist/plugin-tracker-rich-text-editor.js",

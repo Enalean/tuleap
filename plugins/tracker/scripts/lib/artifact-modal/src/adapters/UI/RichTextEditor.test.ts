@@ -31,6 +31,7 @@ import {
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
+import { selectOrThrow } from "@tuleap/dom";
 import { setCatalog } from "../../gettext-catalog";
 import type { HostElement } from "./RichTextEditor";
 import {
@@ -120,7 +121,7 @@ describe(`RichTextEditor`, () => {
                 if (typeof options.onFormatChange !== "function") {
                     throw new Error("Expected onFormatChange to be a function");
                 }
-                options.onFormatChange(format);
+                options.onFormatChange(format, value);
                 if (typeof options.onEditorInit !== "function") {
                     throw new Error("Expected onEditorInit to be a function");
                 }
@@ -152,7 +153,7 @@ describe(`RichTextEditor`, () => {
             disabled,
             required,
             rows: 5,
-            textarea: {} as HTMLTextAreaElement,
+            textarea: doc.createElement("textarea"),
             is_help_shown: false,
             upload_setup,
             controller: FormattedTextController(
@@ -283,7 +284,7 @@ describe(`RichTextEditor`, () => {
             it(`will not create an editor if given identifier is empty`, () => {
                 const host = getHost();
                 host.identifier = "";
-                host.textarea = {} as HTMLTextAreaElement;
+                host.textarea = doc.createElement("textarea");
                 host.editor = createEditor(host);
 
                 expect(host.editor).toBeUndefined();
@@ -299,7 +300,7 @@ describe(`RichTextEditor`, () => {
                 const createRichEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
                 const host = getHost();
-                host.textarea = {} as HTMLTextAreaElement;
+                host.textarea = doc.createElement("textarea");
                 host.editor = createEditor(host);
 
                 const editor_options = createRichEditor.mock.calls[0][1];
@@ -323,15 +324,15 @@ describe(`RichTextEditor`, () => {
                         }
                         throw new Error("Unexpected event name: " + event_name);
                     },
-                    /* eslint-disable @typescript-eslint/no-unused-vars */
                     showNotification(
                         message: string,
                         type: CKEDITOR.plugins.notification.type,
                         duration: number,
                     ): void {
-                        // side-effects
+                        if (message === "" && type === "info" && duration > 0) {
+                            // side-effects
+                        }
                     },
-                    /* eslint-enable @typescript-eslint/no-unused-vars */
                 } as CKEDITOR.editor;
                 isThereAnImageWithDataURI.mockReturnValue(true);
                 const showNotification = jest.spyOn(ckeditor, "showNotification");
@@ -480,7 +481,7 @@ describe(`RichTextEditor`, () => {
             const createRichEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
             const host = getHost();
-            host.textarea = {} as HTMLTextAreaElement;
+            host.textarea = doc.createElement("textarea");
             host.editor = createEditor(host);
 
             const editor_options = createRichEditor.mock.calls[0][1];
@@ -497,7 +498,7 @@ describe(`RichTextEditor`, () => {
             const update = RichTextEditor.content(host);
             update(host, target);
 
-            const textarea = getTextarea(target);
+            const textarea = selectOrThrow(target, "[data-test=textarea]", HTMLTextAreaElement);
             expect(textarea.disabled).toBe(true);
         });
     });
@@ -513,7 +514,7 @@ describe(`RichTextEditor`, () => {
             const update = RichTextEditor.content(host);
             update(host, target);
 
-            const textarea = getTextarea(target);
+            const textarea = selectOrThrow(target, "[data-test=textarea]", HTMLTextAreaElement);
             expect(textarea.required).toBe(true);
         });
     });
@@ -535,11 +536,3 @@ describe(`RichTextEditor`, () => {
         });
     });
 });
-
-function getTextarea(target: ShadowRoot): HTMLTextAreaElement {
-    const textarea = target.querySelector("[data-test=textarea]");
-    if (!(textarea instanceof HTMLTextAreaElement)) {
-        throw new Error("Could not find textarea in component");
-    }
-    return textarea;
-}

@@ -35,6 +35,7 @@ import {
     TEXT_FORMAT_HTML,
 } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
+import { selectOrThrow } from "@tuleap/dom";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -54,7 +55,7 @@ export interface RichTextEditor {
     disabled: boolean;
     required: boolean;
     rows: number;
-    textarea: HTMLTextAreaElement | null;
+    textarea: HTMLTextAreaElement;
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
     upload_setup: Option<FileUploadSetup>;
@@ -157,7 +158,7 @@ function disablePasteOfImages(ckeditor: CKEDITOR.editor): void {
 }
 
 export const createEditor = (host: HostElement): TextEditorInterface | undefined => {
-    if (!host.textarea || host.identifier === "") {
+    if (host.identifier === "") {
         return undefined;
     }
     const locale = document.body.dataset.userLocale ?? "en_US";
@@ -181,16 +182,13 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
                 }),
                 { height: "100px", readOnly: host.disabled },
             ),
-        onFormatChange: (new_format) => {
+        onFormatChange: (new_format, new_content) => {
             host.is_help_shown =
                 host.controller.getFileUploadSetup().isValue() && new_format === TEXT_FORMAT_HTML;
-            if (!host.textarea) {
-                return;
-            }
             dispatch(host, "format-change", {
                 detail: {
                     format: new_format,
-                    content: host.textarea.value,
+                    content: new_content,
                 },
             });
         },
@@ -225,14 +223,7 @@ export const RichTextEditor = define<RichTextEditor>({
     disabled: false,
     required: false,
     rows: 5,
-    textarea: (host) => {
-        const target = host.content();
-        const textarea = target.querySelector("[data-textarea]");
-        if (!(textarea instanceof HTMLTextAreaElement)) {
-            return null;
-        }
-        return textarea;
-    },
+    textarea: (host) => selectOrThrow(host.content(), "[data-textarea]", HTMLTextAreaElement),
     upload_setup: {
         get: (host, last_value) => last_value ?? Option.nothing(),
         set: (host, new_value) => new_value,
@@ -244,21 +235,19 @@ export const RichTextEditor = define<RichTextEditor>({
             return controller;
         },
     },
-    content: (host) => html`
-        <textarea
-            data-textarea
-            data-test="textarea"
-            id="${host.identifier}"
-            required="${host.required}"
-            disabled="${host.disabled}"
-            class="tlp-textarea"
-            rows="${host.rows}"
-            maxlength="65535"
-            oninput="${onTextareaInput}"
-        >
+    content: (host) =>
+        html`<textarea
+                data-textarea
+                data-test="textarea"
+                id="${host.identifier}"
+                required="${host.required}"
+                disabled="${host.disabled}"
+                class="tlp-textarea"
+                rows="${host.rows}"
+                maxlength="65535"
+                oninput="${onTextareaInput}"
+            >
 ${host.contentValue}</textarea
-        >
-        ${host.is_help_shown &&
-        html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`}
-    `,
+            >${host.is_help_shown &&
+            html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`} `,
 });

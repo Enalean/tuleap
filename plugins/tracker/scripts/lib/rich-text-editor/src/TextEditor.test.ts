@@ -29,17 +29,24 @@ import type {
     MarkdownToHTMLRendererInterface,
 } from "./types";
 import CKEDITOR from "ckeditor4";
+import { InternalTextEditorOptionsBuilder } from "../tests/builders/InternalTextEditorOptionsBuilder";
+
+type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
-const emptyFunction = (): void => {
+const noop = (): void => {
     //Do nothing
 };
-const emptyOptionsProvider = (): Record<string, never> => ({});
+
+const COMMONMARK_CONTENT = "**markdown** content";
+const HTML_CONTENT = `<p>Some HTML content</p>`;
+const TEXT_CONTENT = "Plain text content";
 
 describe(`TextEditor`, () => {
     let textarea: HTMLTextAreaElement,
         markdown_converter: HTMLToMarkdownConverterInterface,
-        markdown_renderer: MarkdownToHTMLRendererInterface;
+        markdown_renderer: MarkdownToHTMLRendererInterface,
+        options: InternalTextEditorOptions;
     beforeEach(() => {
         const doc = createDocument();
         textarea = doc.createElement("textarea");
@@ -47,35 +54,38 @@ describe(`TextEditor`, () => {
         doc.body.append(textarea);
         markdown_converter = { convert: (html): string => html };
         markdown_renderer = { render: (markdown): string => markdown };
+
+        options = InternalTextEditorOptionsBuilder.options().build();
     });
 
+    const getTextEditor = (): TextEditor =>
+        new TextEditor(textarea, options, markdown_converter, markdown_renderer);
+
     describe(`init()`, () => {
-        it('when the format is "html", then ckeditor is created and the text is not rendered as Markdown', () => {
+        it(`when the format is "html",
+            then ckeditor is created and the text is not rendered as Markdown
+            and onFormatChange is called`, () => {
             const ckeditor_instance = getMockedCKEditorInstance();
             jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-            jest.spyOn(markdown_converter, "convert");
-            const editor = new TextEditor(
-                textarea,
-                getEmptyOptions(),
-                markdown_converter,
-                markdown_renderer,
-            );
-            textarea.value = `<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>`;
+            const convert = jest.spyOn(markdown_converter, "convert");
+            const onFormatChange = jest.spyOn(options, "onFormatChange");
+            const html_content = `<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>`;
+
+            const editor = getTextEditor();
+            textarea.value = html_content;
             editor.init(TEXT_FORMAT_HTML);
-            expect(markdown_converter.convert).not.toHaveBeenCalled();
-            expect(textarea.value).toBe(
-                "<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>",
-            );
+
+            expect(convert).not.toHaveBeenCalled();
+            expect(textarea.value).toBe(html_content);
+            expect(onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_HTML, html_content);
         });
 
-        it("when the format is commonmark, then ckeditor is not created and callback is called", () => {
-            const options = {
-                ...getEmptyOptions(),
-                onFormatChange: jest.fn(),
-            };
-            const editor = new TextEditor(textarea, options, markdown_converter, markdown_renderer);
+        it("when the format is commonmark, then ckeditor is not created and onFormatChange is called", () => {
+            const onFormatChange = jest.spyOn(options, "onFormatChange");
+            const editor = getTextEditor();
+            textarea.value = COMMONMARK_CONTENT;
             editor.init(TEXT_FORMAT_COMMONMARK);
-            expect(options.onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_COMMONMARK);
+            expect(onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_COMMONMARK, COMMONMARK_CONTENT);
         });
     });
 
@@ -89,19 +99,14 @@ describe(`TextEditor`, () => {
                     extraPlugins: "uploadimage",
                     uploadUrl: "/example/url",
                 };
-                const options = {
-                    ...getEmptyOptions(),
-                    getAdditionalOptions: (): CKEDITOR.config => additional_options,
-                };
-                const editor = new TextEditor(
-                    textarea,
-                    options,
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                editor.onFormatChange(TEXT_FORMAT_HTML);
+                const locale = "fr_FR";
+                options = InternalTextEditorOptionsBuilder.options()
+                    .withLocale(locale)
+                    .withAdditionalOptionsProvider(() => additional_options)
+                    .build();
+                getTextEditor().onFormatChange(TEXT_FORMAT_HTML);
 
-                const expected_options = { language: "fr_FR", ...additional_options };
+                const expected_options = { language: locale, ...additional_options };
                 expect(replace).toHaveBeenCalledWith(
                     textarea,
                     expect.objectContaining(expected_options),
@@ -112,104 +117,78 @@ describe(`TextEditor`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 const eventHandler = jest.spyOn(ckeditor_instance, "on");
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                const options = {
-                    ...getEmptyOptions(),
-                    onEditorDataReady: jest.fn(),
-                };
-                const editor = new TextEditor(
-                    textarea,
-                    options,
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                editor.onFormatChange(TEXT_FORMAT_HTML);
+                const onEditorDataReady = jest.spyOn(options, "onEditorDataReady");
+
+                getTextEditor().onFormatChange(TEXT_FORMAT_HTML);
                 const onDataReadyCallback = eventHandler.mock.calls[0][1];
                 onDataReadyCallback({} as CKEDITOR.eventInfo);
 
-                expect(options.onEditorDataReady).toHaveBeenCalled();
+                expect(onEditorDataReady).toHaveBeenCalled();
             });
 
-            it(`calls the given onEditorInit and onFormatChange callbacks`, () => {
+            it(`calls the given onEditorInit callback`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                const options = {
-                    ...getEmptyOptions(),
-                    onEditorInit: jest.fn(),
-                    onFormatChange: jest.fn(),
-                };
-                const editor = new TextEditor(
-                    textarea,
-                    options,
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                editor.onFormatChange(TEXT_FORMAT_HTML);
+                const onEditorInit = jest.spyOn(options, "onEditorInit");
 
-                expect(options.onEditorInit).toHaveBeenCalledWith(ckeditor_instance, textarea);
-                expect(options.onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_HTML);
+                getTextEditor().onFormatChange(TEXT_FORMAT_HTML);
+
+                expect(onEditorInit).toHaveBeenCalledWith(ckeditor_instance, textarea);
             });
 
             it(`from another format, it converts the textarea's value as Markdown to HTML
-                and sets CKEditor data with it`, () => {
+                and sets CKEditor data with it
+                and calls the onFormatChange callback with the HTML format and the converted content`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                jest.spyOn(markdown_renderer, "render").mockReturnValue(`<p>Some HTML content</p>`);
+                const render = jest
+                    .spyOn(markdown_renderer, "render")
+                    .mockReturnValue(HTML_CONTENT);
+                const onFormatChange = jest.spyOn(options, "onFormatChange");
 
-                const editor = new TextEditor(
-                    textarea,
-                    getEmptyOptions(),
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                textarea.value = "**markdown** content";
+                const editor = getTextEditor();
+                textarea.value = COMMONMARK_CONTENT;
                 editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
                 editor.onFormatChange(TEXT_FORMAT_HTML);
 
-                expect(markdown_renderer.render).toHaveBeenCalledWith("**markdown** content");
-                expect(ckeditor_instance.getData()).toBe(`<p>Some HTML content</p>`);
+                expect(render).toHaveBeenCalledWith(COMMONMARK_CONTENT);
+                expect(ckeditor_instance.getData()).toBe(HTML_CONTENT);
+                expect(onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_HTML, HTML_CONTENT);
             });
         });
 
         describe(`when the format changes from "html" to another format`, () => {
-            it(`converts the CKEditor content to Markdown and sets the textarea value with it`, () => {
+            it(`converts the CKEditor content to Markdown
+                and sets the textarea value with it
+                and calls the onFormatChange callback with the new format and the converted content`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                jest.spyOn(markdown_converter, "convert").mockReturnValue("**markdown** content");
+                const convert = jest
+                    .spyOn(markdown_converter, "convert")
+                    .mockReturnValue(COMMONMARK_CONTENT);
+                const onFormatChange = jest.spyOn(options, "onFormatChange");
 
-                const editor = new TextEditor(
-                    textarea,
-                    getEmptyOptions(),
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                textarea.value = `<p><strong>HTML</strong> content</p>`;
+                const editor = getTextEditor();
+                textarea.value = HTML_CONTENT;
                 editor.onFormatChange(TEXT_FORMAT_HTML);
                 editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
 
-                expect(markdown_converter.convert).toHaveBeenCalledWith(
-                    `<p><strong>HTML</strong> content</p>`,
+                expect(convert).toHaveBeenCalledWith(HTML_CONTENT);
+                expect(textarea.value).toBe(COMMONMARK_CONTENT);
+                expect(onFormatChange).toHaveBeenCalledWith(
+                    TEXT_FORMAT_COMMONMARK,
+                    COMMONMARK_CONTENT,
                 );
-                expect(textarea.value).toBe("**markdown** content");
             });
         });
 
-        it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
-            `when the format changes to %s, it calls the given onFormatChange callback`,
-            (format) => {
-                const options = {
-                    ...getEmptyOptions(),
-                    onFormatChange: jest.fn(),
-                };
-                const editor = new TextEditor(
-                    textarea,
-                    options,
-                    markdown_converter,
-                    markdown_renderer,
-                );
-                editor.onFormatChange(format);
-                expect(options.onFormatChange).toHaveBeenCalledWith(format);
-            },
-        );
+        it(`when the format changes to "text", it calls the onFormatChange callback with the new format and the textarea's value`, () => {
+            const onFormatChange = jest.spyOn(options, "onFormatChange");
+            const editor = getTextEditor();
+            textarea.value = TEXT_CONTENT;
+            editor.onFormatChange(TEXT_FORMAT_TEXT);
+            expect(onFormatChange).toHaveBeenCalledWith(TEXT_FORMAT_TEXT, TEXT_CONTENT);
+        });
     });
 
     describe("getContent()", () => {
@@ -222,12 +201,7 @@ describe(`TextEditor`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
 
-                const editor = new TextEditor(
-                    textarea,
-                    getEmptyOptions(),
-                    markdown_converter,
-                    markdown_renderer,
-                );
+                const editor = getTextEditor();
                 editor.onFormatChange(format);
                 if (format === TEXT_FORMAT_HTML) {
                     ckeditor_instance.setData(expected_content);
@@ -237,30 +211,21 @@ describe(`TextEditor`, () => {
                     textarea.value = expected_content;
                 }
 
-                expect(editor.getContent()).toEqual(expected_content);
+                expect(editor.getContent()).toBe(expected_content);
             },
         );
     });
 
     describe(`destroy()`, () => {
-        let ckeditor_instance: CKEDITOR.editor,
-            destroyCKEditor: jest.SpyInstance,
-            editor: TextEditor;
+        let ckeditor_instance: CKEDITOR.editor;
         beforeEach(() => {
             ckeditor_instance = getMockedCKEditorInstance();
             jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-
-            destroyCKEditor = jest.spyOn(ckeditor_instance, "destroy");
-
-            editor = new TextEditor(
-                textarea,
-                getEmptyOptions(),
-                markdown_converter,
-                markdown_renderer,
-            );
         });
 
         it(`when the format is html, it will destroy the CKEditor`, () => {
+            const destroyCKEditor = jest.spyOn(ckeditor_instance, "destroy");
+            const editor = getTextEditor();
             editor.onFormatChange(TEXT_FORMAT_HTML);
 
             editor.destroy();
@@ -268,6 +233,8 @@ describe(`TextEditor`, () => {
         });
 
         it(`when the format is not html, it does nothing`, () => {
+            const destroyCKEditor = jest.spyOn(ckeditor_instance, "destroy");
+            const editor = getTextEditor();
             editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
 
             editor.destroy();
@@ -276,21 +243,15 @@ describe(`TextEditor`, () => {
     });
 });
 
-function getEmptyOptions(): InternalTextEditorOptions {
-    return {
-        locale: "fr_FR",
-        getAdditionalOptions: emptyOptionsProvider,
-        onEditorInit: emptyFunction,
-        onFormatChange: emptyFunction,
-        onEditorDataReady: emptyFunction,
-    };
-}
-
 function getMockedCKEditorInstance(): CKEDITOR.editor {
     let _data = "";
     const fake_ckeditor_document = createDocument();
     return {
-        on: emptyFunction,
+        on(event_name: string, handler: CKEditorEventHandler): void {
+            if (event_name === "" && handler !== null) {
+                // Do nothing
+            }
+        },
         document: {
             getBody(): CKEDITOR.dom.element {
                 return {
@@ -304,6 +265,6 @@ function getMockedCKEditorInstance(): CKEDITOR.editor {
         getData(): string {
             return _data;
         },
-        destroy: emptyFunction,
-    } as unknown as CKEDITOR.editor;
+        destroy: noop,
+    } as CKEDITOR.editor;
 }

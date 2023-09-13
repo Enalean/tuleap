@@ -60,17 +60,21 @@ export class TextEditor implements TextEditorInterface {
 
     public init(new_format: TextFieldFormat): void {
         if (new_format === TEXT_FORMAT_HTML) {
-            this.insertFormatAndTextInCKEditorWhenFormatIsHTML(this.textarea.value);
-            return;
+            if (!this.ckeditor) {
+                this.ckeditor = this.initCKEditor();
+            }
+            this.ckeditor.setData(this.textarea.value);
         }
-        this.options.onFormatChange(new_format);
+        this.options.onFormatChange(new_format, this.getContent());
     }
 
     public onFormatChange(new_format: TextFieldFormat): void {
         if (new_format === TEXT_FORMAT_HTML) {
-            this.insertFormatAndTextInCKEditorWhenFormatIsHTML(
-                this.markdown_renderer.render(this.textarea.value),
-            );
+            if (!this.ckeditor) {
+                this.ckeditor = this.initCKEditor();
+            }
+            this.ckeditor.setData(this.markdown_renderer.render(this.textarea.value));
+            this.options.onFormatChange(new_format, this.ckeditor.getData());
             return;
         }
 
@@ -81,7 +85,7 @@ export class TextEditor implements TextEditorInterface {
             this.textarea.value = text;
         }
 
-        this.options.onFormatChange(new_format);
+        this.options.onFormatChange(new_format, this.textarea.value);
     }
 
     public getContent(): string {
@@ -93,12 +97,6 @@ export class TextEditor implements TextEditorInterface {
 
     public destroy(): void {
         this.ckeditor?.destroy();
-    }
-
-    private insertFormatAndTextInCKEditorWhenFormatIsHTML(text: string): void {
-        const editor = this.initCKEditor();
-        this.options.onFormatChange(TEXT_FORMAT_HTML);
-        editor.setData(text);
     }
 
     private initCKEditor(): CKEDITOR.editor {

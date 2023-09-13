@@ -4,5 +4,5 @@
         "lib": ["ES2015", "ES2017", "DOM", "DOM.Iterable", "ES2018.Promise"],
         "types": ["ckeditor", "jest", "bootstrap"]
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "tests/**/*"]
 }
