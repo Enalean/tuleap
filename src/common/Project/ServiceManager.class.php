@@ -175,26 +175,28 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             throw new ServiceCannotBeUpdatedException(_('Admin service cannot be disabled.'));
         }
 
-        if (! $this->doesServiceUsageChange($project, $short_name, $is_used) && $is_used) {
+        if ($is_used === false) {
+            // Service is being inactivated. We should always allow this, otherwise mutually-exclusive services can become locked.
+            return;
+        }
+
+        if (! $this->doesServiceUsageChange($project, $short_name, $is_used)) {
             return;
         }
 
         $event = new ProjectServiceBeforeActivation($project, $short_name, $user);
-        EventManager::instance()->processEvent($event);
+        EventManager::instance()->dispatch($event);
 
         if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {
             throw new ServiceCannotBeUpdatedException($event->getWarningMessage());
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function doesServiceUsageChange(Project $project, $short_name, $is_used)
+    private function doesServiceUsageChange(Project $project, string $short_name, bool $new_is_used): bool
     {
-        $previous_is_used = $project->getService($short_name);
+        $previous_is_used = $project->usesService($short_name);
 
-        return $previous_is_used != $is_used;
+        return $previous_is_used !== $new_is_used;
     }
 
     /**

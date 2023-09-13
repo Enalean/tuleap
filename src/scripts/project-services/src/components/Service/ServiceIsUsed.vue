@@ -26,12 +26,16 @@
                 name="is_used"
                 value="1"
                 v-bind:checked="props.value"
-                v-bind:disabled="props.disabledReason !== ''"
+                v-bind:disabled="props.value === false && props.disabledReason !== ''"
                 data-test="service-is-used"
             />
             <translate>Enabled</translate>
         </label>
-        <div v-if="props.disabledReason !== ''" class="tlp-text-info">
+        <div
+            v-if="props.value === false && props.disabledReason !== ''"
+            class="tlp-text-info"
+            data-test="service-disabled-message"
+        >
             {{ props.disabledReason }}
         </div>
     </div>
