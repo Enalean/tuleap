@@ -15,6 +15,7 @@
                        value="{{ value }}"
                        required
                        autocomplete="email"
+                       data-test="user-email"
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>
@@ -34,6 +35,7 @@
                            class="tlp-input"
                            id="form_pw"
                            name="form_pw"
+                           data-test="user-pw"
                            required
                            data-password-validators="{{ json_password_strategy_keys }}"
                     >
@@ -62,6 +64,7 @@
                        placeholder="Jane Doe"
                        required
                        value="{{ value }}"
+                       data-test="user-name"
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>

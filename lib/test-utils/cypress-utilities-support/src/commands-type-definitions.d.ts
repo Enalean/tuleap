@@ -115,6 +115,8 @@ declare global {
                 email_address: string,
                 specific_content_of_email: string,
             ): void;
+
+            deleteAllMessagesInMailbox(): void;
         }
     }
 }

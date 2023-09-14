@@ -80,6 +80,18 @@ Cypress.Commands.add(
     },
 );
 
+Cypress.Commands.add("deleteAllMessagesInMailbox", (): void => {
+    cy.request({
+        method: "DELETE",
+        url: "http://mailhog:8025/api/v1/messages",
+        headers: {
+            accept: "application/json",
+        },
+    }).then((response) => {
+        expect(response.status).to.eq(200);
+    });
+});
+
 interface EmailItem {
     readonly Content: {
         readonly Body: string;

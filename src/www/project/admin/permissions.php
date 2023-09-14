@@ -604,7 +604,7 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     }
 
     // Display form
-    $html .= '<FORM ACTION="' . $post_url . '" METHOD="POST">
+    $html .= '<FORM ACTION="' . $post_url . '" METHOD="POST" data-test="form-permissions">
         <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_permissions">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
         <INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="' . $permission_type . '">
@@ -612,7 +612,7 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
 
     $html .= permission_fetch_selection_field($permission_type, $object_id, $group_id);
 
-    $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="' . $GLOBALS['Language']->getText('project_admin_permissions', 'submit_perm') . '">';
+    $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" data-test="submit-form-permissions" VALUE="' . $GLOBALS['Language']->getText('project_admin_permissions', 'submit_perm') . '">';
     $html .= '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="' . $GLOBALS['Language']->getText('project_admin_permissions', 'reset_to_def') . '">';
     $html .= '</FORM>';
     $html .= '<p>' . $GLOBALS['Language']->getText(
