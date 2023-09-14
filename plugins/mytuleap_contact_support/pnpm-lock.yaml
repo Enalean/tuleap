@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
@@ -8,8 +12,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-modal
   dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^3.0.5
+    version: 3.0.5
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -51,8 +55,8 @@ packages:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
     dev: false
 
   /popper.js@1.16.1:

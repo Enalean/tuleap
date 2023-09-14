@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/concurrency-limit-pool':
     specifier: workspace:*
@@ -17,8 +21,8 @@ dependencies:
     specifier: ^7.3.0
     version: 7.8.2
   dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^3.0.5
+    version: 3.0.5
   sprintf-js:
     specifier: ^1.1.2
     version: 1.1.2
@@ -69,8 +73,8 @@ packages:
       xml-js: 1.6.11
     dev: false
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
     dev: false
 
   /immediate@3.0.6:

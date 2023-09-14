@@ -69,8 +69,8 @@ dependencies:
     specifier: ^2.4.2
     version: 2.4.2
   dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^3.0.5
+    version: 3.0.5
   hybrids:
     specifier: ^8.2.2
     version: 8.2.2
@@ -147,8 +147,8 @@ packages:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}
     dev: false
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
     dev: false
 
   /graceful-fs@4.2.11:

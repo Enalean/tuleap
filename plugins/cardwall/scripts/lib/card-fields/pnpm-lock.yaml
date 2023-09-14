@@ -9,8 +9,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-swatch-colors
   dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^3.0.5
+    version: 3.0.5
   escape-string-regexp:
     specifier: ^5.0.0
     version: 5.0.0
@@ -52,8 +52,8 @@ packages:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
     dev: false
 
   /escape-string-regexp@5.0.0:

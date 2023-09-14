@@ -26,7 +26,7 @@
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
-    "dompurify": "^3.0.0",
+    "dompurify": "^3.0.5",
     "lit": "^2.2.3",
     "moment": "^2.29.4",
     "node-gettext": "^3.0.0",
