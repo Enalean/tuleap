@@ -22,10 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\GitPHP;
 
+use Git_Exec;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TagTest extends TestCase
 {
+    use TemporaryTestDirectory;
+
+    private string $fixture_dir;
+    private Git_Exec $git_exec;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->fixture_dir = $this->getTmpDir() . '/tuleap-gitphp-tag-test_' . random_int(0, 99999999);
+        mkdir($this->fixture_dir);
+
+        $this->git_exec = new Git_Exec($this->fixture_dir);
+        $this->git_exec->init();
+        $this->git_exec->setLocalCommiter('test', 'test@example.com');
+    }
+
+    protected function tearDown(): void
+    {
+        system("rm -rf $this->fixture_dir");
+
+        parent::tearDown();
+    }
+
     public function testItReturnsCommitSHA1ofTag(): void
     {
         $tag_content = <<<EOF
@@ -53,43 +79,26 @@ EOF;
 
     public function testItReturnsCommitSHA1ofNestedTags(): void
     {
-        $nested_tag_content = <<<EOF
-object 6ab479decb315611faa0cc6252816109884636b6
-type tag
-tag v5.3
-tagger Toto <toto@example.com> 1643295518 +0100
+        $project = new Project($this->fixture_dir, '.git', $this->git_exec);
+        $gitexe  = new GitExe($project);
 
-create tag 5.3
-EOF;
+        //add initial commit
+        touch("$this->fixture_dir/stuff");
+        $this->git_exec->add("$this->fixture_dir/stuff");
+        $this->git_exec->commit("add stuff file");
 
-        $tag_content = <<<EOF
-object 27f1d88dc86a73284d6c85448ec46de2cdb5bb95
-type commit
-tag v5
-tagger Toto <toto@example.com> 1643295365 +0100
+        //get commit SHA1
+        $initial_commit_sha1 = trim($gitexe->Execute('rev-parse', ['HEAD']));
 
-Version 5
-EOF;
+        //add tags
+        $gitexe->Execute('tag', ['v1']);
+        $gitexe->Execute('checkout', ['v1', '-q']);
+        $gitexe->Execute('tag', ['v1nested']);
 
-        $project = $this->createMock(Project::class);
-        $project->method('GetObject')->willReturnMap(
-            [
-                ['353bc8c7b54ef3beb976e2faca2f3c0be974eeff', 0, $nested_tag_content],
-                ['6ab479decb315611faa0cc6252816109884636b6', 0, $tag_content],
-            ],
-        );
-        $project->method('GetCommit')->with('v5')->willReturn(
-            new Commit($project, '27f1d88dc86a73284d6c85448ec46de2cdb5bb95')
-        );
-        $project->method('GetTag')->with('v5')->willReturn(
-            new Tag($project, 'v5', '6ab479decb315611faa0cc6252816109884636b6')
-        );
-
-        $nested_tag = new Tag($project, 'v5.3', '353bc8c7b54ef3beb976e2faca2f3c0be974eeff');
-
+        $nested_tag = new Tag($project, 'v1nested', '');
         self::assertSame(
-            '27f1d88dc86a73284d6c85448ec46de2cdb5bb95',
-            $nested_tag->GetCommit()->GetHash()
+            $initial_commit_sha1,
+            $nested_tag->GetCommit()->GetHash(),
         );
     }
 }

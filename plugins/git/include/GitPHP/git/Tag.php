@@ -184,7 +184,14 @@ class Tag extends Ref
             if ($this->object instanceof Commit) {
                 $this->commit = $this->object;
             } elseif ($this->object instanceof Tag) {
-                $this->commit = $this->GetProject()->GetCommit($this->object->GetName());
+                if ($this->GetHash() !== $this->object->GetHash()) {
+                    $this->commit = $this->GetProject()->GetCommit($this->object->GetName());
+                } else {
+                    $exe              = new GitExe($this->project);
+                    $initial_git_hash = trim($exe->Execute(GitExe::REV_LIST, ['-n1', escapeshellarg($this->refName)]));
+
+                    $this->commit = $this->GetProject()->GetCommit($initial_git_hash);
+                }
             }
         }
 
@@ -423,7 +430,6 @@ class Tag extends Ref
             }
             $readInitialData = true;
         }
-
         switch ($this->type) {
             case 'commit':
                 try {
