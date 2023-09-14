@@ -80,7 +80,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
                 $in = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $ids_to_search);
                 return Option::fromValue(new ParametrizedSQLFragment("c.submitted_by IN($in)", $in->values()));
             } elseif (count($ids_to_search)) {
-                return Option::fromValue(new ParametrizedSQLFragment("c.submitted_by = ?", $ids_to_search[0]));
+                return Option::fromValue(new ParametrizedSQLFragment("c.submitted_by = ?", [$ids_to_search[0]]));
             }
         }
 
