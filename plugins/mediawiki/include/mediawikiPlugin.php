@@ -58,6 +58,7 @@ use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\Statistics\CSV\StatisticsServiceUsage;
@@ -563,13 +564,10 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         return new MediawikiManager($this->getDao());
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
+        $event->addService($this->getServiceShortname(), ServiceMediawiki::class);
     }
 
     /**

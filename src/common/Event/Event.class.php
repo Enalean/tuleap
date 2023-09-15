@@ -230,17 +230,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE = 'system_event_get_types_for_custom_queue';
 
     /**
-     * Get an instance of service object corresponding to $row
-     *
-     * Parameters:
-     *  'classnames' => array of Service child class names indexed by service short name
-     *
-     * Example (in tracker plugin):
-     * $params['classnames']['plugin_tracker'] = 'ServiceTracker';
-     */
-    public const SERVICE_CLASSNAMES = 'service_classnames';
-
-    /**
      * Display javascript snippets in the page header (<head>)
      *
      * No Parameters.

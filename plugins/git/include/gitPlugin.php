@@ -85,6 +85,7 @@ use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -364,13 +365,10 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return parent::getHooksAndCallbacks();
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = \Tuleap\Git\GitService::class;
+        $event->addService($this->getServiceShortname(), \Tuleap\Git\GitService::class);
     }
 
     /**

@@ -80,6 +80,7 @@ use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\HideServiceInUserInterfaceEvent;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
@@ -718,12 +719,10 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         return KanbanService::SERVICE_SHORTNAME;
     }
 
-    /**
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][KanbanService::SERVICE_SHORTNAME] = KanbanService::class;
+        $event->addService(KanbanService::SERVICE_SHORTNAME, KanbanService::class);
     }
 
     public function serviceIsUsed(array $params): void

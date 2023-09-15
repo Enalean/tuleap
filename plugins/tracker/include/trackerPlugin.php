@@ -67,6 +67,7 @@ use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -628,13 +629,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return self::SERVICE_SHORTNAME;
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = ServiceTracker::class;
+        $event->addService($this->getServiceShortname(), ServiceTracker::class);
     }
 
     /**

@@ -36,6 +36,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
@@ -177,13 +178,10 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return $project->usesService($this->getServiceShortname());
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
+        $event->addService($this->getServiceShortname(), \Tuleap\TestManagement\Service::class);
     }
 
     /**

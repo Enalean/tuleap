@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use Event;
 use Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ServiceClassnameRetrieverTest extends TestCase
 {
@@ -33,7 +33,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
 
     public function testReturnsProjectDefinedServiceWhenShortNameIsEmpty(): void
     {
-        $retriever = new ServiceClassnameRetriever($this->createMock(\EventManager::class));
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withIdentityCallback());
 
         self::assertSame(
             ProjectDefinedService::class,
@@ -46,10 +46,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
      */
     public function testReturnsService(string $name): void
     {
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->method('processEvent');
-
-        $retriever = new ServiceClassnameRetriever($event_manager);
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withIdentityCallback());
 
         self::assertSame(
             Service::class,
@@ -75,10 +72,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
 
     public function testReturnsServiceFile(): void
     {
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->method('processEvent');
-
-        $retriever = new ServiceClassnameRetriever($event_manager);
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withIdentityCallback());
 
         self::assertSame(
             \ServiceFile::class,
@@ -88,10 +82,7 @@ final class ServiceClassnameRetrieverTest extends TestCase
 
     public function testReturnsServiceSVN(): void
     {
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->method('processEvent');
-
-        $retriever = new ServiceClassnameRetriever($event_manager);
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withIdentityCallback());
 
         self::assertSame(
             \ServiceSVN::class,
@@ -105,14 +96,11 @@ final class ServiceClassnameRetrieverTest extends TestCase
         };
         $plugin_service_classname = $plugin_service::class;
 
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->method('processEvent')->willReturnCallback(static function (string $event, array $params) use ($plugin_service_classname): void {
-            if ($event === Event::SERVICE_CLASSNAMES) {
-                $params['classnames'][self::PLUGIN_SERVICE_SHORTNAME] = $plugin_service_classname;
-            }
-        });
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withCallback(function (ServiceClassnamesCollector $event) use ($plugin_service_classname): object {
+            $event->addService(self::PLUGIN_SERVICE_SHORTNAME, $plugin_service_classname);
 
-        $retriever = new ServiceClassnameRetriever($event_manager);
+            return $event;
+        }));
 
         self::assertSame(
             $plugin_service_classname,
@@ -122,13 +110,18 @@ final class ServiceClassnameRetrieverTest extends TestCase
 
     public function testItCachesRetrievalOfPluginClassnamesToSaveRainforestWhenMultipleCalls(): void
     {
-        $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->expects(self::once())->method('processEvent');
+        $nb_calls = 0;
 
-        $retriever = new ServiceClassnameRetriever($event_manager);
+        $retriever = new ServiceClassnameRetriever(EventDispatcherStub::withCallback(function (ServiceClassnamesCollector $event) use (&$nb_calls): object {
+            $nb_calls++;
+
+            return $event;
+        }));
 
         $retriever->getServiceClassName(Service::SVN);
         $retriever->getServiceClassName(Service::FILE);
         $retriever->getServiceClassName(Service::SVN);
+
+        self::assertSame(1, $nb_calls);
     }
 }

@@ -161,7 +161,6 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
             $this->addHookIfNotAlreadyListened(GetConfigKeys::NAME);
         }
         if ($this instanceof PluginWithService) {
-            $this->addHookIfNotAlreadyListened(Event::SERVICE_CLASSNAMES);
             $this->addHookIfNotAlreadyListened(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHookIfNotAlreadyListened(Event::SERVICE_IS_USED);
             $this->addHookIfNotAlreadyListened(ProjectServiceBeforeActivation::NAME);

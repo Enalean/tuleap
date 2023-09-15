@@ -34,11 +34,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
  */
 interface PluginWithService
 {
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void;
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void;
 
     /**
      * @see Event::SERVICE_IS_USED

@@ -211,6 +211,7 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -308,9 +309,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return ProgramService::class;
     }
 
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][$this->getServiceShortname()] = $this->getServiceClass();
+        $event->addService($this->getServiceShortname(), $this->getServiceClass());
     }
 
     public function getServiceShortname(): string

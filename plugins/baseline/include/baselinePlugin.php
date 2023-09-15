@@ -42,6 +42,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 
@@ -100,14 +101,10 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         }
     }
 
-    /**
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     *
-     * @see Event::SERVICE_CLASSNAMES
-     */
-    public function serviceClassnames(array &$params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
-        $params['classnames'][self::SERVICE_SHORTNAME] = BaselineTuleapService::class;
+        $event->addService(self::SERVICE_SHORTNAME, BaselineTuleapService::class);
     }
 
     /**
