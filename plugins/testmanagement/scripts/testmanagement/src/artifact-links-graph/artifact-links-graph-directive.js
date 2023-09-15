@@ -18,7 +18,7 @@
  */
 
 import angular from "angular";
-import _, { has, remove } from "lodash-es";
+import _, { remove } from "lodash-es";
 import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
 import { drag } from "d3-drag";
 import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
@@ -852,18 +852,19 @@ function Graph(
         if (!artifactExist(artifact_id)) {
             return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(
                 function (artifact) {
-                    ArtifactLinksArtifactsList.artifacts[artifact_id] =
-                        ArtifactLinksModelService.getGraphStructure(artifact);
-                    return ArtifactLinksArtifactsList.artifacts[artifact_id];
+                    const structure = ArtifactLinksModelService.getGraphStructure(artifact);
+                    ArtifactLinksArtifactsList.artifacts.set(artifact_id, structure);
+
+                    return structure;
                 },
             );
         }
         return $q(function (resolve) {
-            return resolve(ArtifactLinksArtifactsList.artifacts[artifact_id]);
+            return resolve(ArtifactLinksArtifactsList.artifacts.get(artifact_id));
         });
     }
 
     function artifactExist(artifact_id) {
-        return has(ArtifactLinksArtifactsList.artifacts, artifact_id);
+        return ArtifactLinksArtifactsList.artifacts.has(artifact_id);
     }
 }

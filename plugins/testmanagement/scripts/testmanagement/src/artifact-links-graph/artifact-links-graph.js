@@ -14,7 +14,7 @@ export default angular
     .controller("ArtifactLinksGraphCtrl", ArtifactLinksGraphCtrl)
     .directive("graph", GraphDirective)
     .value("ArtifactLinksArtifactsList", {
-        artifacts: {},
+        artifacts: new Map(),
     })
     .value("ArtifactLinksGraphModalLoading", {
         loading: {
