@@ -23,6 +23,8 @@ import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
 import { drag } from "d3-drag";
 import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
 import { select, selectAll } from "d3-selection";
+import { normalizeColor } from "./normalize-color";
+import { calculatePosition } from "./calculate-position";
 
 export default Graph;
 
@@ -863,80 +865,5 @@ function Graph(
 
     function artifactExist(artifact_id) {
         return has(ArtifactLinksArtifactsList.artifacts, artifact_id);
-    }
-
-    function calculatePosition(svg, element, x, y, width, height) {
-        var relative_point = { x: x, y: y },
-            new_x = x,
-            new_y = y,
-            transformed_point,
-            is_x_changed = false,
-            is_y_changed = false;
-
-        if (svg && element) {
-            relative_point = getRelativeXY(svg, element, x, y);
-        }
-
-        if (relative_point.x < 10) {
-            new_x = 10;
-            is_x_changed = true;
-        } else if (relative_point.x > width - 10) {
-            new_x = width - 10;
-            is_x_changed = true;
-        }
-
-        if (relative_point.y < 10) {
-            new_y = 10;
-            is_y_changed = true;
-        } else if (relative_point.y > height - 10) {
-            new_y = height - 10;
-            is_y_changed = true;
-        }
-
-        if (is_x_changed) {
-            transformed_point = getTransformedX(svg, element, new_x);
-            new_x = transformed_point.x;
-        }
-
-        if (is_y_changed) {
-            transformed_point = getTransformedY(svg, element, new_y);
-            new_y = transformed_point.y;
-        }
-
-        return { x: new_x, y: new_y };
-    }
-
-    function getRelativeXY(svg, element, x, y) {
-        var point = svg.createSVGPoint(),
-            element_coordinate_system = element.getCTM();
-
-        point.x = x;
-        point.y = y;
-
-        return point.matrixTransform(element_coordinate_system);
-    }
-
-    function getTransformedX(svg, element, x) {
-        var point = svg.createSVGPoint(),
-            element_coordinate_system_inverse = element.getCTM().inverse();
-
-        point.x = x;
-
-        return point.matrixTransform(element_coordinate_system_inverse);
-    }
-
-    function getTransformedY(svg, element, y) {
-        var point = svg.createSVGPoint(),
-            element_coordinate_system_inverse = element.getCTM().inverse();
-
-        point.y = y;
-
-        return point.matrixTransform(element_coordinate_system_inverse);
-    }
-
-    function normalizeColor(color) {
-        const all_underscores = /_/g;
-
-        return color.replace(all_underscores, "-");
     }
 }
