@@ -10,6 +10,7 @@
   "types": "dist/index.d.ts",
   "style": "dist/style.css",
   "dependencies": {
+    "@tuleap/commonmark-popover": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
@@ -17,11 +18,10 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
-    "@tuleap/commonmark-popover": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^2.3.6",
+    "dompurify": "^2.4.7",
     "hybrids": "^8.2.2",
     "moment": "^2.29.4",
     "neverthrow": "6.0.0"

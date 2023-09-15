@@ -18,7 +18,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/dompurify": "^3.0.2",
-    "dompurify": "^3.0.0"
+    "dompurify": "^3.0.5"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

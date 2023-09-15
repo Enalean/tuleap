@@ -14,7 +14,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/webauthn": "workspace:*",
-    "dompurify": "^3.0.0",
+    "dompurify": "^3.0.5",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },
