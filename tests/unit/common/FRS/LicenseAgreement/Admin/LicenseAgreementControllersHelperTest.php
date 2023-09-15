@@ -72,7 +72,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
     public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
-        $this->project->method('getFileService')->willReturn(null);
+        $this->project->method('getService')->with(\Service::FILE)->willReturn(null);
 
         self::expectException(NotFoundException::class);
 
@@ -90,7 +90,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
 
     public function testItRendersFrsAdminHeader(): void
     {
-        $this->project->method('getFileService')->willReturn($this->service_file);
+        $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $header_renderer = $this->createMock(TemplateRenderer::class);
         $header_renderer->expects(self::once())->method('renderToPage')->with('toolbar-presenter', self::anything());
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {

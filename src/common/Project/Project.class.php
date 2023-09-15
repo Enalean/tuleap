@@ -67,10 +67,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public const ACCESS_PUBLIC                = 'public';
 
     private $project_data_array;
-
-    // All data concerning services for this project
-    private $service_data_array = null;
-    private $services;
+    private readonly \Tuleap\Project\Service\ServiceForProjectCollection $service_collection;
 
     public function __construct($param)
     {
@@ -79,43 +76,15 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
         $this->project_data_array = $this->data_array;
+        $this->service_collection = new \Tuleap\Project\Service\ServiceForProjectCollection($this, ServiceManager::instance());
     }
 
-    private function cacheServices()
+    public function getMinimalRank(): int
     {
-        if ($this->services !== null) {
-            return;
-        }
-
-        // Get Service data
-        $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
-        if (count($allowed_services) < 1) {
-            $this->service_data_array = [];
-        }
-        $j = 1;
-        foreach ($allowed_services as $service) {
-            $res_row    = $service->data;
-            $short_name = $service->getShortName();
-            if (! $short_name) {
-                $short_name = $j++;
-            }
-
-            $res_row['label']       = $service->getInternationalizedName();
-            $res_row['description'] = $service->getInternationalizedDescription();
-
-            $this->service_data_array[$short_name] = $res_row;
-            $this->services[$short_name]           = $service;
-        }
+        return $this->service_collection->getMinimalRank();
     }
 
-    public function getMinimalRank()
-    {
-        // get it, no matter if summary is enabled or not
-        $this->cacheServices();
-        return isset($this->services[Service::SUMMARY]) ? $this->services[Service::SUMMARY]->getRank() : 1;
-    }
-
-    private function getServiceLink($short_name)
+    private function getServiceLink(string $short_name): string
     {
         $service = $this->getService($short_name);
         if ($service === null) {
@@ -125,72 +94,57 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $service->getUrl();
     }
 
-    private function getServicesData()
-    {
-        $this->cacheServices();
-        return $this->service_data_array;
-    }
-
     public function getService(string $service_name): ?Service
     {
-        $this->cacheServices();
-        return $this->usesService($service_name) ? $this->services[$service_name] : null;
+        return $this->service_collection->getService($service_name);
     }
 
     /**
      * @return Service[]
      */
-    public function getServices()
+    public function getServices(): array
     {
-        $this->cacheServices();
-        return $this->services;
+        return $this->service_collection->getServices();
     }
 
-    public function getFileService(): ?ServiceFile
-    {
-        $this->cacheServices();
-        return $this->usesService(Service::FILE) ? $this->services[Service::FILE] : null;
-    }
-
-    public function usesTracker()
+    public function usesTracker(): bool
     {
         return $this->usesService(Service::TRACKERV3);
     }
 
-    public function usesSVN()
+    public function usesSVN(): bool
     {
         return $this->usesService(Service::SVN);
     }
 
-    public function usesFile()
+    public function usesFile(): bool
     {
         return $this->usesService(Service::FILE);
     }
 
     //whether or not this group has opted to use news
-    public function usesNews()
+    public function usesNews(): bool
     {
         return $this->usesService(Service::NEWS);
     }
 
     //whether or not this group has opted to use discussion forums
-    public function usesForum()
+    public function usesForum(): bool
     {
         return $this->usesService(Service::FORUM);
     }
 
     //whether or not this group has opted to use wiki
-    public function usesWiki()
+    public function usesWiki(): bool
     {
         return $this->usesService(Service::WIKI);
     }
 
 
     // Generic versions
-    public function usesService($service_short_name)
+    public function usesService($service_short_name): bool
     {
-        $data = $this->getServicesData();
-        return isset($data[$service_short_name]) && $data[$service_short_name]['is_used'];
+        return $this->service_collection->usesService($service_short_name);
     }
 
     /**
@@ -198,37 +152,19 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      * to be able to use @see usesService (and friends) in tests. Using this for other service releated methods **will**
      * break.
      *
-     * @psalm-internal Tuleap\Test\Builders
-     */
-
-    /**
      * @param array{0: string, 1: Service}|string ...$services
-     *
      */
     public function addUsedServices(...$services): void
     {
-        if ($this->services !== null || $this->service_data_array !== null) {
-            throw new LogicException('This method is not supposed to be called after caching of Services');
-        }
-
-        $this->service_data_array = [];
-        $this->services           = []; // Gonna break tests that rely on Services but needed to stop caching in @see cacheServices
-        foreach ($services as $service) {
-            if (is_string($service)) {
-                $this->service_data_array[$service] = ['is_used' => true];
-            } else {
-                $this->service_data_array[$service[0]] = ['is_used' => true];
-                $this->services[$service[0]]           = $service[1];
-            }
-        }
+        $this->service_collection->addUsedServices(...$services);
     }
 
-    public function getWikiPage()
+    public function getWikiPage(): string
     {
         return $this->getServiceLink(Service::WIKI);
     }
 
-    public function getForumPage()
+    public function getForumPage(): string
     {
         return $this->getServiceLink(Service::FORUM);
     }

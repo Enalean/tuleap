@@ -18,11 +18,12 @@
  */
 
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\ListOfAllowedServicesForProjectRetriever;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceClassnameRetriever;
 use Tuleap\Project\Service\ServiceNotFoundException;
 
-class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ServiceManager implements ListOfAllowedServicesForProjectRetriever //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const CUSTOM_SERVICE_SHORTNAME = '';
 
@@ -88,7 +89,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @return Service[]
      */
-    public function getListOfAllowedServicesForProject(Project $project)
+    public function getListOfAllowedServicesForProject(Project $project): array
     {
         if (! isset($this->list_of_services_per_project[$project->getID()])) {
             $this->list_of_services_per_project[$project->getID()] = [];

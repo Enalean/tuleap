@@ -89,7 +89,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->service_file = $this->createConfiguredMock(ServiceFile::class, ['displayFRSHeader' => 'foo']);
         $this->project      = $this->createConfiguredMock(Project::class, ['getID' => '101']);
-        $this->project->method('getFileService')->willReturn($this->service_file);
+        $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects(self::once())->method('getProjectFromId')
             ->with('101')
