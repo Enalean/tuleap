@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { FLOAT_FIELD, INT_FIELD } from "@tuleap/plugin-tracker-constants";
 
 export {
@@ -189,7 +188,7 @@ function addPostAction(state) {
 }
 
 function deletePostAction(state, post_action) {
-    Vue.delete(state.post_actions_by_unique_id, post_action.unique_id);
+    delete state.post_actions_by_unique_id[post_action.unique_id];
 }
 
 function setUsedServiceName(state, used_service_name) {

@@ -20,32 +20,26 @@
 import { shallowMount } from "@vue/test-utils";
 
 import AuthorizedUGroupsSelect from "./AuthorizedUGroupsSelect.vue";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-import module_options from "../../store/transition-modal/module.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as list_picker from "@tuleap/list-picker";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe("AuthorizedUGroupsSelect", () => {
-    async function getWrapper(user_groups, current_transition, is_modal_save_running) {
-        const { mutations, actions } = module_options;
-        const store_options = {
-            state: {
-                transitionModal: {
-                    user_groups,
-                    current_transition,
-                    is_modal_save_running,
-                },
-            },
-            mutations,
-            actions,
-        };
-        const store = createStoreMock(store_options);
-
+    function getWrapper(current_transition, is_modal_save_running) {
         return shallowMount(AuthorizedUGroupsSelect, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            namespaced: true,
+                            state: {
+                                user_groups: [],
+                                current_transition,
+                                is_modal_save_running,
+                            },
+                        },
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
         });
     }
 
@@ -55,8 +49,8 @@ describe("AuthorizedUGroupsSelect", () => {
 
     describe("authorized_user_group_ids", () => {
         describe("when no current transition", () => {
-            it("returns empty array", async () => {
-                const wrapper = await getWrapper([], null, false);
+            it("returns empty array", () => {
+                const wrapper = getWrapper(null, false);
                 const all_options = wrapper
                     .get("[data-test=authorized-ugroups-select]")
                     .findAll("option");
@@ -66,12 +60,12 @@ describe("AuthorizedUGroupsSelect", () => {
 
         describe("with a current transition", () => {
             const authorized_user_group_ids = ["1", "2"];
-            it("returns transition authorized group ids", async () => {
+            it("returns transition authorized group ids", () => {
                 const current_transition = {
                     not_empty_field_ids: [],
                     authorized_user_group_ids,
                 };
-                const wrapper = await getWrapper([], current_transition, false);
+                const wrapper = getWrapper(current_transition, false);
                 expect(wrapper.vm.authorized_user_group_ids).toStrictEqual(
                     authorized_user_group_ids,
                 );
@@ -80,12 +74,16 @@ describe("AuthorizedUGroupsSelect", () => {
     });
 
     describe(`when the modal is saving`, () => {
-        it(`will disable the "Authorized ugroups" selectbox`, async () => {
-            const wrapper = await getWrapper([], null, true);
+        it(`will disable the "Authorized ugroups" selectbox`, () => {
+            const current_transition = {
+                not_empty_field_ids: [],
+                authorized_user_group_ids: [],
+            };
+            const wrapper = getWrapper(current_transition, true);
             const authorized_ugroups_selectbox = wrapper.get(
                 "[data-test=authorized-ugroups-select]",
             );
-            expect(authorized_ugroups_selectbox.attributes("disabled")).toBe("disabled");
+            expect(authorized_ugroups_selectbox.attributes("disabled")).toBe("");
         });
     });
 });

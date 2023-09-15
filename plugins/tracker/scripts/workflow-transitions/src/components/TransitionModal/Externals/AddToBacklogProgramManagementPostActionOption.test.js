@@ -18,36 +18,37 @@
  *
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { shallowMount } from "@vue/test-utils";
 import AddToBacklogProgramManagementPostActionOption from "./AddToBacklogProgramManagementPostActionOption.vue";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
 
 describe("AddToBacklogProgramManagementPostActionOption", () => {
-    let store, wrapper;
-    beforeEach(async () => {
-        const store_options = {
-            state: {
-                transitionModal: {
-                    used_service_name: [],
-                },
-            },
-            getters: {
-                "transitionModal/post_actions": [],
-                "transitionModal/is_program_management_used": false,
-            },
-        };
-        store = createStoreMock(store_options);
+    let wrapper, post_actions_value;
+    beforeEach(() => {
+        post_actions_value = [];
         wrapper = shallowMount(AddToBacklogProgramManagementPostActionOption, {
-            mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue: await createLocalVueForTests(),
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            state: {
+                                used_service_name: [],
+                            },
+                            getters: {
+                                post_actions: () => post_actions_value,
+                                is_program_management_used: () => false,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     });
 
     it("returns the option", () => {
-        store.getters["transitionModal/post_actions"] = [];
         expect(wrapper.vm.add_to_backlog_information).toStrictEqual({
             option: "Add to the backlog",
             title: "",
@@ -56,7 +57,7 @@ describe("AddToBacklogProgramManagementPostActionOption", () => {
     });
 
     it('returns the "already present" option because the post action is already used', () => {
-        store.getters["transitionModal/post_actions"] = [
+        post_actions_value = [
             create("post_action", { type: "program_management_add_to_top_backlog" }),
         ];
         expect(wrapper.vm.add_to_backlog_information).toStrictEqual({

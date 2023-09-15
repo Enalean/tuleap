@@ -17,22 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 
 import TransitionDeletePopover from "./TransitionDeletePopover.vue";
-import { createLocalVueForTests } from "../support/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 jest.useFakeTimers();
 
 describe("TransitionDeletePopover", () => {
-    let store,
-        destroyPopover,
-        transition,
-        deleteTransition,
-        is_transition_updated,
-        create_popover_spy;
+    let destroyPopover, transition, deleteTransition, is_transition_updated, create_popover_spy;
 
     beforeEach(() => {
         destroyPopover = jest.fn();
@@ -48,17 +42,17 @@ describe("TransitionDeletePopover", () => {
         is_transition_updated = false;
     });
 
-    const getWrapper = async () => {
-        const store_options = {
-            state: { is_operation_running: false },
-            getters: { current_workflow_transitions: [], is_workflow_advanced: false },
-        };
-        store = createStoreMock(store_options, {});
-        return shallowMount(TransitionDeletePopover, {
-            mocks: {
-                $store: store,
+    const getWrapper = () => {
+        return mount(TransitionDeletePopover, {
+            global: {
+                ...getGlobalTestOptions({
+                    state: { is_operation_running: false },
+                    getters: {
+                        current_workflow_transitions: () => [],
+                        is_workflow_advanced: () => false,
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
             propsData: {
                 transition,
                 deleteTransition,
@@ -68,27 +62,25 @@ describe("TransitionDeletePopover", () => {
         });
     };
 
-    afterEach(() => store.reset());
-
     const confirm_delete_transition_selector = '[data-test-action="confirm-delete-transition"]';
 
     it("will create a popover", async () => {
-        await getWrapper();
+        getWrapper();
         await jest.runOnlyPendingTimersAsync();
         expect(create_popover_spy).toHaveBeenCalled();
     });
 
     it("will destroy its popover on destroy", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
         await jest.runOnlyPendingTimersAsync();
-        wrapper.destroy();
+        wrapper.unmount();
         await jest.runOnlyPendingTimersAsync();
 
         expect(destroyPopover).toHaveBeenCalled();
     });
 
     it("shows an animation when the transition has just been updated", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
         wrapper.setProps({ is_transition_updated: true });
         await jest.runOnlyPendingTimersAsync();
 

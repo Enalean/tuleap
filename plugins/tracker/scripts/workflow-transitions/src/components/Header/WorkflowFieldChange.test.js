@@ -17,36 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../../support/local-vue.js";
 import WorkflowFieldChange from "./WorkflowFieldChange.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe(`WorkflowFieldChange`, () => {
-    async function createWrapper(is_operation_running) {
-        const store = createStoreMock({
-            state: {
-                is_operation_running,
-            },
-            getters: {
-                workflow_field_label: "Status",
-            },
-        });
+    function createWrapper(is_operation_running) {
         return shallowMount(WorkflowFieldChange, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running,
+                    },
+                    getters: {
+                        workflow_field_label: () => "Status",
+                        current_tracker_id: () => 145,
+                    },
+                }),
+            },
         });
     }
-
     describe(`when an operation is running`, () => {
-        it(`will disable the "Change or remove" button`, async () => {
-            const wrapper = await createWrapper(true);
+        it(`will disable the "Change or remove" button`, () => {
+            const wrapper = createWrapper(true);
             const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
-            expect(change_remove_button.attributes("disabled")).toBe("disabled");
+            expect(change_remove_button.attributes("disabled")).toBe("");
         });
     });
 
     it(`when I click the "Change or remove" button, it will open a confirmation modal`, async () => {
-        const wrapper = await createWrapper(false);
+        const wrapper = createWrapper(false);
 
         const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
         await change_remove_button.trigger("click");

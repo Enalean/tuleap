@@ -20,44 +20,31 @@
 import { shallowMount } from "@vue/test-utils";
 
 import CommentNotEmptyCheckBox from "./CommentNotEmptyCheckBox.vue";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-import module_options from "../../store/transition-modal/module.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe("CommentNotEmptyCheckBox", () => {
-    let store;
-
-    async function filledPreConditionsMockFactory(state_store) {
-        let state = state_store;
-        if (state_store === null) {
-            state = module_options.state;
-        }
-
-        const { mutations, actions } = module_options;
-        const store_options = {
-            state: {
-                transitionModal: state,
-            },
-            getters: {
-                "transitionModal/is_transition_from_new_artifact": false,
-            },
-            mutations,
-            actions,
-        };
-        store = createStoreMock(store_options);
-
+    function filledPreConditionsMockFactory(state) {
         return shallowMount(CommentNotEmptyCheckBox, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            namespaced: true,
+                            state,
+                            getters: {
+                                is_transition_from_new_artifact: () => false,
+                            },
+                        },
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
         });
     }
 
     describe("transition_comment_not_empty", () => {
         describe("when no current transition", () => {
-            it("returns false", async () => {
-                const wrapper = await filledPreConditionsMockFactory(null);
+            it("returns false", () => {
+                const wrapper = filledPreConditionsMockFactory(null);
                 expect(wrapper.get("[data-test=not-empty-comment-checkbox]").element.checked).toBe(
                     false,
                 );
@@ -65,7 +52,7 @@ describe("CommentNotEmptyCheckBox", () => {
         });
 
         describe("when current transition requires comment", () => {
-            it("returns true", async () => {
+            it("returns true", () => {
                 const state = {
                     current_transition: {
                         is_comment_required: true,
@@ -73,7 +60,7 @@ describe("CommentNotEmptyCheckBox", () => {
                         not_empty_field_ids: [],
                     },
                 };
-                const wrapper = await filledPreConditionsMockFactory(state);
+                const wrapper = filledPreConditionsMockFactory(state);
                 expect(wrapper.get("[data-test=not-empty-comment-checkbox]").element.checked).toBe(
                     true,
                 );
@@ -83,18 +70,18 @@ describe("CommentNotEmptyCheckBox", () => {
 
     describe(`when the modal is saving`, () => {
         let wrapper;
-        beforeEach(async () => {
+        beforeEach(() => {
             const state = {
                 is_modal_save_running: true,
             };
-            wrapper = await filledPreConditionsMockFactory(state);
+            wrapper = filledPreConditionsMockFactory(state);
         });
 
         it(`will disable the "Not empty comment" checkbox`, () => {
             const not_empty_comment_checkbox = wrapper.get(
                 "[data-test=not-empty-comment-checkbox]",
             );
-            expect(not_empty_comment_checkbox.attributes("disabled")).toBeTruthy();
+            expect(not_empty_comment_checkbox.attributes("disabled")).toBe("");
         });
     });
 });

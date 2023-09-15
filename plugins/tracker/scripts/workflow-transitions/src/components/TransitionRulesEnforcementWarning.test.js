@@ -20,36 +20,29 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
-import { createLocalVueForTests } from "../support/local-vue.js";
 import { create } from "../support/factories.js";
-import store_options from "../store/index.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe("TransitionRulesEnforcementWarning", () => {
-    let store;
-
-    beforeEach(() => {
-        store = createStoreMock(store_options, {
-            current_tracker: create("tracker", { workflow: create("workflow") }),
-        });
-    });
-
-    const getWrapper = async () => {
+    const getWrapper = (are_transition_rules_enforced) => {
         return shallowMount(TransitionRulesEnforcementWarning, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        current_tracker: create("tracker", { workflow: create("workflow") }),
+                    },
+                    getters: {
+                        are_transition_rules_enforced: () => are_transition_rules_enforced,
+                        is_workflow_legacy: () => false,
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
         });
     };
 
-    afterEach(() => store.reset());
-
     describe("when rules enforcement is active", () => {
-        beforeEach(() => (store.getters.are_transition_rules_enforced = true));
-
-        it("shows only rules enforcement active message", async () => {
-            const wrapper = await getWrapper();
+        it("shows only rules enforcement active message", () => {
+            const wrapper = getWrapper(true);
             expect(
                 wrapper.find('[data-test-message="rules-enforcement-active"]').exists(),
             ).toBeTruthy();
@@ -60,10 +53,8 @@ describe("TransitionRulesEnforcementWarning", () => {
     });
 
     describe("when rules enforcement is inactive", () => {
-        beforeEach(() => (store.getters.are_transition_rules_enforced = false));
-
-        it("shows only rule enforcement inactive message", async () => {
-            const wrapper = await getWrapper();
+        it("shows only rule enforcement inactive message", () => {
+            const wrapper = getWrapper(false);
             expect(
                 wrapper.find('[data-test-message="rules-enforcement-active"]').exists(),
             ).toBeFalsy();

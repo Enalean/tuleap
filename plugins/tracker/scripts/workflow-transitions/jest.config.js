@@ -19,7 +19,12 @@
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
+const jest_base_config = defineJestConfiguration();
 export default {
     ...defineJestConfiguration(),
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
     displayName: "tracker/workflow-transitions",
 };

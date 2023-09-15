@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
 import store_options from "./store/index.js";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 import "./tracker-email-copy-paste-bp.js";
+import { createStore } from "vuex";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-workflow-transitions");
@@ -38,16 +39,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const used_services_names = JSON.parse(service_name_list);
 
-    Vue.use(Vuex);
-    await initVueGettext(Vue, (locale) => import("../po/" + getPOFileFromLocale(locale)));
-    Vue.use(VueDOMPurifyHTML);
-
-    const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
-    const store = new Vuex.Store(store_options);
+    const store = createStore(store_options);
 
-    new RootComponent({
-        store,
-        propsData: { trackerId, used_services_names },
-    }).$mount(vue_mount_point);
+    createApp(BaseTrackerWorkflowTransitions, {
+        trackerId,
+        used_services_names,
+    })
+        .use(VueDOMPurifyHTML)
+        .use(
+            await initVueGettext(
+                createGettext,
+                (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+            ),
+        )
+        .use(store)
+        .mount(vue_mount_point);
 });

@@ -18,10 +18,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.js";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe(`ChangeFieldConfirmationModal`, () => {
     let create_modal_spy;
@@ -34,32 +33,31 @@ describe(`ChangeFieldConfirmationModal`, () => {
         create_modal_spy = jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
     });
 
-    async function createWrapper(is_operation_running) {
-        const store = createStoreMock({
-            state: {
-                is_operation_running: is_operation_running,
-            },
-            getters: {
-                workflow_field_label: "Status",
-                current_tracker_id: 145,
-            },
-        });
-
+    function createWrapper(is_operation_running) {
         return shallowMount(ChangeFieldConfirmationModal, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running: is_operation_running,
+                    },
+                    getters: {
+                        workflow_field_label: () => "Status",
+                        current_tracker_id: () => 145,
+                    },
+                }),
+            },
         });
     }
 
     describe(`when an operation is running`, () => {
         let wrapper;
-        beforeEach(async () => {
-            wrapper = await createWrapper(true);
+        beforeEach(() => {
+            wrapper = createWrapper(true);
         });
 
         it(`will disable the "Confirm" button`, () => {
             const confirm_button = wrapper.get("[data-test=confirm-button]");
-            expect(confirm_button.attributes("disabled")).toBeTruthy();
+            expect(confirm_button.attributes("disabled")).toBe("");
         });
 
         it(`will show a spinner icon on the "Confirm" button`, () => {
@@ -68,8 +66,8 @@ describe(`ChangeFieldConfirmationModal`, () => {
         });
     });
 
-    it(`when mounted(), it will create a TLP modal`, async () => {
-        await createWrapper(false);
+    it(`when mounted(), it will create a TLP modal`, () => {
+        createWrapper(false);
         expect(create_modal_spy).toHaveBeenCalled();
     });
 });

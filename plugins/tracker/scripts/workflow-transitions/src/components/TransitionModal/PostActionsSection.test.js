@@ -18,50 +18,59 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
 import { createList } from "../../support/factories.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import RunJobAction from "./PostAction/RunJobAction.vue";
 import SetValueAction from "./PostAction/SetValueAction.vue";
 import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";
 import HiddenFieldsetsAction from "./PostAction/HiddenFieldsetsAction.vue";
 import AddToBacklogAgileDashboardPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
 import AddToBacklogProgramManagementPostAction from "./Externals/AddToBacklogProgramManagementPostAction.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe("PostActionsSection", () => {
-    let store;
-    let wrapper;
+    let is_loading_modal, is_modal_save_running, post_actions_value;
+    let addPostActionMock = jest.fn();
 
-    beforeEach(async () => {
-        const store_options = {
-            state: {
-                transitionModal: {
-                    is_loading_modal: false,
-                    is_modal_save_running: false,
-                },
-            },
-            getters: {
-                "transitionModal/post_actions": createList("post_action", 2, "presented"),
-            },
-        };
-        store = createStoreMock(store_options);
-        wrapper = shallowMount(PostActionsSection, {
-            mocks: {
-                $store: store,
-            },
-            localVue: await createLocalVueForTests(),
-        });
+    beforeEach(() => {
+        is_loading_modal = false;
+        is_modal_save_running = false;
+        post_actions_value = createList("post_action", 2, "presented");
     });
+
+    function instantiateComponent() {
+        return shallowMount(PostActionsSection, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            state: {
+                                is_loading_modal,
+                                is_modal_save_running,
+                            },
+                            getters: {
+                                post_actions: () => post_actions_value,
+                            },
+                            mutations: {
+                                addPostAction: addPostActionMock,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+        });
+    }
 
     const skeleton_selector = '[data-test-type="skeleton"]';
     const empty_message_selector = '[data-test-type="empty-message"]';
     const post_action_selector = '[data-test-type="post-action"]';
 
     describe("when loading", () => {
-        beforeEach(() => (store.state.transitionModal.is_loading_modal = true));
+        beforeEach(() => (is_loading_modal = true));
 
         it("shows only skeleton", () => {
+            const wrapper = instantiateComponent();
             expect(wrapper.find(skeleton_selector).exists()).toBeTruthy();
             expect(wrapper.find(post_action_selector).exists()).toBeFalsy();
             expect(wrapper.find(empty_message_selector).exists()).toBeFalsy();
@@ -69,54 +78,49 @@ describe("PostActionsSection", () => {
     });
 
     describe("when loaded", () => {
-        beforeEach(() => (store.state.transitionModal.is_loading_modal = false));
-
         describe("when no action", () => {
-            beforeEach(() => (store.getters["transitionModal/post_actions"] = []));
+            beforeEach(() => (post_actions_value = []));
 
             it("shows only empty message", () => {
+                const wrapper = instantiateComponent();
                 expect(wrapper.find(skeleton_selector).exists()).toBeFalsy();
                 expect(wrapper.find(post_action_selector).exists()).toBeFalsy();
                 expect(wrapper.find(empty_message_selector).exists()).toBeTruthy();
             });
         });
         describe("when some post actions", () => {
-            beforeEach(
-                () =>
-                    (store.getters["transitionModal/post_actions"] = createList(
-                        "post_action",
-                        2,
-                        "presented",
-                    )),
-            );
+            beforeEach(() => (post_actions_value = createList("post_action", 2, "presented")));
 
             it("shows only post actions", () => {
+                const wrapper = instantiateComponent();
                 expect(wrapper.find(skeleton_selector).exists()).toBeFalsy();
                 expect(wrapper.find(post_action_selector).exists()).toBeTruthy();
                 expect(wrapper.find(empty_message_selector).exists()).toBeFalsy();
             });
             it("shows as many post action as stored", () => {
+                const wrapper = instantiateComponent();
                 expect(wrapper.findAll(post_action_selector)).toHaveLength(2);
             });
         });
     });
 
-    it(`when the modal is saving, it will disable the "Add another action" button`, async () => {
-        store.state.transitionModal.is_modal_save_running = true;
-        await wrapper.vm.$nextTick();
+    it(`when the modal is saving, it will disable the "Add another action" button`, () => {
+        is_modal_save_running = true;
+        const wrapper = instantiateComponent();
         const add_action_button = wrapper.get("[data-test=add-post-action]");
-        expect(add_action_button.attributes("disabled")).toBeTruthy();
+        expect(add_action_button.attributes("disabled")).toBe("");
     });
 
     it(`when I click on the "Add another action" button, it will commit a mutation to create a new post action`, () => {
+        const wrapper = instantiateComponent();
         const add_action_button = wrapper.get("[data-test=add-post-action]");
         add_action_button.trigger("click");
-        expect(store.commit).toHaveBeenCalledWith("transitionModal/addPostAction");
+        expect(addPostActionMock).toHaveBeenCalled();
     });
 
     describe("getComponent", () => {
-        it("displays the components which are alreay set", async () => {
-            store.getters["transitionModal/post_actions"] = [
+        it("displays the components which are alreay set", () => {
+            post_actions_value = [
                 {
                     type: "run_job",
                     unique_id: "new_1",
@@ -130,7 +134,7 @@ describe("PostActionsSection", () => {
                     unique_id: "new_4",
                 },
             ];
-            await wrapper.vm.$nextTick();
+            const wrapper = instantiateComponent();
             expect(wrapper.findComponent(RunJobAction).exists()).toBe(true);
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
@@ -142,8 +146,8 @@ describe("PostActionsSection", () => {
                 false,
             );
         });
-        it("displays all the component which are in the post_actions", async () => {
-            store.getters["transitionModal/post_actions"] = [
+        it("displays all the component which are in the post_actions", () => {
+            post_actions_value = [
                 {
                     type: "run_job",
                     unique_id: "new_1",
@@ -169,7 +173,7 @@ describe("PostActionsSection", () => {
                     unique_id: "new_11",
                 },
             ];
-            await wrapper.vm.$nextTick();
+            const wrapper = instantiateComponent();
             expect(wrapper.findComponent(RunJobAction).exists()).toBe(true);
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(true);
@@ -180,9 +184,9 @@ describe("PostActionsSection", () => {
             );
         });
 
-        it("displays nothing if there is no post action", async () => {
-            store.getters["transitionModal/post_actions"] = [];
-            await wrapper.vm.$nextTick();
+        it("displays nothing if there is no post action", () => {
+            post_actions_value = [];
+            const wrapper = instantiateComponent();
             expect(wrapper.findComponent(RunJobAction).exists()).toBe(false);
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(false);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);

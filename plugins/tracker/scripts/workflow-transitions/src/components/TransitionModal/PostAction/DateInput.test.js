@@ -21,15 +21,17 @@
 import { shallowMount } from "@vue/test-utils";
 import DateInput from "./DateInput.vue";
 import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
-import { createLocalVueForTests } from "../../../support/local-vue.js";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests.js";
 
 describe("DateInput", () => {
     let wrapper;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         wrapper = shallowMount(DateInput, {
             propsData: { input_value: DATE_FIELD_VALUE.CLEAR },
-            localVue: await createLocalVueForTests(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
     });
 

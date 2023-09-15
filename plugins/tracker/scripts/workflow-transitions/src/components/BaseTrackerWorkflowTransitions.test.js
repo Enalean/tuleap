@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
@@ -27,43 +26,64 @@ import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationS
 import HeaderSection from "./Header/HeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
-import store_options from "../store/index.js";
 import { create } from "../support/factories.js";
-import { createLocalVueForTests } from "../support/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe("BaseTrackerWorkflowTransitions", () => {
-    let store;
-
+    let is_operation_running,
+        is_current_tracker_load_failed,
+        is_current_tracker_loading,
+        has_selectbox_fields_getter,
+        current_tracker;
     beforeEach(() => {
-        store = createStoreMock(store_options, { is_operation_running: false });
+        is_operation_running = false;
+        is_current_tracker_load_failed = false;
+        is_current_tracker_loading = false;
+        has_selectbox_fields_getter = false;
+        current_tracker = create("workflow", "field_not_defined");
     });
-
-    const getWrapper = async () => {
+    const getWrapper = () => {
         return shallowMount(BaseTrackerWorkflowTransitions, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running,
+                        is_current_tracker_load_failed,
+                        is_current_tracker_loading,
+                        current_tracker,
+                    },
+                    getters: {
+                        has_selectbox_fields: () => has_selectbox_fields_getter,
+                    },
+                    actions: {
+                        loadTracker: jest.fn(),
+                    },
+                    modules: {
+                        transitionModal: {
+                            actions: {
+                                setUsedServiceName: jest.fn(),
+                                setIsSplitFeatureFlagEnabled: jest.fn(),
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
             propsData: { trackerId: 1 },
         });
     };
 
-    afterEach(() => store.reset());
-
     describe("when tracker load failed", () => {
-        beforeEach(() => {
-            store.state.is_current_tracker_load_failed = true;
-        });
-
-        it("shows tracker load error message", async () => {
-            const wrapper = await getWrapper();
+        it("shows tracker load error message", () => {
+            is_current_tracker_load_failed = true;
+            const wrapper = getWrapper();
             expect(
                 wrapper.find('[data-test-type="tracker-load-error-message"]').exists(),
             ).toBeTruthy();
         });
-        it("does not show anything else", async () => {
-            const wrapper = await getWrapper();
+        it("does not show anything else", () => {
+            is_current_tracker_load_failed = true;
+            const wrapper = getWrapper();
             expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeFalsy();
             expect(wrapper.findComponent(HeaderSection).exists()).toBeFalsy();
             expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeFalsy();
@@ -71,17 +91,14 @@ describe("BaseTrackerWorkflowTransitions", () => {
     });
 
     describe("when tracker loading", () => {
-        beforeEach(() => {
-            store.state.is_current_tracker_load_failed = false;
-            store.state.is_current_tracker_loading = true;
-        });
-
-        it("shows tracker load spinner", async () => {
-            const wrapper = await getWrapper();
+        it("shows tracker load spinner", () => {
+            is_current_tracker_loading = true;
+            const wrapper = getWrapper();
             expect(wrapper.find('[data-test-type="tracker-load-spinner"]').exists()).toBeTruthy();
         });
-        it("does not show anything else", async () => {
-            const wrapper = await getWrapper();
+        it("does not show anything else", () => {
+            is_current_tracker_loading = true;
+            const wrapper = getWrapper();
             expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeFalsy();
             expect(wrapper.findComponent(HeaderSection).exists()).toBeFalsy();
             expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeFalsy();
@@ -89,39 +106,24 @@ describe("BaseTrackerWorkflowTransitions", () => {
     });
 
     describe("when tracker loaded", () => {
-        beforeEach(() => {
-            store.state.is_current_tracker_load_failed = false;
-            store.state.is_current_tracker_loading = false;
-            store.state.current_tracker = {};
-            Vue.set(store.state, "current_tracker", {});
-        });
-
         describe("when base field is not configured", () => {
-            beforeEach(() => {
-                Vue.set(
-                    store.state.current_tracker,
-                    "workflow",
-                    create("workflow", "field_not_defined"),
-                );
-            });
+            it("and there is a selectbox field, then it shows first configuration", () => {
+                has_selectbox_fields_getter = true;
 
-            it("and there is a selectbox field, then it shows first configuration", async () => {
-                store.getters.has_selectbox_fields = true;
-
-                const wrapper = await getWrapper();
+                const wrapper = getWrapper();
                 expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeTruthy();
             });
 
-            it("does not show rules enforcement warning", async () => {
-                const wrapper = await getWrapper();
+            it("does not show rules enforcement warning", () => {
+                const wrapper = getWrapper();
                 expect(
                     wrapper.findComponent(TransitionRulesEnforcementWarning).exists(),
                 ).toBeFalsy();
             });
 
-            it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", async () => {
-                store.getters.has_selectbox_fields = false;
-                const wrapper = await getWrapper();
+            it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", () => {
+                has_selectbox_fields_getter = false;
+                const wrapper = getWrapper();
 
                 expect(
                     wrapper.findComponent(FirstConfigurationImpossibleWarning).exists(),
@@ -130,22 +132,18 @@ describe("BaseTrackerWorkflowTransitions", () => {
         });
 
         describe("when base field is configured", () => {
-            beforeEach(() => {
-                Vue.set(
-                    store.state.current_tracker,
-                    "workflow",
-                    create("workflow", "field_defined"),
-                );
+            it("shows configuration header and matrix", () => {
+                current_tracker = create("workflow", "field_defined");
+                current_tracker.workflow = { field_id: 1 };
+                const wrapper = getWrapper();
+                expect(wrapper.find("[data-test=header-section]").exists()).toBe(true);
+                expect(wrapper.find("[data-test=transition-matrix-section]").exists()).toBe(true);
             });
-            it("shows configuration header and matrix", async () => {
-                const wrapper = await getWrapper();
-                expect(wrapper.findComponent(HeaderSection).exists()).toBeTruthy();
-                expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeTruthy();
-            });
-            it("shows rules enforcement warning", async () => {
-                const wrapper = await getWrapper();
+            it("shows rules enforcement warning", () => {
+                current_tracker = create("workflow", "field_defined");
+                const wrapper = getWrapper();
                 expect(
-                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists(),
+                    wrapper.find("[data-test=configuration-impossible-warning]").exists(),
                 ).toBeTruthy();
             });
         });

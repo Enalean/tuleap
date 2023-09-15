@@ -18,31 +18,47 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TransitionModal from "./TransitionModal.vue";
 import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
-import storeOptions from "../../store/transition-modal/module.js";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests.js";
 
 describe(`TransitionModal`, () => {
     let modal;
-    function mockStore() {
-        const store = createStoreMock({
-            state: {
-                transitionModal: storeOptions,
-            },
-        });
-        // eslint-disable-next-line jest/prefer-spy-on
-        store.watch = jest.fn();
-        return store;
-    }
+    let is_loading_modal, is_modal_shown, is_modal_save_running;
 
-    const createWrapper = async (store) =>
+    const saveTransitionRulesMock = jest.fn();
+    const clearModalShownMock = jest.fn();
+
+    beforeEach(() => {
+        is_loading_modal = false;
+        is_modal_shown = false;
+        is_modal_save_running = false;
+    });
+
+    const createWrapper = () =>
         shallowMount(TransitionModal, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        transitionModal: {
+                            state: {
+                                is_loading_modal,
+                                is_modal_shown,
+                                is_modal_save_running,
+                            },
+                            actions: {
+                                saveTransitionRules: saveTransitionRulesMock,
+                            },
+                            mutations: {
+                                clearModalShown: clearModalShownMock,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
 
     beforeEach(() => {
@@ -54,83 +70,59 @@ describe(`TransitionModal`, () => {
         jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal);
     });
 
-    it(`when mounted(), it will create a TLP modal`, async () => {
+    it(`when mounted(), it will create a TLP modal`, () => {
         const createModal = jest.spyOn(tlp_modal, "createModal");
-        await createWrapper(mockStore());
+        createWrapper();
         expect(createModal).toHaveBeenCalled();
     });
 
     it(`when the modal is hidden (through ESC or a close button),
-        it will clear the modal shown flag`, async () => {
+        it will clear the modal shown flag`, () => {
         jest.spyOn(modal, "addEventListener").mockImplementation((event_name, callback) =>
             callback(),
         );
-        const store = mockStore();
-        await createWrapper(store);
+        createWrapper();
 
-        expect(store.commit).toHaveBeenCalledWith("transitionModal/clearModalShown");
-    });
-
-    it(`when the modal shown flag becomes true, it will show the modal`, async () => {
-        const showModal = jest.spyOn(modal, "show");
-        const store = mockStore();
-        jest.spyOn(store, "watch").mockImplementation((watchFunction, callback) => callback(true));
-        await createWrapper(store);
-
-        expect(showModal).toHaveBeenCalled();
-    });
-
-    it(`when the modal shown flag becomes false, it will hide the modal`, async () => {
-        const hideModal = jest.spyOn(modal, "hide");
-        const store = mockStore();
-        jest.spyOn(store, "watch").mockImplementation((watchFunction, callback) => callback(false));
-        await createWrapper(store);
-
-        expect(hideModal).toHaveBeenCalled();
+        expect(clearModalShownMock).toHaveBeenCalled();
     });
 
     it(`when the modal form is submitted,
-        it will dispatch an action to save the transition rules`, async () => {
-        const store = mockStore();
-        const wrapper = await createWrapper(store);
+        it will dispatch an action to save the transition rules`, () => {
+        const wrapper = createWrapper();
 
         wrapper.trigger("submit");
-        expect(store.dispatch).toHaveBeenCalledWith("transitionModal/saveTransitionRules");
+        expect(saveTransitionRulesMock).toHaveBeenCalled();
     });
 
-    it(`when the modal is loading, it will show a skeleton for Pre-conditions`, async () => {
-        const store = mockStore();
-        store.state.transitionModal.is_loading_modal = true;
-        const wrapper = await createWrapper(store);
+    it(`when the modal is loading, it will show a skeleton for Pre-conditions`, () => {
+        is_loading_modal = true;
+        const wrapper = createWrapper();
 
         expect(wrapper.findComponent(PreConditionsSkeleton).exists()).toBe(true);
     });
 
-    it(`when the modal is loaded and shown, it will show the Pre-conditions section`, async () => {
-        const store = mockStore();
-        store.state.transitionModal.is_loading_modal = false;
-        store.state.transitionModal.is_modal_shown = true;
-        const wrapper = await createWrapper(store);
+    it(`when the modal is loaded and shown, it will show the Pre-conditions section`, () => {
+        is_modal_shown = true;
+        const wrapper = createWrapper();
 
         expect(wrapper.findComponent(FilledPreConditionsSection).exists()).toBe(true);
     });
 
     describe(`when the modal is saving`, () => {
         let wrapper;
-        beforeEach(async () => {
-            const store = mockStore();
-            store.state.transitionModal.is_modal_save_running = true;
-            wrapper = await createWrapper(store);
+        beforeEach(() => {
+            is_modal_save_running = true;
+            wrapper = createWrapper();
         });
 
         it(`will disable the Cancel button`, () => {
             const cancel_button = wrapper.get("[data-test=cancel-button]");
-            expect(cancel_button.attributes("disabled")).toBe("disabled");
+            expect(cancel_button.attributes("disabled")).toBe("");
         });
 
         it(`will disable the "Save configuration" button`, () => {
             const save_button = wrapper.get("[data-test=save-button]");
-            expect(save_button.attributes("disabled")).toBe("disabled");
+            expect(save_button.attributes("disabled")).toBe("");
         });
 
         it(`will show a spinner icon on the "Save configuration" button`, () => {

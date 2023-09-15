@@ -22,38 +22,43 @@ import { shallowMount } from "@vue/test-utils";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 import TransitionDeleter from "./TransitionDeleter.vue";
 import { create } from "../support/factories.js";
-import { createLocalVueForTests } from "../support/local-vue.js";
-import store_options from "../store/index.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 jest.useFakeTimers();
 
 describe("TransitionMatrixContent", () => {
-    let store, wrapper;
+    let wrapper;
+    const createTransitionMock = jest.fn();
 
-    const getWrapper = async () => {
+    const getWrapper = (
+        is_operation_running,
+        current_workflow_transitions_value,
+        is_workflow_advanced_value,
+    ) => {
         return shallowMount(TransitionMatrixContent, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_operation_running,
+                    },
+                    getters: {
+                        current_workflow_transitions: () => current_workflow_transitions_value,
+                        is_workflow_advanced: () => is_workflow_advanced_value,
+                    },
+                    actions: {
+                        createTransition: createTransitionMock,
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
             propsData: {
-                from: create("field_value"),
-                to: create("field_value"),
+                from: { id: 1 },
+                to: { id: 2 },
             },
         });
     };
 
-    beforeEach(async () => {
-        store = createStoreMock(store_options, { is_operation_running: false });
-        store.getters.current_workflow_transitions = [];
-        store.getters.is_workflow_advanced = true;
-        wrapper = await getWrapper();
-    });
-
-    afterEach(() => {
-        wrapper.destroy(); //Otherwise we get problems because current_workflow_transitions becomes a function
-        store.reset();
+    beforeEach(() => {
+        wrapper = getWrapper(true, [], true);
     });
 
     const create_transition_selector = '[data-test-action="create-transition"]';
@@ -90,8 +95,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("during another operation running", () => {
                 it("transition creation is disabled", async () => {
-                    store.state.is_operation_running = true;
-                    await wrapper.vm.$nextTick();
+                    await jest.runOnlyPendingTimersAsync();
 
                     expect(wrapper.get(create_transition_selector).classes()).toContain(
                         "tracker-workflow-transition-action-disabled",
@@ -99,42 +103,19 @@ describe("TransitionMatrixContent", () => {
 
                     wrapper.get(create_transition_selector).trigger("click");
 
-                    expect(store.commit).not.toHaveBeenCalledWith("createTransition");
+                    expect(createTransitionMock).not.toHaveBeenCalled();
                 });
             });
 
-            describe("when user clicks to create transition", () => {
-                let resolveCreateTransition;
+            it("user can create transition", async () => {
+                wrapper = getWrapper(false, [], true);
+                wrapper.get(create_transition_selector).trigger("click");
+                await wrapper.vm.$nextTick();
+                expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
 
-                beforeEach(() => {
-                    store.dispatch.mockReturnValue(
-                        new Promise((resolve) => {
-                            resolveCreateTransition = resolve;
-                        }),
-                    );
-                    wrapper.get(create_transition_selector).trigger("click");
-                });
-
-                it("shows a spinner", () => {
-                    expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
-                });
-                it("creates transition", () => {
-                    expect(store.dispatch).toHaveBeenCalledWith("createTransition", {
-                        from_id: 1,
-                        to_id: 2,
-                    });
-                });
-
-                describe("and new transition successfully saved", () => {
-                    beforeEach(async () => {
-                        resolveCreateTransition();
-                        await jest.runOnlyPendingTimersAsync();
-                    });
-
-                    it("hides spinner", () => {
-                        expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
-                    });
-                });
+                expect(createTransitionMock).toHaveBeenCalled();
+                await jest.runOnlyPendingTimersAsync();
+                expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
             });
         });
 
@@ -145,40 +126,29 @@ describe("TransitionMatrixContent", () => {
                 updated: false,
             };
 
-            beforeEach(() => {
-                store.getters.current_workflow_transitions = [transition];
-            });
-
             it("shows transition", () => {
+                wrapper = getWrapper(false, [transition], true);
                 expect(wrapper.findComponent(TransitionDeleter).exists()).toBeTruthy();
                 expect(wrapper.find(transition_configuration_selector).exists()).toBeTruthy();
             });
 
-            describe("and the workflow is in simple mode", () => {
-                beforeEach(() => {
-                    store.getters.is_workflow_advanced = false;
-                });
-
-                it("does not show the 'configure transition' button", () => {
-                    expect(wrapper.find(transition_configuration_selector).exists()).toBeFalsy();
-                });
+            it("does not show the 'configure transition' button when the workflow is in simple mode", () => {
+                wrapper = getWrapper(false, [transition], false);
+                expect(wrapper.find(transition_configuration_selector).exists()).toBeFalsy();
             });
 
-            describe("when the transition has just been updated", () => {
-                beforeEach(() => {
-                    transition.updated = true;
-                });
+            it("shows an 'updated' animation when the transition has just been updated", () => {
+                const transition = {
+                    from_id: 1,
+                    to_id: 2,
+                    updated: true,
+                };
 
-                it("shows an 'updated' animation", () => {
-                    const configure_transition_button = wrapper.get(
-                        transition_configuration_selector,
-                    );
+                wrapper = getWrapper(false, [transition], true);
+                const configure_transition_button = wrapper.get(transition_configuration_selector);
 
-                    expect(configure_transition_button.classes()).toContain("tlp-button-success");
-                    expect(wrapper.classes()).toContain(
-                        "tracker-workflow-transition-action-updated",
-                    );
-                });
+                expect(configure_transition_button.classes()).toContain("tlp-button-success");
+                expect(wrapper.classes()).toContain("tracker-workflow-transition-action-updated");
             });
         });
     });

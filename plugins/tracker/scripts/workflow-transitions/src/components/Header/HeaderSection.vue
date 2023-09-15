@@ -34,7 +34,8 @@
                     id="workflow-transitions-enabled"
                     data-test="workflow-transitions-enabled"
                     class="tlp-switch-checkbox"
-                    v-model="transition_rules_enforcement"
+                    v-bind:checked="are_transition_rules_enforced"
+                    v-on:click="updateTransitionRules"
                     v-bind:disabled="is_operation_running"
                 />
                 <label
@@ -61,16 +62,13 @@ export default {
     computed: {
         ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
         ...mapGetters(["are_transition_rules_enforced"]),
-        transition_rules_enforcement: {
-            get() {
-                return this.are_transition_rules_enforced;
-            },
-            set() {
-                this.$store.dispatch(
-                    "updateTransitionRulesEnforcement",
-                    !this.are_transition_rules_enforced,
-                );
-            },
+    },
+    methods: {
+        updateTransitionRules() {
+            this.$store.dispatch(
+                "updateTransitionRulesEnforcement",
+                !this.are_transition_rules_enforced,
+            );
         },
     },
 };

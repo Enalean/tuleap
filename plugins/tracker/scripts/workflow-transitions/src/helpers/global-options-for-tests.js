@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,16 +15,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createGettext } from "vue3-gettext";
+import { createStore } from "vuex";
 
-export async function createLocalVueForTests() {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw Error("Fallback to default");
-    });
-    return local_vue;
+export function getGlobalTestOptions(store_options = {}) {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
 }
