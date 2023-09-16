@@ -19,6 +19,7 @@
  */
 namespace Tuleap\Kanban\RealTime;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
@@ -34,26 +35,26 @@ final class KanbanRealtimeMessageSenderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private TrackerFactory $tracker_factory;
-    private KanbanStructureRealTimeMercure $structure_realtime_kanban;
-    private NodeJSClient $node_js_client;
-    private \Tracker_Permission_PermissionsSerializer $permissions_serializer;
-    private Kanban $kanban;
+    private TrackerFactory&MockObject $tracker_factory;
+    private KanbanStructureRealTimeMercure&MockObject $structure_realtime_kanban;
+    private NodeJSClient&MockObject $node_js_client;
+    private \Tracker_Permission_PermissionsSerializer&MockObject $permissions_serializer;
+    private Kanban&MockObject $kanban;
     private \PFUser $user;
     private KanbanRealtimeStructureMessageSender $sender;
     private Tracker $tracker;
-    private \HTTPRequest $request;
+    private \HTTPRequest&MockObject $request;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tracker_factory           = $this->createStub(TrackerFactory::class);
-        $this->structure_realtime_kanban = $this->createStub(KanbanStructureRealTimeMercure::class);
+        $this->tracker_factory           = $this->createMock(TrackerFactory::class);
+        $this->structure_realtime_kanban = $this->createMock(KanbanStructureRealTimeMercure::class);
         $this->node_js_client            = $this->createMock(NodeJSClient::class);
-        $this->permissions_serializer    = $this->createStub(\Tracker_Permission_PermissionsSerializer::class);
+        $this->permissions_serializer    = $this->createMock(\Tracker_Permission_PermissionsSerializer::class);
         $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)->build();
-        $this->kanban                    = $this->createStub(Kanban::class);
+        $this->kanban                    = $this->createMock(Kanban::class);
         $this->user                      = ProvideCurrentUserStub::buildCurrentUserByDefault()->getCurrentUser();
-        $this->request                   = $this->createStub(\HTTPRequest::class);
+        $this->request                   = $this->createMock(\HTTPRequest::class);
         $this->kanban->method('getTrackerId')->willReturn(1);
         $this->sender = new KanbanRealtimeStructureMessageSender($this->tracker_factory, $this->structure_realtime_kanban, $this->node_js_client, $this->permissions_serializer);
     }

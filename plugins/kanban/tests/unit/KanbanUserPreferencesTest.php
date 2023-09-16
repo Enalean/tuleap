@@ -20,29 +20,27 @@
 
 namespace Tuleap\Kanban;
 
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
 final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /** @var  */
+    private PFUser&MockObject $user;
 
-    /** @var PFUser */
-    private $user;
-
-    /** @var KanbanUserPreferences */
-    private $user_preferences;
+    /** @var  */
+    private KanbanUserPreferences $user_preferences;
 
     /** @var Kanban */
     private $kanban;
 
-    private $column_id = 10;
+    private int $column_id = 10;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::spy(\PFUser::class);
+        $this->user = $this->createMock(\PFUser::class);
 
         $this->user_preferences = new KanbanUserPreferences();
         $this->kanban           = new Kanban(1, TrackerTestBuilder::aTracker()->build(), 'My first kanban');
@@ -50,57 +48,59 @@ final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDefaultBehavior(): void
     {
-        $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
-        $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
-        $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
+        $this->user->method('getPreference')->willReturn(false);
+
+        self::assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
+        self::assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
+        self::assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
     public function testItOpensTheBacklog(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(KanbanUserPreferences::EXPAND);
+        $this->user->method('getPreference')->with('kanban_collapse_backlog_1')->willReturn(KanbanUserPreferences::EXPAND);
 
-        $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
+        self::assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
     public function testItOpensTheBacklogIfNoPreferenceSet(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturnFalse();
+        $this->user->method('getPreference')->with('kanban_collapse_backlog_1')->willReturn(false);
 
-        $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
+        self::assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
     public function testItOpensTheArchive(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(KanbanUserPreferences::EXPAND);
+        $this->user->method('getPreference')->with('kanban_collapse_archive_1')->willReturn(KanbanUserPreferences::EXPAND);
 
-        $this->assertTrue($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
+        self::assertTrue($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
     public function testItOpensTheColumn(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(KanbanUserPreferences::EXPAND);
+        $this->user->method('getPreference')->with('kanban_collapse_column_1_10')->willReturn(KanbanUserPreferences::EXPAND);
 
-        $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
+        self::assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
     public function testItClosesTheBacklog(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(KanbanUserPreferences::COLLAPSE);
+        $this->user->method('getPreference')->with('kanban_collapse_backlog_1')->willReturn(KanbanUserPreferences::COLLAPSE);
 
-        $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
+        self::assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
     public function testItClosesTheArchive(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(KanbanUserPreferences::COLLAPSE);
+        $this->user->method('getPreference')->with('kanban_collapse_archive_1')->willReturn(KanbanUserPreferences::COLLAPSE);
 
-        $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
+        self::assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
     public function testItClosesTheColumn(): void
     {
-        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(KanbanUserPreferences::COLLAPSE);
+        $this->user->method('getPreference')->with('kanban_collapse_column_1_10')->willReturn(KanbanUserPreferences::COLLAPSE);
 
-        $this->assertFalse($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
+        self::assertFalse($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 }

@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Tuleap\Kanban\RealTimeMercure;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
@@ -48,7 +49,7 @@ final class MercureJWTControllerTest extends TestCase
     private EmitterInterface $emitter;
     private TestLogger $test_logger;
     private MercureJWTController $mercure_jwt_controller;
-    private KanbanFactory $agile_dashboard_kanban_factory;
+    private KanbanFactory&MockObject $agile_dashboard_kanban_factory;
     private ProvideCurrentUserStub $user_manager;
 
     protected function setup(): void
@@ -62,7 +63,7 @@ final class MercureJWTControllerTest extends TestCase
         $jwt_configuration                    = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
         $mercure_jwt_generator                = new MercureJWTGeneratorImpl($jwt_configuration);
         $this->emitter                        = new NoopSapiEmitter();
-        $this->agile_dashboard_kanban_factory = $this->createStub(\Tuleap\Kanban\KanbanFactory::class);
+        $this->agile_dashboard_kanban_factory = $this->createMock(\Tuleap\Kanban\KanbanFactory::class);
         $this->test_logger                    = new TestLogger();
         $this->mercure_jwt_controller         =  new MercureJWTController(
             $this->agile_dashboard_kanban_factory,
@@ -84,7 +85,7 @@ final class MercureJWTControllerTest extends TestCase
         );
 
         $response = $this->mercure_jwt_controller->handle($request);
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testNoGenerator(): void
@@ -104,8 +105,8 @@ final class MercureJWTControllerTest extends TestCase
             $this->emitter,
         );
         $response                   = $controller->handle($request);
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertTrue($this->test_logger->hasInfo('Error while generating the token in Kanban JWT Request'));
+        self::assertEquals(404, $response->getStatusCode());
+        self::assertTrue($this->test_logger->hasInfo('Error while generating the token in Kanban JWT Request'));
     }
 
     public function testKanbanNotFoundException(): void
@@ -115,8 +116,8 @@ final class MercureJWTControllerTest extends TestCase
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
         $response = $this->mercure_jwt_controller->handle($request);
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertTrue($this->test_logger->hasInfoThatContains('Kanban error in generating the token in Kanban JWT Request'));
+        self::assertEquals(404, $response->getStatusCode());
+        self::assertTrue($this->test_logger->hasInfoThatContains('Kanban error in generating the token in Kanban JWT Request'));
     }
 
     public function testKanbanCannotAccessException(): void
@@ -126,7 +127,7 @@ final class MercureJWTControllerTest extends TestCase
             HTTPFactoryBuilder::URIFactory()->createUri('/12')
         );
         $response = $this->mercure_jwt_controller->handle($request);
-        $this->assertEquals(404, $response->getStatusCode());
-        $this->assertTrue($this->test_logger->hasInfoThatContains('Kanban error in generating the token in Kanban JWT Request'));
+        self::assertEquals(404, $response->getStatusCode());
+        self::assertTrue($this->test_logger->hasInfoThatContains('Kanban error in generating the token in Kanban JWT Request'));
     }
 }

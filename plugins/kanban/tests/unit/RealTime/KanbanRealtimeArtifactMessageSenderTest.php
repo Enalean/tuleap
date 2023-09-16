@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\Kanban\RealTime;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Kanban\RealTime\KanbanRealtimeArtifactMessageSender;
 use Tuleap\Kanban\RealTime\RealTimeArtifactMessageController;
@@ -28,12 +29,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class KanbanRealtimeArtifactMessageSenderTest extends TestCase
+final class KanbanRealtimeArtifactMessageSenderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private RealTimeArtifactMessageControllerMercure $realtime_controller_mercure;
-    private RealTimeArtifactMessageController $realtime_controller;
+    private RealTimeArtifactMessageControllerMercure&MockObject $realtime_controller_mercure;
+    private RealTimeArtifactMessageController&MockObject $realtime_controller;
     protected function setUp(): void
     {
         $this->realtime_controller         = $this->createMock(RealTimeArtifactMessageController::class);
@@ -41,7 +42,7 @@ class KanbanRealtimeArtifactMessageSenderTest extends TestCase
         parent::setUp();
     }
 
-    public function testNoFlag()
+    public function testNoFlag(): void
     {
         $user     = UserTestBuilder::aUser()->build();
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
@@ -59,7 +60,7 @@ class KanbanRealtimeArtifactMessageSenderTest extends TestCase
         );
     }
 
-    public function testFlag()
+    public function testFlag(): void
     {
         \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, 1);
         $user     = UserTestBuilder::aUser()->build();

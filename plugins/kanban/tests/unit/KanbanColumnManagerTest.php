@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use Mockery;
 use PFUser;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var int
      */
@@ -42,20 +40,17 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var int
      */
     private $wip_limit;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
     /**
      * @var KanbanColumn
      */
     private $column;
     /**
-     * @var KanbanColumnDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var KanbanColumnDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $column_dao;
     /**
-     * @var KanbanActionsChecker|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var KanbanActionsChecker&\PHPUnit\Framework\MockObject\MockObject
      */
     private $kanban_actions_checker;
     /**
@@ -73,17 +68,16 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->column_id = 456;
         $this->wip_limit = 12;
 
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getUserName')->andReturn('user name');
+        $this->user   = UserTestBuilder::aUser()->withUserName('user name')->build();
         $this->column = new KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, 2, true);
 
-        $this->column_dao             = \Mockery::spy(\Tuleap\Kanban\KanbanColumnDao::class);
-        $this->kanban_actions_checker = \Mockery::spy(\Tuleap\Kanban\KanbanActionsChecker::class);
+        $this->column_dao             = $this->createMock(\Tuleap\Kanban\KanbanColumnDao::class);
+        $this->kanban_actions_checker = $this->createMock(\Tuleap\Kanban\KanbanActionsChecker::class);
 
         $this->kanban                = new Kanban($this->kanban_id, TrackerTestBuilder::aTracker()->build(), "My Kanban");
         $this->kanban_column_manager = new KanbanColumnManager(
             $this->column_dao,
-            \Mockery::spy(
+            $this->createMock(
                 \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
             ),
             $this->kanban_actions_checker
@@ -92,16 +86,20 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesTheWIPLimit(): void
     {
-        $this->column_dao->shouldReceive('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit)->once();
+        $this->kanban_actions_checker->method('checkUserCanAdministrate')->with($this->user, $this->kanban);
+
+        $this->column_dao->expects(self::once())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);
     }
 
     public function testItThrowsAnExceptionIfUserNotAdmin(): void
     {
-        $this->kanban_actions_checker->shouldReceive('checkUserCanAdministrate')->with($this->user, $this->kanban)->andThrows(new KanbanUserNotAdminException($this->user));
+        $this->kanban_actions_checker->method('checkUserCanAdministrate')->with($this->user, $this->kanban)->willThrowException(
+            new KanbanUserNotAdminException($this->user)
+        );
 
-        $this->column_dao->shouldReceive('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit)->never();
+        $this->column_dao->expects(self::never())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
         $this->expectException(\Tuleap\Kanban\KanbanUserNotAdminException::class);
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);

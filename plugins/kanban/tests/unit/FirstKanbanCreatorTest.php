@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace unit;
 
-use Mockery;
 use PFUser;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Report;
 use Tracker_ReportFactory;
@@ -37,54 +36,50 @@ use Tuleap\Kanban\FirstKanbanCreator;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**
-     * @var Mockery\MockInterface|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
     /**
-     * @var Mockery\MockInterface|KanbanManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&KanbanManager
      */
     private $kanban_manager;
     /**
-     * @var Mockery\MockInterface|KanbanFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&KanbanFactory
      */
     private $kanban_factory;
     /**
-     * @var Mockery\MockInterface|TrackerXmlImport
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerXmlImport
      */
     private $xml_import;
     /**
-     * @var Mockery\MockInterface|TrackerReportUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerReportUpdater
      */
     private $report_updater;
     /**
-     * @var Mockery\MockInterface|Tracker_ReportFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ReportFactory
      */
     private $report_factory;
-    /**
-     * @var Mockery\MockInterface|FirstKanbanCreator
-     */
-    private $kanban_creator;
+    private FirstKanbanCreator $kanban_creator;
 
     protected function setUp(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(123);
+        $project = ProjectTestBuilder::aProject()->withId(123)->build();
 
-        $this->tracker_factory = Mockery::mock(TrackerFactory::class);
-        $this->kanban_manager  = Mockery::mock(KanbanManager::class);
-        $this->kanban_factory  = Mockery::mock(KanbanFactory::class);
-        $this->xml_import      = Mockery::mock(TrackerXmlImport::class);
-        $this->xml_import->shouldReceive('getTrackerItemNameFromXMLFile')->andReturn('tracker_item_name');
-        $this->report_updater = Mockery::mock(TrackerReportUpdater::class);
-        $this->report_factory = Mockery::mock(Tracker_ReportFactory::class);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
+        $this->kanban_manager  = $this->createMock(KanbanManager::class);
+        $this->kanban_factory  = $this->createMock(KanbanFactory::class);
+        $this->xml_import      = $this->createMock(TrackerXmlImport::class);
+        $this->xml_import->method('getTrackerItemNameFromXMLFile')->willReturn('tracker_item_name');
+        $this->report_updater = $this->createMock(TrackerReportUpdater::class);
+        $this->report_factory = $this->createMock(Tracker_ReportFactory::class);
         $this->kanban_creator = new FirstKanbanCreator(
             $project,
             $this->kanban_manager,
@@ -98,18 +93,18 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreationFirstKanban(): void
     {
-        $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(Kanban::class);
-        $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
+        $this->kanban_manager->method('getTrackersUsedAsKanban')->willReturn([]);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $this->xml_import->method('createFromXMLFile')->willReturn($tracker);
+        $kanban = $this->createMock(Kanban::class);
+        $this->kanban_factory->method('getKanban')->willReturn($kanban);
 
-        $this->kanban_manager->shouldReceive('createKanban')->once();
+        $this->kanban_manager->expects(self::once())->method('createKanban');
 
-        $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
+        $this->kanban_creator->createFirstKanban($this->createMock(PFUser::class));
     }
 
     public function testItAddsAssignedToMeReportAsSelectableReport(): void
@@ -117,67 +112,67 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $default_report        = $this->buildReport(10, true, 'Default');
         $assigned_to_me_report = $this->buildReport(20, true, 'Assigned to me');
 
-        $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->kanban_manager->method('getTrackersUsedAsKanban')->willReturn([]);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(Kanban::class);
-        $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
-        $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
-        $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $this->xml_import->method('createFromXMLFile')->willReturn($tracker);
+        $kanban = $this->createMock(Kanban::class);
+        $this->kanban_factory->method('getKanban')->willReturn($kanban);
+        $this->kanban_manager->method('createKanban')->willReturn(1);
+        $this->report_factory->method('getReportsByTrackerId')->with(101, null)->willReturn(
             [$default_report, $assigned_to_me_report]
         );
 
-        $this->report_updater->shouldReceive('save')->with($kanban, [20])->once();
+        $this->report_updater->expects(self::once())->method('save')->with($kanban, [20]);
 
-        $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
+        $this->kanban_creator->createFirstKanban($this->createMock(PFUser::class));
     }
 
     public function testItDoesNotAddAReportAsSelectableReportIfAssignedToMeReportNotFound(): void
     {
         $default_report = $this->buildReport(10, true, 'Default');
 
-        $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(Kanban::class);
-        $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
-        $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
-        $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
+        $this->kanban_manager->method('getTrackersUsedAsKanban')->willReturn([]);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $this->xml_import->method('createFromXMLFile')->willReturn($tracker);
+        $kanban = $this->createMock(Kanban::class);
+        $this->kanban_factory->method('getKanban')->willReturn($kanban);
+        $this->kanban_manager->method('createKanban')->willReturn(1);
+        $this->report_factory->method('getReportsByTrackerId')->with(101, null)->willReturn(
             [$default_report]
         );
 
-        $this->report_updater->shouldNotReceive('save');
+        $this->report_updater->expects(self::never())->method('save');
 
-        $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
+        $this->kanban_creator->createFirstKanban($this->createMock(PFUser::class));
     }
 
     public function testItDoesNotAddAReportAsSelectableReportIfNoPublicReportFound(): void
     {
         $default_report = $this->buildReport(10, true, 'Default');
 
-        $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(Kanban::class);
-        $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
-        $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
-        $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
+        $this->kanban_manager->method('getTrackersUsedAsKanban')->willReturn([]);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $this->xml_import->method('createFromXMLFile')->willReturn($tracker);
+        $kanban = $this->createMock(Kanban::class);
+        $this->kanban_factory->method('getKanban')->willReturn($kanban);
+        $this->kanban_manager->method('createKanban')->willReturn(1);
+        $this->report_factory->method('getReportsByTrackerId')->with(101, null)->willReturn(
             [$default_report]
         );
 
-        $this->report_updater->shouldNotReceive('save');
+        $this->report_updater->expects(self::never())->method('save');
 
-        $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
+        $this->kanban_creator->createFirstKanban($this->createMock(PFUser::class));
     }
 
     public function testItDoesNotAddTwiceAssignedToMeReportAsSelectableReport(): void
@@ -186,30 +181,30 @@ final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $assigned_to_me_report       = $this->buildReport(15, true, 'Assigned to me');
         $other_assigned_to_me_report = $this->buildReport(20, true, 'Other assigned to me');
 
-        $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
-        $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $this->xml_import->shouldReceive('createFromXMLFile')->andReturn($tracker);
-        $kanban = Mockery::mock(Kanban::class);
-        $this->kanban_factory->shouldReceive('getKanban')->andReturn($kanban);
-        $this->kanban_manager->shouldReceive('createKanban')->andReturn(1);
-        $this->report_factory->shouldReceive('getReportsByTrackerId')->with(101, null)->andReturn(
+        $this->kanban_manager->method('getTrackersUsedAsKanban')->willReturn([]);
+        $this->tracker_factory->method('isShortNameExists')->willReturn(false);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $this->xml_import->method('createFromXMLFile')->willReturn($tracker);
+        $kanban = $this->createMock(Kanban::class);
+        $this->kanban_factory->method('getKanban')->willReturn($kanban);
+        $this->kanban_manager->method('createKanban')->willReturn(1);
+        $this->report_factory->method('getReportsByTrackerId')->with(101, null)->willReturn(
             [$default_report, $assigned_to_me_report, $other_assigned_to_me_report]
         );
 
-        $this->report_updater->shouldReceive('save')->with($kanban, Mockery::any())->once();
+        $this->report_updater->expects(self::once())->method('save')->with($kanban, self::anything());
 
-        $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
+        $this->kanban_creator->createFirstKanban($this->createMock(PFUser::class));
     }
 
-    private function buildReport(int $id, bool $is_public, string $name): Tracker_Report
+    private function buildReport(int $id, bool $is_public, string $name): MockObject&Tracker_Report
     {
-        $report = Mockery::mock(Tracker_Report::class);
-        $report->shouldReceive('getId')->andReturn($id);
-        $report->shouldReceive('isPublic')->andReturn($is_public);
-        $report->shouldReceive('getName')->andReturn($name);
+        $report = $this->createMock(Tracker_Report::class);
+        $report->method('getId')->willReturn($id);
+        $report->method('isPublic')->willReturn($is_public);
+        $report->method('getName')->willReturn($name);
 
         return $report;
     }

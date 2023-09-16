@@ -40,7 +40,6 @@
             <directory name="src/embedded_vendor/jpgraph/"/>
             <directory name="tools/utils/xml-templates-to-php/vendor/"/>
             <directory name="plugins/agiledashboard/tests/unit/"/>
-            <directory name="plugins/kanban/tests/unit/"/>
             <directory name="plugins/cardwall/tests/unit/"/>
             <directory name="plugins/docman/tests/unit/"/>
             <directory name="plugins/git/tests/unit/"/>

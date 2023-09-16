@@ -80,15 +80,21 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $kanban_export->export($xml_element, $project);
 
-        $kanban1_attributes = $xml_element->agiledashboard->kanban_list->kanban[0]->attributes();
-        $this->assertEquals('T1', (string) $kanban1_attributes->tracker_id);
-        $this->assertEquals('Alice task', (string) $kanban1_attributes->name);
-        $this->assertEquals('K10', (string) $kanban1_attributes->ID);
+        $kanban1 = $xml_element->agiledashboard->kanban_list->kanban[0];
+        self::assertNotNull($kanban1);
+        $kanban1_attributes = $kanban1->attributes();
+        self::assertNotNull($kanban1_attributes);
+        self::assertEquals('T1', (string) $kanban1_attributes->tracker_id);
+        self::assertEquals('Alice task', (string) $kanban1_attributes->name);
+        self::assertEquals('K10', (string) $kanban1_attributes->ID);
 
-        $kanban2_attributes = $xml_element->agiledashboard->kanban_list->kanban[1]->attributes();
-        $this->assertEquals('T2', (string) $kanban2_attributes->tracker_id);
-        $this->assertEquals('Bob task', (string) $kanban2_attributes->name);
-        $this->assertEquals('K20', (string) $kanban2_attributes->ID);
+        $kanban2 = $xml_element->agiledashboard->kanban_list->kanban[1];
+        self::assertNotNull($kanban2);
+        $kanban2_attributes = $kanban2->attributes();
+        self::assertNotNull($kanban2_attributes);
+        self::assertEquals('T2', (string) $kanban2_attributes->tracker_id);
+        self::assertEquals('Bob task', (string) $kanban2_attributes->name);
+        self::assertEquals('K20', (string) $kanban2_attributes->ID);
     }
 
     public function testItUsesAlreadyCreatedAgiledashboardNode(): void
