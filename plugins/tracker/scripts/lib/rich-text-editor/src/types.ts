@@ -23,7 +23,7 @@ type EmptyObject = Record<string, never>;
 
 type additionalOptionsProvider = (textarea: HTMLTextAreaElement) => CKEDITOR.config | EmptyObject;
 type editorInitCallback = (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
-type formatChangedCallback = (new_format: TextFieldFormat) => void;
+type formatChangedCallback = (new_format: TextFieldFormat, new_content: string) => void;
 type dataReadyCallback = (ckeditor: CKEDITOR.editor) => void;
 
 export interface InternalTextEditorOptions {
