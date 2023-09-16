@@ -5,7 +5,7 @@
 
 <div class="linked-issue-alert tlp-alert-success" ng-if="linkedIssueAlertVisible">
     <span class="linked-issue-alert-text">
-    {{ "Bug" | translate }} <a ng-href="/plugins/tracker/?aid={{ linkedIssueId }}">#{{ linkedIssueId }}</a> {{ "has been successfully linked to this test." | translate }}
+    {{ "Bug" | translate }} <a ng-href="/plugins/tracker/?aid={{ linkedIssueId }}" load-tooltip>#{{ linkedIssueId }}</a> {{ "has been successfully linked to this test." | translate }}
     </span>
     <button type="button"
             class="linked-issue-alert-close tlp-button-success tlp-button-outline tlp-button-mini"
@@ -127,6 +127,7 @@
                     </button>
                     <div class="tlp-dropdown-menu">
                         <a class="tlp-dropdown-menu-item"
+                            load-tooltip
                             role="menuitem"
                             href="/plugins/tracker/?aid={{ requirement.id }}"
                             ng-repeat="requirement in execution.definition.all_requirements track by requirement.id"
@@ -153,6 +154,7 @@
                     </button>
                     <div class="tlp-dropdown-menu">
                         <a class="tlp-dropdown-menu-item"
+                            load-tooltip
                             role="menuitem"
                             href="/plugins/tracker/?aid={{ bug.id }}"
                             ng-repeat="bug in execution.linked_bugs track by bug.id"
@@ -171,7 +173,7 @@
                      data-test="current-test-requirement"
             >
                 <i class="fas fa-fw fa-long-arrow-alt-right current-test-requirement-or-bug-icon" aria-hidden="true"></i>
-                <a href="/plugins/tracker/?aid={{ requirement.id }}">
+                <a href="/plugins/tracker/?aid={{ requirement.id }}" load-tooltip>
                     <span class="current-test-requirement-or-bug-badge cross-ref-badge">
                         {{ requirement.xref }}
                     </span>
@@ -185,7 +187,7 @@
                      data-test="current-test-bug"
             >
                 <i class="fas fa-fw fa-bug current-test-requirement-or-bug-icon" aria-hidden="true"></i>
-                <a href="/plugins/tracker/?aid={{ bug.id }}">
+                <a href="/plugins/tracker/?aid={{ bug.id }}" load-tooltip>
                     <span class="current-test-requirement-or-bug-badge cross-ref-badge">
                         {{ bug.xref }}
                     </span>
@@ -219,7 +221,7 @@
                 >
                     This test has no description. Please edit it.
                 </p>
-                <div ng-bind-html="execution.definition.description"></div>
+                <div ng-bind-html="execution.definition.description" load-all-tooltips></div>
             </section>
         </section>
 
@@ -300,6 +302,7 @@
                     class="current-test-comment-displayer"
                     data-test="current-test-comment-preview"
                     ng-bind-html="execution.previous_result.result"
+                    load-all-tooltips
                 >
                 </div>
                 <execution-attachments
