@@ -17,6 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
+use Tuleap\Tracker\Service\SidebarPromotedTrackerRetriever;
+
 class ServiceTracker extends Service
 {
     public const NAME = 'tracker';
@@ -97,5 +103,17 @@ class ServiceTracker extends Service
             'is_in_iframe' => 0,
             'server_id'    => 0,
         ];
+    }
+
+    public function getPromotedItemPresenters(PFUser $user): array
+    {
+        $retriever = new SidebarPromotedTrackerRetriever(
+            new TrackerInNewDropdownRetriever(
+                new TrackerInNewDropdownDao(),
+                TrackerFactory::instance(),
+            ),
+        );
+
+        return $retriever->getPromotedItemPresenters($user, $this->project);
     }
 }

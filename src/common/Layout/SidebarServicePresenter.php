@@ -31,6 +31,9 @@ use Tuleap\Project\Service\ProjectDefinedService;
  */
 final class SidebarServicePresenter
 {
+    /**
+     * @param list<SidebarPromotedItemPresenter> $promoted_items
+     */
     private function __construct(
         public string $href,
         public string $label,
@@ -39,10 +42,11 @@ final class SidebarServicePresenter
         public bool $open_in_new_tab,
         public bool $is_active,
         public string $shortcut_id,
+        public array $promoted_items,
     ) {
     }
 
-    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href): self
+    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href, \PFUser $user): self
     {
         $description          = $service->getInternationalizedDescription();
         $is_opened_in_new_tab = $service->isOpenedInNewTab();
@@ -58,10 +62,11 @@ final class SidebarServicePresenter
             $is_opened_in_new_tab,
             false,
             '',
+            $service->getPromotedItemPresenters($user),
         );
     }
 
-    public static function fromService(Service $service, string $href, bool $is_enabled): self
+    public static function fromService(Service $service, string $href, bool $is_enabled, \PFUser $user): self
     {
         return new self(
             $href,
@@ -71,6 +76,7 @@ final class SidebarServicePresenter
             $service->isOpenedInNewTab(),
             $is_enabled,
             $service->getShortName(),
+            $service->getPromotedItemPresenters($user),
         );
     }
 }

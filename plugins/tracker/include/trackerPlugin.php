@@ -248,6 +248,7 @@ use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\Service\SidebarPromotedTrackerRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
@@ -2502,6 +2503,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(Tracker_ReportDao::class);
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
         $event->addConfigClass(MoveArtifactSemanticFeatureFlag::class);
+        $event->addConfigClass(SidebarPromotedTrackerRetriever::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

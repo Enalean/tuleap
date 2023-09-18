@@ -20,10 +20,11 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import { default as ToolComponent } from "./ToolPresenter.vue";
 import type { Tool } from "../configuration";
+import PromotedItemPresenter from "./PromotedItemPresenter.vue";
 
 describe("ToolPresenter", () => {
     it("displays an active link that do not force to open itself in a new tab", () => {
@@ -80,5 +81,87 @@ describe("ToolPresenter", () => {
         expect(anchor_element.getAttribute("rel")).toBe("noopener noreferrer");
         expect(anchor_element.classList.contains("active")).toBe(false);
         expect(anchor.find("[data-test=tool-new-tab-icon]").exists()).toBe(true);
+    });
+
+    it("should displays a link that do not have any promoted items property at all for backward compatibility", () => {
+        const tool_data: Tool = {
+            href: "/foo",
+            label: "Label",
+            description: "Description",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
+            open_in_new_tab: true,
+            is_active: false,
+            shortcut_id: "",
+        };
+        const wrapper = shallowMount(ToolComponent, {
+            props: tool_data,
+        });
+
+        const anchor_element = wrapper.find("a").element;
+
+        expect(
+            anchor_element.classList.contains("project-sidebar-nav-item-with-promoted-items"),
+        ).toBe(false);
+
+        expect(wrapper.findComponent(PromotedItemPresenter).exists()).toBe(false);
+    });
+
+    it("should displays a link with an empty list of promoted items", () => {
+        const tool_data: Tool = {
+            href: "/foo",
+            label: "Label",
+            description: "Description",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
+            open_in_new_tab: true,
+            is_active: false,
+            shortcut_id: "",
+            promoted_items: [],
+        };
+        const wrapper = shallowMount(ToolComponent, {
+            props: tool_data,
+        });
+
+        const anchor_element = wrapper.find("a").element;
+
+        expect(
+            anchor_element.classList.contains("project-sidebar-nav-item-with-promoted-items"),
+        ).toBe(false);
+
+        expect(wrapper.findComponent(PromotedItemPresenter).exists()).toBe(false);
+    });
+
+    it("should displays a link with a list of promoted items", () => {
+        const tool_data: Tool = {
+            href: "/foo",
+            label: "Label",
+            description: "Description",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
+            open_in_new_tab: true,
+            is_active: false,
+            shortcut_id: "",
+            promoted_items: [
+                {
+                    href: "/service/fake_git/fake_repo1",
+                    label: "Repository 1",
+                    description: "Awesome repository",
+                },
+                {
+                    href: "/service/fake_git/fake_repo2",
+                    label: "Repository 2",
+                    description: "Another awesome repository",
+                },
+            ],
+        };
+        const wrapper = shallowMount(ToolComponent, {
+            props: tool_data,
+        });
+
+        const anchor_element = wrapper.find("a").element;
+
+        expect(
+            anchor_element.classList.contains("project-sidebar-nav-item-with-promoted-items"),
+        ).toBe(true);
+
+        expect(wrapper.findAllComponents(PromotedItemPresenter)).toHaveLength(2);
     });
 });

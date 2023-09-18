@@ -110,6 +110,18 @@ export const example_config: Configuration = {
             open_in_new_tab: false,
             is_active: false,
             shortcut_id: "plugin_git",
+            promoted_items: [
+                {
+                    href: "/service/fake_git/fake_repo1",
+                    label: "Repository 1",
+                    description: "Awesome repository",
+                },
+                {
+                    href: "/service/fake_git/fake_repo2",
+                    label: "Repository 2",
+                    description: "Another awesome repository",
+                },
+            ],
         },
         {
             label: "Custom",

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) 2021-Present Enalean
+  - Copyright (c) 2023-Present Enalean
   -
   - Permission is hereby granted, free of charge, to any person obtaining a copy
   - of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,17 @@
     <a
         v-bind:href="sanitized_href"
         v-bind:aria-label="label"
-        class="project-sidebar-nav-item"
-        v-bind:class="{
-            active: is_active,
-            'project-sidebar-nav-item-with-promoted-items': has_promoted_items,
-        }"
+        class="project-sidebar-nav-promoted-item"
         v-bind:title="description"
-        v-bind:target="open_in_new_tab ? '_blank' : '_self'"
-        v-bind:rel="open_in_new_tab ? 'noopener noreferrer' : ''"
-        v-bind:data-shortcut-sidebar="shortcut"
-        data-test="project-sidebar-tool"
+        data-test="project-sidebar-tool-promoted-item"
     >
-        <i
-            class="project-sidebar-nav-item-icon"
-            aria-hidden="true"
-            v-bind:class="icon"
-            data-test="tool-icon"
-        ></i>
-        <span class="project-sidebar-nav-item-label">{{ label }}</span>
-        <i
-            v-if="open_in_new_tab"
-            class="fa-solid fa-arrow-right project-sidebar-nav-item-new-tab"
-            aria-hidden="true"
-            data-test="tool-new-tab-icon"
-        ></i>
+        <span class="project-sidebar-nav-promoted-item-label">{{ label }}</span>
     </a>
-    <nav v-if="has_promoted_items" class="project-sidebar-promoted-item-nav">
-        <promoted-item-presenter
-            v-for="item in promoted_items"
-            v-bind="item"
-            v-bind:key="href + label + description + item.href + item.label + item.description"
-        />
-    </nav>
 </template>
+
 <script setup lang="ts">
 import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
-import type { PromotedItem } from "../configuration";
-import PromotedItemPresenter from "./PromotedItemPresenter.vue";
 
 // We cannot directly import the Tool interface from the external file so we duplicate the content for now
 // See https://github.com/vuejs/vue-next/issues/4294
@@ -69,13 +42,6 @@ const props = defineProps<{
     href: string;
     label: string;
     description: string;
-    icon: string;
-    open_in_new_tab: boolean;
-    is_active: boolean;
-    shortcut_id: string;
-    promoted_items?: ReadonlyArray<PromotedItem>;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
-const shortcut = computed(() => `sidebar-${props.shortcut_id}`);
-const has_promoted_items = computed(() => props.promoted_items && props.promoted_items.length > 0);
 </script>

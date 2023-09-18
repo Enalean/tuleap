@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\SidebarPromotedItemPresenter;
+
 class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const FAKE_ID_FOR_CREATION = -1;
@@ -315,5 +317,13 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
 
         return 'fa-fw ' . $icon;
+    }
+
+    /**
+     * @return list<SidebarPromotedItemPresenter>
+     */
+    public function getPromotedItemPresenters(PFUser $user): array
+    {
+        return [];
     }
 }
