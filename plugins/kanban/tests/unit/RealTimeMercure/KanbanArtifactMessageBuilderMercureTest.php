@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\RealTimeMercure;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -30,19 +31,19 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 {
-    private \Tuleap\Kanban\KanbanItemDao $kanban_item_dao;
-    private Tracker_Artifact_ChangesetFactory $changeset_factory;
+    private \Tuleap\Kanban\KanbanItemDao&MockObject $kanban_item_dao;
+    private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
     private KanbanArtifactMessageBuilderMercure $message_builder;
-    private \Tracker_Semantic_Status $tracker_semantic;
-    private \Tracker_FormElement_Field_List $status_field;
+    private \Tracker_Semantic_Status&MockObject $tracker_semantic;
+    private \Tracker_FormElement_Field_List&MockObject $status_field;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->kanban_item_dao   = $this->createStub(\Tuleap\Kanban\KanbanItemDao::class);
-        $this->changeset_factory = $this->createStub(Tracker_Artifact_ChangesetFactory::class);
+        $this->kanban_item_dao   = $this->createMock(\Tuleap\Kanban\KanbanItemDao::class);
+        $this->changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
         $this->message_builder   = new KanbanArtifactMessageBuilderMercure($this->kanban_item_dao, $this->changeset_factory);
-        $this->tracker_semantic  = $this->createStub(\Tracker_Semantic_Status::class);
-        $this->status_field      = $this->createStub(\Tracker_FormElement_Field_List::class);
+        $this->tracker_semantic  = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->status_field      = $this->createMock(\Tracker_FormElement_Field_List::class);
         $this->status_field->method('getId')->willReturn(1);
     }
 
@@ -50,7 +51,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
         $result   = $this->message_builder->buildArtifactUpdated($artifact);
-        $this->assertInstanceOf(KanbanArtifactUpdatedMessageRepresentationMercure::class, $result);
+        self::assertInstanceOf(KanbanArtifactUpdatedMessageRepresentationMercure::class, $result);
     }
 
     public function testBuildArtifactMovedNoError(): void
@@ -64,7 +65,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $this->setupPreviousChangeset();
 
         $data = $this->message_builder->buildArtifactMoved($artifact, $this->tracker_semantic);
-        $this->assertInstanceOf(KanbanArtifactMovedMessageRepresentationMercure::class, $data);
+        self::assertInstanceOf(KanbanArtifactMovedMessageRepresentationMercure::class, $data);
     }
 
     public function testBuildArtifactMovedNoStatusField(): void
@@ -77,7 +78,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $this->setupChangeSet();
         $this->setupPreviousChangeset();
         $data = $this->message_builder->buildArtifactMoved($artifact, $this->tracker_semantic);
-        $this->assertNull($data);
+        self::assertNull($data);
     }
 
     public function testBuildArtifactMovedNoChangeset(): void
@@ -129,7 +130,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $this->setupChangeSet();
         $this->tracker_semantic->method('isOpenValue')->willReturn(false);
         $data = $this->message_builder->buildArtifactReordered($artifact, $this->tracker_semantic);
-        $this->assertInstanceOf(KanbanArtifactMovedMessageRepresentationMercure::class, $data);
+        self::assertInstanceOf(KanbanArtifactMovedMessageRepresentationMercure::class, $data);
     }
 
     public function testBuildArtifactReorderedNoStatus(): void
@@ -145,7 +146,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 
     private function setupArtifact(\Tracker $tracker): Artifact
     {
-        $artifact = $this->createStub(Artifact::class);
+        $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(1);
         $artifact->method('getStatusForChangeset')->willReturn('');
         $artifact->method('getTracker')->willReturn($tracker);
@@ -160,8 +161,8 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 
     private function setupValues(): void
     {
-        $value1 = $this->createStub(\Tracker_FormElement_Field_List_BindValue::class);
-        $value2 = $this->createStub(\Tracker_FormElement_Field_List_BindValue::class);
+        $value1 = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
+        $value2 = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $values = [$value1, $value2];
         $this->status_field->method('getAllValues')->willReturn($values);
     }
@@ -193,7 +194,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 
     private function setupChangeSet(): void
     {
-        $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(true);
         $changeset->method('getId')->willReturn(1);
         $this->changeset_factory->method('getLastChangeset')->willReturn($changeset);
@@ -201,7 +202,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 
     private function setupChangeSetHasNotChanged(): void
     {
-        $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(false);
         $changeset->method('getId')->willReturn(1);
         $this->changeset_factory->method('getLastChangeset')->willReturn($changeset);
@@ -214,7 +215,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 
     private function setupPreviousChangeset(): void
     {
-        $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(true);
         $changeset->method('getId')->willReturn(1);
         $this->changeset_factory->method('getPreviousChangesetWithFieldValue')->willReturn($changeset);

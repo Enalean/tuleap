@@ -22,48 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\NewDropdown;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanUserCantAddArtifactException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var \Tuleap\Kanban\KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \Tuleap\Kanban\KanbanFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $kanban_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
      */
     private $tracker_factory;
+    private TrackerNewDropdownLinkPresenterBuilder $presenter_builder;
     /**
-     * @var TrackerNewDropdownLinkPresenterBuilder
-     */
-    private $presenter_builder;
-    /**
-     * @var KanbanActionsChecker|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var KanbanActionsChecker&\PHPUnit\Framework\MockObject\MockObject
      */
     private $kanban_actions_checker;
-    /**
-     * @var NewDropdownCurrentContextSectionForKanbanProvider
-     */
-    private $provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
+    private NewDropdownCurrentContextSectionForKanbanProvider $provider;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->kanban_factory         = Mockery::mock(\Tuleap\Kanban\KanbanFactory::class);
-        $this->tracker_factory        = Mockery::mock(\TrackerFactory::class);
+        $this->kanban_factory         = $this->createMock(\Tuleap\Kanban\KanbanFactory::class);
+        $this->tracker_factory        = $this->createMock(\TrackerFactory::class);
         $this->presenter_builder      = new TrackerNewDropdownLinkPresenterBuilder();
-        $this->kanban_actions_checker = Mockery::mock(KanbanActionsChecker::class);
+        $this->kanban_actions_checker = $this->createMock(KanbanActionsChecker::class);
 
         $this->provider = new NewDropdownCurrentContextSectionForKanbanProvider(
             $this->kanban_factory,
@@ -72,16 +63,16 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
             $this->kanban_actions_checker,
         );
 
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = UserTestBuilder::aUser()->build();
     }
 
     public function testItReturnsNullIfKanbanDoesNotExist(): void
     {
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andThrow(KanbanNotFoundException::class);
+            ->willThrowException(new KanbanNotFoundException());
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -91,10 +82,10 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
     public function testItReturnsNullIfUserCannotAccessToTheKanban(): void
     {
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andThrow(KanbanCannotAccessException::class);
+            ->willThrowException(new KanbanCannotAccessException());
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -103,21 +94,19 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoSemantic(): void
     {
-        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
-            ->shouldReceive(['getTrackerId' => 42])
-            ->getMock();
+        $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($kanban);
+            ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->shouldReceive('checkUserCanAddArtifact')
+            ->expects(self::once())
+            ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
-            ->once()
-            ->andThrow(\Tuleap\Kanban\KanbanSemanticStatusNotDefinedException::class);
+            ->willThrowException(new \Tuleap\Kanban\KanbanSemanticStatusNotDefinedException());
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -126,21 +115,19 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoTracker(): void
     {
-        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
-            ->shouldReceive(['getTrackerId' => 42])
-            ->getMock();
+        $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($kanban);
+            ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->shouldReceive('checkUserCanAddArtifact')
+            ->expects(self::once())
+            ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
-            ->once()
-            ->andThrow(\Tuleap\Kanban\KanbanTrackerNotDefinedException::class);
+            ->willThrowException(new \Tuleap\Kanban\KanbanTrackerNotDefinedException());
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -149,21 +136,19 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
 
     public function testItReturnsNullIfUserCannotAddArtifactInKanbanDueToNoPerm(): void
     {
-        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
-            ->shouldReceive(['getTrackerId' => 42])
-            ->getMock();
+        $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($kanban);
+            ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->shouldReceive('checkUserCanAddArtifact')
+            ->expects(self::once())
+            ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
-            ->once()
-            ->andThrow(KanbanUserCantAddArtifactException::class);
+            ->willThrowException(new KanbanUserCantAddArtifactException());
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -172,25 +157,23 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
 
     public function testItReturnsNullIfKanbanDoesNotHaveTracker(): void
     {
-        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
-            ->shouldReceive(['getTrackerId' => 42])
-            ->getMock();
+        $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($kanban);
+            ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->shouldReceive('checkUserCanAddArtifact')
-            ->with($this->user, $kanban)
-            ->once();
+            ->expects(self::once())
+            ->method('checkUserCanAddArtifact')
+            ->with($this->user, $kanban);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->method('getTrackerById')
             ->with(42)
-            ->andReturnNull();
+            ->willReturn(null);
 
         self::assertNull(
             $this->provider->getSectionByKanbanId(101, $this->user)
@@ -199,36 +182,42 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
 
     public function testItReturnsASection(): void
     {
-        $kanban = Mockery::mock(\Tuleap\Kanban\Kanban::class)
-            ->shouldReceive(['getTrackerId' => 42])
-            ->getMock();
+        $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->shouldReceive('getKanban')
+            ->expects(self::once())
+            ->method('getKanban')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($kanban);
+            ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->shouldReceive('checkUserCanAddArtifact')
-            ->with($this->user, $kanban)
-            ->once();
+            ->expects(self::once())
+            ->method('checkUserCanAddArtifact')
+            ->with($this->user, $kanban);
 
-        $tracker = Mockery::mock(\Tracker::class)
-            ->shouldReceive([
-                'getId' => 102,
-                'getSubmitUrl' => '/path/to/102',
-                'getItemName' => 'bug',
-            ])
-            ->getMock();
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(102);
+        $tracker->method('getSubmitUrl')->willReturn('/path/to/102');
+        $tracker->method('getItemName')->willReturn('bug');
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->method('getTrackerById')
             ->with(42)
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $section = $this->provider->getSectionByKanbanId(101, $this->user);
+        self::assertNotNull($section);
         self::assertEquals('Kanban', $section->label);
         self::assertCount(1, $section->links);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function buildKanbanMock(): Kanban&MockObject
+    {
+        $kanban = $this->createMock(\Tuleap\Kanban\Kanban::class);
+        $kanban->method('getTrackerId')->willReturn(42);
+        return $kanban;
     }
 }

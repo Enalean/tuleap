@@ -21,20 +21,17 @@
 
 namespace Tuleap\Kanban\Widget;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
-use Mockery;
 use Tuleap\XML\MappingsRegistry;
 
 final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private MappingsRegistry $registry;
     /**
-     * @var MappingsRegistry
-     */
-    private $registry;
-    /**
-     * @var Mockery
+     * @var \Widget&MockObject
      */
     private $widget;
 
@@ -49,20 +46,10 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->registry = new MappingsRegistry();
         $this->registry->addReference('K123', $kanban);
 
-        $this->widget = Mockery::mock(\Widget::class);
+        $this->widget = $this->createMock(\Widget::class);
     }
 
-    public function tearDown(): void
-    {
-        if ($container = Mockery::getContainer()) {
-            $this->addToAssertionCount($container->mockery_getExpectationCount());
-        }
-
-        Mockery::close();
-        parent::tearDown();
-    }
-
-    public function testItGetReferenceFromRegistry()
+    public function testItGetReferenceFromRegistry(): void
     {
         $xml = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -73,7 +60,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
+        $this->widget->expects(self::once())->method('create')->with(self::callback(function (\Codendi_Request $request): bool {
             if (
                 $request->get('kanban') &&
                 $request->getInArray('kanban', 'id') === 20001 &&
@@ -82,18 +69,18 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
             return false;
-        }))->once()->andReturn(30003);
+        }))->willReturn(30003);
 
         $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, ProjectTestBuilder::aProject()->build());
 
         $importer = new WidgetKanbanXMLImporter();
         $importer->configureWidget($event);
 
-        $this->assertTrue($event->isWidgetConfigured());
-        $this->assertEquals(30003, $event->getContentId());
+        self::assertTrue($event->isWidgetConfigured());
+        self::assertEquals(30003, $event->getContentId());
     }
 
-    public function testItShouldThrowExceptionsWhenIDIsNotPresent()
+    public function testItShouldThrowExceptionsWhenIDIsNotPresent(): void
     {
         $xml = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -104,7 +91,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->shouldNotReceive('create');
+        $this->widget->expects(self::never())->method('create');
 
         $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, ProjectTestBuilder::aProject()->build());
 
@@ -114,7 +101,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $importer->configureWidget($event);
     }
 
-    public function testItShouldThrowExceptionsWhenKanbanIsNotReferenced()
+    public function testItShouldThrowExceptionsWhenKanbanIsNotReferenced(): void
     {
         $xml = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -125,7 +112,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->shouldNotReceive('create');
+        $this->widget->expects(self::never())->method('create');
 
         $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, ProjectTestBuilder::aProject()->build());
 

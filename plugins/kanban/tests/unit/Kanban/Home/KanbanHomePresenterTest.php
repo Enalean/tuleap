@@ -29,6 +29,9 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 final class KanbanHomePresenterTest extends TestCase
 {
     /**
+     *
+     * @psalm-param list<array{id: int, name: string, used: bool}> $trackers
+     *
      * @dataProvider dataProviderTrackersWithKanbanUsage
      */
     public function testAreTrackersAvailable(array $trackers, bool $expected): void
@@ -55,6 +58,9 @@ final class KanbanHomePresenterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array{id: int, name: string, used: bool}
+     */
     private static function aTrackerPresenter(bool $used): array
     {
         return [

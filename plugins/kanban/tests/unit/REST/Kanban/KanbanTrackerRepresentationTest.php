@@ -22,39 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\REST\v1;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildsRepresentation(): void
     {
-        $tracker         = \Mockery::mock(\Tracker::class);
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class);
-        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $tracker->shouldReceive('getId')->andReturn(789);
-        $tracker->shouldReceive('getName')->andReturn('Bug');
-        $tracker->shouldReceive('getItemName')->andReturn('bug');
-        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(789)
+            ->withName('Bug')
+            ->withShortName('bug')
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build();
 
-        $kanban = \Mockery::mock(\Tuleap\Kanban\Kanban::class);
-        $kanban->shouldReceive('getTrackerId')->andReturn(789);
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->willReturn($tracker);
+
+        $kanban = $this->createMock(\Tuleap\Kanban\Kanban::class);
+        $kanban->method('getTrackerId')->willReturn(789);
 
         $representation = KanbanTrackerRepresentation::fromKanban($tracker_factory, $kanban);
-        $this->assertEquals(789, $representation->id);
-        $this->assertEquals('Bug', $representation->label);
-        $this->assertEquals('bug', $representation->item_name);
+        self::assertEquals(789, $representation->id);
+        self::assertEquals('Bug', $representation->label);
+        self::assertEquals('bug', $representation->item_name);
     }
 
     public function testCannotBuildRepresentationWhenTheTrackerAssociatedWithTheKanbanCannotBeFound(): void
     {
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class);
-        $tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
-        $kanban = \Mockery::mock(\Tuleap\Kanban\Kanban::class);
-        $kanban->shouldReceive('getId')->andReturn(999);
-        $kanban->shouldReceive('getTrackerId')->andReturn(404);
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->willReturn(null);
+        $kanban = $this->createMock(\Tuleap\Kanban\Kanban::class);
+        $kanban->method('getId')->willReturn(999);
+        $kanban->method('getTrackerId')->willReturn(404);
 
         $this->expectException(\RuntimeException::class);
         KanbanTrackerRepresentation::fromKanban($tracker_factory, $kanban);
