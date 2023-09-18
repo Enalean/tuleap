@@ -65,6 +65,13 @@ describe(`IntField`, () => {
         },
     );
 
+    it(`does not use hybrids default setter (otherwise, zero is converted to empty string)`, () => {
+        if (typeof IntField.value !== "object") {
+            throw Error("value should have a setter");
+        }
+        expect(typeof IntField.value.set).toBe("function");
+    });
+
     it(`dispatches a bubbling "change" event when its inner input is changed
         so that the modal shows a warning when closed`, () => {
         const host = getHost();

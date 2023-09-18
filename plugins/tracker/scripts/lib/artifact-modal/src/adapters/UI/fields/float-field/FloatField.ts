@@ -55,7 +55,11 @@ export const FloatField = define<InternalFloatField>({
     label: "",
     required: false,
     disabled: false,
-    value: "",
+    value: {
+        set: (host, new_value: AllowedValue | null): AllowedValue => {
+            return new_value === null ? "" : new_value;
+        },
+    },
     content: (host) => html`
         <div class="tlp-form-element">
             <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
