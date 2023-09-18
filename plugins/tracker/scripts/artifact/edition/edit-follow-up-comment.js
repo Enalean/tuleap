@@ -36,7 +36,7 @@ import {
     getTextAreaValue,
 } from "./edit-follow-up-comment-helpers";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { RichTextEditorsCreator } from "../rich-text-editor-creator/RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 
 document.observe("dom:loaded", function () {

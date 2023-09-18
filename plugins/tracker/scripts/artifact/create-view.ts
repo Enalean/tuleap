@@ -19,7 +19,7 @@
 
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { RichTextEditorsCreator } from "./rich-text-editor-creator/RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
 import { reopenFieldsetsWithInvalidInput } from "./edition/reopen-fieldsets-with-invalid-input";
 
 document.addEventListener("DOMContentLoaded", () => {

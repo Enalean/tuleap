@@ -26,13 +26,16 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock @tuleap/mention because it needs jquery in tests
-jest.mock("@tuleap/mention", () => {
-    return { initMentions: jest.fn() };
+vi.mock("@tuleap/mention", () => {
+    return { initMentions: vi.fn() };
 });
 
-const createDocument = (): Document => document.implementation.createHTMLDocument();
+const noop = (): void => {
+    //Do nothing
+};
 
 describe(`RichTextEditorsCreator`, () => {
     let doc: Document,
@@ -40,23 +43,25 @@ describe(`RichTextEditorsCreator`, () => {
         image_upload_factory: UploadImageFormFactory,
         editor_factory: RichTextEditorFactory;
     beforeEach(() => {
-        doc = createDocument();
+        doc = document.implementation.createHTMLDocument();
         image_upload_factory = {
-            createHelpBlock: jest.fn(),
-            initiateImageUpload: jest.fn(),
-            forbidImageUpload: jest.fn(),
+            createHelpBlock: (): null => null,
+            initiateImageUpload: noop,
+            forbidImageUpload: noop,
         };
         editor_factory = {
-            createRichTextEditor: jest.fn(),
+            createRichTextEditor: vi.fn(),
         } as unknown as RichTextEditorFactory;
         creator = new RichTextEditorsCreator(doc, image_upload_factory, editor_factory);
     });
 
     describe(`createNewFollowupEditor()`, () => {
         it(`when there is no "new followup" textarea in the document, it does nothing`, () => {
+            const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+
             creator.createNewFollowupEditor();
 
-            expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
+            expect(createRichTextEditor).not.toHaveBeenCalled();
         });
 
         describe(`when there is a "new followup" textarea in the document`, () => {
@@ -68,11 +73,12 @@ describe(`RichTextEditorsCreator`, () => {
             });
 
             it(`enables image upload and creates a rich text editor on it`, () => {
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+                const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
 
                 creator.createNewFollowupEditor();
 
-                expect(image_upload_factory.createHelpBlock).toHaveBeenCalled();
+                expect(createHelpBlock).toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
 
@@ -80,8 +86,8 @@ describe(`RichTextEditorsCreator`, () => {
             });
 
             it(`sets up the onEditorInit callback`, () => {
-                const initiateImageUpload = jest.spyOn(image_upload_factory, "initiateImageUpload");
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const initiateImageUpload = vi.spyOn(image_upload_factory, "initiateImageUpload");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
 
                 creator.createNewFollowupEditor();
 
@@ -101,9 +107,11 @@ describe(`RichTextEditorsCreator`, () => {
 
     describe(`createEditFollowupEditor()`, () => {
         it(`when there is no "edit followup" textarea in the document, it does nothing`, () => {
+            const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+
             creator.createEditFollowupEditor(1, "text");
 
-            expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
+            expect(createRichTextEditor).not.toHaveBeenCalled();
         });
 
         describe(`when there is an "edit followup" textarea in the document`, () => {
@@ -115,11 +123,12 @@ describe(`RichTextEditorsCreator`, () => {
             });
 
             it(`disables image upload and creates a rich text editor on it`, () => {
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+                const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
 
                 creator.createEditFollowupEditor(1, "html");
 
-                expect(image_upload_factory.createHelpBlock).not.toHaveBeenCalled();
+                expect(createHelpBlock).not.toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
 
@@ -128,8 +137,8 @@ describe(`RichTextEditorsCreator`, () => {
             });
 
             it(`sets up the onEditorInit callback`, () => {
-                const forbidImageUpload = jest.spyOn(image_upload_factory, "forbidImageUpload");
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const forbidImageUpload = vi.spyOn(image_upload_factory, "forbidImageUpload");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
 
                 creator.createEditFollowupEditor(1, "text");
 
@@ -179,9 +188,11 @@ describe(`RichTextEditorsCreator`, () => {
         });
 
         it(`when there is no text field textarea, it does nothing`, () => {
+            const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+
             creator.createTextFieldEditors();
 
-            expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
+            expect(createRichTextEditor).not.toHaveBeenCalled();
         });
 
         it(`when a text field textarea has an id that does not end with underscore and its field id,
@@ -202,11 +213,12 @@ describe(`RichTextEditorsCreator`, () => {
                     "beforeend",
                     `<div class="tracker_artifact_field"><textarea id="field_1234"></textarea>`,
                 );
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+                const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
 
                 creator.createTextFieldEditors();
 
-                expect(image_upload_factory.createHelpBlock).toHaveBeenCalled();
+                expect(createHelpBlock).toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
 
@@ -229,11 +241,12 @@ describe(`RichTextEditorsCreator`, () => {
                       <input type="hidden" id="artifact[4567]_body_format" value="text">
                   </div>`,
                 );
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const createRichTextEditor = vi.spyOn(editor_factory, "createRichTextEditor");
+                const createHelpBlock = vi.spyOn(image_upload_factory, "createHelpBlock");
 
                 creator.createTextFieldEditors();
 
-                expect(image_upload_factory.createHelpBlock).toHaveBeenCalled();
+                expect(createHelpBlock).toHaveBeenCalled();
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const first_options = createRichTextEditor.mock.calls[0][1];
 

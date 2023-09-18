@@ -35,6 +35,9 @@ dependencies:
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:scripts/lib/rich-text-editor
+  '@tuleap/plugin-tracker-rte-creator':
+    specifier: workspace:*
+    version: link:scripts/lib/rte-creator
   '@tuleap/plugin-tracker-tql-codemirror':
     specifier: workspace:*
     version: link:scripts/lib/TQL-CodeMirror

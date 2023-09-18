@@ -19,7 +19,7 @@
 
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { RichTextEditorsCreator } from "../rich-text-editor-creator/RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
 
 // Do not use DOMContentLoaded event because it arrives after jQuery document ready event
 // and it will cause the "submission bar" to stop working.

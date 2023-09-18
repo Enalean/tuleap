@@ -1,0 +1,9 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": ["ES2015", "DOM", "DOM.Iterable"],
+        "types": ["ckeditor"],
+        "resolveJsonModule": true
+    },
+    "include": ["src/**/*"]
+}
