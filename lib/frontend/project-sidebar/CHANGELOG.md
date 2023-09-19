@@ -1,5 +1,10 @@
 # Changelog
 
+## In development
+
+* Tools can have promoted items, they will be displayed as a sub list when the sidebar is expanded.
+* Collapse of the sidebar is deprecated. A boolean `is_collapsible` is now part of the configuration to control the behavior.
+
 ## 2.2.4
 
 * `process.env.NODE_ENV` is removed from the distributed files so the element can be used without a bundler

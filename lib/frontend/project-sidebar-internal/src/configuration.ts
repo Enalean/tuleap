@@ -105,6 +105,7 @@ export interface Configuration {
         logo: LogoInformation;
     };
     tools: Tool[];
+    readonly is_collapsible?: boolean;
 }
 
 export function unserializeConfiguration(

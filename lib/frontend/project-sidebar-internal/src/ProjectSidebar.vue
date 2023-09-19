@@ -24,7 +24,7 @@
     <aside
         v-if="sidebar_configuration !== undefined"
         class="sidebar"
-        v-bind:class="{ 'sidebar-collapsed': props.collapsed }"
+        v-bind:class="{ 'sidebar-collapsed': is_sidebar_collapsed }"
     >
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
@@ -41,7 +41,7 @@
 </template>
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
-import { provide, readonly, computed, ref, watch } from "vue";
+import { provide, readonly, computed, watch, ref } from "vue";
 import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "./injection-symbols";
@@ -57,8 +57,29 @@ const props = defineProps<{
 }>();
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
 
-const is_sidebar_collapsed = ref(props.collapsed ?? false);
-const can_sidebar_be_collapsed = readonly(computed(() => !props.noCollapseButton));
+const can_sidebar_be_collapsed = readonly(
+    computed(() => {
+        if (props.noCollapseButton) {
+            return false;
+        }
+
+        if (sidebar_configuration.value === undefined) {
+            return false;
+        }
+
+        if (sidebar_configuration.value.is_collapsible === undefined) {
+            // If `is_collapsible` is not given then we keep backward compatibility
+            // and consider that the sidebar can be collapsed.
+            // Note: This is only for when the sidebar component is used outside of Tuleap,
+            // because the latter always give `is_collapsible`.
+            return true;
+        }
+
+        return sidebar_configuration.value.is_collapsible;
+    }),
+);
+
+const is_sidebar_collapsed = ref(can_sidebar_be_collapsed.value && (props.collapsed ?? false));
 
 provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 const emit = defineEmits<{
