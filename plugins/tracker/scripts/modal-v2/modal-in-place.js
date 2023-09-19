@@ -25,7 +25,7 @@ import { loadTooltips } from "@tuleap/tooltip";
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
-import { RichTextEditorsCreator } from "../artifact/rich-text-editor-creator/RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
 
 var tuleap = window.tuleap || {};
 tuleap.tracker = tuleap.tracker || {};

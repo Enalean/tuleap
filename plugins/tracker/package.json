@@ -15,6 +15,7 @@
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
+    "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp": "workspace:*",

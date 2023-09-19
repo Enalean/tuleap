@@ -1,0 +1,33 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-rte-creator",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "./dist/plugin-tracker-rte-creator.js",
+  "main": "./dist/plugin-tracker-rte-creator.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-rte-creator.js",
+      "require": "./dist/plugin-tracker-rte-creator.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/mention": "workspace:*",
+    "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
+    "@tuleap/plugin-tracker-constants": "workspace:*",
+    "@tuleap/plugin-tracker-rich-text-editor": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/ckeditor": "4.9.10"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}
