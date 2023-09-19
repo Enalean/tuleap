@@ -21,13 +21,14 @@ import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 import type { GettextProvider } from "./type";
 import type { ProjectSidebarShortcut } from "@tuleap/project-sidebar-internal";
 import {
-    FIRST_TOOL,
-    AGILEDASHBOARD,
+    BACKLOG,
     DOCUMENTS,
+    FIRST_TOOL,
+    getAvailableShortcuts,
     GIT,
+    KANBAN,
     TESTMANAGEMENT,
     TRACKERS,
-    getAvailableShortcuts,
 } from "@tuleap/project-sidebar-internal";
 
 export function getServicesShortcutsGroup(
@@ -62,7 +63,8 @@ function buildShortcutFromProjectSidebarShortcut(
         case TRACKERS:
         case GIT:
         case DOCUMENTS:
-        case AGILEDASHBOARD:
+        case BACKLOG:
+        case KANBAN:
             description = gettext_provider
                 .gettext("Go to %s")
                 .replace("%s", project_sidebar_shortcut.label);
