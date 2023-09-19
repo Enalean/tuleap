@@ -20,6 +20,12 @@
  * SOFTWARE.
  */
 
+export interface PromotedItem {
+    readonly href: string;
+    readonly label: string;
+    readonly description: string;
+}
+
 export interface Tool {
     href: string;
     label: string;
@@ -28,6 +34,7 @@ export interface Tool {
     open_in_new_tab: boolean;
     is_active: boolean;
     shortcut_id: string;
+    readonly promoted_items?: ReadonlyArray<PromotedItem>;
 }
 
 interface InstanceVersionInformation {

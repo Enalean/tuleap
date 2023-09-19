@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\NewDropdown;
 
 use Tracker;
+use Tuleap\Tracker\RetrievePromotedTrackers;
 
-class TrackerInNewDropdownRetriever
+class TrackerInNewDropdownRetriever implements RetrievePromotedTrackers
 {
     /**
      * @var TrackerInNewDropdownDao
