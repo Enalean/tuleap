@@ -28,14 +28,16 @@ export type ToolID =
     | typeof GIT
     | typeof TESTMANAGEMENT
     | typeof DOCUMENTS
-    | typeof AGILEDASHBOARD
+    | typeof BACKLOG
+    | typeof KANBAN
     | typeof FIRST_TOOL;
 
 export const TRACKERS = "plugin_tracker";
 export const GIT = "plugin_git";
 export const TESTMANAGEMENT = "plugin_testmanagement";
 export const DOCUMENTS = "docman";
-export const AGILEDASHBOARD = "plugin_agiledashboard";
+export const BACKLOG = "plugin_agiledashboard";
+export const KANBAN = "plugin_kanban";
 export const FIRST_TOOL = "first_sidebar_tool";
 
 const SUPPORTED_SERVICE_SHORTCUTS: ReadonlyArray<
@@ -45,7 +47,8 @@ const SUPPORTED_SERVICE_SHORTCUTS: ReadonlyArray<
     { name: TRACKERS, keyboard_inputs: "g+t" },
     { name: GIT, keyboard_inputs: "g+i" },
     { name: DOCUMENTS, keyboard_inputs: "g+d" },
-    { name: AGILEDASHBOARD, keyboard_inputs: "g+a" },
+    { name: BACKLOG, keyboard_inputs: "g+b" },
+    { name: KANBAN, keyboard_inputs: "g+k" },
 ];
 
 export interface ProjectSidebarShortcut {
