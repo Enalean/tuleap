@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         "tracker_artifact",
         (locale) =>
             import(
-                /* webpackChunkName: "tracker-artifact-po-" */ "./po/" + getPOFileFromLocale(locale)
+                /* webpackChunkName: "tracker-artifact-po-" */ "../po/" +
+                    getPOFileFromLocale(locale)
             ),
     );
 

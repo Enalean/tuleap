@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { ListPickersCreator } from "./ListPickersCreator";
+import { SelectWrappedByListPickerStore } from "./SelectWrappedByListPickerStore";
 
-namespace Tuleap\Tracker\Artifact\Renderer;
+document.addEventListener("DOMContentLoaded", () => {
+    const creator = ListPickersCreator(document, SelectWrappedByListPickerStore());
+    creator.listenToggleEditionEvents();
+    creator.initListPickersInArtifactCreationView();
+    creator.initListPickersPostUpdateErrorView();
+    creator.initTrackerSelector();
+});
 
-final class ListFieldsIncluder
-{
-    public static function includeListFieldsAssets(): void
-    {
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
-            '/assets/trackers/artifact'
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
-    }
-}
+// List picker must be included **before** field dependencies execution
+import "./run-field-dependencies";

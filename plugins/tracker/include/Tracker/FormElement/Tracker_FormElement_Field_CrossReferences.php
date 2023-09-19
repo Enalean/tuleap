@@ -402,8 +402,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         );
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('cross-references-fields.js'));
 

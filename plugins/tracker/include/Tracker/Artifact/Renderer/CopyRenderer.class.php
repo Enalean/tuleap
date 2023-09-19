@@ -66,7 +66,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
             ],
         ];
 
-        ListFieldsIncluder::includeListFieldsAssets($this->tracker->getId());
+        ListFieldsIncluder::includeListFieldsAssets();
 
         $this->tracker->displayHeader(
             $this->layout,

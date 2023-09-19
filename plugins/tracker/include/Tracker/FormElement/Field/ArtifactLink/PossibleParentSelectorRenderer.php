@@ -43,8 +43,8 @@ class PossibleParentSelectorRenderer
         }
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('artifact-links-field.js'));

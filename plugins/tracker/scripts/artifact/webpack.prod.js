@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+const common = require("./webpack.common.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-namespace Tuleap\Tracker\Artifact\Renderer;
-
-final class ListFieldsIncluder
-{
-    public static function includeListFieldsAssets(): void
-    {
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
-            '/assets/trackers/artifact'
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
-    }
-}
+module.exports = webpack_configurator.extendProdConfiguration(common);
