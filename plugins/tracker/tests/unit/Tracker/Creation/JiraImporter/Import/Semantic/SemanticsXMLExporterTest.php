@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\unit\Tracker\Creation\JiraImporter\Import\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
@@ -36,10 +35,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
-class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testExportsTheSemantics(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
@@ -106,36 +103,44 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $exporter = new SemanticsXMLExporter();
+        $exporter = new SemanticsXMLExporter(
+            new class implements EventDispatcherInterface
+            {
+                public function dispatch(object $event)
+                {
+                    return;
+                }
+            }
+        );
         $exporter->exportSemantics(
             $tracker_node,
             $mapping,
             $collection
         );
 
-        $this->assertNotNull($tracker_node->semantics);
-        $this->assertCount(5, $tracker_node->semantics->children());
+        self::assertNotNull($tracker_node->semantics);
+        self::assertCount(5, $tracker_node->semantics->children());
 
         $semantic_title_node = $tracker_node->semantics->semantic[0];
-        $this->assertSame("title", (string) $semantic_title_node['type']);
-        $this->assertSame("Fsummary", (string) $semantic_title_node->field['REF']);
+        self::assertSame("title", (string) $semantic_title_node['type']);
+        self::assertSame("Fsummary", (string) $semantic_title_node->field['REF']);
 
         $semantic_description_node = $tracker_node->semantics->semantic[1];
-        $this->assertSame("description", (string) $semantic_description_node['type']);
-        $this->assertSame("Fdescription", (string) $semantic_description_node->field['REF']);
+        self::assertSame("description", (string) $semantic_description_node['type']);
+        self::assertSame("Fdescription", (string) $semantic_description_node->field['REF']);
 
         $semantic_status_node = $tracker_node->semantics->semantic[2];
-        $this->assertSame("status", (string) $semantic_status_node['type']);
-        $this->assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
-        $this->assertCount(2, $semantic_status_node->open_values->children());
+        self::assertSame("status", (string) $semantic_status_node['type']);
+        self::assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
+        self::assertCount(2, $semantic_status_node->open_values->children());
 
         $semantic_done_node = $tracker_node->semantics->semantic[3];
         self::assertSame("done", (string) $semantic_done_node['type']);
         self::assertCount(3, $semantic_done_node->closed_values->children());
 
         $semantic_assignee_node = $tracker_node->semantics->semantic[4];
-        $this->assertSame("contributor", (string) $semantic_assignee_node['type']);
-        $this->assertSame("Fassignee", (string) $semantic_assignee_node->field['REF']);
+        self::assertSame("contributor", (string) $semantic_assignee_node['type']);
+        self::assertSame("Fassignee", (string) $semantic_assignee_node->field['REF']);
     }
 
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void
@@ -143,14 +148,22 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_node = new SimpleXMLElement('<tracker/>');
         $mapping      = new FieldMappingCollection();
 
-        $exporter = new SemanticsXMLExporter();
+        $exporter = new SemanticsXMLExporter(
+            new class implements EventDispatcherInterface
+            {
+                public function dispatch(object $event)
+                {
+                    return;
+                }
+            }
+        );
         $exporter->exportSemantics(
             $tracker_node,
             $mapping,
-            Mockery::mock(StatusValuesCollection::class)
+            $this->createMock(StatusValuesCollection::class),
         );
 
-        $this->assertNotNull($tracker_node->semantics);
-        $this->assertNotNull($tracker_node->semantics->semantic);
+        self::assertNotNull($tracker_node->semantics);
+        self::assertNotNull($tracker_node->semantics->semantic);
     }
 }

@@ -38,6 +38,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExportEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
@@ -714,5 +715,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $event->addAllIssuesRenderers(CompleteIssuesTemplate::getAllIssuesRenderer());
         $event->addMyIssuesRenderers(CompleteIssuesTemplate::getMyIssuesRenderer());
         $event->addOpenIssuesRenderers(CompleteIssuesTemplate::getOpenIssuesRenderer());
+    }
+
+    #[ListeningToEventClass]
+    public function externalSemanticsExport(ExternalSemanticsExportEvent $event): void
+    {
+        (new \Tuleap\Cardwall\JiraImport\CardSemanticExporter())->exportCardSemantic(
+            $event->semantics_node,
+            $event->field_mapping_collection,
+        );
     }
 }

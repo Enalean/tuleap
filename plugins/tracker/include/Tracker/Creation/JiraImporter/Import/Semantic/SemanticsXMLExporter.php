@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Semantic;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
 use Tracker_Semantic_Contributor;
 use Tracker_Semantic_Description;
@@ -38,6 +39,10 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 
 class SemanticsXMLExporter
 {
+    public function __construct(private readonly EventDispatcherInterface $event_dispatcher)
+    {
+    }
+
     public function exportSemantics(
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $field_mapping_collection,
@@ -50,6 +55,7 @@ class SemanticsXMLExporter
         $this->exportDoneSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
         $this->exportContributorSemantic($semantics_node, $field_mapping_collection);
         $this->exportTimeframeSemantic($semantics_node, $field_mapping_collection);
+        $this->exportExternalSemantics($semantics_node, $field_mapping_collection);
     }
 
     private function exportTitleSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -172,5 +178,12 @@ class SemanticsXMLExporter
 
         $semantic_node->addChild("start_date_field")->addAttribute("REF", $start_date_field->getXMLId());
         $semantic_node->addChild("end_date_field")->addAttribute("REF", $due_date_field->getXMLId());
+    }
+
+    private function exportExternalSemantics(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
+    {
+        $this->event_dispatcher->dispatch(
+            new ExternalSemanticsExportEvent($semantics_node, $field_mapping_collection)
+        );
     }
 }
