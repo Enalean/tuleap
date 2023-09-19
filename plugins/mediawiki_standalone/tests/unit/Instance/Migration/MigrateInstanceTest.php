@@ -89,9 +89,10 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $switcher                    = SwitchMediawikiServiceStub::buildSelf();
-        $db_primer                   = new LegacyMediawikiDBPrimerStub();
-        $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
+        $switcher                       = SwitchMediawikiServiceStub::buildSelf();
+        $db_primer                      = new LegacyMediawikiDBPrimerStub();
+        $legacy_permissions_migrator    = LegacyPermissionsMigratorStub::buildSelf();
+        $legacy_mw_create_missing_users = new LegacyMediawikiCreateMissingUsersStub();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -104,11 +105,12 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('fr_FR'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            $legacy_mw_create_missing_users,
         );
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($switcher, $db_primer, $legacy_permissions_migrator): void {
+            function (MigrateInstance $migrate_instance) use ($switcher, $db_primer, $legacy_permissions_migrator, $legacy_mw_create_missing_users): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -120,6 +122,7 @@ final class MigrateInstanceTest extends TestCase
                 self::assertEquals(Option::fromValue('plugin_mediawiki_120'), $db_primer->db_name_used);
                 self::assertEquals(Option::fromValue('mw'), $db_primer->db_prefix_used);
                 self::assertTrue($legacy_permissions_migrator->hasBeenMigrated());
+                self::assertTrue($legacy_mw_create_missing_users->was_called);
             }
         );
     }
@@ -159,6 +162,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
             LegacyPermissionsMigratorStub::buildSelf(),
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -211,6 +215,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('invalid'),
             new ProvideInitializationLanguageCodeStub(),
             LegacyPermissionsMigratorStub::buildSelf(),
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -251,6 +256,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -291,6 +297,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -343,6 +350,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -396,6 +404,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -433,6 +442,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
             $legacy_permissions_migrator,
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -465,6 +475,7 @@ final class MigrateInstanceTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
             LegacyPermissionsMigratorStub::buildSelf(),
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         self::assertTrue($migrate_instance_option->isNothing());

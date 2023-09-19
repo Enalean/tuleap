@@ -71,9 +71,12 @@ use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\Instance\Migration\Admin\StartMigrationController;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiCreateAndPromoteUserProcess;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiCreateMissingUsersDB;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageDao;
 use Tuleap\MediawikiStandalone\Instance\Migration\Admin\DisplayMigrationController;
 use Tuleap\MediawikiStandalone\Instance\Migration\Admin\LegacyReadyToMigrateDao;
+use Tuleap\MediawikiStandalone\Instance\Migration\PrimeLegacyMediawikiDB;
 use Tuleap\MediawikiStandalone\Instance\Migration\ServiceMediawikiSwitcher;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsDao;
 use Tuleap\MediawikiStandalone\Instance\ProjectRenameHandler;
@@ -452,10 +455,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             $flavor_usage_dao,
             new OngoingInitializationsDao($flavor_usage_dao),
             new ServiceMediawikiSwitcher(new ServiceDao(), $logger),
-            new \Tuleap\MediawikiStandalone\Instance\Migration\PrimeLegacyMediawikiDB(),
+            new PrimeLegacyMediawikiDB(),
             new LegacyMediawikiLanguageDao(),
             new ProvideSiteLevelInitializationLanguageCode(),
             new MediawikiPermissionsDao(),
+            new LegacyMediawikiCreateMissingUsersDB(
+                new LegacyMediawikiCreateAndPromoteUserProcess(),
+            ),
         ))->process($event);
         (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }

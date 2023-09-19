@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
@@ -24,13 +25,15 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-interface LegacyMediawikiDBPrimer
+final class LegacyMediawikiCreateMissingUsersStub implements LegacyMediawikiCreateMissingUsers
 {
-    /**
-     * @psalm-return Ok<null>|Err<Fault>
-     */
-    public function prepareDBForMigration(LoggerInterface $logger, \Project $project, string $db_name, string $db_prefix): Ok|Err;
+    public bool $was_called = false;
+    public function create(LoggerInterface $logger, \Project $project, string $db_prefix): Ok|Err
+    {
+        $this->was_called = true;
+        return Result::ok(null);
+    }
 }

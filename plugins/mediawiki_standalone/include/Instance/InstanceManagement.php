@@ -29,6 +29,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiCreateMissingUsers;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimer;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetriever;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
@@ -59,6 +60,7 @@ final class InstanceManagement
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
         private readonly LegacyPermissionsMigrator $legacy_permissions_migrator,
+        private readonly LegacyMediawikiCreateMissingUsers $legacy_mediawiki_create_missing_users,
     ) {
     }
 
@@ -77,6 +79,7 @@ final class InstanceManagement
                 $this->legacy_mediawiki_language_retriever,
                 $this->default_language_code_provider,
                 $this->legacy_permissions_migrator,
+                $this->legacy_mediawiki_create_missing_users,
             ));
 
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
