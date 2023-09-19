@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PolicyAgreement - Displays text with a clickable link 1`] = `
-<div class="tlp-form-element"><label class="tlp-label tlp-checkbox"><input type="checkbox" value="1" required="required" data-test="approve_tos"> <span>I agree to the <a href="/tos/tos.php">policy agreement</a></span> <i aria-hidden="true" class="fa fa-asterisk"></i>
+<div class="tlp-form-element"><label class="tlp-label tlp-checkbox"><input type="checkbox" value="1" required="required"> <span>I agree to the <a href="/tos/tos.php">policy agreement</a></span> <i aria-hidden="true" class="fa fa-asterisk"></i>
     <agreement-modal-stub></agreement-modal-stub></label></div>
 `;

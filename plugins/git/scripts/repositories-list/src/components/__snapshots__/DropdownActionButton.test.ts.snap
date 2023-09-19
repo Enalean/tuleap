@@ -4,7 +4,7 @@ exports[`DropdownActionButton displays a dropdown for empty state 1`] = `
 <div class="tlp-dropdown"><button type="button" class="tlp-button-primary">
     <translate-stub tag="span">New repository</translate-stub> <i aria-hidden="true" class="fas fa-caret-down tlp-button-icon-right"></i>
   </button>
-  <div role="menu" class="tlp-dropdown-menu"><button type="button" data-test="create-repository-button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i>
+  <div role="menu" class="tlp-dropdown-menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i>
       <translate-stub tag="span" class="git-add-action-button">Create a repository</translate-stub>
     </button>
     <add-gitlab-repository-action-button-stub></add-gitlab-repository-action-button-stub>
@@ -16,7 +16,7 @@ exports[`DropdownActionButton displays a dropdown for repository list 1`] = `
 <div class="tlp-dropdown git-repository-list-create-repository-button"><button type="button" class="tlp-button-primary">
     <translate-stub tag="span">New repository</translate-stub> <i aria-hidden="true" class="fas fa-caret-down tlp-button-icon-right"></i>
   </button>
-  <div role="menu" class="tlp-dropdown-menu"><button type="button" data-test="create-repository-button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i>
+  <div role="menu" class="tlp-dropdown-menu"><button type="button" class="tlp-dropdown-menu-item"><i class="fa fa-plus tlp-button-icon"></i>
       <translate-stub tag="span" class="git-add-action-button">Create a repository</translate-stub>
     </button>
     <add-gitlab-repository-action-button-stub></add-gitlab-repository-action-button-stub>

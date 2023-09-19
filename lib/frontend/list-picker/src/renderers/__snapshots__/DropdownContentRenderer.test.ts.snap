@@ -4,26 +4,26 @@ exports[`DropDownContentRenderer > without search input > renders grouped list i
 <ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="list-picker-item-group"><strong class="list-picker-group-label">Group 1</strong>
     <ul role="group" aria-label="Group 1" class="list-picker-dropdown-option-group">
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group1-value_0" class="list-picker-dropdown-option-value">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group1-value_0" class="list-picker-dropdown-option-value">
         Value 0
       </li>
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group1-value_1" class="list-picker-dropdown-option-value">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group1-value_1" class="list-picker-dropdown-option-value">
         Value 1
       </li>
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group1-value_2" class="list-picker-dropdown-option-value">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group1-value_2" class="list-picker-dropdown-option-value">
         Value 2
       </li>
     </ul>
   </li>
   <li class="list-picker-item-group"><strong class="list-picker-group-label">Group 2</strong>
     <ul role="group" aria-label="Group 2" class="list-picker-dropdown-option-group">
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group2-value_3" class="list-picker-dropdown-option-value">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group2-value_3" class="list-picker-dropdown-option-value">
         Value 3
       </li>
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group2-value_4" class="list-picker-dropdown-option-value">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group2-value_4" class="list-picker-dropdown-option-value">
         Value 4
       </li>
-      <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-group2-value_5" class="list-picker-dropdown-option-value-disabled">
+      <li role="option" aria-selected="false" data-item-id="list-picker-item-group2-value_5" class="list-picker-dropdown-option-value-disabled">
         Value 5
       </li>
     </ul>
@@ -33,22 +33,22 @@ exports[`DropDownContentRenderer > without search input > renders grouped list i
 
 exports[`DropDownContentRenderer > without search input > renders simple list items 1`] = `
 <ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-100" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-100" class="list-picker-dropdown-option-value">
     None
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-value_0" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-value_0" class="list-picker-dropdown-option-value">
     Value 0
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-value_1" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-value_1" class="list-picker-dropdown-option-value">
     Value 1
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-value_2" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-value_2" class="list-picker-dropdown-option-value">
     Value 2
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-value_3" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-value_3" class="list-picker-dropdown-option-value">
     Value 3
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-value_colored" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-value_colored" class="list-picker-dropdown-option-value">
 
     <span class="list-picker-option-colored-label-container">
                 <span class="tlp-swatch-acid-green list-picker-circular-color"></span>
@@ -56,13 +56,13 @@ exports[`DropDownContentRenderer > without search input > renders simple list it
     </span>
 
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-peraltaj" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-peraltaj" class="list-picker-dropdown-option-value">
 
     <span class="list-picker-avatar"><img loading="lazy" src="/url/to/jdoe/avatar.png"></span>
     Jack Peralta
 
   </li>
-  <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-bad_colored" class="list-picker-dropdown-option-value">
+  <li role="option" aria-selected="false" data-item-id="list-picker-item-bad_colored" class="list-picker-dropdown-option-value">
 
     <span class="list-picker-option-colored-label-container">
                 <span class="list-picker-circular-legacy-color" style="background:rgba(255, 255, 255, .6);border:3px solid rgba(255, 255, 255);color:#ffffff;"></span>

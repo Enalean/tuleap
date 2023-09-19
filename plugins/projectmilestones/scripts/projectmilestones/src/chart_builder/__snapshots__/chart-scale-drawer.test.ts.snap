@@ -1,32 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ScaleDrawer - addScaleLines - When the scales are created, Then there are 2 line element with their attributes 1`] = `
-Selection {
-  "_groups": [
-    [
-      <svg
-        height="100"
-        width="100"
-      >
-        <line
-          class="release-line-scale"
-          x1="0"
-          x2="210"
-          y1="100"
-          y2="100"
-        />
-        <line
-          class="release-line-scale"
-          x1="0"
-          x2="0"
-          y1="100"
-          y2="490"
-        />
-      </svg>,
-    ],
-  ],
-  "_parents": [
-    null,
-  ],
-}
+<line class="release-line-scale" x1="0" y1="100" x2="210" y2="100"></line>
+<line class="release-line-scale" x1="0" y1="100" x2="0" y2="490"></line>
 `;

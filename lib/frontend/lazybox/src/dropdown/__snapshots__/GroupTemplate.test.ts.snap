@@ -4,13 +4,13 @@ exports[`GroupTemplate > rendering > renders grouped list items 1`] = `
 <li class="lazybox-item-group">
   <strong class="lazybox-group-label">Group 1</strong>
   <ul role="group" class="lazybox-dropdown-option-group" aria-label="Group 1">
-    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
       <span>Badge</span>Value 0
     </li>
-    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
       <span>Badge</span>Value 1
     </li>
-    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
       <span>Badge</span>Value 2
     </li>
   </ul>
@@ -19,13 +19,13 @@ exports[`GroupTemplate > rendering > renders grouped list items 1`] = `
 <li class="lazybox-item-group">
   <strong class="lazybox-group-label">Group 2</strong>
   <ul role="group" class="lazybox-dropdown-option-group" aria-label="Group 2">
-    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
       <span>Badge</span>Value 3
     </li>
-    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+    <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
       <span>Badge</span>Value 4
     </li>
-    <li role="option" class="lazybox-dropdown-option-value-disabled" data-test="lazybox-item">
+    <li role="option" class="lazybox-dropdown-option-value-disabled">
       <span>Badge</span>Value 5
     </li>
   </ul>

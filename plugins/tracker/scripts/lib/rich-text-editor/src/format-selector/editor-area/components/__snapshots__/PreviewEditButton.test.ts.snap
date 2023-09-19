@@ -1,15 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`PreviewEditButton if the promise fails, it will re-enable the button to allow people to retry 1`] = `
+<button type="button" class="btn btn-small rte-button">
+  <i aria-hidden="true" class="fas fa-fw fa-eye"></i>
+  Preview
+</button>
+`;
+
 exports[`PreviewEditButton when is_in_edit_mode is false, it will create a Edit button 1`] = `
 <button type="button" class="btn btn-small rte-button">
-  <i aria-hidden="true" data-test="button-icon" class="fas fa-fw fa-pencil-alt"></i>
+  <i aria-hidden="true" class="fas fa-fw fa-pencil-alt"></i>
   Edit
 </button>
 `;
 
 exports[`PreviewEditButton when is_in_edit_mode is true, it will create a Preview button 1`] = `
 <button type="button" class="btn btn-small rte-button">
-  <i aria-hidden="true" data-test="button-icon" class="fas fa-fw fa-eye"></i>
+  <i aria-hidden="true" class="fas fa-fw fa-eye"></i>
+  Preview
+</button>
+`;
+
+exports[`PreviewEditButton while promise_of_preview is unsettled, it will create a disabled loading button 1`] = `
+<button type="button" class="btn btn-small rte-button" disabled="">
+  <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
   Preview
 </button>
 `;

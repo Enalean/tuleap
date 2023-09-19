@@ -12,7 +12,8 @@ exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
       </a>
       <div class="breadcrumb-switch-menu-container">
         <nav class="breadcrumb-switch-menu">
-          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span></nav>
+          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span>
+        </nav>
       </div>
     </div>
   </nav>
