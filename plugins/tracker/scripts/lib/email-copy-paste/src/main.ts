@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+import "@tuleap/copy-to-clipboard";
+
 export function setupEmailCopyModalInteractions(
     mount_point: Document,
     show_modal: (target: HTMLElement) => void,
