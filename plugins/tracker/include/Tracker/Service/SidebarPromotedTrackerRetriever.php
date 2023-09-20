@@ -23,28 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Service;
 
 use Tracker;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\RetrievePromotedTrackers;
 
-#[ConfigKeyCategory('Tracker')]
 final class SidebarPromotedTrackerRetriever
 {
-    #[FeatureFlagConfigKey(<<<'EOF'
-    Should we display promoted trackers in project sidebar?
-    Comma separated list of project ids like 123,234.
-    0 => No projects have the feature (default)
-    1 => Every projects have the feature
-    123,234 => Only projects with id 123 or 234 have the feature
-    EOF
-    )]
-    #[ConfigKeyString('0')]
-    public const FEATURE_FLAG = 'display_promoted_trackers_in_sidebar';
-
-    public function __construct(private readonly RetrievePromotedTrackers $retriever)
-    {
+    public function __construct(
+        private readonly RetrievePromotedTrackers $retriever,
+        private readonly PromotedTrackerConfigurationChecker $configuration_checker,
+    ) {
     }
 
     /**
@@ -52,7 +39,7 @@ final class SidebarPromotedTrackerRetriever
      */
     public function getPromotedItemPresenters(\PFUser $user, \Project $project, ?string $active_promoted_item_id): array
     {
-        if (! $this->isProjectAllowedToPromoteTrackersInSidebar($project)) {
+        if (! $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)) {
             return [];
         }
 
@@ -67,20 +54,5 @@ final class SidebarPromotedTrackerRetriever
                 $this->retriever->getTrackers($user, $project),
             ),
         );
-    }
-
-    public function isProjectAllowedToPromoteTrackersInSidebar(\Project $project): bool
-    {
-        $list_of_project_ids_with_promoted_trackers_in_sidebar = \ForgeConfig::getFeatureFlagArrayOfInt(self::FEATURE_FLAG);
-
-        if (! $list_of_project_ids_with_promoted_trackers_in_sidebar) {
-            return false;
-        }
-
-        if ($list_of_project_ids_with_promoted_trackers_in_sidebar === [1]) {
-            return true;
-        }
-
-        return in_array((int) $project->getID(), $list_of_project_ids_with_promoted_trackers_in_sidebar, true);
     }
 }
