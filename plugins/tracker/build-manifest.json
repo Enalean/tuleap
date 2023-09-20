@@ -2,7 +2,7 @@
     "name": "tracker",
     "gettext-ts": {
         "artifact": {
-            "src": "scripts/artifact",
+            "src": "scripts/artifact/src",
             "po": "scripts/artifact/po"
         },
         "burndown-chart": {

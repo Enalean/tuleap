@@ -60,7 +60,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             [],
             ['body_class' => ['widgetable']]
         );
-        ListFieldsIncluder::includeListFieldsAssets($this->tracker->getId());
+        ListFieldsIncluder::includeListFieldsAssets();
 
         echo $this->fetchSubmitInstructions();
     }
@@ -90,8 +90,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
     protected function displayFooter()
     {
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('create-view.js'));
         $this->tracker->displayFooter($this->layout);

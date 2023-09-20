@@ -103,8 +103,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     final protected static function fetchEditViewJSCode(): void
     {
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
     }

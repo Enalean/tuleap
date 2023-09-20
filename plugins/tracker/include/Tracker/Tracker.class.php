@@ -3447,10 +3447,10 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function includeJavascriptAssetsForMassChange(): void
     {
-        ListFieldsIncluder::includeListFieldsAssets($this->getId());
+        ListFieldsIncluder::includeListFieldsAssets();
         $assets = new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
     }

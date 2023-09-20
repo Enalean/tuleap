@@ -1,0 +1,105 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/fetch-result':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/list-picker
+  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
+    specifier: workspace:*
+    version: link:../lib/artifact-ckeditor-image-upload
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:*
+    version: link:../lib/constants
+  '@tuleap/plugin-tracker-rich-text-editor':
+    specifier: workspace:*
+    version: link:../lib/rich-text-editor
+  '@tuleap/plugin-tracker-rte-creator':
+    specifier: workspace:*
+    version: link:../lib/rte-creator
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-fetch
+  dompurify:
+    specifier: ^3.0.5
+    version: 3.0.5
+  lit:
+    specifier: 2.8.0
+    version: 2.8.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@types/dompurify':
+    specifier: ^2.4.0
+    version: 2.4.0
+  '@types/jquery':
+    specifier: ^3.5.5
+    version: 3.5.5
+
+packages:
+
+  /@lit-labs/ssr-dom-shim@1.1.1:
+    resolution: {integrity: sha512-kXOeFbfCm4fFf2A3WwVEeQj55tMZa8c8/f9AKHMobQMkzNUfUj+antR3fRPaZJawsa1aZiP/Da3ndpZrwEe4rQ==}
+    dev: false
+
+  /@lit/reactive-element@1.6.3:
+    resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.1.1
+    dev: false
+
+  /@types/dompurify@2.4.0:
+    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
+    dependencies:
+      '@types/trusted-types': 2.0.3
+    dev: true
+
+  /@types/jquery@3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/sizzle@2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /@types/trusted-types@2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+    dev: false
+
+  /lit-element@3.3.3:
+    resolution: {integrity: sha512-XbeRxmTHubXENkV4h8RIPyr8lXc+Ff28rkcQzw3G6up2xg5E8Zu1IgOWIwBLEQsu3cOVFqdYwiVi0hv0SlpqUA==}
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.1.1
+      '@lit/reactive-element': 1.6.3
+      lit-html: 2.8.0
+    dev: false
+
+  /lit-html@2.8.0:
+    resolution: {integrity: sha512-o9t+MQM3P4y7M7yNzqAyjp7z+mQGa4NS4CxiyLqFPyFWyc4O+nodLrkrxSaCTrla6M5YOLaT3RpbbqjszB5g3Q==}
+    dependencies:
+      '@types/trusted-types': 2.0.3
+    dev: false
+
+  /lit@2.8.0:
+    resolution: {integrity: sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==}
+    dependencies:
+      '@lit/reactive-element': 1.6.3
+      lit-element: 3.3.3
+      lit-html: 2.8.0
+    dev: false

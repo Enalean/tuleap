@@ -44,8 +44,8 @@ class TypeView extends Tracker_Artifact_View_View
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);
         $layout->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../../frontend-assets', '/assets/trackers'),
-            "children-view.js",
+            new IncludeAssets(__DIR__ . '/../../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+            'children-view.js',
         ));
 
         return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-type"></div>';

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickersCreator } from "./ListPickersCreator";
-import { SelectWrappedByListPickerStore } from "./SelectWrappedByListPickerStore";
+const common = require("./webpack.common.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-document.addEventListener("DOMContentLoaded", () => {
-    const creator = ListPickersCreator(document, SelectWrappedByListPickerStore());
-    creator.listenToggleEditionEvents();
-    creator.initListPickersInArtifactCreationView();
-    creator.initListPickersPostUpdateErrorView();
-    creator.initTrackerSelector();
-});
+module.exports = webpack_configurator.extendDevConfiguration(common);
