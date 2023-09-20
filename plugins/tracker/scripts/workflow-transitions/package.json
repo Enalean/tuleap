@@ -9,6 +9,7 @@
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
+    "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",

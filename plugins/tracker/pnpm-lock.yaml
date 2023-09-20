@@ -8,9 +8,6 @@ dependencies:
   '@tuleap/chart-builder':
     specifier: workspace:*
     version: link:../../lib/frontend/chart-builder
-  '@tuleap/copy-to-clipboard':
-    specifier: workspace:*
-    version: link:../../lib/frontend/copy-to-clipboard
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../lib/frontend/fetch-result
@@ -32,6 +29,9 @@ dependencies:
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:scripts/lib/constants
+  '@tuleap/plugin-tracker-email-copy-paste':
+    specifier: workspace:*
+    version: link:scripts/lib/email-copy-paste
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:scripts/lib/rich-text-editor
@@ -53,6 +53,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-swatch-colors

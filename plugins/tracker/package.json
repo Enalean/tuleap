@@ -6,7 +6,6 @@
   "private": true,
   "dependencies": {
     "@tuleap/chart-builder": "workspace:*",
-    "@tuleap/copy-to-clipboard": "workspace:*",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
@@ -14,6 +13,7 @@
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
+    "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
@@ -21,6 +21,7 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/user-and-ugroup-autocompleter": "workspace:*",

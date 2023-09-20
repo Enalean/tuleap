@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-email-copy-paste",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "./dist/plugin-tracker-email-copy-paste.js",
+  "main": "./dist/plugin-tracker-email-copy-paste.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-email-copy-paste.js",
+      "require": "./dist/plugin-tracker-email-copy-paste.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/copy-to-clipboard": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

@@ -44,5 +44,4 @@ document.addEventListener("readystatechange", () => {
 // "submission bar" won't work properly.
 import "./TrackerArtifactEditionSwitcher.js";
 import "./text-follow-up";
-import "../tracker-email-copy-paste-fp";
 import "./edit-follow-up-comment.js";

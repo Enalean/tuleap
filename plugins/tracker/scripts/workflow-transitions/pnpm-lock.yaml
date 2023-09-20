@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:../lib/constants
+  '@tuleap/plugin-tracker-email-copy-paste':
+    specifier: workspace:*
+    version: link:../lib/email-copy-paste
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

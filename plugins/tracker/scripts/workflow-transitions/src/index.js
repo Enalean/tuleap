@@ -23,6 +23,7 @@ import store_options from "./store/index.js";
 import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
+import "./tracker-email-copy-paste-bp.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-workflow-transitions");

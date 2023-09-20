@@ -6,6 +6,8 @@
     "include": [
         "scripts/tracker-homepage/**/*",
         "scripts/artifact/**/*",
-        "scripts/form-element/**/*"
+        "scripts/form-element/**/*",
+        "scripts/header/**/*",
+        "scripts/tracker-admin/**/*",
     ]
 }

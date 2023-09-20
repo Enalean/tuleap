@@ -1007,8 +1007,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $report = null;
 
-        $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
-
         //Does the user wants to change its report?
         if ($request->get('select_report')) {
             //Is the report id valid
@@ -1219,6 +1217,11 @@ class Tracker implements Tracker_Dispatchable_Interface
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
 
             if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
+                $assets      = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/trackers');
+                $base_layout = $GLOBALS['HTML'];
+                assert($base_layout instanceof \Tuleap\Layout\BaseLayout);
+                $base_layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker-header.js'));
+
                 $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/artifact');
                 $renderer->renderToPage(
                     "create-by-mail-modal-info",
@@ -1319,7 +1322,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         array $params = [],
     ) {
         $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
-        $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
 
         $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
@@ -1420,7 +1422,10 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $assets = $this->getIncludeAssets();
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../frontend-assets',
+            '/assets/trackers'
+        );
 
         $GLOBALS['HTML']->addStylesheet($assets->getFileURL('colorpicker.css'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('TrackerAdminFields.js'));
@@ -3440,25 +3445,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
     }
 
-    private function getIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/trackers'
-        );
-    }
-
-    private function IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot(): void
-    {
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $this->getIncludeAssets()->getFileURL('tracker-email-copy-paste-fp.js')
-        );
-    }
-
     private function includeJavascriptAssetsForMassChange(): void
     {
         ListFieldsIncluder::includeListFieldsAssets($this->getId());
-        $assets = $this->getIncludeAssets();
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../frontend-assets',
+            '/assets/trackers'
+        );
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
     }
 }

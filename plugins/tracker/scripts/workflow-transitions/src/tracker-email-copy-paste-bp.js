@@ -18,12 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import jQuery from "jquery";
-import { setupEmailCopyModalInteractions } from "./tracker-email-copy-paste";
-import "@tuleap/copy-to-clipboard";
+import { createModal } from "@tuleap/tlp-modal";
+import { setupEmailCopyModalInteractions } from "@tuleap/plugin-tracker-email-copy-paste";
 
 document.addEventListener("DOMContentLoaded", () => {
-    setupEmailCopyModalInteractions(document, (target: HTMLElement) =>
-        jQuery(target).modal("show"),
-    );
+    setupEmailCopyModalInteractions(document, (target) => createModal(target).show());
 });
