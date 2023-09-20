@@ -3,7 +3,7 @@
 exports[`TroveCategoryList - Display correctly the component 1`] = `
 <div class="tlp-form-element"><label for="trovecat" class="tlp-label">
     licence
-    <i class="fa fa-asterisk"></i></label> <select id="trovecat" name="trovecat" required="required" data-test="trove-category-list" class="tlp-select tlp-select-large">
+    <i class="fa fa-asterisk"></i></label> <select id="trovecat" name="trovecat" required="required" class="tlp-select tlp-select-large">
     <option></option>
     <option value="10">
       MIT Licence

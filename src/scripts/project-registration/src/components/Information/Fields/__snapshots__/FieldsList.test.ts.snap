@@ -3,15 +3,15 @@
 exports[`FieldsList - Display correctly a string field 1`] = `
 <div class="tlp-form-element"><label for="input-1" class="tlp-label">
     custom field
-    <i data-test="asterisk" class="fa fa-asterisk"></i></label> <input type="text" id="input-1" required="required" class="tlp-input tlp-input-large">
-  <p data-test="text-info" class="tlp-text-info">a helpful description</p>
+    <i class="fa fa-asterisk"></i></label> <input type="text" id="input-1" required="required" class="tlp-input tlp-input-large">
+  <p class="tlp-text-info">a helpful description</p>
 </div>
 `;
 
 exports[`FieldsList - Display correctly a text field 1`] = `
 <div class="tlp-form-element"><label for="input-1" class="tlp-label">
     custom field
-    <i data-test="asterisk" class="fa fa-asterisk"></i></label> <textarea id="textaarea-1" required="required" data-test="project-field-text" class="tlp-textarea tlp-textarea-large"></textarea>
-  <p data-test="text-info" class="tlp-text-info">a helpful description</p>
+    <i class="fa fa-asterisk"></i></label> <textarea id="textaarea-1" required="required" class="tlp-textarea tlp-textarea-large"></textarea>
+  <p class="tlp-text-info">a helpful description</p>
 </div>
 `;

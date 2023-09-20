@@ -130,7 +130,7 @@ describe("GroupTemplate", () => {
         it(`renders a list item from a given template`, () => {
             render(getHost());
             expect(target.innerHTML).toMatchInlineSnapshot(`
-              <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+              <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-navigation="lazybox-item" aria-selected="false">
                 <span>Badge</span>Value 1
               </li>
             `);

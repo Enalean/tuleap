@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UserProjectList Spawns the UserProjectList component 1`] = `
-<div class="tlp-form-element"><select id="from-another-project" data-test="from-another-project" name="from-another-project" class="tlp-select tlp-select-adjusted user-project-list-select">
+<div class="tlp-form-element"><select id="from-another-project" name="from-another-project" class="tlp-select tlp-select-adjusted user-project-list-select">
     <option disabled="disabled" value="">
       <translate-stub tag="span">Please choose a project...</translate-stub>
     </option>
-    <option data-test="select-project-101" value="[object Object]">
+    <option value="[object Object]">
       My A project
     </option>
-    <option data-test="select-project-102" value="[object Object]">
+    <option value="[object Object]">
       My B project
     </option>
   </select></div>
