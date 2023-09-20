@@ -72,7 +72,7 @@ final class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
                     $this->getHTMLMessage($artifact),
-                    "fas fa-tlp-tracker",
+                    "fa-solid fa-tlp-tracker",
                     $this->getUser($artifact)
                 )
             );
